@@ -165,7 +165,7 @@ Raw `<div>`/`<span>` (web) and `<View>` (mobile) bypass CDS theming, responsive 
 // Web
 <div style={{ padding: '16px', display: 'flex', flexDirection: 'column' }}>
   <ChildComponent />
-</div>
+</div>;
 
 // Mobile
 import { View } from 'react-native';
@@ -177,7 +177,9 @@ return <View style={{ height: 20, padding: 8 }} />;
 ```tsx
 // Web
 import { Box } from '@cbhq/cds-web/layout';
-<Box padding={2} flexDirection="column"><ChildComponent /></Box>
+<Box padding={2} flexDirection="column">
+  <ChildComponent />
+</Box>;
 
 // Mobile
 import { Box } from '@cbhq/cds-mobile/layout';
@@ -280,7 +282,9 @@ A module that re-exports parallel color, spacing, or typography maps is a shadow
 ```ts
 export const size = { tiny: '2px', small: '4px', medium: '8px', large: '16px' };
 export const color = { coinbase: '#1652F0', positive: '#61CA00', negative: '#FF4949' };
-export const typography = { body: { fontSize: 14, lineHeight: 20, fontFamily: 'CoinbaseSans-Regular' } };
+export const typography = {
+  body: { fontSize: 14, lineHeight: 20, fontFamily: 'CoinbaseSans-Regular' },
+};
 ```
 
 **Good:**
@@ -288,8 +292,8 @@ export const typography = { body: { fontSize: 14, lineHeight: 20, fontFamily: 'C
 ```tsx
 import { useTheme } from '@cbhq/cds-web/system';
 const theme = useTheme();
-theme.space[2];         // 16px — adapts to scale changes
-theme.color.bgPrimary;  // adapts to color scheme
+theme.space[2]; // 16px — adapts to scale changes
+theme.color.bgPrimary; // adapts to color scheme
 ```
 
 **Skip:** Truly app-specific tokens that cannot live in CDS (e.g. partner-brand colors for KYC card art) and third-party app directories with their own intentional brand.
@@ -349,11 +353,11 @@ CDS provides `Button`, `IconButton`, and `Pressable` (plus `Interactable` on mob
 import { Pressable } from '@cbhq/cds-mobile/components';
 <Pressable onPress={handlePress} accessibilityRole="button" accessibilityLabel="Press me">
   <Text>Press me</Text>
-</Pressable>
+</Pressable>;
 
 // Web
 import { Button } from '@cbhq/cds-web/buttons';
-<Button onPress={handlePress}>Press me</Button>
+<Button onPress={handlePress}>Press me</Button>;
 ```
 
 ---
@@ -406,7 +410,7 @@ CDS components ship documented accessibility defaults: `Button` has `role="butto
 
 ```tsx
 import { Checkbox } from '@cbhq/cds-web/form';
-<Checkbox checked={isOn} onChange={setIsOn} label="Subscribe" />
+<Checkbox checked={isOn} onChange={setIsOn} label="Subscribe" />;
 ```
 
 ---
@@ -455,21 +459,21 @@ Importing a deprecated CDS export means relying on something that may be removed
 ```tsx
 // Using a deprecated text shorthand component (v7 pattern)
 import { TextBody } from '@cbhq/cds-web/typography';
-<TextBody>…</TextBody>
+<TextBody>…</TextBody>;
 ```
 
 **Good:**
 
 ```tsx
 import { Text } from '@cbhq/cds-web/typography';
-<Text font="body">…</Text>
+<Text font="body">…</Text>;
 ```
 
 **Action:** For each deprecated import found, note the recommended replacement from the CDS docs or the cds-migrator codemod list.
 
 ---
 
-## Review dangerouslySet* usages
+## Review dangerouslySet\* usages
 
 **Applies to:** web + mobile
 
@@ -493,11 +497,11 @@ Running outdated CDS versions means missing bug fixes, new components, and token
 
 2. Detect the package manager from lockfiles in the project root:
 
-   | Lockfile           | Package manager |
-   | ------------------ | --------------- |
-   | `yarn.lock`        | yarn            |
-   | `package-lock.json`| npm             |
-   | `pnpm-lock.yaml`   | pnpm            |
+   | Lockfile            | Package manager |
+   | ------------------- | --------------- |
+   | `yarn.lock`         | yarn            |
+   | `package-lock.json` | npm             |
+   | `pnpm-lock.yaml`    | pnpm            |
 
 3. For each installed CDS package, query the registry for the latest published version:
 

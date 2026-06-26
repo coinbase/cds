@@ -30,9 +30,7 @@ export function CheckoutSummary({ items, total }: CheckoutSummaryProps) {
         }}
       >
         <span style={{ fontSize: 16, fontWeight: 700 }}>Total</span>
-        <span style={{ fontSize: 16, fontWeight: 700, color: '#1652F0' }}>
-          ${total.toFixed(2)}
-        </span>
+        <span style={{ fontSize: 16, fontWeight: 700, color: '#1652F0' }}>${total.toFixed(2)}</span>
       </div>
     </div>
   );
