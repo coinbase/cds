@@ -1,59 +1,64 @@
 ---
 name: cds-code
 description: |
-  Produces high quality Coinbase Design System (CDS) code for React and React Native projects.
-  Always use this skill every time you are asked to create or update UI or write React or React Native code.
+  Provides a structured workflow for writing high quality Coinbase Design System (CDS) code.
+  Use this skill every time you are asked to create or update a user interface using React or React Native.
+  Additinoally, this skill may be used to conduct a code review on existing code for CDS adherence.
+  Trigger examples: "build this screen", "update this component", "perform a CDS audit on our changes", 
+  "check our codebase for CDS adherence", "does this feature use CDS well?"
 license: Apache-2.0
 metadata:
-  version: '2.0.0'
+  version: '2.1.0'
 ---
 
-# CDS Code Writing Skill
+# CDS Code Skill
 
-## Contents
+## On every request
 
-1. Part 1: Initialization | Follow these steps once per session, before you write any code
-2. Part 2: Workflow | Follow these steps for all frontend coding tasks
+Before responding, determine what the user needs:
 
-## Part 1: Initialization
+**Coding** — the user wants to create or update UI → follow the Coding Workflow.
 
-Perform the following operations only once per session, after the skill is activated.
+**Review** — the user explicitly asks to audit, review, or check existing code for CDS adherence → read `guidelines/code-review.md` and follow it instead.
 
-### Prepare CDS documentation
+**Default to coding.** Only treat a request as a review if the user's intent is explicit. Writing code is the primary use case for this skill.
 
-For any CDS documentation needs, you will need to use either of the following tools.
-If neither are available you may let the user know but still continue on with the task as documentation is helpful but not required.
+## Initialization
+
+Run this once per session, before doing anything else.
+
+Run the discovery script: `scripts/discover-cds-packages.sh`
+
+Its output tells you:
+
+- The `CDS Runtime` (`web` or `mobile`) — use this value as the `platform` argument for the CDS MCP server if it is needed.
+- Every installed CDS package: its name, version, and valid export subpaths — these import paths are the ONLY ALLOWED PATHS when importing from CDS packages
+
+If the script cannot be run, much of the information it provides can be determined via manual inspection:
+
+- Infer the platform by inspecting existing CDS imports in the project's source code
+- Find valid import paths by reading the `exports` field of the `package.json` of installed CDS packages in `node_modules`
+
+## Coding Workflow
+
+For all frontend coding tasks, follow these steps in order.
+
+**YOU MUST** perform steps 1 and 2 before writing any code!
+
+### Step 1: Prepare CDS documentation
+
+For any CDS documentation needs, use either of the following tools.
+If neither are available, let the user know but continue — documentation is helpful but not required.
 
 - Activate the `cds-docs` skill OR...
 - If the `cds-docs` skill is not configured, try calling the CDS MCP server `list-cds-routes` tool.
 
-### Environment Detection
-
-You must determine if you are operating in a React or React Native project before you write any code.
-
-1. **Discover installed CDS packages and runtime**
-
-Run the `bash` discovery script: `scripts/discover-cds-packages.sh`
-
-This will gve you:
-
-- The `CDS Runtime` (`web` or `mobile`) - use this value as the `platform` argument for the CDS MCP server
-- Every installed CDS package: its name, version, and valid export subpaths - these import paths are the ONLY ALLOWED PATHS for importing from CDS packages.
-
-If you are unable to run the bash script, you can likely infer the `platform` by inspecting the project's source code.
-
-2. Read the platform-specific styling and themeing documentation:
+Then read the platform-specific docs (using the runtime detected in Initialization):
 
 - `getting-started/styling`
 - `getting-started/theming`
 
-## Part 2: Workflow
-
-For all frontend coding tasks, you must follow these steps.
-
-**YOU MUST** perform steps 1 and 2 before writing any code!
-
-### Step 1: Identify the appropriate components
+### Step 2: Identify the appropriate components
 
 Use `guidelines/components.md` to help identify the appropriate CDS components for the task.
 The guidelines file will cover most use cases, but you may optionally browse the CDS docs for the full list of supported CDS components.
@@ -64,31 +69,48 @@ If you decide your task will require icons (`Icon` or `IconButton`) or illustrat
 | --------------------- | ----------------------------- |
 | `guidelines/icons.md` | `guidelines/illustrations.md` |
 
-If the task involves icons, also follow `guidelines/icons.md` and use `scripts/discover-cds-icons.mjs` to search icon names. If the task involves illustrations, also follow `guidelines/illustrations.md` and use `scripts/discover-cds-illustrations.mjs` to search illustration names.
-
 If no CDS component fits your use case, you may fall back to the following options in this order of priority:
 
-1. use a custom React component from the project's codebase
-2. build your own custom React component
-3. use the native platform's JSX elements for bespoke UI
+1. search for a relevant and reusable React component from the project's codebase to use
+2. build your own custom React component using CDS primitives as building blocks
+3. use the native platform's JSX elements (div, View, etc.) for bespoke UI as a last resort
 
-**IMPORTANT:** Always inform the user which CDS components you are planning to use before moving on to `Step 2`.
+**IMPORTANT:** Always inform the user which CDS components you are planning to use before moving on to Step 3.
 
-### Step 2: Optionally read component docs
+### Step 3: Optionally read component docs
 
-For any CDS component you plan to use, retrieve and read their documentation (see `Part 1` for more details on docs setup).
+For any CDS component you plan to use, retrieve and read their documentation (see Step 1 in this workflow for more details on docs setup).
 
-### Step 3: Execute the task (writing frontend code)
+If documentation is not retrievable for any reason, the published type definitions for the component may be used to determine the full props API a component affords. This is no substitute for reading the documentation, but it can be a useful fallback when documentation is not available.
+
+### Step 4: Execute the task (writing code)
 
 Now create or update the UI with proper CDS components and usage.
 
-Most CDS component implement an API that allows you to apply the CDS design tokens, we call these 'style props'. Prefer setting these style props for styling components over setting custom style via inline styles or CSS.
+#### Package scope
+
+The package name may vary between projects. Different repos may install CDS under different scopes.
+Always match the full CDS package name(s) as determined in the initialization step. If the project already has CDS imports in existing code, match whatever scope those files use.
+
+#### Using the Design System
+
+In most cases, you should avoid using inline style objects or CSS classNames (web only).
+Through these methods it is very easy to make common mistakes like using hardcoded property values instead of the CDS design tokens.
+Doing so would break the component's connection to the CDS theme.
+
+If you must use a style object or a CSS className, you can still access the CDS theme either through the `useTheme` hook or by CSS variables (web only).
+
+Most CDS components implement an API that conveniently allows you to apply CDS design tokens, internally we call these 'style props'.
+
+In cds-web, style props essentially act as an API for applying atomic CSS classes, much like Tailwind's utility classes which are so prevelant in the web ecosystem.
+
+You should prefer setting these style props for styling components over setting custom style via inline styles or CSS.
 
 **Why this matters:** When you set `font`, `color`, `textAlign`, or other typography properties through `style` instead of props, the component loses its connection to the CDS theme. For example, setting `fontSize` and `fontWeight` via `style` without a `font` prop means the CDS font family never applies -- the text falls back to `inherit` and may render in the wrong typeface.
 
-You should check a component's props table in their CDS docs page to verify what props are available.
+You should check a component's documentation which includes a props table to verify the available API.
 
-Example misuse of custom styles and their style props alternatives:
+Examples of opportunities to use style props over inline styles:
 
 | Instead of `style`                                              | Use the prop                                       |
 | --------------------------------------------------------------- | -------------------------------------------------- |
@@ -101,34 +123,14 @@ Example misuse of custom styles and their style props alternatives:
 | `style={{ padding: 16 }}`                                       | `padding={2}`                                      |
 | `style={{ backgroundColor: "..." }}`                            | `background="bgAlternate"` (or semantic token)     |
 
-If you need to further customize the style of a rendered CDS component or a specific style is not support via style props, you may reference: `guidelines/customizing-styles.md`.
-
-### Step 4: Validate changes
+### Step 5: Validate changes
 
 Your task will be complete if:
 
-1. You performed initialization steps in `Part 1`
-2. You examined the user's request and identified specific CDS components to use
-3. Your changes DO NOT include any raw rgb/hex/etc color values
-4. Your changes DO NOT use any raw pixel values for spacing, border radius, etc.
-5. You changes use style props (e.g. `font`, `color`, `textAlign`, `textTransform`, `padding`, `gap`) instead of customization via `style` or with CSS.
-6. All import paths are valid CDS package exports (see section below)
-7. Any project linting/typechecking tasks are passing
-
-#### Validating import paths
-
-**This is critical.** Do not guess or memorize CDS import paths. The discovery script output is the source of truth (see `Part 1` for details).
-
-Before writing or returning any CDS import, verify it against the export list from setup:
-
-1. Find the CDS package for the target platform in the discovery script output.
-2. Confirm the subpath you want to import is listed as a valid export.
-3. If the subpath is not listed, it does not exist -- pick the closest valid export instead.
-
-**The package name may vary between projects.** Different repos may install CDS under different scopes. Always use the package name reported by the discovery script, not a hardcoded scope. If the project already has CDS imports in existing code, match whatever scope those files use.
-
-Common mistakes to avoid:
-
-- Inventing deep subpaths like `<pkg>/layout/Box` or `<pkg>/buttons/Button` when the actual export is `<pkg>/layout` or `<pkg>/buttons`.
-- Guessing a package scope when the project uses a different one.
-- Assuming that the CDS docs examples use the same package name as the target project -- they may differ.
+1. You performed skill initialization and explicitly identified the specific CDS components you would use
+2. Your changes DO NOT include any raw rgb/hex/etc color values
+3. Your changes DO NOT use any raw pixel values for spacing properties (padding, margin, gap, border radius). Explicit layout dimensions like `width` or `height` set to specific designer-specified values are acceptable.
+4. Your changes DO NOT import any depreacted CDS components or hooks.
+5. Your changes use components' style props (e.g. `font`, `color`, `background`, `textTransform`, `paddingX`, `gap`) instead of customization via inline `style` objects or with CSS classNames.
+6. All import paths are valid CDS package exports, determined in initialization
+7. The project's linting/typechecking/formatting tasks are passing
