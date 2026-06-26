@@ -13,17 +13,19 @@ metadata:
 
 # CDS Code Skill
 
-## Contents
+## On every request
 
-1. Initialization | Always run first — detects the environment and routes to the right mode
-2. Writing Workflow | For creating or updating UI code
-3. Code Review | `guidelines/code-review.md` — for auditing existing code for CDS adherence
+Before responding, determine what the user needs:
+
+**Coding** — the user wants to create or update UI → follow the Coding Workflow.
+
+**Review** — the user explicitly asks to audit, review, or check existing code for CDS adherence → read `guidelines/code-review.md` and follow it instead.
+
+**Default to coding.** Only treat a request as a review if the user's intent is explicit. Writing code is the primary use case for this skill.
 
 ## Initialization
 
-Always run this section once per session before doing anything else.
-
-### Step 1: Detect environment
+Run this once per session, before doing anything else.
 
 Run the discovery script: `scripts/discover-cds-packages.sh`
 
@@ -34,22 +36,10 @@ Its output tells you:
 
 If the script cannot be run, much of the information it provides can be determined via manual inspection:
 
-- infer the platform by inspecting existing imports to cds packages in the project's source code
-- valid import paths can be determinedby reading the `exports` field of the `package.json` of the installed CDS packages within the project's `node_modules` directory.
+- Infer the platform by inspecting existing CDS imports in the project's source code
+- Find valid import paths by reading the `exports` field of the `package.json` of installed CDS packages in `node_modules`
 
-### Step 2: Determine skill "mode" (code vs review)
-
-Based on the user's request and available context, decide which section to follow next.
-
-**Coding mode** — The user wants to create or update a user interface with CDS.
-→ Continue to the Writing Workflow below.
-
-**Review mode** — The user explicitly asks to audit or review existing code for CDS adherence.
-→ Read `guidelines/code-review.md` and follow it. Skip the Writing Workflow entirely.
-
-**When in doubt, default to coding mode.** Only treat a request as a review if the user explicitly asks to "audit", "review", or "check" existing code — never infer review intent from an ambiguous request. Writing code is the most common use-case for this skill.
-
-## Writing Workflow
+## Coding Workflow
 
 For all frontend coding tasks, follow these steps in order.
 
@@ -139,9 +129,8 @@ Your task will be complete if:
 
 1. You performed skill initialization and explicitly identified the specific CDS components you would use
 2. Your changes DO NOT include any raw rgb/hex/etc color values
-3. Your changes DO NOT use any raw pixel values for spacing, border radius, etc.
+3. Your changes DO NOT use any raw pixel values for spacing properties (padding, margin, gap, border radius). Explicit layout dimensions like `width` or `height` set to specific designer-specified values are acceptable.
 4. Your changes DO NOT import any depreacted CDS components or hooks.
 5. Your changes use components' style props (e.g. `font`, `color`, `background`, `textTransform`, `paddingX`, `gap`) instead of customization via inline `style` objects or with CSS classNames.
 6. All import paths are valid CDS package exports, determined in initialization
 7. The project's linting/typechecking/formatting tasks are passing
-

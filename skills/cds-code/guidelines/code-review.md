@@ -229,9 +229,9 @@ backgroundColor: theme.color.bgPositive
 
 **Applies to:** web + mobile
 
-CDS uses an 8px base scale. Raw `px`/`em`/`rem` strings (web) or bare numbers (mobile) for spacing and sizing silently diverge from the scale when designers adjust it. Use CDS props with token values or CSS variables instead.
+CDS uses an 8px base scale. Raw `px`/`em`/`rem` strings (web) or bare numbers (mobile) for spacing properties silently diverge from the scale when designers adjust it. Use CDS props with token values or CSS variables instead.
 
-**Detect:** Inside `style={{}}`, `StyleSheet.create()`, or `styled()` template literals — any of `padding*`, `margin*`, `gap`, `rowGap`, `columnGap`, `top`, `bottom`, `left`, `right`, `borderRadius`, `borderWidth`, `width`, `height`, `min/maxWidth/Height` with a raw numeric or string value (excluding `'100%'`, `'auto'`, `'100vw'`, and values already sourced from `theme.space[…]` or `var(--space-…)`).
+**Detect:** Inside `style={{}}`, `StyleSheet.create()`, or `styled()` template literals — any of `padding*`, `margin*`, `gap`, `rowGap`, `columnGap`, `borderRadius`, `borderWidth` with a raw numeric or string value (excluding values already sourced from `theme.space[…]` or `var(--space-…)`).
 
 **Bad:**
 
@@ -257,7 +257,9 @@ padding-bottom: var(--space-3);
 <Icon marginTop={0.75} /> // 6px → 0.75 × 8
 ```
 
-**Skip:** Exact pixel values with no token equivalent (e.g. designer-pinned column widths, 1px dividers). Note these in findings as intentional.
+**Width and height:** Explicit layout dimensions (`width`, `height`, `minWidth`, `maxWidth`, `minHeight`, `maxHeight`) are a different category from spacing. Specific values like sidebar widths, column sizes, image dimensions, and fixed container heights are often intentional design decisions with no token equivalent — these are acceptable as raw values. Only flag `width`/`height` if it's clearly a spacing intent in disguise (e.g. `width: 16px` as a gap substitute).
+
+**Skip:** 1px dividers, `100%`, `auto`, `100vw`/`100vh`.
 
 ---
 

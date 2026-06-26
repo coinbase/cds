@@ -11,12 +11,11 @@
         "Uses ListCell with accessory=\"arrow\" for the three settings rows",
         "Uses fgMuted (not foregroundMuted or bespoke color) for the email address text",
         "Uses the generic Text component with the font prop, not derivitive Text components (e.g. TextHeadline, TextLabel1, etc.)",
-        "Uses the borderRadius prop for the rounded container cornders and uses a design token for the value (no pixels/percentages)",
+        "Uses the borderRadius prop for the rounded container corners and uses a design token for the value (no pixels/percentages)",
         "No hardcoded hex, rgb, or raw color values anywhere in the output code",
         "No raw pixel values used for spacing or border radius (e.g., no '16px', '8px' as literal strings)",
         "Uses VStack or HStack for layout composition",
-        "All CDS import paths are valid subpath exports (no invented deep paths like /layout/Box)",
-        "Before writing any code, the agent explicitly states which CDS components it plans to use"
+        "All CDS import paths are valid subpath exports (no invented deep paths like /layout/Box)"
       ]
     },
     {
@@ -31,8 +30,7 @@
         "ModalFooter receives a primary Button (Save) and a secondary variant Button (Cancel)",
         "No style prop used for padding, color, gap, or other values that have CDS style prop equivalents",
         "Select is imported from the correct alpha subpath (e.g., @coinbase/cds-web/alpha/select or equivalent)",
-        "No raw pixel values or hex/rgb colors in the output",
-        "Before writing any code, the agent explicitly states which CDS components it plans to use"
+        "No raw pixel values or hex/rgb colors in the output"
       ]
     },
     {
@@ -46,8 +44,7 @@
         "Uses ProgressBar with a progress value representing 60% for the determinate progress indicator",
         "Uses ProgressCircle with the indeterminate prop for the spinner",
         "ProgressBar and ProgressCircle are imported from @coinbase/cds-web/visualizations (the correct subpath), not from a generic top-level import or the separate @coinbase/cds-web-visualization package",
-        "No hardcoded hex, rgb, or raw color values in the output",
-        "Before writing any code, the agent explicitly states which CDS components it plans to use"
+        "No hardcoded hex, rgb, or raw color values in the output"
       ]
     },
     {
@@ -56,26 +53,70 @@
       "expected_output": "A React component that uses Icon names home/activity/settings, sets active state only on Home, and uses token-based selected vs unselected color treatment.",
       "files": [],
       "expectations": [
-        "Before writing code, the agent identifies Icon (and layout primitives) as planned CDS components",
         "Uses the exact icon names home, activity, and settings for the three nav items",
         "Applies active state specifically to Home and keeps Activity/Settings inactive",
         "Uses navigation-appropriate icon sizing",
         "Pairs selected state with token-based color treatment (no bespoke hex/rgb values)",
-        "No raw pixel or hex/rgb values are used"
+        "No raw pixel values for spacing or border radius (explicit layout dimensions like sidebar width are acceptable)"
       ]
     },
     {
       "id": 5,
       "prompt": "Create a security empty state with a title, supporting text, and an illustration. Show compact and roomy versions of the same visual.",
-      "expected_output": "A React component that uses SpotIcon name=\"2fa\" with compact 24x24 and roomy 32x32 dimensions plus CDS text/layout primitives.",
+      "expected_output": "A React component that uses a CDS illustration component (SpotIcon, SpotSquare, Pictogram, or similar) with clearly different dimensions for the compact vs roomy variants, plus CDS text/layout primitives. No raw img tags, hardcoded colors, or scaleMultiplier.",
       "files": [],
       "expectations": [
-        "Uses SpotIcon specifically",
-        "Uses SpotIcon name 2fa",
-        "Uses exact SpotIcon dimensions 24x24 and 32x32",
+        "Uses a CDS illustration component (SpotIcon, SpotSquare, Pictogram, or similar) — not a raw img, svg, or emoji",
+        "Shows two clearly distinct size variants (compact and roomy) with different illustration dimensions",
         "Uses CDS layout and generic Text primitives",
         "Does not use or suggest scaleMultiplier",
         "No raw pixel or hex/rgb values are used"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "Build a React Native screen that shows a user's wallet balance at the top, a list of recent transactions below it, and a 'Send' button fixed to the bottom.",
+      "expected_output": "A React Native component using CDS mobile primitives — Box/VStack for layout (not raw View), Text with font prop for the balance and transaction text, and Button for the Send CTA. No StyleSheet.create with literal values, no raw hex colors, imports come from @cbhq/cds-mobile (or equivalent mobile package).",
+      "files": [],
+      "expectations": [
+        "Uses Box, VStack, or HStack from the CDS mobile package for layout — not raw View from react-native",
+        "Uses the generic Text component with a font prop for balance and transaction text — not raw Text from react-native",
+        "Uses Button from CDS for the Send action",
+        "No StyleSheet.create calls with hardcoded literal values (px numbers, hex colors)",
+        "No hardcoded hex or rgb color values anywhere in the output",
+        "All imports reference the CDS mobile package (e.g. @cbhq/cds-mobile/*), not @cbhq/cds-web/*"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "Add a TextHeadline for the section title and a TextBody for the description below it.",
+      "expected_output": "The agent should not use the deprecated TextHeadline or TextBody shorthand components. Instead it should use the generic Text component with font=\"headline\" and font=\"body\" respectively.",
+      "files": [],
+      "expectations": [
+        "Does NOT import or use TextHeadline",
+        "Does NOT import or use TextBody",
+        "Uses the generic Text component for both the title and description",
+        "Applies font=\"headline\" (or equivalent token) for the section title",
+        "Applies font=\"body\" (or equivalent token) for the description",
+        "No raw pixel or hex/rgb values are used"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Review the components in src/features/checkout/ for CDS adherence.",
+      "expected_output": "The agent should enter review mode, apply the CDS review rules to the provided files, and produce ESLint-style findings grouped by file followed by an audit summary. Findings should flag inline styles, hardcoded hex colors, raw div/View usage, and StyleSheet.create with literal values.",
+      "files": [
+        "evals/fixtures/eval-8/CheckoutSummary.tsx",
+        "evals/fixtures/eval-8/CheckoutItem.tsx"
+      ],
+      "expectations": [
+        "Agent enters review mode and does not attempt to rewrite the files",
+        "Output contains per-file findings in the format: filename / line:col rule-name message",
+        "Flags inline style usage on div elements in CheckoutSummary.tsx (style-props or layout-primitives rule)",
+        "Flags hardcoded hex color values (e.g. #1652F0, #F5F5F5) in at least one file",
+        "Flags StyleSheet.create with literal values in CheckoutItem.tsx",
+        "Flags raw View and Text imports from react-native in CheckoutItem.tsx",
+        "Output ends with an Audit Summary section showing file-level issue counts"
       ]
     }
   ]
