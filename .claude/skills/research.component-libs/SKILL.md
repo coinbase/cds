@@ -1,7 +1,7 @@
 ---
 name: research.component-libs
 description: Orchestrates a comprehensive research effort across multiple design systems/component libraries
-argument-hint: [research goal (e.g. "theming architecture", "progress bar component API", "styling solutions")]
+argument-hint: '[research goal (e.g. "theming architecture", "progress bar component API", "styling solutions")]'
 model: claude-sonnet-4-6
 disable-model-invocation: true
 ---
