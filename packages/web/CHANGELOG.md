@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.0 (7/6/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add TextFallback. [[#780](https://github.com/coinbase/cds/pull/780)]
+
 ## 9.5.0 (6/25/2026 PST)
 
 #### 🚀 Updates
