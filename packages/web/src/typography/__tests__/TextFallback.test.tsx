@@ -27,8 +27,8 @@ describe('TextFallback', () => {
     const fallback = screen.getByTestId(testID);
     expect(fallback).toHaveStyle({
       height: 'var(--fontSize-headline)',
-      paddingTop: 'calc(max((var(--lineHeight-headline) - var(--fontSize-headline)) / 2, 0px))',
-      paddingBottom: 'calc(max((var(--lineHeight-headline) - var(--fontSize-headline)) / 2, 0px))',
+      paddingTop: 'max((var(--lineHeight-headline) - var(--fontSize-headline)) / 2, 0px)',
+      paddingBottom: 'max((var(--lineHeight-headline) - var(--fontSize-headline)) / 2, 0px)',
     });
   });
 });
