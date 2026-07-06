@@ -1,6 +1,6 @@
 import { render, screen } from '@testing-library/react-native';
 
-import { DefaultThemeProvider } from '../../utils/test';
+import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { TextFallback } from '../TextFallback';
 
 describe('TextFallback', () => {
