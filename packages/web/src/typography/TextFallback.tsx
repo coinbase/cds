@@ -30,11 +30,5 @@ export const TextFallback = memo(function TextFallback({
     [font, style],
   );
 
-  return (
-    <Fallback
-      height={`var(--fontSize-${font})`}
-      style={textFallbackStyle}
-      {...props}
-    />
-  );
+  return <Fallback height={`var(--fontSize-${font})`} style={textFallbackStyle} {...props} />;
 });
