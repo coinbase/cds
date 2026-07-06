@@ -3,7 +3,18 @@
 ```jsx
 <VStack gap={1}>
   <Fallback width={150} height={45} />
-  <Fallback width={65} height={45} percentage />
+  <Fallback width={150} height={45} />
+</VStack>
+```
+
+### Text
+
+For text loading states, use [TextFallback](/components/typography/Text/) instead of setting `height` manually. It sizes to a typography `font` token's line height and accepts the same props as `Fallback` except `height`.
+
+```jsx
+<VStack gap={1}>
+  <TextFallback font="headline" width={120} />
+  <TextFallback font="body" width={80} />
 </VStack>
 ```
 

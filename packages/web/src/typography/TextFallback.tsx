@@ -35,8 +35,8 @@ export const TextFallback: TextFallbackComponent = memo(
 
       const textFallbackStyle = useMemo(
         () => ({
-          paddingTop: `calc(max((var(--lineHeight-${font}) - var(--fontSize-${font})) / 2, 0px))`,
-          paddingBottom: `calc(max((var(--lineHeight-${font}) - var(--fontSize-${font})) / 2, 0px))`,
+          paddingTop: `max((var(--lineHeight-${font}) - var(--fontSize-${font})) / 2, 0px)`,
+          paddingBottom: `max((var(--lineHeight-${font}) - var(--fontSize-${font})) / 2, 0px)`,
           ...style,
         }),
         [font, style],

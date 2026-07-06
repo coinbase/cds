@@ -180,6 +180,7 @@ module.exports = {
     'tour/Tour',
     'typography/Link',
     'typography/Text',
+    'typography/TextFallback',
     'numbers/RollingNumber',
     'tables/Table',
     'tables/TableBody',
