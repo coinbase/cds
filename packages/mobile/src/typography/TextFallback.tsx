@@ -12,7 +12,14 @@ export type TextFallbackBaseProps = Omit<FallbackBaseProps, 'height'> & {
 
 export type TextFallbackProps = Omit<FallbackProps, 'height'> & Pick<TextFallbackBaseProps, 'font'>;
 
-export const TextFallback = memo(({ font, style, ...props }: TextFallbackProps) => {
+/**
+ * Loading placeholder sized to match a typography font token's line height.
+ */
+export const TextFallback = memo(function TextFallback({
+  font,
+  style,
+  ...props
+}: TextFallbackProps) {
   const theme = useTheme();
   const { fontScale } = useWindowDimensions();
 

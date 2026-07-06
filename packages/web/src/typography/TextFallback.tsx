@@ -16,6 +16,11 @@ export type TextFallbackBaseProps = Omit<FallbackBaseProps, 'height'> & {
 export type TextFallbackProps = Omit<FallbackProps<typeof fallbackDefaultElement>, 'height'> &
   Pick<TextFallbackBaseProps, 'font'>;
 
+/**
+ * Loading placeholder sized to match a typography font token's line height.
+ *
+ * @note Requires theme `fontSize` and `lineHeight` tokens to be length values (for example `rem` or `px`). Unitless or percentage values will not size accurately.
+ */
 export const TextFallback = memo(function TextFallback({
   font,
   style,
