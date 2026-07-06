@@ -1,4 +1,4 @@
-import { memo, type ReactElement, type ReactNode, useMemo } from 'react';
+import { memo, type ReactNode, useMemo } from 'react';
 import { type StyleProp, StyleSheet, Text, type ViewStyle } from 'react-native';
 import type { FallbackRectWidthProps } from '@coinbase/cds-common/types/FallbackBaseProps';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
@@ -176,7 +176,7 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     );
   }, [disableRandomRectWidth, rectWidthVariant, styles?.subtitle, subtitle]);
 
-  const mediaFallback = useMemo((): ReactElement | undefined => {
+  const mediaFallback = useMemo(() => {
     if (!media) {
       return undefined;
     }
