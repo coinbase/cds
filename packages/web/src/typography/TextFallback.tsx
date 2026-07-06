@@ -16,7 +16,7 @@ export type TextFallbackBaseProps = Omit<FallbackBaseProps, 'height'> & {
 
 export type TextFallbackProps<
   AsComponent extends React.ElementType = typeof fallbackDefaultElement,
-> = Polymorphic.Props<AsComponent, TextFallbackBaseProps>;
+> = Omit<FallbackProps<AsComponent>, 'height'> & Pick<TextFallbackBaseProps, 'font'>;
 
 type TextFallbackComponent = (<
   AsComponent extends React.ElementType = typeof fallbackDefaultElement,
@@ -28,11 +28,9 @@ type TextFallbackComponent = (<
 export const TextFallback: TextFallbackComponent = memo(
   forwardRef<React.ReactElement<TextFallbackBaseProps>, TextFallbackBaseProps>(
     <AsComponent extends React.ElementType>(
-      _props: TextFallbackProps<AsComponent>,
+      { font, style, ...props }: TextFallbackProps<AsComponent>,
       ref?: Polymorphic.Ref<AsComponent>,
     ) => {
-      const { font, style, ...props } = _props;
-
       const textFallbackStyle = useMemo(
         () => ({
           paddingTop: `max((var(--lineHeight-${font}) - var(--fontSize-${font})) / 2, 0px)`,
@@ -45,15 +43,11 @@ export const TextFallback: TextFallbackComponent = memo(
       return (
         <Fallback
           ref={ref}
-          {...(props as FallbackProps<AsComponent>)}
           height={`var(--fontSize-${font})`}
           style={textFallbackStyle}
+          {...props}
         />
       );
     },
   ),
 );
-
-TextFallback.displayName = 'TextFallback';
-
-export type { fallbackDefaultElement };
