@@ -1,6 +1,5 @@
 import { memo, useMemo } from 'react';
-import type { CSSProperties, ReactElement, ReactNode } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { CSSProperties, ReactNode } from 'react';
 import type { FallbackRectWidthProps } from '@coinbase/cds-common/types/FallbackBaseProps';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
