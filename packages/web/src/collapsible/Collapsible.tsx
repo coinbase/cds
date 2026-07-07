@@ -1,5 +1,7 @@
 import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
-import type { CollapsibleDirection, PaddingProps, SharedProps } from '@coinbase/cds-common/types';
+import type { CollapsibleDirection } from '@coinbase/cds-common/types/CollapsibleBaseProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 import { m as motion } from 'framer-motion';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';

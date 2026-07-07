@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-mobile",
-  "version": "9.1.3",
+  "version": "9.6.1",
   "description": "Coinbase Design System - Mobile",
   "repository": {
     "type": "git",
@@ -36,6 +36,10 @@
     "./alpha/select-chip": {
       "types": "./dts/alpha/select-chip/index.d.ts",
       "default": "./esm/alpha/select-chip/index.js"
+    },
+    "./alpha/tabbed-chips": {
+      "types": "./dts/alpha/tabbed-chips/index.d.ts",
+      "default": "./esm/alpha/tabbed-chips/index.js"
     },
     "./animation": {
       "types": "./dts/animation/index.d.ts",

@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
 import type { GestureResponderEvent } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useWebBrowserOpener } from '../hooks/useWebBrowserOpener';

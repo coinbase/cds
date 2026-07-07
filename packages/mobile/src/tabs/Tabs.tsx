@@ -19,8 +19,10 @@ import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interacta
 import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import type { BoxBaseProps, BoxProps, HStackProps } from '../layout';
-import { Box, HStack } from '../layout';
+import type { BoxBaseProps, BoxProps } from '../layout/Box';
+import { Box } from '../layout/Box';
+import type { HStackProps } from '../layout/HStack';
+import { HStack } from '../layout/HStack';
 
 import { DefaultTab } from './DefaultTab';
 import { DefaultTabsActiveIndicator } from './DefaultTabsActiveIndicator';
@@ -30,6 +32,7 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 type TabContainerProps = {
   id: string;
   registerRef: (tabId: string, ref: View) => void;
+  style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
 };
 
@@ -104,6 +107,8 @@ export type TabsProps<
     styles?: {
       /** Root container element */
       root?: StyleProp<ViewStyle>;
+      /** Container element wrapping each tab */
+      tabContainer?: StyleProp<ViewStyle>;
       /** Tab element */
       tab?: StyleProp<ViewStyle>;
       /** Active indicator element */
@@ -221,7 +226,7 @@ const TabsComponent = memo(
               ...tabRest,
             };
             return (
-              <TabContainer key={id} id={id} registerRef={registerRef}>
+              <TabContainer key={id} id={id} registerRef={registerRef} style={styles?.tabContainer}>
                 <RenderedTab {...renderedTabProps} />
               </TabContainer>
             );

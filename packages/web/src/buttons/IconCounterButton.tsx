@@ -1,6 +1,7 @@
 import React, { forwardRef, memo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { IconSize, ValidateProps } from '@coinbase/cds-common/types';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
+import type { ValidateProps } from '@coinbase/cds-common/types/SpreadPropsSafely';
 import { formatCount } from '@coinbase/cds-common/utils/formatCount';
 import type { IconName } from '@coinbase/cds-icons';
 

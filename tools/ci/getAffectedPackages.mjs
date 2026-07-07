@@ -10,9 +10,15 @@ const BUMP_REGEX =
 const IGNORE_CHANGED_FILES_REGEX =
   /^((CHANGELOG|README|MIGRATION|CONTRIBUTING)(\.md)?|[^/]+\.yml|OWNERS|project\.json|[^/]+\.[dD]ockerfile|tsconfig\.json|jest\.config\.js|\.?eslint.*)$/;
 
-// `.d.ts` declaration files are dev-only ambient types (e.g. figma Code Connect,
-// jest globals). They never emit runtime code, so they should not drive version bumps.
-const DEV_FILES_REGEX = /(\.(spec|test|figma)\.[jt]sx?(\.snap)?$|__stories__|\.d\.ts$)/;
+// Dev-only files that never emit runtime code, so they should not drive version bumps:
+//   - test/dev directories `__tests__`/`__stories__`/`__mocks__`/`__fixtures__` and everything
+//     inside them (helpers, fixtures, snapshots, and perf tests, regardless of file name)
+//   - co-located specs by name: `.test`/`.spec` (+ their `.snap` snapshots)
+//   - figma Code Connect bindings: per-component templates (`*.figma.ts(x)`) and the
+//     batch integrations (`*.figma.batch.ts(x)` template + `*.figma.batch.json` data list)
+//   - `.d.ts` ambient declarations (e.g. figma Code Connect, jest globals)
+const DEV_FILES_REGEX =
+  /(\.(spec|test|figma)\.[jt]sx?(\.snap)?$|\.figma\.batch\.([jt]sx?|json)$|__(tests|stories|mocks|fixtures)__|\.d\.ts$)/;
 
 export async function getAffectedPackages(options = {}) {
   if (getCurrentCIBranch() === 'master') {

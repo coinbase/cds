@@ -1,9 +1,11 @@
 import React, { memo, useMemo } from 'react';
 import { I18nManager, type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
-import type { PaddingProps, Placement } from '@coinbase/cds-common/types';
+import type { Placement } from '@coinbase/cds-common/types/Placement';
+import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { VStack } from '../layout/VStack';
 
 import { getProgressBarLabelParts, type ProgressBarLabel } from './getProgressBarLabelParts';
 import { type ProgressBarProps, type ProgressBaseProps } from './ProgressBar';

@@ -4,14 +4,12 @@ import { m as motion } from 'framer-motion';
 import { useCartesianChartContext } from '../ChartProvider';
 import {
   defaultBarEnterTransition,
-  defaultTransition,
-  getBarPath,
   getNormalizedStagger,
   getStackInitialClipRect,
-  getTransition,
   withStaggerDelayTransition,
-} from '../utils';
-import { usePathTransition } from '../utils/transition';
+} from '../utils/bar';
+import { getBarPath } from '../utils/path';
+import { defaultTransition, getTransition, usePathTransition } from '../utils/transition';
 
 import type { BarStackComponentProps } from './BarStack';
 

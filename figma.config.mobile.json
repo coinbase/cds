@@ -3,7 +3,8 @@
     "label": "CDS Mobile",
     "language": "jsx",
     "include": [
-      "packages/mobile/src/**/*.figma.ts"
+      "packages/mobile/src/**/*.figma.ts",
+      "packages/mobile/src/**/*.figma.batch.json"
     ],
     "exclude": [
       "**/__tests__/**",

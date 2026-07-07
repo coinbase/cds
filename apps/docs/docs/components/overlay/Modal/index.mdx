@@ -14,6 +14,9 @@ import mobilePropsToc from ':docgen/mobile/overlays/modal/Modal/toc-props';
 import WebPropsTable from './_webPropsTable.mdx';
 import webPropsToc from ':docgen/web/overlays/modal/Modal/toc-props';
 
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
+
 import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
 import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
 
@@ -35,10 +38,14 @@ import mobileMetadata from './mobileMetadata.json';
   <ComponentTabsContainer
     webPropsTable={<WebPropsTable />}
     webExamples={<WebExamples />}
+    webStyles={<WebStyles />}
     mobilePropsTable={<MobilePropsTable />}
     mobileExamples={<MobileExamples />}
+    mobileStyles={<MobileStyles />}
     webExamplesToc={webExamplesToc}
     mobileExamplesToc={mobileExamplesToc}
+    webStylesToc={webStylesToc}
+    mobileStylesToc={mobileStylesToc}
     webPropsToc={webPropsToc}
     mobilePropsToc={mobilePropsToc}
   />

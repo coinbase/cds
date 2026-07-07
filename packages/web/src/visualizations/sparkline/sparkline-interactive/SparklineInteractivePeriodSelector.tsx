@@ -3,7 +3,8 @@ import { periodLabelMap } from '@coinbase/cds-common/tokens/sparkline';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 
 import { useTheme } from '../../../hooks/useTheme';
-import { Box, HStack } from '../../../layout';
+import { Box } from '../../../layout/Box';
+import { HStack } from '../../../layout/HStack';
 import { Pressable } from '../../../system/Pressable';
 import { Text } from '../../../typography/Text';
 

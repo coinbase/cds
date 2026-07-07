@@ -77,5 +77,5 @@ export default {
 />`,
   imports: ['import { TextInput } from "@coinbase/cds-mobile/controls"'],
   id: 'text-input-mobile',
-  metadata: { nestable: false },
+  metadata: { nestable: true },
 };

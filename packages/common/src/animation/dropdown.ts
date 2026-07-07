@@ -1,4 +1,4 @@
-import type { MotionBaseSpec } from '../types';
+import type { MotionBaseSpec } from '../types/Motion';
 
 const baseDropdownAnimations: Pick<MotionBaseSpec, 'easing' | 'duration'> = {
   easing: 'global',

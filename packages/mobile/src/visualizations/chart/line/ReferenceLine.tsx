@@ -10,8 +10,8 @@ import type {
   TextHorizontalAlignment,
   TextVerticalAlignment,
 } from '../text/ChartText';
-import type { ChartInset } from '../utils';
-import { unwrapAnimatedValue } from '../utils';
+import type { ChartInset } from '../utils/chart';
+import { unwrapAnimatedValue } from '../utils/chart';
 import { getPointOnSerializableScale } from '../utils/point';
 
 import { DefaultReferenceLineLabel } from './DefaultReferenceLineLabel';

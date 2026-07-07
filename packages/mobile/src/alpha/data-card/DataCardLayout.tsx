@@ -5,7 +5,7 @@ import { Box } from '../../layout/Box';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { Tag } from '../../tag/Tag';
-import { Text } from '../../typography';
+import { Text } from '../../typography/Text';
 
 export type DataCardLayoutBaseProps = {
   /** Text or React node to display as the card title. Use a Text component to override default color and font. */

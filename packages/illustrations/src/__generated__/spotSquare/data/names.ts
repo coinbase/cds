@@ -176,6 +176,7 @@ const names: SpotSquareName[] = [
   'instoEthStakingRewards',
   'instoPixDeposits',
   'instoPrimeStaking',
+  'instoProgressCircle',
   'instoSecurityKey',
   'instoSideChainSide',
   'instoStaking',

@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
-import type { FallbackRectWidthProps } from '@coinbase/cds-common/types';
+import type { FallbackRectWidthProps } from '@coinbase/cds-common/types/FallbackBaseProps';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 import { css } from '@linaria/core';

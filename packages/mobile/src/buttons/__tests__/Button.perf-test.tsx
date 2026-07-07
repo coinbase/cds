@@ -1,4 +1,3 @@
-/* eslint-disable jest/expect-expect */
 import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { measurePerformance } from 'reassure';

@@ -229,6 +229,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoRewardsProduct',
     'instoBusinessProduct',
     'instoAssetHubProduct',
+    'instoInstantAccess',
   ],
   advanced: [
     'advancedTradeProduct',

@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
 import { pictogramScaleMultiplier } from '@coinbase/cds-common/tokens/tile';
-import type { IllustrationPictogramNames } from '@coinbase/cds-common/types';
+import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import type { Polymorphic } from '../core/polymorphism';

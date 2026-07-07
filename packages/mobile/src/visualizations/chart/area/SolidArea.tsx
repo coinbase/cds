@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
 import { useTheme } from '../../../hooks/useTheme';
-import { Gradient } from '../gradient';
+import { Gradient } from '../gradient/Gradient';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';

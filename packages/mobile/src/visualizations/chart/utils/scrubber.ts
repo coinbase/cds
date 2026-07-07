@@ -1,4 +1,4 @@
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 
 export type ScrubberLabelPosition = 'left' | 'right';
 

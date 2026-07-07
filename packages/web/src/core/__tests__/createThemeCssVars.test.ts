@@ -7,6 +7,7 @@ const mockIllustrationColor = {
   gray: 'rgb(206, 210, 219)',
   gray2: 'rgb(10, 11, 15)',
   gray3: 'rgb(206, 210, 220)',
+  gray4: 'rgb(200, 203, 210)',
   positive: 'rgb(60, 194, 138)',
   negative: 'rgb(225, 57, 71)',
   accent1: 'rgb(255, 210, 0)',
@@ -31,16 +32,17 @@ describe('createThemeCssVars — illustrationColor', () => {
     expect(result['--illustration-accent-4']).toBe('rgb(115, 162, 255)');
   });
 
-  it('converts gray2/gray3 to --illustration-gray-2 / --illustration-gray-3', () => {
+  it('converts gray2/gray3/gray4 to --illustration-gray-2 / -gray-3 / -gray-4', () => {
     const result = createThemeCssVars({ illustrationColor: mockIllustrationColor });
     expect(result['--illustration-gray-2']).toBe('rgb(10, 11, 15)');
     expect(result['--illustration-gray-3']).toBe('rgb(206, 210, 220)');
+    expect(result['--illustration-gray-4']).toBe('rgb(200, 203, 210)');
   });
 
-  it('emits all 14 illustration tokens', () => {
+  it('emits all 15 illustration tokens', () => {
     const result = createThemeCssVars({ illustrationColor: mockIllustrationColor });
     const illustrationKeys = Object.keys(result).filter((k) => k.startsWith('--illustration-'));
-    expect(illustrationKeys).toHaveLength(14);
+    expect(illustrationKeys).toHaveLength(15);
   });
 
   it('does not emit --illustration-* vars when illustrationColor is absent', () => {

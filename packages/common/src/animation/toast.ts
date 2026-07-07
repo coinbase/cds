@@ -1,4 +1,4 @@
-import type { MotionBaseSpec } from '../types';
+import type { MotionBaseSpec } from '../types/Motion';
 
 export const toastHiddenOpacity = 0;
 export const toastHiddenBottom = 25;

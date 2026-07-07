@@ -27,7 +27,7 @@ const HERO_SQUARE_SAMPLES = [
   'accountUnderReview',
   'add2Fa',
   'addBankAccount',
-  'addCreditCard',
+  'filter',
 ] as const;
 
 const SPOT_SQUARE_SAMPLES = [

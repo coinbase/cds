@@ -25,6 +25,8 @@ export type SegmentedTabsProps<TabId extends string = string> = SegmentedTabsBas
     styles?: {
       /** Root element */
       root?: React.CSSProperties;
+      /** Container element wrapping each tab */
+      tabContainer?: React.CSSProperties;
       /** Tab element */
       tab?: React.CSSProperties;
       /** Active indicator element */
@@ -34,6 +36,8 @@ export type SegmentedTabsProps<TabId extends string = string> = SegmentedTabsBas
     classNames?: {
       /** Root element */
       root?: string;
+      /** Container element wrapping each tab */
+      tabContainer?: string;
       /** Tab element */
       tab?: string;
       /** Active indicator element */
@@ -74,12 +78,14 @@ const SegmentedTabsComponent = memo(
           borderRadius={borderRadius}
           className={cx(className, classNames?.root)}
           classNames={{
+            tabContainer: classNames?.tabContainer,
             tab: classNames?.tab,
             activeIndicator: classNames?.activeIndicator,
           }}
           role="tablist"
           style={styles?.root ? { ...style, ...styles.root } : style}
           styles={{
+            tabContainer: styles?.tabContainer,
             tab: styles?.tab,
             activeIndicator: styles?.activeIndicator,
           }}

@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
 import { Modal, Platform, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
@@ -9,6 +8,7 @@ import { TourContext, type TourContextValue } from '@coinbase/cds-common/tour/To
 import type { TourOptions, TourStepValue } from '@coinbase/cds-common/tour/useTour';
 import { useTour } from '@coinbase/cds-common/tour/useTour';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import {
   type AutoPlacementOptions,
   type Coords,

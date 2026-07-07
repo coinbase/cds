@@ -3,7 +3,7 @@ import type { View, ViewProps } from 'react-native';
 import { useAccordionContext } from '@coinbase/cds-common/accordion/AccordionProvider';
 import { accordionMinWidth } from '@coinbase/cds-common/tokens/accordion';
 
-import { VStack } from '../layout';
+import { VStack } from '../layout/VStack';
 
 import { AccordionHeader, type AccordionHeaderBaseProps } from './AccordionHeader';
 import { AccordionPanel, type AccordionPanelBaseProps } from './AccordionPanel';

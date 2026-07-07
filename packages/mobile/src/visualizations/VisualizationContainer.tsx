@@ -3,7 +3,7 @@ import type { DimensionValue } from 'react-native';
 import { useVisualizationDimensions } from '@coinbase/cds-common/visualizations/useVisualizationDimensions';
 
 import { useLayout } from '../hooks/useLayout';
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 
 export type VisualizationContainerDimension = {
   width: number;

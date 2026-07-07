@@ -22,6 +22,8 @@ export type SegmentedTabsProps<TabId extends string = string> = SegmentedTabsBas
     styles?: {
       /** Root container element */
       root?: StyleProp<ViewStyle>;
+      /** Container element wrapping each tab */
+      tabContainer?: StyleProp<ViewStyle>;
       /** Tab element */
       tab?: StyleProp<ViewStyle>;
       /** Active indicator element */

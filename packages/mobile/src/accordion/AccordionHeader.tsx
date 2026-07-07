@@ -6,11 +6,13 @@ import {
   accordionIconVisibleRotate,
 } from '@coinbase/cds-common/animation/accordion';
 import { listHeight } from '@coinbase/cds-common/tokens/cell';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import type { CollapsibleBaseProps } from '../collapsible/Collapsible';
 import { useCellSpacing } from '../hooks/useCellSpacing';
-import { Box, HStack, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import { AnimatedCaret } from '../motion/AnimatedCaret';
 import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';

@@ -8,7 +8,8 @@ import {
   type CartesianChartBaseProps,
   type CartesianChartProps,
 } from '../CartesianChart';
-import { type CartesianAxisConfigProps, type Series } from '../utils';
+import { type CartesianAxisConfigProps } from '../utils/axis';
+import { type Series } from '../utils/chart';
 
 import { Line, type LineProps } from './Line';
 

@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import type { PinningDirection } from '@coinbase/cds-common';
 import { MAX_OVER_DRAG } from '@coinbase/cds-common/animation/drawer';
+import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
 
 import { useSafeBottomPadding } from '../../hooks/useSafeBottomPadding';
 

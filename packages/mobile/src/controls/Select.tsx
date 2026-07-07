@@ -5,12 +5,9 @@ import { animateCaretInConfig, animateCaretOutConfig } from '@coinbase/cds-commo
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import type {
-  InputVariant,
-  SharedAccessibilityProps,
-  SharedInputProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { InputVariant, SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useRotateAnimation } from '../animation/useRotateAnimation';
 import { useA11y } from '../hooks/useA11y';

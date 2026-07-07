@@ -3,8 +3,8 @@ import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 
 import type { SelectBaseProps } from '../controls/Select';
 import { useRefocusTrigger } from '../controls/useRefocusTrigger';
-import type { DropdownProps } from '../dropdown';
-import { Dropdown } from '../dropdown';
+import { Dropdown } from '../dropdown/Dropdown';
+import type { DropdownProps } from '../dropdown/DropdownProps';
 import { AnimatedCaret } from '../motion/AnimatedCaret';
 
 import type { ChipProps } from './ChipProps';

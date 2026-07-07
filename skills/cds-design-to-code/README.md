@@ -10,27 +10,24 @@ This skill provides a structured workflow for translating Figma designs into rea
 2. **Capture a screenshot** as the visual source of truth.
 3. **Download assets** (images, icons, SVGs) from the Figma payload.
 4. **Translate the design** into CDS components, leveraging Code Connect mappings as the highest-confidence signal and converting fallback HTML/Tailwind output into proper CDS primitives.
-5. **Verify visual parity** by comparing the rendered implementation against the Figma screenshot, running a corrective loop until the UI matches.
+5. **Validate code quality and correctness** by detecting the project's own typecheck, lint, and format commands and fixing all errors before rendering anything.
+6. **Verify visual parity** by comparing the rendered implementation against the Figma screenshot, running a corrective loop until the UI matches.
 
 ## Dependencies
 
-| Dependency           | Required | Purpose                                                                                                                           |
-| -------------------- | -------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| **`cds-code` skill** | Yes      | Provides component selection, styling rules, doc lookup workflow, and code quality standards. This skill must be installed first. |
-| **CDS MCP server**   | Yes      | Provides `list-cds-routes` and `get-cds-doc` tools for looking up component docs, props, and examples at runtime.                 |
-| **Figma MCP server** | Yes      | Provides `get_design_context`, `get_metadata`, and `get_screenshot` tools for fetching design data from Figma files.              |
+| Dependency           | Required             | Purpose                                                                                                              |
+| -------------------- | -------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| **Figma MCP server** | Yes                  | Provides `get_design_context`, `get_metadata`, and `get_screenshot` tools for fetching design data from Figma files. |
+| **`cds-code` skill** | Strongly recommended | Provides component selection, styling rules, doc lookup workflow, and code quality standards.                        |
+| **`cds-docs` skill** | Recommended          | Provides CDS component documentation (routes, props, examples) used by the `cds-code` workflow.                      |
 
 ### Installing the cds-code skill
 
-Install via your organization's skill registry. The `cds-code` skill must be installed before using this skill.
+Install via your organization's skill registry. The `cds-code` skill is strongly recommended -- it significantly improves the quality of the generated CDS code. If it is not available, the skill will ask whether you want to proceed using only the Figma MCP server, since decent CDS code can still be produced from Figma without it.
 
-### Installing the CDS MCP server
+### Installing the cds-docs skill
 
-```sh
-npx --package=@coinbase/cds-mcp-server cds-mcp-setup
-```
-
-After running the setup command, enable the MCP server in your editor. See the [CDS AI Overview](https://cds.coinbase.com/getting-started/ai-overview#first-time-setup) for full setup instructions.
+Install via your organization's skill registry. This skill is recommended for accurate component documentation lookups but is not strictly required.
 
 ### Installing the Figma MCP server
 

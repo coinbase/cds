@@ -1,5 +1,3 @@
-import { Text } from '@coinbase/cds-web/typography/Text';
-
 import type { ComponentConfig } from '../../core/componentConfig';
 
 export const customComponentConfig: ComponentConfig = {
@@ -53,6 +51,8 @@ export const customComponentConfig: ComponentConfig = {
   }),
 
   Tooltip: {
+    background: 'bgSecondary',
+    font: 'body',
     invertColorScheme: false,
   },
 
@@ -121,15 +121,14 @@ export const customComponentConfig: ComponentConfig = {
     height: props.compact ? 24 : 32,
   }),
 
-  Select: (props) => ({
+  Select: ({ readOnly, ...props }) => ({
     bordered: false,
     variant: 'foregroundMuted',
-    inputBackground: 'bgAlternate',
+    inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
     focusedBorderWidth: 100,
-    height: props.compact ? 24 : props.labelVariant === 'inside' ? 40 : 32,
-    font: props.compact ? 'label2' : 'body',
+    font: props.compact ? (props.align === 'end' ? 'label1' : 'label2') : 'body',
     labelColor: 'fgMuted',
-    labelFont: props.compact ? (props.align === 'end' ? 'label1' : 'label2') : 'body',
+    labelFont: 'label2',
   }),
 
   ListCell: (props) => {

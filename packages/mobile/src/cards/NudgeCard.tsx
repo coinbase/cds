@@ -2,17 +2,16 @@ import React, { isValidElement, memo } from 'react';
 import type { PressableProps } from 'react-native';
 import { getCardBodySpacingProps } from '@coinbase/cds-common/cards/getCardBodySpacingProps';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type {
-  DimensionStyles,
-  DimensionValue,
-  IllustrationPictogramNames,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { DimensionStyles, DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
+import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { IconButton } from '../buttons';
+import { IconButton } from '../buttons/IconButton';
 import { Pictogram } from '../illustrations/Pictogram';
-import { Box, HStack, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import type { StyleProps } from '../styles/styleProps';
 import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';

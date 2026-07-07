@@ -15,5 +15,5 @@ export default {
 />`,
   imports: ['import { RollingNumber } from "@coinbase/cds-web/numbers/RollingNumber"'],
   id: 'rolling-number',
-  metadata: { nestable: false },
+  metadata: { nestable: true },
 };

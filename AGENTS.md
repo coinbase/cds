@@ -59,6 +59,21 @@ Runtime: NodeJS (see .nvmrc for version)
 - **`apps/storybook/`** - Component development and testing environment for cds-web
 - **`apps/expo-app/`** - Expo app for testing and visual regression of CDS mobile components
 
+## Skills
+
+Skills for this project live in `skills/`. Each skill has a `README.md` and optionally an `evals/` directory with benchmark test cases.
+
+### After running skill evals
+
+If a skill has evals and you run them, update the skill's `README.md` with a `## Performance` section containing the latest benchmark results:
+
+- Overall summary table: pass rate, avg time, avg tokens — with/without skill and the delta
+- Per-eval breakdown table showing each task name and pass rates for each configuration
+- A callout of the biggest gains (where the skill adds the most value)
+- The iteration number and date for traceability
+
+See `skills/cds-code/README.md` for a reference example.
+
 ## Standards & Best Practices
 
 ### General

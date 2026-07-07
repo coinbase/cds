@@ -2,10 +2,10 @@ import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import { animateRotateConfig } from '@coinbase/cds-common/motion/animatedCaret';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
-import { Icon, type IconProps } from '../icons';
+import { Icon, type IconProps } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
 
 export type AnimatedCaretBaseProps = SharedProps & {

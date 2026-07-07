@@ -1,7 +1,9 @@
 import React, { cloneElement, createContext, isValidElement, useMemo } from 'react';
 
 import type { ThemeVars } from '../core/theme';
-import type { OverlayLifecycleProps, SharedAccessibilityProps, SharedProps } from '../types';
+import type { OverlayLifecycleProps } from '../types/OverlayLifecycleProps';
+import type { SharedAccessibilityProps } from '../types/SharedAccessibilityProps';
+import type { SharedProps } from '../types/SharedProps';
 
 import { useToastQueue } from './useToastQueue';
 

@@ -1,4 +1,4 @@
-import type { MotionCurve, MotionProperty, MotionValue } from '../types';
+import type { MotionCurve, MotionProperty, MotionValue } from '../types/Motion';
 
 type MotionValues = [MotionValue, MotionValue] | MotionValue;
 

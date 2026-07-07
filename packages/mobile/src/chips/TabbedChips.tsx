@@ -6,8 +6,10 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../hooks/useHorizontalScrollToTarget';
-import { Box, OverflowGradient } from '../layout';
-import { type TabNavigationBaseProps, Tabs } from '../tabs';
+import { Box } from '../layout/Box';
+import { OverflowGradient } from '../layout/OverflowGradient';
+import { type TabNavigationBaseProps } from '../tabs/TabNavigation';
+import { Tabs } from '../tabs/Tabs';
 
 import { MediaChip } from './MediaChip';
 

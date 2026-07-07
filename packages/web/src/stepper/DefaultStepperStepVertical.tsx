@@ -2,7 +2,8 @@ import { memo, useMemo } from 'react';
 import { containsStep, isStepVisited } from '@coinbase/cds-common/stepper/utils';
 
 import { cx } from '../cx';
-import { HStack, VStack } from '../layout';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 
 import { DefaultStepperIconVertical } from './DefaultStepperIconVertical';
 import { DefaultStepperLabelVertical } from './DefaultStepperLabelVertical';

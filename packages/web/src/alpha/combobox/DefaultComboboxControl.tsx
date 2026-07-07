@@ -1,11 +1,11 @@
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 
 import { NativeInput } from '../../controls/NativeInput';
-import { HStack } from '../../layout';
+import { HStack } from '../../layout/HStack';
 import { NAVIGATION_KEYS } from '../../overlays/FocusTrap';
-import { Text } from '../../typography';
-import type { SelectType } from '../select';
+import { Text } from '../../typography/Text';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
+import type { SelectType } from '../select/types';
 
 import type { ComboboxControlComponent, ComboboxControlProps } from './Combobox';
 

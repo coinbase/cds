@@ -12,7 +12,7 @@ import { m as motion } from 'framer-motion';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 import { useMotionProps } from '../motion/useMotionProps';
 
 import { Control, type ControlBaseProps } from './Control';

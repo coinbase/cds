@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 import { Button } from '../../../buttons';
 import { Text } from '../../../typography/Text';
 import { DefaultThemeProvider } from '../../../utils/test';
-import { Modal, type ModalProps } from '../Modal';
+import { Modal, modalClassNames, type ModalProps } from '../Modal';
 import { ModalBody } from '../ModalBody';
 import { ModalFooter } from '../ModalFooter';
 import { ModalHeader, type ModalHeaderProps } from '../ModalHeader';
@@ -498,5 +498,52 @@ describe('Modal', () => {
     fireEvent.click(screen.getByRole('button'));
 
     expect(screen.getByLabelText('Back')).toHaveAccessibleDescription('Back button hint');
+  });
+});
+
+describe('Modal styles API', () => {
+  const renderStyledModal = (props: Partial<Pick<ModalProps, 'styles' | 'classNames'>> = {}) =>
+    render(
+      <DefaultThemeProvider>
+        <Modal disablePortal visible onRequestClose={jest.fn()} {...props}>
+          <ModalHeader title="Styled" />
+        </Modal>
+      </DefaultThemeProvider>,
+    );
+
+  it('applies static class names to overlay and modal', () => {
+    renderStyledModal();
+
+    const overlay = screen.getByRole('dialog');
+    expect(overlay).toHaveClass(modalClassNames.overlay);
+    expect(overlay.querySelector(`.${modalClassNames.modal}`)).toBeInTheDocument();
+  });
+
+  it('applies the classNames slot to overlay and modal', () => {
+    renderStyledModal({ classNames: { overlay: 'custom-overlay', modal: 'custom-modal' } });
+
+    const overlay = screen.getByRole('dialog');
+    expect(overlay).toHaveClass('custom-overlay');
+    expect(overlay.querySelector('.custom-modal')).toBeInTheDocument();
+  });
+
+  it('applies the styles slot to overlay and modal', () => {
+    renderStyledModal({ styles: { overlay: { outlineWidth: 3 }, modal: { borderRadius: 16 } } });
+
+    const overlay = screen.getByRole('dialog');
+    expect(overlay).toHaveStyle({ outlineWidth: '3px' });
+    expect(overlay.querySelector(`.${modalClassNames.modal}`)).toHaveStyle({
+      borderRadius: '16px',
+    });
+  });
+
+  it('applies appearance styles to the modal card, not the overlay container', () => {
+    renderStyledModal({ styles: { modal: { borderRadius: 24 } } });
+
+    const overlay = screen.getByRole('dialog');
+    expect(overlay).not.toHaveStyle({ borderRadius: '24px' });
+    expect(overlay.querySelector(`.${modalClassNames.modal}`)).toHaveStyle({
+      borderRadius: '24px',
+    });
   });
 });

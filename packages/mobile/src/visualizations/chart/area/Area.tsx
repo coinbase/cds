@@ -2,8 +2,8 @@ import React, { memo, useMemo } from 'react';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { PathBaseProps, PathProps } from '../Path';
-import { type ChartPathCurveType, getAreaPath } from '../utils';
 import type { GradientDefinition } from '../utils/gradient';
+import { type ChartPathCurveType, getAreaPath } from '../utils/path';
 
 import { DottedArea } from './DottedArea';
 import { GradientArea } from './GradientArea';

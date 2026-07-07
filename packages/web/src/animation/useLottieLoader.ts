@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { LottieSource } from '@coinbase/cds-common';
+import type { LottieSource } from '@coinbase/cds-common/types/LottieSource';
 import type { AnyObject } from '@coinbase/cds-utils';
 import type { AnimationConfigWithData } from 'lottie-web';
 import lottie from 'lottie-web';

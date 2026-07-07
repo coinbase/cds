@@ -20,7 +20,7 @@ describe('ListCellFallback', () => {
 
   it('renders a Fallback component if subdetail is passed', () => {
     render(<ListCellFallback subdetail />);
-    expect(screen.getByTestId('list-cell-fallback-detail')).toBeTruthy();
+    expect(screen.getByTestId('list-cell-fallback-subdetail')).toBeTruthy();
   });
 
   it('renders a Fallback component if title is passed', () => {

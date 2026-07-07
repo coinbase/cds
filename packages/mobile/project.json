@@ -10,20 +10,21 @@
       "defaultConfiguration": "dev",
       "configurations": {
         "dev": {
-          "command": "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+          "command": "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx"
         },
         "prod": {
           "commands": [
-            "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+            "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx"
           ],
           "parallel": false
         }
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "nx:run-commands",
       "options": {
-        "jestConfig": "{projectRoot}/jest.config.js"
+        "command": "jest --maxWorkers=75%",
+        "cwd": "{projectRoot}"
       }
     },
     "lint": {

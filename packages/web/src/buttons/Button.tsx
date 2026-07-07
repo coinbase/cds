@@ -1,11 +1,9 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import type {
-  ButtonVariant,
-  IconName,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
@@ -16,7 +14,7 @@ import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
-import { ProgressCircle } from '../visualizations';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 
@@ -30,7 +28,6 @@ const defaultProgressCircleSize = 24;
 const baseCss = css`
   text-decoration: none;
   display: inline-flex;
-  height: fit-content;
   text-align: center;
   vertical-align: middle;
   align-items: center;
@@ -197,6 +194,7 @@ export const Button: ButtonComponent = memo(
         fontFamily,
         fontSize,
         fontWeight,
+        height = 'fit-content',
         lineHeight,
         background,
         color,
@@ -263,6 +261,7 @@ export const Button: ButtonComponent = memo(
           data-flush={flush}
           data-transparent={transparent}
           data-variant={variant}
+          height={height}
           loading={loading}
           margin={margin}
           minWidth={minWidth}

@@ -12,7 +12,7 @@ import React, {
 import type { ForwardedRef, KeyboardEvent, Ref } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 

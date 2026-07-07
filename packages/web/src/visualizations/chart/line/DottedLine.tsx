@@ -1,7 +1,7 @@
 import { memo, type SVGProps, useId } from 'react';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { Gradient } from '../gradient';
+import { Gradient } from '../gradient/Gradient';
 import { Path, type PathProps } from '../Path';
 
 import type { LineComponentProps } from './Line';

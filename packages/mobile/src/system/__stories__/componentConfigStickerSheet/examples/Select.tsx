@@ -42,6 +42,14 @@ export const SelectExample = memo(() => {
         placeholder="Compact end align"
         value={selectValue}
       />
+      <Select
+        readOnly
+        label="Label"
+        onChange={setSelectValue}
+        options={stickerSheetSelectOptions}
+        placeholder="Read only select"
+        value={selectValue}
+      />
     </VStack>
   );
 });

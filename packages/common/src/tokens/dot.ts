@@ -1,5 +1,5 @@
-import type { DotSize } from '../types';
 import type { AvatarSize } from '../types/AvatarSize';
+import type { DotSize } from '../types/DotBaseProps';
 
 export const avatarIconSizeMap: Record<AvatarSize, DotSize> = {
   xxxl: 's',

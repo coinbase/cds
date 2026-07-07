@@ -21,11 +21,9 @@ import {
   horizontalDrawerPercentageOfView,
   verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView,
 } from '@coinbase/cds-common/tokens/drawer';
-import type {
-  PinningDirection,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHasNotch } from '../../hooks/useHasNotch';

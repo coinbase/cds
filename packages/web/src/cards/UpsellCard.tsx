@@ -1,15 +1,15 @@
 import React, { isValidElement, memo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { upsellCardDefaultWidth, upsellCardMinHeight } from '@coinbase/cds-common/tokens/card';
-import type {
-  DimensionStyles,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { DimensionStyles } from '@coinbase/cds-common/types/DimensionStyles';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { Button, IconButton } from '../buttons';
-import { HStack, type HStackDefaultElement, type HStackProps, VStack } from '../layout';
-import { Pressable, type PressableDefaultElement, type PressableProps } from '../system';
+import { Button } from '../buttons/Button';
+import { IconButton } from '../buttons/IconButton';
+import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
+import { Pressable, type PressableDefaultElement, type PressableProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
 export type UpsellCardBaseProps = SharedProps &

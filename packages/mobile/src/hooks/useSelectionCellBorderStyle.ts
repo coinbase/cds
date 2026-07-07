@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useRef } from 'react';
 import { Animated } from 'react-native';
-import type { ThemeVars } from '@coinbase/cds-common';
 import {
   animateInputBorderInConfig,
   animateInputBorderOutConfig,
 } from '@coinbase/cds-common/animation/border';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 

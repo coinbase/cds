@@ -412,6 +412,12 @@ export const routes = [
       require('@coinbase/cds-mobile/overlays/__stories__/ModalBasic.stories').default,
   },
   {
+    key: 'ReactNavigationModal',
+    options: { presentation: 'fullScreenModal' as const, headerShown: false },
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/ModalNavigation.stories').default,
+  },
+  {
     key: 'ModalCustomHeader',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/ModalCustomHeader.stories').default,

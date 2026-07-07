@@ -1,7 +1,7 @@
 import { Easing } from 'react-native';
 import type { Animated } from 'react-native';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
-import type { MotionBaseSpec } from '@coinbase/cds-common/types';
+import type { MotionBaseSpec } from '@coinbase/cds-common/types/Motion';
 
 type MotionSpec = Omit<MotionBaseSpec, 'property'>;
 

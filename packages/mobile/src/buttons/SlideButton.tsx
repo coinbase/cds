@@ -8,7 +8,7 @@ import Animated, {
   useSharedValue,
   withSpring,
 } from 'react-native-reanimated';
-import type { ButtonVariant } from '@coinbase/cds-common/types';
+import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';

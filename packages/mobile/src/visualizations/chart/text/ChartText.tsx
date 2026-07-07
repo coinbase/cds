@@ -1,7 +1,7 @@
 import { memo, useMemo } from 'react';
 import { runOnJS, useAnimatedReaction, useDerivedValue } from 'react-native-reanimated';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 import {
   type AnimatedProp,
   type Color,
@@ -22,7 +22,8 @@ import {
 import type { Theme } from '../../../core/theme';
 import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
-import { type ChartInset, getChartInset, getColorWithOpacity, unwrapAnimatedValue } from '../utils';
+import { type ChartInset, getChartInset, unwrapAnimatedValue } from '../utils/chart';
+import { getColorWithOpacity } from '../utils/gradient';
 
 /**
  * Converts a fontWeight from Theme to a Skia FontWeight

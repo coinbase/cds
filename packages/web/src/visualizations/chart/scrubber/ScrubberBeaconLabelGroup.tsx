@@ -1,17 +1,12 @@
 import { type CSSProperties, memo, useCallback, useMemo, useState } from 'react';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import type { ChartTextChildren, ChartTextProps } from '../text';
-import {
-  defaultTransition,
-  getPointOnScale,
-  getTransition,
-  instantTransition,
-  useScrubberContext,
-} from '../utils';
+import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
+import { useScrubberContext } from '../utils/context';
+import { getPointOnScale } from '../utils/point';
 import {
   calculateLabelYPositions,
   getLabelPosition,
@@ -19,6 +14,7 @@ import {
   type LabelPosition,
   type ScrubberLabelPosition,
 } from '../utils/scrubber';
+import { defaultTransition, getTransition, instantTransition } from '../utils/transition';
 
 import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
 import type {

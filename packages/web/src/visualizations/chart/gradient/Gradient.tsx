@@ -2,8 +2,9 @@ import { memo, useMemo } from 'react';
 import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { defaultTransition, type GradientDefinition, instantTransition } from '../utils';
+import { type GradientDefinition } from '../utils/gradient';
 import { getGradientAxis, getGradientConfig } from '../utils/gradient';
+import { defaultTransition, instantTransition } from '../utils/transition';
 
 export type GradientBaseProps = {
   /**

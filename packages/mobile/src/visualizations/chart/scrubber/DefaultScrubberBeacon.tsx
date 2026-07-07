@@ -12,9 +12,9 @@ import {
 } from 'react-native-reanimated';
 import { Circle, Group } from '@shopify/react-native-skia';
 
-import { useTheme } from '../../../index';
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
-import { unwrapAnimatedValue } from '../utils';
+import { unwrapAnimatedValue } from '../utils/chart';
 import { projectPointWithSerializableScale } from '../utils/point';
 import {
   buildTransition,

@@ -2,7 +2,7 @@ import type { SpotIconName } from '../types/SpotIconName';
 
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:backfill-themed-svgjs
+ * Generated from yarn nx run illustration-tasks:sync-illustrations
  */
 
 const svgJsMap = {
@@ -396,6 +396,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/instoIdVerification-0.js').content,
     themeable: () => require('../svgJs/cjs/themeable/instoIdVerification-0.js').content,
   },
+  instoInstantAccess: {
+    light: () => require('../svgJs/cjs/light/instoInstantAccess-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/instoInstantAccess-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/instoInstantAccess-0.js').content,
+  },
   instoLayeredNetworks: {
     light: () => require('../svgJs/cjs/light/instoLayeredNetworks-0.js').content,
     dark: () => require('../svgJs/cjs/dark/instoLayeredNetworks-0.js').content,
@@ -472,9 +477,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/instoSignInProduct-0.js').content,
   },
   instoStakingProduct: {
-    light: () => require('../svgJs/cjs/light/instoStakingProduct-0.js').content,
-    dark: () => require('../svgJs/cjs/dark/instoStakingProduct-0.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/instoStakingProduct-0.js').content,
+    light: () => require('../svgJs/cjs/light/instoStakingProduct-1.js').content,
+    dark: () => require('../svgJs/cjs/dark/instoStakingProduct-1.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/instoStakingProduct-1.js').content,
   },
   instoWalletAsAServiceProduct: {
     light: () => require('../svgJs/cjs/light/instoWalletAsAServiceProduct-0.js').content,

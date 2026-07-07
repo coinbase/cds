@@ -4,11 +4,12 @@ import {
   AccordionProvider,
   type AccordionProviderProps,
 } from '@coinbase/cds-common/accordion/AccordionProvider';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { join } from '@coinbase/cds-common/utils/join';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Divider, VStack } from '../layout';
+import { Divider } from '../layout/Divider';
+import { VStack } from '../layout/VStack';
 
 export type AccordionBaseProps = SharedProps & AccordionProviderProps;
 

@@ -1,6 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 
-import { type ChipBaseProps, MediaChip } from '../../chips';
+import { type ChipBaseProps } from '../../chips/ChipProps';
+import { MediaChip } from '../../chips/MediaChip';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import type { SelectRef } from '../select/Select';
 import {

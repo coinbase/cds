@@ -88,3 +88,15 @@ When applying padding to a `Text` component that contains instances of `Link`, w
   </Text>
 </Box>
 ```
+
+### Fallback
+
+You can use `TextFallback` as a placeholder for `Text`.
+
+```jsx
+<VStack gap={1}>
+  <TextFallback font="headline" width={120} />
+  <TextFallback font="body" width={160} />
+  <TextFallback font="label2" width={100} />
+</VStack>
+```

@@ -68,12 +68,15 @@ Review the component's JSX to identify elements that should be targetable via st
 | `logo`                | Logo element                                          |
 | `mainContent`         | Primary content area                                  |
 | `media`               | Media element (image, avatar, icon)                   |
+| `modal`               | Visible modal card element                            |
 | `navigation`          | Navigation controls (e.g., prev/next buttons)         |
+| `overlay`             | Full-viewport overlay/backdrop element                |
 | `pagination`          | Pagination indicators                                 |
 | `pressable`           | Pressable/interactive wrapper                         |
 | `progress`            | Progress indicator element                            |
 | `progressBar`         | ProgressBar sub-component within a composed component |
 | `root`                | Root/outermost container element                      |
+| `safeArea`            | Safe area region wrapping content                     |
 | `start`               | Start slot content (e.g., back button)                |
 | `step`                | Individual step element (in steppers)                 |
 | `substepContainer`    | Container for nested sub-steps                        |

@@ -1,7 +1,8 @@
 import { type DimensionValue, type StyleProp, type ViewStyle } from 'react-native';
-import { type SharedAccessibilityProps, type SharedProps } from '@coinbase/cds-common/types';
+import { type SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import { type SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import type { PressableProps } from '../system';
+import type { PressableProps } from '../system/Pressable';
 
 export type ChipBaseProps = SharedProps &
   Omit<PressableProps, 'children' | 'maxWidth' | 'style' | 'onChange' | 'maxWidth'> &

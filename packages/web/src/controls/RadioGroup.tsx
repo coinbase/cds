@@ -1,8 +1,10 @@
 import React, { forwardRef, memo } from 'react';
-import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 
-import type { BoxBaseProps } from '../layout';
+import type { BoxBaseProps } from '../layout/Box';
 import type { GroupBaseProps } from '../layout/Group';
 import type { FilteredHTMLAttributes } from '../types';
 

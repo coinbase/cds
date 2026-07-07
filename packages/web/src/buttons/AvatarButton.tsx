@@ -4,8 +4,8 @@ import { css } from '@linaria/core';
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Avatar, type AvatarBaseProps } from '../media';
-import { Pressable, type PressableBaseProps } from '../system';
+import { Avatar, type AvatarBaseProps } from '../media/Avatar';
+import { Pressable, type PressableBaseProps } from '../system/Pressable';
 
 import type { ButtonBaseProps } from './Button';
 

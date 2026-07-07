@@ -82,6 +82,7 @@ export const illustrationColor = {
   gray: '#CED2DB',
   gray2: '#050607',
   gray3: '#CED3DA',
+  gray4: '#C8CBD2',
   positive: '#00D17F',
   negative: '#FF3344',
   accent1: '#FFD200',

@@ -12,10 +12,10 @@ export type ThemeConfig = {
   lightColor?: { [key in ThemeVars.Color]: Property.Color };
   /** The dark color palette. */
   darkColor?: { [key in ThemeVars.Color]: Property.Color };
-  /** The light illustration color palette. */
-  lightIllustrationColor?: { [key in ThemeVars.IllustrationColor]: Property.Color };
-  /** The dark illustration color palette. */
-  darkIllustrationColor?: { [key in ThemeVars.IllustrationColor]: Property.Color };
+  /** The light illustration color palette. All tokens are optional. */
+  lightIllustrationColor?: Partial<{ [key in ThemeVars.IllustrationColor]: Property.Color }>;
+  /** The dark illustration color palette. All tokens are optional. */
+  darkIllustrationColor?: Partial<{ [key in ThemeVars.IllustrationColor]: Property.Color }>;
   /** The space values, used for margin and padding. */
   space: { [key in ThemeVars.Space]: number };
   /** The icon size values. */

@@ -14,7 +14,9 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { useSelectionCellBorderStyle } from '../hooks/useSelectionCellBorderStyle';
 import { useTheme } from '../hooks/useTheme';
-import { Box, HStack, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 

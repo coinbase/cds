@@ -1,4 +1,4 @@
-import type { MotionTransition } from '../types';
+import type { MotionTransition } from '../types/Motion';
 
 import { createMotionConfig } from './tokens';
 

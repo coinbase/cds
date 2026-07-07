@@ -1,4 +1,4 @@
-import type { LottieMarkersAsMap, LottieSource } from '../types';
+import type { LottieMarkersAsMap, LottieSource } from '../types/LottieSource';
 
 type GetLottieMarkerOptions = {
   /** Convert frames to milliseconds (ms) */

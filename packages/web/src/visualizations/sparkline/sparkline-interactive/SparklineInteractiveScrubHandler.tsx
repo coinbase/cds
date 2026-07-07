@@ -1,14 +1,14 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import type { KeyboardEvent, MouseEvent } from 'react';
-import type { ChartGetMarker } from '@coinbase/cds-common';
 import { fadeDuration, maskOpacity } from '@coinbase/cds-common/tokens/sparkline';
+import type { ChartGetMarker } from '@coinbase/cds-common/types/Chart';
 import { debounce } from '@coinbase/cds-common/utils/debounce';
 import { noop } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
 import { cubicBezier } from '../../../animation/convertMotionConfig';
+import { cx } from '../../../cx';
 import { useDimensions } from '../../../hooks/useDimensions';
-import { cx } from '../../../index';
 
 import { fadeIn, fadeOut } from './fade';
 import type { SparklineInteractiveBaseProps } from './SparklineInteractive';

@@ -1,4 +1,4 @@
-import type { TextHorizontalAlignment, TextVerticalAlignment } from '../text';
+import type { TextHorizontalAlignment, TextVerticalAlignment } from '../text/ChartText';
 
 import type { CartesianChartLayout } from './context';
 import {

@@ -2,12 +2,21 @@
  * Generates Icon Code Connect files for both web and mobile packages, driven
  * entirely by the icon component sets in the Figma CDS Components file.
  *
- * Each icon component set (prefixed "ui/" or "nav/") gets its own parser-less
- * Code Connect template file (`<iconName>.figma.ts`) in the package's
- * `icons/__figma__/` directory. Active/Inactive-suffixed variants
- * (e.g. "ui/bellActive") are legacy names — they collapse onto the base icon's
- * single template (<Icon name="bell" />), since the active state is expressed
- * via the shared `active` prop instead of a distinct name.
+ * Rather than one Code Connect template file per icon, each package gets a single
+ * Code Connect *batch* integration (https://developers.figma.com/docs/code-connect/batch-files/)
+ * in its `icons/__figma__/` directory:
+ *
+ *   - `icons.figma.batch.ts`   A shared, parser-less template. It has no `// url=`
+ *                              metadata comments and reads per-icon data (the icon
+ *                              name) from `figma.batch`, which the Figma runtime
+ *                              populates from each entry in the JSON file below.
+ *   - `icons.figma.batch.json` Lists every icon as a `{ name, url, source, component }`
+ *                              entry. Each entry publishes as its own Code Connect
+ *                              document, exactly as the old per-icon files did.
+ *
+ * Active/Inactive-suffixed variants (e.g. "ui/bellActive") are legacy names — they
+ * collapse onto the base icon's single entry (<Icon name="bell" />), since the
+ * active state is expressed via the shared `active` prop instead of a distinct name.
  *
  * Called automatically by `icons:sync-icons`, but can also be run standalone:
  *
@@ -26,9 +35,9 @@ import path from 'node:path';
 const CODE_CONNECT_FIGMA_FILE_KEY = 'k5CtyJccNQUGMI5bI4lJ2g';
 const FIGMA_BASE_URL = `https://www.figma.com/design/${CODE_CONNECT_FIGMA_FILE_KEY}/CDS-Components`;
 
-// Files in each icons/__figma__ directory that are NOT generated per-icon
-// templates and must never be deleted by the cleanup step.
-const PRESERVE = new Set<string>([]);
+// Names of the two batch files written into each icons/__figma__ directory.
+const BATCH_TEMPLATE_FILE = 'icons.figma.batch.ts';
+const BATCH_JSON_FILE = 'icons.figma.batch.json';
 
 // ─── Name helpers ─────────────────────────────────────────────────────────────
 
@@ -77,21 +86,16 @@ type ComponentSet = { name: string; node_id: string };
 
 type Icon = { iconName: string; nodeId: string };
 
-// Builds the full content of one parser-less Code Connect template file.
-// The `example` line embeds a `figma.code` literal whose `${...}` placeholders are
-// evaluated by the Figma runtime (not here), so it's assembled via string
-// concatenation to keep those placeholders literal in the output.
-export function renderIconTemplate(target: Target, iconName: string, nodeId: string): string {
-  const url = `${FIGMA_BASE_URL}?node-id=${nodeId.replace(':', '-')}`;
-  const exampleLine =
-    '  example: figma.code`<Icon name="' +
-    iconName +
-    "\" size=\"${size}\"${active ? ' active' : ''} />`,";
-
+// Builds the shared batch template (`icons.figma.batch.ts`) for a target. Unlike
+// a per-icon raw template, it carries no `// url=`/`// source=`/`// component=`
+// metadata (those come from the JSON entries) and substitutes the icon name via
+// `figma.batch.name`, which the Figma runtime resolves per entry at render time.
+//
+// The `example`/`id` lines embed `figma.code` and template-literal placeholders
+// (`${figma.batch.name}`, `${size}`, …) that must remain literal in the output, so
+// the file is assembled from single-quoted strings to avoid interpolating them here.
+export function renderBatchTemplate(target: Target): string {
   return (
-    `// url=${url}\n` +
-    `// source=${target.sourcePath}\n` +
-    `// component=Icon\n` +
     `import figma from 'figma';\n` +
     `\n` +
     `const instance = figma.selectedInstance;\n` +
@@ -107,36 +111,47 @@ export function renderIconTemplate(target: Target, iconName: string, nodeId: str
     `\n` +
     `// eslint-disable-next-line no-restricted-exports\n` +
     `export default {\n` +
-    `${exampleLine}\n` +
+    '  example: figma.code`<Icon name="${figma.batch.name}" size="${size}"' +
+    "${active ? ' active' : ''} />`,\n" +
     `  imports: ['import { Icon } from "${target.importPackage}"'],\n` +
-    `  id: 'icon-${iconName}${target.idSuffix}',\n` +
+    '  id: `icon-${figma.batch.name}' +
+    target.idSuffix +
+    '`,\n' +
     `  metadata: { nestable: true },\n` +
     `};\n`
   );
 }
 
-// Removes previously-generated per-icon template files (and the legacy
-// single-file Icon.figma.tsx) from a target dir, preserving anything in PRESERVE.
-function cleanTargetDir(outDir: string): void {
-  if (!fs.existsSync(outDir)) {
-    fs.mkdirSync(outDir, { recursive: true });
-    return;
-  }
-  for (const file of fs.readdirSync(outDir)) {
-    if (PRESERVE.has(file)) continue;
-    if (file.endsWith('.figma.ts') || file === 'Icon.figma.tsx') {
-      fs.unlinkSync(path.join(outDir, file));
-    }
-  }
+// Builds the batch JSON (`icons.figma.batch.json`) for a target: one entry per
+// icon, each pointing the shared template at a Figma node URL. `name` is the
+// custom field consumed by the template via `figma.batch.name`.
+export function renderBatchJson(target: Target, icons: Icon[]): string {
+  const data = {
+    templateFile: `./${BATCH_TEMPLATE_FILE}`,
+    components: icons.map(({ iconName, nodeId }) => ({
+      name: iconName,
+      url: `${FIGMA_BASE_URL}?node-id=${nodeId.replace(':', '-')}`,
+      source: target.sourcePath,
+      component: 'Icon',
+    })),
+  };
+  return `${JSON.stringify(data, null, 2)}\n`;
 }
 
 function generateFiles(target: Target, icons: Icon[]): number {
-  cleanTargetDir(target.outDir);
-  for (const { iconName, nodeId } of icons) {
-    const content = renderIconTemplate(target, iconName, nodeId);
-    fs.writeFileSync(path.join(target.outDir, `${iconName}.figma.ts`), content, 'utf-8');
-  }
-  console.log(`  [${target.label}] ${icons.length} template files written.`);
+  // The two batch files are always overwritten, so we only need the dir to exist.
+  fs.mkdirSync(target.outDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(target.outDir, BATCH_TEMPLATE_FILE),
+    renderBatchTemplate(target),
+    'utf-8',
+  );
+  fs.writeFileSync(
+    path.join(target.outDir, BATCH_JSON_FILE),
+    renderBatchJson(target, icons),
+    'utf-8',
+  );
+  console.log(`  [${target.label}] batch template + JSON written (${icons.length} icons).`);
   return icons.length;
 }
 
@@ -180,14 +195,14 @@ export function makeTargets(repoRoot: string): Target[] {
     {
       label: 'web',
       outDir: path.join(repoRoot, 'packages/web/src/icons/__figma__'),
-      importPackage: '@coinbase/cds-web/icons/Icon',
+      importPackage: '@coinbase/cds-web/icons',
       sourcePath: 'packages/web/src/icons/Icon.tsx',
       idSuffix: '',
     },
     {
       label: 'mobile',
       outDir: path.join(repoRoot, 'packages/mobile/src/icons/__figma__'),
-      importPackage: '@coinbase/cds-mobile/icons/Icon',
+      importPackage: '@coinbase/cds-mobile/icons',
       sourcePath: 'packages/mobile/src/icons/Icon.tsx',
       idSuffix: '-mobile',
     },
@@ -216,13 +231,13 @@ export async function syncIconCodeConnect(repoRoot: string) {
     }
   }
 
-  console.log('\nGenerating Code Connect template files…');
+  console.log('\nGenerating Code Connect batch files…');
   for (const target of makeTargets(repoRoot)) {
     generateFiles(target, icons);
     console.log(`  Written to ${path.relative(repoRoot, target.outDir)}`);
   }
 
-  console.log('\n✅ Code Connect template files generated.');
+  console.log('\n✅ Code Connect batch files generated.');
 }
 
 // ─── CLI entry point ──────────────────────────────────────────────────────────

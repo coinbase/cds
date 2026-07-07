@@ -2,6 +2,7 @@ import React, { createContext, memo, useContext, useMemo } from 'react';
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
 
 import type { Theme, ThemeConfig } from '../core/theme';
+import { defaultTheme } from '../themes/defaultTheme';
 
 export type ThemeContextValue = Theme;
 
@@ -64,12 +65,18 @@ export const ThemeProvider = memo(({ theme, activeColorScheme, children }: Theme
         `ThemeProvider theme has ${inverseColorKey} colors defined but no ${inverseSpectrumKey} values are defined for the theme. See the docs https://cds.coinbase.com/getting-started/theming`,
       );
 
+    // All illustration tokens are optional; fill in any omitted tokens from defaultTheme.
+    const consumerIllustrationColor = theme[activeIllustrationKey];
+    const illustrationColor = consumerIllustrationColor
+      ? { ...defaultTheme[activeIllustrationKey], ...consumerIllustrationColor }
+      : undefined;
+
     return {
       ...theme,
       activeColorScheme: activeColorScheme,
       spectrum: theme[activeSpectrumKey],
       color: theme[activeColorKey],
-      illustrationColor: theme[activeIllustrationKey],
+      illustrationColor,
     };
   }, [theme, activeColorScheme]);
 

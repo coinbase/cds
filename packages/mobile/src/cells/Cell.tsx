@@ -7,7 +7,8 @@ import {
   type ViewStyle,
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { CellPriority, SharedProps } from '@coinbase/cds-common/types';
+import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { hasCellPriority } from '@coinbase/cds-common/utils/cell';
 
 import { useCellSpacing } from '../hooks/useCellSpacing';

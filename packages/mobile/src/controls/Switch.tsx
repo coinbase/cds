@@ -55,6 +55,10 @@ const SwitchIcon = ({
 
   const { switchWidth, switchHeight, switchThumbSize } = theme.controlSize;
 
+  // Inset that keeps the thumb centered within the track regardless of the
+  // configured track/thumb sizes (built-in themes use a 1px inset).
+  const thumbInset = (switchHeight - switchThumbSize) / 2;
+
   const trackStyle = useMemo(
     () => [
       {
@@ -72,21 +76,21 @@ const SwitchIcon = ({
         width: switchThumbSize,
         height: switchThumbSize,
         position: 'absolute',
-        top: 1 - borderSize,
-        left: 1 - borderSize,
+        top: thumbInset - borderSize,
+        left: thumbInset - borderSize,
       } as const,
       {
         transform: [
           {
             translateX: animatedScaleValue.interpolate({
               inputRange: [0.9, 1],
-              outputRange: [0, switchWidth - switchThumbSize - 2],
+              outputRange: [0, switchWidth - switchThumbSize - thumbInset * 2],
             }),
           },
         ],
       },
     ],
-    [animatedScaleValue, borderSize, switchThumbSize, switchWidth],
+    [animatedScaleValue, borderSize, thumbInset, switchThumbSize, switchWidth],
   );
 
   return (

@@ -6,9 +6,12 @@ import { css } from '@linaria/core';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../hooks/useHorizontalScrollToTarget';
-import { type BoxBaseProps, HStack } from '../layout';
+import { type BoxBaseProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
 import type { ResponsiveProp } from '../styles/styleProps';
-import { Paddle, type TabNavigationBaseProps, Tabs } from '../tabs';
+import { Paddle } from '../tabs/Paddle';
+import { type TabNavigationBaseProps } from '../tabs/TabNavigation';
+import { Tabs } from '../tabs/Tabs';
 
 import { MediaChip } from './MediaChip';
 

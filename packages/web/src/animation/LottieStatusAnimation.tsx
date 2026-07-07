@@ -4,7 +4,9 @@ import { useStatusAnimationPoller } from '@coinbase/cds-common/lottie/useStatusA
 import type { LottiePlayer } from '@coinbase/cds-common/types/LottiePlayer';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+// eslint-disable-next-line internal/no-cds-barrel-imports -- tradeStatus is the deepest available export in cds-lottie-files
 import type { TradeStatusLottie } from '@coinbase/cds-lottie-files/tradeStatus';
+// eslint-disable-next-line internal/no-cds-barrel-imports -- tradeStatus is the deepest available export in cds-lottie-files
 import { tradeStatus } from '@coinbase/cds-lottie-files/tradeStatus';
 import type { LottieStatus } from 'packages/common/dts/types/LottieStatus';
 

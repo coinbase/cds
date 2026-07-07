@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import type { CarouselAutoplay } from '@coinbase/cds-common';
-import type { Rect } from '@coinbase/cds-common/types';
+import type { CarouselAutoplay } from '@coinbase/cds-common/carousel/useCarouselAutoplay';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 
 export type CarouselContextValue = {
   registerItem: (id: string, state: Rect) => void;

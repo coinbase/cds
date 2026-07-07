@@ -1,11 +1,11 @@
 import React, { forwardRef, memo } from 'react';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
-import type { InputVariant } from '@coinbase/cds-common/types';
+import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 import { css } from '@linaria/core';
 
-import { VStack } from '../layout';
 import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import { AnimatedCaret } from '../motion/AnimatedCaret';
 import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';

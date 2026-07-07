@@ -7,21 +7,24 @@ import type {
   ChartFormatDate,
   ChartScrubParams,
   ChartTimeseries,
-  Placement,
-} from '@coinbase/cds-common/types';
+} from '@coinbase/cds-common/types/Chart';
+import type { Placement } from '@coinbase/cds-common/types/Placement';
 import { debounce } from '@coinbase/cds-common/utils/debounce';
 import { getAccessibleColor } from '@coinbase/cds-common/utils/getAccessibleColor';
 import { useSparklineCoordinates } from '@coinbase/cds-common/visualizations/useSparklineCoordinates';
+// eslint-disable-next-line internal/no-cds-barrel-imports -- cds-lottie-files subpaths are the deepest available exports
 import { chartFallbackNegative, chartFallbackPositive } from '@coinbase/cds-lottie-files';
 import { emptyArray, isStorybook, noop } from '@coinbase/cds-utils';
 import isEqual from 'lodash/isEqual';
 import isObject from 'lodash/isObject';
 
-import { Lottie } from '../../../animation';
+import { Lottie } from '../../../animation/Lottie';
+import { cx } from '../../../cx';
 import { useDimensions } from '../../../hooks/useDimensions';
-import { cx, useTheme } from '../../../index';
-import { HStack, VStack } from '../../../layout';
+import { useTheme } from '../../../hooks/useTheme';
 import { Box } from '../../../layout/Box';
+import { HStack } from '../../../layout/HStack';
+import { VStack } from '../../../layout/VStack';
 import { getBrowserGlobals } from '../../../utils/browser';
 import {
   VisualizationContainer,

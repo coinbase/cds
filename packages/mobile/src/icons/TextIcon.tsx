@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { Animated, Text } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
-import type { IconName } from '@coinbase/cds-common';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
 import { glyphMap } from '@coinbase/cds-icons/glyphMap';
 import { isDevelopment } from '@coinbase/cds-utils';
 

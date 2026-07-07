@@ -3,8 +3,10 @@ import type { View } from 'react-native';
 import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, HStack } from '../layout';
-import { InvertedThemeProvider, Pressable } from '../system';
+import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { Pressable } from '../system/Pressable';
+import { InvertedThemeProvider } from '../system/ThemeProvider';
 import { Text } from '../typography/Text';
 
 import type { ChipProps } from './ChipProps';

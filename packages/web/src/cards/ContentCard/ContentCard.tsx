@@ -2,7 +2,7 @@ import React, { forwardRef, memo } from 'react';
 import { contentCardMaxWidth, contentCardMinWidth } from '@coinbase/cds-common/tokens/card';
 
 import type { Polymorphic } from '../../core/polymorphism';
-import { VStack, type VStackBaseProps } from '../../layout';
+import { VStack, type VStackBaseProps } from '../../layout/VStack';
 
 export const contentCardDefaultElement = 'article';
 export type ContentCardDefaultElement = typeof contentCardDefaultElement;

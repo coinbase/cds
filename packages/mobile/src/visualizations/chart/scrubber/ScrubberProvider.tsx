@@ -5,8 +5,9 @@ import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reani
 
 import { Haptics } from '../../../utils/haptics';
 import { useCartesianChartContext } from '../ChartProvider';
-import { invertSerializableScale, ScrubberContext, type ScrubberContextValue } from '../utils';
+import { ScrubberContext, type ScrubberContextValue } from '../utils/context';
 import { getPointOnSerializableScale } from '../utils/point';
+import { invertSerializableScale } from '../utils/scale';
 
 export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableScrubbing'>> & {
   children: React.ReactNode;

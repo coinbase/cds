@@ -1,6 +1,7 @@
 export * from './Link';
 export * from './Text';
 export * from './TextBody';
+export * from './TextFallback';
 export * from './TextCaption';
 export * from './TextDisplay1';
 export * from './TextDisplay2';

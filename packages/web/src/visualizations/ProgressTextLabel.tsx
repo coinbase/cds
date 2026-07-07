@@ -3,7 +3,7 @@ import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { usePreviousValues } from '@coinbase/cds-common/hooks/usePreviousValues';
 import { durations } from '@coinbase/cds-common/motion/tokens';
-import type { MotionDuration } from '@coinbase/cds-common/types';
+import type { MotionDuration } from '@coinbase/cds-common/types/Motion';
 
 import { Text } from '../typography/Text';
 

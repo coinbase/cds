@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { DimensionValue } from 'react-native';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import { cardSizes } from '@coinbase/cds-common/tokens/card';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import { useTheme } from '../hooks/useTheme';
 import type { BoxBaseProps, BoxProps } from '../layout/Box';

@@ -1123,6 +1123,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoSecurityKey',
     'instoUbiKey',
     'instoAuthenticatorProgress',
+    'instoProgressCircle',
   ],
   xtz: ['coinbaseOneStaking'],
   yield: [
@@ -1724,6 +1725,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoSideChainSide',
     'instoUbiKey',
     'instoAuthenticatorProgress',
+    'instoProgressCircle',
   ],
   prime: [
     'instoEthStaking',
@@ -1737,6 +1739,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoSideChainSide',
     'instoUbiKey',
     'instoAuthenticatorProgress',
+    'instoProgressCircle',
   ],
   negroni: [
     'instoEthStaking',
@@ -1750,6 +1753,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoSideChainSide',
     'instoUbiKey',
     'instoAuthenticatorProgress',
+    'instoProgressCircle',
   ],
   orange: [
     'instoEthStaking',
@@ -1763,6 +1767,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoSideChainSide',
     'instoUbiKey',
     'instoAuthenticatorProgress',
+    'instoProgressCircle',
   ],
   institutional: [
     'instoEthStaking',
@@ -1776,6 +1781,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoSideChainSide',
     'instoUbiKey',
     'instoAuthenticatorProgress',
+    'instoProgressCircle',
   ],
   'institutional investor': [
     'instoEthStaking',
@@ -1789,6 +1795,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoSideChainSide',
     'instoUbiKey',
     'instoAuthenticatorProgress',
+    'instoProgressCircle',
   ],
   pictogram: ['inrTrade'],
   'crypto learning': ['inrTrade'],

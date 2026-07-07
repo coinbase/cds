@@ -2,7 +2,7 @@ import type { SpotIconName } from '../types/SpotIconName';
 
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:backfill-themed-svgjs
+ * Generated from yarn nx run illustration-tasks:sync-illustrations
  */
 
 const svgEsmMap = {
@@ -315,6 +315,10 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/instoIdVerification-0.js').then((m) => m.default as string),
   },
+  instoInstantAccess: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/instoInstantAccess-0.js').then((m) => m.default as string),
+  },
   instoLayeredNetworks: {
     themeable: () =>
       import('../svgJs/esm/themeable/instoLayeredNetworks-0.js').then((m) => m.default as string),
@@ -385,7 +389,7 @@ const svgEsmMap = {
   },
   instoStakingProduct: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoStakingProduct-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoStakingProduct-1.js').then((m) => m.default as string),
   },
   instoWalletAsAServiceProduct: {
     themeable: () =>

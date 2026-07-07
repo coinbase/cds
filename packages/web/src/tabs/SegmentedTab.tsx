@@ -120,6 +120,7 @@ const SegmentedTabComponent = memo(
           fontSize={fontSize}
           fontWeight={fontWeight}
           id={id}
+          justifyContent="center"
           lineHeight={lineHeight}
           onClick={handlePress}
           role="tab"

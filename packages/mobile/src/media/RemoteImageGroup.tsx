@@ -2,13 +2,11 @@ import React, { Children, isValidElement, useMemo } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import type { ViewStyle } from 'react-native';
 import { shapeBorderRadius } from '@coinbase/cds-common/tokens/borderRadius';
-import type {
-  AvatarSize,
-  NegativeSpace,
-  Shape,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
+import type { Shape } from '@coinbase/cds-common/types/Shape';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { NegativeSpace } from '@coinbase/cds-common/types/SpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';

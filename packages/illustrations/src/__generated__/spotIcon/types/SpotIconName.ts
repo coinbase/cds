@@ -82,6 +82,7 @@ export type SpotIconName =
   | 'instoFast'
   | 'instoHelpCenterProduct'
   | 'instoIdVerification'
+  | 'instoInstantAccess'
   | 'instoLayeredNetworks'
   | 'instoLearningRewardsProduct'
   | 'instoMultiCoin'

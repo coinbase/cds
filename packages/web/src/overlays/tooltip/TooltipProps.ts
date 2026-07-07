@@ -1,10 +1,14 @@
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { BaseTooltipPlacement, ElevationProps, SharedProps } from '@coinbase/cds-common/types';
+import type { ElevationProps } from '@coinbase/cds-common/types/ElevationLevels';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { BaseTooltipPlacement } from '@coinbase/cds-common/types/TooltipBaseProps';
 
+import type { BoxBaseProps } from '../../layout/Box';
 import type { PopoverProps } from '../popover/PopoverProps';
 
 export type TooltipBaseProps = SharedProps &
   ElevationProps &
+  Omit<BoxBaseProps, 'children' | 'gap' | 'pin'> &
   Pick<
     PopoverProps,
     | 'disableFocusTrap'

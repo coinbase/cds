@@ -1,6 +1,6 @@
 import { memo, useId } from 'react';
 
-import { Gradient } from '../gradient';
+import { Gradient } from '../gradient/Gradient';
 import { Path, type PathProps } from '../Path';
 
 import type { AreaComponentProps } from './Area';

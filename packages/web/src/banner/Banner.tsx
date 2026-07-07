@@ -10,19 +10,18 @@ import React, {
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { BannerVariantStyle } from '@coinbase/cds-common/tokens/banner';
 import { bannerMinWidth, variants } from '@coinbase/cds-common/tokens/banner';
-import type {
-  BannerStyleVariant,
-  BannerVariant,
-  IconName,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { BannerStyleVariant, BannerVariant } from '@coinbase/cds-common/types/BannerBaseProps';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
-import { Collapsible } from '../collapsible';
+import { Collapsible } from '../collapsible/Collapsible';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Icon } from '../icons/Icon';
-import { Box, HStack, type HStackDefaultElement, type HStackProps, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import type { ResponsiveProps, StaticStyleProps } from '../styles/styleProps';
 import { Pressable } from '../system/Pressable';
 import type { StylesAndClassNames } from '../types';

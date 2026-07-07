@@ -13,7 +13,8 @@ import type { DateInputValidationError } from '@coinbase/cds-common/dates/DateIn
 import { Button } from '../buttons/Button';
 import { InputIconButton } from '../controls/InputIconButton';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { VStack } from '../layout/VStack';
 import { Tray } from '../overlays/tray/Tray';
 import { StickyFooter } from '../sticky-footer/StickyFooter';
 

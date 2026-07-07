@@ -9,7 +9,8 @@ import {
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { durations } from '@coinbase/cds-common/motion/tokens';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

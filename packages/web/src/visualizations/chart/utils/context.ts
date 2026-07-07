@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 
 import type { CartesianAxisConfig } from './axis';
 import type { Series } from './chart';

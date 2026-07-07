@@ -4,6 +4,7 @@ import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event';
 
 import { Button } from '../../../buttons/Button';
+import { ComponentConfigProvider } from '../../../system';
 import { DefaultThemeProvider } from '../../../utils/test';
 import { PortalProvider } from '../../PortalProvider';
 import { Tooltip } from '../Tooltip';
@@ -133,6 +134,69 @@ describe('Tooltip', () => {
     await waitFor(() => expect(screen.queryByTestId(tooltipTestID)).not.toBeInTheDocument());
 
     jest.useRealTimers();
+  });
+
+  it('applies Tooltip defaults from ComponentConfigProvider', async () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider
+          value={{
+            Tooltip: {
+              background: 'bgSecondary',
+              font: 'body',
+            },
+          }}
+        >
+          <PortalProvider>
+            <Tooltip content="Configured tooltip" testID={tooltipTestID}>
+              <Button>Button</Button>
+            </Tooltip>
+          </PortalProvider>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    expect(tooltip).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    expect(screen.getByText('Configured tooltip')).toHaveStyle({
+      '--text-textTransform': 'var(--textTransform-body)',
+    });
+  });
+
+  it('keeps local Tooltip props higher precedence than provider defaults', async () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider
+          value={{
+            Tooltip: {
+              background: 'bgSecondary',
+              font: 'body',
+            },
+          }}
+        >
+          <PortalProvider>
+            <Tooltip
+              background="bgPrimary"
+              content="Configured tooltip"
+              font="label2"
+              testID={tooltipTestID}
+            >
+              <Button>Button</Button>
+            </Tooltip>
+          </PortalProvider>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    expect(tooltip).toHaveStyle({ backgroundColor: 'var(--color-bgPrimary)' });
+    expect(screen.getByText('Configured tooltip')).toHaveStyle({
+      '--text-textTransform': 'var(--textTransform-label2)',
+    });
   });
 
   it('focuses after a delay when using autoFocusDelay', async () => {

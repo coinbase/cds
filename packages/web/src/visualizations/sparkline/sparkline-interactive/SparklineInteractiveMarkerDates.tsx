@@ -6,7 +6,7 @@ import { css } from '@linaria/core';
 import times from 'lodash/times';
 
 import { cubicBezier } from '../../../animation/convertMotionConfig';
-import { HStack } from '../../../layout';
+import { HStack } from '../../../layout/HStack';
 import { Text } from '../../../typography/Text';
 
 import type { ChartFormatDate, ChartGetMarker } from './SparklineInteractive';

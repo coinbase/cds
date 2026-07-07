@@ -7,8 +7,9 @@ import React, {
   useMemo,
 } from 'react';
 import type { ForwardedRef } from 'react';
-import type { MotionTransition, PulseVariant } from '@coinbase/cds-common';
 import { pulseTransitionConfig, pulseVariantOpacity } from '@coinbase/cds-common/motion/hint';
+import type { MotionTransition } from '@coinbase/cds-common/types/Motion';
+import type { PulseVariant } from '@coinbase/cds-common/types/PulseBaseProps';
 import { m as motion, useAnimation } from 'framer-motion';
 
 import type { HintMotionBaseProps } from './types';

@@ -5,6 +5,7 @@ import type { ColorScheme } from '@coinbase/cds-common/core/theme';
 import { createThemeCssVars } from '../core/createThemeCssVars';
 import type { Theme, ThemeConfig, ThemeCSSVars } from '../core/theme';
 import { cx } from '../cx';
+import { defaultTheme } from '../themes/defaultTheme';
 
 import { FramerMotionProvider, type FramerMotionProviderProps } from './FramerMotionProvider';
 
@@ -123,12 +124,18 @@ export const ThemeProvider = memo(
           `ThemeProvider theme has ${inverseColorKey} colors defined but no ${inverseSpectrumKey} values are defined for the theme. See the docs https://cds.coinbase.com/getting-started/theming`,
         );
 
+      // All illustration tokens are optional; fill in any omitted tokens from defaultTheme.
+      const consumerIllustrationColor = theme[activeIllustrationKey];
+      const illustrationColor = consumerIllustrationColor
+        ? { ...defaultTheme[activeIllustrationKey], ...consumerIllustrationColor }
+        : undefined;
+
       return {
         ...theme,
         activeColorScheme: activeColorScheme,
         spectrum: theme[activeSpectrumKey],
         color: theme[activeColorKey],
-        illustrationColor: theme[activeIllustrationKey],
+        illustrationColor,
       };
     }, [theme, activeColorScheme]);
 

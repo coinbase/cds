@@ -68,6 +68,7 @@ const DefaultSelectControlComponent = memo(
         open,
         placeholder,
         disabled,
+        readOnly,
         setOpen,
         variant,
         helperText,
@@ -80,9 +81,13 @@ const DefaultSelectControlComponent = memo(
         blendStyles,
         align = 'start',
         font = 'body',
+        labelColor = 'fg',
+        labelFont = 'label1',
         bordered = true,
         borderWidth = bordered ? 100 : 0,
         focusedBorderWidth = bordered ? undefined : 200,
+        inputBackground = !disabled && readOnly ? 'bgSecondary' : 'bg',
+        borderRadius,
         maxSelectedOptionsToShow = 6,
         hiddenSelectedOptionsLabel = 'more',
         removeSelectedOptionAccessibilityLabel = 'Remove',
@@ -96,6 +101,14 @@ const DefaultSelectControlComponent = memo(
       }: SelectControlProps<Type, SelectOptionValue>,
       ref: React.Ref<HTMLElement>,
     ) => {
+      const isInteractionBlocked = disabled || readOnly;
+      const disableFocusedStyle = !bordered && focusedBorderWidth === 200;
+
+      const handleToggleOpen = useCallback(() => {
+        if (isInteractionBlocked) return;
+        setOpen((currentOpen) => !currentOpen);
+      }, [isInteractionBlocked, setOpen]);
+
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
@@ -246,7 +259,8 @@ const DefaultSelectControlComponent = memo(
           return (
             <InputLabel
               className={classNames?.controlLabelNode}
-              color="fg"
+              color={labelColor}
+              font={labelFont}
               paddingY={0.5}
               style={styles?.controlLabelNode}
             >
@@ -262,6 +276,8 @@ const DefaultSelectControlComponent = memo(
         classNames?.controlLabelNode,
         styles?.controlLabelNode,
         label,
+        labelColor,
+        labelFont,
       ]);
 
       const inlineLabelNode = useMemo(() => {
@@ -271,7 +287,8 @@ const DefaultSelectControlComponent = memo(
           return (
             <InputLabel
               className={classNames?.controlLabelNode}
-              color="fg"
+              color={labelColor}
+              font={labelFont}
               paddingY={0}
               style={styles?.controlLabelNode}
             >
@@ -287,6 +304,8 @@ const DefaultSelectControlComponent = memo(
         classNames?.controlLabelNode,
         styles?.controlLabelNode,
         label,
+        labelColor,
+        labelFont,
       ]);
 
       const valueNode = useMemo(() => {
@@ -318,7 +337,11 @@ const DefaultSelectControlComponent = memo(
                     disabled={option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
-                    onClick={(event) => handleUnselectValue(event, index)}
+                    onClick={
+                      isInteractionBlocked
+                        ? undefined
+                        : (event) => handleUnselectValue(event, index)
+                    }
                   >
                     <Text color="fg" flexShrink={1} font="label1" overflow="truncate">
                       {option.label ?? option.description ?? option.value ?? ''}
@@ -362,6 +385,7 @@ const DefaultSelectControlComponent = memo(
         optionsMap,
         removeSelectedOptionAccessibilityLabel,
         handleUnselectValue,
+        isInteractionBlocked,
       ]);
 
       const inputNode = useMemo(
@@ -372,6 +396,7 @@ const DefaultSelectControlComponent = memo(
             accessibilityLabel={computedControlAccessibilityLabel}
             aria-expanded={open}
             aria-haspopup={ariaHaspopup}
+            aria-readonly={readOnly}
             as={role === 'combobox' ? 'div' : 'button'}
             background="transparent"
             blendStyles={interactableBlendStyles}
@@ -382,7 +407,7 @@ const DefaultSelectControlComponent = memo(
             flexShrink={1}
             focusable={false}
             minWidth={0}
-            onClick={() => setOpen((s) => !s)}
+            onClick={handleToggleOpen}
             onKeyDown={onKeyDown}
             role={role}
             style={styles?.controlInputNode}
@@ -468,6 +493,7 @@ const DefaultSelectControlComponent = memo(
           classNames?.controlStartNode,
           classNames?.controlValueNode,
           disabled,
+          readOnly,
           styles?.controlInputNode,
           styles?.controlStartNode,
           styles?.controlValueNode,
@@ -480,13 +506,13 @@ const DefaultSelectControlComponent = memo(
           align,
           valueNode,
           contentNode,
-          setOpen,
+          handleToggleOpen,
         ],
       );
 
       const endNode = useMemo(
         () => (
-          <Pressable aria-hidden flexShrink={0} onClick={() => setOpen((s) => !s)} tabIndex={-1}>
+          <Pressable aria-hidden flexShrink={0} onClick={handleToggleOpen} tabIndex={-1}>
             <HStack
               alignItems="center"
               className={classNames?.controlEndNode}
@@ -496,14 +522,7 @@ const DefaultSelectControlComponent = memo(
               paddingStart={2}
               style={styles?.controlEndNode}
             >
-              {customEndNode ? (
-                customEndNode
-              ) : (
-                <AnimatedCaret
-                  color={!open ? 'fg' : variant ? variantColor[variant] : 'fgPrimary'}
-                  rotate={open ? 0 : 180}
-                />
-              )}
+              {customEndNode ? customEndNode : <AnimatedCaret color="fg" rotate={open ? 0 : 180} />}
             </HStack>
           </Pressable>
         ),
@@ -513,8 +532,7 @@ const DefaultSelectControlComponent = memo(
           styles?.controlEndNode,
           customEndNode,
           open,
-          variant,
-          setOpen,
+          handleToggleOpen,
         ],
       );
 
@@ -532,11 +550,15 @@ const DefaultSelectControlComponent = memo(
         <InputStack
           ref={ref}
           blendStyles={interactableBlendStyles}
+          borderRadius={borderRadius}
           borderWidth={borderWidth}
+          disableFocusedStyle={disableFocusedStyle}
           disabled={disabled}
           endNode={endNode}
+          focused={open && !readOnly}
           focusedBorderWidth={focusedBorderWidth}
           helperTextNode={helperTextNode}
+          inputBackground={inputBackground}
           inputNode={inputNode}
           labelNode={labelNode}
           labelVariant={labelVariant}

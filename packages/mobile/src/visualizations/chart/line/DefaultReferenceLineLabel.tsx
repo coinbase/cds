@@ -1,9 +1,9 @@
 import { memo, useMemo } from 'react';
 
-import { useTheme } from '../../../index';
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
-import { ChartText } from '../text';
-import { type ChartInset, getChartInset } from '../utils';
+import { ChartText } from '../text/ChartText';
+import { type ChartInset, getChartInset } from '../utils/chart';
 
 import type { ReferenceLineLabelComponentProps } from './ReferenceLine';
 

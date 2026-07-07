@@ -1,4 +1,4 @@
-import type { Rect } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 
 import type { BarBaseProps, BarComponent } from '../bar/Bar';
 import type { BarSeries } from '../bar/BarStack';

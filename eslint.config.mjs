@@ -431,6 +431,64 @@ export default tseslint.config(
       ...react19CompatibilityRules,
     },
   },
+  // Scope no-cds-barrel-imports to the published source of the three platform
+  // packages. Non-shipped files (stories, Figma Code Connect, tests, mocks,
+  // fixtures) are excluded since they aren't part of the package's build output
+  // and so don't affect downstream consumers' bundles.
+  {
+    files: [
+      'packages/web/src/**/*.{js,jsx,mjs,cjs,ts,tsx}',
+      'packages/mobile/src/**/*.{js,jsx,mjs,cjs,ts,tsx}',
+      'packages/common/src/**/*.{js,jsx,mjs,cjs,ts,tsx}',
+    ],
+    ignores: [
+      '**/__stories__/**',
+      '**/__tests__/**',
+      '**/__mocks__/**',
+      '**/__fixtures__/**',
+      '**/__figma__/**',
+      '**/*.stories.*',
+      '**/*.test.*',
+      '**/*.spec.*',
+      '**/*.figma.*',
+    ],
+    rules: {
+      'internal/no-cds-barrel-imports': 'warn',
+    },
+  },
+  // cds-web is the only package whose style props compile to overridable
+  // single-class Linaria rules, so a component's own `css` block can silently
+  // win the CSS source-order tiebreaker over a consumer-provided style prop
+  // (see CDS-2118). Scope the rule to published web source and exclude the
+  // style system itself, which legitimately implements these CSS properties.
+  //
+  // The rule is type-aware (it resolves the type of `{...spread}` props to find
+  // style props that reach an element without an explicit attribute), so this
+  // block enables `projectService` for the in-scope TS/TSX files.
+  {
+    files: ['packages/web/src/**/*.{ts,tsx}'],
+    ignores: [
+      'packages/web/src/styles/**',
+      '**/__stories__/**',
+      '**/__tests__/**',
+      '**/__mocks__/**',
+      '**/__fixtures__/**',
+      '**/__figma__/**',
+      '**/*.stories.*',
+      '**/*.test.*',
+      '**/*.spec.*',
+      '**/*.figma.*',
+    ],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      'internal/no-style-prop-css-overrides': 'warn',
+    },
+  },
   {
     files: ['**/*.stories.{js,jsx,ts,tsx}', '**/__stories__/**'],
     rules: {
@@ -481,6 +539,14 @@ export default tseslint.config(
   },
   {
     files: ['packages/migrator/**/*.test.{ts,tsx}'],
+    rules: {
+      'jest/expect-expect': 'off',
+    },
+  },
+  // Reassure perf benchmarks use `measurePerformance` as their assertion; they intentionally
+  // have no `expect()` calls, so jest/expect-expect does not apply.
+  {
+    files: ['**/*.perf-test.{ts,tsx}'],
     rules: {
       'jest/expect-expect': 'off',
     },

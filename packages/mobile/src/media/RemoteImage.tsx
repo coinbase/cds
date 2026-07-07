@@ -14,7 +14,9 @@ import { ClipPath, Defs, Image as SvgImage, Path, Svg, SvgXml } from 'react-nati
 import { SvgCssUri } from 'react-native-svg/css';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { hexagonShapePath } from '@coinbase/cds-common/svg/shape';
-import type { AspectRatio, AvatarSize, FixedValue, Shape } from '@coinbase/cds-common/types';
+import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
+import type { FixedValue } from '@coinbase/cds-common/types/DimensionStyles';
+import type { AspectRatio, Shape } from '@coinbase/cds-common/types/Shape';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';

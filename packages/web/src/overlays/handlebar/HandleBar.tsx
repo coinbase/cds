@@ -3,7 +3,7 @@ import { handleBarHeight } from '@coinbase/cds-common/tokens/drawer';
 import { css } from '@linaria/core';
 
 import { cx } from '../../cx';
-import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../../layout';
+import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../../layout/Box';
 import { Pressable } from '../../system/Pressable';
 
 // Fixed pixel values used intentionally — handle size should not scale with theme density.

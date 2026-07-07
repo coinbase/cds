@@ -3,9 +3,10 @@ import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 
-import { useTheme } from '../../../index';
+import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
-import { evaluateGradientAtValue, getGradientStops, useScrubberContext } from '../utils';
+import { useScrubberContext } from '../utils/context';
+import { evaluateGradientAtValue, getGradientStops } from '../utils/gradient';
 import { convertToSerializableScale } from '../utils/scale';
 
 import { DefaultScrubberBeacon } from './DefaultScrubberBeacon';

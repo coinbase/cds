@@ -1,22 +1,24 @@
 import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import type { ChipProps } from '../../chips/ChipProps';
-import { MediaChip } from '../../chips/MediaChip';
+import { MediaChip, type MediaChipBaseProps } from '../../chips/MediaChip';
 import { cx } from '../../cx';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
-import { HStack, type HStackDefaultElement, type HStackProps } from '../../layout';
+import { HStack, type HStackDefaultElement, type HStackProps } from '../../layout/HStack';
+import { Paddle } from '../../tabs/Paddle';
 import {
-  Paddle,
   Tabs,
   type TabsActiveIndicatorComponent,
   type TabsBaseProps,
   type TabsProps,
-} from '../../tabs';
+} from '../../tabs/Tabs';
 
 const containerCss = css`
   isolation: isolate;
@@ -32,6 +34,9 @@ const scrollContainerCss = css`
 const DefaultTabComponent = <TabId extends string = string>({
   label = '',
   id,
+  activeBackground,
+  activeColor,
+  color,
   ...tabProps
 }: TabbedChipProps<TabId>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
@@ -56,7 +61,9 @@ const DefaultTabComponent = <TabId extends string = string>({
     <MediaChip
       ref={chipRef}
       aria-selected={isActive}
-      invertColorScheme={isActive}
+      background={isActive && activeBackground ? activeBackground : undefined}
+      color={isActive && activeColor ? activeColor : color}
+      invertColorScheme={isActive && !activeBackground}
       onClick={handleClick}
       role="tab"
       width="max-content"
@@ -77,6 +84,15 @@ export type TabbedChipProps<TabId extends string = string> = Omit<
 > &
   TabValue<TabId> & {
     Component?: React.FC<Omit<ChipProps, 'children'> & TabValue<TabId>>;
+    /**
+     * Custom background color applied to the chip when it is the active tab.
+     * When set, takes precedence over the default `invertColorScheme` behavior.
+     */
+    activeBackground?: MediaChipBaseProps['background'];
+    /**
+     * Custom foreground color applied to the chip label when it is the active tab.
+     */
+    activeColor?: MediaChipBaseProps['color'];
   };
 
 export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
@@ -86,6 +102,7 @@ export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
   | 'tabs'
   | 'onActiveTabElementChange'
   | 'activeBackground'
+  | 'activeColor'
 > & {
   TabComponent?: React.FC<TabbedChipProps<TabId>>;
   TabsActiveIndicatorComponent?: TabsProps<TabId>['TabsActiveIndicatorComponent'];

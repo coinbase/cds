@@ -6,7 +6,9 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { Collapsible } from '../collapsible/Collapsible';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { type BoxBaseProps, type BoxProps, HStack, VStack } from '../layout';
+import { type BoxBaseProps, type BoxProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import type { ResponsiveProp } from '../styles/styleProps';
 import type { StylesAndClassNames } from '../types';
 

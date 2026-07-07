@@ -4,10 +4,11 @@ import {
   floatingAssetCardLargeWidth,
   floatingAssetCardSmallDimension,
 } from '@coinbase/cds-common/tokens/card';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { HStack, VStack } from '../layout';
-import { Pressable } from '../system';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
+import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
 export type FloatingAssetCardBaseProps = SharedProps & {

@@ -8,6 +8,77 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.1 (7/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: memoize fallback styles. [[#782](https://github.com/coinbase/cds/pull/782)]
+
+## 9.6.0 (7/6/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add TextFallback. [[#780](https://github.com/coinbase/cds/pull/780)]
+
+## 9.5.0 (6/25/2026 PST)
+
+#### 🚀 Updates
+
+- Chore: add styled element for Tab's TabContainer component to support equal width tabs. [[#772](https://github.com/coinbase/cds/pull/772)]
+
+## 9.4.3 (6/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Add `activeBackground` and `activeColor` props to alpha `TabbedChips`. `activeBackground` sets a custom chip background color when active (replacing the default `invertColorScheme` behavior); `activeColor` sets a custom chip label text color when active. [[#766](https://github.com/coinbase/cds/pull/766)]
+
+## 9.4.2 ((6/23/2026, 07:32 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.4.1 (6/15/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Modal appearance props now apply to the modal card. [[#758](https://github.com/coinbase/cds/pull/758)]
+
+## 9.4.0 (6/15/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add gray4 illustration color token. [[#746](https://github.com/coinbase/cds/pull/746)]
+
+## 9.3.1 (6/12/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: replace barrel file imports with targeted imports to specific modules. [[#757](https://github.com/coinbase/cds/pull/757)]
+
+## 9.3.0 (6/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support tooltip theming. [[#753](https://github.com/coinbase/cds/pull/753)]
+
+## 9.2.2 (6/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: custom Switch sizes now center in the background track correctly. [[#750](https://github.com/coinbase/cds/pull/750)]
+
+## 9.2.1 (6/9/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: add tabbed-chips to exports in web/mobile packages.
+
+## 9.2.0 (5/28/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: improve Select theming support. [[#733](https://github.com/coinbase/cds/pull/733)]
+- Feat: add readOnly support to Select. [[#733](https://github.com/coinbase/cds/pull/733)]
+
 ## 9.1.3 (5/28/2026 PST)
 
 #### 🐞 Fixes

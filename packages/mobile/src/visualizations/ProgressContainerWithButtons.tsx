@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import type { ProgressContainerWithButtonsProps } from '@coinbase/cds-common/types/ProgressContainerWithButtonsProps';
 
-import { Button } from '../buttons';
-import { VStack } from '../layout';
+import { Button } from '../buttons/Button';
+import { VStack } from '../layout/VStack';
 
 export const ProgressContainerWithButtons = ({
   children,

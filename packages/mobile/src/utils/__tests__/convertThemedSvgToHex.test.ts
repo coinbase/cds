@@ -9,6 +9,7 @@ const palette: { [key in ThemeVars.IllustrationColor]: string } = {
   gray: 'rgb(206, 210, 219)',
   gray2: 'rgb(10, 11, 15)',
   gray3: 'rgb(206, 210, 220)',
+  gray4: 'rgb(200, 203, 210)',
   positive: 'rgb(60, 194, 138)',
   negative: 'rgb(225, 57, 71)',
   accent1: 'rgb(255, 210, 0)',
@@ -33,9 +34,12 @@ describe('convertThemedSvgToHex', () => {
     );
   });
 
-  it('normalises hyphenated tokens: accent-1 maps to accent1', () => {
-    const svg = '<path fill="var(--illustration-accent-1)"/>';
-    expect(convertThemedSvgToHex(svg, palette)).toBe('<path fill="#ffd200"/>');
+  it('normalises hyphenated tokens: accent-1 maps to accent1, gray-4 maps to gray4', () => {
+    const svg =
+      '<path fill="var(--illustration-accent-1)"/><path fill="var(--illustration-gray-4)"/>';
+    expect(convertThemedSvgToHex(svg, palette)).toBe(
+      '<path fill="#ffd200"/><path fill="#c8cbd2"/>',
+    );
   });
 
   it('converts rgba() to hex (alpha channel is dropped by colorToHex)', () => {

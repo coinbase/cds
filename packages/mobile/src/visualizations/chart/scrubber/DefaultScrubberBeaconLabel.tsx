@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
-import { useTheme } from '../../../index';
-import { ChartText, type ChartTextProps } from '../text';
+import { useTheme } from '../../../hooks/useTheme';
+import { ChartText, type ChartTextProps } from '../text/ChartText';
 
 import type { ScrubberBeaconLabelProps } from './Scrubber';
 

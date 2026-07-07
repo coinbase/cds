@@ -8,12 +8,13 @@ import {
   type ViewStyle,
 } from 'react-native';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import type { Placement } from '@coinbase/cds-common/types';
+import type { Placement } from '@coinbase/cds-common/types/Placement';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
-import { Box, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { VStack } from '../layout/VStack';
 
 import { getProgressBarLabelParts, type ProgressBarLabel } from './getProgressBarLabelParts';
 import { type ProgressBaseProps } from './ProgressBar';

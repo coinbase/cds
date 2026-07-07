@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import type { CarouselAutoplay } from '@coinbase/cds-common';
+import type { CarouselAutoplay } from '@coinbase/cds-common/carousel/useCarouselAutoplay';
 
 export type CarouselContextValue = {
   /**

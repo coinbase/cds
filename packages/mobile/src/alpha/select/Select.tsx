@@ -63,6 +63,7 @@ const SelectBase = memo(
       open: openProp,
       setOpen: setOpenProp,
       disabled,
+      readOnly,
       disableClickOutsideClose,
       placeholder,
       helperText,
@@ -89,6 +90,12 @@ const SelectBase = memo(
       align,
       font,
       bordered = true,
+      borderWidth,
+      focusedBorderWidth,
+      inputBackground,
+      labelColor,
+      labelFont,
+      borderRadius,
       SelectOptionComponent = DefaultSelectOption,
       SelectAllOptionComponent = DefaultSelectAllOption,
       SelectDropdownComponent = DefaultSelectDropdown,
@@ -180,20 +187,27 @@ const SelectBase = memo(
           accessibilityLabel={accessibilityLabel}
           align={align}
           blendStyles={styles?.controlBlendStyles}
+          borderRadius={borderRadius}
+          borderWidth={borderWidth}
           bordered={bordered}
           compact={compact}
           disabled={disabled}
           endNode={endNode}
+          focusedBorderWidth={focusedBorderWidth}
           font={font}
           helperText={helperText}
           hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
+          inputBackground={inputBackground}
           label={label}
+          labelColor={labelColor}
+          labelFont={labelFont}
           labelVariant={labelVariant}
           maxSelectedOptionsToShow={maxSelectedOptionsToShow}
           onChange={onChange}
-          open={open}
+          open={open && !readOnly}
           options={options}
           placeholder={placeholder}
+          readOnly={readOnly}
           removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
           setOpen={setOpen}
           startNode={startNode}
@@ -220,7 +234,7 @@ const SelectBase = memo(
           label={label}
           media={media}
           onChange={onChange}
-          open={open}
+          open={open && !readOnly}
           options={options}
           selectAllLabel={selectAllLabel}
           setOpen={setOpen}

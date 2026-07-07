@@ -2,7 +2,7 @@ import { memo, useCallback, useId, useMemo } from 'react';
 
 import { Checkbox } from '../../controls/Checkbox';
 import { Radio } from '../../controls/Radio';
-import { VStack } from '../../layout';
+import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
 
 import type { SelectOptionGroupProps, SelectType } from './Select';

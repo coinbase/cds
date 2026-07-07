@@ -2,9 +2,10 @@ import React, { memo, useCallback, useImperativeHandle, useMemo, useRef, useStat
 import { Animated, StyleSheet } from 'react-native';
 import type { ScrollView, ScrollViewProps } from 'react-native';
 import { useSafeAreaFrame } from 'react-native-safe-area-context';
-import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useScrollOffset } from '../../hooks/useScrollOffset';
 import type { ScrollToParams } from '../../hooks/useScrollTo';

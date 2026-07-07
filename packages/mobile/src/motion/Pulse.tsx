@@ -2,7 +2,8 @@ import React, { memo, useCallback, useEffect, useImperativeHandle, useRef, useSt
 import { Animated } from 'react-native';
 import type { ForwardedRef } from 'react';
 import { pulseTransitionConfig, pulseVariantOpacity } from '@coinbase/cds-common/motion/hint';
-import type { MotionTransition, PulseVariant } from '@coinbase/cds-common/types';
+import type { MotionTransition } from '@coinbase/cds-common/types/Motion';
+import type { PulseVariant } from '@coinbase/cds-common/types/PulseBaseProps';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 
