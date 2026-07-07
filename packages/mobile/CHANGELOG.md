@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.1 (7/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: memoize fallback styles. [[#782](https://github.com/coinbase/cds/pull/782)]
+
 ## 9.6.0 (7/6/2026 PST)
 
 #### 🚀 Updates
