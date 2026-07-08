@@ -4,7 +4,7 @@ on:
   push:
     branches: [master]
   pull_request:
-    types: [opened, synchronize, reopened, labeled, unlabeled]
+    types: [opened, synchronize, reopened, labeled, unlabeled, ready_for_review]
     branches: [master]
   workflow_dispatch:
     inputs:
@@ -72,14 +72,19 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           HAS_LABEL: ${{ contains(github.event.pull_request.labels.*.name, 'visreg-mobile') }}
+          IS_DRAFT: ${{ github.event.pull_request.draft }}
           CACHE_HIT: ${{ steps.cache-check.outputs.cache-hit }}
         run: |
           if [[ "$EVENT_NAME" != "pull_request" ]]; then
             echo "Non-PR event, always running visreg"
             echo "should_run=true" >> "$GITHUB_OUTPUT"
           elif [[ "$HAS_LABEL" == "true" ]]; then
+            # Label is an explicit opt-in — runs even on draft PRs.
             echo "visreg-mobile label present, running visreg"
             echo "should_run=true" >> "$GITHUB_OUTPUT"
+          elif [[ "$IS_DRAFT" == "true" ]]; then
+            echo "Draft PR without visreg-mobile label, skipping"
+            echo "should_run=false" >> "$GITHUB_OUTPUT"
           elif [[ "$CACHE_HIT" == "true" ]]; then
             echo "Cache hit - visreg already passed with these exact files, skipping"
             echo "should_run=false" >> "$GITHUB_OUTPUT"
