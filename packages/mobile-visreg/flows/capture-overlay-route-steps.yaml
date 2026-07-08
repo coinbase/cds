@@ -10,9 +10,9 @@ appId: ${APP_ID}
 - waitForAnimationToEnd
 - inputText: ${ROUTE_NAME}
 - assertVisible:
-    text: 'Go to: ${ROUTE_NAME}'
+    id: exact-match-button
 - tapOn:
-    text: 'Go to: ${ROUTE_NAME}'
+    id: exact-match-button
 - assertVisible:
     id: mobile-playground-screen
 - waitForAnimationToEnd

@@ -74,6 +74,7 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
           accessory="arrow"
           innerSpacing={innerSpacingConfig}
           onPress={() => navigate(exactMatch)}
+          testID="exact-match-button"
           title={`Go to: ${exactMatch}`}
         />
       )}
