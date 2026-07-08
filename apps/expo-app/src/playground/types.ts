@@ -4,7 +4,6 @@ type RouteParams = { routeKeys: string[] } | undefined;
 
 export type PlaygroundStackParamList = {
   DebugExamples: { routeKeys: string[] };
-  DebugSearch: { routeKeys: string[] };
   DebugIconSheet: undefined;
 } & {
   [key: string]: RouteParams;
@@ -12,7 +11,7 @@ export type PlaygroundStackParamList = {
 
 export type ExamplesListScreenProps = NativeStackScreenProps<
   PlaygroundStackParamList,
-  'DebugExamples' | 'DebugSearch'
+  'DebugExamples'
 >;
 
 export type IconSheetScreenProps = NativeStackScreenProps<
