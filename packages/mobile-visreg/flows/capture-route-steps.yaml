@@ -11,9 +11,9 @@ appId: ${APP_ID}
 - waitForAnimationToEnd
 - inputText: ${ROUTE_NAME}
 - assertVisible:
-    id: exact-match-button
+    id: exact-match-button-cell-pressable
 - tapOn:
-    id: exact-match-button
+    id: exact-match-button-cell-pressable
 - assertVisible:
     id: mobile-playground-screen
 - waitForAnimationToEnd
