@@ -78,6 +78,7 @@ const HeaderContent = memo(
           accessibilityLabel="Search for component"
           name="search"
           onPress={onOpenSearch}
+          testID="search-button"
         />
       </Box>
     ) : showBackButton ? (
