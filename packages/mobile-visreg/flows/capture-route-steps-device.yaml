@@ -18,5 +18,6 @@ appId: ${APP_ID}
     id: mobile-playground-screen
 - waitForAnimationToEnd
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
-- tapOn: Back
+- tapOn:
+    id: nav-back-button
 - waitForAnimationToEnd

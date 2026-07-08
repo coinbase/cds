@@ -24,5 +24,6 @@ appId: ${APP_ID}
     text: 'Cancel'
     optional: true
 - waitForAnimationToEnd
-- tapOn: Back
+- tapOn:
+    id: nav-back-button
 - waitForAnimationToEnd
