@@ -1,17 +1,18 @@
 appId: ${APP_ID}
 ---
 # Sub-flow for overlay routes (alerts, modals, trays, drawers, etc.).
-# Scrolls to the route, taps it, opens the overlay, captures a screenshot,
-# closes it, then taps nav-back-button to return to the debug list.
+# Same search-based navigation as capture-route-steps.yaml, with an extra
+# Open/Cancel step to capture the overlay before going back.
 # Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
 
-- scrollUntilVisible:
-    element:
-      text: ${ROUTE_NAME}
-    direction: DOWN
-    timeout: 15000
 - tapOn:
-    text: ${ROUTE_NAME}
+    accessibilityLabel: 'Search for component'
+- waitForAnimationToEnd
+- inputText: ${ROUTE_NAME}
+- assertVisible:
+    text: 'Go to: ${ROUTE_NAME}'
+- tapOn:
+    text: 'Go to: ${ROUTE_NAME}'
 - assertVisible:
     id: mobile-playground-screen
 - waitForAnimationToEnd

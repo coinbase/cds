@@ -1,16 +1,19 @@
 appId: ${APP_ID}
 ---
-# Sub-flow: scroll the debug screen list to the target route, tap it, capture a
-# screenshot, then tap the nav-back-button to return to the list.
+# Open inline search, type the route name, and tap the exact-match shortcut.
+# If "Go to: ${ROUTE_NAME}" is not visible, assertVisible fails — this is intentional.
+# Every route in enabled-routes.mjs must appear in the ExamplesListScreen for the
+# suite to pass, keeping the route list and visreg config in sync.
 # Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
 
-- scrollUntilVisible:
-    element:
-      text: ${ROUTE_NAME}
-    direction: DOWN
-    timeout: 15000
 - tapOn:
-    text: ${ROUTE_NAME}
+    accessibilityLabel: 'Search for component'
+- waitForAnimationToEnd
+- inputText: ${ROUTE_NAME}
+- assertVisible:
+    text: 'Go to: ${ROUTE_NAME}'
+- tapOn:
+    text: 'Go to: ${ROUTE_NAME}'
 - assertVisible:
     id: mobile-playground-screen
 - waitForAnimationToEnd
