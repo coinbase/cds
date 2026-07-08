@@ -71,7 +71,6 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
       {exactMatch !== null && (
         <ListCell
           compact
-          accessibilityLabel={`Go directly to ${exactMatch} example`}
           accessory="arrow"
           innerSpacing={innerSpacingConfig}
           onPress={() => navigate(exactMatch)}
