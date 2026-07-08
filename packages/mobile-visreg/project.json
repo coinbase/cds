@@ -16,6 +16,12 @@
         "cwd": "packages/mobile-visreg"
       }
     },
+    "recover-screenshots": {
+      "command": "node ./src/recover-screenshots.mjs",
+      "options": {
+        "cwd": "packages/mobile-visreg"
+      }
+    },
     "upload": {
       "command": "node ./src/upload.mjs",
       "options": {
