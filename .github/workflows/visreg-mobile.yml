@@ -128,11 +128,33 @@ jobs:
 
       - name: Boot iOS simulator
         run: |
-          STATE=$(xcrun simctl list devices available --json | jq -r '.devices[] | .[] | select(.name == "iPhone 16") | .state' | head -n 1)
-          if [ "$STATE" != "Booted" ]; then
-            xcrun simctl boot "iPhone 16"
+          # Use whichever iPhone simulator ships with the current macos-latest image
+          # rather than pinning a device by name. GitHub periodically rolls
+          # macos-latest to a new Xcode image with a different default device set, so
+          # a hard-coded name (e.g. "iPhone 16") eventually stops resolving and the
+          # boot fails with "Invalid device or device pair". Prefer an already-booted
+          # device, otherwise take the first available iPhone.
+          DEVICE=$(xcrun simctl list devices available --json | jq -r '
+            [ .devices | to_entries[] | .key as $runtime | .value[]
+              | select(.name | startswith("iPhone"))
+              | { runtime: ($runtime | sub("com.apple.CoreSimulator.SimRuntime."; "")), name, udid, state } ]
+            | (map(select(.state == "Booted")) + .)
+            | .[0] // empty')
+
+          if [ -z "$DEVICE" ]; then
+            echo "No available iPhone simulator found on this runner" >&2
+            xcrun simctl list devices available
+            exit 1
           fi
-          xcrun simctl bootstatus booted
+
+          UDID=$(echo "$DEVICE" | jq -r '.udid')
+          LABEL=$(echo "$DEVICE" | jq -r '"\(.name) [\(.runtime)] (\(.udid))"')
+
+          echo "Booting iOS simulator: $LABEL"
+          echo "iOS simulator: $LABEL" >> "$GITHUB_STEP_SUMMARY"
+
+          # -b boots the device if it isn't already, then waits for full boot.
+          xcrun simctl bootstatus "$UDID" -b
           sleep 30
 
       - name: Install app on simulator
