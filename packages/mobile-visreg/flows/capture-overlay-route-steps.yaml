@@ -19,8 +19,13 @@ appId: ${APP_ID}
 - tapOn: 'Open'
 - waitForAnimationToEnd
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
+# Different overlay components use different dismiss button text.
+# AlertBasic/ModalBasic use "Cancel"; TrayBasic uses "Close". Try both.
 - tapOn:
     text: 'Cancel'
+    optional: true
+- tapOn:
+    text: 'Close'
     optional: true
 - waitForAnimationToEnd
 - tapOn:
