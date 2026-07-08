@@ -4,8 +4,7 @@ appId: ${APP_ID}
 # Uses scrollUntilVisible + tapOn instead of openLink because Maestro's openLink
 # on iOS real devices fails with "Invalid device" — the lower-level device channel
 # it uses is not available on BrowserStack's infrastructure.
-# After the screenshot, swipe from the left edge to trigger React Navigation's
-# native back gesture and return to the debug screen list.
+# After the screenshot, taps the "Back" header button to return to the debug list.
 # Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
 
 - scrollUntilVisible:
@@ -19,7 +18,5 @@ appId: ${APP_ID}
     id: mobile-playground-screen
 - waitForAnimationToEnd
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
-- swipe:
-    start: '0%,50%'
-    end: '40%,50%'
+- tapOn: Back
 - waitForAnimationToEnd

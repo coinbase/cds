@@ -3,7 +3,7 @@ appId: ${APP_ID}
 # Sub-flow for overlay routes (alerts, modals, trays, drawers, etc.) on
 # BrowserStack real devices. Mirrors capture-overlay-route-steps.yaml but uses
 # scrollUntilVisible + tapOn instead of openLink (see capture-route-steps-device.yaml
-# for the explanation). After closing the overlay, swipes back to the debug list.
+# for the explanation). After closing the overlay, taps the "Back" header button.
 # Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
 
 - scrollUntilVisible:
@@ -24,7 +24,5 @@ appId: ${APP_ID}
     text: 'Cancel'
     optional: true
 - waitForAnimationToEnd
-- swipe:
-    start: '0%,50%'
-    end: '40%,50%'
+- tapOn: Back
 - waitForAnimationToEnd
