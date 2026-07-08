@@ -6,7 +6,7 @@ appId: ${APP_ID}
 # Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
 
 - tapOn:
-    accessibilityLabel: 'Search for component'
+    label: 'Search for component'
 - waitForAnimationToEnd
 - inputText: ${ROUTE_NAME}
 - assertVisible:
