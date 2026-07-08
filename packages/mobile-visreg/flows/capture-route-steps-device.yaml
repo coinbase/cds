@@ -4,7 +4,7 @@ appId: ${APP_ID}
 # Uses scrollUntilVisible + tapOn instead of openLink because Maestro's openLink
 # on iOS real devices fails with "Invalid device" — the lower-level device channel
 # it uses is not available on BrowserStack's infrastructure.
-# After the screenshot, taps the "Back" header button to return to the debug list.
+# After the screenshot, taps the nav-back-button (testID) to return to the debug list.
 # Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
 
 - scrollUntilVisible:
