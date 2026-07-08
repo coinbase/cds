@@ -55,7 +55,7 @@ jobs:
         id: hash
         if: github.event_name == 'pull_request'
         run: |
-          HASH=$(git ls-tree -r HEAD -- packages/common packages/mobile packages/mobile-visualization | sha256sum | cut -d' ' -f1)
+          HASH=$(git ls-tree -r HEAD -- packages/mobile/src | grep -E '\.(ts|tsx)$' | grep -vE '\.(spec|test|figma|stories)\.' | sha256sum | cut -d' ' -f1)
           echo "hash=$HASH" >> "$GITHUB_OUTPUT"
 
       - name: Check visreg result cache
