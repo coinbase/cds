@@ -28,8 +28,10 @@ packages/mobile-visreg/
   src/
     config.mjs              # Re-exports enabled routes + default settings
     generate-flows.mjs      # Generates flows/capture-all.yaml from the route list
-    run.mjs                 # Orchestrator CLI — generates flows, invokes Maestro
-    setup.mjs               # Maestro CLI installer
+    run.mjs                 # Local orchestrator CLI — generates flows, invokes local Maestro
+    browserstack.mjs        # BrowserStack App Automate REST API client
+    browserstack-run.mjs    # Cloud orchestrator CLI — uploads app+flows, runs on a real device
+    setup.mjs               # Maestro CLI installer (local only)
     upload.mjs              # Percy upload CLI
   flows/
     capture-route.yaml      # Single-route Maestro flow (used for --route iteration)
@@ -42,12 +44,19 @@ packages/mobile-visreg/
 
 All targets are run from the repo root via `yarn nx run mobile-visreg:<target>`.
 
-| Target    | Command                             | Description                                              |
-| --------- | ----------------------------------- | -------------------------------------------------------- |
-| `setup`   | `yarn nx run mobile-visreg:setup`   | Install Maestro CLI (one-time)                           |
-| `ios`     | `yarn nx run mobile-visreg:ios`     | Capture screenshots from the CDS expo-app app on iOS     |
-| `android` | `yarn nx run mobile-visreg:android` | Capture screenshots from the CDS expo-app app on Android |
-| `upload`  | `yarn nx run mobile-visreg:upload`  | Upload screenshots to BrowserStack App Percy             |
+| Target                 | Command                                          | Description                                                       |
+| ---------------------- | ------------------------------------------------ | ----------------------------------------------------------------- |
+| `setup`                | `yarn nx run mobile-visreg:setup`                | Install Maestro CLI (one-time, local only)                        |
+| `ios`                  | `yarn nx run mobile-visreg:ios`                  | Capture screenshots locally from the expo-app on an iOS simulator |
+| `android`              | `yarn nx run mobile-visreg:android`              | Capture screenshots locally from the expo-app on an emulator      |
+| `browserstack-ios`     | `yarn nx run mobile-visreg:browserstack-ios`     | Capture screenshots on a BrowserStack real iOS device             |
+| `browserstack-android` | `yarn nx run mobile-visreg:browserstack-android` | Capture screenshots on a BrowserStack real Android device         |
+| `upload`               | `yarn nx run mobile-visreg:upload`               | Upload screenshots to BrowserStack App Percy                      |
+
+There are two execution paths that both land screenshots in `maestro-test-output/screenshots/` and then feed the same `upload` target:
+
+- **Local** (`ios` / `android`) — drives a simulator/emulator on your machine via the Maestro CLI. Best for local iteration.
+- **BrowserStack** (`browserstack-ios` / `browserstack-android`) — runs the suite on a real device in BrowserStack App Automate. This is what CI uses.
 
 ## Prerequisites
 
@@ -112,7 +121,7 @@ Routes must be explicitly opted in to visreg. To add a new route:
 
 1. Open `config/enabled-routes.mjs`
 2. Add the route name (must match the debug route name registered in the app) to the `enabledRoutes` array
-3. Verify the deep-link works: `xcrun simctl openurl booted cds:///Debug<RouteName>`
+3. Verify the deep-link works: `xcrun simctl openurl booted expoapp:///Debug<RouteName>`
 4. Run `yarn nx run mobile-visreg:ios` and confirm a screenshot is captured for the new route
 
 ## Single-route iteration
@@ -123,18 +132,56 @@ For fast iteration on a single component, run only that route without regenerati
 # Via the Maestro CLI directly
 cd packages/mobile-visreg
 maestro test flows/capture-route.yaml \
-  --env APP_ID=com.ui-systems.ios-release-hermes \
-  --env SCHEME=cds \
+  --env APP_ID=com.anonymous.expo-app \
+  --env SCHEME=expoapp \
   --env ROUTE_NAME=Button \
   --env PLATFORM_SUFFIX=_ios
 
 # Via run.mjs
 node src/run.mjs \
-  --appId com.ui-systems.ios-release-hermes \
-  --scheme cds \
+  --appId com.anonymous.expo-app \
+  --scheme expoapp \
   --route Button \
   --output ./visreg-screenshots
 ```
+
+## Running on BrowserStack App Automate
+
+CI runs the suite on BrowserStack's real-device cloud instead of a local simulator/emulator. The flow is:
+
+1. `expo-app` produces a committed native artifact — a device `.ipa` (iOS) or `.apk` (Android) — whose JS bundle is patched fresh on each run.
+2. `browserstack-run.mjs` uploads the app and a zip of the Maestro flows, triggers a Maestro build on a real device, polls until it finishes, and downloads the captured screenshots into `maestro-test-output/screenshots/`.
+3. The unchanged `upload` target pushes those screenshots to Percy.
+
+BrowserStack **automatically re-signs** uploaded iOS apps with its own provisioning profile, so no Apple Developer certificate, provisioning profile, or `codesign` step is required — the device `.ipa` just needs to exist.
+
+### Prerequisites
+
+- A **BrowserStack App Automate** account. Set credentials in your environment:
+  ```bash
+  export BROWSERSTACK_USERNAME=your_username
+  export BROWSERSTACK_ACCESS_KEY=your_access_key
+  ```
+- Committed device artifacts (see `apps/expo-app`): `prebuilds/ios-release-device/expoapp.ipa` and `prebuilds/android-release/expoapp.apk`.
+- `unzip` and `zip` on PATH (present on macOS and GitHub Ubuntu runners).
+
+### Run it
+
+```bash
+# Patch a fresh JS bundle into the committed device artifact
+yarn nx run expo-app:patch-bundle-ios-device      # iOS
+yarn nx run expo-app:patch-bundle-android         # Android
+
+# Run the suite on a BrowserStack real device
+yarn nx run mobile-visreg:browserstack-ios        # iOS
+yarn nx run mobile-visreg:browserstack-android    # Android
+
+# Upload the downloaded screenshots to Percy
+export PERCY_TOKEN=app_xxxxxxxxxxxxxxxx
+yarn nx run mobile-visreg:upload
+```
+
+To target different devices, edit the `--devices` flag in the `browserstack-ios` / `browserstack-android` targets in `project.json` (format: `"Device Name-OSVersion"`, e.g. `"iPhone 16-18"`).
 
 ## BrowserStack App Percy setup
 

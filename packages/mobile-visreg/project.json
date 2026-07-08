@@ -22,6 +22,18 @@
         "cwd": "packages/mobile-visreg"
       }
     },
+    "browserstack-ios": {
+      "command": "node ./src/browserstack-run.mjs --platform ios --appPath ../../apps/expo-app/prebuilds/ios-release-device/expoapp.ipa --devices 'iPhone 16-18' --appId com.anonymous.expo-app --scheme expoapp --platform-suffix _ios",
+      "options": {
+        "cwd": "packages/mobile-visreg"
+      }
+    },
+    "browserstack-android": {
+      "command": "node ./src/browserstack-run.mjs --platform android --appPath ../../apps/expo-app/prebuilds/android-release/expoapp.apk --devices 'Google Pixel 8-14.0' --appId com.anonymous.expoapp --scheme expoapp --platform-suffix _android",
+      "options": {
+        "cwd": "packages/mobile-visreg"
+      }
+    },
     "upload": {
       "command": "node ./src/upload.mjs",
       "options": {

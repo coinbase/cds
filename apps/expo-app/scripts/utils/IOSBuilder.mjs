@@ -166,7 +166,24 @@ export class IOSBuilder extends PlatformBuilder {
   // App installation and launch
   // ─────────────────────────────────────────────────────────────────
 
+  // Device builds are shipped as a signed .ipa (a zip whose Payload/ holds the
+  // .app). BrowserStack re-signs on upload, so patching the JS bundle and
+  // re-zipping — with no codesign — is sufficient.
+  #deviceApp() {
+    return path.join(this.buildInfo.outputPath, 'Payload', `${this.ios.scheme}.app`);
+  }
+
   async extractArtifact() {
+    if (this.ios.isDevice) {
+      try {
+        await fs.access(this.#deviceApp());
+      } catch {
+        console.log(`Extracting ${this.ios.ipa}...`);
+        await run('unzip', ['-oq', this.ios.ipa, '-d', this.buildInfo.outputPath]);
+      }
+      return;
+    }
+
     try {
       await fs.access(this.ios.app);
     } catch {
@@ -187,6 +204,25 @@ export class IOSBuilder extends PlatformBuilder {
   }
 
   async applyBundle(bundlePath) {
+    if (this.ios.isDevice) {
+      const outBundle = path.join(this.#deviceApp(), 'main.jsbundle');
+      console.log(`\nCopying bundle → ${outBundle}...`);
+      await fs.copyFile(bundlePath, outBundle);
+
+      // Re-zip Payload/ back into the .ipa. No codesign — BrowserStack re-signs.
+      const ipaAbs = path.resolve(this.ios.ipa);
+      await fs.rm(ipaAbs, { force: true });
+      await run('zip', ['-qr', ipaAbs, 'Payload'], { cwd: this.buildInfo.outputPath });
+      await fs.rm(path.join(this.buildInfo.outputPath, 'Payload'), {
+        recursive: true,
+        force: true,
+      });
+
+      console.log('iOS device .ipa bundle patched successfully.');
+      console.log(`IPA ready at: ${ipaAbs}`);
+      return;
+    }
+
     const outBundle = `${this.ios.app}/main.jsbundle`;
     console.log(`\nCopying bundle → ${outBundle}...`);
     await fs.copyFile(bundlePath, outBundle);

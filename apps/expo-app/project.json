@@ -78,6 +78,12 @@
         "cwd": "apps/expo-app"
       }
     },
+    "patch-bundle-ios-device": {
+      "command": "node ./scripts/patch-bundle.mjs --platform ios --profile release --target device",
+      "options": {
+        "cwd": "apps/expo-app"
+      }
+    },
     "patch-bundle-android": {
       "command": "node ./scripts/patch-bundle.mjs --platform android --profile release",
       "options": {
