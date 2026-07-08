@@ -4,20 +4,21 @@ Expo-based demo app for testing CDS mobile components. Used as the visual regres
 
 ## Nx targets
 
-| Command                                                | Description                                                                             |
-| ------------------------------------------------------ | --------------------------------------------------------------------------------------- |
-| `yarn nx run expo-app:ios`                             | Build (if needed), install, launch, and start Metro — full dev loop for iOS (debug)     |
-| `yarn nx run expo-app:ios --configuration=release`     | Install and launch the release build artifact (no Metro)                                |
-| `yarn nx run expo-app:android`                         | Build (if needed), install, launch, and start Metro — full dev loop for Android (debug) |
-| `yarn nx run expo-app:android --configuration=release` | Install and launch the release build artifact (no Metro)                                |
-| `yarn nx run expo-app:start`                           | Start Metro bundler only (assumes app is already installed)                             |
-| `yarn nx run expo-app:build --configuration=<config>`  | Compile the native app and archive to a tarball in `prebuilds/`                         |
-| `yarn nx run expo-app:launch --configuration=<config>` | Install + launch an existing build artifact on a simulator/emulator                     |
-| `yarn nx run expo-app:patch-bundle-ios`                | Swap the JS bundle inside the committed iOS Release prebuild — used by visreg CI        |
-| `yarn nx run expo-app:patch-bundle-android`            | Swap the JS bundle inside the committed Android Release prebuild — used by visreg CI    |
-| `yarn nx run expo-app:validate`                        | Check Expo dependency versions for compatibility                                        |
-| `yarn nx run expo-app:lint`                            | Lint the app source                                                                     |
-| `yarn nx run expo-app:typecheck`                       | Type-check the app source                                                               |
+| Command                                                        | Description                                                                             |
+| -------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `yarn nx run expo-app:ios`                                     | Build (if needed), install, launch, and start Metro — full dev loop for iOS (debug)     |
+| `yarn nx run expo-app:ios --configuration=release`             | Install and launch the release build artifact (no Metro)                                |
+| `yarn nx run expo-app:android`                                 | Build (if needed), install, launch, and start Metro — full dev loop for Android (debug) |
+| `yarn nx run expo-app:android --configuration=release`         | Install and launch the release build artifact (no Metro)                                |
+| `yarn nx run expo-app:start`                                   | Start Metro bundler only (assumes app is already installed)                             |
+| `yarn nx run expo-app:build --configuration=<config>`          | Compile the native app and archive to a tarball in `prebuilds/`                         |
+| `yarn nx run expo-app:launch --configuration=<config>`         | Install + launch an existing build artifact on a simulator/emulator                     |
+| `yarn nx run expo-app:patch-bundle --configuration=ios`        | Swap the JS bundle inside the committed iOS simulator prebuild — used by local visreg   |
+| `yarn nx run expo-app:patch-bundle --configuration=ios-device` | Swap the JS bundle inside the committed iOS device .ipa — used by CI visreg             |
+| `yarn nx run expo-app:patch-bundle --configuration=android`    | Swap the JS bundle inside the committed Android .apk — used by visreg CI                |
+| `yarn nx run expo-app:validate`                                | Check Expo dependency versions for compatibility                                        |
+| `yarn nx run expo-app:lint`                                    | Lint the app source                                                                     |
+| `yarn nx run expo-app:typecheck`                               | Type-check the app source                                                               |
 
 ## Build configurations
 
@@ -53,15 +54,23 @@ git add apps/expo-app/prebuilds/
 git commit -m "chore: update expo-app prebuilds"
 ```
 
-### patch-bundle targets
+### patch-bundle target
 
-`patch-bundle-ios` and `patch-bundle-android` update the JS bundle inside an already-extracted prebuild without recompiling native code. This is what visreg CI runs instead of a full build:
+`patch-bundle` updates the JS bundle inside an already-built native artifact without recompiling native code. It has three configurations:
 
-1. Extracts `prebuilds/ios-release/expoapp.tar.gz` → `prebuilds/ios-release/expoapp.app`
+| Configuration | Artifact patched                                         | Used by                  |
+| ------------- | -------------------------------------------------------- | ------------------------ |
+| `ios`         | `prebuilds/ios-release/expoapp.tar.gz` (simulator)       | Local visreg             |
+| `ios-device`  | `prebuilds/ios-release-device/expoapp.ipa` (real device) | CI visreg (BrowserStack) |
+| `android`     | `prebuilds/android-release/expoapp.apk`                  | CI and local visreg      |
+
+Each configuration:
+
+1. Extracts the committed artifact
 2. Runs `expo export` to produce a fresh JS bundle from the current branch
-3. Replaces the JS bundle inside the `.app`
+3. Replaces the bundle inside the artifact and repackages it
 
-The patched `.app` is then installed directly onto the simulator for screenshot capture.
+For the `ios-device` configuration no code signing is performed — BrowserStack re-signs the `.ipa` on upload.
 
 ## Local development
 

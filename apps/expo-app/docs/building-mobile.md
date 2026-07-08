@@ -49,7 +49,7 @@ It is a native module build of your application that is:
 - Any native dependency change in `apps/expo-app/package.json` or `packages/mobile/package.json`
 - Any change to native Expo config or build tooling
 
-> JS-only changes do not require a full rebuild — use `yarn nx run expo-app:patch-bundle-ios` / `patch-bundle-android` to swap the JS bundle into the existing prebuild instead.
+> JS-only changes do not require a full rebuild — use `yarn nx run expo-app:patch-bundle --configuration=<ios|ios-device|android>` to swap the JS bundle into the existing prebuild instead.
 
 ### How do I rebuild a release build?
 

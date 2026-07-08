@@ -92,7 +92,7 @@ yarn nx run mobile-visreg:setup
 > **Important**: Use the **release** build, not debug. Debug builds use the Expo Dev Client shell which intercepts deep links before React Navigation can handle them, preventing navigation to component routes.
 
 ```bash
-yarn nx run expo-app:patch-bundle-ios
+yarn nx run expo-app:patch-bundle --configuration=ios
 xcrun simctl install booted apps/expo-app/prebuilds/ios-release/expoapp.app
 ```
 
@@ -169,8 +169,8 @@ BrowserStack **automatically re-signs** uploaded iOS apps with its own provision
 
 ```bash
 # Patch a fresh JS bundle into the committed device artifact
-yarn nx run expo-app:patch-bundle-ios-device      # iOS
-yarn nx run expo-app:patch-bundle-android         # Android
+yarn nx run expo-app:patch-bundle --configuration=ios-device    # iOS
+yarn nx run expo-app:patch-bundle --configuration=android       # Android
 
 # Run the suite on a BrowserStack real device
 yarn nx run mobile-visreg:browserstack-ios        # iOS

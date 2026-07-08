@@ -123,11 +123,12 @@ A key performance optimization keeps the committed prebuilds (native `.ipa` / `.
 Instead, CI uses a patch step:
 
 ```bash
-yarn nx run expo-app:patch-bundle-ios      # iOS
-yarn nx run expo-app:patch-bundle-android  # Android
+yarn nx run expo-app:patch-bundle --configuration=ios           # iOS simulator (local visreg)
+yarn nx run expo-app:patch-bundle --configuration=ios-device    # iOS device .ipa (CI visreg)
+yarn nx run expo-app:patch-bundle --configuration=android       # Android .apk
 ```
 
-These scripts uncompress the committed release artifact, swap in the freshly bundled JS, and re-compress it into a valid platform artifact. This makes CI visreg runs fast while keeping the native prebuilds in sync with the JS codebase.
+These scripts decompress the committed release artifact, swap in the freshly bundled JS, and re-compress it into a valid platform artifact. This makes CI visreg runs fast while keeping the native prebuilds in sync with the JS codebase.
 
 **When should the native prebuilds be rebuilt?**
 Any time native dependencies, native Expo configs, or relevant build tooling changes. When this happens, regenerate and commit the updated prebuilds:

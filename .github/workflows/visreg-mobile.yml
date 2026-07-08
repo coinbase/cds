@@ -130,7 +130,7 @@ jobs:
           fi
 
       - name: Prepare iOS app (patch JS bundle into device .ipa)
-        run: yarn nx run expo-app:patch-bundle-ios-device
+        run: yarn nx run expo-app:patch-bundle --configuration=ios-device
 
       - name: Run visreg on BrowserStack
         run: yarn nx run mobile-visreg:browserstack-ios
@@ -201,7 +201,7 @@ jobs:
 
       - name: Setup Android build tools
         run: |
-          # zipalign + apksigner (used by patch-bundle-android) live in build-tools
+          # zipalign + apksigner (used by patch-bundle android) live in build-tools
           BUILD_TOOLS_DIR="$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)"
           echo "$BUILD_TOOLS_DIR" >> "$GITHUB_PATH"
           # The APK is re-signed with the standard Android debug keystore; create
@@ -215,7 +215,7 @@ jobs:
           fi
 
       - name: Prepare Android app (patch JS bundle into .apk)
-        run: yarn nx run expo-app:patch-bundle-android
+        run: yarn nx run expo-app:patch-bundle --configuration=android
 
       - name: Run visreg on BrowserStack
         run: yarn nx run mobile-visreg:browserstack-android
