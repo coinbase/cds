@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.2 (7/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: refactor from React.forwardRef to ref as prop for all cds-mobile components. [[#741](https://github.com/coinbase/cds/pull/741)]
+
 ## 9.6.1 (7/7/2026 PST)
 
 #### 🐞 Fixes
