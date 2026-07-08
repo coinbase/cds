@@ -99,6 +99,8 @@ xcuserdata
 DerivedData
 *.hmap
 *.ipa
+# Allow the committed device prebuild used by BrowserStack visreg CI
+!apps/expo-app/prebuilds/ios-release-device/expoapp.ipa
 *.xcuserstate
 
 ## Android
@@ -158,9 +160,10 @@ apps/expo-app/build/
 # we expect developers to generate their own debug builds for local development
 apps/expo-app/prebuilds/ios-debug/
 apps/expo-app/prebuilds/android-debug/
-# android release builds are too large to be committed at this time
-# committed prebuilds are especially important for running visreg in CI so we will need to figure out a solution when we turn android tests back on
-apps/expo-app/prebuilds/android-release/
+# Ignore android release directory contents, except the committed APK used by BrowserStack visreg CI.
+# Use glob form (not trailing slash) so negation rules inside the directory work.
+apps/expo-app/prebuilds/android-release/*
+!apps/expo-app/prebuilds/android-release/expoapp.apk
 
 #reassure
 **/.reassure/*
