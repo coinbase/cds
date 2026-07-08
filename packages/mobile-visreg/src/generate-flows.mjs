@@ -31,7 +31,6 @@ appId: \${APP_ID}
     appId: \${APP_ID}
 - assertVisible:
     text: CDS
-- waitForAnimationToEnd
 ${routeSteps}
 `;
 

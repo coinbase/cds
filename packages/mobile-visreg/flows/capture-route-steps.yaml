@@ -20,4 +20,5 @@ appId: ${APP_ID}
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
 - tapOn:
     id: nav-back-button
-- waitForAnimationToEnd
+# No waitForAnimationToEnd here — the next sub-flow starts with
+# tapOn: search-button, which already has implicit element-wait.

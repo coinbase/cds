@@ -30,4 +30,5 @@ appId: ${APP_ID}
 - waitForAnimationToEnd
 - tapOn:
     id: nav-back-button
-- waitForAnimationToEnd
+# No waitForAnimationToEnd here — the next sub-flow starts with
+# tapOn: search-button, which already has implicit element-wait.
