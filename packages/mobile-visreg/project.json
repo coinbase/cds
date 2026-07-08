@@ -4,24 +4,6 @@
   "sourceRoot": "packages/mobile-visreg/src",
   "projectType": "library",
   "targets": {
-    "setup": {
-      "command": "node ./src/setup.mjs",
-      "options": {
-        "cwd": "packages/mobile-visreg"
-      }
-    },
-    "ios": {
-      "command": "node ./src/run.mjs --appId com.anonymous.expo-app --scheme expoapp --platform ios --platform-suffix _ios",
-      "options": {
-        "cwd": "packages/mobile-visreg"
-      }
-    },
-    "android": {
-      "command": "node ./src/run.mjs --appId com.anonymous.expoapp --scheme expoapp --platform android --platform-suffix _android",
-      "options": {
-        "cwd": "packages/mobile-visreg"
-      }
-    },
     "browserstack-ios": {
       "command": "node ./src/browserstack-run.mjs --platform ios --appPath ../../apps/expo-app/prebuilds/ios-release-device/expoapp.ipa --devices 'iPhone 16-18' --appId com.anonymous.expo-app --scheme expoapp --platform-suffix _ios",
       "options": {

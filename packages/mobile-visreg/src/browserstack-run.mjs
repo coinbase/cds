@@ -66,13 +66,9 @@ const deviceList = devices
 const resolvedAppPath = resolve(packageRoot, appPath);
 
 async function main() {
-  // 1. Generate the combined capture-all.yaml flow in device mode.
-  // --device: uses scrollUntilVisible + tapOn + swipe-back for navigation
-  // instead of openLink. Maestro's openLink on iOS real devices uses a
-  // lower-level device channel that is not available on BrowserStack,
-  // failing with "Invalid device: <UDID>". Also skips the dismiss-dialog step.
-  console.log('Generating capture-all.yaml (device mode)...');
-  execFileSync('node', ['src/generate-flows.mjs', '--device'], {
+  // 1. Generate the combined capture-all.yaml flow.
+  console.log('Generating capture-all.yaml...');
+  execFileSync('node', ['src/generate-flows.mjs'], {
     cwd: packageRoot,
     stdio: 'inherit',
   });
