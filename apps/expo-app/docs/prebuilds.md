@@ -4,14 +4,7 @@
 
 ## Setup
 
-1. Setup your dependencies - fastlane, and eas-cli
-
-```shell
-brew install fastlane
-npm install -g eas-cli
-```
-
-2. Run `yarn install` from root
+1. Run `yarn install` from root
 
 > All yarn nx commands should be run at the root.
 

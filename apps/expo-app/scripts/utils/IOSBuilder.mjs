@@ -74,7 +74,13 @@ export class IOSBuilder extends PlatformBuilder {
   async #compileForDevice(configuration) {
     const { outputPath } = this.buildInfo;
 
-    console.log(`Archiving iOS app (${configuration}) for device...`);
+    // Archive without code signing. expo-dev-client adds Push Notification
+    // capability during prebuild, which normally requires a development
+    // certificate. Since BrowserStack re-signs uploaded IPAs with its own
+    // wildcard provisioning profile, no Apple Developer account is needed:
+    // we strip entitlements and skip signing entirely, then package the IPA
+    // manually (avoids xcodebuild -exportArchive, which also requires a cert).
+    console.log(`Archiving iOS app (${configuration}) for device (unsigned)...`);
     await run('xcodebuild', [
       '-workspace',
       this.ios.workspace,
@@ -87,34 +93,34 @@ export class IOSBuilder extends PlatformBuilder {
       '-archivePath',
       this.ios.archivePath,
       'archive',
-      'CODE_SIGN_IDENTITY=-',
-      'AD_HOC_CODE_SIGNING_ALLOWED=YES',
+      'CODE_SIGNING_REQUIRED=NO',
+      'CODE_SIGNING_ALLOWED=NO',
+      'CODE_SIGN_IDENTITY=',
+      'CODE_SIGN_ENTITLEMENTS=',
     ]);
 
-    console.log('Exporting IPA...');
-    await run('xcodebuild', [
-      '-exportArchive',
-      '-archivePath',
+    // Package Payload/<scheme>.app → <scheme>.ipa manually.
+    console.log('Packaging .ipa...');
+    await fs.mkdir(outputPath, { recursive: true });
+    const archiveAppPath = path.join(
       this.ios.archivePath,
-      '-exportPath',
-      outputPath,
-      '-exportOptionsPlist',
-      this.ios.exportOptionsPlist,
-      '-allowProvisioningUpdates',
-    ]);
+      'Products',
+      'Applications',
+      `${this.ios.scheme}.app`,
+    );
+    const payloadDir = path.join(outputPath, 'Payload');
+    await fs.rm(payloadDir, { recursive: true, force: true });
+    await fs.mkdir(payloadDir, { recursive: true });
+    await fs.cp(archiveAppPath, path.join(payloadDir, `${this.ios.scheme}.app`), {
+      recursive: true,
+    });
 
-    // Rename if needed
-    const exportedIpa = path.join(outputPath, `${this.ios.scheme}.ipa`);
-    try {
-      await fs.access(exportedIpa);
-      await fs.rename(exportedIpa, this.ios.ipa);
-    } catch {
-      // Already named correctly
-    }
-
-    // Clean up archive
+    const ipaAbs = path.resolve(this.ios.ipa);
+    await fs.rm(ipaAbs, { force: true });
+    await run('zip', ['-qr', ipaAbs, 'Payload'], { cwd: outputPath });
+    await fs.rm(payloadDir, { recursive: true, force: true });
     await fs.rm(this.ios.archivePath, { recursive: true, force: true });
-    console.log(`iOS device build created: ${this.ios.ipa}`);
+    console.log(`iOS device build created: ${ipaAbs}`);
   }
 
   // ─────────────────────────────────────────────────────────────────
