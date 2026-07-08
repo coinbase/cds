@@ -67,8 +67,11 @@ const resolvedAppPath = resolve(packageRoot, appPath);
 
 async function main() {
   // 1. Generate the combined capture-all.yaml flow.
+  // --no-dismiss-dialog: on real devices Maestro's openLink goes straight to
+  // the app via XCUITest — no system "Open in app?" dialog appears, and the
+  // /dismiss dummy path would crash the app instead.
   console.log('Generating capture-all.yaml...');
-  execFileSync('node', ['src/generate-flows.mjs', platform], {
+  execFileSync('node', ['src/generate-flows.mjs', '--no-dismiss-dialog'], {
     cwd: packageRoot,
     stdio: 'inherit',
   });
