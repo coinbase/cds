@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text as RNText } from 'react-native';
+import React, { createRef, useState } from 'react';
+import { StyleSheet, Text as RNText, View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
@@ -74,5 +74,24 @@ describe('Tabs', () => {
 
     const flat = StyleSheet.flatten(screen.getByTestId('tab-a').props.style);
     expect(flat.marginTop).toBe(marginTop);
+  });
+
+  it('forwards ref to the underlying View', () => {
+    const ref = createRef<View>();
+    const tabs = [{ id: 'a', label: 'A', testID: 'tab-a' }];
+
+    const Wrapper = () => {
+      const [active, setActive] = useState<(typeof tabs)[number] | null>(tabs[0]);
+      return (
+        <DefaultThemeProvider>
+          <Tabs ref={ref} activeTab={active} onChange={setActive} tabs={tabs} />
+        </DefaultThemeProvider>
+      );
+    };
+
+    render(<Wrapper />);
+
+    expect(ref.current).not.toBeNull();
+    expect(ref.current).toBeInstanceOf(View);
   });
 });
