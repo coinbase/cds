@@ -47,7 +47,7 @@ The `prebuilds/` directory contains pre-compiled native artifacts committed to t
 
 Rebuild and commit when native dependencies, the Expo SDK, or native config changes. JS-only changes use `patch-bundle` instead (no rebuild needed).
 
-**Why commit the built artifacts?** CI never runs a full native build on a PR — it would take ~14 min for iOS and ~7 min for Android on every run. Instead, CI downloads the committed artifact and patches in a fresh JS bundle from the current branch (a few seconds). The committed artifact is the stable native binary; `patch-bundle` keeps the JS layer current. Only rebuild and re-commit when the native layer itself changes.
+**Why commit the built artifacts?** CI never runs a full native build on a PR — a full native build takes several minutes per platform on every run. Instead, CI downloads the committed artifact and patches in a fresh JS bundle from the current branch (a few seconds). The committed artifact is the stable native binary; `patch-bundle` keeps the JS layer current. Only rebuild and re-commit when the native layer itself changes.
 
 ```bash
 # iOS device build — requires macOS (Xcode)

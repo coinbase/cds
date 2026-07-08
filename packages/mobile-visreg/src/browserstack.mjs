@@ -11,7 +11,7 @@
  */
 import { execFileSync } from 'node:child_process';
 import { openAsBlob } from 'node:fs';
-import { mkdir, rm, writeFile } from 'node:fs/promises';
+import { access, mkdir, rm, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 
 const API_BASE = 'https://api-cloud.browserstack.com/app-automate/maestro/v2';
@@ -65,6 +65,16 @@ async function bsFetch(url, options = {}) {
  */
 export async function uploadApp(filePath, customId) {
   console.log(`Uploading app: ${filePath}`);
+  try {
+    await access(filePath);
+  } catch {
+    throw new Error(
+      `App artifact not found: ${filePath}\n` +
+        `Build it first with the appropriate patch-bundle target, e.g.:\n` +
+        `  yarn nx run expo-app:patch-bundle --configuration=android\n` +
+        `  yarn nx run expo-app:patch-bundle --configuration=ios-device`,
+    );
+  }
   const form = new FormData();
   form.set('file', await openAsBlob(filePath), basename(filePath));
   if (customId) form.set('custom_id', customId);

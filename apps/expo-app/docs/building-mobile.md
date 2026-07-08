@@ -68,7 +68,7 @@ yarn nx run expo-app:build --configuration=ios-release-device
 yarn nx run expo-app:build --configuration=android-release
 ```
 
-**Commit the updated artifacts after building.** Visreg CI uses these committed files as the baseline native binary and patches in a fresh JS bundle on each run. Committing them saves ~14 min (iOS) and ~7 min (Android) in CI.
+**Commit the updated artifacts after building.** Visreg CI uses these committed files as the baseline native binary and patches in a fresh JS bundle on each run. This avoids running a full native build (~several minutes per platform) on every CI run.
 
 ```shell
 git add apps/expo-app/prebuilds/ios-release-device/expoapp.ipa \

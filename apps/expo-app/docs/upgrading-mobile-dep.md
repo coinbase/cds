@@ -46,7 +46,7 @@ git add apps/expo-app/prebuilds/ios-release-device/expoapp.ipa \
 git commit -m "chore(expo-app): update release prebuilds for <dependency> upgrade"
 ```
 
-> **Why commit these?** CI patches the committed native artifact with a fresh JS bundle on each run instead of doing a full native build. Committing saves ~14 min (iOS) and ~7 min (Android) per CI job.
+> **Why commit these?** CI patches the committed native artifact with a fresh JS bundle on each run instead of doing a full native build. This avoids a full native rebuild on every CI run, which would otherwise take several minutes per platform.
 
 ### 5. Verify visreg still passes
 

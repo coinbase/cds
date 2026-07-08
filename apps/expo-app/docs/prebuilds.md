@@ -66,7 +66,7 @@ yarn nx run expo-app:patch-bundle --configuration=ios-device    # iOS device .ip
 yarn nx run expo-app:patch-bundle --configuration=android       # Android .apk
 ```
 
-This decompresses the committed artifact, swaps in the current branch's JS bundle, and recompresses — saving ~14 min (iOS) and ~7 min (Android) per CI run.
+This decompresses the committed artifact, swaps in the current branch's JS bundle, and recompresses — avoiding a full native rebuild on every CI run.
 
 **When to do a full native rebuild instead:** any native dependency change, Expo SDK upgrade, or native config change. See [building-mobile.md](./building-mobile.md).
 
