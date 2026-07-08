@@ -429,12 +429,7 @@ export const DefaultSelectControlComponent = memo(
           disabled={disabled}
           onPress={handleToggleOpen}
         >
-          <HStack
-            alignItems="center"
-            flexGrow={1}
-            paddingStart={2}
-            style={styles?.controlEndNode}
-          >
+          <HStack alignItems="center" flexGrow={1} paddingStart={2} style={styles?.controlEndNode}>
             {customEndNode ? customEndNode : <AnimatedCaret color="fg" rotate={open ? 0 : 180} />}
           </HStack>
         </Pressable>

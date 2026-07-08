@@ -185,7 +185,7 @@ describe('Drawer', () => {
     render(
       <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
         <DefaultThemeProvider>
-          <Drawer ref={ref} onCloseComplete={onCloseComplete} reduceMotion visible>
+          <Drawer ref={ref} reduceMotion visible onCloseComplete={onCloseComplete}>
             {() => <Text font="body">Drawer content</Text>}
           </Drawer>
         </DefaultThemeProvider>

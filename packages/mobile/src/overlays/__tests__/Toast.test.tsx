@@ -1,8 +1,8 @@
 import { createRef } from 'react';
 import { Animated } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { fireEvent, render, screen } from '@testing-library/react-native';
 import type { ToastRefHandle } from '@coinbase/cds-common/overlays/ToastProvider';
+import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider, SAFE_AREA_METRICS } from '../../utils/testHelpers';
 import { Toast } from '../Toast';

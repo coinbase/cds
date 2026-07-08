@@ -214,12 +214,12 @@ describe('Alert', () => {
       <DefaultThemeProvider>
         <Alert
           ref={ref}
+          visible
           body="body"
           onRequestClose={onRequestClose}
           pictogram="warning"
           preferredActionLabel="OK"
           title="title"
-          visible
         />
       </DefaultThemeProvider>,
     );

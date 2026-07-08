@@ -412,7 +412,7 @@ describe('Modal', () => {
     render(
       <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
         <DefaultThemeProvider>
-          <Modal ref={ref} onRequestClose={onRequestClose} visible>
+          <Modal ref={ref} visible onRequestClose={onRequestClose}>
             <ModalHeader title="Test Modal" />
             <ModalBody>
               <Text font="body">Modal content</Text>
