@@ -1,0 +1,25 @@
+appId: ${APP_ID}
+---
+# Sub-flow for BrowserStack real-device runs (replaces capture-route-steps.yaml).
+# Uses scrollUntilVisible + tapOn instead of openLink because Maestro's openLink
+# on iOS real devices fails with "Invalid device" — the lower-level device channel
+# it uses is not available on BrowserStack's infrastructure.
+# After the screenshot, swipe from the left edge to trigger React Navigation's
+# native back gesture and return to the debug screen list.
+# Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
+
+- scrollUntilVisible:
+    element:
+      text: ${ROUTE_NAME}
+    direction: DOWN
+    timeout: 15000
+- tapOn:
+    text: ${ROUTE_NAME}
+- assertVisible:
+    id: mobile-playground-screen
+- waitForAnimationToEnd
+- takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
+- swipe:
+    start: '0%,50%'
+    end: '40%,50%'
+- waitForAnimationToEnd
