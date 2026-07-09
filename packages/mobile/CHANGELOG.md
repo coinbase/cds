@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.3 (7/9/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: reconcile drawer pan offset on gesture termination. [[#785](https://github.com/coinbase/cds/pull/785)]
+
 ## 9.6.2 (7/8/2026 PST)
 
 #### 🐞 Fixes
