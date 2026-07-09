@@ -157,13 +157,13 @@ android
 # expo-app generated artifacts
 apps/expo-app/artifacts
 apps/expo-app/build/
-# we expect developers to generate their own debug builds for local development
-apps/expo-app/prebuilds/ios-debug/
-apps/expo-app/prebuilds/android-debug/
-# Ignore android release directory contents, except the committed APK used by BrowserStack visreg CI.
-# Use glob form (not trailing slash) so negation rules inside the directory work.
-apps/expo-app/prebuilds/android-release/*
-!apps/expo-app/prebuilds/android-release/expoapp.apk
+# Ignore all prebuilds. The only committed artifact is
+# ios-release-device/expoapp.ipa (BrowserStack visreg CI) — allowed via
+# the *.ipa negation rule above. Use glob form so the negation can work.
+apps/expo-app/prebuilds/*
+!apps/expo-app/prebuilds/ios-release-device
+apps/expo-app/prebuilds/ios-release-device/*
+!apps/expo-app/prebuilds/ios-release-device/expoapp.ipa
 
 #reassure
 **/.reassure/*
