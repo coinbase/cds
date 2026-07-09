@@ -120,10 +120,12 @@ const HeaderContent = memo(
             width="100%"
           >
             {isSearch ? (
+              /* eslint-disable jsx-a11y/no-autofocus -- opening the search panel
+                 implies intent to type immediately; auto-focus is expected here */
               <TextInput
+                autoFocus
                 accessibilityHint="Search for component"
                 accessibilityLabel="Search for component"
-                autoFocus
                 label=""
                 onChange={onSearchChange}
                 placeholder="Search"

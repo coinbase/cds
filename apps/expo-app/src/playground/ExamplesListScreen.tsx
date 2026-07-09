@@ -15,7 +15,7 @@ const innerSpacingConfig: CellSpacing = { paddingX: 1 };
 
 export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
   const { filter, isOpen, resetSearch, closeSearch } = useContext(SearchContext);
-  const routeKeys = route.params?.routeKeys ?? [];
+  const routeKeys = useMemo(() => route.params?.routeKeys ?? [], [route.params?.routeKeys]);
   const navigation = useNavigation();
   const { bottom } = useSafeAreaInsets();
 
@@ -71,6 +71,7 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
       {exactMatch !== null && (
         <ListCell
           compact
+          accessibilityLabel={`Go to ${exactMatch}`}
           accessory="arrow"
           innerSpacing={innerSpacingConfig}
           onPress={() => navigate(exactMatch)}
