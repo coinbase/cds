@@ -46,7 +46,10 @@ function authHeader() {
  * where sending an Authorization header would be rejected.
  */
 async function bsFetch(url, options = {}) {
-  const isBrowserStackHost = new URL(url).host.endsWith('browserstack.com');
+  // Use exact match or subdomain check (with leading dot) to prevent a host
+  // like "evilbrowserstack.com" from satisfying a bare endsWith check.
+  const host = new URL(url).host;
+  const isBrowserStackHost = host === 'browserstack.com' || host.endsWith('.browserstack.com');
   const headers = { ...(options.headers ?? {}) };
   if (isBrowserStackHost) {
     headers.Authorization = authHeader();
