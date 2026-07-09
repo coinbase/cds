@@ -41,7 +41,13 @@ dts/
 
 # generated native folders
 /ios
-/android
+# Ignore the generated android/ directory, except app/build.gradle which
+# carries ABI-split and R8/shrinkResources customisations that need to
+# persist across expo prebuild runs.
+/android/**
+!/android/
+!/android/app/
+!/android/app/build.gradle
 
 # generated build artifacts (xcodebuild/gradle output, not committed)
 builds/
