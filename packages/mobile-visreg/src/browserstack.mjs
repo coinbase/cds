@@ -137,6 +137,12 @@ export async function triggerBuild(platform, opts) {
   return json.build_id;
 }
 
+/** List recent Maestro builds (most recent first). */
+export async function listRecentBuilds(limit = 5) {
+  const res = await bsFetch(`${API_BASE}/builds?limit=${limit}`);
+  return res.json();
+}
+
 /** Fetch the current build object. */
 export async function getBuild(buildId) {
   const res = await bsFetch(`${API_BASE}/builds/${buildId}`);

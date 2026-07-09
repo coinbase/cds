@@ -13,7 +13,7 @@ import { readdirSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
-import { downloadScreenshots, getBuild } from './browserstack.mjs';
+import { downloadScreenshots, getBuild, listRecentBuilds } from './browserstack.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const packageRoot = resolve(__dirname, '..');
@@ -28,26 +28,6 @@ function parseArgs() {
     }
   }
   return result;
-}
-
-function authHeader() {
-  const username = process.env.BROWSERSTACK_USERNAME;
-  const accessKey = process.env.BROWSERSTACK_ACCESS_KEY;
-  if (!username || !accessKey) {
-    throw new Error(
-      'BROWSERSTACK_USERNAME and BROWSERSTACK_ACCESS_KEY environment variables must be set',
-    );
-  }
-  return `Basic ${Buffer.from(`${username}:${accessKey}`).toString('base64')}`;
-}
-
-async function listRecentBuilds(limit = 5) {
-  const res = await fetch(
-    `https://api-cloud.browserstack.com/app-automate/maestro/v2/builds?limit=${limit}`,
-    { headers: { Authorization: authHeader() } },
-  );
-  if (!res.ok) throw new Error(`Failed to list builds: ${res.status} ${res.statusText}`);
-  return res.json();
 }
 
 async function main() {

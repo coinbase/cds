@@ -99,8 +99,6 @@ xcuserdata
 DerivedData
 *.hmap
 *.ipa
-# Allow the committed device prebuild used by BrowserStack visreg CI
-!apps/expo-app/prebuilds/ios-release-device/expoapp.ipa
 *.xcuserstate
 
 ## Android
