@@ -25,6 +25,8 @@ Before responding, determine what the user needs:
 
 **Out of scope** — the user wants logic-only changes, hooks, tests, Relay or data fetching, analytics, navigation wiring, feature flags, generated artifacts, performance-only refactors, or edits in component files that do not alter rendered presentation or CDS usage → do not follow this skill's coding or review workflows.
 
+**Default in-scope work to coding.** For requests that affect rendered UI presentation or CDS usage, only treat the request as a review if the user's audit/review intent is explicit. Writing code is the primary use case for this skill.
+
 If the request is ambiguous, inspect the requested change first. Only enter the Coding Workflow when the change affects rendered UI presentation or CDS usage. Do not treat "component" or "frontend repo" as sufficient signal by itself.
 
 ## Initialization
