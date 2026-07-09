@@ -47,15 +47,25 @@ export class AndroidBuilder extends PlatformBuilder {
       'apk',
       buildTypeLC,
     );
-    const builtApkPath = path.join(builtApkDir, `app-${buildTypeLC}.apk`);
+    // ABI splits produce arm64-v8a-specific APKs; fall back to the universal name.
+    const arm64ApkPath = path.join(builtApkDir, `app-arm64-v8a-${buildTypeLC}.apk`);
+    const universalApkPath = path.join(builtApkDir, `app-${buildTypeLC}.apk`);
 
+    let builtApkPath;
     try {
-      await fs.access(builtApkPath);
-      await fs.copyFile(builtApkPath, this.android.apk);
-      console.log(`Android APK created: ${this.android.apk}`);
+      await fs.access(arm64ApkPath);
+      builtApkPath = arm64ApkPath;
     } catch {
-      throw new Error(`APK not found at ${builtApkPath}`);
+      try {
+        await fs.access(universalApkPath);
+        builtApkPath = universalApkPath;
+      } catch {
+        throw new Error(`APK not found at ${arm64ApkPath} or ${universalApkPath}`);
+      }
     }
+
+    await fs.copyFile(builtApkPath, this.android.apk);
+    console.log(`Android APK created: ${this.android.apk}`);
   }
 
   // ─────────────────────────────────────────────────────────────────
