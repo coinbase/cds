@@ -3,7 +3,7 @@ on:
   push:
     branches: [master]
   pull_request:
-    types: [opened, synchronize, reopened, labeled, unlabeled]
+    types: [opened, synchronize, reopened, labeled, unlabeled, ready_for_review]
     branches: [master]
 
 concurrency:
@@ -13,14 +13,24 @@ concurrency:
 permissions:
   contents: read
   actions: read
+  pull-requests: write
 
 env:
   CI: true
   PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
 
 jobs:
+  check:
+    uses: ./.github/workflows/visreg-check.yml
+    with:
+      source-paths: packages/web/src packages/common/src packages/icons/src packages/illustrations/src
+      cache-key-prefix: web-visreg-v1
+      has-label: ${{ contains(github.event.pull_request.labels.*.name, 'visreg') }}
+
   visreg-web:
     name: Visreg Web
+    needs: [check]
+    if: needs.check.outputs.should_run == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -34,37 +44,55 @@ jobs:
 
       - uses: ./.github/actions/setup
       - name: Set branch name for Percy
-        id: set_branch
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          REF_NAME: ${{ github.ref_name }}
         run: |
-          if [[ "${{ github.event_name }}" == "pull_request" ]]; then
-            echo "PERCY_BRANCH=${{ github.head_ref }}" >> "$GITHUB_ENV"
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            echo "PERCY_BRANCH=$HEAD_REF" >> "$GITHUB_ENV"
           else
-            echo "PERCY_BRANCH=${{ github.ref_name }}" >> "$GITHUB_ENV"
+            echo "PERCY_BRANCH=$REF_NAME" >> "$GITHUB_ENV"
           fi
-      - name: Evaluate Visreg Web Should Run
-        id: visreg-should-run
-        # Do not run affected tests when the run-all `visreg` label is present
-        if: ${{ github.event_name == 'pull_request' && !contains(github.event.pull_request.labels.*.name, 'visreg') }}
-        run: |
-          if yarn workspace @coinbase/cds-storybook should-run-visreg; then
-            echo "Storybook changes detected, running Visreg Web Percy run"
-            echo "SHOULD_RUN_VISREG=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "No storybook changes detected, skipping Visreg Web Percy run"
-            echo "SHOULD_RUN_VISREG=false" >> "$GITHUB_OUTPUT"
-          fi
-        shell: bash
       - name: Setup Chrome
         uses: browser-actions/setup-chrome@b94431e051d1c52dcbe9a7092a4f10f827795416 # v2.1.0
         with:
           chrome-version: stable
           install-chromedriver: true
       - name: Visreg Web
-        # Run on `master` or when `visreg` label is present, or when an project that affects storybook is changed
-        if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'visreg') || steps.visreg-should-run.outputs.SHOULD_RUN_VISREG == 'true' }}
-        run: yarn nx run storybook:percy
+        id: percy-run
+        run: |
+          OUTPUT=$(yarn nx run storybook:percy 2>&1)
+          EXIT_CODE=$?
+          echo "$OUTPUT"
+          PERCY_URL=$(echo "$OUTPUT" | grep -oE 'https://percy\.io[^[:space:]]+' | head -1)
+          echo "percy_url=$PERCY_URL" >> "$GITHUB_OUTPUT"
+          exit $EXIT_CODE
         env:
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
           STORYBOOK_SKIP_ANIMATION: true
           PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
           CI: true
+      - name: Comment Percy link on PR
+        if: always() && github.event_name == 'pull_request' && steps.percy-run.outputs.percy_url != ''
+        uses: ./.github/actions/visreg-comment-percy
+        with:
+          percy_url: ${{ steps.percy-run.outputs.percy_url }}
+
+  finalize:
+    name: Save visreg result cache
+    needs: [check, visreg-web]
+    if: github.event_name == 'pull_request' && needs.visreg-web.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+      - name: Create visreg cache marker
+        run: touch .visreg-cache-marker
+      - name: Save visreg result cache
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: .visreg-cache-marker
+          key: web-visreg-v1-${{ needs.check.outputs.content_hash }}
