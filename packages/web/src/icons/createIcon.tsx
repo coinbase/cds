@@ -96,6 +96,7 @@ export type IconProps<Name extends string = string> = IconBaseProps<Name> &
 
 const iconCss = css`
   color: currentColor;
+  font-family: var(--cds-icon-font-family, 'CoinbaseIcons');
   font-weight: 400;
   font-style: normal;
   font-variant: normal;
@@ -184,7 +185,19 @@ export function createIcon<Name extends string>({
         [dangerouslySetColor, style, styles?.root],
       );
 
-      const iconStyle = useMemo(() => ({ fontFamily, ...styles?.icon }), [styles?.icon]);
+      // The default font family lives in the static Linaria block via a CSS
+      // variable fallback; only set the variable when a custom font is bound,
+      // so consumers can also override it via className, inline style, or theme scope.
+      const iconStyle = useMemo(
+        () =>
+          fontFamily === DEFAULT_ICON_FONT_FAMILY
+            ? styles?.icon
+            : ({
+                '--cds-icon-font-family': fontFamily,
+                ...styles?.icon,
+              } as React.CSSProperties),
+        [styles?.icon],
+      );
 
       const iconName = `${name}-${sourceSize}-${active ? 'active' : 'inactive'}`;
       const glyph = glyphMap[iconName as keyof typeof glyphMap];
