@@ -26,7 +26,6 @@ jobs:
       source-paths: packages/web/src packages/common/src packages/icons/src packages/illustrations/src
       cache-key-prefix: web-visreg-v1
       has-label: ${{ contains(github.event.pull_request.labels.*.name, 'visreg') }}
-      script: apps/storybook/scripts/shouldRunVisreg.mjs
 
   visreg-web:
     name: Visreg Web
@@ -97,4 +96,3 @@ jobs:
         with:
           path: .visreg-cache-marker
           key: web-visreg-v1-${{ needs.check.outputs.content_hash }}
-

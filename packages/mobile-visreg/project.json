@@ -29,7 +29,7 @@
       }
     },
     "should-run": {
-      "command": "node ./scripts/shouldRunVisreg.mjs",
+      "command": "node ../../tools/ci/shouldRunVisreg.mjs packages/mobile/src",
       "options": {
         "cwd": "packages/mobile-visreg"
       }

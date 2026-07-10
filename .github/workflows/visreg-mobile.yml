@@ -32,7 +32,6 @@ jobs:
       source-paths: packages/mobile/src
       cache-key-prefix: mobile-visreg-v1
       has-label: ${{ contains(github.event.pull_request.labels.*.name, 'visreg-mobile') }}
-      script: packages/mobile-visreg/scripts/shouldRunVisreg.mjs
 
   # iOS visreg runs entirely on ubuntu-latest: the committed device .ipa is
   # JS-bundle-patched (unzip -> swap main.jsbundle -> rezip), uploaded to
@@ -215,4 +214,3 @@ jobs:
         with:
           path: .visreg-cache-marker
           key: mobile-visreg-v1-${{ needs.check.outputs.content_hash }}
-

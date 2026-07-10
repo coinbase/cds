@@ -4,7 +4,7 @@ on:
   workflow_call:
     inputs:
       source-paths:
-        description: 'Space-separated source directories passed to git ls-tree for content hashing'
+        description: 'Space-separated source directories whose non-test .ts/.tsx changes trigger visreg (used for both the content hash and change detection)'
         required: true
         type: string
       cache-key-prefix:
@@ -15,10 +15,6 @@ on:
         description: 'Whether the PR has the label that forces visreg to run'
         required: true
         type: boolean
-      script:
-        description: 'Repo-relative path to the shouldRunVisreg.mjs script'
-        required: true
-        type: string
     outputs:
       should_run:
         description: '"true" if visreg should run, "false" to skip'
@@ -83,7 +79,7 @@ jobs:
           HAS_LABEL: ${{ inputs.has-label }}
           IS_DRAFT: ${{ github.event.pull_request.draft }}
           CACHE_HIT: ${{ steps.cache-check.outputs.cache-hit }}
-          SCRIPT: ${{ inputs.script }}
+          SOURCE_PATHS: ${{ inputs.source-paths }}
         run: |
           if [[ "$EVENT_NAME" != "pull_request" ]]; then
             echo "Non-PR event, always running visreg"
@@ -98,10 +94,25 @@ jobs:
           elif [[ "$CACHE_HIT" == "true" ]]; then
             echo "Cache hit - visreg already passed with these exact files, skipping"
             echo "should_run=false" >> "$GITHUB_OUTPUT"
-          elif node "$SCRIPT"; then
-            echo "Relevant changes detected, running visreg"
-            echo "should_run=true" >> "$GITHUB_OUTPUT"
           else
-            echo "No relevant changes, skipping visreg"
-            echo "should_run=false" >> "$GITHUB_OUTPUT"
+            # Capture the exit code without tripping `set -e`. shouldRunVisreg exits
+            # 0 = run, 1 = skip, and 2 = misconfiguration (e.g. empty source-paths).
+            # Exit 2 must fail the job — treating it as a skip would silently drop
+            # visual regression coverage.
+            STATUS=0
+            node tools/ci/shouldRunVisreg.mjs $SOURCE_PATHS || STATUS=$?
+            case "$STATUS" in
+              0)
+                echo "Relevant changes detected, running visreg"
+                echo "should_run=true" >> "$GITHUB_OUTPUT"
+                ;;
+              1)
+                echo "No relevant changes, skipping visreg"
+                echo "should_run=false" >> "$GITHUB_OUTPUT"
+                ;;
+              *)
+                echo "::error::shouldRunVisreg failed (exit $STATUS); check the 'source-paths' input"
+                exit "$STATUS"
+                ;;
+            esac
           fi
