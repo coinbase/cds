@@ -11,6 +11,41 @@ const getSrOnlyText = (live: 'polite' | 'assertive') => {
 
 const normalize = (s: unknown) => String(s).replace(/\s+/g, ' ').trim();
 
+describe('RollingNumber (mobile) custom text color via styles.text', () => {
+  const wrapper = ({ children }: { children: React.ReactNode }) => (
+    <DefaultThemeProvider>{children}</DefaultThemeProvider>
+  );
+
+  it('accepts a CDS design token color via color prop without error', () => {
+    expect(() =>
+      render(<RollingNumber color="fgPositive" value={42} />, { wrapper }),
+    ).not.toThrow();
+  });
+
+  it('accepts a hex color string via styles.text without error', () => {
+    expect(() =>
+      render(<RollingNumber styles={{ text: { color: '#6366f1' } }} value={42} />, { wrapper }),
+    ).not.toThrow();
+  });
+
+  it('accepts an rgba color string via styles.text without error', () => {
+    expect(() =>
+      render(<RollingNumber styles={{ text: { color: 'rgba(255, 0, 0, 0.5)' } }} value={42} />, {
+        wrapper,
+      }),
+    ).not.toThrow();
+  });
+
+  it('accepts styles.text color alongside colorPulseOnUpdate without error', () => {
+    expect(() =>
+      render(
+        <RollingNumber colorPulseOnUpdate styles={{ text: { color: '#6366f1' } }} value={42} />,
+        { wrapper },
+      ),
+    ).not.toThrow();
+  });
+});
+
 describe('RollingNumber (mobile) accessibility', () => {
   const wrapper = ({ children }: { children: React.ReactNode }) => (
     <DefaultThemeProvider>{children}</DefaultThemeProvider>

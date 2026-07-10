@@ -383,25 +383,61 @@ export type RollingNumberProps<AsComponent extends React.ElementType> = Polymorp
     };
     /** Custom styles for individual elements of the RollingNumber component */
     styles?: {
-      /** Outer container element */
+      /**
+       * Outer container element. Setting `color` here cascades to all content via CSS.
+       * Compatible with `colorPulseOnUpdate` — see the color customization docs for the full
+       * specificity hierarchy.
+       */
       root?: React.CSSProperties;
-      /** Animated visible content wrapper */
+      /**
+       * Animated visible content wrapper. The `colorPulseOnUpdate` animation runs on this element.
+       * Setting `color` here cascades to all content. Compatible with `colorPulseOnUpdate`.
+       */
       visibleContent?: React.CSSProperties;
-      /** Formatted numeric value wrapper */
+      /**
+       * Formatted numeric value wrapper. Setting `color` here cascades to the four i18n sections.
+       * However, because this element is a child of the animation span, its inline `color` overrides
+       * the animation cascade — making the pulse invisible within those sections. Not compatible with
+       * `colorPulseOnUpdate`.
+       */
       formattedValueSection?: React.CSSProperties;
-      /** Prefix section (from props) */
+      /**
+       * Prefix section from the `prefix` prop. Setting `color` here cascades to the prefix text.
+       * Inline style on this section container overrides the animation cascade. Not compatible with
+       * `colorPulseOnUpdate`.
+       */
       prefix?: React.CSSProperties;
-      /** Suffix section (from props) */
+      /**
+       * Suffix section from the `suffix` prop. Setting `color` here cascades to the suffix text.
+       * Inline style on this section container overrides the animation cascade. Not compatible with
+       * `colorPulseOnUpdate`.
+       */
       suffix?: React.CSSProperties;
-      /** Prefix from Intl.NumberFormat (e.g. "$" in "$1,000") */
+      /**
+       * i18n-generated prefix section (e.g. "$" in "$1,000"). Setting `color` here overrides the
+       * animation cascade within this section. Not compatible with `colorPulseOnUpdate`.
+       */
       i18nPrefix?: React.CSSProperties;
-      /** Suffix from Intl.NumberFormat (e.g. "K" in "100K") */
+      /**
+       * i18n-generated suffix section (e.g. "K" in "100K"). Setting `color` here overrides the
+       * animation cascade within this section. Not compatible with `colorPulseOnUpdate`.
+       */
       i18nSuffix?: React.CSSProperties;
-      /** Integer portion of formatted value */
+      /**
+       * Integer portion of the formatted value. Setting `color` here overrides the animation
+       * cascade within this section. Not compatible with `colorPulseOnUpdate`.
+       */
       integer?: React.CSSProperties;
-      /** Fractional portion of formatted value */
+      /**
+       * Fractional portion of the formatted value. Setting `color` here overrides the animation
+       * cascade within this section. Not compatible with `colorPulseOnUpdate`.
+       */
       fraction?: React.CSSProperties;
-      /** Text element for digits and symbols */
+      /**
+       * Inline style applied directly to each text element — digits, symbols, prefix text, and
+       * suffix text. Setting `color` here has the highest CSS specificity and is compatible with
+       * `colorPulseOnUpdate` — the color is used as the animation base so the pulse returns to it.
+       */
       text?: React.CSSProperties;
     };
   }
@@ -486,9 +522,44 @@ export const RollingNumber: RollingNumberComponent = memo(
 
       const direction = useValueChangeDirection(value);
 
+      // The color pulse animation runs on the visibleContent m.span (animate={colorControls}).
+      // When the pulse completes, framer-motion writes an inline `color` back onto that span,
+      // which overrides any color that was cascading down from a parent element. To restore the
+      // customer's intended color as the animation base, we read it from the style targets that
+      // overlap with the animation element, in CSS specificity order (highest first):
+      //   1. styles.text.color           — inline on text elements; highest CSS specificity
+      //   2. styles.visibleContent.color — inline on the animated span itself
+      //   3. styles.root.color           — root span; overrides style via rootStyle spread
+      //   4. style.color                 — root span cascade; most natural customer reach
+      //
+      // When styles.text.color is the source, we also strip color from styles.text before
+      // threading it to sub-components (effectiveStylesText), and inject the custom color onto
+      // the m.span (visibleContentStyle) so the animation cascade can reach text elements.
+      // Without this, the inline child style would block the cascade and make the pulse invisible.
+      const stylesTextColor =
+        typeof styles?.text?.color === 'string' ? styles.text.color : undefined;
+      const customColor =
+        stylesTextColor ??
+        (typeof styles?.visibleContent?.color === 'string'
+          ? styles.visibleContent.color
+          : undefined) ??
+        (typeof styles?.root?.color === 'string' ? styles.root.color : undefined) ??
+        (typeof style?.color === 'string' ? style.color : undefined);
+
+      const effectiveStylesText = useMemo<React.CSSProperties | undefined>(() => {
+        if (!stylesTextColor || !styles?.text) return styles?.text;
+        const { color: _removed, ...rest } = styles.text;
+        return Object.keys(rest).length > 0 ? (rest as React.CSSProperties) : undefined;
+      }, [stylesTextColor, styles?.text]);
+
+      const visibleContentStyle = useMemo<React.CSSProperties | undefined>(() => {
+        if (!customColor) return styles?.visibleContent;
+        return { color: customColor, ...styles?.visibleContent };
+      }, [customColor, styles?.visibleContent]);
+
       const colorControls = useColorPulse({
         value,
-        defaultColor: color,
+        defaultColor: customColor ?? color,
         colorPulseOnUpdate: !!colorPulseOnUpdate,
         positivePulseColor,
         negativePulseColor,
@@ -511,7 +582,7 @@ export const RollingNumber: RollingNumberComponent = memo(
             classNames={{ text: classNames?.text }}
             justifyContent="flex-end"
             style={styles?.prefix}
-            styles={{ text: styles?.text }}
+            styles={{ text: effectiveStylesText }}
           >
             {prefix}
           </RollingNumberAffixSectionComponent>
@@ -522,7 +593,7 @@ export const RollingNumber: RollingNumberComponent = memo(
           classNames?.prefix,
           classNames?.text,
           styles?.prefix,
-          styles?.text,
+          effectiveStylesText,
           prefix,
         ],
       );
@@ -535,7 +606,7 @@ export const RollingNumber: RollingNumberComponent = memo(
             classNames={{ text: classNames?.text }}
             justifyContent="flex-start"
             style={styles?.suffix}
-            styles={{ text: styles?.text }}
+            styles={{ text: effectiveStylesText }}
           >
             {suffix}
           </RollingNumberAffixSectionComponent>
@@ -546,7 +617,7 @@ export const RollingNumber: RollingNumberComponent = memo(
           classNames?.suffix,
           classNames?.text,
           styles?.suffix,
-          styles?.text,
+          effectiveStylesText,
           suffix,
         ],
       );
@@ -573,7 +644,7 @@ export const RollingNumber: RollingNumberComponent = memo(
               intlNumberParts={pre}
               justifyContent="flex-end"
               style={styles?.i18nPrefix}
-              styles={{ text: styles?.text }}
+              styles={{ text: effectiveStylesText }}
               transitionConfig={transitionConfig}
             />
             <RollingNumberValueSectionComponent
@@ -587,7 +658,7 @@ export const RollingNumber: RollingNumberComponent = memo(
               intlNumberParts={integer}
               justifyContent="flex-end"
               style={styles?.integer}
-              styles={{ text: styles?.text }}
+              styles={{ text: effectiveStylesText }}
               transitionConfig={transitionConfig}
             />
             <RollingNumberValueSectionComponent
@@ -601,7 +672,7 @@ export const RollingNumber: RollingNumberComponent = memo(
               intlNumberParts={fraction}
               justifyContent="flex-start"
               style={styles?.fraction}
-              styles={{ text: styles?.text }}
+              styles={{ text: effectiveStylesText }}
               transitionConfig={transitionConfig}
             />
             {/* Suffix generated by Intl.NumberFormat is displayed here. */}
@@ -616,7 +687,7 @@ export const RollingNumber: RollingNumberComponent = memo(
               intlNumberParts={post}
               justifyContent="flex-start"
               style={styles?.i18nSuffix}
-              styles={{ text: styles?.text }}
+              styles={{ text: effectiveStylesText }}
               transitionConfig={transitionConfig}
             />
           </HStack>
@@ -641,7 +712,7 @@ export const RollingNumber: RollingNumberComponent = memo(
         transitionConfig,
         digitTransitionVariant,
         direction,
-        styles?.text,
+        effectiveStylesText,
         classNames?.text,
       ]);
 
@@ -659,7 +730,7 @@ export const RollingNumber: RollingNumberComponent = memo(
             intlNumberParts={[]}
             justifyContent="flex-start"
             style={styles?.formattedValueSection}
-            styles={{ text: styles?.text }}
+            styles={{ text: effectiveStylesText }}
             transitionConfig={transitionConfig}
           />
         ),
@@ -667,7 +738,7 @@ export const RollingNumber: RollingNumberComponent = memo(
           classNames?.formattedValueSection,
           styles?.formattedValueSection,
           classNames?.text,
-          styles?.text,
+          effectiveStylesText,
           RollingNumberValueSectionComponent,
           RollingNumberDigitComponent,
           RollingNumberSymbolComponent,
@@ -724,7 +795,7 @@ export const RollingNumber: RollingNumberComponent = memo(
               'aria-hidden': true,
               animate: colorControls,
               className: cx(tickerCss, classNames?.visibleContent),
-              style: styles?.visibleContent,
+              style: visibleContentStyle,
               transition: transitionConfig,
             } as React.ComponentProps<typeof m.span>)}
           >

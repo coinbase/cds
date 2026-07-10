@@ -322,6 +322,58 @@ function Example() {
 }
 ```
 
+## Custom, Non-Token Color
+
+To apply a non-token color (e.g. a hex string or CSS custom property), use an inline style object or custom CSS.
+
+### Specificity hierarchy
+
+When the `color` property is used in multiple elements' styles, a single color will chosen based on specificity to resolve conflicts.
+
+`color` properties set from the table above are compatible with `colorPulseOnUpdate` — they will be used as the base color the animation returns to after pulsing.
+
+| Priority    | Target                        | Notes                                                  |
+| ----------- | ----------------------------- | ------------------------------------------------------ |
+| 1 (highest) | `styles.text.color`           | Inline on each text element                            |
+| 2           | `styles.visibleContent.color` | Inline on the animated span                            |
+| 3           | `styles.root.color`           | Cascades from root; overrides `style` via spread order |
+| 4           | `style.color`                 | Root element cascade; most natural to reach for        |
+| 5           | `color` prop                  | CDS design token only                                  |
+
+:::warning Incompatibility with colorPulseOnUpdate
+Section-level targets (`styles.prefix`, `styles.integer`, `styles.i18nPrefix`, etc.) can carry `color` but are **not** compatible with `colorPulseOnUpdate` — their inline style on the section container overrides the animation cascade within that section, making the pulse invisible there.
+This is demonstrated in the example below.
+:::
+
+```tsx live
+function Example() {
+  const [price, setPrice] = React.useState(12345.67);
+  const onNext = () =>
+    setPrice((p) => Math.max(0, Math.round((p + (Math.random() - 0.5) * 200) * 100) / 100));
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Custom hex color with color pulse
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        styles={{ visibleContent: { color: '#6366f1' }, i18nPrefix: { color: 'green' } }}
+        value={price}
+      />
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
+    </VStack>
+  );
+}
+```
+
+::::tip Mobile equivalent
+On mobile, CSS does not cascade. Use `styles={{ text: { color: '#6366f1' } }}` instead — see the mobile docs for details.
+::::
+
 ## Digit Transition Variants
 
 RollingNumber supports two digit transition styles via the `digitTransitionVariant` prop:

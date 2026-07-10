@@ -262,6 +262,43 @@ function ColorAndTransition() {
 }
 ```
 
+## Custom, Non-Token Color
+
+On mobile, React Native does not cascade styles from View containers to nested Text children. Because of this, most entries in the component's `styles` object target HStack/View containers and cannot carry a meaningful `color` down to the text.
+
+`styles.text` is the **only** style target capable of setting the default text color on mobile. It is explicitly threaded to every text element in RollingNumber (digits, symbols, prefix text, suffix text), acting as a manual substitute for CSS cascade.
+
+Customizing the base color in this way is fully compatible with the `colorPulseOnUpdate` animation.
+
+::::tip Web equivalent
+On web, color cascades naturally through the DOM tree. This affords many ways to customize the default color, even on different elements. See the web docs for the full specificity hierarchy.
+::::
+
+```tsx
+function CustomColor() {
+  const price = 12345.67;
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Hex color via styles.text</Text>
+      <RollingNumber
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        styles={{ text: { color: '#6366f1' } }}
+        value={price}
+      />
+      <Text font="label1">With color pulse</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        styles={{ text: { color: '#6366f1' } }}
+        value={price}
+      />
+    </VStack>
+  );
+}
+```
+
 ## Digit Transition Variants
 
 RollingNumber supports two digit transition styles via the `digitTransitionVariant` prop:
