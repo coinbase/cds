@@ -2183,10 +2183,10 @@ __metadata:
     react-native: "npm:0.81.5"
     react-native-gesture-handler: "npm:2.28.0"
     react-native-inappbrowser-reborn: "npm:3.7.0"
-    react-native-navigation-bar-color: "npm:2.0.2"
     react-native-reanimated: "npm:4.1.1"
     react-native-safe-area-context: "npm:5.6.0"
     react-native-svg: "npm:15.12.1"
+    react-native-system-navigation-bar: "npm:2.8.0"
     react-native-worklets: "npm:0.5.2"
     react-test-renderer: "npm:19.1.2"
     type-fest: "npm:^2.19.0"
@@ -2198,10 +2198,10 @@ __metadata:
     react-native: ~0.81.5
     react-native-gesture-handler: 2.28.0
     react-native-inappbrowser-reborn: ^3.7.0
-    react-native-navigation-bar-color: ^2.0.2
     react-native-reanimated: 4.1.1
     react-native-safe-area-context: 5.6.0
     react-native-svg: 15.12.1
+    react-native-system-navigation-bar: ^2.8.0
     react-native-worklets: 0.5.2
   languageName: unknown
   linkType: soft
@@ -16943,11 +16943,11 @@ __metadata:
     react-native-date-picker: "npm:5.0.12"
     react-native-gesture-handler: "npm:2.28.0"
     react-native-inappbrowser-reborn: "npm:3.7.0"
-    react-native-navigation-bar-color: "npm:2.0.2"
     react-native-reanimated: "npm:4.1.1"
     react-native-safe-area-context: "npm:5.6.0"
     react-native-screens: "npm:4.16.0"
     react-native-svg: "npm:15.12.1"
+    react-native-system-navigation-bar: "npm:2.8.0"
     react-native-worklets: "npm:0.5.2"
   languageName: unknown
   linkType: soft
@@ -27016,20 +27016,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-navigation-bar-color@npm:2.0.2":
-  version: 2.0.2
-  resolution: "react-native-navigation-bar-color@npm:2.0.2"
-  checksum: 10c0/8d9482614b349ab2f25416a25f1b750fd776b8b11f83402142eeb74a11be056d75b5249f69af2357422b47dec8857bd62fc8cd339158f8736270566a51c43375
-  languageName: node
-  linkType: hard
-
-"react-native-navigation-bar-color@patch:react-native-navigation-bar-color@npm:2.0.2#.yarn/patches/react-native-navigation-bar-color-npm-2.0.2-9a2ea3aaf6.patch::locator=design-system%40workspace%3A.":
-  version: 2.0.2
-  resolution: "react-native-navigation-bar-color@patch:react-native-navigation-bar-color@npm%3A2.0.2#.yarn/patches/react-native-navigation-bar-color-npm-2.0.2-9a2ea3aaf6.patch::version=2.0.2&hash=2060ba&locator=design-system%40workspace%3A."
-  checksum: 10c0/b4f06c4c901d4e82c88c532016a240cf6f7a5d0d77f16cdb8da96c8f0a433bcb45d0617af4f849006bfb0f3427847d25d85964c83bc62c77bd921006d0dce4d8
-  languageName: node
-  linkType: hard
-
 "react-native-reanimated@npm:4.1.1":
   version: 4.1.1
   resolution: "react-native-reanimated@npm:4.1.1"
@@ -27080,6 +27066,16 @@ __metadata:
     react: "*"
     react-native: "*"
   checksum: 10c0/ed94b57007125c715283fc760438ac8eac0677ced3201f6e272a7cd4459f3fecb672a8eed2c32664e5b8e6e0367585353b0f83f99b231f603d75094bb052c01f
+  languageName: node
+  linkType: hard
+
+"react-native-system-navigation-bar@npm:2.8.0":
+  version: 2.8.0
+  resolution: "react-native-system-navigation-bar@npm:2.8.0"
+  peerDependencies:
+    react: "*"
+    react-native: "*"
+  checksum: 10c0/82c31cef1e36df6f759444f9597d8636c88d361e1295a7b482430cf7f7404b253b10c78ffdd2611054ae5eef879cde7ccc1b1980496cc9f635b47f4571747f1c
   languageName: node
   linkType: hard
 
