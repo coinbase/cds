@@ -327,15 +327,13 @@ export type RollingNumberBaseProps = SharedProps &
      * positive or negative mid color before returning to this base color.
      *
      * Only CDS design token colors are accepted here. To apply a non-token color (e.g. a hex string),
-     * use `styles={{ text: { color: '#FF0000' } }}` instead. On mobile, unlike web, CSS does not
-     * cascade, so text color must be threaded explicitly through `styles.text` to reach all digits.
-     * A custom color is not compatible with {@link colorPulseOnUpdate}.
+     * use `styles={{ text: { color: '#FF0000' } }}` instead.
      * @default 'fg'
      */
     color?: ThemeVars.Color;
     /**
-     * Enables color pulsing on positive or negative changes. Only works with the token-driven
-     * {@link color} prop — it will not work if a custom color is set via `styles.text`.
+     * Enables color pulsing on positive or negative changes. Overriding the default color using
+     * `styles.text` nullifies the effect.
      */
     colorPulseOnUpdate?: boolean;
     /**
@@ -407,11 +405,7 @@ export type RollingNumberProps = TextProps &
       fraction?: StyleProp<ViewStyle>;
       /**
        * Style applied to every text element — digits, symbols, prefix text, and suffix text. Set
-       * `color` here to apply a custom (non-token) text color. This is the only target that can set
-       * text color: the container keys above are `ViewStyle` and React Native does not cascade
-       * `color` to Text children.
-       * @example
-       * styles={{ text: { color: '#6366f1' } }}
+       * `color` here to apply a custom (non-token) text color.
        */
       text?: StyleProp<TextStyle>;
     };

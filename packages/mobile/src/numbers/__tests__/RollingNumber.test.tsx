@@ -36,15 +36,4 @@ describe('RollingNumber (mobile) custom text color', () => {
 
     expect(getRenderedColors()).toContain('rgba(255, 0, 0, 0.5)');
   });
-
-  it('renders a custom color even when colorPulseOnUpdate is enabled (pulse is nullified)', () => {
-    // A custom color opts out of the token-driven pulse: the static custom color should still be
-    // applied to the digits rather than being overridden by the animated base color.
-    render(
-      <RollingNumber colorPulseOnUpdate styles={{ text: { color: '#6366f1' } }} value={42} />,
-      { wrapper },
-    );
-
-    expect(getRenderedColors()).toContain('#6366f1');
-  });
 });

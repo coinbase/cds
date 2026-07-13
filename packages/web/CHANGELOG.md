@@ -10,9 +10,9 @@ All notable changes to this project will be documented in this file.
 
 ## 9.6.4 (7/10/2026 PST)
 
-#### 🐞 Fixes
+#### 📘 Misc
 
-- Chore(CDS-2463): Support non-token color customizations in RollingNumber. [[#787](https://github.com/coinbase/cds/pull/787)]
+- Docs(CDS-2463): document non-token color customization on RollingNumber (web changes are documentation only). [[#787](https://github.com/coinbase/cds/pull/787)]
 
 ## 9.6.3 ((7/9/2026, 10:48 AM PST))
 

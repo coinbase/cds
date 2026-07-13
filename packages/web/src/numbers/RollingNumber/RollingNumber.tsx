@@ -408,12 +408,7 @@ export type RollingNumberProps<AsComponent extends React.ElementType> = Polymorp
       integer?: React.CSSProperties;
       /** Container for the fractional portion of the value. */
       fraction?: React.CSSProperties;
-      /**
-       * Style applied to every text element — digits, symbols, prefix text, and suffix text. Set
-       * `color` here to apply a custom (non-token) text color.
-       * @example
-       * styles={{ text: { color: '#6366f1' } }}
-       */
+      /** Style applied to every text element — digits, symbols, prefix text, and suffix text. */
       text?: React.CSSProperties;
     };
   }
