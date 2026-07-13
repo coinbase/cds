@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.4 (7/13/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: tabs remount single frame delay. [[#791](https://github.com/coinbase/cds/pull/791)]
+- Fix: tabs reanimated value changes during render. [[#791](https://github.com/coinbase/cds/pull/791)]
+
 ## 9.6.3 (7/9/2026 PST)
 
 #### 🐞 Fixes
