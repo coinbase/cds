@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
@@ -9,7 +9,6 @@ import { type TabComponent, type TabsActiveIndicatorProps } from '../../tabs/Tab
 import { tabsSpringConfig } from '../../tabs/Tabs';
 import { Text, type TextBaseProps } from '../../typography/Text';
 
-// Animated active indicator to support smooth transition of background color
 export const PeriodSelectorActiveIndicator = ({
   activeTabRect,
   background = 'bgPrimaryWash',
@@ -19,28 +18,24 @@ export const PeriodSelectorActiveIndicator = ({
   const theme = useTheme();
   const { width, height, x, y } = activeTabRect;
 
-  // Get the target background color
   const backgroundColorKey = background as keyof typeof theme.color;
   const targetColor = theme.color[backgroundColorKey] || background;
 
-  // Track previous values for first render detection
-  const previousActiveTabRect = React.useRef(activeTabRect);
-  const previousColor = React.useRef(targetColor);
+  const animatedValues = useSharedValue({ x, y, width, backgroundColor: targetColor });
+  const isFirstRenderWithWidth = useRef(true);
 
-  // Combined animated value for position, size, and color
-  const newAnimatedValues = { x, y, width, backgroundColor: targetColor };
-  const animatedValues = useSharedValue(newAnimatedValues);
+  useEffect(() => {
+    const nextAnimatedValues = { x, y, width, backgroundColor: targetColor };
 
-  const isFirstRenderWithWidth =
-    previousActiveTabRect.current.width === 0 && activeTabRect.width > 0;
+    if (width <= 0) return;
 
-  if (previousActiveTabRect.current !== activeTabRect || previousColor.current !== targetColor) {
-    previousActiveTabRect.current = activeTabRect;
-    previousColor.current = targetColor;
-    animatedValues.value = isFirstRenderWithWidth
-      ? newAnimatedValues
-      : withSpring(newAnimatedValues, tabsSpringConfig);
-  }
+    if (isFirstRenderWithWidth.current) {
+      animatedValues.value = nextAnimatedValues;
+      isFirstRenderWithWidth.current = false;
+    } else {
+      animatedValues.value = withSpring(nextAnimatedValues, tabsSpringConfig);
+    }
+  }, [animatedValues, targetColor, width, x, y]);
 
   const animatedStyles = useAnimatedStyle(
     () => ({

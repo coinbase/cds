@@ -1,5 +1,5 @@
-import React, { memo, useCallback, useImperativeHandle, useRef, useState } from 'react';
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import React, { memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -32,18 +32,27 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 type TabContainerProps = {
   id: string;
   registerRef: (tabId: string, ref: View) => void;
+  onLayout: (tabId: string, event: LayoutChangeEvent) => void;
   style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
 };
 
-const TabContainer = ({ id, registerRef, ...props }: TabContainerProps) => {
+const TabContainer = ({ id, registerRef, onLayout, ...props }: TabContainerProps) => {
   const refCallback = useCallback(
     (ref: View | null) => {
       if (ref) registerRef(id, ref);
     },
     [id, registerRef],
   );
-  return <View ref={refCallback} {...props} />;
+
+  const handleLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      onLayout(id, event);
+    },
+    [id, onLayout],
+  );
+
+  return <View ref={refCallback} onLayout={handleLayout} {...props} />;
 };
 
 export const tabsSpringConfig = {
@@ -160,15 +169,33 @@ const TabsComponent = memo(
     const api = useTabs<TabId, TTab>({ tabs, activeTab, disabled, onChange });
 
     const [activeTabRect, setActiveTabRect] = useState<Rect>(defaultRect);
-    const previousActiveRef = useRef(activeTab);
+    const tabRects = useRef<Record<string, Rect>>({});
+    const [prevActiveTabId, setPrevActiveTabId] = useState(activeTab?.id);
 
-    const updateActiveTabRect = useCallback(() => {
-      const activeTabRef = activeTab ? refMap.getRef(activeTab.id) : null;
-      if (!activeTabRef || !tabsContainerRef.current) return;
-      activeTabRef.measureLayout(tabsContainerRef.current, (x, y, width, height) =>
-        setActiveTabRect({ x, y, width, height }),
-      );
-    }, [activeTab, refMap]);
+    const handleTabLayout = useCallback(
+      (tabId: string, event: LayoutChangeEvent) => {
+        const { x, y, width, height } = event.nativeEvent.layout;
+        const nextRect = { x, y, width, height };
+        tabRects.current[tabId] = nextRect;
+
+        if (activeTab?.id === tabId) {
+          setActiveTabRect(nextRect);
+        }
+      },
+      [activeTab?.id],
+    );
+
+    if (activeTab?.id !== prevActiveTabId) {
+      setPrevActiveTabId(activeTab?.id);
+      if (activeTab?.id) {
+        const cachedRect = tabRects.current[activeTab.id];
+        if (cachedRect) {
+          setActiveTabRect(cachedRect);
+        }
+      } else {
+        setActiveTabRect(defaultRect);
+      }
+    }
 
     const registerRef = useCallback(
       (tabId: string, ref: View) => {
@@ -177,13 +204,8 @@ const TabsComponent = memo(
           onActiveTabElementChange?.(ref);
         }
       },
-      [activeTab, onActiveTabElementChange, refMap],
+      [activeTab?.id, onActiveTabElementChange, refMap],
     );
-
-    if (previousActiveRef.current !== activeTab) {
-      previousActiveRef.current = activeTab;
-      updateActiveTabRect();
-    }
 
     return (
       <HStack
@@ -195,7 +217,6 @@ const TabsComponent = memo(
         borderTopLeftRadius={borderTopLeftRadius}
         borderTopRightRadius={borderTopRightRadius}
         color={color}
-        onLayout={updateActiveTabRect}
         opacity={opacity ?? (disabled ? accessibleOpacityDisabled : 1)}
         position={position}
         role={role}
@@ -226,7 +247,13 @@ const TabsComponent = memo(
               ...tabRest,
             };
             return (
-              <TabContainer key={id} id={id} registerRef={registerRef} style={styles?.tabContainer}>
+              <TabContainer
+                key={id}
+                id={id}
+                onLayout={handleTabLayout}
+                registerRef={registerRef}
+                style={styles?.tabContainer}
+              >
                 <RenderedTab {...renderedTabProps} />
               </TabContainer>
             );
@@ -248,19 +275,30 @@ export const TabsActiveIndicator = ({
   testID = 'tabs-active-indicator',
   ...props
 }: TabsActiveIndicatorProps) => {
-  const previousActiveTabRect = useRef(activeTabRect);
-  const newActiveTabRect = { x: activeTabRect.x, y: activeTabRect.y, width: activeTabRect.width };
-  const animatedTabRect = useSharedValue(newActiveTabRect);
-  const isFirstRenderWithWidth =
-    previousActiveTabRect.current.width === 0 && activeTabRect.width > 0;
+  const animatedTabRect = useSharedValue({
+    x: activeTabRect.x,
+    y: activeTabRect.y,
+    width: activeTabRect.width,
+  });
+  // Skip spring on first non-zero width or the indicator animates in from x:0/width:0.
+  const isFirstRenderWithWidth = useRef(true);
 
-  if (previousActiveTabRect.current !== activeTabRect) {
-    previousActiveTabRect.current = activeTabRect;
-    // TODO: writing to shared value during render causes a reanimated warning which we have to suppress in jest setup
-    animatedTabRect.value = isFirstRenderWithWidth
-      ? newActiveTabRect
-      : withSpring(newActiveTabRect, tabsSpringConfig);
-  }
+  useEffect(() => {
+    const nextActiveTabRect = {
+      x: activeTabRect.x,
+      y: activeTabRect.y,
+      width: activeTabRect.width,
+    };
+
+    if (activeTabRect.width <= 0) return;
+
+    if (isFirstRenderWithWidth.current) {
+      animatedTabRect.value = nextActiveTabRect;
+      isFirstRenderWithWidth.current = false;
+    } else {
+      animatedTabRect.value = withSpring(nextActiveTabRect, tabsSpringConfig);
+    }
+  }, [activeTabRect, animatedTabRect]);
 
   const animatedBoxStyle = useAnimatedStyle(
     () => ({
