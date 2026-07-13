@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useMemo } from 'react';
 import {
   type GestureResponderEvent,
   type StyleProp,
@@ -88,14 +88,12 @@ const SegmentedTabComponent = memo(
     const theme = useTheme();
     const activeColorRgbaString = theme.color[activeColor];
     const inactiveColorRgbaString = theme.color[color];
-    const animatedColor = useSharedValue(
-      isActive ? activeColorRgbaString : inactiveColorRgbaString,
-    );
+    const targetColor = isActive ? activeColorRgbaString : inactiveColorRgbaString;
+    const animatedColor = useSharedValue(targetColor);
 
-    animatedColor.value = withSpring(
-      isActive ? activeColorRgbaString : inactiveColorRgbaString,
-      tabsSpringConfig,
-    );
+    useEffect(() => {
+      animatedColor.value = withSpring(targetColor, tabsSpringConfig);
+    }, [animatedColor, targetColor]);
 
     const animatedTextStyles = useAnimatedStyle(
       () => ({ color: animatedColor.value }),
