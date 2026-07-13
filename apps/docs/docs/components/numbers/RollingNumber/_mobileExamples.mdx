@@ -264,38 +264,25 @@ function ColorAndTransition() {
 
 ## Custom, Non-Token Color
 
-On mobile, React Native does not cascade styles from View containers to nested Text children. Because of this, most entries in the component's `styles` object target HStack/View containers and cannot carry a meaningful `color` down to the text.
-
-`styles.text` is the **only** style target capable of setting text color on mobile. It is explicitly threaded to every text element in RollingNumber (digits, symbols, prefix text, suffix text), acting as a manual substitute for CSS cascade.
-
-:::warning Custom colors and colorPulseOnUpdate
-`colorPulseOnUpdate` is a semantic, token-driven effect and only works with the design-token `color` prop. It **will not work** alongside a custom color — combining a custom color (via `styles.text`) with `colorPulseOnUpdate` is unsupported. Use one or the other.
-:::
-
-:::note Per-section colors not supported
-Unlike web, per-section text color overrides (e.g. coloring only the integer portion) are not supported on mobile. All non-`text` `styles` keys are `ViewStyle` containers, and `color` is not a valid `ViewStyle` property in React Native.
-:::
-
-::::tip Web equivalent
-On web, color cascades naturally through the DOM tree. This affords more ways to customize color, including per-section overrides. See the web docs for details.
-::::
+To apply a non-token color (e.g. a hex string), set `color` via `styles.text`.
 
 ```tsx
 function CustomColor() {
   const price = 12345.67;
   return (
-    <VStack gap={2}>
-      <Text font="label1">Hex color via styles.text</Text>
-      <RollingNumber
-        font="title1"
-        format={{ style: 'currency', currency: 'USD' }}
-        styles={{ text: { color: '#6366f1' } }}
-        value={price}
-      />
-    </VStack>
+    <RollingNumber
+      font="title1"
+      format={{ style: 'currency', currency: 'USD' }}
+      styles={{ text: { color: '#6366f1' } }}
+      value={price}
+    />
   );
 }
 ```
+
+:::warning
+`colorPulseOnUpdate` will not work when a custom color is set.
+:::
 
 ## Digit Transition Variants
 

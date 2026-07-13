@@ -567,13 +567,7 @@ export const RollingNumber = memo(
           {prefix}
         </RollingNumberAffixSectionComponent>
       ),
-      [
-        RollingNumberAffixSectionComponent,
-        textColorStyles,
-        styles?.prefix,
-        textProps,
-        prefix,
-      ],
+      [RollingNumberAffixSectionComponent, textColorStyles, styles?.prefix, textProps, prefix],
     );
 
     const suffixSection = useMemo(
@@ -588,13 +582,7 @@ export const RollingNumber = memo(
           {suffix}
         </RollingNumberAffixSectionComponent>
       ),
-      [
-        RollingNumberAffixSectionComponent,
-        textColorStyles,
-        styles?.suffix,
-        textProps,
-        suffix,
-      ],
+      [RollingNumberAffixSectionComponent, textColorStyles, styles?.suffix, textProps, suffix],
     );
 
     const intlPartsValueSection = useMemo(() => {

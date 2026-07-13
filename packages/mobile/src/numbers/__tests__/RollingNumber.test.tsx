@@ -18,7 +18,9 @@ const getRenderedColors = () =>
 
 describe('RollingNumber (mobile) custom text color', () => {
   it('renders without error for a CDS design token color prop', () => {
-    expect(() => render(<RollingNumber color="fgPositive" value={42} />, { wrapper })).not.toThrow();
+    expect(() =>
+      render(<RollingNumber color="fgPositive" value={42} />, { wrapper }),
+    ).not.toThrow();
   });
 
   it('applies a hex color from styles.text to the digits', () => {
