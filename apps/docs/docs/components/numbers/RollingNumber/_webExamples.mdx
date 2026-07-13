@@ -324,18 +324,19 @@ function Example() {
 
 ## Custom, Non-Token Color
 
-To apply a non-token color (e.g. a hex string or CSS custom property), set `color` via an inline style or custom CSS. Any of these apply to the whole number:
+To apply a non-token color (e.g. a hex string or CSS custom property), set `color` via an inline style, `className`, or custom CSS. Any of these apply to the whole number:
 
 - `style={{ color: '...' }}`
 - `styles={{ root: { color: '...' } }}`
 - `styles={{ visibleContent: { color: '...' } }}`
 - `styles={{ text: { color: '...' } }}`
+- a `className` targeting the component or its `classNames` slots
 
 :::warning Custom colors and colorPulseOnUpdate
-`colorPulseOnUpdate` is a semantic, token-driven effect and only works with the design-token `color` prop. Setting a custom color through any of the inline-style targets above **nullifies the pulse** — the number renders in your custom color and does not animate on change.
+`colorPulseOnUpdate` is a semantic, token-driven effect and only works with the design-token `color` prop. It **will not work** alongside a custom color — combining a custom color with `colorPulseOnUpdate` is unsupported. Use one or the other.
 :::
 
-If more than one of the above sets `color`, the winner follows normal CSS specificity: `styles.text` (inline on the text) beats `styles.visibleContent`, which beats `styles.root`, which beats `style` (spread order).
+If more than one target sets `color`, the winner follows normal CSS specificity: `styles.text` (inline on the text) beats `styles.visibleContent`, which beats `styles.root`, which beats `style` (spread order).
 
 ```tsx live
 function Example() {

@@ -329,12 +329,13 @@ export type RollingNumberBaseProps = SharedProps &
      * Only CDS design token colors are accepted here. To apply a non-token color (e.g. a hex string),
      * use `styles={{ text: { color: '#FF0000' } }}` instead. On mobile, unlike web, CSS does not
      * cascade, so text color must be threaded explicitly through `styles.text` to reach all digits.
+     * A custom color is not compatible with {@link colorPulseOnUpdate}.
      * @default 'fg'
      */
     color?: ThemeVars.Color;
     /**
      * Enables color pulsing on positive or negative changes. Only works with the token-driven
-     * {@link color} prop — setting a custom color via `styles.text` nullifies the pulse.
+     * {@link color} prop — it will not work if a custom color is set via `styles.text`.
      */
     colorPulseOnUpdate?: boolean;
     /**

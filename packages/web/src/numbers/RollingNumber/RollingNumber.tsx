@@ -305,15 +305,16 @@ export type RollingNumberBaseProps = SharedProps &
      * Base text color token. When {@link colorPulseOnUpdate} is true, the color briefly pulses to a
      * positive or negative mid color before returning to this base color.
      *
-     * To apply a non-token color (e.g. a hex string), set `color` via an inline style instead
-     * (`style`, `styles.root`, `styles.visibleContent`, or `styles.text`). Note that doing so
-     * nullifies {@link colorPulseOnUpdate}.
+     * To apply a non-token color (e.g. a hex string), set `color` via an inline style or className
+     * instead (`style`, `styles.root`, `styles.visibleContent`, `styles.text`, or `classNames`).
+     * A custom color is not compatible with {@link colorPulseOnUpdate}.
      * @default 'fg'
      */
     color?: ThemeVars.Color;
     /**
      * Enables color pulsing on positive or negative changes. Only works with the token-driven
-     * {@link color} prop — applying a custom color via an inline style nullifies the pulse.
+     * {@link color} prop — it will not work if a custom color is applied via an inline style or
+     * className.
      */
     colorPulseOnUpdate?: boolean;
     /**
@@ -497,24 +498,10 @@ export const RollingNumber: RollingNumberComponent = memo(
 
       const direction = useValueChangeDirection(value);
 
-      // A custom (non-token) color set via an inline style nullifies colorPulseOnUpdate: the pulse
-      // is a semantic, token-driven effect and does not run for custom colors. Disabling the pulse
-      // when a custom color is present also keeps the color rendering purely declarative — the
-      // custom color cascades through the visibleContent span to the text via normal CSS, with no
-      // framer-motion inline color written on top to override it.
-      //
-      // Only whole-number color sources gate the pulse. Per-section overrides (styles.integer,
-      // styles.i18nPrefix, etc.) can still be combined with a token-driven pulse on the rest.
-      const hasCustomColor =
-        typeof style?.color === 'string' ||
-        typeof styles?.root?.color === 'string' ||
-        typeof styles?.visibleContent?.color === 'string' ||
-        typeof styles?.text?.color === 'string';
-
       const colorControls = useColorPulse({
         value,
         defaultColor: color,
-        colorPulseOnUpdate: !!colorPulseOnUpdate && !hasCustomColor,
+        colorPulseOnUpdate: !!colorPulseOnUpdate,
         positivePulseColor,
         negativePulseColor,
         formatted,
