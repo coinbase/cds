@@ -366,75 +366,52 @@ export type RollingNumberProps<AsComponent extends React.ElementType> = Polymorp
   RollingNumberBaseProps & {
     /** Custom class names for individual elements of the RollingNumber component */
     classNames?: {
-      /** Outer container element */
+      /** Outer container element. */
       root?: string;
-      /** Animated visible content wrapper */
+      /** Wrapper around the visible number (prefix, value, and suffix). */
       visibleContent?: string;
-      /** Formatted numeric value wrapper */
+      /** Wrapper around the formatted numeric value (the four i18n sections). */
       formattedValueSection?: string;
-      /** Prefix section (from props) */
+      /** Container for the `prefix` prop content. */
       prefix?: string;
-      /** Suffix section (from props) */
+      /** Container for the `suffix` prop content. */
       suffix?: string;
-      /** Prefix from Intl.NumberFormat (e.g. "$" in "$1,000") */
+      /** Container for the Intl.NumberFormat-generated prefix (e.g. "$" in "$1,000"). */
       i18nPrefix?: string;
-      /** Suffix from Intl.NumberFormat (e.g. "K" in "100K") */
+      /** Container for the Intl.NumberFormat-generated suffix (e.g. "K" in "100K"). */
       i18nSuffix?: string;
-      /** Integer portion of formatted value */
+      /** Container for the integer portion of the value. */
       integer?: string;
-      /** Fractional portion of formatted value */
+      /** Container for the fractional portion of the value. */
       fraction?: string;
-      /** Text element for digits and symbols */
+      /** Every text element — digits, symbols, prefix text, and suffix text. */
       text?: string;
     };
     /** Custom styles for individual elements of the RollingNumber component */
     styles?: {
-      /**
-       * Outer container element. Setting `color` here cascades to the whole number and nullifies
-       * {@link colorPulseOnUpdate} — a custom color opts out of the token-driven pulse.
-       */
+      /** Outer container element. */
       root?: React.CSSProperties;
-      /**
-       * Visible content wrapper. Setting `color` here cascades to the whole number and nullifies
-       * {@link colorPulseOnUpdate}.
-       */
+      /** Wrapper around the visible number (prefix, value, and suffix). */
       visibleContent?: React.CSSProperties;
-      /** Formatted numeric value wrapper (contains the four i18n sections). */
+      /** Wrapper around the formatted numeric value (the four i18n sections). */
       formattedValueSection?: React.CSSProperties;
-      /**
-       * Prefix section from the `prefix` prop. A `color` here applies only to the prefix; that
-       * section renders statically and does not participate in the pulse.
-       */
+      /** Container for the `prefix` prop content. */
       prefix?: React.CSSProperties;
-      /**
-       * Suffix section from the `suffix` prop. A `color` here applies only to the suffix; that
-       * section renders statically and does not participate in the pulse.
-       */
+      /** Container for the `suffix` prop content. */
       suffix?: React.CSSProperties;
-      /**
-       * i18n-generated prefix section (e.g. "$" in "$1,000"). A `color` here applies only to this
-       * section; it renders statically and does not participate in the pulse.
-       */
+      /** Container for the Intl.NumberFormat-generated prefix (e.g. "$" in "$1,000"). */
       i18nPrefix?: React.CSSProperties;
-      /**
-       * i18n-generated suffix section (e.g. "K" in "100K"). A `color` here applies only to this
-       * section; it renders statically and does not participate in the pulse.
-       */
+      /** Container for the Intl.NumberFormat-generated suffix (e.g. "K" in "100K"). */
       i18nSuffix?: React.CSSProperties;
-      /**
-       * Integer portion of the formatted value. A `color` here applies only to this section; it
-       * renders statically and does not participate in the pulse.
-       */
+      /** Container for the integer portion of the value. */
       integer?: React.CSSProperties;
-      /**
-       * Fractional portion of the formatted value. A `color` here applies only to this section; it
-       * renders statically and does not participate in the pulse.
-       */
+      /** Container for the fractional portion of the value. */
       fraction?: React.CSSProperties;
       /**
-       * Inline style applied directly to each text element — digits, symbols, prefix text, and
-       * suffix text. Setting `color` here (highest CSS specificity) applies to the whole number and
-       * nullifies {@link colorPulseOnUpdate}.
+       * Style applied to every text element — digits, symbols, prefix text, and suffix text. Set
+       * `color` here to apply a custom (non-token) text color.
+       * @example
+       * styles={{ text: { color: '#6366f1' } }}
        */
       text?: React.CSSProperties;
     };

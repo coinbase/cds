@@ -386,61 +386,29 @@ export type RollingNumberProps = TextProps &
   RollingNumberBaseProps & {
     /** Custom styles for individual elements of the RollingNumber component */
     styles?: {
-      /**
-       * Outer container element (HStack/View). Accepts layout styles — padding, margin, etc.
-       * `color` has no effect here: React Native does not cascade styles from View to Text children.
-       * Per-section color overrides (e.g. coloring only the integer portion) are
-       * therefore not supported on mobile — use `styles.text` to customize the default text color.
-       */
+      /** Outer container element. */
       root?: StyleProp<ViewStyle>;
-      /**
-       * Visible content wrapper (HStack/View). Accepts layout styles.
-       * `color` has no effect here for the same reason as `root`.
-       */
+      /** Wrapper around the visible number (prefix, value, and suffix). */
       visibleContent?: StyleProp<ViewStyle>;
-      /**
-       * Formatted numeric value wrapper (HStack/View). Accepts layout styles.
-       * `color` has no effect here for the same reason as `root`.
-       */
+      /** Wrapper around the formatted numeric value (the four i18n sections). */
       formattedValueSection?: StyleProp<ViewStyle>;
-      /**
-       * Prefix section container (HStack/View). Accepts layout styles — padding, gap, etc.
-       * `color` has no effect here for the same reason as `root`.
-       */
+      /** Container for the `prefix` prop content. */
       prefix?: StyleProp<ViewStyle>;
-      /**
-       * Suffix section container (HStack/View). Accepts layout styles — padding, gap, etc.
-       * `color` has no effect here for the same reason as `root`.
-       */
+      /** Container for the `suffix` prop content. */
       suffix?: StyleProp<ViewStyle>;
-      /**
-       * i18n-generated prefix section container (HStack/View), e.g. "$" in "$1,000".
-       * Accepts layout styles. `color` has no effect here for the same reason as `root`.
-       */
+      /** Container for the Intl.NumberFormat-generated prefix (e.g. "$" in "$1,000"). */
       i18nPrefix?: StyleProp<ViewStyle>;
-      /**
-       * i18n-generated suffix section container (HStack/View), e.g. "K" in "100K".
-       * Accepts layout styles. `color` has no effect here for the same reason as `root`.
-       */
+      /** Container for the Intl.NumberFormat-generated suffix (e.g. "K" in "100K"). */
       i18nSuffix?: StyleProp<ViewStyle>;
-      /**
-       * Integer portion container (HStack/View). Accepts layout styles.
-       * `color` has no effect here for the same reason as `root`.
-       */
+      /** Container for the integer portion of the value. */
       integer?: StyleProp<ViewStyle>;
-      /**
-       * Fractional portion container (HStack/View). Accepts layout styles.
-       * `color` has no effect here for the same reason as `root`.
-       */
+      /** Container for the fractional portion of the value. */
       fraction?: StyleProp<ViewStyle>;
       /**
-       * Shared TextStyle applied to every text element — digits, symbols, prefix text, and suffix
-       * text. This is the **only** style target capable of setting text color on mobile; all other
-       * keys are ViewStyle containers and `color` has no effect on them.
-       *
-       * Setting a non-token `color` here nullifies `colorPulseOnUpdate` — the pulse is a semantic,
-       * token-driven effect and does not run for custom colors. To keep the pulse, use the `color`
-       * prop with a design token instead.
+       * Style applied to every text element — digits, symbols, prefix text, and suffix text. Set
+       * `color` here to apply a custom (non-token) text color. This is the only target that can set
+       * text color: the container keys above are `ViewStyle` and React Native does not cascade
+       * `color` to Text children.
        * @example
        * styles={{ text: { color: '#6366f1' } }}
        */
