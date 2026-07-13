@@ -280,6 +280,7 @@ export const TabsActiveIndicator = ({
     y: activeTabRect.y,
     width: activeTabRect.width,
   });
+  // Skip spring on first non-zero width or the indicator animates in from x:0/width:0.
   const isFirstRenderWithWidth = useRef(true);
 
   useEffect(() => {
