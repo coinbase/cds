@@ -4,8 +4,9 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 
+import { Button } from '../../buttons';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
-import { VStack } from '../../layout';
+import { HStack, VStack } from '../../layout';
 import { ThemeProvider } from '../../system/ThemeProvider';
 import { defaultTheme } from '../../themes/defaultTheme';
 import { Text } from '../../typography/Text';
@@ -132,6 +133,58 @@ const TabsWithPanelsExample = () => {
   );
 };
 
+const RemountTabsExample = () => {
+  const [remountKey, setRemountKey] = useState(0);
+  const [activeTab, setActiveTab] = useState<TabRowWithTestId | null>(basicTabs[1]);
+
+  const handleRemount = useCallback(() => {
+    setRemountKey((key) => key + 1);
+  }, []);
+
+  const handleActivateFirst = useCallback(() => {
+    setActiveTab(basicTabs[0]);
+  }, []);
+
+  const handleActivateSecond = useCallback(() => {
+    setActiveTab(basicTabs[1]);
+  }, []);
+
+  return (
+    <Example overflow="visible" padding={gutter} title="Remount (indicator mount flash)">
+      <VStack gap={3}>
+        <Text font="body">
+          Press Remount to force a fresh mount. The active indicator should appear under the active
+          tab on the first frame — no flash at x:0 or animate-from-zero.
+        </Text>
+        <HStack gap={2}>
+          <Button compact onPress={handleRemount}>
+            Remount ({remountKey})
+          </Button>
+          <Button compact onPress={handleActivateFirst} variant="secondary">
+            Active: Buy
+          </Button>
+          <Button compact onPress={handleActivateSecond} variant="secondary">
+            Active: Sell
+          </Button>
+        </HStack>
+        <Tabs
+          key={remountKey}
+          TabComponent={DefaultTab}
+          TabsActiveIndicatorComponent={CustomSpringIndicator}
+          accessibilityLabel="Remount test tabs"
+          activeBackground="bgPrimary"
+          activeTab={activeTab}
+          background="bg"
+          gap={4}
+          onChange={setActiveTab}
+          tabs={basicTabs}
+          zIndex={zIndex.navigation}
+        />
+      </VStack>
+    </Example>
+  );
+};
+
 const DefaultTabsScreen = () => (
   <ExampleScreen>
     <TabsExample
@@ -179,6 +232,7 @@ const DefaultTabsScreen = () => (
       tabs={basicTabs}
       title="TabsActiveIndicator (spring) instead of DefaultTabIndicator"
     />
+    <RemountTabsExample />
     <TabsWithPanelsExample />
   </ExampleScreen>
 );
