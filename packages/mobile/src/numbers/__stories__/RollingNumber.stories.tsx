@@ -366,9 +366,9 @@ export const ColorAndTransition = () => {
         value={price}
       />
 
-      <Text font="label1">Custom non-token color via styles.text</Text>
+      {/* Custom (non-token) color via styles.text nullifies colorPulseOnUpdate */}
+      <Text font="label1">Custom non-token color via styles.text (no pulse)</Text>
       <RollingNumber
-        colorPulseOnUpdate
         font="title1"
         format={{ style: 'currency', currency: 'USD' }}
         styles={{ text: { color: '#6366f1' } }}

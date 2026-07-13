@@ -28,15 +28,14 @@ export function useColorPulse({
 }: {
   value: number;
   formatted: string;
-  defaultColor: ThemeVars.Color | string;
+  defaultColor: ThemeVars.Color;
   colorPulseOnUpdate: boolean;
   positivePulseColor: ThemeVars.Color;
   negativePulseColor: ThemeVars.Color;
   transitionConfig?: RollingNumberTransitionConfig;
 }): AnimatedTextStyle {
   const theme = useTheme();
-  const baseColor =
-    (theme.color as Record<string, string | undefined>)[defaultColor] ?? (defaultColor as string);
+  const baseColor = theme.color[defaultColor];
   const previousValue = useRef<number>(Number(value));
   const previousStringValue = useRef<string>(formatted);
   const animatedColor = useSharedValue<string>(baseColor);
