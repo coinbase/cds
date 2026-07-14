@@ -185,9 +185,8 @@ export function createIcon<Name extends string>({
         [dangerouslySetColor, style, styles?.root],
       );
 
-      // The default font family lives in the static Linaria block via a CSS
-      // variable fallback; only set the variable when a custom font is bound,
-      // so consumers can also override it via className, inline style, or theme scope.
+      // Only override the font-family CSS variable when a custom font is bound;
+      // the default is applied by the static Linaria block's fallback value.
       const iconStyle = useMemo(
         () =>
           fontFamily === DEFAULT_ICON_FONT_FAMILY

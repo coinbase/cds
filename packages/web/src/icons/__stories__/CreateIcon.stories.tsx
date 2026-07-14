@@ -7,11 +7,9 @@ import { createIcon, type GlyphMap } from '../createIcon';
 import { Icon } from '../Icon';
 
 /**
- * Demo of `createIcon` bound to a *different* icon font (Google "Material
- * Icons") to show that a consumer can supply their own glyph map, font family,
- * and typed name union while reusing the CDS Icon renderer.
- *
- * Uses a network font, so it is excluded from visual regression (percy skip).
+ * `createIcon` bound to a different font (Google Material Icons), showing a
+ * consumer can supply their own glyph map, font, and name union while reusing
+ * the CDS Icon renderer. Uses a network font, so percy is skipped.
  */
 const materialCodepoints = {
   home: 0xe88a,
