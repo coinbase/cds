@@ -118,11 +118,11 @@ describe('DotCount', () => {
     expect(screen.getByText('1')).toBeTruthy();
   });
 
-  it('renders correct count when count  0', () => {
-    renderDotCount({ count: 0, testID: DOTCOUNT_TESTID, variant: 'negative' });
+  it.each([0, -1])('does not render when count is %s', (count) => {
+    renderDotCount({ count, testID: DOTCOUNT_TESTID, variant: 'negative' });
     triggerChildrenLayout();
 
-    expect(screen.queryByText('0')).toBeNull();
+    expect(screen.queryByText(String(count))).toBeNull();
   });
 
   it('passes a11y for 0 counter', () => {
