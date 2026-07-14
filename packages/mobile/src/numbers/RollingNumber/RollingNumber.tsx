@@ -487,17 +487,6 @@ export const RollingNumber = memo(
       ],
     );
 
-    // A custom (non-token) color is set via styles.text.color — the only text-color target on
-    // mobile, since styles are explicitly threaded to every text element (there is no CSS cascade).
-    // A custom color opts out of colorPulseOnUpdate: the pulse is a semantic, token-driven effect,
-    // so when a custom color is present we disable the pulse and let styles.text drive color as a
-    // plain static style (see textColorStyles below).
-    const hasCustomTextColor = useMemo(() => {
-      if (!styles?.text) return false;
-      const flat = StyleSheet.flatten(styles.text as StyleProp<TextStyle>);
-      return typeof flat?.color === 'string';
-    }, [styles?.text]);
-
     const transitionConfig = useMemo(
       () => ({ ...defaultTransitionConfig, ...transition }),
       [transition],
@@ -521,19 +510,21 @@ export const RollingNumber = memo(
     const animatedColorStyle = useColorPulse({
       value,
       defaultColor: colorProp,
-      colorPulseOnUpdate: !!colorPulseOnUpdate && !hasCustomTextColor,
+      colorPulseOnUpdate: !!colorPulseOnUpdate,
       positivePulseColor,
       negativePulseColor,
       transitionConfig,
       formatted,
     });
 
-    // When a custom text color is present, omit the animated color style so styles.text drives the
-    // color statically. Otherwise animatedColorStyle leads the array and (via Reanimated's native
-    // precedence) drives both the base color and the pulse.
+    // Only apply the animated color style while pulsing. When idle it just re-emits the token base
+    // color (already applied via textProps.color), and — because a Reanimated animated style
+    // overrides static styles regardless of array order — it would clobber a custom styles.text
+    // color. Omitting it when not pulsing lets textProps.color (token) or styles.text (custom) drive
+    // the color statically.
     const textColorStyles = useMemo(
-      () => (hasCustomTextColor ? styles?.text : [animatedColorStyle, styles?.text]),
-      [hasCustomTextColor, animatedColorStyle, styles?.text],
+      () => (colorPulseOnUpdate ? [animatedColorStyle, styles?.text] : styles?.text),
+      [colorPulseOnUpdate, animatedColorStyle, styles?.text],
     );
 
     const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
