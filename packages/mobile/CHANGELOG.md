@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.6 (7/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: do not animate initial animated caret render. [[#792](https://github.com/coinbase/cds/pull/792)]
+
 ## 9.6.5 (7/13/2026 PST)
 
 #### 🐞 Fixes

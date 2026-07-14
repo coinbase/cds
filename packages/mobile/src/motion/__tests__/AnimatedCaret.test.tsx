@@ -1,4 +1,5 @@
 import { act, useCallback, useState } from 'react';
+import { Animated } from 'react-native';
 import { withTimeTravel } from '@coinbase/cds-common/jest/timeTravel';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -8,6 +9,8 @@ import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { AnimatedCaret } from '../AnimatedCaret';
 
 const rotates = [0, 90, 180, -90];
+const caretTestID = 'mock-animated-caret';
+
 const MockAnimatedCaret = () => {
   const [rotateIndex, setRotateIndex] = useState(0);
 
@@ -19,20 +22,59 @@ const MockAnimatedCaret = () => {
         <Button onPress={handleRotate} testID="mock-rotate-button">
           Rotate
         </Button>
-        <AnimatedCaret rotate={rotates[rotateIndex]} testID="mock-animated-caret" />
+        <AnimatedCaret rotate={rotates[rotateIndex]} testID={caretTestID} />
       </VStack>
     </DefaultThemeProvider>
   );
 };
 
+const getCaretTransform = () => screen.getByTestId(caretTestID).props.style.transform;
+
 describe('AnimatedCaret', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('passes a11y', () => {
     render(
       <DefaultThemeProvider>
-        <AnimatedCaret rotate={1} testID="mock-animated-caret" />
+        <AnimatedCaret rotate={1} testID={caretTestID} />
       </DefaultThemeProvider>,
     );
-    expect(screen.getByTestId('mock-animated-caret')).toBeAccessible();
+    expect(screen.getByTestId(caretTestID)).toBeAccessible();
+  });
+
+  it('does not animate on mount', () => {
+    render(
+      <DefaultThemeProvider>
+        <AnimatedCaret rotate={180} testID={caretTestID} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(Animated.timing).not.toHaveBeenCalled();
+    expect(getCaretTransform()).toEqual([{ rotate: '180deg' }]);
+  });
+
+  it('animates when rotate changes after mount', () => {
+    withTimeTravel((timeTravel) => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <AnimatedCaret rotate={180} testID={caretTestID} />
+        </DefaultThemeProvider>,
+      );
+
+      jest.clearAllMocks();
+
+      rerender(
+        <DefaultThemeProvider>
+          <AnimatedCaret rotate={0} testID={caretTestID} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(Animated.timing).toHaveBeenCalled();
+      act(() => timeTravel(500));
+      expect(getCaretTransform()).toEqual([{ rotate: '0deg' }]);
+    });
   });
 
   it('rotates', () => {
@@ -42,9 +84,7 @@ describe('AnimatedCaret', () => {
       for (let i = 0; i < rotates.length - 1; i += 1) {
         fireEvent.press(screen.getByTestId('mock-rotate-button'));
         act(() => timeTravel(500));
-        expect(screen.getByTestId('mock-animated-caret').props.style.transform).toEqual([
-          { rotate: `${rotates[i + 1]}deg` },
-        ]);
+        expect(getCaretTransform()).toEqual([{ rotate: `${rotates[i + 1]}deg` }]);
       }
     });
   });

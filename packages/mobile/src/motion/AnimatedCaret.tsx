@@ -1,6 +1,5 @@
-import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { Animated } from 'react-native';
-import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import { animateRotateConfig } from '@coinbase/cds-common/motion/animatedCaret';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
@@ -14,18 +13,21 @@ export type AnimatedCaretBaseProps = SharedProps & {
 
 export type AnimatedCaretProps = AnimatedCaretBaseProps & Partial<Omit<IconProps, 'name'>>;
 
-export const useAnimatedCaretAnimation = () => {
-  const rotateValue = useRef(new Animated.Value(0)).current;
+export const useAnimatedCaretAnimation = (rotate: number) => {
+  const [rotateValue] = useState(() => new Animated.Value(rotate));
+  const isInitialRender = useRef(true);
 
-  const animate = useCallback(
-    (rotate: number) => {
-      Animated.timing(
-        rotateValue,
-        convertMotionConfig({ ...animateRotateConfig, toValue: rotate }),
-      ).start();
-    },
-    [rotateValue],
-  );
+  useEffect(() => {
+    if (isInitialRender.current) {
+      isInitialRender.current = false;
+      return;
+    }
+
+    Animated.timing(
+      rotateValue,
+      convertMotionConfig({ ...animateRotateConfig, toValue: rotate }),
+    ).start();
+  }, [rotate, rotateValue]);
 
   const interpolatedRotateValue = rotateValue.interpolate({
     inputRange: [0, 360],
@@ -35,9 +37,8 @@ export const useAnimatedCaretAnimation = () => {
   return useMemo(
     () => ({
       animatedStyles: { transform: [{ rotate: interpolatedRotateValue }] },
-      animate,
     }),
-    [interpolatedRotateValue, animate],
+    [interpolatedRotateValue],
   );
 };
 
@@ -48,12 +49,7 @@ export const AnimatedCaret = memo(function AnimatedCaret({
   style,
   ...props
 }: AnimatedCaretProps) {
-  const { animatedStyles, animate } = useAnimatedCaretAnimation();
-  const previousRotate = usePreviousValue(rotate);
-
-  useEffect(() => {
-    if (rotate !== previousRotate) animate(rotate);
-  }, [rotate, previousRotate, animate]);
+  const { animatedStyles } = useAnimatedCaretAnimation(rotate);
 
   return (
     // HStack to limit rotate boundary
