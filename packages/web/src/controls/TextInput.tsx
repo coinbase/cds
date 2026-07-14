@@ -26,20 +26,31 @@ import { InputLabel } from './InputLabel';
 import type { InputStackBaseProps } from './InputStack';
 import { InputStack } from './InputStack';
 import { NativeInput, type NativeInputBaseProps, type NativeInputProps } from './NativeInput';
+import type { TextInputSize } from './useTextInputDensity';
+import { useTextInputDensity } from './useTextInputDensity';
 
 /**
  * In normal circumstances, padding horizontal should be 2 (16px).
- * If compact is true, the padding top should be 1.
- * If labelVariant is 'inside', the padding top should be 3.5 (28px).
- * This gives the absolute positioning of the label space.
- * The bottom will be 1 (8px) in this case to equal padding of inside label.
- * If start exist, the padding between input area and icon should be 0.5 (4px).
+ * Size path: only paddingY changes (s=8, m=12, l=16); paddingX stays space-2.
+ * Legacy compact: all-around space-1 (unchanged).
+ * Vertical inside label (size l): padding-top 0, padding-bottom space-1.
+ * If start exists, padding between input area and icon should be 0.5 (4px).
  */
 const nativeInputContainerCss = css`
   padding-top: var(--space-2);
   padding-bottom: var(--space-2);
   padding-inline-start: var(--space-2);
   padding-inline-end: var(--space-2);
+
+  &[data-size='s'] {
+    padding-top: var(--space-1);
+    padding-bottom: var(--space-1);
+  }
+
+  &[data-size='m'] {
+    padding-top: var(--space-1_5);
+    padding-bottom: var(--space-1_5);
+  }
 
   &[data-labelvariant='inside'] {
     padding-top: 0;
@@ -70,7 +81,7 @@ const insideLabelCssStartCss = css`
 `;
 
 export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
-  SharedInputProps &
+  Omit<SharedInputProps, 'compact'> &
   Pick<
     InputStackBaseProps,
     | 'height'
@@ -82,6 +93,18 @@ export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
     | 'labelVariant'
     | 'inputBackground'
   > & {
+    /**
+     * Enables compact variation. Prefer `size="s"` or `size="m"` with an explicit `labelVariant`.
+     *
+     * @deprecated Use `size` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
+    /**
+     * Controls vertical density of the input field.
+     * @default 'l'
+     */
+    size?: TextInputSize;
     /**
      * Customize the element which the input area will be rendered as.
      * Adds ability to render the input area as a `<textarea />`, `<input />` etc...
@@ -134,7 +157,7 @@ export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
     labelNode?: React.ReactNode;
   };
 
-export type TextInputProps = TextInputBaseProps & Omit<NativeInputProps, 'caretColor'>;
+export type TextInputProps = TextInputBaseProps & Omit<NativeInputProps, 'caretColor' | 'size'>;
 
 const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   primary: 'fgPrimary',
@@ -164,6 +187,7 @@ export const TextInput = memo(
       align = 'start',
       font = 'body',
       compact = false,
+      size,
       suffix = '',
       onFocus,
       onBlur,
@@ -232,6 +256,13 @@ export const TextInput = memo(
 
     const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
 
+    const density = useTextInputDensity({
+      compact,
+      hasLabel,
+      labelVariant,
+      size,
+    });
+
     const inputElement = useMemo(() => {
       /** Ensures that the renderedInput has the blurring, focusing, disabled features */
       if (inputNode) {
@@ -263,11 +294,12 @@ export const TextInput = memo(
           align={align}
           aria-invalid={variant === 'negative'}
           caretColor={variantColorMap[focusedVariant]}
-          compact={compact}
+          compact={density.nativeCompact}
           containerSpacing={nativeInputContainerCss}
-          data-compact={compact}
-          data-labelvariant={compact || !hasLabel ? 'outside' : labelVariant}
-          data-start={!!start || compact}
+          data-compact={density.nativeCompact || undefined}
+          data-labelvariant={density.inputStackLabelVariant}
+          data-size={density.dataSize}
+          data-start={!!start || density.showLabelInStartSlot}
           disabled={disabled}
           font={font}
           id={shouldSetLabelId ? labelId : undefined}
@@ -287,9 +319,10 @@ export const TextInput = memo(
       align,
       variant,
       focusedVariant,
-      compact,
-      hasLabel,
-      labelVariant,
+      density.nativeCompact,
+      density.inputStackLabelVariant,
+      density.dataSize,
+      density.showLabelInStartSlot,
       start,
       disabled,
       font,
@@ -352,9 +385,9 @@ export const TextInput = memo(
           inputBackground={readOnlyInputBackground ?? inputBackground}
           inputNode={inputElement}
           labelNode={
-            !compact &&
+            density.showLabelInStack &&
             (labelNode ? (
-              labelVariant === 'inside' ? (
+              density.labelPlacement === 'inside-vertical' ? (
                 <Box
                   background={readOnlyInputBackground}
                   paddingEnd={2}
@@ -369,10 +402,16 @@ export const TextInput = memo(
             ) : (
               !!label && (
                 <InputLabel
-                  background={labelVariant === 'inside' ? readOnlyInputBackground : undefined}
+                  background={
+                    density.labelPlacement === 'inside-vertical'
+                      ? readOnlyInputBackground
+                      : undefined
+                  }
                   className={cx(
-                    labelVariant === 'inside' && insideLabelCss,
-                    labelVariant === 'inside' && !!start && insideLabelCssStartCss,
+                    density.labelPlacement === 'inside-vertical' && insideLabelCss,
+                    density.labelPlacement === 'inside-vertical' &&
+                      !!start &&
+                      insideLabelCssStartCss,
                   )}
                   color={labelColor}
                   font={labelFont}
@@ -384,19 +423,19 @@ export const TextInput = memo(
               )
             ))
           }
-          labelVariant={labelVariant}
+          labelVariant={density.inputStackLabelVariant}
           startNode={
-            (compact || !!start) && (
+            (density.showLabelInStartSlot || !!start) && (
               <HStack
                 alignItems="center"
                 background={readOnlyInputBackground}
                 gap={2}
                 justifyContent="center"
                 onClick={handleNodePress}
-                paddingStart={compact && hasLabel ? 2 : undefined}
+                paddingStart={density.showLabelInStartSlot ? 2 : undefined}
                 testID={testIDMap?.start ?? ''}
               >
-                {compact &&
+                {density.showLabelInStartSlot &&
                   (labelNode
                     ? labelNode
                     : !!label && (

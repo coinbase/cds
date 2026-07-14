@@ -13,7 +13,6 @@ import type {
   DimensionValue,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
-  ViewStyle,
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
@@ -37,13 +36,15 @@ import { InputIconButton } from './InputIconButton';
 import { InputLabel } from './InputLabel';
 import { InputStack, type InputStackBaseProps } from './InputStack';
 import { NativeInput } from './NativeInput';
+import type { TextInputSize } from './useTextInputDensity';
+import { useTextInputDensity } from './useTextInputDensity';
 
 export type TextInputBaseProps = SharedProps &
   Pick<
     SharedAccessibilityProps,
     'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
   > &
-  SharedInputProps &
+  Omit<SharedInputProps, 'compact'> &
   Pick<
     InputStackBaseProps,
     | 'height'
@@ -56,6 +57,18 @@ export type TextInputBaseProps = SharedProps &
     | 'labelVariant'
     | 'inputBackground'
   > & {
+    /**
+     * Enables compact variation. Prefer `size="s"` or `size="m"` with an explicit `labelVariant`.
+     *
+     * @deprecated Use `size` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
+    /**
+     * Controls vertical density of the input field.
+     * @default 'l'
+     */
+    size?: TextInputSize;
     /**
      * Aligns text inside input and helperText
      * @default start
@@ -150,6 +163,7 @@ export const TextInput = memo(
       align = 'start',
       font = 'body',
       compact,
+      size,
       suffix = '',
       accessibilityLabel,
       borderRadius,
@@ -197,18 +211,14 @@ export const TextInput = memo(
 
     const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
 
-    const containerSpacing: ViewStyle = useMemo(
-      () => ({
-        ...(!!start && { paddingStart: theme.space[0.5] }),
-        ...(labelVariant === 'inside' &&
-          hasLabel &&
-          !compact && {
-            paddingBottom: theme.space[1],
-            paddingTop: 0,
-          }),
-      }),
-      [start, theme.space, labelVariant, hasLabel, compact],
-    );
+    const density = useTextInputDensity({
+      compact,
+      hasLabel,
+      hasStart: !!start,
+      labelVariant,
+      size,
+      theme,
+    });
 
     // Get the accessability label from the start node child
     const startIconA11yLabel = useMemo(() => {
@@ -301,8 +311,8 @@ export const TextInput = memo(
             accessibilityHint={typeof helperText === 'string' ? helperText : undefined}
             accessibilityLabel={accessibilityLabel ?? label}
             align={align}
-            compact={compact}
-            containerSpacing={containerSpacing}
+            compact={density.nativeCompact}
+            containerSpacing={density.containerSpacing}
             disabled={disabled}
             font={font}
             selectionColor={variantColorMap[focusedVariant]}
@@ -311,12 +321,12 @@ export const TextInput = memo(
           />
         }
         labelNode={
-          !compact &&
-          (labelNode && labelVariant !== 'inside'
+          density.showLabelInStack &&
+          (labelNode && density.labelPlacement !== 'inside-vertical'
             ? labelNode
             : hasLabel && (
                 <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                  {labelVariant === 'inside' && labelNode ? (
+                  {density.labelPlacement === 'inside-vertical' && labelNode ? (
                     <Box
                       background={readOnlyInputBackground}
                       paddingEnd={2}
@@ -324,7 +334,7 @@ export const TextInput = memo(
                     >
                       {labelNode}
                     </Box>
-                  ) : labelVariant === 'inside' ? (
+                  ) : density.labelPlacement === 'inside-vertical' ? (
                     <InputLabel
                       background={readOnlyInputBackground}
                       color={labelColor}
@@ -344,9 +354,9 @@ export const TextInput = memo(
                 </Pressable>
               ))
         }
-        labelVariant={labelVariant}
+        labelVariant={density.inputStackLabelVariant}
         startNode={
-          ((compact && hasLabel) || !!start) && (
+          (density.showLabelInStartSlot || !!start) && (
             <Box
               alignItems="center"
               background={readOnlyInputBackground}
@@ -362,8 +372,8 @@ export const TextInput = memo(
                 importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
                 onPress={handleNodePress}
               >
-                <HStack paddingStart={compact && hasLabel ? 2 : undefined}>
-                  {compact &&
+                <HStack paddingStart={density.showLabelInStartSlot ? 2 : undefined}>
+                  {density.showLabelInStartSlot &&
                     (labelNode
                       ? labelNode
                       : !!label && (

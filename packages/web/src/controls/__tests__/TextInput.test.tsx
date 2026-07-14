@@ -618,4 +618,74 @@ describe('TextInput', () => {
     expect(inputArea).toContainElement(label);
     expect(inputArea).toContainElement(endContent);
   });
+
+  it('renders outside label when size is s', () => {
+    const labelTestID = 'label-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput label="Small Outside Label" size="s" testIDMap={{ label: labelTestID }} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Small Outside Label');
+  });
+
+  it('renders inside label horizontally in start slot when size is s', () => {
+    const startTestID = 'start-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          label="Small Inside Label"
+          labelVariant="inside"
+          size="s"
+          testIDMap={{ start: startTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(startTestID)).toHaveTextContent('Small Inside Label');
+  });
+
+  it('renders inside label vertically when size is l', () => {
+    const labelTestID = 'label-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          label="Large Inside Label"
+          labelVariant="inside"
+          size="l"
+          testIDMap={{ label: labelTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Large Inside Label');
+  });
+
+  it('ignores compact when size is explicitly set', () => {
+    const labelTestID = 'label-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          compact
+          label="Sized Label"
+          labelVariant="inside"
+          size="l"
+          testIDMap={{ label: labelTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Sized Label');
+  });
+
+  it('sets data-size on the native input for size path', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput size="s" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveAttribute('data-size', 's');
+  });
 });

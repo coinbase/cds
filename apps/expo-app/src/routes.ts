@@ -412,12 +412,6 @@ export const routes = [
       require('@coinbase/cds-mobile/overlays/__stories__/ModalBasic.stories').default,
   },
   {
-    key: 'ReactNavigationModal',
-    options: { presentation: 'fullScreenModal' as const, headerShown: false },
-    getComponent: () =>
-      require('@coinbase/cds-mobile/overlays/__stories__/ModalNavigation.stories').default,
-  },
-  {
     key: 'ModalCustomHeader',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/ModalCustomHeader.stories').default,
@@ -431,6 +425,11 @@ export const routes = [
     key: 'ModalLong',
     getComponent: () =>
       require('@coinbase/cds-mobile/overlays/__stories__/ModalLong.stories').default,
+  },
+  {
+    key: 'ModalNavigation',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/overlays/__stories__/ModalNavigation.stories').default,
   },
   {
     key: 'ModalPortal',
@@ -692,11 +691,6 @@ export const routes = [
       require('@coinbase/cds-mobile/illustrations/__stories__/SpotSquare.stories').default,
   },
   {
-    key: 'ThemedIllustrations',
-    getComponent: () =>
-      require('@coinbase/cds-mobile/illustrations/__stories__/ThemedIllustrations.stories').default,
-  },
-  {
     key: 'StepperHorizontal',
     getComponent: () =>
       require('@coinbase/cds-mobile/stepper/__stories__/StepperHorizontal.stories').default,
@@ -793,6 +787,11 @@ export const routes = [
       require('@coinbase/cds-mobile/controls/__stories__/TextInput.stories').default,
   },
   {
+    key: 'TextInputSize',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/controls/__stories__/TextInputSize.stories').default,
+  },
+  {
     key: 'TextLabel1',
     getComponent: () =>
       require('@coinbase/cds-mobile/typography/__stories__/TextLabel1.stories').default,
@@ -826,6 +825,11 @@ export const routes = [
     key: 'TextTitle4',
     getComponent: () =>
       require('@coinbase/cds-mobile/typography/__stories__/TextTitle4.stories').default,
+  },
+  {
+    key: 'ThemedIllustrations',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/illustrations/__stories__/ThemedIllustrations.stories').default,
   },
   {
     key: 'ThemeProvider',

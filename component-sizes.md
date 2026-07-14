@@ -13,4 +13,3 @@ Linear issues tracking t-shirt sizing across CDS components.
 - [CDS-2223 — T-shirt Input Chip](https://linear.app/coinbase/issue/CDS-2223/cds-t-shirt-input-chip)
 - [CDS-2173 — T-shirt TabbedChips](https://linear.app/coinbase/issue/CDS-2173/cds-t-shirt-tabbedchips)
 - [CDS-2168 — T-shirt Button](https://linear.app/coinbase/issue/CDS-2168/cds-t-shirt-button)
-- [CDS-2152 — T-shirt Text Input](https://linear.app/coinbase/issue/CDS-2152/cds-t-shirt-text-input)
