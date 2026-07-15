@@ -3,8 +3,9 @@ import { sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
+import type { ChipSize } from '../../../chips/ChipProps';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
-import { type TabbedChipProps, TabbedChips } from '../TabbedChips';
+import { type TabbedChipProps, TabbedChips, type TabbedChipsProps } from '../TabbedChips';
 
 const testID = 'tabbed-chips';
 const tabs = sampleTabs.slice(0, 5);
@@ -93,6 +94,47 @@ describe('TabbedChips(Alpha)', () => {
 
       await waitFor(() => expect(screen.getByTestId(secondTestId)).toBeSelected());
       await waitFor(() => expect(screen.getByTestId(firstTestId)).not.toBeSelected());
+    });
+  });
+
+  describe('size', () => {
+    const renderWithCapturingTab = (props: Partial<TabbedChipsProps>) => {
+      const receivedSizes: (ChipSize | undefined)[] = [];
+      const CapturingTab = (tabProps: TabbedChipProps) => {
+        receivedSizes.push(tabProps.size);
+        return null;
+      };
+      render(
+        <DefaultThemeProvider>
+          <TabbedChips
+            TabComponent={CapturingTab}
+            activeTab={tabs[0]}
+            onChange={jest.fn()}
+            tabs={tabs}
+            testID={testID}
+            {...props}
+          />
+        </DefaultThemeProvider>,
+      );
+      return receivedSizes;
+    };
+
+    it('forwards s to tab chips by default', () => {
+      expect(renderWithCapturingTab({}).every((size) => size === 's')).toBe(true);
+    });
+
+    it('forwards the provided size to tab chips', () => {
+      expect(renderWithCapturingTab({ size: 'xs' }).every((size) => size === 'xs')).toBe(true);
+    });
+
+    it('forwards xs to tab chips when legacy compact is set', () => {
+      expect(renderWithCapturingTab({ compact: true }).every((size) => size === 'xs')).toBe(true);
+    });
+
+    it('resolves size over compact when both are provided', () => {
+      expect(
+        renderWithCapturingTab({ compact: true, size: 's' }).every((size) => size === 's'),
+      ).toBe(true);
     });
   });
 

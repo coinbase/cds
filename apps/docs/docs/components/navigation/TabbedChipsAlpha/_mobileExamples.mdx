@@ -13,10 +13,13 @@ function ExampleDefault() {
 }
 ```
 
-### Compact
+### Size
+
+Use `size` to control the height and spacing of each tab chip. `size` defaults to `s`; use
+`size="xs"` for dense layouts (this replaces the deprecated `compact` prop).
 
 ```tsx
-function ExampleCompactNoStart() {
+function ExampleSizeNoStart() {
   const tabs = [
     { id: 'all', label: 'All' },
     { id: 'swap', label: 'Swap' },
@@ -24,7 +27,7 @@ function ExampleCompactNoStart() {
     { id: 'bridge', label: 'Bridge' },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  return <TabbedChips activeTab={activeTab} compact onChange={setActiveTab} tabs={tabs} />;
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} size="xs" tabs={tabs} />;
 }
 ```
 
@@ -105,7 +108,7 @@ function ExampleDisabled() {
 ### With start media
 
 :::tip Media sizing
-For start media, use circular images sized 24×24 for regular chips and 16×16 for compact chips.
+For start media, use circular images sized 24×24 for `s` chips and 16×16 for `xs` chips.
 :::
 
 ```tsx
@@ -123,7 +126,7 @@ function ExampleWithStart() {
   return (
     <VStack gap={2}>
       <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
-      <TabbedChips compact activeTab={activeTab} onChange={setActiveTab} tabs={compactTabs} />
+      <TabbedChips activeTab={activeTab} onChange={setActiveTab} size="xs" tabs={compactTabs} />
     </VStack>
   );
 }

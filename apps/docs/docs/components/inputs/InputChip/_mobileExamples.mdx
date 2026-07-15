@@ -69,16 +69,17 @@ function Example() {
 }
 ```
 
-### Compact
+### Size
 
-Use `compact` to reduce chip height and spacing in dense layouts.
+Use `size` to control chip height and spacing. `size` defaults to `s`; use `size="xs"` for dense
+layouts (this replaces the deprecated `compact` prop).
 
 ```tsx
 function Example() {
   return (
     <HStack gap={2} flexWrap="wrap">
-      <InputChip onPress={() => console.log('Remove Default')} value="Default" />
-      <InputChip compact onPress={() => console.log('Remove Compact')} value="Compact" />
+      <InputChip onPress={() => console.log('Remove Small')} size="s" value="Small" />
+      <InputChip onPress={() => console.log('Remove Extra small')} size="xs" value="Extra small" />
     </HStack>
   );
 }

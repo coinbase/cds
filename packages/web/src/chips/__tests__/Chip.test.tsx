@@ -98,4 +98,47 @@ describe('Chip', () => {
     expect(chip).toHaveStyle('border: 2px solid red');
     expect(chip.firstElementChild).toHaveStyle('padding: 10px');
   });
+
+  describe('size', () => {
+    const ChipWithSize = (props: ChipProps) => (
+      <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
+        <Chip testID={testID} {...props}>
+          Label
+        </Chip>
+      </ThemeProvider>
+    );
+
+    it('defaults to s geometry', () => {
+      render(<ChipWithSize />);
+      expect(screen.getByTestId(testID).firstElementChild).toHaveStyle(
+        'padding: var(--space-2) var(--space-1)',
+      );
+    });
+
+    it('applies xs geometry when size="xs" (matching legacy compact)', () => {
+      const { rerender } = render(<ChipWithSize size="xs" />);
+      const xsPadding = screen.getByTestId(testID).firstElementChild?.getAttribute('style');
+      rerender(<ChipWithSize compact />);
+      expect(screen.getByTestId(testID).firstElementChild?.getAttribute('style')).toEqual(
+        xsPadding,
+      );
+      expect(screen.getByTestId(testID).firstElementChild).toHaveStyle(
+        'padding: var(--space-1-5) var(--space-0-5)',
+      );
+    });
+
+    it('resolves size over compact when both are provided', () => {
+      render(<ChipWithSize compact size="s" />);
+      expect(screen.getByTestId(testID).firstElementChild).toHaveStyle(
+        'padding: var(--space-2) var(--space-1)',
+      );
+    });
+
+    it('lets an explicit paddingX/paddingY override win over size', () => {
+      render(<ChipWithSize paddingX={5} paddingY={3} size="xs" />);
+      expect(screen.getByTestId(testID).firstElementChild).toHaveStyle(
+        'padding: var(--space-5) var(--space-3)',
+      );
+    });
+  });
 });

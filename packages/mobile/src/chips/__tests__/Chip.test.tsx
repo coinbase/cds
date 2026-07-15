@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import type { Shape } from '@coinbase/cds-common';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { fireEvent, render, screen } from '@testing-library/react-native';
@@ -74,5 +75,51 @@ describe('Chip', () => {
 
     expect(screen.getByTestId(chipTestID)).toHaveStyle({ borderWidth: 2 });
     expect(screen.getByTestId(`${chipTestID}-content`)).toHaveStyle({ paddingVertical: 10 });
+  });
+
+  describe('size', () => {
+    const renderLabelChip = (props: Omit<ChipProps, 'children'>) => {
+      const { unmount } = render(
+        <DefaultThemeProvider>
+          <Chip testID={chipTestID} {...props}>
+            Label
+          </Chip>
+        </DefaultThemeProvider>,
+      );
+      const content = screen.getByTestId(`${chipTestID}-content`);
+      const style = StyleSheet.flatten(content.props.style);
+      const spacing = {
+        paddingLeft: style.paddingLeft,
+        paddingRight: style.paddingRight,
+        paddingStart: style.paddingStart,
+        paddingEnd: style.paddingEnd,
+        paddingTop: style.paddingTop,
+        paddingBottom: style.paddingBottom,
+      };
+      unmount();
+      return spacing;
+    };
+
+    it('defaults to the s geometry', () => {
+      expect(renderLabelChip({})).toEqual(renderLabelChip({ size: 's' }));
+    });
+
+    it('treats size="xs" and legacy compact identically', () => {
+      expect(renderLabelChip({ size: 'xs' })).toEqual(renderLabelChip({ compact: true }));
+    });
+
+    it('resolves size over compact when both are provided', () => {
+      expect(renderLabelChip({ size: 's', compact: true })).toEqual(renderLabelChip({ size: 's' }));
+    });
+
+    it('produces distinct geometry for xs and s', () => {
+      expect(renderLabelChip({ size: 'xs' })).not.toEqual(renderLabelChip({ size: 's' }));
+    });
+
+    it('lets an explicit paddingY override win over size', () => {
+      expect(renderLabelChip({ size: 'xs', paddingY: 3 }).paddingTop).toEqual(
+        renderLabelChip({ size: 's', paddingY: 3 }).paddingTop,
+      );
+    });
   });
 });

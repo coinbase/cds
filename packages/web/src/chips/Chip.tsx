@@ -13,8 +13,24 @@ import { Pressable } from '../system/Pressable';
 import { InvertedThemeProvider } from '../system/ThemeProvider';
 import { Text } from '../typography/Text';
 
-import type { ChipProps } from './ChipProps';
-export type { ChipProps };
+import type { ChipProps, ChipSize } from './ChipProps';
+export type { ChipProps, ChipSize };
+
+// values chosen to reproduce today's byte-for-byte top-level Chip defaults
+const chipSizes = {
+  xs: { paddingX: 1.5, paddingY: 0.5, font: 'label1', borderRadius: 700 },
+  s: { paddingX: 2, paddingY: 1, font: 'headline', borderRadius: 700 },
+} as const satisfies Record<
+  ChipSize,
+  {
+    paddingX: NonNullable<HStackProps<'div'>['paddingX']>;
+    paddingY: NonNullable<HStackProps<'div'>['paddingY']>;
+    font: NonNullable<ChipProps['font']>;
+    borderRadius: NonNullable<ChipProps['borderRadius']>;
+  }
+>;
+
+const defaultChipSize: ChipSize = 's';
 
 const transitionCss = css`
   transition: background ${durations.fast3}ms cubic-bezier(${curves.global.join(',')});
@@ -31,17 +47,19 @@ export const Chip = memo(
     ref: React.ForwardedRef<HTMLButtonElement | HTMLDivElement>,
   ) {
     const mergedProps = useComponentConfig('Chip', _props);
+    const cfg = chipSizes[mergedProps.size ?? (mergedProps.compact ? 'xs' : defaultChipSize)];
     const {
       as,
       alignItems = 'center',
       width = 'fit-content',
       height = 'fit-content',
       compact,
+      size: _size,
       gap = 1,
       start,
       end,
-      paddingX = compact ? 1.5 : 2,
-      paddingY = compact ? 0.5 : 1,
+      paddingX = cfg.paddingX,
+      paddingY = cfg.paddingY,
       padding,
       paddingTop,
       paddingBottom,
@@ -55,13 +73,13 @@ export const Chip = memo(
       numberOfLines = 1,
       testID,
       contentStyle,
-      borderRadius = 700,
+      borderRadius = cfg.borderRadius,
       background = 'bgSecondary',
       style,
       className,
       styles,
       classNames,
-      font = compact ? 'label1' : 'headline',
+      font = cfg.font,
       color = 'fg',
       onClick,
       ...props

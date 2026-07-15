@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 
-import { type ChipBaseProps } from '../../chips/ChipProps';
+import { type ChipBaseProps, type ChipSize } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import type { SelectRef } from '../select/Select';
@@ -33,12 +33,13 @@ const SelectChipControlComponent = memo(
         hiddenSelectedOptionsLabel = 'more',
         label,
         compact,
+        size,
         invertColorScheme,
         numberOfLines,
         disabled,
         maxWidth,
         displayValue,
-      }: SelectControlProps<Type, SelectOptionValue> &
+      }: Omit<SelectControlProps<Type, SelectOptionValue>, 'size' | 'compact'> &
         SelectChipBaseProps & { displayValue?: React.ReactNode },
       ref: React.Ref<SelectRef>,
     ) => {
@@ -160,6 +161,7 @@ const SelectChipControlComponent = memo(
           maxWidth={maxWidth}
           numberOfLines={numberOfLines}
           onClick={() => setOpen((s) => !s)}
+          size={size}
           start={startNode}
           style={style}
         >
@@ -174,8 +176,8 @@ export const SelectChipControl = SelectChipControlComponent as <
   Type extends SelectType,
   SelectOptionValue extends string = string,
 >(
-  props: SelectControlProps<Type, SelectOptionValue> &
-    Pick<ChipBaseProps, 'invertColorScheme' | 'numberOfLines'> & {
+  props: Omit<SelectControlProps<Type, SelectOptionValue>, 'size' | 'compact'> &
+    Pick<ChipBaseProps, 'invertColorScheme' | 'numberOfLines' | 'size' | 'compact'> & {
       ref?: React.Ref<HTMLElement>;
       displayValue?: React.ReactNode;
     },

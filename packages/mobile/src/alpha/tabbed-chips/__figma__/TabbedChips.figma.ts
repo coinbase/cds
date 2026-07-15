@@ -5,8 +5,9 @@ import figma from 'figma';
 
 const instance = figma.selectedInstance;
 
-// compact: VARIANT "true"/"false" → compact boolean prop
-const compact = instance.getEnum('compact', { true: true, false: false });
+// size: VARIANT "s"/"xs" → size prop
+const size = instance.getEnum('size', { s: 's', xs: 'xs' });
+const isXs = size === 'xs';
 
 // platform: VARIANT "mobile"/"desktop" → no code equivalent (Figma design-only distinction)
 // overflowing: BOOLEAN → no code equivalent (internal scroll overflow state managed by the component)
@@ -15,7 +16,7 @@ const compact = instance.getEnum('compact', { true: true, false: false });
 export default {
   example: figma.code`<TabbedChips
   activeTab={activeTab}
-  ${compact ? 'compact' : ''}
+  ${isXs ? 'size="xs"' : ''}
   onChange={setActiveTab}
   tabs={[
     { id: 'tab-1', label: 'Tab 1' },

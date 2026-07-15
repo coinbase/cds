@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 
-import type { ChipBaseProps } from '../../chips/ChipProps';
+import type { ChipBaseProps, ChipSize } from '../../chips/ChipProps';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import type { PressableBaseProps } from '../../system/Pressable';
 import { Select, type SelectRef } from '../select/Select';
@@ -18,6 +18,17 @@ export type SelectChipBaseProps = Pick<
    * When provided, this value takes precedence over the default label generation.
    */
   displayValue?: React.ReactNode;
+  /**
+   * Reduces spacing around the chip control.
+   * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  compact?: boolean;
+  /**
+   * Set the size of the chip control.
+   * @default s
+   */
+  size?: ChipSize;
 };
 
 export type SelectChipProps<
@@ -26,7 +37,13 @@ export type SelectChipProps<
 > = SelectChipBaseProps &
   Omit<
     SelectProps<Type, SelectOptionValue>,
-    'SelectControlComponent' | 'helperText' | 'labelVariant' | 'variant' | 'maxWidth'
+    | 'SelectControlComponent'
+    | 'helperText'
+    | 'labelVariant'
+    | 'variant'
+    | 'maxWidth'
+    | 'size'
+    | 'compact'
   >;
 
 /**
@@ -42,11 +59,15 @@ function createSelectChipControlWrapper<
   numberOfLines,
   maxWidth,
   displayValue,
+  size,
+  compact,
 }: {
   invertColorScheme?: boolean;
   numberOfLines?: number;
   maxWidth?: PressableBaseProps['maxWidth'];
   displayValue?: React.ReactNode;
+  size?: ChipSize;
+  compact?: boolean;
 }): React.FC<SelectControlProps<Type, SelectOptionValue> & { ref?: React.Ref<HTMLDivElement> }> {
   return memo(
     forwardRef<HTMLDivElement, SelectControlProps<Type, SelectOptionValue>>(
@@ -55,10 +76,12 @@ function createSelectChipControlWrapper<
           <SelectChipControl
             {...controlProps}
             ref={controlRef}
+            compact={compact}
             displayValue={displayValue}
             invertColorScheme={invertColorScheme}
             maxWidth={maxWidth}
             numberOfLines={numberOfLines}
+            size={size}
           />
         );
       },
@@ -77,7 +100,8 @@ const SelectChipComponent = memo(
       ref: React.Ref<SelectRef>,
     ) => {
       const mergedProps = useComponentConfig('SelectChip', _props);
-      const { invertColorScheme, numberOfLines, maxWidth, displayValue, ...props } = mergedProps;
+      const { invertColorScheme, numberOfLines, maxWidth, displayValue, size, compact, ...props } =
+        mergedProps;
       const WrappedSelectChipControl = useMemo(
         () =>
           createSelectChipControlWrapper<Type, SelectOptionValue>({
@@ -85,8 +109,10 @@ const SelectChipComponent = memo(
             numberOfLines,
             maxWidth,
             displayValue,
+            size,
+            compact,
           }),
-        [displayValue, invertColorScheme, numberOfLines, maxWidth],
+        [displayValue, invertColorScheme, numberOfLines, maxWidth, size, compact],
       );
 
       return (

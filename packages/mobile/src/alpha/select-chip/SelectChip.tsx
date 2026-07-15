@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
 
-import type { ChipBaseProps } from '../../chips/ChipProps';
+import type { ChipBaseProps, ChipSize } from '../../chips/ChipProps';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Select, type SelectRef } from '../select/Select';
 import type { SelectControlProps, SelectProps, SelectType } from '../select/types';
@@ -17,6 +17,17 @@ export type SelectChipBaseProps = Pick<
    * When provided, this value takes precedence over the default label generation.
    */
   displayValue?: React.ReactNode;
+  /**
+   * Reduces spacing around the chip control.
+   * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  compact?: boolean;
+  /**
+   * Set the size of the chip control.
+   * @default s
+   */
+  size?: ChipSize;
 };
 
 export type SelectChipProps<
@@ -25,7 +36,13 @@ export type SelectChipProps<
 > = SelectChipBaseProps &
   Omit<
     SelectProps<Type, SelectOptionValue>,
-    'SelectControlComponent' | 'helperText' | 'labelVariant' | 'variant' | 'maxWidth'
+    | 'SelectControlComponent'
+    | 'helperText'
+    | 'labelVariant'
+    | 'variant'
+    | 'maxWidth'
+    | 'size'
+    | 'compact'
   >;
 
 /**
@@ -40,20 +57,23 @@ const SelectChipComponent = memo(
     ref?: React.Ref<SelectRef>;
   }) => {
     const mergedProps = useComponentConfig('SelectChip', _props);
-    const { invertColorScheme, numberOfLines, maxWidth, displayValue, ...props } = mergedProps;
+    const { invertColorScheme, numberOfLines, maxWidth, displayValue, size, compact, ...props } =
+      mergedProps;
     const SelectChipControlComponent = useCallback(
-      (props: SelectControlProps<Type, SelectOptionValue>) => {
+      (controlProps: SelectControlProps<Type, SelectOptionValue>) => {
         return (
           <SelectChipControl
+            {...controlProps}
+            compact={compact}
             displayValue={displayValue}
             invertColorScheme={invertColorScheme}
             maxWidth={maxWidth}
             numberOfLines={numberOfLines}
-            {...props}
+            size={size}
           />
         );
       },
-      [displayValue, invertColorScheme, maxWidth, numberOfLines],
+      [displayValue, invertColorScheme, maxWidth, numberOfLines, size, compact],
     );
 
     return (
