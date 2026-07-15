@@ -616,6 +616,11 @@ export const routes = [
       require('@coinbase/cds-mobile/controls/__stories__/SearchInput.stories').default,
   },
   {
+    key: 'SearchInputSize',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/controls/__stories__/SearchInputSize.stories').default,
+  },
+  {
     key: 'SectionHeader',
     getComponent: () =>
       require('@coinbase/cds-mobile/section-header/__stories__/SectionHeader.stories').default,

@@ -262,4 +262,55 @@ describe('Search', () => {
 
     expect(onClearSpy).toHaveBeenCalled();
   });
+
+  /** Testing t-shirt sizing */
+  it('applies no extra vertical padding by default (size l)', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    const flattenedStyle = StyleSheet.flatten(screen.getByTestId(TEST_ID).props.style);
+    expect(flattenedStyle?.paddingVertical).toBeUndefined();
+  });
+
+  it('forwards size s vertical padding through to the text input', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} size="s" testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    const flattenedStyle = StyleSheet.flatten(screen.getByTestId(TEST_ID).props.style);
+    expect(flattenedStyle?.paddingVertical).toBe(defaultTheme.space[1]);
+  });
+
+  it('forwards size m vertical padding through to the text input', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} size="m" testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    const flattenedStyle = StyleSheet.flatten(screen.getByTestId(TEST_ID).props.style);
+    expect(flattenedStyle?.paddingVertical).toBe(defaultTheme.space[1.5]);
+  });
+
+  it('lets size win over compact (size m padding applied, not legacy compact)', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput
+          compact
+          onChangeText={onChangeTextSpy}
+          size="m"
+          testID={TEST_ID}
+          value="value"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const flattenedStyle = StyleSheet.flatten(screen.getByTestId(TEST_ID).props.style);
+    expect(flattenedStyle?.paddingVertical).toBe(defaultTheme.space[1.5]);
+  });
 });

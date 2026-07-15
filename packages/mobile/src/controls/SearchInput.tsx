@@ -14,6 +14,10 @@ import { Box } from '../layout/Box';
 
 import { InputIconButton } from './InputIconButton';
 import { TextInput, type TextInputBaseProps, type TextInputProps } from './TextInput';
+import type { TextInputSize } from './useTextInputDensity';
+
+/** Local (per-package) alias for SearchInput's t-shirt size. */
+export type SearchInputSize = TextInputSize;
 
 export type SearchInputBaseProps = Pick<
   TextInputBaseProps,
@@ -31,6 +35,7 @@ export type SearchInputBaseProps = Pick<
   | 'labelFont'
   | 'labelColor'
   | 'placeholder'
+  | 'size'
   | 'testID'
   | 'testIDMap'
   | 'width'

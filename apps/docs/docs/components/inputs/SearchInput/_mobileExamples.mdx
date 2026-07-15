@@ -91,3 +91,41 @@ function SearchInputVariants() {
   );
 }
 ```
+
+### Sizing
+
+Use the `size` prop to control vertical density. `size` defaults to `l`. `size="s"` replaces the
+deprecated `compact` prop.
+
+```tsx
+function SearchInputSizes() {
+  const [s, setS] = useState('');
+  const [m, setM] = useState('');
+  const [l, setL] = useState('');
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        value={s}
+        onChangeText={setS}
+        onClear={() => setS('')}
+        placeholder="Small (replaces compact)"
+        size="s"
+      />
+      <SearchInput
+        value={m}
+        onChangeText={setM}
+        onClear={() => setM('')}
+        placeholder="Medium (new)"
+        size="m"
+      />
+      <SearchInput
+        value={l}
+        onChangeText={setL}
+        onClear={() => setL('')}
+        placeholder="Large (default)"
+        size="l"
+      />
+    </VStack>
+  );
+}
+```

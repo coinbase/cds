@@ -9,8 +9,9 @@ const instance = figma.selectedInstance;
 const placeholderHandle = instance.findText('search-input-label', { traverseInstances: true });
 const placeholder = placeholderHandle.type === 'TEXT' ? placeholderHandle.textContent : 'Search';
 
-// compact and disabled are VARIANT types with string "true"/"false" values
-const compact = instance.getEnum('compact', { true: true, false: false });
+// size is a VARIANT type with values l | m | s; l is the default and is omitted from the snippet
+const size = instance.getEnum('size', { l: '', m: 'm', s: 's' });
+// disabled is a VARIANT type with string "true"/"false" values
 const disabled = instance.getEnum('disabled', { true: true, false: false });
 
 // state (default, active, focus, typing, hover) and show cursor are interaction-only states with no code equivalent
@@ -19,7 +20,7 @@ const disabled = instance.getEnum('disabled', { true: true, false: false });
 export default {
   example: figma.code`<SearchInput
   placeholder="${placeholder}"
-  ${compact ? 'compact' : ''}
+  ${size ? figma.code`size="${size}"` : ''}
   ${disabled ? 'disabled' : ''}
   onChangeText={() => {}}
   value=""

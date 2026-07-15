@@ -8,6 +8,7 @@ import { Box } from '../layout/Box';
 import { InputIcon } from './InputIcon';
 import { InputIconButton } from './InputIconButton';
 import { TextInput, type TextInputBaseProps, type TextInputProps } from './TextInput';
+import type { TextInputSize } from './useTextInputDensity';
 
 /**
  * @deprecated Use local constants or the `compact` prop instead. This will be removed in a future major release.
@@ -17,6 +18,9 @@ export const scales = {
   regular: 56,
   compact: 40,
 } as const;
+
+/** Local (per-package) alias for SearchInput's t-shirt size. */
+export type SearchInputSize = TextInputSize;
 
 export type SearchInputBaseProps = Pick<
   TextInputBaseProps,
@@ -34,6 +38,7 @@ export type SearchInputBaseProps = Pick<
   | 'labelFont'
   | 'labelColor'
   | 'placeholder'
+  | 'size'
   | 'testID'
   | 'testIDMap'
   | 'width'
@@ -96,6 +101,7 @@ export const SearchInput = memo(
       testID,
       value,
       compact,
+      size,
       hideStartIcon = false,
       hideEndIcon,
       startIcon,
@@ -103,11 +109,14 @@ export const SearchInput = memo(
       startIconAccessibilityLabel = 'Back',
       clearIconAccessibilityLabel = 'Clear search query',
       borderRadius = 1000,
-      height = compact ? scales.compact : scales.regular,
       ...props
     } = mergedProps;
     const internalRef = useRef<HTMLInputElement>(null);
     const refs = useMergeRefs(ref, internalRef);
+
+    // Mirror TextInput's precedence for SearchInput's own cosmetics only:
+    // `size` wins over `compact`; compact-only maps to `s`; otherwise `l`.
+    const resolvedSize: SearchInputSize = size ?? (compact ? 's' : 'l');
 
     const handleOnChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -145,10 +154,14 @@ export const SearchInput = memo(
       <TextInput
         ref={refs}
         borderRadius={borderRadius}
+        compact={compact}
         end={
           end ??
           (!!value && !hideEndIcon && (
-            <Box marginEnd={compact ? -0.5 : 0} paddingEnd={compact ? 0 : 0.5}>
+            <Box
+              marginEnd={resolvedSize === 's' ? -0.5 : 0}
+              paddingEnd={resolvedSize === 's' ? 0 : 0.5}
+            >
               <InputIconButton
                 accessibilityLabel={clearIconAccessibilityLabel}
                 name="close"
@@ -158,10 +171,10 @@ export const SearchInput = memo(
             </Box>
           ))
         }
-        height={height}
         onChange={handleOnChange}
         onKeyUp={handleOnKeyUp}
         role="searchbox"
+        size={size}
         start={
           !hideStartIcon && (
             <InputIcon

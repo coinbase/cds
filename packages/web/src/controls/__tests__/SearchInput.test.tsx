@@ -197,6 +197,69 @@ describe('Search', () => {
     expect(closeIconBtn).toBeDefined();
   });
 
+  /** Testing t-shirt sizing */
+  it('does not set a fixed height on the input by default (height derived from padding)', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    const inputArea = screen.getByTestId('input-interactable-area');
+    expect(inputArea.style.height).toBe('');
+  });
+
+  it('does not set a fixed height when compact', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput compact onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    const inputArea = screen.getByTestId('input-interactable-area');
+    expect(inputArea.style.height).toBe('');
+  });
+
+  it('gives compact the legacy density (data-compact set, no data-size)', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput compact onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    const searchbox = screen.getByRole('searchbox');
+    expect(searchbox).toHaveAttribute('data-compact', 'true');
+    expect(searchbox).not.toHaveAttribute('data-size');
+  });
+
+  it('forwards size to the underlying input via data-size', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} size="m" testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('searchbox')).toHaveAttribute('data-size', 'm');
+  });
+
+  it('lets size win over compact (size="m" resolves to data-size=m, no legacy compact)', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput
+          compact
+          onChangeText={onChangeTextSpy}
+          size="m"
+          testID={TEST_ID}
+          value="value"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const searchbox = screen.getByRole('searchbox');
+    expect(searchbox).toHaveAttribute('data-size', 'm');
+    expect(searchbox).not.toHaveAttribute('data-compact');
+  });
+
   /** Testing for events */
   it('fires `onClear` when close icon button is pressed', () => {
     render(
