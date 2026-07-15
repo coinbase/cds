@@ -21,7 +21,7 @@ const MockTextInput = (props: TextInputProps) => {
 };
 
 const LabeledExample = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <VStack gap={1}>
+  <VStack alignItems="flex-start" gap={1}>
     <Text as="p" color="fgMuted" font="label2">
       {title}
     </Text>
@@ -30,16 +30,16 @@ const LabeledExample = ({ title, children }: { title: string; children: React.Re
 );
 
 /**
- * One-off size density stories for TextInput (s/m/l).
- * Do not fold these into TextInput.stories.tsx — keeps visual review of density isolated.
+ * One-off t-shirt size stories for TextInput (s/m/l).
+ * Do not fold these into TextInput.stories.tsx — keeps visual review of sizing isolated.
  */
-export const SizeDensity: Story = {
+export const Size: Story = {
   render: () => (
     <VStack gap={3} maxWidth={400}>
       <LabeledExample title="Default (resolves to size l)">
         <MockTextInput label="Username" placeholder="john.doe@coinbase.com" />
       </LabeledExample>
-      <LabeledExample title="Deprecated compact (legacy behavior)">
+      <LabeledExample title="Deprecated compact (renders as size s)">
         <MockTextInput compact label="Username" placeholder="john.doe@coinbase.com" />
       </LabeledExample>
       <LabeledExample title='size="s"'>

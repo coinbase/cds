@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { VStack } from '../../../layout/VStack';
 import { Text } from '../../../typography/Text';
 import { Select, type SelectOption } from '../Select';
 
-export default {
-  title: 'Components/Alpha/Select/SelectSize',
+const meta: Meta = {
+  title: 'Components/Alpha/SelectSize',
   component: Select,
 };
+
+export default meta;
+type Story = StoryObj;
 
 const exampleOptions: SelectOption[] = [
   { value: '1', label: 'Apple' },
@@ -15,8 +19,48 @@ const exampleOptions: SelectOption[] = [
   { value: '3', label: 'Cherry' },
 ];
 
+const MockSelect = ({
+  label,
+  compact,
+  size,
+}: {
+  label: string;
+  compact?: boolean;
+  size?: 's' | 'm' | 'l';
+}) => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      compact={compact}
+      label={label}
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Select…"
+      size={size}
+      value={value}
+    />
+  );
+};
+
+const MockMultiSelect = ({ label, size }: { label: string; size?: 's' | 'm' | 'l' }) => {
+  const [value, setValue] = useState<string[]>(['1']);
+
+  return (
+    <Select
+      label={label}
+      onChange={(next) => setValue(next as string[])}
+      options={exampleOptions}
+      placeholder="Select…"
+      size={size}
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const LabeledExample = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <VStack gap={1}>
+  <VStack alignItems="flex-start" gap={1}>
     <Text as="p" color="fgMuted" font="label2">
       {title}
     </Text>
@@ -25,108 +69,39 @@ const LabeledExample = ({ title, children }: { title: string; children: React.Re
 );
 
 /**
- * One-off size density stories for the alpha Select (s/m/l).
- * Do not fold these into Select.stories.tsx — keeps visual review of density isolated.
+ * One-off t-shirt size stories for the alpha Select (s/m/l).
+ * Do not fold these into Select.stories.tsx — keeps visual review of sizing isolated.
  */
-export const SizeDensity = () => {
-  const [value, setValue] = useState<string | null>('1');
-  const [multiValue, setMultiValue] = useState<string[]>(['1']);
-
-  return (
+export const Size: Story = {
+  render: () => (
     <VStack gap={3} maxWidth={400}>
-      <LabeledExample title="Default (resolves to size l, 56px)">
-        <Select
-          label="Default"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Select…"
-          value={value}
-        />
+      <LabeledExample title="Default (resolves to size l)">
+        <MockSelect label="Default" />
       </LabeledExample>
-      <LabeledExample title="Deprecated compact (legacy behavior, 40px)">
-        <Select
-          compact
-          label="Compact"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Select…"
-          value={value}
-        />
+      <LabeledExample title="Deprecated compact (renders as size s)">
+        <MockSelect compact label="Compact" />
       </LabeledExample>
-      <LabeledExample title='size="s" (replaces compact, 40px)'>
-        <Select
-          label="Small"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Select…"
-          size="s"
-          value={value}
-        />
+      <LabeledExample title='size="s"'>
+        <MockSelect label="Small" size="s" />
       </LabeledExample>
-      <LabeledExample title='size="m" (new, 48px)'>
-        <Select
-          label="Medium"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Select…"
-          size="m"
-          value={value}
-        />
+      <LabeledExample title='size="m"'>
+        <MockSelect label="Medium" size="m" />
       </LabeledExample>
-      <LabeledExample title='size="l" (default, 56px)'>
-        <Select
-          label="Large"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Select…"
-          size="l"
-          value={value}
-        />
+      <LabeledExample title='size="l"'>
+        <MockSelect label="Large" size="l" />
       </LabeledExample>
-      <LabeledExample title='compact + size="m" (size wins, 48px)'>
-        <Select
-          compact
-          label="Compact + Medium"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Select…"
-          size="m"
-          value={value}
-        />
+      <LabeledExample title='compact + size="m" (size wins)'>
+        <MockSelect compact label="Compact + Medium" size="m" />
       </LabeledExample>
       <LabeledExample title='Multi-select size="s"'>
-        <Select
-          label="Multi small"
-          onChange={(next) => setMultiValue(next as string[])}
-          options={exampleOptions}
-          placeholder="Select…"
-          size="s"
-          type="multi"
-          value={multiValue}
-        />
+        <MockMultiSelect label="Multi small" size="s" />
       </LabeledExample>
       <LabeledExample title='Multi-select size="m"'>
-        <Select
-          label="Multi medium"
-          onChange={(next) => setMultiValue(next as string[])}
-          options={exampleOptions}
-          placeholder="Select…"
-          size="m"
-          type="multi"
-          value={multiValue}
-        />
+        <MockMultiSelect label="Multi medium" size="m" />
       </LabeledExample>
       <LabeledExample title='Multi-select size="l"'>
-        <Select
-          label="Multi large"
-          onChange={(next) => setMultiValue(next as string[])}
-          options={exampleOptions}
-          placeholder="Select…"
-          size="l"
-          type="multi"
-          value={multiValue}
-        />
+        <MockMultiSelect label="Multi large" size="l" />
       </LabeledExample>
     </VStack>
-  );
+  ),
 };

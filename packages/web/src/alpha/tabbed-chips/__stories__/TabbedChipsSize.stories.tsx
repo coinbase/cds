@@ -1,20 +1,25 @@
 import React, { useState } from 'react';
 import { sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import type { Meta, StoryObj } from '@storybook/react';
 
-import { VStack } from '../../../layout';
-import { Text } from '../../../typography';
+import { VStack } from '../../../layout/VStack';
+import { Text } from '../../../typography/Text';
 import { type TabbedChipProps, TabbedChips, type TabbedChipsProps } from '../TabbedChips';
 
-export default {
-  title: 'Components/alpha/TabbedChipsSize',
+const meta: Meta = {
+  title: 'Components/Alpha/TabbedChipsSize',
   component: TabbedChips,
 };
+
+export default meta;
+type Story = StoryObj;
 
 const defaultTabs: TabbedChipProps[] = sampleTabs.slice(0, 5);
 
 const SizeDemo = ({ compact, size }: { compact?: boolean; size?: TabbedChipsProps['size'] }) => {
   const [activeTab, setActiveTab] = useState<TabValue | null>(defaultTabs[0]);
+
   return (
     <TabbedChips
       activeTab={activeTab}
@@ -27,7 +32,7 @@ const SizeDemo = ({ compact, size }: { compact?: boolean; size?: TabbedChipsProp
 };
 
 const LabeledExample = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <VStack gap={1}>
+  <VStack alignItems="flex-start" gap={1}>
     <Text as="p" color="fgMuted" font="label2">
       {title}
     </Text>
@@ -36,25 +41,27 @@ const LabeledExample = ({ title, children }: { title: string; children: React.Re
 );
 
 /**
- * One-off size density story for the Alpha TabbedChips (xs/s).
- * Do not fold this into TabbedChips.stories.tsx — keeps visual review of density isolated.
+ * One-off t-shirt size stories for the alpha TabbedChips (xs/s).
+ * Do not fold these into TabbedChips.stories.tsx — keeps visual review of sizing isolated.
  */
-export const Size = () => (
-  <VStack gap={3}>
-    <LabeledExample title="Default (resolves to size s)">
-      <SizeDemo />
-    </LabeledExample>
-    <LabeledExample title="Deprecated compact (legacy behavior, renders xs)">
-      <SizeDemo compact />
-    </LabeledExample>
-    <LabeledExample title='size="s"'>
-      <SizeDemo size="s" />
-    </LabeledExample>
-    <LabeledExample title='size="xs"'>
-      <SizeDemo size="xs" />
-    </LabeledExample>
-    <LabeledExample title='compact + size="s" (size wins)'>
-      <SizeDemo compact size="s" />
-    </LabeledExample>
-  </VStack>
-);
+export const Size: Story = {
+  render: () => (
+    <VStack gap={3}>
+      <LabeledExample title="Default (resolves to size s)">
+        <SizeDemo />
+      </LabeledExample>
+      <LabeledExample title="Deprecated compact (renders as size xs)">
+        <SizeDemo compact />
+      </LabeledExample>
+      <LabeledExample title='size="xs"'>
+        <SizeDemo size="xs" />
+      </LabeledExample>
+      <LabeledExample title='size="s"'>
+        <SizeDemo size="s" />
+      </LabeledExample>
+      <LabeledExample title='compact + size="s" (size wins)'>
+        <SizeDemo compact size="s" />
+      </LabeledExample>
+    </VStack>
+  ),
+};

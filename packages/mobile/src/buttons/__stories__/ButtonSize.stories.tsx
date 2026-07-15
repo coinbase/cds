@@ -1,10 +1,8 @@
-import React from 'react';
-
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { Button } from '../Button';
 
 /**
- * One-off t-shirt size story for Button (xs/s/m/l).
+ * One-off t-shirt size stories for Button (xs/s/m/l).
  * Do not fold these into Button.stories.tsx — keeps visual review of sizing isolated.
  */
 const ButtonSizeScreen = () => {
@@ -13,7 +11,7 @@ const ButtonSizeScreen = () => {
       <Example inline title="Default (resolves to size l)">
         <Button onPress={console.log}>Default</Button>
       </Example>
-      <Example inline title="Deprecated compact (legacy behavior, renders as s)">
+      <Example inline title="Deprecated compact (renders as size s)">
         <Button compact onPress={console.log}>
           Compact
         </Button>
@@ -38,7 +36,7 @@ const ButtonSizeScreen = () => {
           Large
         </Button>
       </Example>
-      <Example inline title='compact + size="m" (size wins, renders as m)'>
+      <Example inline title='compact + size="m" (size wins)'>
         <Button compact onPress={console.log} size="m">
           Compact + Medium
         </Button>

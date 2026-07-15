@@ -1,44 +1,44 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import type { TextInputProps } from '../TextInput';
 import { TextInput } from '../TextInput';
 
-const MockTextInput = ({ ...props }: TextInputProps) => {
-  const [text, onChangeText] = useState('');
+const MockTextInput = (props: TextInputProps) => {
+  const [text, onChangeText] = useState(typeof props.value === 'string' ? props.value : '');
 
   return <TextInput editable={__DEV__} onChangeText={onChangeText} value={text} {...props} />;
 };
 
 /**
- * One-off size density story for TextInput (s/m/l).
- * Do not fold these into TextInput.stories.tsx — keeps visual review of density isolated.
+ * One-off t-shirt size stories for TextInput (s/m/l).
+ * Do not fold these into TextInput.stories.tsx — keeps visual review of sizing isolated.
  */
 const TextInputSizeScreen = () => {
   return (
     <ExampleScreen>
-      <Example inline title="Default (resolves to size l)">
+      <Example title="Default (resolves to size l)">
         <MockTextInput label="Username" placeholder="john.doe@coinbase.com" />
       </Example>
-      <Example inline title="Deprecated compact (legacy behavior)">
+      <Example title="Deprecated compact (renders as size s)">
         <MockTextInput compact label="Username" placeholder="john.doe@coinbase.com" />
       </Example>
-      <Example inline title='size="s"'>
+      <Example title='size="s"'>
         <MockTextInput label="Username" placeholder="john.doe@coinbase.com" size="s" />
       </Example>
-      <Example inline title='size="m"'>
+      <Example title='size="m"'>
         <MockTextInput label="Username" placeholder="john.doe@coinbase.com" size="m" />
       </Example>
-      <Example inline title='size="l"'>
+      <Example title='size="l"'>
         <MockTextInput label="Username" placeholder="john.doe@coinbase.com" size="l" />
       </Example>
-      <Example inline title='compact + size="m" (size wins)'>
+      <Example title='compact + size="m" (size wins)'>
         <MockTextInput compact label="Username" placeholder="john.doe@coinbase.com" size="m" />
       </Example>
-      <Example inline title='size="s" with outside label'>
+      <Example title='size="s" with outside label'>
         <MockTextInput label="Amount" placeholder="0.00" size="s" suffix="USD" />
       </Example>
-      <Example inline title='size="s" with inside label (horizontal)'>
+      <Example title='size="s" with inside label (horizontal)'>
         <MockTextInput
           label="Username"
           labelVariant="inside"
@@ -46,7 +46,7 @@ const TextInputSizeScreen = () => {
           size="s"
         />
       </Example>
-      <Example inline title='size="m" with inside label (horizontal)'>
+      <Example title='size="m" with inside label (horizontal)'>
         <MockTextInput
           label="Username"
           labelVariant="inside"
@@ -54,7 +54,7 @@ const TextInputSizeScreen = () => {
           size="m"
         />
       </Example>
-      <Example inline title='size="l" with inside label (vertical)'>
+      <Example title='size="l" with inside label (vertical)'>
         <MockTextInput
           label="Username"
           labelVariant="inside"

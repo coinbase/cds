@@ -32,7 +32,7 @@ export const Size: Story = {
       <LabeledExample title="Default (resolves to size l)">
         <Button onClick={console.log}>Default</Button>
       </LabeledExample>
-      <LabeledExample title="Deprecated compact (legacy behavior, renders as s)">
+      <LabeledExample title="Deprecated compact (renders as size s)">
         <Button compact onClick={console.log}>
           Compact
         </Button>
@@ -57,7 +57,7 @@ export const Size: Story = {
           Large
         </Button>
       </LabeledExample>
-      <LabeledExample title='compact + size="m" (size wins, renders as m)'>
+      <LabeledExample title='compact + size="m" (size wins)'>
         <Button compact onClick={console.log} size="m">
           Compact + Medium
         </Button>

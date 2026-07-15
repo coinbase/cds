@@ -9,95 +9,36 @@ const exampleOptions: SelectOption[] = [
   { value: '3', label: 'Option 3' },
 ];
 
-const DefaultExample = () => {
+const MockSelect = ({
+  label,
+  compact,
+  size,
+}: {
+  label: string;
+  compact?: boolean;
+  size?: 's' | 'm' | 'l';
+}) => {
   const [value, setValue] = useState<string | null>('1');
+
   return (
     <Select
-      label="Default"
+      compact={compact}
+      label={label}
       onChange={setValue}
       options={exampleOptions}
       placeholder="Select…"
+      size={size}
       value={value}
     />
   );
 };
 
-const CompactExample = () => {
-  const [value, setValue] = useState<string | null>('1');
-  return (
-    <Select
-      compact
-      label="Compact"
-      onChange={setValue}
-      options={exampleOptions}
-      placeholder="Select…"
-      value={value}
-    />
-  );
-};
-
-const SmallExample = () => {
-  const [value, setValue] = useState<string | null>('1');
-  return (
-    <Select
-      label="Small"
-      onChange={setValue}
-      options={exampleOptions}
-      placeholder="Select…"
-      size="s"
-      value={value}
-    />
-  );
-};
-
-const MediumExample = () => {
-  const [value, setValue] = useState<string | null>('1');
-  return (
-    <Select
-      label="Medium"
-      onChange={setValue}
-      options={exampleOptions}
-      placeholder="Select…"
-      size="m"
-      value={value}
-    />
-  );
-};
-
-const LargeExample = () => {
-  const [value, setValue] = useState<string | null>('1');
-  return (
-    <Select
-      label="Large"
-      onChange={setValue}
-      options={exampleOptions}
-      placeholder="Select…"
-      size="l"
-      value={value}
-    />
-  );
-};
-
-const CompactAndSizeExample = () => {
-  const [value, setValue] = useState<string | null>('1');
-  return (
-    <Select
-      compact
-      label="Compact + Medium"
-      onChange={setValue}
-      options={exampleOptions}
-      placeholder="Select…"
-      size="m"
-      value={value}
-    />
-  );
-};
-
-const MultiSelectSizeExample = ({ size }: { size: 's' | 'm' | 'l' }) => {
+const MockMultiSelect = ({ label, size }: { label: string; size?: 's' | 'm' | 'l' }) => {
   const [value, setValue] = useState<string[]>(['1']);
+
   return (
     <Select
-      label={`Multi ${size}`}
+      label={label}
       onChange={(next) => setValue(next as string[])}
       options={exampleOptions}
       placeholder="Select…"
@@ -109,38 +50,38 @@ const MultiSelectSizeExample = ({ size }: { size: 's' | 'm' | 'l' }) => {
 };
 
 /**
- * One-off size density story for the alpha Select (s/m/l).
- * Do not fold these into AlphaSelect.stories.tsx — keeps visual review of density isolated.
+ * One-off t-shirt size stories for the alpha Select (s/m/l).
+ * Do not fold these into Select.stories.tsx — keeps visual review of sizing isolated.
  */
 const SelectSizeScreen = () => {
   return (
     <ExampleScreen>
-      <Example title="Default (resolves to size l, 56px)">
-        <DefaultExample />
+      <Example title="Default (resolves to size l)">
+        <MockSelect label="Default" />
       </Example>
-      <Example title="Deprecated compact (legacy behavior, 40px)">
-        <CompactExample />
+      <Example title="Deprecated compact (renders as size s)">
+        <MockSelect compact label="Compact" />
       </Example>
-      <Example title='size="s" (replaces compact, 40px)'>
-        <SmallExample />
+      <Example title='size="s"'>
+        <MockSelect label="Small" size="s" />
       </Example>
-      <Example title='size="m" (new, 48px)'>
-        <MediumExample />
+      <Example title='size="m"'>
+        <MockSelect label="Medium" size="m" />
       </Example>
-      <Example title='size="l" (default, 56px)'>
-        <LargeExample />
+      <Example title='size="l"'>
+        <MockSelect label="Large" size="l" />
       </Example>
-      <Example title='compact + size="m" (size wins, 48px)'>
-        <CompactAndSizeExample />
+      <Example title='compact + size="m" (size wins)'>
+        <MockSelect compact label="Compact + Medium" size="m" />
       </Example>
       <Example title='Multi-select size="s"'>
-        <MultiSelectSizeExample size="s" />
+        <MockMultiSelect label="Multi small" size="s" />
       </Example>
       <Example title='Multi-select size="m"'>
-        <MultiSelectSizeExample size="m" />
+        <MockMultiSelect label="Multi medium" size="m" />
       </Example>
       <Example title='Multi-select size="l"'>
-        <MultiSelectSizeExample size="l" />
+        <MockMultiSelect label="Multi large" size="l" />
       </Example>
     </ExampleScreen>
   );

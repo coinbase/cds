@@ -30,7 +30,7 @@ const MockSearchInput = (props: Partial<SearchInputProps>) => {
 };
 
 const LabeledExample = ({ title, children }: { title: string; children: React.ReactNode }) => (
-  <VStack gap={1}>
+  <VStack alignItems="flex-start" gap={1}>
     <Text as="p" color="fgMuted" font="label2">
       {title}
     </Text>
@@ -39,28 +39,28 @@ const LabeledExample = ({ title, children }: { title: string; children: React.Re
 );
 
 /**
- * One-off size density stories for SearchInput (s/m/l).
- * Do not fold these into SearchInput.stories.tsx — keeps visual review of density isolated.
+ * One-off t-shirt size stories for SearchInput (s/m/l).
+ * Do not fold these into SearchInput.stories.tsx — keeps visual review of sizing isolated.
  */
-export const SizeDensity: Story = {
+export const Size: Story = {
   render: () => (
     <VStack gap={3} maxWidth={400}>
-      <LabeledExample title="Default (resolves to size l, 56px)">
+      <LabeledExample title="Default (resolves to size l)">
         <MockSearchInput />
       </LabeledExample>
-      <LabeledExample title="Deprecated compact (legacy behavior, 40px)">
+      <LabeledExample title="Deprecated compact (renders as size s)">
         <MockSearchInput compact />
       </LabeledExample>
-      <LabeledExample title='size="s" (replaces compact, 40px)'>
+      <LabeledExample title='size="s"'>
         <MockSearchInput size="s" />
       </LabeledExample>
-      <LabeledExample title='size="m" (new, 48px)'>
+      <LabeledExample title='size="m"'>
         <MockSearchInput size="m" />
       </LabeledExample>
-      <LabeledExample title='size="l" (default, 56px)'>
+      <LabeledExample title='size="l"'>
         <MockSearchInput size="l" />
       </LabeledExample>
-      <LabeledExample title='compact + size="m" (size wins, 48px)'>
+      <LabeledExample title='compact + size="m" (size wins)'>
         <MockSearchInput compact size="m" />
       </LabeledExample>
     </VStack>

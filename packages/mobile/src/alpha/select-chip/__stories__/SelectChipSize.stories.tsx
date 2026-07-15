@@ -10,69 +10,44 @@ const exampleOptions = [
   { value: '4', label: 'Option 4' },
 ];
 
-/**
- * One-off size density screen for the Alpha SelectChip (xs/s).
- * Do not fold this into AlphaSelectChip.stories.tsx — keeps visual review of density isolated.
- */
-const SelectChipSizeScreen = () => {
+const MockSelectChip = ({ compact, size }: { compact?: boolean; size?: 'xs' | 's' }) => {
   const [value, setValue] = useState<string | null>('1');
 
   return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      compact={compact}
+      label="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      size={size}
+      value={value}
+    />
+  );
+};
+
+/**
+ * One-off t-shirt size stories for the alpha SelectChip (xs/s).
+ * Do not fold these into SelectChip.stories.tsx — keeps visual review of sizing isolated.
+ */
+const SelectChipSizeScreen = () => {
+  return (
     <ExampleScreen>
-      <Example title="Default (resolves to size s)">
-        <SelectChip
-          accessibilityLabel="Select a value"
-          label="Select a value"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Choose an option"
-          value={value}
-        />
+      <Example inline title="Default (resolves to size s)">
+        <MockSelectChip />
       </Example>
-      <Example title="Deprecated compact (legacy behavior, renders xs)">
-        <SelectChip
-          accessibilityLabel="Select a value"
-          compact
-          label="Select a value"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Choose an option"
-          value={value}
-        />
+      <Example inline title="Deprecated compact (renders as size xs)">
+        <MockSelectChip compact />
       </Example>
-      <Example title='size="xs"'>
-        <SelectChip
-          accessibilityLabel="Select a value"
-          label="Select a value"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Choose an option"
-          size="xs"
-          value={value}
-        />
+      <Example inline title='size="xs"'>
+        <MockSelectChip size="xs" />
       </Example>
-      <Example title='size="s"'>
-        <SelectChip
-          accessibilityLabel="Select a value"
-          label="Select a value"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Choose an option"
-          size="s"
-          value={value}
-        />
+      <Example inline title='size="s"'>
+        <MockSelectChip size="s" />
       </Example>
-      <Example title='compact + size="s" (size wins)'>
-        <SelectChip
-          accessibilityLabel="Select a value"
-          compact
-          label="Select a value"
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Choose an option"
-          size="s"
-          value={value}
-        />
+      <Example inline title='compact + size="s" (size wins)'>
+        <MockSelectChip compact size="s" />
       </Example>
     </ExampleScreen>
   );

@@ -54,9 +54,20 @@ export const routes = [
       require('@coinbase/cds-mobile/alpha/select-chip/__stories__/AlphaSelectChip.stories').default,
   },
   {
+    key: 'AlphaSelectChipSize',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/select-chip/__stories__/SelectChipSize.stories').default,
+  },
+  {
     key: 'AlphaTabbedChips',
     getComponent: () =>
       require('@coinbase/cds-mobile/alpha/tabbed-chips/__stories__/AlphaTabbedChips.stories')
+        .default,
+  },
+  {
+    key: 'AlphaTabbedChipsSize',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/tabbed-chips/__stories__/AlphaTabbedChipsSize.stories')
         .default,
   },
   {
@@ -182,6 +193,10 @@ export const routes = [
     getComponent: () => require('@coinbase/cds-mobile/chips/__stories__/Chip.stories').default,
   },
   {
+    key: 'ChipSize',
+    getComponent: () => require('@coinbase/cds-mobile/chips/__stories__/ChipSize.stories').default,
+  },
+  {
     key: 'Coachmark',
     getComponent: () =>
       require('@coinbase/cds-mobile/coachmark/__stories__/Coachmark.stories').default,
@@ -245,6 +260,11 @@ export const routes = [
     key: 'DatePicker',
     getComponent: () =>
       require('@coinbase/cds-mobile/dates/__stories__/DatePicker.stories').default,
+  },
+  {
+    key: 'DatePickerSize',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/dates/__stories__/DatePickerSize.stories').default,
   },
   {
     key: 'Divider',
@@ -331,6 +351,11 @@ export const routes = [
       require('@coinbase/cds-mobile/buttons/__stories__/IconButton.stories').default,
   },
   {
+    key: 'IconButtonSize',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/buttons/__stories__/IconButtonSize.stories').default,
+  },
+  {
     key: 'IconCounterButton',
     getComponent: () =>
       require('@coinbase/cds-mobile/buttons/__stories__/IconCounterButton.stories').default,
@@ -338,6 +363,11 @@ export const routes = [
   {
     key: 'InputChip',
     getComponent: () => require('@coinbase/cds-mobile/chips/__stories__/InputChip.stories').default,
+  },
+  {
+    key: 'InputChipSize',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/chips/__stories__/InputChipSize.stories').default,
   },
   {
     key: 'InputIcon',
@@ -653,6 +683,11 @@ export const routes = [
     key: 'SlideButton',
     getComponent: () =>
       require('@coinbase/cds-mobile/buttons/__stories__/SlideButton.stories').default,
+  },
+  {
+    key: 'SlideButtonSize',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/buttons/__stories__/SlideButtonSize.stories').default,
   },
   {
     key: 'Spacer',

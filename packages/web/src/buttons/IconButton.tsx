@@ -49,6 +49,11 @@ const iconButtonSizes = {
   l: { padding: 2, iconSize: 'm', borderRadius: 1000 },
 } as const satisfies Record<IconButtonSize, IconButtonSizeConfig>;
 
+/**
+ * Nominal default of the size scale. NOTE: this only takes effect when `compact` is
+ * explicitly `false`. IconButton defaults `compact` to `true`, so the *effective* default
+ * size is `s` — see the `compact`/`size` prop docs and the `resolvedSize` logic below.
+ */
 const defaultIconButtonSize: IconButtonSize = 'l';
 
 export type IconButtonBaseProps = Polymorphic.ExtendableProps<
@@ -70,13 +75,21 @@ export type IconButtonBaseProps = Polymorphic.ExtendableProps<
     variant?: IconButtonVariant;
     /**
      * Reduce the inner padding within the button itself.
+     *
+     * NOTE: unlike most CDS components, IconButton defaults `compact` to `true`, so an
+     * IconButton with no `size` prop renders at `size="s"`. Pass `compact={false}` (or an
+     * explicit `size`) to opt out of the compact default.
      * @deprecated Use `size="s"` instead. This will be removed in a future major release.
      * @deprecationExpectedRemoval v10
      */
     compact?: boolean;
     /**
-     * Set the size of the button.
-     * @default l
+     * Sets the size of the button.
+     *
+     * IconButton is a special case: because `compact` defaults to `true`, an IconButton
+     * with no `size` (and no `compact={false}`) resolves to `s`, NOT `l`. An explicit
+     * `size` always wins over `compact` when both are provided.
+     * @default 's' (because `compact` defaults to `true`; resolves to `l` only when `compact={false}`)
      */
     size?: IconButtonSize;
   }
@@ -136,7 +149,10 @@ export const IconButton: IconButtonComponent = memo(
       const Component = (as ?? iconButtonDefaultElement) satisfies React.ElementType;
       const theme = useTheme();
 
-      // `size` wins when both `size` and `compact` are set; compact-only maps to `s`.
+      // IconButton is a special case: `compact` defaults to `true` (see the prop default
+      // above), so with no explicit `size` the button resolves to `s` rather than the `l`
+      // nominal default of the size scale. `compact={false}` yields `defaultIconButtonSize`
+      // (`l`). An explicit `size` always wins over `compact` when both are provided.
       const resolvedSize = size ?? (compact ? 's' : defaultIconButtonSize);
       const cfg = iconButtonSizes[resolvedSize];
       const padding = paddingProp ?? cfg.padding;

@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { IconButton } from '../../buttons/IconButton';
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
@@ -21,7 +21,7 @@ const SlideButtonExample = ({
     <VStack gap={1}>
       <HStack alignItems="center" gap={1} justifyContent="flex-end" paddingBottom={2}>
         <Text font="label1">Reset</Text>
-        <IconButton compact name="refresh" onPress={toggleOff} />
+        <IconButton name="refresh" size="s" onPress={toggleOff} />
       </HStack>
       <SlideButton
         checked={checked}
@@ -34,29 +34,33 @@ const SlideButtonExample = ({
   );
 };
 
-export const SlideButtonSizeStories = () => {
+/**
+ * One-off t-shirt size stories for SlideButton (s/m/l).
+ * Do not fold these into SlideButton.stories.tsx — keeps visual review of sizing isolated.
+ */
+const SlideButtonSizeScreen = () => {
   return (
     <ExampleScreen>
-      <Example title="Default (renders as size l, 56px)">
+      <Example title="Default (resolves to size l)">
         <SlideButtonExample uncheckedLabel="Default" />
       </Example>
-      <Example title="Deprecated compact (renders as size s, 40px)">
+      <Example title="Deprecated compact (renders as size s)">
         <SlideButtonExample compact uncheckedLabel="Compact (deprecated)" />
       </Example>
-      <Example title="size='s' (40px)">
+      <Example title='size="s"'>
         <SlideButtonExample size="s" uncheckedLabel="Small" />
       </Example>
-      <Example title="size='m' (48px)">
+      <Example title='size="m"'>
         <SlideButtonExample size="m" uncheckedLabel="Medium" />
       </Example>
-      <Example title="size='l' (56px, default)">
+      <Example title='size="l"'>
         <SlideButtonExample size="l" uncheckedLabel="Large" />
       </Example>
-      <Example title="compact + size='m' (size wins, renders as m/48px)">
+      <Example title='compact + size="m" (size wins)'>
         <SlideButtonExample compact size="m" uncheckedLabel="Size wins over compact" />
       </Example>
     </ExampleScreen>
   );
 };
 
-export default SlideButtonSizeStories;
+export default SlideButtonSizeScreen;
