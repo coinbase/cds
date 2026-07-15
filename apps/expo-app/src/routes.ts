@@ -122,6 +122,11 @@ export const routes = [
     getComponent: () => require('@coinbase/cds-mobile/buttons/__stories__/Button.stories').default,
   },
   {
+    key: 'ButtonSize',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/buttons/__stories__/ButtonSize.stories').default,
+  },
+  {
     key: 'ButtonGroup',
     getComponent: () =>
       require('@coinbase/cds-mobile/buttons/__stories__/ButtonGroup.stories').default,
