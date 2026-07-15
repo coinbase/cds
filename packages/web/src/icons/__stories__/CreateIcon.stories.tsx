@@ -9,7 +9,8 @@ import { Icon } from '../Icon';
 /**
  * `createIcon` bound to a different font (Google Material Icons), showing a
  * consumer can supply their own glyph map, font, and name union while reusing
- * the CDS Icon renderer. Uses a network font, so percy is skipped.
+ * the CDS Icon renderer. Uses a network font, so it is excluded from Percy in
+ * `.percy.js`.
  */
 const materialCodepoints = {
   home: 0xe88a,
@@ -53,10 +54,6 @@ const materialNames = Object.keys(materialCodepoints) as MaterialIconName[];
 export default {
   title: 'Icons/createIcon (custom font)',
   decorators: [withMaterialIconsFont],
-  parameters: {
-    // External font makes pixels non-deterministic across runs.
-    percy: { skip: true },
-  },
 };
 
 export const CustomIconFont = () => (
