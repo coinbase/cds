@@ -23,8 +23,15 @@ const state = instance.getEnum('state', {
 const isLoading = state === 'loading';
 const isDisabled = state === 'disabled';
 
-// compact and transparent are VARIANT types with string "true"/"false" values; code default for compact is true
-const isCompact = instance.getEnum('compact', { true: true, false: false });
+// size maps directly — Figma uses the same t-shirt values as code. Default `l` is omitted.
+const size = instance.getEnum('size', {
+  xs: 'xs',
+  s: 's',
+  m: 'm',
+  l: 'l',
+});
+
+// transparent is a VARIANT type with string "true"/"false" values
 const isTransparent = instance.getEnum('transparent', { true: true, false: false });
 
 // eslint-disable-next-line no-restricted-exports
@@ -32,7 +39,7 @@ export default {
   example: figma.code`<IconButton
   name="add"
   ${variant !== 'secondary' ? figma.code`variant="${variant}"` : ''}
-  ${!isCompact ? 'compact={false}' : ''}
+  ${size !== 'l' ? figma.code`size="${size}"` : ''}
   ${isTransparent ? 'transparent' : ''}
   ${isLoading ? 'loading' : ''}
   ${isDisabled ? 'disabled' : ''}

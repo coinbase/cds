@@ -16,17 +16,34 @@ import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 import { type ButtonBaseProps } from './Button';
 
+export type IconButtonSize = 'xs' | 's' | 'm' | 'l';
+
+type IconButtonFeedback = 'light' | 'normal';
+
+type IconButtonSizeConfig = {
+  padding: number;
+  iconSize: 's' | 'm';
+  borderRadius: number;
+  feedback: IconButtonFeedback;
+};
+
+const iconButtonSizes = {
+  xs: { padding: 1, iconSize: 's', borderRadius: 1000, feedback: 'light' },
+  s: { padding: 1.5, iconSize: 's', borderRadius: 1000, feedback: 'light' },
+  m: { padding: 1.5, iconSize: 'm', borderRadius: 1000, feedback: 'normal' },
+  l: { padding: 2, iconSize: 'm', borderRadius: 1000, feedback: 'normal' },
+} as const satisfies Record<IconButtonSize, IconButtonSizeConfig>;
+
+const defaultIconButtonSize: IconButtonSize = 'l';
+
 export type IconButtonBaseProps = SharedProps &
   Omit<PressableBaseProps, 'children'> &
-  Pick<
-    ButtonBaseProps,
-    'disabled' | 'transparent' | 'compact' | 'flush' | 'loading' | 'progressCircleSize'
-  > & {
+  Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'flush' | 'loading' | 'progressCircleSize'> & {
     /** Name of the icon, as defined in Figma. */
     name: IconName;
     /**
      * Size for the icon rendered inside the button.
-     * @default compact ? 's' : 'm'
+     * @default 's' for size xs/s, 'm' for size m/l
      */
     iconSize?: IconSize;
     /** Whether the icon is active */
@@ -36,6 +53,17 @@ export type IconButtonBaseProps = SharedProps &
      * @default primary
      */
     variant?: IconButtonVariant;
+    /**
+     * Reduce the inner padding within the button itself.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
+    /**
+     * Set the size of the button.
+     * @default l
+     */
+    size?: IconButtonSize;
     /** Custom styles for individual elements of the IconButton component */
     styles?: {
       /** Root Pressable element */
@@ -64,15 +92,16 @@ export const IconButton = memo(
       alignSelf = 'flex-start', // prevents stretching when placed in a flex container
       transparent,
       compact = true,
+      size,
       background,
       color,
       borderColor,
-      iconSize = compact ? 's' : 'm',
+      iconSize: iconSizeProp,
       borderWidth = 0, // remove Pressable's default transparent border
-      borderRadius = 1000,
-      feedback = compact ? 'light' : 'normal',
+      borderRadius: borderRadiusProp,
+      feedback: feedbackProp,
       flush,
-      padding = compact ? 1.5 : 2,
+      padding: paddingProp,
       loading,
       progressCircleSize,
       style,
@@ -81,6 +110,14 @@ export const IconButton = memo(
       accessibilityLabel,
       ...props
     } = mergedProps;
+
+    // `size` wins when both `size` and `compact` are set; compact-only maps to `s`.
+    const resolvedSize = size ?? (compact ? 's' : defaultIconButtonSize);
+    const cfg = iconButtonSizes[resolvedSize];
+    const padding = paddingProp ?? cfg.padding;
+    const iconSize = iconSizeProp ?? cfg.iconSize;
+    const borderRadius = borderRadiusProp ?? cfg.borderRadius;
+    const feedback = feedbackProp ?? cfg.feedback;
     const theme = useTheme();
     const iconSizeValue = theme.iconSize[iconSize];
     const variantMap = transparent ? transparentVariants : variants;

@@ -34,14 +34,31 @@ export const iconButtonDefaultElement = 'button';
 
 export type IconButtonDefaultElement = typeof iconButtonDefaultElement;
 
+export type IconButtonSize = 'xs' | 's' | 'm' | 'l';
+
+type IconButtonSizeConfig = {
+  padding: number;
+  iconSize: 's' | 'm';
+  borderRadius: number;
+};
+
+const iconButtonSizes = {
+  xs: { padding: 1, iconSize: 's', borderRadius: 1000 },
+  s: { padding: 1.5, iconSize: 's', borderRadius: 1000 },
+  m: { padding: 1.5, iconSize: 'm', borderRadius: 1000 },
+  l: { padding: 2, iconSize: 'm', borderRadius: 1000 },
+} as const satisfies Record<IconButtonSize, IconButtonSizeConfig>;
+
+const defaultIconButtonSize: IconButtonSize = 'l';
+
 export type IconButtonBaseProps = Polymorphic.ExtendableProps<
   Omit<PressableBaseProps, 'children'>,
-  Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'compact' | 'flush'> & {
+  Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'flush'> & {
     /** Name of the icon, as defined in Figma. */
     name: IconName;
     /**
      * Size for the icon rendered inside the button.
-     * @default compact ? 's' : 'm'
+     * @default 's' for size xs/s, 'm' for size m/l
      */
     iconSize?: IconSize;
     /** Whether the icon is active */
@@ -51,6 +68,17 @@ export type IconButtonBaseProps = Polymorphic.ExtendableProps<
      * @default primary
      */
     variant?: IconButtonVariant;
+    /**
+     * Reduce the inner padding within the button itself.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
+    /**
+     * Set the size of the button.
+     * @default l
+     */
+    size?: IconButtonSize;
   }
 >;
 
@@ -82,18 +110,19 @@ export const IconButton: IconButtonComponent = memo(
         variant = 'secondary',
         transparent,
         compact = true,
+        size,
         background,
         color,
         borderColor,
-        borderRadius = 1000,
+        borderRadius: borderRadiusProp,
         borderWidth = 0, // remove Pressable's default transparent border
         alignItems = 'center',
         justifyContent = 'center',
         className,
         style,
-        padding = compact ? 1.5 : 2,
+        padding: paddingProp,
         name,
-        iconSize = compact ? 's' : 'm',
+        iconSize: iconSizeProp,
         active,
         flush,
         loading,
@@ -106,6 +135,13 @@ export const IconButton: IconButtonComponent = memo(
       } = mergedProps;
       const Component = (as ?? iconButtonDefaultElement) satisfies React.ElementType;
       const theme = useTheme();
+
+      // `size` wins when both `size` and `compact` are set; compact-only maps to `s`.
+      const resolvedSize = size ?? (compact ? 's' : defaultIconButtonSize);
+      const cfg = iconButtonSizes[resolvedSize];
+      const padding = paddingProp ?? cfg.padding;
+      const iconSize = iconSizeProp ?? cfg.iconSize;
+      const borderRadius = borderRadiusProp ?? cfg.borderRadius;
 
       const iconSizeValue = theme.iconSize[iconSize];
       const spinnerSize = iconSizeValue / 10;

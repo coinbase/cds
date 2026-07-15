@@ -224,6 +224,91 @@ describe('IconButton', () => {
     expect(button).toHaveAttribute('data-compact', 'true');
   });
 
+  describe('size', () => {
+    const getPadding = (button: HTMLElement) => {
+      const cls = button.className;
+      // padding token classes look like `_2-<hash>` / `_1_5-<hash>` (fractional keys use `_`)
+      if (/(^|\s)_2-/.test(cls)) return 2;
+      if (/(^|\s)_1_5-/.test(cls)) return 1.5;
+      if (/(^|\s)_1-/.test(cls)) return 1;
+      return undefined;
+    };
+
+    it('defaults (no props) to the "s" geometry (padding 1.5, iconSize s)', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton name={name} testID="icon-button" />
+        </DefaultThemeProvider>,
+      );
+      expect(getPadding(screen.getByRole('button'))).toBe(1.5);
+      expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(
+        glyphMap[`${name}-16-inactive`],
+      );
+    });
+
+    it('resolves each t-shirt size to the expected padding and iconSize', () => {
+      const cases = [
+        { size: 'xs', padding: 1, iconPx: 16 },
+        { size: 's', padding: 1.5, iconPx: 16 },
+        { size: 'm', padding: 1.5, iconPx: 24 },
+        { size: 'l', padding: 2, iconPx: 24 },
+      ] as const;
+
+      cases.forEach(({ size, padding, iconPx }) => {
+        const { unmount } = render(
+          <DefaultThemeProvider>
+            <IconButton name={name} size={size} />
+          </DefaultThemeProvider>,
+        );
+        expect(getPadding(screen.getByRole('button'))).toBe(padding);
+        expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(
+          glyphMap[`${name}-${iconPx}-inactive`],
+        );
+        unmount();
+      });
+    });
+
+    it('renders `compact` alone as the "s" geometry (padding 1.5)', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton compact name={name} />
+        </DefaultThemeProvider>,
+      );
+      expect(getPadding(screen.getByRole('button'))).toBe(1.5);
+    });
+
+    it('renders `compact={false}` as the "l" geometry (padding 2)', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton compact={false} name={name} />
+        </DefaultThemeProvider>,
+      );
+      expect(getPadding(screen.getByRole('button'))).toBe(2);
+    });
+
+    it('lets `size` win when both `size` and `compact` are provided', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton compact name={name} size="m" />
+        </DefaultThemeProvider>,
+      );
+      // "m" geometry (padding 1.5, iconSize m) rather than compact's iconSize s
+      expect(getPadding(screen.getByRole('button'))).toBe(1.5);
+      expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(
+        glyphMap[`${name}-24-inactive`],
+      );
+    });
+
+    it('lets an explicit `padding` override the size-derived default', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton name={name} padding={1} size="l" />
+        </DefaultThemeProvider>,
+      );
+      expect(getPadding(screen.getByRole('button'))).toBe(1);
+    });
+  });
+
   describe('static classNames', () => {
     it('applies static class names to component elements', () => {
       render(
