@@ -21,6 +21,48 @@ export const slideButtonTestID = 'slide-button';
 
 export const DEFAULT_COMPACT_HEIGHT = 40;
 export const DEFAULT_REGULAR_HEIGHT = 56;
+export const DEFAULT_MEDIUM_HEIGHT = 48;
+
+export type SlideButtonSize = 's' | 'm' | 'l';
+
+type SlideButtonSizeConfig = {
+  height: number;
+  borderRadius: number;
+  iconSize: 's' | 'm';
+  handlePadding: number;
+  backgroundPadding: number;
+};
+
+export const slideButtonSizes = {
+  s: {
+    height: DEFAULT_COMPACT_HEIGHT,
+    borderRadius: 700,
+    iconSize: 's',
+    handlePadding: 1.5,
+    backgroundPadding: 7,
+  },
+  m: {
+    height: DEFAULT_MEDIUM_HEIGHT,
+    borderRadius: 900,
+    iconSize: 'm',
+    handlePadding: 2,
+    backgroundPadding: 9,
+  },
+  l: {
+    height: DEFAULT_REGULAR_HEIGHT,
+    borderRadius: 900,
+    iconSize: 'm',
+    handlePadding: 2,
+    backgroundPadding: 9,
+  },
+} as const satisfies Record<SlideButtonSize, SlideButtonSizeConfig>;
+
+const defaultSlideButtonSize: SlideButtonSize = 'l';
+
+export const resolveSlideButtonSize = (
+  size?: SlideButtonSize,
+  compact?: boolean,
+): SlideButtonSize => size ?? (compact ? 's' : defaultSlideButtonSize);
 
 export type SlideButtonBackgroundProps = Pick<
   SlideButtonBaseProps,
@@ -32,6 +74,7 @@ export type SlideButtonBackgroundProps = Pick<
   | 'checked'
   | 'compact'
   | 'disabled'
+  | 'size'
   | 'uncheckedLabel'
   | 'variant'
 > & {
@@ -46,6 +89,7 @@ export type SlideButtonHandleProps = PressableProps &
     | 'checkedLabel'
     | 'compact'
     | 'disabled'
+    | 'size'
     | 'startUncheckedNode'
     | 'endCheckedNode'
     | 'variant'
@@ -103,14 +147,21 @@ export type SlideButtonBaseProps = Omit<PressableProps, 'loading'> & {
   disabled?: boolean;
   /**
    * Reduces the height, borderRadius and inner padding within the button.
+   * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   compact?: boolean;
+  /**
+   * Set the size of the slide button.
+   * @default l
+   */
+  size?: SlideButtonSize;
   /**
    * Height of the entire button component (background and handle).
    * If you pass a custom SlideButtonBackgroundComponent or SlideButtonHandleComponent,
    * this property will be applied to both.
    *
-   * @default 40px for compact variant, 56px for regular variant
+   * @default 40px for size "s", 48px for size "m", 56px for size "l"
    */
   height?: number;
   /**
@@ -170,10 +221,13 @@ export const SlideButton = memo(
     ref?: React.Ref<View>;
   }) => {
     const mergedProps = useComponentConfig('SlideButton', _props);
+    const resolvedSize = resolveSlideButtonSize(mergedProps.size, mergedProps.compact);
+    const sizeConfig = slideButtonSizes[resolvedSize];
     const {
       checked,
       compact,
-      borderRadius = compact ? 700 : 900,
+      size,
+      borderRadius = sizeConfig.borderRadius,
       borderTopLeftRadius,
       borderTopRightRadius,
       borderBottomLeftRadius,
@@ -186,7 +240,7 @@ export const SlideButton = memo(
       onSlideComplete,
       onChange,
       disabled,
-      height = compact ? DEFAULT_COMPACT_HEIGHT : DEFAULT_REGULAR_HEIGHT,
+      height = sizeConfig.height,
       checkThreshold = 0.7,
       SlideButtonHandleComponent = DefaultSlideButtonHandle,
       SlideButtonBackgroundComponent = DefaultSlideButtonBackground,
@@ -320,9 +374,9 @@ export const SlideButton = memo(
           borderTopLeftRadius={borderTopLeftRadius}
           borderTopRightRadius={borderTopRightRadius}
           checked={checked}
-          compact={compact}
           disabled={disabled}
           progress={progress}
+          size={resolvedSize}
           style={styles?.background}
           uncheckedLabel={uncheckedLabel}
           variant={variant}
@@ -342,11 +396,11 @@ export const SlideButton = memo(
               borderTopRightRadius={borderTopRightRadius}
               checked={checked}
               checkedLabel={checkedLabel}
-              compact={compact}
               disabled={disabled}
               endCheckedNode={endCheckedNode}
               onAccessibilityAction={handleAccessibilityAction}
               progress={progress}
+              size={resolvedSize}
               startUncheckedNode={startUncheckedNode}
               style={styles?.handle}
               testID={`${testID}-handle`}

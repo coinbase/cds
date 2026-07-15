@@ -64,22 +64,38 @@ function Example() {
 }
 ```
 
-## Compact
+## Size
 
-Use the `compact` prop to reduce the height, border-radius and padding of the button:
+Use the `size` prop to control the height, border-radius and inner padding of the button. Available sizes are `s`, `m` and `l`. `size` defaults to `l`. `size="s"` is the direct replacement for the deprecated `compact` prop.
 
 ```jsx
 function Example() {
   const [checked, setChecked] = useState(false);
 
   return (
-    <SlideButton
-      checked={checked}
-      onChange={setChecked}
-      uncheckedLabel="Swipe to confirm"
-      checkedLabel="Confirming..."
-      compact
-    />
+    <VStack gap={2}>
+      <SlideButton
+        size="s"
+        checked={checked}
+        onChange={setChecked}
+        uncheckedLabel="Small"
+        checkedLabel="Confirming..."
+      />
+      <SlideButton
+        size="m"
+        checked={checked}
+        onChange={setChecked}
+        uncheckedLabel="Medium"
+        checkedLabel="Confirming..."
+      />
+      <SlideButton
+        size="l"
+        checked={checked}
+        onChange={setChecked}
+        uncheckedLabel="Large (default)"
+        checkedLabel="Confirming..."
+      />
+    </VStack>
   );
 }
 ```
