@@ -14,8 +14,16 @@ import { VStack } from '../../layout/VStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Text } from '../../typography/Text';
 
-import type { SelectControlProps, SelectOption, SelectType } from './Select';
+import type { SelectControlProps, SelectOption, SelectSize, SelectType } from './Select';
 import { isSelectOptionGroup } from './Select';
+
+const selectSizes = {
+  s: { paddingY: 1 },
+  m: { paddingY: 1.5 },
+  l: { paddingY: 2 },
+} as const satisfies Record<SelectSize, { paddingY: 1 | 1.5 | 2 }>;
+
+const defaultSelectSize: SelectSize = 'l';
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -55,6 +63,7 @@ export const DefaultSelectControlComponent = memo(
     startNode,
     endNode: customEndNode,
     compact,
+    size,
     align = 'start',
     font = 'body',
     labelColor = 'fg',
@@ -89,11 +98,16 @@ export const DefaultSelectControlComponent = memo(
     }, [isInteractionBlocked, setOpen]);
 
     const theme = useTheme();
-    // When compact, labelVariant is ignored
-    const labelVariant = compact ? undefined : labelVariantProp;
+    // `size` wins when both `size` and the deprecated `compact` are provided.
+    const resolvedSize = size ?? (compact ? 's' : defaultSelectSize);
+    const sizeConfig = selectSizes[resolvedSize];
+    // The `s` size collapses the label into the input row (the legacy compact layout).
+    const isCompactLayout = resolvedSize === 's';
+    // When using the compact layout, labelVariant is ignored
+    const labelVariant = isCompactLayout ? undefined : labelVariantProp;
     const isMultiSelect = type === 'multi';
-    const shouldShowCompactLabel = compact && label && !isMultiSelect;
-    const shouldShowInsideLabel = labelVariant === 'inside' && !compact && label;
+    const shouldShowCompactLabel = isCompactLayout && label && !isMultiSelect;
+    const shouldShowInsideLabel = labelVariant === 'inside' && !isCompactLayout && label;
     const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
     // Map of options to their values
@@ -439,12 +453,18 @@ export const DefaultSelectControlComponent = memo(
 
     const inputStackStyles: StyleProp<ViewStyle> = useMemo(
       () => ({
-        paddingTop: compact || labelVariant === 'inside' ? theme.space[1] : theme.space[2],
-        paddingBottom: compact || labelVariant === 'inside' ? theme.space[1] : theme.space[2],
+        paddingTop:
+          isCompactLayout || labelVariant === 'inside'
+            ? theme.space[1]
+            : theme.space[sizeConfig.paddingY],
+        paddingBottom:
+          isCompactLayout || labelVariant === 'inside'
+            ? theme.space[1]
+            : theme.space[sizeConfig.paddingY],
         paddingLeft: theme.space[2],
         paddingRight: theme.space[2],
       }),
-      [compact, labelVariant, theme.space],
+      [isCompactLayout, labelVariant, sizeConfig.paddingY, theme.space],
     );
 
     return (

@@ -42,6 +42,7 @@ export type {
   SelectOptionProps,
   SelectProps,
   SelectRef,
+  SelectSize,
   SelectType,
 } from './types';
 
@@ -68,6 +69,7 @@ const SelectBase = memo(
       placeholder,
       helperText,
       compact,
+      size,
       label,
       labelVariant,
       accessibilityLabel = typeof label === 'string' ? label : 'Select control',
@@ -210,6 +212,7 @@ const SelectBase = memo(
           readOnly={readOnly}
           removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
           setOpen={setOpen}
+          size={size}
           startNode={startNode}
           style={styles?.control}
           styles={controlStyles}

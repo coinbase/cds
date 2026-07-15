@@ -1,7 +1,8 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { defaultTheme } from '../../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
 import { DefaultSelectControl } from '../DefaultSelectControl';
 import type { SelectControlProps, SelectOption } from '../Select';
@@ -187,6 +188,74 @@ describe('DefaultSelectControl', () => {
       );
 
       expect(screen.getByText('+2 more')).toBeTruthy();
+    });
+  });
+
+  describe('Size', () => {
+    const TEST_ID = 'select';
+    const getInputAreaPadding = () => {
+      const inputArea = screen.getByTestId(`${TEST_ID}-input-area`);
+      return StyleSheet.flatten(inputArea.props.style);
+    };
+
+    it('defaults to size l geometry (space[2] padding)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} testID={TEST_ID} />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaPadding();
+      expect(style?.paddingTop).toBe(defaultTheme.space[2]);
+      expect(style?.paddingBottom).toBe(defaultTheme.space[2]);
+    });
+
+    it('applies size="m" geometry (space[1.5] padding) with label above', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="m" testID={TEST_ID} />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaPadding();
+      expect(style?.paddingTop).toBe(defaultTheme.space[1.5]);
+      expect(style?.paddingBottom).toBe(defaultTheme.space[1.5]);
+    });
+
+    it('applies size="s" geometry (space[1] padding)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" testID={TEST_ID} />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaPadding();
+      expect(style?.paddingTop).toBe(defaultTheme.space[1]);
+      expect(style?.paddingBottom).toBe(defaultTheme.space[1]);
+    });
+
+    it('deprecated compact (alone) still yields size s geometry', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact testID={TEST_ID} />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaPadding();
+      expect(style?.paddingTop).toBe(defaultTheme.space[1]);
+      expect(style?.paddingBottom).toBe(defaultTheme.space[1]);
+    });
+
+    it('size wins over compact when both are provided', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact size="m" testID={TEST_ID} />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaPadding();
+      expect(style?.paddingTop).toBe(defaultTheme.space[1.5]);
+      expect(style?.paddingBottom).toBe(defaultTheme.space[1.5]);
     });
   });
 

@@ -202,6 +202,64 @@ describe('DefaultSelectControl', () => {
     });
   });
 
+  describe('Size', () => {
+    const getInputArea = () => screen.getByTestId('input-interactable-area');
+    // The label is rendered inline (inside the input area) only for the compact `s` layout;
+    // for `m`/`l` it is rendered above the input (outside the input area).
+    const isLabelInline = () => getInputArea().textContent?.includes('Test Select Control');
+
+    it('renders the label above the input by default (size l layout)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Test Select Control')).toBeInTheDocument();
+      expect(isLabelInline()).toBe(false);
+    });
+
+    it('renders the label above the input for size="m"', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="m" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(isLabelInline()).toBe(false);
+    });
+
+    it('collapses the label inline for size="s"', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(isLabelInline()).toBe(true);
+    });
+
+    it('deprecated compact (alone) still collapses the label inline (size s layout)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact />
+        </DefaultThemeProvider>,
+      );
+
+      expect(isLabelInline()).toBe(true);
+    });
+
+    it('lets size win over compact when both are provided (m layout, label above)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact size="m" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(isLabelInline()).toBe(false);
+    });
+  });
+
   describe('States and Variants', () => {
     it('renders disabled state correctly', () => {
       render(

@@ -44,6 +44,11 @@ export const routes = [
       require('@coinbase/cds-mobile/alpha/select/__stories__/AlphaSelect.stories').default,
   },
   {
+    key: 'AlphaSelectSize',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/alpha/select/__stories__/SelectSize.stories').default,
+  },
+  {
     key: 'AlphaSelectChip',
     getComponent: () =>
       require('@coinbase/cds-mobile/alpha/select-chip/__stories__/AlphaSelectChip.stories').default,
