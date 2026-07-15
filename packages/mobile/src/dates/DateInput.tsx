@@ -13,6 +13,7 @@ import { type DateInputOptions, useDateInput } from '@coinbase/cds-common/dates/
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 
 import { TextInput, type TextInputBaseProps, type TextInputProps } from '../controls/TextInput';
+import type { TextInputSize } from '../controls/useTextInputDensity';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
 
@@ -20,6 +21,17 @@ export type DateInputBaseProps = Omit<DateInputOptions, 'intlDateFormat'> &
   Omit<TextInputBaseProps, 'inputNode' | 'value' | 'defaultValue'> & {
     /** Date format separator character, e.g. the / in "MM/DD/YYYY". Defaults to forward slash (/). */
     separator?: string;
+    /**
+     * Controls the vertical density (size) of the input field.
+     * @default 'l'
+     */
+    size?: TextInputSize;
+    /**
+     * Enables a smaller, compact input.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
   };
 
 export type DateInputProps = DateInputBaseProps &

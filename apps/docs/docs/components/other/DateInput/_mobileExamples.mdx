@@ -194,9 +194,9 @@ function Example() {
 
 ## Styling
 
-### Compact
+### Size
 
-Use the `compact` prop for a smaller input size.
+Use the `size` prop to control the vertical density of the input. It defaults to `l`. `size="s"` replaces the deprecated `compact` prop.
 
 ```jsx
 function Example() {
@@ -206,20 +206,30 @@ function Example() {
   return (
     <VStack gap={3}>
       <DateInput
+        size="s"
         date={date}
         error={error}
         onChangeDate={setDate}
         onErrorDate={setError}
-        label="Default size"
+        label="Small"
         invalidDateError="Please enter a valid date"
       />
       <DateInput
-        compact
+        size="m"
         date={date}
         error={error}
         onChangeDate={setDate}
         onErrorDate={setError}
-        label="Compact size"
+        label="Medium"
+        invalidDateError="Please enter a valid date"
+      />
+      <DateInput
+        size="l"
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Large (default)"
         invalidDateError="Please enter a valid date"
       />
     </VStack>

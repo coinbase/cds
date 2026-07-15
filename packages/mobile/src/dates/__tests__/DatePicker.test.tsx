@@ -566,3 +566,52 @@ describe('DatePicker', () => {
     expect(mockOnChangeDate).not.toHaveBeenCalled();
   });
 });
+
+describe('DatePicker size', () => {
+  const labelTestID = 'label-test';
+  const startTestID = 'start-test';
+
+  it('renders the label above the input (in stack) by default', () => {
+    render(<DatePickerExample label="Birthdate" testIDMap={{ label: labelTestID }} />);
+
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Birthdate');
+  });
+
+  it.each(['m', 'l'] as const)(
+    'renders the label above the input (in stack) for size="%s"',
+    (size) => {
+      render(
+        <DatePickerExample label="Birthdate" size={size} testIDMap={{ label: labelTestID }} />,
+      );
+
+      expect(screen.getByTestId(labelTestID)).toHaveTextContent('Birthdate');
+    },
+  );
+
+  it('renders the label inline in the start slot for size="s" with inside label', () => {
+    render(
+      <DatePickerExample
+        label="Birthdate"
+        labelVariant="inside"
+        size="s"
+        testIDMap={{ start: startTestID }}
+      />,
+    );
+
+    expect(screen.getByTestId(startTestID)).toHaveTextContent('Birthdate');
+  });
+
+  it('compact alone reproduces the legacy inline start-slot label placement', () => {
+    render(<DatePickerExample compact label="Birthdate" testIDMap={{ start: startTestID }} />);
+
+    expect(screen.getByTestId(startTestID)).toHaveTextContent('Birthdate');
+  });
+
+  it('size wins over compact: size="m" keeps the label above (in stack) even with compact set', () => {
+    render(
+      <DatePickerExample compact label="Birthdate" size="m" testIDMap={{ label: labelTestID }} />,
+    );
+
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Birthdate');
+  });
+});
