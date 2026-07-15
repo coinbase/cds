@@ -48,6 +48,8 @@ The `glyphMap` must be keyed by `` `${name}-${size}-${active | inactive}` `` (wh
 import '@my-org/icons/fonts/web/icon-font.css';
 ```
 
+If your icon set uses a different key format or size model, pass a `getGlyph` resolver to `createIcon` to control exactly how a glyph is looked up from the map.
+
 On web the font family is applied via the `--cds-icon-font-family` CSS variable (its default is `CoinbaseIcons`). Beyond passing `fontFamily` to `createIcon`, you can override the font per instance through `classNames`/`styles`, or scope it on an ancestor by setting that variable.
 
 #### Live demo

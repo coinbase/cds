@@ -31,6 +31,20 @@ export type GlyphMap<Name extends string> = Record<
   string
 >;
 
+/** Arguments passed to a glyph resolver to look up an icon's glyph. */
+export type IconGlyphResolverArgs<Name extends string> = {
+  /** Glyph map bound to this icon set. */
+  glyphMap: GlyphMap<Name>;
+  /** Icon name requested via the `name` prop. */
+  name: Name;
+  /** Size token requested via the `size` prop. */
+  size: IconSize;
+  /** Resolved pixel size from the theme (includes device font scaling). */
+  pixelSize: number;
+  /** Whether the active variant was requested. */
+  active: boolean;
+};
+
 /** Configuration used to bind an icon set to a typed `Icon` component. */
 export type CreateIconConfig<Name extends string> = {
   /** Generated glyph map for this icon set. */
@@ -41,10 +55,12 @@ export type CreateIconConfig<Name extends string> = {
    */
   fontFamily?: string;
   /**
-   * Maps a resolved pixel size to the source glyph size. Override for icon
-   * sets that use a different size model.
+   * Resolves the glyph to render for an icon from the glyph map. Override to
+   * support a custom key format or size model. Defaults to the CDS scheme:
+   * `${name}-${sourceSize}-${'active' | 'inactive'}`, where `sourceSize` is
+   * `12`, `16`, or `24`.
    */
-  getSourceSize?: (iconSize: number) => IconSourcePixelSize;
+  getGlyph?: (args: IconGlyphResolverArgs<Name>) => string | undefined;
 };
 
 export type IconBaseProps<Name extends string = string> = SharedProps &
@@ -96,6 +112,18 @@ const getIconSourceSize = (iconSize: number): IconSourcePixelSize => {
   return 24;
 };
 
+/** Default glyph resolver using the CDS `${name}-${sourceSize}-${state}` key scheme. */
+const defaultGetGlyph = <Name extends string>({
+  glyphMap,
+  name,
+  pixelSize,
+  active,
+}: IconGlyphResolverArgs<Name>): string | undefined => {
+  const sourceSize = getIconSourceSize(pixelSize);
+  const key = `${name}-${sourceSize}-${active ? 'active' : 'inactive'}` as keyof GlyphMap<Name>;
+  return glyphMap[key];
+};
+
 /**
  * Creates a typed `Icon` component bound to a specific icon set (glyph map,
  * font family, and name union). The default CDS `Icon` is created from this
@@ -106,7 +134,7 @@ const getIconSourceSize = (iconSize: number): IconSourcePixelSize => {
 export function createIcon<Name extends string>({
   glyphMap,
   fontFamily = DEFAULT_ICON_FONT_FAMILY,
-  getSourceSize = getIconSourceSize,
+  getGlyph = defaultGetGlyph,
 }: CreateIconConfig<Name>) {
   const Icon = memo((_props: IconProps<Name>) => {
     const mergedProps = useComponentConfig('Icon', _props);
@@ -137,7 +165,6 @@ export function createIcon<Name extends string>({
 
     // Scale according to device a11y font size settings
     const iconSize = theme.iconSize[size] * fontScale;
-    const sourceSize = getSourceSize(iconSize);
 
     const iconColor = theme.color[color];
     const finalColor = dangerouslySetColor ?? iconColor;
@@ -182,12 +209,17 @@ export function createIcon<Name extends string>({
       [finalColor, iconSize, styles?.icon],
     );
 
-    const iconName = `${name}-${sourceSize}-${active ? 'active' : 'inactive'}`;
-    const glyph = glyphMap[iconName as keyof typeof glyphMap];
+    const glyph = getGlyph({
+      glyphMap,
+      name,
+      size,
+      pixelSize: iconSize,
+      active: Boolean(active),
+    });
 
     if (glyph === undefined) {
       if (isDevelopment()) {
-        console.error(`Unable to find glyph for icon name "${name}" with glyph key "${iconName}"`);
+        console.error(`Unable to find glyph for icon "${name}" at size "${size}"`);
       }
       return fallback;
     }

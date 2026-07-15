@@ -49,3 +49,5 @@ export const MyIcon = createIcon<MyIconName>({
 ```
 
 The `glyphMap` must be keyed by `` `${name}-${size}-${active | inactive}` `` (where `size` is `12`, `16`, or `24`), with each value the single font glyph character — the same shape as `@coinbase/cds-icons`. Load your font before rendering (for example with `expo-font`'s `useFonts`) using the same family name you pass as `fontFamily`. Because mobile bundles fonts into the native build, rebuild your app after adding a new font.
+
+If your icon set uses a different key format or size model, pass a `getGlyph` resolver to `createIcon` to control exactly how a glyph is looked up from the map.
