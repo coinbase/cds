@@ -32,7 +32,7 @@ A Linear issue ID or URL (e.g. `CDS-2168`) for a CDS component adopting the t-sh
 4. **Never add fixed sizes/heights.** `size` must never introduce a hard-coded `height`,
    `minHeight`, `width`, or any fixed dimension. Dimensions stay **derived from content + spacing**
    (padding + font/line-height); `size` only tunes those spacing/typography inputs. Any heights in
-   the spec table are *computed outcomes*, not values to set.
+   the spec table are _computed outcomes_, not values to set.
 5. **Do not share size/property maps via `cds-common`.** Web and mobile style-prop value types
    differ, so a shared map cannot be strongly typed against both. Define the size config
    **independently in each package**, typed to that package's style-prop types.
@@ -84,7 +84,7 @@ Compare a **controlled set** of variants: hold every other variant property cons
     `disableCodeConnect: true` to get the raw generated styles.
 - From each variant capture: `paddingX`, `paddingY` (spacing tokens), `borderRadius`, `font`
   (font-size / line-height), and `iconSize`. Compute the resulting height
-  (`paddingY×2 + line-height`) as a *derived* value.
+  (`paddingY×2 + line-height`) as a _derived_ value.
 
 Reference facts for CDS token mapping:
 
@@ -132,7 +132,7 @@ worked example to mirror). It must contain every section below:
   any pre-existing deprecated helpers not to extend).
 - **Height verification vs `size=l`** — the Step 6 result; explicitly state MATCH or the mismatch.
 - **Target size spec table** — `size` × `paddingX` / `paddingY` / `borderRadius` / `font` / text /
-  *derived* height, with a callout that height is a derived outcome, never set.
+  _derived_ height, with a callout that height is a derived outcome, never set.
 - **Implementation**:
   - Per-package size config (**not** `cds-common`) with the rationale (differing style-prop types),
     typed locally with `satisfies Record<ButtonSize, {...}>`.
@@ -144,7 +144,7 @@ worked example to mirror). It must contain every section below:
     default paths stay byte-for-byte unchanged; flag it as the one non-geometric effect.
   - Add the `size` prop to `ButtonBaseProps` (both packages), `@default l`.
 - **Deprecate `compact`** — via the `deprecate-cds-api` skill; JSDoc `@deprecated Use \`size="s"\`
-  instead` + `@deprecationExpectedRemoval v10`; run `lint` so the deprecation lint rule passes.
+  instead`+`@deprecationExpectedRemoval v10`; run `lint` so the deprecation lint rule passes.
 - **Backward-compat & stability risks** — including an **informational** (out-of-scope) note
   listing sibling/related components that `Pick` the deprecated prop (they'll be updated
   separately), plus `font`/`feedback`/`flush` interaction notes.

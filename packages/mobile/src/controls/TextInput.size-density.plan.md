@@ -48,21 +48,21 @@ const useLegacyCompact = Boolean(compact) && size === undefined;
 const resolvedSize: TextInputSize = size ?? 'l';
 ```
 
-| Inputs | Behavior |
-| --- | --- |
-| neither | `resolvedSize = 'l'`, size path |
+| Inputs         | Behavior                              |
+| -------------- | ------------------------------------- |
+| neither        | `resolvedSize = 'l'`, size path       |
 | `compact` only | **legacy compact** (today’s behavior) |
-| `size` only | size path; ignore compact |
-| both | size path; **ignore compact** |
+| `size` only    | size path; ignore compact             |
+| both           | size path; **ignore compact**         |
 
 ## Label placement matrix
 
-| Mode | `labelVariant` | Label placement |
-| --- | --- | --- |
-| Legacy `compact` | any | Forced into start slot (unchanged) |
-| size path + `outside` | `outside` | Outside, above — including `s`/`m` |
-| `size="l"` + `inside` | `inside` | Vertical stack inside field |
-| `size="s"` or `"m"` + `inside` | `inside` | Horizontal in start slot — without forcing when `outside` |
+| Mode                           | `labelVariant` | Label placement                                           |
+| ------------------------------ | -------------- | --------------------------------------------------------- |
+| Legacy `compact`               | any            | Forced into start slot (unchanged)                        |
+| size path + `outside`          | `outside`      | Outside, above — including `s`/`m`                        |
+| `size="l"` + `inside`          | `inside`       | Vertical stack inside field                               |
+| `size="s"` or `"m"` + `inside` | `inside`       | Horizontal in start slot — without forcing when `outside` |
 
 ## Design: untangle the complexity
 

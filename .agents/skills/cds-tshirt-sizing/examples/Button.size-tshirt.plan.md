@@ -25,7 +25,7 @@ existing caller that has not adopted `size`.
 5. **No fixed sizes/heights, ever.** `size` must **never** introduce a hard-coded `height`,
    `minHeight`, `width`, or any fixed dimension. Button dimensions stay **derived from content +
    spacing** (padding + font/line-height); the `size` variant only tunes those spacing/typography
-   inputs. The heights in the spec table below are *computed outcomes*, not values to set.
+   inputs. The heights in the spec table below are _computed outcomes_, not values to set.
 
 ---
 
@@ -33,14 +33,14 @@ existing caller that has not adopted `size`.
 
 Both components are structurally parallel and derive their geometry inline from `compact`:
 
-| Prop default | `compact` (true) | default (false) | Resolved px |
-| --- | --- | --- | --- |
-| `paddingX` | `2` | `4` | 16px / 32px |
-| `paddingY` | `1` | `2` | 8px / 16px |
-| `borderRadius` | `700` | `900` | 40px / 56px |
-| `iconSize` | `'s'` | `'m'` | — |
-| `feedback` *(mobile only)* | `'light'` | `'normal'` | press/haptic |
-| `font` | `'headline'` | `'headline'` | 16/24 (unchanged by compact) |
+| Prop default               | `compact` (true) | default (false) | Resolved px                  |
+| -------------------------- | ---------------- | --------------- | ---------------------------- |
+| `paddingX`                 | `2`              | `4`             | 16px / 32px                  |
+| `paddingY`                 | `1`              | `2`             | 8px / 16px                   |
+| `borderRadius`             | `700`            | `900`           | 40px / 56px                  |
+| `iconSize`                 | `'s'`            | `'m'`           | —                            |
+| `feedback` _(mobile only)_ | `'light'`        | `'normal'`      | press/haptic                 |
+| `font`                     | `'headline'`     | `'headline'`    | 16/24 (unchanged by compact) |
 
 - Web: `packages/web/src/buttons/Button.tsx`
 - Mobile: `packages/mobile/src/buttons/Button.tsx`
@@ -68,18 +68,19 @@ Both components are structurally parallel and derive their geometry inline from 
 
 Holding `variant=primary, state=default, width=full, transparent=false, icon=none`:
 
-| size | `paddingX` (space) | `paddingY` (space) | `borderRadius` | `font` | text | height |
-| --- | --- | --- | --- | --- | --- | --- |
-| `xs` | `2` (16px) | `0.75` (6px) | `700` (40) | `label1` | 14/20 | **32px** |
-| `s`  | `2` (16px) | `1` (8px)    | `700` (40) | `headline` | 16/24 | **40px** |
-| `m`  | `3` (24px) | `1.5` (12px) | `900` (56) | `headline` | 16/24 | **48px** |
-| `l`  | `4` (32px) | `2` (16px)   | `900` (56) | `headline` | 16/24 | **56px** |
+| size | `paddingX` (space) | `paddingY` (space) | `borderRadius` | `font`     | text  | height   |
+| ---- | ------------------ | ------------------ | -------------- | ---------- | ----- | -------- |
+| `xs` | `2` (16px)         | `0.75` (6px)       | `700` (40)     | `label1`   | 14/20 | **32px** |
+| `s`  | `2` (16px)         | `1` (8px)          | `700` (40)     | `headline` | 16/24 | **40px** |
+| `m`  | `3` (24px)         | `1.5` (12px)       | `900` (56)     | `headline` | 16/24 | **48px** |
+| `l`  | `4` (32px)         | `2` (16px)         | `900` (56)     | `headline` | 16/24 | **56px** |
 
-> The **height** column is a *derived outcome* of `paddingY` + line-height, **not** a value that is
+> The **height** column is a _derived outcome_ of `paddingY` + line-height, **not** a value that is
 > ever set. Height must remain content/spacing-driven (see Rule 5). Mobile stays intrinsic and web
 > keeps `height="fit-content"`; no size adds a fixed/min height or width.
 
 Notes:
+
 - `xs`/`s` share `paddingX` (16px) and `borderRadius` (40); they differ in `paddingY` and `font`.
 - `s`/`m`/`l` share the `headline` type ramp; only `xs` drops to `label1` (14/20).
 - **`icon` size per t‑shirt size still needs confirmation from Figma** (see Open questions).
@@ -100,22 +101,27 @@ in `common` could not be strongly typed against both — it would force `any`/lo
 compile-time safety. Keeping a config per package lets each one be typed against its own
 `ButtonBaseProps` / style-prop types, so a bad token value fails typecheck in that package.
 
-Each package defines the same *values* (the spec table is the shared source of truth on paper),
+Each package defines the same _values_ (the spec table is the shared source of truth on paper),
 typed locally, e.g.:
 
 ```ts
 // packages/web/src/buttons/Button.tsx  (and mobile equivalent, typed to that package)
 const buttonSizes = {
   xs: { paddingX: 2, paddingY: 0.75, borderRadius: 700, iconSize: 's', font: 'label1' },
-  s:  { paddingX: 2, paddingY: 1,    borderRadius: 700, iconSize: 's', font: 'headline' },
-  m:  { paddingX: 3, paddingY: 1.5,  borderRadius: 900, iconSize: 'm', font: 'headline' },
-  l:  { paddingX: 4, paddingY: 2,    borderRadius: 900, iconSize: 'm', font: 'headline' },
-} as const satisfies Record<ButtonSize, { /* package-local style-prop types */ }>;
+  s: { paddingX: 2, paddingY: 1, borderRadius: 700, iconSize: 's', font: 'headline' },
+  m: { paddingX: 3, paddingY: 1.5, borderRadius: 900, iconSize: 'm', font: 'headline' },
+  l: { paddingX: 4, paddingY: 2, borderRadius: 900, iconSize: 'm', font: 'headline' },
+} as const satisfies Record<
+  ButtonSize,
+  {
+    /* package-local style-prop types */
+  }
+>;
 
 const defaultButtonSize: ButtonSize = 'l';
 ```
 
-- The `ButtonSize` string-union type (`'xs' | 's' | 'm' | 'l'`) is a plain literal union and *is*
+- The `ButtonSize` string-union type (`'xs' | 's' | 'm' | 'l'`) is a plain literal union and _is_
   safe to share if desired, but the simplest path is to declare it in each package alongside the
   map. Keep the two maps in sync manually; the spec table above is the reference.
 - Rationale for the values: the `compact` geometry (`s` and `l` rows) is a strict subset of this
@@ -134,7 +140,7 @@ Then fold `cfg` into the existing destructure defaults, preserving the current p
 - `borderRadius = borderRadius ?? cfg.borderRadius`
 - `paddingX = paddingX ?? padding ?? cfg.paddingX` (web keeps its `padding ??` shorthand)
 - `paddingY = paddingY ?? padding ?? cfg.paddingY`
-- `font = font ?? cfg.font`  ← **change**: default was hard-coded `'headline'`; now size-derived
+- `font = font ?? cfg.font` ← **change**: default was hard-coded `'headline'`; now size-derived
 - `iconSize = cfg.iconSize`
 
 > Because `resolvedSize` for the compact-only path is `'s'`, and the `'s'` row is byte-for-byte
@@ -143,18 +149,18 @@ Then fold `cfg` into the existing destructure defaults, preserving the current p
 
 ### 3. Mobile-only: `feedback`
 
-Current: `feedback = compact ? 'light' : 'normal'`. To preserve BC *and* stay consistent, tie
+Current: `feedback = compact ? 'light' : 'normal'`. To preserve BC _and_ stay consistent, tie
 the default to `resolvedSize`:
 
 ```ts
-feedback = feedbackProp ?? (resolvedSize === 'xs' || resolvedSize === 's' ? 'light' : 'normal')
+feedback = feedbackProp ?? (resolvedSize === 'xs' || resolvedSize === 's' ? 'light' : 'normal');
 ```
 
 - compact-only → `resolvedSize='s'` → `'light'` (unchanged ✅)
 - default → `'l'` → `'normal'` (unchanged ✅)
 - new `size='s'`/`'xs'` → `'light'`; `size='m'`/`'l'` → `'normal'` (consistent)
 
-This is the one spot where `compact`'s effect is *not* purely geometric, so it is called out
+This is the one spot where `compact`'s effect is _not_ purely geometric, so it is called out
 explicitly. (See Open questions if product prefers `feedback` to remain literally `compact`-gated.)
 
 ### 4. Add the `size` prop to the public type (both packages)
@@ -266,15 +272,24 @@ Files: `apps/docs/docs/components/inputs/Button/_webExamples.mdx` and `_mobileEx
    ```jsx live
    // web (_webExamples.mdx); mobile mirrors with onPress + RN layout
    <HStack gap={2} flexWrap="wrap" alignItems="center">
-     <Button onClick={console.log} size="xs">Extra small</Button>
-     <Button onClick={console.log} size="s">Small</Button>
-     <Button onClick={console.log} size="m">Medium</Button>
-     <Button onClick={console.log} size="l">Large (default)</Button>
+     <Button onClick={console.log} size="xs">
+       Extra small
+     </Button>
+     <Button onClick={console.log} size="s">
+       Small
+     </Button>
+     <Button onClick={console.log} size="m">
+       Medium
+     </Button>
+     <Button onClick={console.log} size="l">
+       Large (default)
+     </Button>
    </HStack>
    ```
 
    Include a one-line intro noting `size` defaults to `l` and that it replaces `compact`
    (`size="s"` is the direct equivalent of the old `compact`).
+
 3. **Scrub incidental `compact` usage from other examples** so no live example promotes the
    deprecated prop: update the `compact` occurrences in the **Loading**, **End Icon**, and
    **Start Icon** examples (both files) to `size="s"` (or drop the prop). This is a mechanical
