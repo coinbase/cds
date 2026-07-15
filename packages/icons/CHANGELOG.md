@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (1)
+
+- lineChartPoints
+
 ## 5.20.0 (6/24/2026 PST)
 
 #### 🚀 Updates

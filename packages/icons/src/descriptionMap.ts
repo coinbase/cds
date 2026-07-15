@@ -569,7 +569,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'peopleGroup',
     'faces',
     'group',
-    'verifiedPools'
+    'verifiedPools',
+    'lineChartPoints'
   ],
   'friends': [
     'peopleGroup',
@@ -1565,7 +1566,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'lineChartCrypto',
     'candlesticks',
     'leadChart',
-    'ipoChart'
+    'ipoChart',
+    'lineChartPoints'
   ],
   'candles': [
     'chartCandles'
@@ -2466,7 +2468,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'chartLine',
     'chartLine',
     'lineChartCrypto',
-    'filterLineStack'
+    'filterLineStack',
+    'lineChartPoints'
   ],
   'calendar': [
     'calendar',
@@ -5221,7 +5224,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'login'
   ],
   'linechart': [
-    'lineChartCrypto'
+    'lineChartCrypto',
+    'lineChartPoints'
   ],
   'Cash': [
     'cashCoins'
@@ -5988,7 +5992,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'baseball'
   ],
   'strategy': [
-    'strategy'
+    'strategy',
+    'lineChartPoints'
   ],
   'tactics': [
     'strategy'
@@ -6709,5 +6714,11 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'watch': [
     'liveEvents'
+  ],
+  'points': [
+    'lineChartPoints'
+  ],
+  'dots': [
+    'lineChartPoints'
   ]
 };
