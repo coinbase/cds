@@ -29,15 +29,14 @@ Mobile apps cache font files in the native build, so you must rebuild your app a
 
 ### Custom icon sets
 
-CDS ships a single default icon font (`@coinbase/cds-icons`). If you maintain your own icon package — with its own generated glyph map, font, and name union — use `createIcon` to build a fully-typed icon component bound to that set. It reuses all of the default `Icon`'s rendering, sizing, color, and accessibility behavior; only the glyphs, font, and `name` type change. In fact, the default `Icon` is itself `createIcon<IconName>({ glyphMap, fontFamily: 'CoinbaseIcons' })`, so this API is fully backward compatible.
+Most apps only need the default `Icon`. If you have your own icon font, `createIcon` builds a matching, fully-typed `Icon` for it that reuses the same sizing, color, and accessibility behavior — only the glyphs, font, and `name` type change. Support for building your own icon set is expected to become more self-service over time.
 
 ```jsx
 import { createIcon } from '@coinbase/cds-mobile/icons';
-// Your icon package's generated glyph map + name union
+// Your icon font's glyph map and icon-name type
 import { glyphMap } from '@my-org/icons/glyphMap';
 import type { MyIconName } from '@my-org/icons';
 
-// `name` is typed to MyIconName and behaves exactly like the default Icon
 export const MyIcon = createIcon<MyIconName>({
   glyphMap,
   fontFamily: 'MyIcons',

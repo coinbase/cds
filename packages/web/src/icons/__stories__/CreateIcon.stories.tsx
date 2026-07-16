@@ -9,8 +9,7 @@ import { Icon } from '../Icon';
 /**
  * `createIcon` bound to a different font (Google Material Icons), showing a
  * consumer can supply their own glyph map, font, and name union while reusing
- * the CDS Icon renderer. Uses a network font, so it is excluded from Percy in
- * `.percy.js`.
+ * the CDS Icon renderer.
  */
 const materialCodepoints = {
   home: 0xe88a,
