@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 
 import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
 import { Select, type SelectOption } from '../Select';
@@ -34,12 +35,12 @@ const MockSelect = ({
 };
 
 const MockMultiSelect = ({ label, size }: { label: string; size?: 's' | 'm' | 'l' }) => {
-  const [value, setValue] = useState<string[]>(['1']);
+  const { value, onChange } = useMultiSelect({ initialValue: ['1'] });
 
   return (
     <Select
       label={label}
-      onChange={(next) => setValue(next as string[])}
+      onChange={onChange}
       options={exampleOptions}
       placeholder="Select…"
       size={size}

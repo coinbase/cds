@@ -204,8 +204,9 @@ describe('DefaultSelectControl', () => {
 
   describe('Size', () => {
     const getInputArea = () => screen.getByTestId('input-interactable-area');
-    // The label is rendered inline (inside the input area) only for the compact `s` layout;
-    // for `m`/`l` it is rendered above the input (outside the input area).
+    // The label is rendered inline (inside the input area) for the legacy compact layout and for
+    // inside labels; an outside label is rendered above the input (outside the input area).
+    // labelVariant is decoupled from size, so this is driven by labelVariant/compact, not size.
     const isLabelInline = () => getInputArea().textContent?.includes('Test Select Control');
 
     it('renders the label above the input by default (size l layout)', () => {
@@ -229,17 +230,116 @@ describe('DefaultSelectControl', () => {
       expect(isLabelInline()).toBe(false);
     });
 
-    it('collapses the label inline for size="s"', () => {
+    // Regression: the fractional `m` token (space 1.5 -> 12px) must resolve to a real value.
+    // A prior bug interpolated the token into an invalid `var(--space-1.5)`, collapsing `m`'s
+    // vertical padding. Padding now comes straight from the theme space scale (8 / 12 / 16px).
+    it('applies the size-derived vertical padding for each size', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" />
+        </DefaultThemeProvider>,
+      );
+      expect(getInputArea()).toHaveStyle({ paddingTop: '8px', paddingBottom: '8px' });
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="m" />
+        </DefaultThemeProvider>,
+      );
+      expect(getInputArea()).toHaveStyle({ paddingTop: '12px', paddingBottom: '12px' });
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="l" />
+        </DefaultThemeProvider>,
+      );
+      expect(getInputArea()).toHaveStyle({ paddingTop: '16px', paddingBottom: '16px' });
+    });
+
+    // With no selection a multi-select uses its full size-derived padding; once chips are
+    // selected the padding tightens so the chip height doesn't make the control too tall
+    // (s 8->4px, m 12->8px, l 16->8px). `l` also scales its chips up to `s`, so it uses the
+    // same reduced padding as `m` but stays taller via the larger chip.
+    it('reduces multi-select vertical padding per size once options are selected', () => {
+      const sizes = [
+        { size: 's', empty: '8px', selected: '4px' },
+        { size: 'm', empty: '12px', selected: '8px' },
+        { size: 'l', empty: '16px', selected: '8px' },
+      ] as const;
+
+      sizes.forEach(({ size, empty, selected }) => {
+        const { unmount } = render(
+          <DefaultThemeProvider>
+            <DefaultSelectControl {...defaultProps} size={size} type="multi" value={[]} />
+          </DefaultThemeProvider>,
+        );
+        expect(getInputArea()).toHaveStyle({ paddingTop: empty, paddingBottom: empty });
+        unmount();
+
+        const { unmount: unmountSelected } = render(
+          <DefaultThemeProvider>
+            <DefaultSelectControl {...defaultProps} size={size} type="multi" value={['option1']} />
+          </DefaultThemeProvider>,
+        );
+        expect(getInputArea()).toHaveStyle({ paddingTop: selected, paddingBottom: selected });
+        unmountSelected();
+      });
+    });
+
+    it('renders the label above the input for size="s" with the default (outside) labelVariant', () => {
       render(
         <DefaultThemeProvider>
           <DefaultSelectControl {...defaultProps} size="s" />
         </DefaultThemeProvider>,
       );
 
+      expect(isLabelInline()).toBe(false);
+    });
+
+    it('honors labelVariant="inside" independently of size (s and m render inline)', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="inside" size="s" />
+        </DefaultThemeProvider>,
+      );
+      expect(isLabelInline()).toBe(true);
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="inside" size="m" />
+        </DefaultThemeProvider>,
+      );
       expect(isLabelInline()).toBe(true);
     });
 
-    it('deprecated compact (alone) still collapses the label inline (size s layout)', () => {
+    it('stacks an inside label inside the control at size="l"', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="inside" size="l" />
+        </DefaultThemeProvider>,
+      );
+
+      // Inside-vertical: the label sits inside the input area, above the value.
+      expect(isLabelInline()).toBe(true);
+    });
+
+    it('renders an explicit outside label above the input at every size', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="outside" size="s" />
+        </DefaultThemeProvider>,
+      );
+      expect(isLabelInline()).toBe(false);
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="outside" size="l" />
+        </DefaultThemeProvider>,
+      );
+      expect(isLabelInline()).toBe(false);
+    });
+
+    it('deprecated compact (alone) still collapses the label inline (legacy layout)', () => {
       render(
         <DefaultThemeProvider>
           <DefaultSelectControl {...defaultProps} compact />

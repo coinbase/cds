@@ -7,6 +7,7 @@ import { HelperText } from '../../controls/HelperText';
 import { InputLabel } from '../../controls/InputLabel';
 import { InputStack } from '../../controls/InputStack';
 import { cx } from '../../cx';
+import { useTheme } from '../../hooks/useTheme';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
@@ -22,11 +23,19 @@ import {
   type SelectType,
 } from './Select';
 
+// Multi-select selected chips add their own height.
+// `multiSelectPaddingY` tightens the row so the overall height stays in check per size.
 const selectSizes = {
   s: { paddingY: 1 },
   m: { paddingY: 1.5 },
   l: { paddingY: 2 },
-} as const satisfies Record<SelectSize, { paddingY: 0.75 | 1 | 1.5 | 2 }>;
+} as const satisfies Record<SelectSize, Partial<SelectControlProps>>;
+
+const multiSelectSizes = {
+  s: { paddingY: 0.5 },
+  m: { paddingY: 1 },
+  l: { paddingY: 1 },
+} as const satisfies Record<SelectSize, Partial<SelectControlProps>>;
 
 const defaultSelectSize: SelectSize = 'l';
 
@@ -113,6 +122,7 @@ const DefaultSelectControlComponent = memo(
     ) => {
       const isInteractionBlocked = disabled || readOnly;
       const disableFocusedStyle = !bordered && focusedBorderWidth === 200;
+      const theme = useTheme();
 
       const handleToggleOpen = useCallback(() => {
         if (isInteractionBlocked) return;
@@ -125,15 +135,21 @@ const DefaultSelectControlComponent = memo(
       const isMultiSelect = type === 'multi';
       // `size` wins when both `size` and the deprecated `compact` are provided.
       const resolvedSize = size ?? (compact ? 's' : defaultSelectSize);
-      const sizeConfig = selectSizes[resolvedSize];
-      // The `s` size collapses the label into the input row (the legacy compact layout).
-      const isCompactLayout = resolvedSize === 's';
-      // When using the compact layout, labelVariant is ignored
-      const labelVariant = isCompactLayout ? undefined : labelVariantProp;
-      // horizontal/inline label is used for the compact layout except for multi-selects
-      // multi-selects render their label outside of the control unless labelVariant is set to 'inside'
-      const shouldShowCompactLabel = isCompactLayout && label && !isMultiSelect;
-      const shouldShowInsideLabel = labelVariant === 'inside' && !isCompactLayout && label;
+
+      // Label placement is decoupled from `size` (mirrors TextInput's useTextInputDensity):
+      // `labelVariant` is honored at every size. The deprecated `compact` prop forces the legacy
+      // inline label ONLY when `size` is unset — `size` wins over `compact`.
+      const useLegacyCompact = Boolean(compact) && size === undefined;
+      const labelVariant = useLegacyCompact ? undefined : labelVariantProp;
+      // An inside label stacks vertically at size `l` (and for multi-select, which can't host an
+      // inline label); at `s`/`m` it sits inline in the start slot. Legacy compact is always inline.
+      // Multi-selects otherwise render their label outside the control.
+      const shouldShowInsideLabel =
+        !!label && labelVariant === 'inside' && (resolvedSize === 'l' || isMultiSelect);
+      const shouldShowCompactLabel =
+        !!label &&
+        !isMultiSelect &&
+        (useLegacyCompact || (labelVariant === 'inside' && resolvedSize !== 'l'));
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
       // Map of options to their values
       // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
@@ -344,7 +360,6 @@ const DefaultSelectControlComponent = memo(
                 return (
                   <InputChip
                     key={option.value}
-                    compact
                     data-selected-value
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
                     borderWidth={0}
@@ -357,15 +372,15 @@ const DefaultSelectControlComponent = memo(
                         ? undefined
                         : (event) => handleUnselectValue(event, index)
                     }
+                    // larger select allows for larger chip size
+                    size={size === 'l' ? 's' : 'xs'}
                   >
-                    <Text color="fg" flexShrink={1} font="label1" overflow="truncate">
-                      {option.label ?? option.description ?? option.value ?? ''}
-                    </Text>
+                    {option.label ?? option.description ?? option.value ?? ''}
                   </InputChip>
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <InputChip compact borderWidth={0} end={null} invertColorScheme={false}>
+                <InputChip borderWidth={0} end={null} invertColorScheme={false} size="xs">
                   {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
                 </InputChip>
               )}
@@ -401,6 +416,7 @@ const DefaultSelectControlComponent = memo(
         removeSelectedOptionAccessibilityLabel,
         handleUnselectValue,
         isInteractionBlocked,
+        size,
       ]);
 
       const inputNode = useMemo(
@@ -551,21 +567,30 @@ const DefaultSelectControlComponent = memo(
         ],
       );
 
-      const inputStackStyles = useMemo(
-        () => ({
-          paddingTop:
-            isCompactLayout || labelVariant === 'inside'
-              ? 'var(--space-1)'
-              : `var(--space-${sizeConfig.paddingY})`,
-          paddingBottom:
-            isCompactLayout || labelVariant === 'inside'
-              ? 'var(--space-1)'
-              : `var(--space-${sizeConfig.paddingY})`,
-          paddingLeft: 'var(--space-2)',
-          paddingRight: 'var(--space-2)',
-        }),
-        [isCompactLayout, labelVariant, sizeConfig.paddingY],
-      );
+      const inputStackStyles = useMemo(() => {
+        // An inline (start-slot) or inside label tightens the row. Otherwise use size-derived
+        // padding — except a multi-select with selected chips, whose chip height already makes
+        // the row tall, so cap the vertical padding at space 1.5 to keep the height in check.
+        const paddingY =
+          shouldShowCompactLabel || shouldShowInsideLabel
+            ? theme.space[1]
+            : isMultiSelect && hasValue
+              ? theme.space[multiSelectSizes[resolvedSize].paddingY]
+              : theme.space[selectSizes[resolvedSize].paddingY];
+        return {
+          paddingTop: paddingY,
+          paddingBottom: paddingY,
+          paddingLeft: theme.space[2],
+          paddingRight: theme.space[2],
+        };
+      }, [
+        shouldShowCompactLabel,
+        shouldShowInsideLabel,
+        isMultiSelect,
+        hasValue,
+        theme.space,
+        resolvedSize,
+      ]);
 
       return (
         <InputStack

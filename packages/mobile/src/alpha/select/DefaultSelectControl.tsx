@@ -17,11 +17,17 @@ import { Text } from '../../typography/Text';
 import type { SelectControlProps, SelectOption, SelectSize, SelectType } from './Select';
 import { isSelectOptionGroup } from './Select';
 
+// Multi-select selected chips add their own height. `chipSize` scales the chips with the
+// control (`l` has room for the larger `s` chip; smaller sizes use `xs`), and
+// `multiSelectPaddingY` tightens the row so the overall height stays in check per size.
 const selectSizes = {
-  s: { paddingY: 1 },
-  m: { paddingY: 1.5 },
-  l: { paddingY: 2 },
-} as const satisfies Record<SelectSize, { paddingY: 1 | 1.5 | 2 }>;
+  s: { paddingY: 1, multiSelectPaddingY: 0.5, chipSize: 'xs' },
+  m: { paddingY: 1.5, multiSelectPaddingY: 1, chipSize: 'xs' },
+  l: { paddingY: 2, multiSelectPaddingY: 1, chipSize: 's' },
+} as const satisfies Record<
+  SelectSize,
+  { paddingY: 1 | 1.5 | 2; multiSelectPaddingY: 0.5 | 1 | 1.5; chipSize: 'xs' | 's' }
+>;
 
 const defaultSelectSize: SelectSize = 'l';
 
@@ -101,13 +107,21 @@ export const DefaultSelectControlComponent = memo(
     // `size` wins when both `size` and the deprecated `compact` are provided.
     const resolvedSize = size ?? (compact ? 's' : defaultSelectSize);
     const sizeConfig = selectSizes[resolvedSize];
-    // The `s` size collapses the label into the input row (the legacy compact layout).
-    const isCompactLayout = resolvedSize === 's';
-    // When using the compact layout, labelVariant is ignored
-    const labelVariant = isCompactLayout ? undefined : labelVariantProp;
     const isMultiSelect = type === 'multi';
-    const shouldShowCompactLabel = isCompactLayout && label && !isMultiSelect;
-    const shouldShowInsideLabel = labelVariant === 'inside' && !isCompactLayout && label;
+    // Label placement is decoupled from `size` (mirrors TextInput's useTextInputDensity):
+    // `labelVariant` is honored at every size. The deprecated `compact` prop forces the legacy
+    // inline label ONLY when `size` is unset — `size` wins over `compact`.
+    const useLegacyCompact = Boolean(compact) && size === undefined;
+    const labelVariant = useLegacyCompact ? undefined : labelVariantProp;
+    // An inside label stacks vertically at size `l` (and for multi-select, which can't host an
+    // inline label); at `s`/`m` it sits inline in the start slot. Legacy compact is always inline.
+    // Multi-selects otherwise render their label outside the control.
+    const shouldShowInsideLabel =
+      !!label && labelVariant === 'inside' && (resolvedSize === 'l' || isMultiSelect);
+    const shouldShowCompactLabel =
+      !!label &&
+      !isMultiSelect &&
+      (useLegacyCompact || (labelVariant === 'inside' && resolvedSize !== 'l'));
     const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
     // Map of options to their values
@@ -299,7 +313,7 @@ export const DefaultSelectControlComponent = memo(
               return (
                 <InputChip
                   key={option.value}
-                  compact
+                  size={sizeConfig.chipSize}
                   accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
                   borderWidth={0}
                   disabled={disabled || option.disabled}
@@ -319,7 +333,12 @@ export const DefaultSelectControlComponent = memo(
               );
             })}
             {value.length - maxSelectedOptionsToShow > 0 && (
-              <InputChip compact borderWidth={0} end={null} invertColorScheme={false}>
+              <InputChip
+                size={sizeConfig.chipSize}
+                borderWidth={0}
+                end={null}
+                invertColorScheme={false}
+              >
                 {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
               </InputChip>
             )}
@@ -451,21 +470,30 @@ export const DefaultSelectControlComponent = memo(
       [styles?.controlEndNode, disabled, customEndNode, open, handleToggleOpen],
     );
 
-    const inputStackStyles: StyleProp<ViewStyle> = useMemo(
-      () => ({
-        paddingTop:
-          isCompactLayout || labelVariant === 'inside'
-            ? theme.space[1]
-            : theme.space[sizeConfig.paddingY],
-        paddingBottom:
-          isCompactLayout || labelVariant === 'inside'
-            ? theme.space[1]
-            : theme.space[sizeConfig.paddingY],
+    const inputStackStyles: StyleProp<ViewStyle> = useMemo(() => {
+      // An inline (start-slot) or inside label tightens the row. Otherwise use size-derived
+      // padding — except a multi-select with selected chips, whose chip height already makes
+      // the row tall, so cap the vertical padding at space 1.5 to keep the height in check.
+      const paddingY =
+        shouldShowCompactLabel || shouldShowInsideLabel
+          ? theme.space[1]
+          : isMultiSelect && hasValue
+            ? theme.space[sizeConfig.multiSelectPaddingY]
+            : theme.space[sizeConfig.paddingY];
+      return {
+        paddingTop: paddingY,
+        paddingBottom: paddingY,
         paddingLeft: theme.space[2],
         paddingRight: theme.space[2],
-      }),
-      [isCompactLayout, labelVariant, sizeConfig.paddingY, theme.space],
-    );
+      };
+    }, [
+      shouldShowCompactLabel,
+      shouldShowInsideLabel,
+      isMultiSelect,
+      hasValue,
+      sizeConfig.paddingY,
+      theme.space,
+    ]);
 
     return (
       <InputStack
