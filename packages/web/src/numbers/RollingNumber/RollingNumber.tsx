@@ -302,12 +302,19 @@ export type RollingNumberBaseProps = SharedProps &
      */
     locale?: Intl.LocalesArgument;
     /**
-     * Base text color token. When {@link colorPulseOnUpdate} is true, the color briefly pulses to a positive or negative mid color before returning to this base color.
+     * Base text color token. When {@link colorPulseOnUpdate} is true, the color briefly pulses to a
+     * positive or negative mid color before returning to this base color.
+     *
+     * To apply a non-token color (e.g. a hex string), set `color` via an inline style or className
+     * instead (`style`, `styles.root`, `styles.visibleContent`, `styles.text`, or `classNames`).
+     * A custom color is not compatible with {@link colorPulseOnUpdate}.
      * @default 'fg'
      */
     color?: ThemeVars.Color;
     /**
-     * Enables color pulsing on positive or negative changes.
+     * Enables color pulsing on positive or negative changes. Only works with the token-driven
+     * {@link color} prop — it will not work if a custom color is applied via an inline style or
+     * className.
      */
     colorPulseOnUpdate?: boolean;
     /**
@@ -360,48 +367,48 @@ export type RollingNumberProps<AsComponent extends React.ElementType> = Polymorp
   RollingNumberBaseProps & {
     /** Custom class names for individual elements of the RollingNumber component */
     classNames?: {
-      /** Outer container element */
+      /** Outer container element. */
       root?: string;
-      /** Animated visible content wrapper */
+      /** Wrapper around the visible number (prefix, value, and suffix). */
       visibleContent?: string;
-      /** Formatted numeric value wrapper */
+      /** Wrapper around the formatted numeric value (the four i18n sections). */
       formattedValueSection?: string;
-      /** Prefix section (from props) */
+      /** Container for the `prefix` prop content. */
       prefix?: string;
-      /** Suffix section (from props) */
+      /** Container for the `suffix` prop content. */
       suffix?: string;
-      /** Prefix from Intl.NumberFormat (e.g. "$" in "$1,000") */
+      /** Container for the Intl.NumberFormat-generated prefix (e.g. "$" in "$1,000"). */
       i18nPrefix?: string;
-      /** Suffix from Intl.NumberFormat (e.g. "K" in "100K") */
+      /** Container for the Intl.NumberFormat-generated suffix (e.g. "K" in "100K"). */
       i18nSuffix?: string;
-      /** Integer portion of formatted value */
+      /** Container for the integer portion of the value. */
       integer?: string;
-      /** Fractional portion of formatted value */
+      /** Container for the fractional portion of the value. */
       fraction?: string;
-      /** Text element for digits and symbols */
+      /** Every text element — digits, symbols, prefix text, and suffix text. */
       text?: string;
     };
     /** Custom styles for individual elements of the RollingNumber component */
     styles?: {
-      /** Outer container element */
+      /** Outer container element. */
       root?: React.CSSProperties;
-      /** Animated visible content wrapper */
+      /** Wrapper around the visible number (prefix, value, and suffix). */
       visibleContent?: React.CSSProperties;
-      /** Formatted numeric value wrapper */
+      /** Wrapper around the formatted numeric value (the four i18n sections). */
       formattedValueSection?: React.CSSProperties;
-      /** Prefix section (from props) */
+      /** Container for the `prefix` prop content. */
       prefix?: React.CSSProperties;
-      /** Suffix section (from props) */
+      /** Container for the `suffix` prop content. */
       suffix?: React.CSSProperties;
-      /** Prefix from Intl.NumberFormat (e.g. "$" in "$1,000") */
+      /** Container for the Intl.NumberFormat-generated prefix (e.g. "$" in "$1,000"). */
       i18nPrefix?: React.CSSProperties;
-      /** Suffix from Intl.NumberFormat (e.g. "K" in "100K") */
+      /** Container for the Intl.NumberFormat-generated suffix (e.g. "K" in "100K"). */
       i18nSuffix?: React.CSSProperties;
-      /** Integer portion of formatted value */
+      /** Container for the integer portion of the value. */
       integer?: React.CSSProperties;
-      /** Fractional portion of formatted value */
+      /** Container for the fractional portion of the value. */
       fraction?: React.CSSProperties;
-      /** Text element for digits and symbols */
+      /** Style applied to every text element — digits, symbols, prefix text, and suffix text. */
       text?: React.CSSProperties;
     };
   }

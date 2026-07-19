@@ -246,6 +246,13 @@ export const useDrawerPanResponder = ({
           animateSnapBack.start();
         }
       },
+      // On termination (e.g. a child gesture takes over the touch), reconcile
+      // the offsets applied on grant so the next close isn't mispositioned.
+      onPanResponderTerminate: () => {
+        drawerAnimation.flattenOffset();
+        opacityAnimation.flattenOffset();
+        animateSnapBack.start();
+      },
     });
   }, [
     drawerAnimation,

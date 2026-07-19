@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
@@ -44,94 +44,92 @@ export type ContentCardHeaderBaseProps = SharedProps & {
 
 export type ContentCardHeaderProps = ContentCardHeaderBaseProps & HStackProps;
 
-export const ContentCardHeader = memo(
-  forwardRef(function ContentCardHeader(
-    {
-      avatar,
-      title,
-      meta,
-      end,
-      subtitle = meta,
-      actions = end,
-      thumbnail,
-      gap = 1.5,
-      testID,
-      styles,
-      style,
-      ...props
-    }: ContentCardHeaderProps,
-    ref: React.ForwardedRef<View>,
-  ) {
-    const titleNode = useMemo(() => {
-      if (typeof title === 'string') {
-        return (
-          <Text font="label1" numberOfLines={1}>
-            {title}
-          </Text>
-        );
-      }
-      return title;
-    }, [title]);
+export const ContentCardHeader = memo(function ContentCardHeader({
+  ref,
+  avatar,
+  title,
+  meta,
+  end,
+  subtitle = meta,
+  actions = end,
+  thumbnail,
+  gap = 1.5,
+  testID,
+  styles,
+  style,
+  ...props
+}: ContentCardHeaderProps & {
+  ref?: React.Ref<View>;
+}) {
+  const titleNode = useMemo(() => {
+    if (typeof title === 'string') {
+      return (
+        <Text font="label1" numberOfLines={1}>
+          {title}
+        </Text>
+      );
+    }
+    return title;
+  }, [title]);
 
-    const subtitleNode = useMemo(() => {
-      if (typeof subtitle === 'string') {
-        return (
-          <Text color="fgMuted" font="legal" numberOfLines={1}>
-            {subtitle}
-          </Text>
-        );
-      }
-      return subtitle;
-    }, [subtitle]);
+  const subtitleNode = useMemo(() => {
+    if (typeof subtitle === 'string') {
+      return (
+        <Text color="fgMuted" font="legal" numberOfLines={1}>
+          {subtitle}
+        </Text>
+      );
+    }
+    return subtitle;
+  }, [subtitle]);
 
-    const thumbnailNode = useMemo(() => {
-      // Use new thumbnail prop if provided
-      if (thumbnail) return thumbnail;
-      // Fallback to deprecated avatar prop (supports string for backward compatibility)
-      if (typeof avatar === 'string') {
-        return (
-          <Avatar
-            accessibilityLabel={typeof title === 'string' ? title : undefined}
-            name={typeof title === 'string' ? title : undefined}
-            shape="circle"
-            size="l"
-            src={avatar}
-          />
-        );
-      }
-      return avatar;
-    }, [thumbnail, avatar, title]);
+  const thumbnailNode = useMemo(() => {
+    // Use new thumbnail prop if provided
+    if (thumbnail) return thumbnail;
+    // Fallback to deprecated avatar prop (supports string for backward compatibility)
+    if (typeof avatar === 'string') {
+      return (
+        <Avatar
+          accessibilityLabel={typeof title === 'string' ? title : undefined}
+          name={typeof title === 'string' ? title : undefined}
+          shape="circle"
+          size="l"
+          src={avatar}
+        />
+      );
+    }
+    return avatar;
+  }, [thumbnail, avatar, title]);
 
-    return (
+  return (
+    <HStack
+      ref={ref}
+      alignItems="center"
+      gap={gap}
+      justifyContent="space-between"
+      style={[styles?.root, style]}
+      testID={testID}
+      {...props}
+    >
       <HStack
-        ref={ref}
         alignItems="center"
-        gap={gap}
-        justifyContent="space-between"
-        style={[styles?.root, style]}
-        testID={testID}
-        {...props}
+        flexGrow={1}
+        flexShrink={1}
+        gap={1.5}
+        style={styles?.contentContainer}
       >
-        <HStack
-          alignItems="center"
+        {thumbnailNode}
+        <VStack
           flexGrow={1}
           flexShrink={1}
-          gap={1.5}
-          style={styles?.contentContainer}
+          justifyContent="flex-start"
+          style={styles?.textContainer}
         >
-          {thumbnailNode}
-          <VStack
-            flexGrow={1}
-            flexShrink={1}
-            justifyContent="flex-start"
-            style={styles?.textContainer}
-          >
-            {titleNode}
-            {subtitleNode}
-          </VStack>
-        </HStack>
-        {actions}
+          {titleNode}
+          {subtitleNode}
+        </VStack>
       </HStack>
-    );
-  }),
-);
+      {actions}
+    </HStack>
+  );
+});

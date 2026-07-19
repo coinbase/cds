@@ -40,7 +40,7 @@ describe('Text', () => {
         { wrapper },
       );
 
-      expect(screen.UNSAFE_queryAllByType(Text)).toHaveLength(1);
+      expect(screen.getAllByTestId(`text-${fontName}`)).toHaveLength(1);
       expect(screen.getByText('Text')).toBeTruthy();
       expect(screen.getByTestId(`text-${fontName}`)).toBeAccessible();
     });

@@ -1,6 +1,5 @@
 import {
   createContext,
-  forwardRef,
   memo,
   useCallback,
   useContext,
@@ -166,215 +165,215 @@ const ComboboxControlContextAdapter = memo(
 ) as ComboboxControlContextAdapterType;
 
 const ComboboxBase = memo(
-  forwardRef(
-    <Type extends SelectType = 'single', SelectOptionValue extends string = string>(
-      _props: ComboboxProps<Type, SelectOptionValue>,
-      ref: React.Ref<ComboboxRef>,
-    ) => {
-      const mergedProps = useComponentConfig('Combobox', _props);
-      const {
-        type = 'single' as Type,
-        value,
-        onChange,
-        options,
-        open: openProp,
-        setOpen: setOpenProp,
+  <Type extends SelectType = 'single', SelectOptionValue extends string = string>({
+    ref,
+    ..._props
+  }: ComboboxProps<Type, SelectOptionValue> & {
+    ref?: React.Ref<ComboboxRef>;
+  }) => {
+    const mergedProps = useComponentConfig('Combobox', _props);
+    const {
+      type = 'single' as Type,
+      value,
+      onChange,
+      options,
+      open: openProp,
+      setOpen: setOpenProp,
+      label,
+      placeholder,
+      disabled,
+      variant,
+      startNode,
+      endNode,
+      align,
+      accessibilityLabel = typeof label === 'string' ? label : 'Combobox control',
+      defaultOpen,
+      searchText: searchTextProp,
+      onSearch: onSearchProp,
+      defaultSearchText = '',
+      closeButtonLabel = 'Done',
+      filterFunction,
+      SelectControlComponent = DefaultSelectControl,
+      ComboboxControlComponent = DefaultComboboxControl,
+      SelectDropdownComponent = DefaultSelectDropdown,
+      hideSearchInput,
+      font,
+      ...props
+    } = mergedProps;
+    const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
+    const searchText = searchTextProp ?? searchTextInternal;
+    const setSearchText = onSearchProp ?? setSearchTextInternal;
+    if ((typeof searchTextProp === 'undefined') !== (typeof onSearchProp === 'undefined')) {
+      throw Error(
+        'Combobox component must be fully controlled or uncontrolled: "searchText" and "onSearch" props must be provided together or not at all',
+      );
+    }
+
+    const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
+    const open = openProp ?? openInternal;
+    const setOpen = setOpenProp ?? setOpenInternal;
+    if ((typeof openProp === 'undefined') !== (typeof setOpenProp === 'undefined'))
+      throw Error(
+        'Combobox component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
+      );
+
+    const fuse = useMemo(
+      () =>
+        new Fuse(options, {
+          keys: ['label', 'description'],
+          threshold: 0.3,
+        }),
+      [options],
+    );
+
+    const filteredOptions = useMemo(() => {
+      if (searchText.length === 0) return options;
+      if (filterFunction) return filterFunction(options, searchText);
+      return fuse.search(searchText).map((result) => result.item);
+    }, [filterFunction, fuse, options, searchText]);
+
+    const handleChange = useCallback(
+      (
+        value: Type extends 'multi'
+          ? SelectOptionValue | SelectOptionValue[] | null
+          : SelectOptionValue | null,
+      ) => {
+        onChange?.(value);
+      },
+      [onChange],
+    );
+
+    const controlRef = useRef<ComboboxRef>(null);
+    useImperativeHandle(ref, () =>
+      Object.assign(controlRef.current as ComboboxRef, {
+        open,
+        setOpen,
+      }),
+    );
+
+    const searchInputRef = useRef<TextInput | null>(null);
+    const safeBottomPadding = useSafeBottomPadding();
+    const handleTrayVisibilityChange = useCallback((visibility: 'visible' | 'hidden') => {
+      if (visibility === 'visible') {
+        searchInputRef.current?.focus();
+      }
+    }, []);
+
+    const ComboboxControl = useCallback(
+      (props: SelectControlProps<Type, SelectOptionValue>) => {
+        return (
+          <ComboboxControlContextAdapter
+            {...props}
+            ComboboxControlComponent={ComboboxControlComponent}
+            SelectControlComponent={SelectControlComponent}
+            controlRef={controlRef}
+            font={font}
+            searchInputRef={searchInputRef}
+          />
+        );
+      },
+      [ComboboxControlComponent, SelectControlComponent, font, searchInputRef],
+    );
+
+    const ComboboxDropdown = useCallback(
+      (props: SelectDropdownProps<Type, SelectOptionValue>) => (
+        <SelectDropdownComponent
+          label={label}
+          minHeight={500}
+          {...props}
+          footer={({ handleClose }) => (
+            <KeyboardAvoidingView
+              behavior="padding"
+              keyboardVerticalOffset={Platform.OS === 'ios' ? 106 : 0}
+            >
+              <View
+                style={
+                  Platform.OS === 'android' ? { overflow: 'hidden', paddingTop: 4 } : undefined
+                }
+              >
+                <StickyFooter
+                  background="bgElevation2"
+                  elevation={2}
+                  style={{
+                    paddingBottom: safeBottomPadding,
+                  }}
+                >
+                  <Button compact onPress={handleClose}>
+                    {closeButtonLabel}
+                  </Button>
+                </StickyFooter>
+              </View>
+            </KeyboardAvoidingView>
+          )}
+          header={
+            <Box paddingX={3}>
+              <ComboboxControl
+                accessibilityLabel={accessibilityLabel}
+                align={align}
+                endNode={endNode}
+                placeholder={placeholder}
+                startNode={startNode}
+                variant={variant}
+                {...props}
+                font={font}
+                label={null}
+                styles={undefined}
+              />
+            </Box>
+          }
+          onVisibilityChange={handleTrayVisibilityChange}
+        />
+      ),
+      [
+        ComboboxControl,
+        SelectDropdownComponent,
+        accessibilityLabel,
+        align,
+        closeButtonLabel,
+        endNode,
+        font,
+        handleTrayVisibilityChange,
         label,
         placeholder,
-        disabled,
-        variant,
+        safeBottomPadding,
         startNode,
-        endNode,
-        align,
-        accessibilityLabel = typeof label === 'string' ? label : 'Combobox control',
-        defaultOpen,
-        searchText: searchTextProp,
-        onSearch: onSearchProp,
-        defaultSearchText = '',
-        closeButtonLabel = 'Done',
-        filterFunction,
-        SelectControlComponent = DefaultSelectControl,
-        ComboboxControlComponent = DefaultComboboxControl,
-        SelectDropdownComponent = DefaultSelectDropdown,
-        hideSearchInput,
-        font,
-        ...props
-      } = mergedProps;
-      const [searchTextInternal, setSearchTextInternal] = useState(defaultSearchText);
-      const searchText = searchTextProp ?? searchTextInternal;
-      const setSearchText = onSearchProp ?? setSearchTextInternal;
-      if ((typeof searchTextProp === 'undefined') !== (typeof onSearchProp === 'undefined')) {
-        throw Error(
-          'Combobox component must be fully controlled or uncontrolled: "searchText" and "onSearch" props must be provided together or not at all',
-        );
-      }
+        variant,
+      ],
+    );
 
-      const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
-      const open = openProp ?? openInternal;
-      const setOpen = setOpenProp ?? setOpenInternal;
-      if ((typeof openProp === 'undefined') !== (typeof setOpenProp === 'undefined'))
-        throw Error(
-          'Combobox component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
-        );
-
-      const fuse = useMemo(
-        () =>
-          new Fuse(options, {
-            keys: ['label', 'description'],
-            threshold: 0.3,
-          }),
-        [options],
-      );
-
-      const filteredOptions = useMemo(() => {
-        if (searchText.length === 0) return options;
-        if (filterFunction) return filterFunction(options, searchText);
-        return fuse.search(searchText).map((result) => result.item);
-      }, [filterFunction, fuse, options, searchText]);
-
-      const handleChange = useCallback(
-        (
-          value: Type extends 'multi'
-            ? SelectOptionValue | SelectOptionValue[] | null
-            : SelectOptionValue | null,
-        ) => {
-          onChange?.(value);
-        },
-        [onChange],
-      );
-
-      const controlRef = useRef<ComboboxRef>(null);
-      useImperativeHandle(ref, () =>
-        Object.assign(controlRef.current as ComboboxRef, {
-          open,
-          setOpen,
-        }),
-      );
-
-      const searchInputRef = useRef<TextInput | null>(null);
-      const safeBottomPadding = useSafeBottomPadding();
-      const handleTrayVisibilityChange = useCallback((visibility: 'visible' | 'hidden') => {
-        if (visibility === 'visible') {
-          searchInputRef.current?.focus();
-        }
-      }, []);
-
-      const ComboboxControl = useCallback(
-        (props: SelectControlProps<Type, SelectOptionValue>) => {
-          return (
-            <ComboboxControlContextAdapter
-              {...props}
-              ComboboxControlComponent={ComboboxControlComponent}
-              SelectControlComponent={SelectControlComponent}
-              controlRef={controlRef}
-              font={font}
-              searchInputRef={searchInputRef}
-            />
-          );
-        },
-        [ComboboxControlComponent, SelectControlComponent, font, searchInputRef],
-      );
-
-      const ComboboxDropdown = useCallback(
-        (props: SelectDropdownProps<Type, SelectOptionValue>) => (
-          <SelectDropdownComponent
-            label={label}
-            minHeight={500}
-            {...props}
-            footer={({ handleClose }) => (
-              <KeyboardAvoidingView
-                behavior="padding"
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 106 : 0}
-              >
-                <View
-                  style={
-                    Platform.OS === 'android' ? { overflow: 'hidden', paddingTop: 4 } : undefined
-                  }
-                >
-                  <StickyFooter
-                    background="bgElevation2"
-                    elevation={2}
-                    style={{
-                      paddingBottom: safeBottomPadding,
-                    }}
-                  >
-                    <Button compact onPress={handleClose}>
-                      {closeButtonLabel}
-                    </Button>
-                  </StickyFooter>
-                </View>
-              </KeyboardAvoidingView>
-            )}
-            header={
-              <Box paddingX={3}>
-                <ComboboxControl
-                  accessibilityLabel={accessibilityLabel}
-                  align={align}
-                  endNode={endNode}
-                  placeholder={placeholder}
-                  startNode={startNode}
-                  variant={variant}
-                  {...props}
-                  font={font}
-                  label={null}
-                  styles={undefined}
-                />
-              </Box>
-            }
-            onVisibilityChange={handleTrayVisibilityChange}
-          />
-        ),
-        [
-          ComboboxControl,
-          SelectDropdownComponent,
-          accessibilityLabel,
-          align,
-          closeButtonLabel,
-          endNode,
-          font,
-          handleTrayVisibilityChange,
-          label,
-          placeholder,
-          safeBottomPadding,
-          startNode,
-          variant,
-        ],
-      );
-
-      return (
-        <ComboboxContext.Provider
-          value={{
-            searchText,
-            onSearch: setSearchText,
-            hideSearchInput: hideSearchInput ?? false,
-            options,
-          }}
-        >
-          <Select
-            ref={controlRef}
-            SelectControlComponent={ComboboxControl}
-            SelectDropdownComponent={ComboboxDropdown}
-            accessibilityLabel={accessibilityLabel}
-            align={align}
-            defaultOpen={defaultOpen}
-            disabled={disabled}
-            endNode={endNode}
-            label={label}
-            onChange={handleChange}
-            open={open}
-            options={filteredOptions}
-            placeholder={placeholder}
-            setOpen={setOpen}
-            startNode={startNode}
-            type={type}
-            value={value}
-            variant={variant}
-            {...props}
-          />
-        </ComboboxContext.Provider>
-      );
-    },
-  ),
+    return (
+      <ComboboxContext.Provider
+        value={{
+          searchText,
+          onSearch: setSearchText,
+          hideSearchInput: hideSearchInput ?? false,
+          options,
+        }}
+      >
+        <Select
+          ref={controlRef}
+          SelectControlComponent={ComboboxControl}
+          SelectDropdownComponent={ComboboxDropdown}
+          accessibilityLabel={accessibilityLabel}
+          align={align}
+          defaultOpen={defaultOpen}
+          disabled={disabled}
+          endNode={endNode}
+          label={label}
+          onChange={handleChange}
+          open={open}
+          options={filteredOptions}
+          placeholder={placeholder}
+          setOpen={setOpen}
+          startNode={startNode}
+          type={type}
+          value={value}
+          variant={variant}
+          {...props}
+        />
+      </ComboboxContext.Provider>
+    );
+  },
 );
 
 export const Combobox = ComboboxBase as ComboboxComponent;

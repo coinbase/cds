@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useContext } from 'react';
+import React, { memo, useContext } from 'react';
 import type { View } from 'react-native';
 import type { IconButtonVariant } from '@coinbase/cds-common/types/IconButtonBaseProps';
 import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
@@ -25,32 +25,30 @@ export type InputIconButtonProps = IconButtonProps & {
   disableInheritFocusStyle?: boolean;
 };
 
-export const InputIconButton = memo(
-  forwardRef<View, InputIconButtonProps>(function InputIconButton(
-    {
-      disableInheritFocusStyle = false,
-      testID,
-      variant = 'primary',
-      accessibilityLabel,
-      accessibilityHint,
-      ...props
-    },
-    ref,
-  ) {
-    const contextVariant = useContext(TextInputFocusVariantContext);
-    const transformedVariant = contextVariant ? variantTransformMap[contextVariant] : variant;
+export const InputIconButton = memo(function InputIconButton({
+  ref,
+  disableInheritFocusStyle = false,
+  testID,
+  variant = 'primary',
+  accessibilityLabel,
+  accessibilityHint,
+  ...props
+}: InputIconButtonProps & {
+  ref?: React.Ref<View>;
+}) {
+  const contextVariant = useContext(TextInputFocusVariantContext);
+  const transformedVariant = contextVariant ? variantTransformMap[contextVariant] : variant;
 
-    return (
-      <Box paddingEnd={0.5} paddingStart={1} testID={testID}>
-        <IconButton
-          ref={ref}
-          transparent
-          accessibilityHint={accessibilityHint ?? props.name}
-          accessibilityLabel={accessibilityLabel ?? props.name}
-          variant={disableInheritFocusStyle ? variant : transformedVariant}
-          {...props}
-        />
-      </Box>
-    );
-  }),
-);
+  return (
+    <Box paddingEnd={0.5} paddingStart={1} testID={testID}>
+      <IconButton
+        ref={ref}
+        transparent
+        accessibilityHint={accessibilityHint ?? props.name}
+        accessibilityLabel={accessibilityLabel ?? props.name}
+        variant={disableInheritFocusStyle ? variant : transformedVariant}
+        {...props}
+      />
+    </Box>
+  );
+});

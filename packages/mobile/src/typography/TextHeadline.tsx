@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { Text as NativeText } from 'react-native';
 
 import { Text, type TextBaseProps, type TextProps } from './Text';
@@ -20,7 +20,11 @@ export type TextHeadlineProps = TextProps;
  * @deprecationExpectedRemoval v10
  */
 export const TextHeadline = memo(
-  forwardRef<NativeText, TextHeadlineProps>(({ font = 'headline', ...props }, ref) => (
-    <Text ref={ref} font={font} {...props} />
-  )),
+  ({
+    ref,
+    font = 'headline',
+    ...props
+  }: TextHeadlineProps & {
+    ref?: React.Ref<NativeText>;
+  }) => <Text ref={ref} font={font} {...props} />,
 );

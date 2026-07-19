@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useEffect, useId, useMemo } from 'react';
+import React, { memo, useCallback, useEffect, useId, useMemo } from 'react';
 import { type AccessibilityActionEvent, type StyleProp, View, type ViewStyle } from 'react-native';
 import type { ForwardedRef } from 'react';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
@@ -163,7 +163,12 @@ export type SlideButtonBaseProps = Omit<PressableProps, 'loading'> & {
 export type SlideButtonProps = SlideButtonBaseProps;
 
 export const SlideButton = memo(
-  forwardRef((_props: SlideButtonProps, ref: ForwardedRef<View>) => {
+  ({
+    ref,
+    ..._props
+  }: SlideButtonProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('SlideButton', _props);
     const {
       checked,
@@ -352,5 +357,5 @@ export const SlideButton = memo(
         </GestureDetector>
       </View>
     );
-  }),
+  },
 );

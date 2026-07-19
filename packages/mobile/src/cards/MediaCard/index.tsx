@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import type { PressableStateCallbackType, StyleProp, View, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
@@ -23,36 +23,34 @@ const mediaCardContainerProps = {
 };
 
 export const MediaCard = memo(
-  forwardRef<View, MediaCardProps>(
-    (
-      {
-        title,
-        subtitle,
-        description,
-        thumbnail,
-        media,
-        mediaPlacement = 'end',
-        style,
-        styles: { root: rootStyle, ...layoutStyles } = {},
-        ...props
-      },
-      ref,
-    ) => {
-      return (
-        <CardRoot ref={ref} {...mediaCardContainerProps} style={[style, rootStyle]} {...props}>
-          <MediaCardLayout
-            description={description}
-            media={media}
-            mediaPlacement={mediaPlacement}
-            styles={layoutStyles}
-            subtitle={subtitle}
-            thumbnail={thumbnail}
-            title={title}
-          />
-        </CardRoot>
-      );
-    },
-  ),
+  ({
+    ref,
+    title,
+    subtitle,
+    description,
+    thumbnail,
+    media,
+    mediaPlacement = 'end',
+    style,
+    styles: { root: rootStyle, ...layoutStyles } = {},
+    ...props
+  }: MediaCardProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    return (
+      <CardRoot ref={ref} {...mediaCardContainerProps} style={[style, rootStyle]} {...props}>
+        <MediaCardLayout
+          description={description}
+          media={media}
+          mediaPlacement={mediaPlacement}
+          styles={layoutStyles}
+          subtitle={subtitle}
+          thumbnail={thumbnail}
+          title={title}
+        />
+      </CardRoot>
+    );
+  },
 );
 
 MediaCard.displayName = 'MediaCard';

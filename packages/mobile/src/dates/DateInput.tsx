@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useMemo, useRef } from 'react';
 import {
   type BlurEvent,
   type NativeSyntheticEvent,
@@ -28,7 +28,12 @@ export type DateInputProps = DateInputBaseProps &
   };
 
 export const DateInput = memo(
-  forwardRef<NativeTextInput, DateInputProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: DateInputProps & {
+    ref?: React.Ref<NativeTextInput>;
+  }) => {
     const mergedProps = useComponentConfig('DateInput', _props);
     const {
       date,
@@ -137,5 +142,5 @@ export const DateInput = memo(
         />
       </VStack>
     );
-  }),
+  },
 );

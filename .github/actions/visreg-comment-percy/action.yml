@@ -1,0 +1,35 @@
+name: Comment Percy Link
+description: Posts or updates a Percy build URL comment on the PR. No-ops if the URL is unchanged or the event is not a pull_request.
+
+inputs:
+  percy_url:
+    description: 'Percy build URL to post as a PR comment'
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Post Percy link on PR
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        REPO: ${{ github.repository }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        PERCY_URL: ${{ inputs.percy_url }}
+      run: |
+        EXISTING=$(gh api \
+          "repos/$REPO/issues/$PR_NUMBER/comments" \
+          --jq '[.[] | select(.user.login == "github-actions[bot]" and (.body | startswith("https://percy.io")))] | last | .body // ""')
+
+        if [ "$EXISTING" = "$PERCY_URL" ]; then
+          echo "Percy URL unchanged, skipping comment."
+          exit 0
+        fi
+
+        gh pr comment "$PR_NUMBER" \
+          --repo "$REPO" \
+          --body "$PERCY_URL" \
+          --edit-last 2>/dev/null || \
+        gh pr comment "$PR_NUMBER" \
+          --repo "$REPO" \
+          --body "$PERCY_URL"

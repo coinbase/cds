@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Animated } from 'react-native';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
@@ -103,10 +103,12 @@ const CheckboxIcon = memo(
   },
 );
 
-const CheckboxWithRef = forwardRef(function Checkbox<CheckboxValue extends string>(
-  _props: CheckboxProps<CheckboxValue>,
-  ref: React.ForwardedRef<View>,
-) {
+const CheckboxWithRef = function Checkbox<CheckboxValue extends string>({
+  ref,
+  ..._props
+}: CheckboxProps<CheckboxValue> & {
+  ref?: React.Ref<View>;
+}) {
   const mergedProps = useComponentConfig('Checkbox', _props);
   const {
     children,
@@ -137,11 +139,8 @@ const CheckboxWithRef = forwardRef(function Checkbox<CheckboxValue extends strin
       {CheckboxIcon}
     </Control>
   );
-  // Make forwardRef result function stay generic function type
-}) as <CheckboxValue extends string>(
-  props: CheckboxProps<CheckboxValue> & { ref?: React.Ref<View> },
-) => React.ReactElement;
+};
 
-// Make memoized function stay generic function type
+// Preserve generic call signature through React.memo
 export const Checkbox = memo(CheckboxWithRef) as typeof CheckboxWithRef &
   React.MemoExoticComponent<typeof CheckboxWithRef>;

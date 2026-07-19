@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { Text as NativeText } from 'react-native';
 
 import { Text, type TextBaseProps, type TextProps } from './Text';
@@ -20,7 +20,11 @@ export type TextLabel2Props = TextProps;
  * @deprecationExpectedRemoval v10
  */
 export const TextLabel2 = memo(
-  forwardRef<NativeText, TextLabel2Props>(({ font = 'label2', ...props }, ref) => (
-    <Text ref={ref} font={font} {...props} />
-  )),
+  ({
+    ref,
+    font = 'label2',
+    ...props
+  }: TextLabel2Props & {
+    ref?: React.Ref<NativeText>;
+  }) => <Text ref={ref} font={font} {...props} />,
 );

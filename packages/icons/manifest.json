@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-06-24T16:55:23.127Z",
-  "lastUnicode": 986352,
+  "lastUpdated": "2026-07-15T19:23:03.976Z",
+  "lastUnicode": 986358,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -25943,6 +25943,53 @@
           "active": true,
           "size": 12,
           "unicode": 986329
+        }
+      ]
+    },
+    {
+      "nodeId": "7800:111",
+      "name": "lineChartPoints",
+      "description": "line, chart, linechart, points, dots, circles, strategy",
+      "assetsHash": "I8b54hhBuWMbahXHCU+hgbJsn7P0U71n+c22ZVqpqso=",
+      "nameHash": "Cp7hNGJEKfBkBh6DOc1hojwPqnOk9EddibP8DrnjFTw=",
+      "createdAt": "2026-07-15T17:12:36.365Z",
+      "lastUpdated": "2026-07-15T19:10:58.771Z",
+      "svgs": [
+        {
+          "name": "lineChartPoints-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986358
+        },
+        {
+          "name": "lineChartPoints-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986357
+        },
+        {
+          "name": "lineChartPoints-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986356
+        },
+        {
+          "name": "lineChartPoints-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986355
+        },
+        {
+          "name": "lineChartPoints-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986354
+        },
+        {
+          "name": "lineChartPoints-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986353
         }
       ]
     }

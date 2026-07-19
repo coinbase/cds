@@ -1,4 +1,4 @@
-import React, { Children, forwardRef, isValidElement, memo, useMemo } from 'react';
+import React, { Children, isValidElement, memo, useMemo } from 'react';
 import type { View, ViewProps } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
@@ -21,18 +21,18 @@ type CheckboxGroupBaseProps<CheckboxValue extends string | number> = Omit<ViewPr
 type CheckboxGroupProps<CheckboxValue extends string> = CheckboxGroupBaseProps<CheckboxValue>;
 
 // Follows behavior describe in https://www.w3.org/TR/wai-aria-practices/examples/checkbox/checkbox-2/checkbox-2.html
-const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<CheckboxValue extends string>(
-  {
-    children,
-    label,
-    accessibilityLabel,
-    onChange,
-    selectedValues,
-    testID,
-    ...restProps
-  }: CheckboxGroupProps<CheckboxValue>,
-  ref: React.ForwardedRef<View>,
-) {
+const CheckboxGroupWithRef = function CheckboxGroupWithRef<CheckboxValue extends string>({
+  ref,
+  children,
+  label,
+  accessibilityLabel,
+  onChange,
+  selectedValues,
+  testID,
+  ...restProps
+}: CheckboxGroupProps<CheckboxValue> & {
+  ref?: React.Ref<View>;
+}) {
   if (isDevelopment()) {
     console.warn(
       'CheckboxGroup is deprecated. Use ControlGroup with accessibilityRole="combobox" instead.',
@@ -89,12 +89,9 @@ const CheckboxGroupWithRef = forwardRef(function CheckboxGroupWithRef<CheckboxVa
       {...restProps}
     />
   );
-  // Make forwardRef result function stay generic function type
-}) as <CheckboxValue extends string>(
-  props: CheckboxGroupProps<CheckboxValue> & { ref?: React.Ref<View> },
-) => React.ReactElement;
+};
 
-// Make memoized function stay generic function type
+// Preserve generic call signature through React.memo
 /**
  * @deprecated CheckboxGroup is deprecated. Use ControlGroup with accessibilityRole="combobox" instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v8

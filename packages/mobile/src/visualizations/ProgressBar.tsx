@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   I18nManager,
@@ -61,7 +61,12 @@ export type ProgressBarProps = ProgressBaseProps & {
 };
 
 export const ProgressBar = memo(
-  forwardRef((_props: ProgressBarProps, forwardedRef: React.ForwardedRef<View>) => {
+  ({
+    ref: forwardedRef,
+    ..._props
+  }: ProgressBarProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('ProgressBar', _props);
     const {
       weight = 'normal',
@@ -169,5 +174,5 @@ export const ProgressBar = memo(
         />
       </HStack>
     );
-  }),
+  },
 );

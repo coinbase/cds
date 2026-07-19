@@ -1,5 +1,5 @@
-import React, { forwardRef, memo, useCallback, useImperativeHandle, useRef, useState } from 'react';
-import { type StyleProp, View, type ViewStyle } from 'react-native';
+import React, { memo, useCallback, useEffect, useImperativeHandle, useRef, useState } from 'react';
+import { type LayoutChangeEvent, type StyleProp, View, type ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -32,18 +32,27 @@ const AnimatedBox = Animated.createAnimatedComponent(Box);
 type TabContainerProps = {
   id: string;
   registerRef: (tabId: string, ref: View) => void;
+  onLayout: (tabId: string, event: LayoutChangeEvent) => void;
   style?: StyleProp<ViewStyle>;
   children?: React.ReactNode;
 };
 
-const TabContainer = ({ id, registerRef, ...props }: TabContainerProps) => {
+const TabContainer = ({ id, registerRef, onLayout, ...props }: TabContainerProps) => {
   const refCallback = useCallback(
     (ref: View | null) => {
       if (ref) registerRef(id, ref);
     },
     [id, registerRef],
   );
-  return <View ref={refCallback} {...props} />;
+
+  const handleLayout = useCallback(
+    (event: LayoutChangeEvent) => {
+      onLayout(id, event);
+    },
+    [id, onLayout],
+  );
+
+  return <View ref={refCallback} onLayout={handleLayout} {...props} />;
 };
 
 export const tabsSpringConfig = {
@@ -121,125 +130,138 @@ type TabsFC = <TabId extends string = string, TTab extends TabValue<TabId> = Tab
 ) => React.ReactElement;
 
 const TabsComponent = memo(
-  forwardRef(
-    <TabId extends string, TTab extends TabValue<TabId> = TabValue<TabId>>(
-      _props: TabsProps<TabId, TTab>,
-      ref: React.ForwardedRef<View>,
-    ) => {
-      const mergedProps = useComponentConfig('Tabs', _props);
-      const {
-        tabs,
-        TabComponent = DefaultTab,
-        TabsActiveIndicatorComponent = DefaultTabsActiveIndicator,
-        activeBackground,
-        color,
-        activeColor,
-        activeTab,
-        disabled,
-        onChange,
-        styles,
-        style,
-        role = 'tablist',
-        position = 'relative',
-        alignSelf = 'flex-start',
-        opacity,
-        onActiveTabElementChange,
-        borderRadius,
-        borderTopLeftRadius,
-        borderTopRightRadius,
-        borderBottomLeftRadius,
-        borderBottomRightRadius,
-        testID,
-        ...props
-      } = mergedProps;
-      const tabsContainerRef = useRef<View>(null);
-      useImperativeHandle(ref, () => tabsContainerRef.current as View, []); // merge internal ref to forwarded ref
+  <TabId extends string, TTab extends TabValue<TabId> = TabValue<TabId>>({
+    ref,
+    ..._props
+  }: TabsProps<TabId, TTab> & {
+    ref?: React.Ref<View>;
+  }) => {
+    const mergedProps = useComponentConfig('Tabs', _props);
+    const {
+      tabs,
+      TabComponent = DefaultTab,
+      TabsActiveIndicatorComponent = DefaultTabsActiveIndicator,
+      activeBackground,
+      color,
+      activeColor,
+      activeTab,
+      disabled,
+      onChange,
+      styles,
+      style,
+      role = 'tablist',
+      position = 'relative',
+      alignSelf = 'flex-start',
+      opacity,
+      onActiveTabElementChange,
+      borderRadius,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      testID,
+      ...props
+    } = mergedProps;
+    const tabsContainerRef = useRef<View>(null);
+    useImperativeHandle(ref, () => tabsContainerRef.current as View, []); // merge internal ref to forwarded ref
 
-      const refMap = useRefMap<View>();
-      const api = useTabs<TabId, TTab>({ tabs, activeTab, disabled, onChange });
+    const refMap = useRefMap<View>();
+    const api = useTabs<TabId, TTab>({ tabs, activeTab, disabled, onChange });
 
-      const [activeTabRect, setActiveTabRect] = useState<Rect>(defaultRect);
-      const previousActiveRef = useRef(activeTab);
+    const [activeTabRect, setActiveTabRect] = useState<Rect>(defaultRect);
+    const tabRects = useRef<Record<string, Rect>>({});
+    const [prevActiveTabId, setPrevActiveTabId] = useState(activeTab?.id);
 
-      const updateActiveTabRect = useCallback(() => {
-        const activeTabRef = activeTab ? refMap.getRef(activeTab.id) : null;
-        if (!activeTabRef || !tabsContainerRef.current) return;
-        activeTabRef.measureLayout(tabsContainerRef.current, (x, y, width, height) =>
-          setActiveTabRect({ x, y, width, height }),
-        );
-      }, [activeTab, refMap]);
+    const handleTabLayout = useCallback(
+      (tabId: string, event: LayoutChangeEvent) => {
+        const { x, y, width, height } = event.nativeEvent.layout;
+        const nextRect = { x, y, width, height };
+        tabRects.current[tabId] = nextRect;
 
-      const registerRef = useCallback(
-        (tabId: string, ref: View) => {
-          refMap.registerRef(tabId, ref);
-          if (activeTab?.id === tabId) {
-            onActiveTabElementChange?.(ref);
-          }
-        },
-        [activeTab, onActiveTabElementChange, refMap],
-      );
+        if (activeTab?.id === tabId) {
+          setActiveTabRect(nextRect);
+        }
+      },
+      [activeTab?.id],
+    );
 
-      if (previousActiveRef.current !== activeTab) {
-        previousActiveRef.current = activeTab;
-        updateActiveTabRect();
+    if (activeTab?.id !== prevActiveTabId) {
+      setPrevActiveTabId(activeTab?.id);
+      if (activeTab?.id) {
+        const cachedRect = tabRects.current[activeTab.id];
+        if (cachedRect) {
+          setActiveTabRect(cachedRect);
+        }
+      } else {
+        setActiveTabRect(defaultRect);
       }
+    }
 
-      return (
-        <HStack
-          ref={tabsContainerRef}
-          alignSelf={alignSelf}
-          borderBottomLeftRadius={borderBottomLeftRadius}
-          borderBottomRightRadius={borderBottomRightRadius}
-          borderRadius={borderRadius}
-          borderTopLeftRadius={borderTopLeftRadius}
-          borderTopRightRadius={borderTopRightRadius}
-          color={color}
-          onLayout={updateActiveTabRect}
-          opacity={opacity ?? (disabled ? accessibleOpacityDisabled : 1)}
-          position={position}
-          role={role}
-          style={styles?.root ? [style, styles.root] : style}
-          testID={testID}
-          {...props}
-        >
-          <TabsContext.Provider value={api as TabsApi<string>}>
-            <TabsActiveIndicatorComponent
-              activeTabRect={activeTabRect}
-              background={activeBackground}
-              borderBottomLeftRadius={borderBottomLeftRadius}
-              borderBottomRightRadius={borderBottomRightRadius}
-              borderRadius={borderRadius}
-              borderTopLeftRadius={borderTopLeftRadius}
-              borderTopRightRadius={borderTopRightRadius}
-              style={styles?.activeIndicator}
-              testID={testID ? `${testID}-active-indicator` : undefined}
-            />
-            {tabs.map((tabProps) => {
-              const { id, Component: CustomTabComponent, ...tabRest } = tabProps;
-              const RenderedTab = CustomTabComponent ?? TabComponent;
-              const renderedTabProps = {
-                activeColor,
-                color,
-                id,
-                style: styles?.tab,
-                ...tabRest,
-              };
-              return (
-                <TabContainer
-                  key={id}
-                  id={id}
-                  registerRef={registerRef}
-                  style={styles?.tabContainer}
-                >
-                  <RenderedTab {...renderedTabProps} />
-                </TabContainer>
-              );
-            })}
-          </TabsContext.Provider>
-        </HStack>
-      );
-    },
-  ),
+    const registerRef = useCallback(
+      (tabId: string, ref: View) => {
+        refMap.registerRef(tabId, ref);
+        if (activeTab?.id === tabId) {
+          onActiveTabElementChange?.(ref);
+        }
+      },
+      [activeTab?.id, onActiveTabElementChange, refMap],
+    );
+
+    return (
+      <HStack
+        ref={tabsContainerRef}
+        alignSelf={alignSelf}
+        borderBottomLeftRadius={borderBottomLeftRadius}
+        borderBottomRightRadius={borderBottomRightRadius}
+        borderRadius={borderRadius}
+        borderTopLeftRadius={borderTopLeftRadius}
+        borderTopRightRadius={borderTopRightRadius}
+        color={color}
+        opacity={opacity ?? (disabled ? accessibleOpacityDisabled : 1)}
+        position={position}
+        role={role}
+        style={styles?.root ? [style, styles.root] : style}
+        testID={testID}
+        {...props}
+      >
+        <TabsContext.Provider value={api as TabsApi<string>}>
+          <TabsActiveIndicatorComponent
+            activeTabRect={activeTabRect}
+            background={activeBackground}
+            borderBottomLeftRadius={borderBottomLeftRadius}
+            borderBottomRightRadius={borderBottomRightRadius}
+            borderRadius={borderRadius}
+            borderTopLeftRadius={borderTopLeftRadius}
+            borderTopRightRadius={borderTopRightRadius}
+            style={styles?.activeIndicator}
+            testID={testID ? `${testID}-active-indicator` : undefined}
+          />
+          {tabs.map((tabProps) => {
+            const { id, Component: CustomTabComponent, ...tabRest } = tabProps;
+            const RenderedTab = CustomTabComponent ?? TabComponent;
+            const renderedTabProps = {
+              activeColor,
+              color,
+              id,
+              style: styles?.tab,
+              ...tabRest,
+            };
+            return (
+              <TabContainer
+                key={id}
+                id={id}
+                onLayout={handleTabLayout}
+                registerRef={registerRef}
+                style={styles?.tabContainer}
+              >
+                <RenderedTab {...renderedTabProps} />
+              </TabContainer>
+            );
+          })}
+        </TabsContext.Provider>
+      </HStack>
+    );
+  },
 );
 
 TabsComponent.displayName = 'Tabs';
@@ -253,19 +275,30 @@ export const TabsActiveIndicator = ({
   testID = 'tabs-active-indicator',
   ...props
 }: TabsActiveIndicatorProps) => {
-  const previousActiveTabRect = useRef(activeTabRect);
-  const newActiveTabRect = { x: activeTabRect.x, y: activeTabRect.y, width: activeTabRect.width };
-  const animatedTabRect = useSharedValue(newActiveTabRect);
-  const isFirstRenderWithWidth =
-    previousActiveTabRect.current.width === 0 && activeTabRect.width > 0;
+  const animatedTabRect = useSharedValue({
+    x: activeTabRect.x,
+    y: activeTabRect.y,
+    width: activeTabRect.width,
+  });
+  // Skip spring on first non-zero width or the indicator animates in from x:0/width:0.
+  const isFirstRenderWithWidth = useRef(true);
 
-  if (previousActiveTabRect.current !== activeTabRect) {
-    previousActiveTabRect.current = activeTabRect;
-    // TODO: writing to shared value during render causes a reanimated warning which we have to suppress in jest setup
-    animatedTabRect.value = isFirstRenderWithWidth
-      ? newActiveTabRect
-      : withSpring(newActiveTabRect, tabsSpringConfig);
-  }
+  useEffect(() => {
+    const nextActiveTabRect = {
+      x: activeTabRect.x,
+      y: activeTabRect.y,
+      width: activeTabRect.width,
+    };
+
+    if (activeTabRect.width <= 0) return;
+
+    if (isFirstRenderWithWidth.current) {
+      animatedTabRect.value = nextActiveTabRect;
+      isFirstRenderWithWidth.current = false;
+    } else {
+      animatedTabRect.value = withSpring(nextActiveTabRect, tabsSpringConfig);
+    }
+  }, [activeTabRect, animatedTabRect]);
 
   const animatedBoxStyle = useAnimatedStyle(
     () => ({

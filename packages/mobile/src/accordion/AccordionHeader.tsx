@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback } from 'react';
+import React, { memo, useCallback } from 'react';
 import type { View } from 'react-native';
 import { useAccordionContext } from '@coinbase/cds-common/accordion/AccordionProvider';
 import {
@@ -87,45 +87,45 @@ export type AccordionHeaderProps = AccordionHeaderBaseProps;
  * Composes an Accordion Media, Title, and Icon.
  */
 export const AccordionHeader = memo(
-  forwardRef(
-    (
-      { itemKey, title, subtitle, onPress, media, collapsed, testID }: AccordionHeaderProps,
-      forwardedRef: React.ForwardedRef<View>,
-    ) => {
-      const { setActiveKey, activeKey } = useAccordionContext();
-      const spacing = useCellSpacing();
-      const accessibilityLabel = subtitle ? `${title}, ${subtitle}` : title;
+  ({
+    ref: forwardedRef,
+    itemKey,
+    title,
+    subtitle,
+    onPress,
+    media,
+    collapsed,
+    testID,
+  }: AccordionHeaderProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const { setActiveKey, activeKey } = useAccordionContext();
+    const spacing = useCellSpacing();
+    const accessibilityLabel = subtitle ? `${title}, ${subtitle}` : title;
 
-      const handlePress = useCallback(() => {
-        onPress?.(itemKey);
-        setActiveKey(itemKey === activeKey ? null : itemKey);
-      }, [onPress, itemKey, setActiveKey, activeKey]);
+    const handlePress = useCallback(() => {
+      onPress?.(itemKey);
+      setActiveKey(itemKey === activeKey ? null : itemKey);
+    }, [onPress, itemKey, setActiveKey, activeKey]);
 
-      return (
-        <Pressable
-          ref={forwardedRef}
-          noScaleOnPress
-          transparentWhileInactive
-          accessibilityLabel={accessibilityLabel}
-          accessibilityRole="togglebutton"
-          accessibilityState={{ expanded: !collapsed }}
-          background="bg"
-          onPress={handlePress}
-          testID={testID}
-        >
-          <HStack
-            alignItems="center"
-            gap={2}
-            minHeight={listHeight}
-            width="100%"
-            {...spacing.outer}
-          >
-            {!!media && <AccordionMedia media={media} />}
-            <AccordionTitle subtitle={subtitle} title={title} />
-            <AccordionIcon collapsed={collapsed} />
-          </HStack>
-        </Pressable>
-      );
-    },
-  ),
+    return (
+      <Pressable
+        ref={forwardedRef}
+        noScaleOnPress
+        transparentWhileInactive
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="togglebutton"
+        accessibilityState={{ expanded: !collapsed }}
+        background="bg"
+        onPress={handlePress}
+        testID={testID}
+      >
+        <HStack alignItems="center" gap={2} minHeight={listHeight} width="100%" {...spacing.outer}>
+          {!!media && <AccordionMedia media={media} />}
+          <AccordionTitle subtitle={subtitle} title={title} />
+          <AccordionIcon collapsed={collapsed} />
+        </HStack>
+      </Pressable>
+    );
+  },
 );

@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 
 import { Box, type BoxBaseProps, type BoxProps } from '../../../layout/Box';
@@ -128,65 +128,63 @@ export type LegendProps = Omit<BoxProps, 'children'> &
   };
 
 export const Legend = memo(
-  forwardRef<View, LegendProps>(
-    (
-      {
-        flexDirection = 'row',
-        justifyContent = 'center',
-        alignItems = flexDirection === 'row' ? 'center' : 'flex-start',
-        flexWrap = 'wrap',
-        rowGap = 0.75,
-        columnGap = 2,
-        seriesIds,
-        EntryComponent = DefaultLegendEntry,
-        ShapeComponent = DefaultLegendShape,
-        accessibilityLabel = 'Legend',
-        style,
-        styles,
-        ...props
-      },
-      ref,
-    ) => {
-      const { series } = useCartesianChartContext();
+  ({
+    ref,
+    flexDirection = 'row',
+    justifyContent = 'center',
+    alignItems = flexDirection === 'row' ? 'center' : 'flex-start',
+    flexWrap = 'wrap',
+    rowGap = 0.75,
+    columnGap = 2,
+    seriesIds,
+    EntryComponent = DefaultLegendEntry,
+    ShapeComponent = DefaultLegendShape,
+    accessibilityLabel = 'Legend',
+    style,
+    styles,
+    ...props
+  }: LegendProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const { series } = useCartesianChartContext();
 
-      const filteredSeries = useMemo(() => {
-        if (seriesIds === undefined) return series.filter((s) => s.label !== undefined);
-        return series.filter((s) => seriesIds.includes(s.id) && s.label !== undefined);
-      }, [series, seriesIds]);
+    const filteredSeries = useMemo(() => {
+      if (seriesIds === undefined) return series.filter((s) => s.label !== undefined);
+      return series.filter((s) => seriesIds.includes(s.id) && s.label !== undefined);
+    }, [series, seriesIds]);
 
-      if (filteredSeries.length === 0) return;
+    if (filteredSeries.length === 0) return;
 
-      return (
-        <Box
-          ref={ref}
-          accessibilityLabel={accessibilityLabel}
-          accessibilityRole="summary"
-          alignItems={alignItems}
-          columnGap={columnGap}
-          flexDirection={flexDirection}
-          flexWrap={flexWrap}
-          justifyContent={justifyContent}
-          rowGap={rowGap}
-          style={[style, styles?.root]}
-          {...props}
-        >
-          {filteredSeries.map((s) => (
-            <EntryComponent
-              key={s.id}
-              ShapeComponent={ShapeComponent}
-              color={s.color}
-              label={s.label}
-              seriesId={s.id}
-              shape={s.legendShape}
-              styles={{
-                root: styles?.entry,
-                shape: styles?.entryShape,
-                label: styles?.entryLabel,
-              }}
-            />
-          ))}
-        </Box>
-      );
-    },
-  ),
+    return (
+      <Box
+        ref={ref}
+        accessibilityLabel={accessibilityLabel}
+        accessibilityRole="summary"
+        alignItems={alignItems}
+        columnGap={columnGap}
+        flexDirection={flexDirection}
+        flexWrap={flexWrap}
+        justifyContent={justifyContent}
+        rowGap={rowGap}
+        style={[style, styles?.root]}
+        {...props}
+      >
+        {filteredSeries.map((s) => (
+          <EntryComponent
+            key={s.id}
+            ShapeComponent={ShapeComponent}
+            color={s.color}
+            label={s.label}
+            seriesId={s.id}
+            shape={s.legendShape}
+            styles={{
+              root: styles?.entry,
+              shape: styles?.entryShape,
+              label: styles?.entryLabel,
+            }}
+          />
+        ))}
+      </Box>
+    );
+  },
 );

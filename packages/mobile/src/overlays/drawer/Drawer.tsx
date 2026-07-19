@@ -1,5 +1,4 @@
 import React, {
-  forwardRef,
   memo,
   useCallback,
   useEffect,
@@ -136,7 +135,12 @@ const overlayContentContextValue: OverlayContentContextValue = {
 };
 
 export const Drawer = memo(
-  forwardRef<DrawerRefBaseProps, DrawerProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: DrawerProps & {
+    ref?: React.Ref<DrawerRefBaseProps>;
+  }) => {
     const mergedProps = useComponentConfig('Drawer', _props);
     const {
       children,
@@ -365,5 +369,5 @@ export const Drawer = memo(
         </OverlayContentContext.Provider>
       </Modal>
     );
-  }),
+  },
 );

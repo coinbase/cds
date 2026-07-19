@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
 import { XAxis, type XAxisProps } from '../axis/XAxis';
@@ -91,147 +91,145 @@ export type BarChartProps = BarChartBaseProps &
   >;
 
 export const BarChart = memo(
-  forwardRef<View, BarChartProps>(
-    (
-      {
-        series: seriesProp,
-        stacked,
-        showXAxis,
-        showYAxis,
-        xAxis,
-        yAxis,
-        inset,
-        children,
-        barPadding,
-        BarComponent,
-        fillOpacity,
-        stroke,
-        strokeWidth,
-        borderRadius,
-        roundBaseline,
-        BarStackComponent,
-        stackGap,
-        barMinSize,
-        stackMinSize,
-        transitions,
-        transition,
-        ...chartProps
-      },
-      ref,
-    ) => {
-      const series: Array<BarSeries> | undefined = useMemo(() => {
-        if (!stacked || !seriesProp) return seriesProp;
-        return seriesProp.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
-      }, [seriesProp, stacked]);
+  ({
+    ref,
+    series: seriesProp,
+    stacked,
+    showXAxis,
+    showYAxis,
+    xAxis,
+    yAxis,
+    inset,
+    children,
+    barPadding,
+    BarComponent,
+    fillOpacity,
+    stroke,
+    strokeWidth,
+    borderRadius,
+    roundBaseline,
+    BarStackComponent,
+    stackGap,
+    barMinSize,
+    stackMinSize,
+    transitions,
+    transition,
+    ...chartProps
+  }: BarChartProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const series: Array<BarSeries> | undefined = useMemo(() => {
+      if (!stacked || !seriesProp) return seriesProp;
+      return seriesProp.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
+    }, [seriesProp, stacked]);
 
-      const seriesIds = useMemo(() => series?.map((s) => s.id), [series]);
-      const isHorizontalLayout = chartProps.layout === 'horizontal';
-      const defaultXScaleType = isHorizontalLayout ? 'linear' : 'band';
-      const defaultYScaleType = isHorizontalLayout ? 'band' : 'linear';
+    const seriesIds = useMemo(() => series?.map((s) => s.id), [series]);
+    const isHorizontalLayout = chartProps.layout === 'horizontal';
+    const defaultXScaleType = isHorizontalLayout ? 'linear' : 'band';
+    const defaultYScaleType = isHorizontalLayout ? 'band' : 'linear';
 
-      // Split axis props into config props for Chart and visual props for axis components
-      const {
-        scaleType: xScaleType,
+    // Split axis props into config props for Chart and visual props for axis components
+    const {
+      scaleType: xScaleType,
+      data: xData,
+      categoryPadding: xCategoryPadding,
+      domain: xDomain,
+      domainLimit: xDomainLimit,
+      range: xRange,
+      baseline: xBaseline,
+      id: xAxisId,
+      ...xAxisVisualProps
+    } = xAxis || {};
+    const {
+      scaleType: yScaleType,
+      data: yData,
+      categoryPadding: yCategoryPadding,
+      domain: yDomain,
+      domainLimit: yDomainLimit,
+      range: yRange,
+      baseline: yBaseline,
+      id: yAxisId,
+      ...yAxisVisualProps
+    } = yAxis || {};
+    const valueAxisBaseline = isHorizontalLayout ? xBaseline : yBaseline;
+
+    const xAxisConfig = useMemo<Partial<CartesianAxisConfigProps>>(
+      () => ({
+        scaleType: xScaleType ?? defaultXScaleType,
         data: xData,
         categoryPadding: xCategoryPadding,
-        domain: xDomain,
+        domain: isHorizontalLayout ? withBaselineDomain(xDomain, valueAxisBaseline) : xDomain,
         domainLimit: xDomainLimit,
         range: xRange,
         baseline: xBaseline,
-        id: xAxisId,
-        ...xAxisVisualProps
-      } = xAxis || {};
-      const {
-        scaleType: yScaleType,
+      }),
+      [
+        xScaleType,
+        defaultXScaleType,
+        xData,
+        xCategoryPadding,
+        isHorizontalLayout,
+        xDomain,
+        xDomainLimit,
+        xRange,
+        xBaseline,
+        valueAxisBaseline,
+      ],
+    );
+
+    const yAxisConfig = useMemo<Partial<CartesianAxisConfigProps>>(
+      () => ({
+        scaleType: yScaleType ?? defaultYScaleType,
         data: yData,
         categoryPadding: yCategoryPadding,
-        domain: yDomain,
+        domain: !isHorizontalLayout ? withBaselineDomain(yDomain, valueAxisBaseline) : yDomain,
         domainLimit: yDomainLimit,
         range: yRange,
         baseline: yBaseline,
-        id: yAxisId,
-        ...yAxisVisualProps
-      } = yAxis || {};
-      const valueAxisBaseline = isHorizontalLayout ? xBaseline : yBaseline;
+      }),
+      [
+        yScaleType,
+        defaultYScaleType,
+        yData,
+        yCategoryPadding,
+        isHorizontalLayout,
+        yDomain,
+        yDomainLimit,
+        yRange,
+        yBaseline,
+        valueAxisBaseline,
+      ],
+    );
 
-      const xAxisConfig = useMemo<Partial<CartesianAxisConfigProps>>(
-        () => ({
-          scaleType: xScaleType ?? defaultXScaleType,
-          data: xData,
-          categoryPadding: xCategoryPadding,
-          domain: isHorizontalLayout ? withBaselineDomain(xDomain, valueAxisBaseline) : xDomain,
-          domainLimit: xDomainLimit,
-          range: xRange,
-          baseline: xBaseline,
-        }),
-        [
-          xScaleType,
-          defaultXScaleType,
-          xData,
-          xCategoryPadding,
-          isHorizontalLayout,
-          xDomain,
-          xDomainLimit,
-          xRange,
-          xBaseline,
-          valueAxisBaseline,
-        ],
-      );
-
-      const yAxisConfig = useMemo<Partial<CartesianAxisConfigProps>>(
-        () => ({
-          scaleType: yScaleType ?? defaultYScaleType,
-          data: yData,
-          categoryPadding: yCategoryPadding,
-          domain: !isHorizontalLayout ? withBaselineDomain(yDomain, valueAxisBaseline) : yDomain,
-          domainLimit: yDomainLimit,
-          range: yRange,
-          baseline: yBaseline,
-        }),
-        [
-          yScaleType,
-          defaultYScaleType,
-          yData,
-          yCategoryPadding,
-          isHorizontalLayout,
-          yDomain,
-          yDomainLimit,
-          yRange,
-          yBaseline,
-          valueAxisBaseline,
-        ],
-      );
-
-      return (
-        <CartesianChart
-          ref={ref}
-          inset={inset}
-          series={series}
-          xAxis={xAxisConfig}
-          yAxis={yAxisConfig}
-          {...chartProps}
-        >
-          {showXAxis && <XAxis axisId={xAxisId} {...xAxisVisualProps} />}
-          {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
-          <BarPlot
-            BarComponent={BarComponent}
-            BarStackComponent={BarStackComponent}
-            barMinSize={barMinSize}
-            barPadding={barPadding}
-            borderRadius={borderRadius}
-            fillOpacity={fillOpacity}
-            roundBaseline={roundBaseline}
-            seriesIds={seriesIds}
-            stackGap={stackGap}
-            stackMinSize={stackMinSize}
-            stroke={stroke}
-            strokeWidth={strokeWidth}
-            transition={transition}
-            transitions={transitions}
-          />
-          {children}
-        </CartesianChart>
-      );
-    },
-  ),
+    return (
+      <CartesianChart
+        ref={ref}
+        inset={inset}
+        series={series}
+        xAxis={xAxisConfig}
+        yAxis={yAxisConfig}
+        {...chartProps}
+      >
+        {showXAxis && <XAxis axisId={xAxisId} {...xAxisVisualProps} />}
+        {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
+        <BarPlot
+          BarComponent={BarComponent}
+          BarStackComponent={BarStackComponent}
+          barMinSize={barMinSize}
+          barPadding={barPadding}
+          borderRadius={borderRadius}
+          fillOpacity={fillOpacity}
+          roundBaseline={roundBaseline}
+          seriesIds={seriesIds}
+          stackGap={stackGap}
+          stackMinSize={stackMinSize}
+          stroke={stroke}
+          strokeWidth={strokeWidth}
+          transition={transition}
+          transitions={transitions}
+        />
+        {children}
+      </CartesianChart>
+    );
+  },
 );

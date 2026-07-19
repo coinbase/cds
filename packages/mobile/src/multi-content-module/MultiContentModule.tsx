@@ -1,4 +1,4 @@
-import React, { forwardRef, isValidElement, memo } from 'react';
+import React, { isValidElement, memo } from 'react';
 import type { View } from 'react-native';
 import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
 
@@ -32,74 +32,72 @@ export type MultiContentModuleProps = MultiContentModuleBaseProps & {
   onActionPress?: PressableProps['onPress'];
 } & Omit<VStackProps, 'children'>;
 
-export const MultiContentModule = memo(
-  forwardRef(function MultiContentModule(
-    {
-      pictogram,
-      title,
-      description,
-      children,
-      action,
-      onActionPress,
-      actionAccessibilityLabel,
-      end,
-      bordered = false,
-      testID,
-      accessibilityLabel,
-      style,
-      ...props
-    }: MultiContentModuleProps,
-    ref: React.Ref<View>,
-  ) {
-    return (
-      <VStack
-        ref={ref}
-        accessibilityLabel={accessibilityLabel}
-        borderRadius={400}
-        bordered={bordered}
-        flexGrow={1}
-        gap={2}
-        paddingY={4}
-        style={style}
-        testID={testID}
-        {...props}
-      >
-        {typeof pictogram === 'string' ? (
-          <Pictogram
-            dimension="48x48"
-            name={pictogram as IllustrationPictogramNames}
-            testID={`${testID}-pictogram`}
-          />
+export const MultiContentModule = memo(function MultiContentModule({
+  ref,
+  pictogram,
+  title,
+  description,
+  children,
+  action,
+  onActionPress,
+  actionAccessibilityLabel,
+  end,
+  bordered = false,
+  testID,
+  accessibilityLabel,
+  style,
+  ...props
+}: MultiContentModuleProps & {
+  ref?: React.Ref<View>;
+}) {
+  return (
+    <VStack
+      ref={ref}
+      accessibilityLabel={accessibilityLabel}
+      borderRadius={400}
+      bordered={bordered}
+      flexGrow={1}
+      gap={2}
+      paddingY={4}
+      style={style}
+      testID={testID}
+      {...props}
+    >
+      {typeof pictogram === 'string' ? (
+        <Pictogram
+          dimension="48x48"
+          name={pictogram as IllustrationPictogramNames}
+          testID={`${testID}-pictogram`}
+        />
+      ) : (
+        pictogram
+      )}
+      {typeof title === 'string' ? (
+        <Text font="title1" role="heading">
+          {title}
+        </Text>
+      ) : (
+        title
+      )}
+      {typeof description === 'string' ? (
+        <Text color="fgMuted" font="body" numberOfLines={3}>
+          {description}
+        </Text>
+      ) : (
+        description
+      )}
+      <Box flexGrow={1} testID={`${testID}-primary-content`}>
+        {children}
+      </Box>
+      {action &&
+        (isValidElement(action) ? (
+          action
         ) : (
-          pictogram
-        )}
-        {typeof title === 'string' ? (
-          <Text font="title1" role="heading">
-            {title}
-          </Text>
-        ) : (
-          title
-        )}
-        {typeof description === 'string' ? (
-          <Text color="fgMuted" font="body" numberOfLines={3}>
-            {description}
-          </Text>
-        ) : (
-          description
-        )}
-        <Box flexGrow={1} testID={`${testID}-primary-content`}>
-          {children}
-        </Box>
-        {action &&
-          (isValidElement(action) ? (
-            action
-          ) : (
-            <Button accessibilityLabel={actionAccessibilityLabel} onPress={onActionPress}>
-              {action}
-            </Button>
-          ))}
-        {end}
-      </VStack>
-    );
-  }),
-);
+          <Button accessibilityLabel={actionAccessibilityLabel} onPress={onActionPress}>
+            {action}
+          </Button>
+        ))}
+      {end}
+    </VStack>
+  );
+});

@@ -13,18 +13,13 @@ import type { NativeStackNavigationOptions } from '@react-navigation/native-stac
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 import { ExamplesListScreen } from './ExamplesListScreen';
-import {
-  ExamplesSearchProvider,
-  SearchFilterContext,
-  SetSearchFilterContext,
-} from './ExamplesSearchProvider';
+import { ExamplesSearchProvider, SearchContext } from './ExamplesSearchProvider';
 import { IconSheetScreen } from './IconSheetScreen';
 import { keyToRouteName } from './keyToRouteName';
 import type { PlaygroundRoute } from './PlaygroundRoute';
 import type { PlaygroundStackParamList } from './types';
 
 const initialRouteName = keyToRouteName('Examples');
-const searchRouteName = keyToRouteName('Search');
 
 const Stack = createNativeStackNavigator<PlaygroundStackParamList>();
 
@@ -45,8 +40,8 @@ type HeaderProps = {
   showSearch: boolean;
   title: string;
   onGoBack: () => void;
-  onGoBackFromSearch: () => void;
-  onGoToSearch: () => void;
+  onCloseSearch: () => void;
+  onOpenSearch: () => void;
   onToggleTheme: () => void;
   onSearchChange: (e: NativeSyntheticEvent<TextInputChangeEventData>) => void;
   searchFilter: string;
@@ -60,8 +55,8 @@ const HeaderContent = memo(
     showSearch,
     title,
     onGoBack,
-    onGoBackFromSearch,
-    onGoToSearch,
+    onCloseSearch,
+    onOpenSearch,
     onToggleTheme,
     onSearchChange,
     searchFilter,
@@ -82,7 +77,8 @@ const HeaderContent = memo(
           transparent
           accessibilityLabel="Search for component"
           name="search"
-          onPress={onGoToSearch}
+          onPress={onOpenSearch}
+          testID="search-button"
         />
       </Box>
     ) : showBackButton ? (
@@ -124,7 +120,10 @@ const HeaderContent = memo(
             width="100%"
           >
             {isSearch ? (
+              /* eslint-disable jsx-a11y/no-autofocus -- opening the search panel
+                 implies intent to type immediately; auto-focus is expected here */
               <TextInput
+                autoFocus
                 accessibilityHint="Search for component"
                 accessibilityLabel="Search for component"
                 label=""
@@ -133,9 +132,9 @@ const HeaderContent = memo(
                 start={
                   <IconButton
                     transparent
-                    accessibilityLabel="Go back from search"
+                    accessibilityLabel="Close search"
                     name="backArrow"
-                    onPress={onGoBackFromSearch}
+                    onPress={onCloseSearch}
                   />
                 }
                 value={searchFilter}
@@ -157,8 +156,7 @@ const HeaderContent = memo(
 const PlaygroundContent = memo(
   ({ routes = [], listScreenTitle, setColorScheme }: PlaygroundProps) => {
     const theme = useTheme();
-    const searchFilter = useContext(SearchFilterContext);
-    const setFilter = useContext(SetSearchFilterContext);
+    const { filter, isOpen, setFilter, openSearch, closeSearch } = useContext(SearchContext);
 
     const routeKeys = useMemo(() => routes.map(({ key }) => key), [routes]);
 
@@ -171,18 +169,15 @@ const PlaygroundContent = memo(
         headerShadowVisible: false,
         header: ({ navigation, route, options }) => {
           const routeName = route.name;
-          const isSearch = routeName === searchRouteName;
-          const showSearch = routeName === initialRouteName;
+          const isHomeScreen = routeName === initialRouteName;
+          // Search mode: only on the home screen when isOpen is true.
+          const isSearch = isHomeScreen && isOpen;
+          const showSearch = isHomeScreen && !isOpen;
           const canGoBack = navigation.canGoBack();
           const isFocused = navigation.isFocused();
           const showBackButton = isFocused && canGoBack && !isSearch;
 
           const handleGoBack = () => navigation.goBack();
-          const handleGoBackFromSearch = () => {
-            setFilter('');
-            navigation.goBack();
-          };
-          const handleGoToSearch = () => navigation.navigate(searchRouteName);
           const handleToggleTheme = () =>
             setColorScheme?.((s) => (s === 'dark' ? 'light' : 'dark'));
           const handleSearchChange = (e: NativeSyntheticEvent<TextInputChangeEventData>) =>
@@ -192,12 +187,12 @@ const PlaygroundContent = memo(
             <HeaderContent
               isDark={theme.activeColorScheme === 'dark'}
               isSearch={isSearch}
+              onCloseSearch={closeSearch}
               onGoBack={handleGoBack}
-              onGoBackFromSearch={handleGoBackFromSearch}
-              onGoToSearch={handleGoToSearch}
+              onOpenSearch={openSearch}
               onSearchChange={handleSearchChange}
               onToggleTheme={handleToggleTheme}
-              searchFilter={searchFilter}
+              searchFilter={filter}
               showBackButton={showBackButton}
               showSearch={showSearch}
               title={options.title ?? routeName}
@@ -205,7 +200,16 @@ const PlaygroundContent = memo(
           );
         },
       }),
-      [theme.color.bg, theme.activeColorScheme, searchFilter, setFilter, setColorScheme],
+      [
+        theme.color.bg,
+        theme.activeColorScheme,
+        filter,
+        setFilter,
+        setColorScheme,
+        isOpen,
+        openSearch,
+        closeSearch,
+      ],
     );
 
     const exampleScreens = useMemo(
@@ -233,12 +237,6 @@ const PlaygroundContent = memo(
           initialParams={{ routeKeys }}
           name="DebugExamples"
           options={{ title: listScreenTitle ?? 'CDS' }}
-        />
-        <Stack.Screen
-          component={ExamplesListScreen}
-          initialParams={{ routeKeys }}
-          name="DebugSearch"
-          options={{ title: 'Search' }}
         />
         <Stack.Screen
           component={IconSheetScreen}

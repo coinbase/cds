@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import { ScrollView, type StyleProp, type View, type ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
@@ -109,82 +109,82 @@ type TabbedChipsFC = <TabId extends string = string>(
   props: TabbedChipsProps<TabId> & { ref?: React.ForwardedRef<View> },
 ) => React.ReactElement;
 
-const TabbedChipsComponent = memo(
-  forwardRef(function TabbedChips<TabId extends string = string>(
-    _props: TabbedChipsProps<TabId>,
-    ref: React.ForwardedRef<View>,
-  ) {
-    const mergedProps = useComponentConfig('TabbedChips', _props);
-    const {
-      tabs,
-      activeTab = tabs[0],
-      testID = 'tabbed-chips',
-      TabComponent = DefaultTabComponent,
-      onChange,
-      width,
-      gap = 1,
-      compact,
-      styles,
-      autoScrollOffset = 30,
-      ...accessibilityProps
-    } = mergedProps;
-    const [scrollTarget, setScrollTarget] = useState<View | null>(null);
-    const {
-      scrollRef,
-      isScrollContentOverflowing,
-      isScrollContentOffscreenLeft,
-      isScrollContentOffscreenRight,
-      handleScroll,
-      handleScrollContainerLayout,
-      handleScrollContentSizeChange,
-    } = useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset });
+const TabbedChipsComponent = memo(function TabbedChips<TabId extends string = string>({
+  ref,
+  ..._props
+}: TabbedChipsProps<TabId> & {
+  ref?: React.Ref<View>;
+}) {
+  const mergedProps = useComponentConfig('TabbedChips', _props);
+  const {
+    tabs,
+    activeTab = tabs[0],
+    testID = 'tabbed-chips',
+    TabComponent = DefaultTabComponent,
+    onChange,
+    width,
+    gap = 1,
+    compact,
+    styles,
+    autoScrollOffset = 30,
+    ...accessibilityProps
+  } = mergedProps;
+  const [scrollTarget, setScrollTarget] = useState<View | null>(null);
+  const {
+    scrollRef,
+    isScrollContentOverflowing,
+    isScrollContentOffscreenLeft,
+    isScrollContentOffscreenRight,
+    handleScroll,
+    handleScrollContainerLayout,
+    handleScrollContentSizeChange,
+  } = useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset });
 
-    const TabComponentWithCompact = useCallback(
-      (props: TabValue<TabId>) => {
-        return <TabComponent compact={compact} {...props} />;
-      },
-      [TabComponent, compact],
-    );
+  const TabComponentWithCompact = useCallback(
+    (props: TabValue<TabId>) => {
+      return <TabComponent compact={compact} {...props} />;
+    },
+    [TabComponent, compact],
+  );
 
-    return (
-      <Box
-        ref={ref}
-        overflow={isScrollContentOverflowing ? undefined : 'visible'}
-        style={styles?.root}
-        testID={testID}
-        width={width}
+  return (
+    <Box
+      ref={ref}
+      overflow={isScrollContentOverflowing ? undefined : 'visible'}
+      style={styles?.root}
+      testID={testID}
+      width={width}
+    >
+      <ScrollView
+        ref={scrollRef}
+        horizontal
+        onContentSizeChange={handleScrollContentSizeChange}
+        onLayout={handleScrollContainerLayout}
+        onScroll={handleScroll}
+        scrollEventThrottle={1}
+        showsHorizontalScrollIndicator={false}
       >
-        <ScrollView
-          ref={scrollRef}
-          horizontal
-          onContentSizeChange={handleScrollContentSizeChange}
-          onLayout={handleScrollContainerLayout}
-          onScroll={handleScroll}
-          scrollEventThrottle={1}
-          showsHorizontalScrollIndicator={false}
-        >
-          <Tabs
-            TabComponent={TabComponentWithCompact}
-            TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
-            activeTab={activeTab || null}
-            gap={gap}
-            onActiveTabElementChange={setScrollTarget}
-            onChange={onChange}
-            style={styles?.tabs}
-            tabs={tabs}
-            {...accessibilityProps}
-          />
-        </ScrollView>
-        {isScrollContentOverflowing && isScrollContentOffscreenLeft && (
-          <OverflowGradient pin="left" />
-        )}
-        {isScrollContentOverflowing && isScrollContentOffscreenRight && (
-          <OverflowGradient pin="right" />
-        )}
-      </Box>
-    );
-  }),
-);
+        <Tabs
+          TabComponent={TabComponentWithCompact}
+          TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
+          activeTab={activeTab || null}
+          gap={gap}
+          onActiveTabElementChange={setScrollTarget}
+          onChange={onChange}
+          style={styles?.tabs}
+          tabs={tabs}
+          {...accessibilityProps}
+        />
+      </ScrollView>
+      {isScrollContentOverflowing && isScrollContentOffscreenLeft && (
+        <OverflowGradient pin="left" />
+      )}
+      {isScrollContentOverflowing && isScrollContentOffscreenRight && (
+        <OverflowGradient pin="right" />
+      )}
+    </Box>
+  );
+});
 
 TabbedChipsComponent.displayName = 'TabbedChips';
 

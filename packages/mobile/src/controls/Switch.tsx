@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { type StyleProp, StyleSheet, type View, type ViewStyle } from 'react-native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -119,10 +119,12 @@ const SwitchIcon = ({
   );
 };
 
-const SwitchWithRef = forwardRef(function SwitchWithRef<SwitchValue extends string>(
-  _props: SwitchProps<SwitchValue>,
-  ref: React.ForwardedRef<View>,
-) {
+const SwitchWithRef = function SwitchWithRef<SwitchValue extends string>({
+  ref,
+  ..._props
+}: SwitchProps<SwitchValue> & {
+  ref?: React.Ref<View>;
+}) {
   const mergedProps = useComponentConfig('Switch', _props);
   const { children, style, styles, ...props } = mergedProps;
   const theme = useTheme();
@@ -156,7 +158,7 @@ const SwitchWithRef = forwardRef(function SwitchWithRef<SwitchValue extends stri
       {switchNode}
     </Box>
   );
-});
+};
 
 export const Switch = memo(SwitchWithRef);
 

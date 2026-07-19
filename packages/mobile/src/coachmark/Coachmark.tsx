@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import { useWindowDimensions } from 'react-native';
 import type { DimensionValue, View } from 'react-native';
 import { type SharedProps } from '@coinbase/cds-common/types/SharedProps';
@@ -51,7 +51,12 @@ export type CoachmarkBaseProps = SharedProps &
 export type CoachmarkProps = CoachmarkBaseProps & BoxProps;
 
 export const Coachmark = memo(
-  forwardRef((_props: CoachmarkProps, ref: React.ForwardedRef<View>) => {
+  ({
+    ref,
+    ..._props
+  }: CoachmarkProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('Coachmark', _props);
     const {
       title,
@@ -112,5 +117,5 @@ export const Coachmark = memo(
         </VStack>
       </InvertedThemeProvider>
     );
-  }),
+  },
 );

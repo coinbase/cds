@@ -44,12 +44,11 @@ function getTypeName(type: ComponentType): string {
 }
 
 /**
- * Check if a component type is a pressable element.
- * Includes TouchableHighlight, TouchableOpacity, TouchableNativeFeedback,
- * TouchableWithoutFeedback, and Pressable.
+ * Type-only check: whether a component type looks like a pressable element.
+ * Used internally; rules should use the node-based `isPressable` to avoid
+ * matching both a CDS wrapper and its inner native pressable in the same tree.
  */
-export function isPressable(type: ComponentType): boolean {
-  // Direct reference comparison for React component instances
+function isPressableType(type: ComponentType): boolean {
   if (
     type === TouchableHighlight ||
     type === TouchableOpacity ||
@@ -60,23 +59,57 @@ export function isPressable(type: ComponentType): boolean {
     return true;
   }
 
-  // String name comparison for host components or named types
   const typeName = getTypeName(type);
   return PRESSABLE_TYPE_NAMES.some((name) => typeName.includes(name));
 }
 
 /**
- * Check if a component type is a Text element.
+ * Type-only check: whether a component type looks like a Text element.
  */
-export function isText(type: ComponentType): boolean {
-  // Direct reference comparison
+function isTextType(type: ComponentType): boolean {
   if (type === Text) {
     return true;
   }
-
-  // String name comparison
   const typeName = getTypeName(type);
   return typeName === 'Text';
+}
+
+/**
+ * Check if a node is a pressable element. Returns false for CDS wrapper
+ * components that contain a leaf pressable (so a single logical control
+ * is only matched once at the leaf).
+ */
+export function isPressable(node: TestInstance): boolean {
+  if (!isPressableType(node.type)) {
+    return false;
+  }
+  const pressablesInTree = node.findAll((n) => isPressableType(n.type));
+  return pressablesInTree.length === 1;
+}
+
+/**
+ * Check if a node is a Text element. Filters out the CDS `Text` wrapper when
+ * it sits directly above its host `RNText` and forwards the same a11y-defining
+ * props verbatim, so a single logical Text is matched once at the host. Outer
+ * Text nodes that own distinct a11y semantics (e.g. `onPress`, `accessibilityRole`)
+ * are preserved so legitimate nested Text compositions still surface violations.
+ */
+export function isText(node: TestInstance): boolean {
+  if (!isTextType(node.type)) {
+    return false;
+  }
+  const directChildText = node.children.find(
+    (c): c is TestInstance => typeof c !== 'string' && isTextType(c.type),
+  );
+  if (
+    directChildText &&
+    directChildText.props.onPress === node.props.onPress &&
+    directChildText.props.accessibilityRole === node.props.accessibilityRole &&
+    directChildText.props.accessibilityLabel === node.props.accessibilityLabel
+  ) {
+    return false;
+  }
+  return true;
 }
 
 /**
@@ -95,7 +128,7 @@ export function isAdjustable(node: TestInstance): boolean {
  * Check if a node is a checkbox (pressable with role="checkbox").
  */
 export function isCheckbox(node: TestInstance): boolean {
-  return isPressable(node.type) && node.props.accessibilityRole === 'checkbox';
+  return isPressable(node) && node.props.accessibilityRole === 'checkbox';
 }
 
 /**

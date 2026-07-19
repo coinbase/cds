@@ -23,11 +23,49 @@ export class AndroidBuilder extends PlatformBuilder {
     }
   }
 
+  /**
+   * Append release-size optimizations to the expo-prebuild-generated build.gradle.
+   * expo prebuild regenerates this file on every build so we cannot commit edits
+   * to it — patching after prebuild is the correct pattern.
+   *
+   * Appending a second android {} block is safe in Gradle (blocks are merged).
+   */
+  async #patchBuildGradle() {
+    const buildGradlePath = path.join(this.android.projectPath, 'app', 'build.gradle');
+    const patch = `
+// Applied by apps/expo-app/scripts/utils/AndroidBuilder.mjs after expo prebuild.
+// expo prebuild regenerates build.gradle, so edits must be re-applied here.
+android {
+    // arm64-v8a only: all BrowserStack Android devices are arm64.
+    // Dropping x86/x86_64 native libs significantly reduces the APK size.
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'arm64-v8a'
+            universalApk false
+        }
+    }
+}
+// Enable R8 code shrinking and resource shrinking for release builds.
+android.buildTypes.release.minifyEnabled = true
+android.buildTypes.release.shrinkResources = true
+`;
+    await fs.appendFile(buildGradlePath, patch, 'utf8');
+    console.log('Patched android/app/build.gradle (ABI splits + R8).');
+  }
+
   async compile() {
     const { outputPath } = this.buildInfo;
     const isDebug = this.buildInfo.profile === 'debug';
     const buildType = isDebug ? 'Debug' : 'Release';
     const buildTypeLC = buildType.toLowerCase();
+
+    // Patch the freshly generated build.gradle before invoking Gradle.
+    // Only needed for release — debug builds don't need size optimizations.
+    if (!isDebug) {
+      await this.#patchBuildGradle();
+    }
 
     console.log(`Building Android app (${buildType})...`);
 
@@ -47,15 +85,25 @@ export class AndroidBuilder extends PlatformBuilder {
       'apk',
       buildTypeLC,
     );
-    const builtApkPath = path.join(builtApkDir, `app-${buildTypeLC}.apk`);
+    // ABI splits produce arm64-v8a-specific APKs; fall back to the universal name.
+    const arm64ApkPath = path.join(builtApkDir, `app-arm64-v8a-${buildTypeLC}.apk`);
+    const universalApkPath = path.join(builtApkDir, `app-${buildTypeLC}.apk`);
 
+    let builtApkPath;
     try {
-      await fs.access(builtApkPath);
-      await fs.copyFile(builtApkPath, this.android.apk);
-      console.log(`Android APK created: ${this.android.apk}`);
+      await fs.access(arm64ApkPath);
+      builtApkPath = arm64ApkPath;
     } catch {
-      throw new Error(`APK not found at ${builtApkPath}`);
+      try {
+        await fs.access(universalApkPath);
+        builtApkPath = universalApkPath;
+      } catch {
+        throw new Error(`APK not found at ${arm64ApkPath} or ${universalApkPath}`);
+      }
     }
+
+    await fs.copyFile(builtApkPath, this.android.apk);
+    console.log(`Android APK created: ${this.android.apk}`);
   }
 
   // ─────────────────────────────────────────────────────────────────

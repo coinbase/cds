@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { StyleSheet, View, type ViewStyle } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
@@ -9,7 +9,6 @@ import { type TabComponent, type TabsActiveIndicatorProps } from '../../tabs/Tab
 import { tabsSpringConfig } from '../../tabs/Tabs';
 import { Text, type TextBaseProps } from '../../typography/Text';
 
-// Animated active indicator to support smooth transition of background color
 export const PeriodSelectorActiveIndicator = ({
   activeTabRect,
   background = 'bgPrimaryWash',
@@ -19,28 +18,24 @@ export const PeriodSelectorActiveIndicator = ({
   const theme = useTheme();
   const { width, height, x, y } = activeTabRect;
 
-  // Get the target background color
   const backgroundColorKey = background as keyof typeof theme.color;
   const targetColor = theme.color[backgroundColorKey] || background;
 
-  // Track previous values for first render detection
-  const previousActiveTabRect = React.useRef(activeTabRect);
-  const previousColor = React.useRef(targetColor);
+  const animatedValues = useSharedValue({ x, y, width, backgroundColor: targetColor });
+  const isFirstRenderWithWidth = useRef(true);
 
-  // Combined animated value for position, size, and color
-  const newAnimatedValues = { x, y, width, backgroundColor: targetColor };
-  const animatedValues = useSharedValue(newAnimatedValues);
+  useEffect(() => {
+    const nextAnimatedValues = { x, y, width, backgroundColor: targetColor };
 
-  const isFirstRenderWithWidth =
-    previousActiveTabRect.current.width === 0 && activeTabRect.width > 0;
+    if (width <= 0) return;
 
-  if (previousActiveTabRect.current !== activeTabRect || previousColor.current !== targetColor) {
-    previousActiveTabRect.current = activeTabRect;
-    previousColor.current = targetColor;
-    animatedValues.value = isFirstRenderWithWidth
-      ? newAnimatedValues
-      : withSpring(newAnimatedValues, tabsSpringConfig);
-  }
+    if (isFirstRenderWithWidth.current) {
+      animatedValues.value = nextAnimatedValues;
+      isFirstRenderWithWidth.current = false;
+    } else {
+      animatedValues.value = withSpring(nextAnimatedValues, tabsSpringConfig);
+    }
+  }, [animatedValues, targetColor, width, x, y]);
 
   const animatedStyles = useAnimatedStyle(
     () => ({
@@ -94,40 +89,51 @@ const styles = StyleSheet.create({
 });
 
 export const LiveTabLabel = memo(
-  forwardRef<View, LiveTabLabelProps>(
-    ({ color = 'fgNegative', label = 'LIVE', font = 'label1', hideDot, style, ...props }, ref) => {
-      const theme = useTheme();
+  ({
+    ref,
+    color = 'fgNegative',
+    label = 'LIVE',
+    font = 'label1',
+    hideDot,
+    style,
+    ...props
+  }: LiveTabLabelProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const theme = useTheme();
 
-      const colorKey = color as keyof typeof theme.color;
-      const textColor = theme.color[colorKey] || color;
+    const colorKey = color as keyof typeof theme.color;
+    const textColor = theme.color[colorKey] || color;
 
-      const dotStyle = useMemo(
-        () => ({
-          width: theme.space[1],
-          height: theme.space[1],
-          borderRadius: 1000,
-          marginRight: theme.space[0.75],
-          backgroundColor: textColor,
-        }),
-        [theme.space, textColor],
-      );
+    const dotStyle = useMemo(
+      () => ({
+        width: theme.space[1],
+        height: theme.space[1],
+        borderRadius: 1000,
+        marginRight: theme.space[0.75],
+        backgroundColor: textColor,
+      }),
+      [theme.space, textColor],
+    );
 
-      return (
-        <View ref={ref} style={[styles.liveContainer, style]}>
-          {!hideDot && <View style={dotStyle} />}
-          <Text color={color} font={font} {...props}>
-            {label}
-          </Text>
-        </View>
-      );
-    },
-  ),
+    return (
+      <View ref={ref} style={[styles.liveContainer, style]}>
+        {!hideDot && <View style={dotStyle} />}
+        <Text color={color} font={font} {...props}>
+          {label}
+        </Text>
+      </View>
+    );
+  },
 );
 
 const PeriodSelectorTab: TabComponent = memo(
-  forwardRef((props: SegmentedTabProps, ref: React.ForwardedRef<any>) => (
-    <SegmentedTab ref={ref} font="label1" {...props} />
-  )),
+  ({
+    ref,
+    ...props
+  }: SegmentedTabProps & {
+    ref?: React.Ref<any>;
+  }) => <SegmentedTab ref={ref} font="label1" {...props} />,
 );
 
 export type PeriodSelectorProps = SegmentedTabsProps;
@@ -137,31 +143,29 @@ export type PeriodSelectorProps = SegmentedTabsProps;
  * It provides transparent background, primary wash active state, and full-width layout by default.
  */
 export const PeriodSelector = memo(
-  forwardRef(
-    (
-      {
-        background = 'transparent',
-        activeBackground = 'bgPrimaryWash',
-        activeColor = 'fgPrimary',
-        width = '100%',
-        justifyContent = 'space-between',
-        TabComponent = PeriodSelectorTab,
-        TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
-        ...props
-      }: PeriodSelectorProps,
-      ref: React.ForwardedRef<any>,
-    ) => (
-      <SegmentedTabs
-        ref={ref}
-        TabComponent={TabComponent}
-        TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
-        activeBackground={activeBackground}
-        activeColor={activeColor}
-        background={background}
-        justifyContent={justifyContent}
-        width={width}
-        {...props}
-      />
-    ),
+  ({
+    ref,
+    background = 'transparent',
+    activeBackground = 'bgPrimaryWash',
+    activeColor = 'fgPrimary',
+    width = '100%',
+    justifyContent = 'space-between',
+    TabComponent = PeriodSelectorTab,
+    TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
+    ...props
+  }: PeriodSelectorProps & {
+    ref?: React.Ref<any>;
+  }) => (
+    <SegmentedTabs
+      ref={ref}
+      TabComponent={TabComponent}
+      TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
+      activeBackground={activeBackground}
+      activeColor={activeColor}
+      background={background}
+      justifyContent={justifyContent}
+      width={width}
+      {...props}
+    />
   ),
 );

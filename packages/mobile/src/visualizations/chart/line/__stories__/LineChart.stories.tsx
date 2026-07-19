@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { View } from 'react-native';
 import {
   useAnimatedReaction,
@@ -967,7 +967,13 @@ function AssetPriceWithDottedArea() {
   }, []);
 
   const BTCTab: TabComponent = memo(
-    forwardRef(({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<View>) => {
+    ({
+      ref,
+      label,
+      ...props
+    }: SegmentedTabProps & {
+      ref?: React.Ref<View>;
+    }) => {
       const { activeTab } = useTabsContext();
       const isActive = activeTab?.id === props.id;
 
@@ -987,7 +993,7 @@ function AssetPriceWithDottedArea() {
           {...props}
         />
       );
-    }),
+    },
   );
   const BTCActiveIndicator = memo(({ style, ...props }: TabsActiveIndicatorProps) => (
     <PeriodSelectorActiveIndicator

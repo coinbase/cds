@@ -1,5 +1,7 @@
+import { createRef } from 'react';
 import { Animated } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import type { ToastRefHandle } from '@coinbase/cds-common/overlays/ToastProvider';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider, SAFE_AREA_METRICS } from '../../utils/testHelpers';
@@ -86,5 +88,26 @@ describe('Toast', () => {
 
     expect(animationParallelSpy).toHaveBeenCalled();
     expect(animationTimingSpy).toHaveBeenCalled();
+  });
+
+  it('exposes imperative hide handler via ref', () => {
+    const ref = createRef<ToastRefHandle>();
+    const onWillHide = jest.fn();
+    const onDidHide = jest.fn();
+
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <Toast ref={ref} onDidHide={onDidHide} onWillHide={onWillHide} text="Toast copy" />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    expect(ref.current).not.toBeNull();
+    expect(typeof ref.current?.hide).toBe('function');
+
+    ref.current?.hide();
+    expect(onWillHide).toHaveBeenCalledTimes(1);
+    expect(onDidHide).toHaveBeenCalledTimes(1);
   });
 });

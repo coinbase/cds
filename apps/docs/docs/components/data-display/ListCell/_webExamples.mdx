@@ -441,6 +441,10 @@ The accessibility props are only applied when the `<ListCell>` has a value for t
 
 The ListCellFallback component provides loading state representations of ListCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. The web version uses percentage-based widths and custom layouts to match the ListCell's four-column structure.
 
+:::warning
+`ListCellFallback` uses `TextFallback` for text placeholders, which requires theme `fontSize` and `lineHeight` tokens to be length values (such as `rem` or `px`); unitless or percentage values will not size accurately.
+:::
+
 ```tsx live
 <VStack gap={3}>
   {/* Basic loading state */}

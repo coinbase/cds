@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { pageHeaderHeight } from '@coinbase/cds-common/tokens/page';
@@ -48,7 +48,12 @@ export type PageHeaderProps = PageHeaderBaseProps &
   };
 
 export const PageHeader = memo(
-  forwardRef((_props: PageHeaderProps, ref: React.ForwardedRef<View>) => {
+  ({
+    ref,
+    ..._props
+  }: PageHeaderProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('PageHeader', _props);
     const { start, title, end, styles, style, ...props } = mergedProps;
     const isMultiRow = useMemo(() => Boolean(start && title && end), [start, end, title]);
@@ -90,5 +95,5 @@ export const PageHeader = memo(
         )}
       </VStack>
     );
-  }),
+  },
 );

@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useImperativeHandle, useMemo } from 'react';
+import { memo, useCallback, useImperativeHandle, useMemo } from 'react';
 import type { SharedValue } from 'react-native-reanimated';
 import { useDerivedValue } from 'react-native-reanimated';
 import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
@@ -170,82 +170,85 @@ export type ScrubberBeaconGroupProps = ScrubberBeaconGroupBaseProps & {
 };
 
 export const ScrubberBeaconGroup = memo(
-  forwardRef<ScrubberBeaconGroupRef, ScrubberBeaconGroupProps>(
-    (
-      { seriesIds, idlePulse, transitions, BeaconComponent = DefaultScrubberBeacon, stroke },
-      ref,
-    ) => {
-      const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
-      const { scrubberPosition } = useScrubberContext();
-      const { layout, getXAxis, getYAxis, series, dataLength, animate } =
-        useCartesianChartContext();
+  ({
+    ref,
+    seriesIds,
+    idlePulse,
+    transitions,
+    BeaconComponent = DefaultScrubberBeacon,
+    stroke,
+  }: ScrubberBeaconGroupProps & {
+    ref?: React.Ref<ScrubberBeaconGroupRef>;
+  }) => {
+    const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
+    const { scrubberPosition } = useScrubberContext();
+    const { layout, getXAxis, getYAxis, series, dataLength, animate } = useCartesianChartContext();
 
-      const categoryAxisIsX = useMemo(() => layout !== 'horizontal', [layout]);
-      const indexAxis = useMemo(
-        () => (categoryAxisIsX ? getXAxis() : getYAxis()),
-        [categoryAxisIsX, getXAxis, getYAxis],
-      );
+    const categoryAxisIsX = useMemo(() => layout !== 'horizontal', [layout]);
+    const indexAxis = useMemo(
+      () => (categoryAxisIsX ? getXAxis() : getYAxis()),
+      [categoryAxisIsX, getXAxis, getYAxis],
+    );
 
-      // Expose imperative handle with pulse method
-      useImperativeHandle(ref, () => ({
-        pulse: () => {
-          Object.values(ScrubberBeaconRefs.refs).forEach((beaconRef) => {
-            beaconRef?.pulse();
-          });
-        },
-      }));
+    // Expose imperative handle with pulse method
+    useImperativeHandle(ref, () => ({
+      pulse: () => {
+        Object.values(ScrubberBeaconRefs.refs).forEach((beaconRef) => {
+          beaconRef?.pulse();
+        });
+      },
+    }));
 
-      const filteredSeries = useMemo(() => {
-        return series?.filter((s) => seriesIds.includes(s.id)) ?? [];
-      }, [series, seriesIds]);
+    const filteredSeries = useMemo(() => {
+      return series?.filter((s) => seriesIds.includes(s.id)) ?? [];
+    }, [series, seriesIds]);
 
-      const dataIndex = useDerivedValue(() => {
-        return scrubberPosition.value ?? Math.max(0, dataLength - 1);
-      }, [scrubberPosition, dataLength]);
+    const dataIndex = useDerivedValue(() => {
+      return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+    }, [scrubberPosition, dataLength]);
 
-      const dataIndexValue = useDerivedValue(() => {
-        // Convert index to actual category-axis value if axis has data.
-        if (
-          indexAxis?.data &&
-          Array.isArray(indexAxis.data) &&
-          indexAxis.data[dataIndex.value] !== undefined
-        ) {
-          const dataValue = indexAxis.data[dataIndex.value];
-          return typeof dataValue === 'string' ? dataIndex.value : dataValue;
-        }
-        return dataIndex.value;
-      }, [indexAxis, dataIndex]);
+    const dataIndexValue = useDerivedValue(() => {
+      // Convert index to actual category-axis value if axis has data.
+      if (
+        indexAxis?.data &&
+        Array.isArray(indexAxis.data) &&
+        indexAxis.data[dataIndex.value] !== undefined
+      ) {
+        const dataValue = indexAxis.data[dataIndex.value];
+        return typeof dataValue === 'string' ? dataIndex.value : dataValue;
+      }
+      return dataIndex.value;
+    }, [indexAxis, dataIndex]);
 
-      const isIdle = useDerivedValue(() => {
-        return scrubberPosition.value === undefined;
-      }, [scrubberPosition]);
+    const isIdle = useDerivedValue(() => {
+      return scrubberPosition.value === undefined;
+    }, [scrubberPosition]);
 
-      const createBeaconRef = useCallback(
-        (seriesId: string) => {
-          return (beaconRef: ScrubberBeaconRef | null) => {
-            if (beaconRef) {
-              ScrubberBeaconRefs.registerRef(seriesId, beaconRef);
-            }
-          };
-        },
-        [ScrubberBeaconRefs],
-      );
+    const createBeaconRef = useCallback(
+      (seriesId: string) => {
+        return (beaconRef: ScrubberBeaconRef | null) => {
+          if (beaconRef) {
+            ScrubberBeaconRefs.registerRef(seriesId, beaconRef);
+          }
+        };
+      },
+      [ScrubberBeaconRefs],
+    );
 
-      return filteredSeries.map((s) => (
-        <BeaconWithData
-          key={s.id}
-          BeaconComponent={BeaconComponent}
-          animate={animate}
-          beaconRef={createBeaconRef(s.id)}
-          dataIndex={dataIndex}
-          dataIndexValue={dataIndexValue}
-          idlePulse={idlePulse}
-          isIdle={isIdle}
-          seriesId={s.id}
-          stroke={stroke}
-          transitions={transitions}
-        />
-      ));
-    },
-  ),
+    return filteredSeries.map((s) => (
+      <BeaconWithData
+        key={s.id}
+        BeaconComponent={BeaconComponent}
+        animate={animate}
+        beaconRef={createBeaconRef(s.id)}
+        dataIndex={dataIndex}
+        dataIndexValue={dataIndexValue}
+        idlePulse={idlePulse}
+        isIdle={isIdle}
+        seriesId={s.id}
+        stroke={stroke}
+        transitions={transitions}
+      />
+    ));
+  },
 );

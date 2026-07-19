@@ -1,4 +1,4 @@
-import React, { forwardRef, isValidElement, memo, useCallback, useMemo, useState } from 'react';
+import React, { isValidElement, memo, useCallback, useMemo, useState } from 'react';
 import type { StyleProp, TextStyle, View, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { variants } from '@coinbase/cds-common/tokens/banner';
@@ -112,27 +112,99 @@ export type BannerProps = BannerBaseProps &
  */
 export type MobileBannerProps = BannerProps;
 
-export const Banner = memo(
-  forwardRef(function Banner(_props: BannerProps, forwardedRef: React.ForwardedRef<View>) {
-    const mergedProps = useComponentConfig('Banner', _props);
-    const {
-      variant,
-      startIcon,
-      startIconActive,
-      onClose,
-      primaryAction,
-      secondaryAction,
-      title,
-      children,
-      showDismiss = false,
-      testID,
-      numberOfLines = 3,
-      style,
-      label,
-      styleVariant = 'contextual',
-      startIconAccessibilityLabel,
-      closeAccessibilityLabel = 'close',
-      borderRadius = styleVariant === 'contextual' ? 400 : undefined,
+export const Banner = memo(function Banner({
+  ref: forwardedRef,
+  ..._props
+}: BannerProps & {
+  ref?: React.Ref<View>;
+}) {
+  const mergedProps = useComponentConfig('Banner', _props);
+  const {
+    variant,
+    startIcon,
+    startIconActive,
+    onClose,
+    primaryAction,
+    secondaryAction,
+    title,
+    children,
+    showDismiss = false,
+    testID,
+    numberOfLines = 3,
+    style,
+    label,
+    styleVariant = 'contextual',
+    startIconAccessibilityLabel,
+    closeAccessibilityLabel = 'close',
+    borderRadius = styleVariant === 'contextual' ? 400 : undefined,
+    margin,
+    marginX,
+    marginY,
+    marginTop,
+    marginEnd,
+    marginBottom,
+    marginStart,
+    styles,
+    ...props
+  } = mergedProps;
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const theme = useTheme();
+
+  // Events
+  const handleOnDismiss = useCallback(() => {
+    setIsCollapsed(true);
+    onClose?.();
+  }, [onClose]);
+
+  // Setup color configs
+  const {
+    iconColor,
+    textColor,
+    background,
+    primaryActionColor,
+    secondaryActionColor,
+    iconButtonColor,
+    borderColor,
+  } = variants[variant];
+
+  const clonedPrimaryAction = useMemo(() => {
+    if (!isValidElement(primaryAction)) return null;
+
+    if (primaryAction.type === Link) {
+      return React.cloneElement(primaryAction, {
+        font: 'label1',
+        color: primaryActionColor,
+        testID: `${testID}-action--primary`,
+        ...(primaryAction.props as LinkProps),
+      });
+    } else {
+      return React.cloneElement(primaryAction, {
+        testID: `${testID}-action--primary`,
+        ...(primaryAction.props as any), // we don't know the type of element this ReactNode is
+      });
+    }
+  }, [primaryAction, primaryActionColor, testID]);
+
+  const clonedSecondaryAction = useMemo(() => {
+    if (!isValidElement(secondaryAction)) return null;
+
+    if (secondaryAction.type === Link) {
+      return React.cloneElement(secondaryAction, {
+        font: 'label1',
+        color: secondaryActionColor,
+        testID: `${testID}-action--secondary`,
+        ...(secondaryAction.props as LinkProps),
+      });
+    } else {
+      return React.cloneElement(secondaryAction, {
+        testID: `${testID}-action--secondary`,
+        ...(secondaryAction.props as any), // we don't know the type of element this ReactNode is
+      });
+    }
+  }, [secondaryAction, secondaryActionColor, testID]);
+
+  const marginStyles = useMemo(
+    () => ({
       margin,
       marginX,
       marginY,
@@ -140,183 +212,114 @@ export const Banner = memo(
       marginEnd,
       marginBottom,
       marginStart,
-      styles,
-      ...props
-    } = mergedProps;
-    const [isCollapsed, setIsCollapsed] = useState(false);
-    const theme = useTheme();
+    }),
+    [margin, marginX, marginY, marginTop, marginEnd, marginBottom, marginStart],
+  );
 
-    // Events
-    const handleOnDismiss = useCallback(() => {
-      setIsCollapsed(true);
-      onClose?.();
-    }, [onClose]);
+  const borderBox = (
+    <Box pin="left" style={{ backgroundColor: theme.color[borderColor] }} width={4} />
+  );
 
-    // Setup color configs
-    const {
-      iconColor,
-      textColor,
-      background,
-      primaryActionColor,
-      secondaryActionColor,
-      iconButtonColor,
-      borderColor,
-    } = variants[variant];
-
-    const clonedPrimaryAction = useMemo(() => {
-      if (!isValidElement(primaryAction)) return null;
-
-      if (primaryAction.type === Link) {
-        return React.cloneElement(primaryAction, {
-          font: 'label1',
-          color: primaryActionColor,
-          testID: `${testID}-action--primary`,
-          ...(primaryAction.props as LinkProps),
-        });
-      } else {
-        return React.cloneElement(primaryAction, {
-          testID: `${testID}-action--primary`,
-          ...(primaryAction.props as any), // we don't know the type of element this ReactNode is
-        });
-      }
-    }, [primaryAction, primaryActionColor, testID]);
-
-    const clonedSecondaryAction = useMemo(() => {
-      if (!isValidElement(secondaryAction)) return null;
-
-      if (secondaryAction.type === Link) {
-        return React.cloneElement(secondaryAction, {
-          font: 'label1',
-          color: secondaryActionColor,
-          testID: `${testID}-action--secondary`,
-          ...(secondaryAction.props as LinkProps),
-        });
-      } else {
-        return React.cloneElement(secondaryAction, {
-          testID: `${testID}-action--secondary`,
-          ...(secondaryAction.props as any), // we don't know the type of element this ReactNode is
-        });
-      }
-    }, [secondaryAction, secondaryActionColor, testID]);
-
-    const marginStyles = useMemo(
-      () => ({
-        margin,
-        marginX,
-        marginY,
-        marginTop,
-        marginEnd,
-        marginBottom,
-        marginStart,
-      }),
-      [margin, marginX, marginY, marginTop, marginEnd, marginBottom, marginStart],
-    );
-
-    const borderBox = (
-      <Box pin="left" style={{ backgroundColor: theme.color[borderColor] }} width={4} />
-    );
-
-    const content = (
-      <HStack
-        ref={forwardedRef}
-        background={background}
-        borderRadius={borderRadius}
-        gap={1}
-        paddingX={styleVariant === 'contextual' ? 2 : 3}
-        paddingY={2}
-        style={[style, styles?.content]}
-        testID={testID}
-        {...props}
+  const content = (
+    <HStack
+      ref={forwardedRef}
+      background={background}
+      borderRadius={borderRadius}
+      gap={1}
+      paddingX={styleVariant === 'contextual' ? 2 : 3}
+      paddingY={2}
+      style={[style, styles?.content]}
+      testID={testID}
+      {...props}
+    >
+      {/** Start */}
+      <Box
+        accessibilityLabel={startIconAccessibilityLabel}
+        accessibilityRole="image"
+        accessible={!!startIconAccessibilityLabel}
+        style={styles?.start}
       >
-        {/** Start */}
-        <Box
-          accessibilityLabel={startIconAccessibilityLabel}
-          accessibilityRole="image"
-          accessible={!!startIconAccessibilityLabel}
-          style={styles?.start}
-        >
-          <Icon
-            active={startIconActive}
-            color={iconColor}
-            name={startIcon}
-            paddingX={0.5}
-            paddingY={0.25}
-            size="s"
-            testID={`${testID}-icon`}
-          />
-        </Box>
-        <VStack
-          flexGrow={1}
-          flexShrink={1}
-          gap={2}
-          justifyContent="space-between"
-          style={styles?.body}
-          testID={`${testID}-inner-end-box`}
-        >
-          {/** Middle */}
-          <VStack gap={2} style={styles?.middle} testID={`${testID}-content-box`}>
-            <VStack gap={0.5}>
-              {typeof title === 'string' ? (
-                <Text color={textColor} font="label1" numberOfLines={2}>
-                  {title}
-                </Text>
-              ) : (
-                title
-              )}
-              {typeof children === 'string' ? (
-                <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
-                  {children}
-                </Text>
-              ) : (
-                children
-              )}
-            </VStack>
-            {typeof label === 'string' ? (
-              <Text color="fgMuted" font="legal" numberOfLines={1} style={styles?.label}>
-                {label}
+        <Icon
+          active={startIconActive}
+          color={iconColor}
+          name={startIcon}
+          paddingX={0.5}
+          paddingY={0.25}
+          size="s"
+          testID={`${testID}-icon`}
+        />
+      </Box>
+      <VStack
+        flexGrow={1}
+        flexShrink={1}
+        gap={2}
+        justifyContent="space-between"
+        style={styles?.body}
+        testID={`${testID}-inner-end-box`}
+      >
+        {/** Middle */}
+        <VStack gap={2} style={styles?.middle} testID={`${testID}-content-box`}>
+          <VStack gap={0.5}>
+            {typeof title === 'string' ? (
+              <Text color={textColor} font="label1" numberOfLines={2}>
+                {title}
               </Text>
             ) : (
-              label
+              title
+            )}
+            {typeof children === 'string' ? (
+              <Text color={textColor} font="label2" numberOfLines={numberOfLines}>
+                {children}
+              </Text>
+            ) : (
+              children
             )}
           </VStack>
-          {/** Actions */}
-          {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
-            <HStack alignItems="center" gap={2} style={styles?.actions} testID={`${testID}-action`}>
-              {clonedPrimaryAction}
-              {clonedSecondaryAction}
-            </HStack>
+          {typeof label === 'string' ? (
+            <Text color="fgMuted" font="legal" numberOfLines={1} style={styles?.label}>
+              {label}
+            </Text>
+          ) : (
+            label
           )}
         </VStack>
-        {/** Dismissable action */}
-        {showDismiss && (
-          <Box alignItems="flex-start" padding={0.5} style={styles?.dismiss}>
-            <Pressable
-              accessibilityLabel={closeAccessibilityLabel}
-              accessibilityRole="button"
-              background="transparent"
-              borderRadius={1000}
-              hitSlop={{ top: 15, left: 15, bottom: 15, right: 15 }}
-              onPress={handleOnDismiss}
-              testID={`${testID}-dismiss-btn`}
-            >
-              <Icon color={iconButtonColor} name="close" size="s" />
-            </Pressable>
-          </Box>
+        {/** Actions */}
+        {(!!clonedPrimaryAction || !!clonedSecondaryAction) && (
+          <HStack alignItems="center" gap={2} style={styles?.actions} testID={`${testID}-action`}>
+            {clonedPrimaryAction}
+            {clonedSecondaryAction}
+          </HStack>
         )}
-      </HStack>
-    );
+      </VStack>
+      {/** Dismissable action */}
+      {showDismiss && (
+        <Box alignItems="flex-start" padding={0.5} style={styles?.dismiss}>
+          <Pressable
+            accessibilityLabel={closeAccessibilityLabel}
+            accessibilityRole="button"
+            background="transparent"
+            borderRadius={1000}
+            hitSlop={{ top: 15, left: 15, bottom: 15, right: 15 }}
+            onPress={handleOnDismiss}
+            testID={`${testID}-dismiss-btn`}
+          >
+            <Icon color={iconButtonColor} name="close" size="s" />
+          </Pressable>
+        </Box>
+      )}
+    </HStack>
+  );
 
-    return (
-      <Box {...marginStyles} style={styles?.root}>
-        {showDismiss ? (
-          <Collapsible collapsed={isCollapsed} testID={`${testID}-collapsible`}>
-            {content}
-          </Collapsible>
-        ) : (
-          content
-        )}
-        {styleVariant === 'global' && borderBox}
-      </Box>
-    );
-  }),
-);
+  return (
+    <Box {...marginStyles} style={styles?.root}>
+      {showDismiss ? (
+        <Collapsible collapsed={isCollapsed} testID={`${testID}-collapsible`}>
+          {content}
+        </Collapsible>
+      ) : (
+        content
+      )}
+      {styleVariant === 'global' && borderBox}
+    </Box>
+  );
+});

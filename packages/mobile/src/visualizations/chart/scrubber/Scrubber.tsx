@@ -1,11 +1,4 @@
-import React, {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-} from 'react';
+import React, { memo, useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
 import {
   runOnJS,
   useAnimatedReaction,
@@ -256,234 +249,232 @@ export type ScrubberRef = ScrubberBeaconGroupRef;
  * Unified component that manages all scrubber elements (beacons, line, labels).
  */
 export const Scrubber = memo(
-  forwardRef<ScrubberRef, ScrubberProps>(
-    (
-      {
-        seriesIds,
-        hideBeaconLabels,
-        hideLine,
-        label,
-        lineStroke,
-        BeaconComponent = DefaultScrubberBeacon,
-        BeaconLabelComponent,
-        LineComponent,
-        LabelComponent = DefaultScrubberLabel,
-        labelElevated,
-        hideOverlay,
-        overlayOffset = 2,
-        beaconLabelMinGap,
-        beaconLabelHorizontalOffset,
-        beaconLabelPreferredSide,
-        labelFont,
-        labelBoundsInset,
-        beaconLabelFont,
-        idlePulse,
-        beaconTransitions,
-        transitions = beaconTransitions,
-        beaconStroke,
+  ({
+    ref,
+    seriesIds,
+    hideBeaconLabels,
+    hideLine,
+    label,
+    lineStroke,
+    BeaconComponent = DefaultScrubberBeacon,
+    BeaconLabelComponent,
+    LineComponent,
+    LabelComponent = DefaultScrubberLabel,
+    labelElevated,
+    hideOverlay,
+    overlayOffset = 2,
+    beaconLabelMinGap,
+    beaconLabelHorizontalOffset,
+    beaconLabelPreferredSide,
+    labelFont,
+    labelBoundsInset,
+    beaconLabelFont,
+    idlePulse,
+    beaconTransitions,
+    transitions = beaconTransitions,
+    beaconStroke,
+  }: ScrubberProps & {
+    ref?: React.Ref<ScrubberRef>;
+  }) => {
+    const theme = useTheme();
+    const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
+
+    const { scrubberPosition } = useScrubberContext();
+    const {
+      layout,
+      getXSerializableScale,
+      getYSerializableScale,
+      getXAxis,
+      getYAxis,
+      series,
+      drawingArea,
+      animate,
+      dataLength,
+    } = useCartesianChartContext();
+
+    const categoryAxisIsX = useMemo(() => layout !== 'horizontal', [layout]);
+    const indexAxis = useMemo(
+      () => (categoryAxisIsX ? getXAxis() : getYAxis()),
+      [categoryAxisIsX, getXAxis, getYAxis],
+    );
+    const indexScale = useMemo(
+      () => (categoryAxisIsX ? getXSerializableScale() : getYSerializableScale()),
+      [categoryAxisIsX, getXSerializableScale, getYSerializableScale],
+    );
+
+    // Animation state for delayed scrubber rendering (matches web timing)
+    const scrubberOpacity = useSharedValue(animate ? 0 : 1);
+
+    // Expose imperative handle with pulse method
+    useImperativeHandle(ref, () => ({
+      pulse: () => {
+        beaconGroupRef.current?.pulse();
       },
-      ref,
-    ) => {
-      const theme = useTheme();
-      const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
+    }));
 
-      const { scrubberPosition } = useScrubberContext();
-      const {
-        layout,
-        getXSerializableScale,
-        getYSerializableScale,
-        getXAxis,
-        getYAxis,
-        series,
-        drawingArea,
-        animate,
-        dataLength,
-      } = useCartesianChartContext();
+    const filteredSeriesIds = useMemo(() => {
+      if (seriesIds === undefined) {
+        return series?.map((s) => s.id) ?? [];
+      }
+      return seriesIds;
+    }, [series, seriesIds]);
 
-      const categoryAxisIsX = useMemo(() => layout !== 'horizontal', [layout]);
-      const indexAxis = useMemo(
-        () => (categoryAxisIsX ? getXAxis() : getYAxis()),
-        [categoryAxisIsX, getXAxis, getYAxis],
-      );
-      const indexScale = useMemo(
-        () => (categoryAxisIsX ? getXSerializableScale() : getYSerializableScale()),
-        [categoryAxisIsX, getXSerializableScale, getYSerializableScale],
-      );
+    const dataIndex = useDerivedValue(() => {
+      return scrubberPosition.value ?? Math.max(0, dataLength - 1);
+    }, [scrubberPosition, dataLength]);
 
-      // Animation state for delayed scrubber rendering (matches web timing)
-      const scrubberOpacity = useSharedValue(animate ? 0 : 1);
+    const dataValue = useDerivedValue(() => {
+      if (
+        indexAxis?.data &&
+        Array.isArray(indexAxis.data) &&
+        indexAxis.data[dataIndex.value] !== undefined
+      ) {
+        const axisValue = indexAxis.data[dataIndex.value];
+        return typeof axisValue === 'string' ? dataIndex.value : axisValue;
+      }
+      return dataIndex.value;
+    }, [indexAxis, dataIndex]);
 
-      // Expose imperative handle with pulse method
-      useImperativeHandle(ref, () => ({
-        pulse: () => {
-          beaconGroupRef.current?.pulse();
-        },
-      }));
+    const lineOpacity = useDerivedValue(() => {
+      return scrubberPosition.value !== undefined ? 1 : 0;
+    }, [scrubberPosition]);
 
-      const filteredSeriesIds = useMemo(() => {
-        if (seriesIds === undefined) {
-          return series?.map((s) => s.id) ?? [];
+    const overlayOpacity = useDerivedValue(() => {
+      return scrubberPosition.value !== undefined ? 0.8 : 0;
+    }, [scrubberPosition]);
+
+    const pixelPosition = useDerivedValue(() => {
+      if (dataValue.value === undefined || !indexScale) return undefined;
+      return getPointOnSerializableScale(dataValue.value, indexScale);
+    }, [dataValue, indexScale]);
+
+    const overlayWidth = useDerivedValue(() => {
+      const pixel = pixelPosition.value ?? 0;
+      return categoryAxisIsX
+        ? drawingArea.x + drawingArea.width - pixel + overlayOffset
+        : drawingArea.width + overlayOffset * 2;
+    }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+
+    const overlayHeight = useDerivedValue(() => {
+      const pixel = pixelPosition.value ?? 0;
+      return categoryAxisIsX
+        ? drawingArea.height + overlayOffset * 2
+        : drawingArea.y + drawingArea.height - pixel + overlayOffset;
+    }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+
+    const overlayX = useDerivedValue(() => {
+      const pixel = pixelPosition.value ?? 0;
+      return categoryAxisIsX ? pixel : drawingArea.x - overlayOffset;
+    }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+
+    const overlayY = useDerivedValue(() => {
+      const pixel = pixelPosition.value ?? 0;
+      return categoryAxisIsX ? drawingArea.y - overlayOffset : pixel;
+    }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+
+    const resolvedLabelValue = useSharedValue<SkParagraph | string>('');
+
+    const updateResolvedLabel = useCallback(
+      (index: number) => {
+        if (!label) {
+          resolvedLabelValue.value = '';
+          return;
         }
-        return seriesIds;
-      }, [series, seriesIds]);
 
-      const dataIndex = useDerivedValue(() => {
-        return scrubberPosition.value ?? Math.max(0, dataLength - 1);
-      }, [scrubberPosition, dataLength]);
-
-      const dataValue = useDerivedValue(() => {
-        if (
-          indexAxis?.data &&
-          Array.isArray(indexAxis.data) &&
-          indexAxis.data[dataIndex.value] !== undefined
-        ) {
-          const axisValue = indexAxis.data[dataIndex.value];
-          return typeof axisValue === 'string' ? dataIndex.value : axisValue;
+        if (typeof label === 'function') {
+          const result = label(index);
+          resolvedLabelValue.value = result ?? '';
+        } else if (typeof label === 'string') {
+          resolvedLabelValue.value = label;
         }
-        return dataIndex.value;
-      }, [indexAxis, dataIndex]);
+      },
+      [label, resolvedLabelValue],
+    );
 
-      const lineOpacity = useDerivedValue(() => {
-        return scrubberPosition.value !== undefined ? 1 : 0;
-      }, [scrubberPosition]);
+    // Update resolved label when dataIndex changes
+    useAnimatedReaction(
+      () => dataIndex.value,
+      (currentIndex) => {
+        'worklet';
+        runOnJS(updateResolvedLabel)(currentIndex);
+      },
+      [updateResolvedLabel],
+    );
 
-      const overlayOpacity = useDerivedValue(() => {
-        return scrubberPosition.value !== undefined ? 0.8 : 0;
-      }, [scrubberPosition]);
+    const beaconLabels: ScrubberBeaconLabelGroupBaseProps['labels'] = useMemo(
+      () =>
+        series
+          ?.filter((s) => filteredSeriesIds.includes(s.id))
+          .filter((s) => s.label !== undefined && s.label.length > 0)
+          .map((s) => ({
+            seriesId: s.id,
+            label: s.label!,
+            color: s.color,
+          })) ?? [],
+      [series, filteredSeriesIds],
+    );
 
-      const pixelPosition = useDerivedValue(() => {
-        if (dataValue.value === undefined || !indexScale) return undefined;
-        return getPointOnSerializableScale(dataValue.value, indexScale);
-      }, [dataValue, indexScale]);
+    const showBeaconLabels = !hideBeaconLabels && categoryAxisIsX && beaconLabels.length > 0;
+    const isReady = !!indexScale;
 
-      const overlayWidth = useDerivedValue(() => {
-        const pixel = pixelPosition.value ?? 0;
-        return categoryAxisIsX
-          ? drawingArea.x + drawingArea.width - pixel + overlayOffset
-          : drawingArea.width + overlayOffset * 2;
-      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+    const groupEnterTransition = useMemo(
+      () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
+      [transitions?.enter, animate],
+    );
 
-      const overlayHeight = useDerivedValue(() => {
-        const pixel = pixelPosition.value ?? 0;
-        return categoryAxisIsX
-          ? drawingArea.height + overlayOffset * 2
-          : drawingArea.y + drawingArea.height - pixel + overlayOffset;
-      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+    useEffect(() => {
+      if (animate && isReady) {
+        scrubberOpacity.value = buildTransition(1, groupEnterTransition);
+      }
+    }, [animate, isReady, scrubberOpacity, groupEnterTransition]);
 
-      const overlayX = useDerivedValue(() => {
-        const pixel = pixelPosition.value ?? 0;
-        return categoryAxisIsX ? pixel : drawingArea.x - overlayOffset;
-      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
+    if (!isReady) return;
 
-      const overlayY = useDerivedValue(() => {
-        const pixel = pixelPosition.value ?? 0;
-        return categoryAxisIsX ? drawingArea.y - overlayOffset : pixel;
-      }, [pixelPosition, categoryAxisIsX, drawingArea, overlayOffset]);
-
-      const resolvedLabelValue = useSharedValue<SkParagraph | string>('');
-
-      const updateResolvedLabel = useCallback(
-        (index: number) => {
-          if (!label) {
-            resolvedLabelValue.value = '';
-            return;
-          }
-
-          if (typeof label === 'function') {
-            const result = label(index);
-            resolvedLabelValue.value = result ?? '';
-          } else if (typeof label === 'string') {
-            resolvedLabelValue.value = label;
-          }
-        },
-        [label, resolvedLabelValue],
-      );
-
-      // Update resolved label when dataIndex changes
-      useAnimatedReaction(
-        () => dataIndex.value,
-        (currentIndex) => {
-          'worklet';
-          runOnJS(updateResolvedLabel)(currentIndex);
-        },
-        [updateResolvedLabel],
-      );
-
-      const beaconLabels: ScrubberBeaconLabelGroupBaseProps['labels'] = useMemo(
-        () =>
-          series
-            ?.filter((s) => filteredSeriesIds.includes(s.id))
-            .filter((s) => s.label !== undefined && s.label.length > 0)
-            .map((s) => ({
-              seriesId: s.id,
-              label: s.label!,
-              color: s.color,
-            })) ?? [],
-        [series, filteredSeriesIds],
-      );
-
-      const showBeaconLabels = !hideBeaconLabels && categoryAxisIsX && beaconLabels.length > 0;
-      const isReady = !!indexScale;
-
-      const groupEnterTransition = useMemo(
-        () => getTransition(transitions?.enter, animate, defaultAccessoryEnterTransition),
-        [transitions?.enter, animate],
-      );
-
-      useEffect(() => {
-        if (animate && isReady) {
-          scrubberOpacity.value = buildTransition(1, groupEnterTransition);
-        }
-      }, [animate, isReady, scrubberOpacity, groupEnterTransition]);
-
-      if (!isReady) return;
-
-      return (
-        <Group layer={<Paint opacity={scrubberOpacity} />}>
-          {!hideOverlay && (
-            <Rect
-              color={theme.color.bg}
-              height={overlayHeight}
-              opacity={overlayOpacity}
-              width={overlayWidth}
-              x={overlayX}
-              y={overlayY}
-            />
-          )}
-          {!hideLine && (
-            <ReferenceLine
-              LabelComponent={LabelComponent}
-              LineComponent={LineComponent}
-              {...(categoryAxisIsX ? { dataX: dataValue } : { dataY: dataValue })}
-              label={resolvedLabelValue}
-              labelBoundsInset={labelBoundsInset}
-              labelElevated={labelElevated}
-              labelFont={labelFont}
-              opacity={lineOpacity}
-              stroke={lineStroke}
-            />
-          )}
-          <ScrubberBeaconGroup
-            ref={beaconGroupRef}
-            BeaconComponent={BeaconComponent}
-            idlePulse={idlePulse}
-            seriesIds={filteredSeriesIds}
-            stroke={beaconStroke}
+    return (
+      <Group layer={<Paint opacity={scrubberOpacity} />}>
+        {!hideOverlay && (
+          <Rect
+            color={theme.color.bg}
+            height={overlayHeight}
+            opacity={overlayOpacity}
+            width={overlayWidth}
+            x={overlayX}
+            y={overlayY}
+          />
+        )}
+        {!hideLine && (
+          <ReferenceLine
+            LabelComponent={LabelComponent}
+            LineComponent={LineComponent}
+            {...(categoryAxisIsX ? { dataX: dataValue } : { dataY: dataValue })}
+            label={resolvedLabelValue}
+            labelBoundsInset={labelBoundsInset}
+            labelElevated={labelElevated}
+            labelFont={labelFont}
+            opacity={lineOpacity}
+            stroke={lineStroke}
+          />
+        )}
+        <ScrubberBeaconGroup
+          ref={beaconGroupRef}
+          BeaconComponent={BeaconComponent}
+          idlePulse={idlePulse}
+          seriesIds={filteredSeriesIds}
+          stroke={beaconStroke}
+          transitions={transitions}
+        />
+        {showBeaconLabels && (
+          <ScrubberBeaconLabelGroup
+            BeaconLabelComponent={BeaconLabelComponent}
+            labelFont={beaconLabelFont}
+            labelHorizontalOffset={beaconLabelHorizontalOffset}
+            labelMinGap={beaconLabelMinGap}
+            labelPreferredSide={beaconLabelPreferredSide}
+            labels={beaconLabels}
             transitions={transitions}
           />
-          {showBeaconLabels && (
-            <ScrubberBeaconLabelGroup
-              BeaconLabelComponent={BeaconLabelComponent}
-              labelFont={beaconLabelFont}
-              labelHorizontalOffset={beaconLabelHorizontalOffset}
-              labelMinGap={beaconLabelMinGap}
-              labelPreferredSide={beaconLabelPreferredSide}
-              labels={beaconLabels}
-              transitions={transitions}
-            />
-          )}
-        </Group>
-      );
-    },
-  ),
+        )}
+      </Group>
+    );
+  },
 );

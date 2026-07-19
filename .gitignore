@@ -155,12 +155,15 @@ android
 # expo-app generated artifacts
 apps/expo-app/artifacts
 apps/expo-app/build/
-# we expect developers to generate their own debug builds for local development
-apps/expo-app/prebuilds/ios-debug/
-apps/expo-app/prebuilds/android-debug/
-# android release builds are too large to be committed at this time
-# committed prebuilds are especially important for running visreg in CI so we will need to figure out a solution when we turn android tests back on
-apps/expo-app/prebuilds/android-release/
+# Ignore all prebuilds except the two committed device artifacts used by
+# BrowserStack visreg CI. Use glob form (not trailing slash) so negation works.
+apps/expo-app/prebuilds/*
+!apps/expo-app/prebuilds/ios-release-device
+apps/expo-app/prebuilds/ios-release-device/*
+!apps/expo-app/prebuilds/ios-release-device/expoapp.ipa
+!apps/expo-app/prebuilds/android-release
+apps/expo-app/prebuilds/android-release/*
+!apps/expo-app/prebuilds/android-release/expoapp.apk
 
 #reassure
 **/.reassure/*

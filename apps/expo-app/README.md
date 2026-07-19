@@ -1,67 +1,78 @@
 # expo-app
 
-Expo-based demo app for testing CDS mobile components. Used as the visual regression (visreg) target app for the CDS v9 branch.
+Expo-based demo app for testing CDS mobile components. Used as the visual regression (visreg) target app — Maestro flows run against it on BrowserStack App Automate real devices.
 
 ## Nx targets
 
-| Command                                                | Description                                                                             |
-| ------------------------------------------------------ | --------------------------------------------------------------------------------------- |
-| `yarn nx run expo-app:ios`                             | Build (if needed), install, launch, and start Metro — full dev loop for iOS (debug)     |
-| `yarn nx run expo-app:ios --configuration=release`     | Install and launch the release build artifact (no Metro)                                |
-| `yarn nx run expo-app:android`                         | Build (if needed), install, launch, and start Metro — full dev loop for Android (debug) |
-| `yarn nx run expo-app:android --configuration=release` | Install and launch the release build artifact (no Metro)                                |
-| `yarn nx run expo-app:start`                           | Start Metro bundler only (assumes app is already installed)                             |
-| `yarn nx run expo-app:build --configuration=<config>`  | Compile the native app and archive to a tarball in `prebuilds/`                         |
-| `yarn nx run expo-app:launch --configuration=<config>` | Install + launch an existing build artifact on a simulator/emulator                     |
-| `yarn nx run expo-app:patch-bundle-ios`                | Swap the JS bundle inside the committed iOS Release prebuild — used by visreg CI        |
-| `yarn nx run expo-app:patch-bundle-android`            | Swap the JS bundle inside the committed Android Release prebuild — used by visreg CI    |
-| `yarn nx run expo-app:validate`                        | Check Expo dependency versions for compatibility                                        |
-| `yarn nx run expo-app:lint`                            | Lint the app source                                                                     |
-| `yarn nx run expo-app:typecheck`                       | Type-check the app source                                                               |
+| Command                                                        | Description                                                                       |
+| -------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| `yarn nx run expo-app:ios`                                     | Build (if needed), install, launch, and start Metro — full iOS debug dev loop     |
+| `yarn nx run expo-app:ios --configuration=release`             | Install and launch the release build (no Metro)                                   |
+| `yarn nx run expo-app:android`                                 | Build (if needed), install, launch, and start Metro — full Android debug dev loop |
+| `yarn nx run expo-app:android --configuration=release`         | Install and launch the release build (no Metro)                                   |
+| `yarn nx run expo-app:start`                                   | Start Metro bundler only (assumes app is already installed)                       |
+| `yarn nx run expo-app:build --configuration=<config>`          | Compile the native app and write the artifact to `prebuilds/`                     |
+| `yarn nx run expo-app:launch --configuration=<config>`         | Install + launch an existing build artifact on a simulator/emulator               |
+| `yarn nx run expo-app:patch-bundle --configuration=ios-device` | Swap the JS bundle inside the committed iOS device `.ipa` — used by CI visreg     |
+| `yarn nx run expo-app:patch-bundle --configuration=android`    | Swap the JS bundle inside the committed Android `.apk` — used by CI visreg        |
+| `yarn nx run expo-app:validate`                                | Check Expo dependency versions for compatibility                                  |
+| `yarn nx run expo-app:lint`                                    | Lint the app source                                                               |
+| `yarn nx run expo-app:typecheck`                               | Type-check the app source                                                         |
 
 ## Build configurations
 
-| Configuration        | Platform | Profile | Target    | Output                                     |
-| -------------------- | -------- | ------- | --------- | ------------------------------------------ |
-| `ios-debug`          | iOS      | Debug   | Simulator | `prebuilds/ios-debug/expoapp.tar.gz`       |
-| `ios-release`        | iOS      | Release | Simulator | `prebuilds/ios-release/expoapp.tar.gz`     |
-| `ios-debug-device`   | iOS      | Debug   | Device    | `prebuilds/ios-debug-device/expoapp.ipa`   |
-| `ios-release-device` | iOS      | Release | Device    | `prebuilds/ios-release-device/expoapp.ipa` |
-| `android-debug`      | Android  | Debug   | Emulator  | `prebuilds/android-debug/expoapp.apk`      |
-| `android-release`    | Android  | Release | Emulator  | `prebuilds/android-release/expoapp.apk`    |
+| Configuration        | Platform | Profile | Target    | Output                                                 |
+| -------------------- | -------- | ------- | --------- | ------------------------------------------------------ |
+| `ios-debug`          | iOS      | Debug   | Simulator | `prebuilds/ios-debug/expoapp.tar.gz`                   |
+| `ios-release`        | iOS      | Release | Simulator | `prebuilds/ios-release/expoapp.tar.gz`                 |
+| `ios-debug-device`   | iOS      | Debug   | Device    | `prebuilds/ios-debug-device/expoapp.ipa`               |
+| `ios-release-device` | iOS      | Release | Device    | `prebuilds/ios-release-device/expoapp.ipa` ✓ committed |
+| `android-debug`      | Android  | Debug   | Emulator  | `prebuilds/android-debug/expoapp.apk`                  |
+| `android-release`    | Android  | Release | Device    | `prebuilds/android-release/expoapp.apk` ✓ committed    |
 
 ## Prebuilds
 
-The `prebuilds/` directory contains pre-compiled native artifacts (tarballs) that are committed to the repo. This means CI and team members never need to run a full native build just to run visreg or launch the app for JS-only development.
+The `prebuilds/` directory contains pre-compiled native artifacts committed to the repo so CI never needs to do a full native build just to run visreg.
 
-**Committed:** iOS tarballs (`.tar.gz`), Android release zips (`.zip`)
-**Not committed:** Extracted `.app` directories (recreated at runtime from the tarball), Android debug APKs
+**Committed artifacts (used by CI visreg):**
+
+| File                                       | Purpose                                             |
+| ------------------------------------------ | --------------------------------------------------- |
+| `prebuilds/ios-release-device/expoapp.ipa` | iOS real-device build for BrowserStack App Automate |
+| `prebuilds/android-release/expoapp.apk`    | Android build for BrowserStack App Automate         |
+
+**Not committed:** extracted `.app` directories, debug builds (too large).
 
 ### Updating prebuilds
 
-Rebuild and commit a new tarball whenever native dependencies change (e.g. a new native module, an RN upgrade, or an Expo SDK bump):
+Rebuild and commit when native dependencies, the Expo SDK, or native config changes. JS-only changes use `patch-bundle` instead (no rebuild needed).
+
+**Why commit the built artifacts?** CI never runs a full native build on a PR — a full native build takes several minutes per platform on every run. Instead, CI downloads the committed artifact and patches in a fresh JS bundle from the current branch (a few seconds). The committed artifact is the stable native binary; `patch-bundle` keeps the JS layer current. Only rebuild and re-commit when the native layer itself changes.
 
 ```bash
-# iOS release (used by visreg CI)
-yarn nx run expo-app:build --configuration=ios-release
+# iOS device build — requires macOS (Xcode)
+yarn nx run expo-app:build --configuration=ios-release-device
 
-# iOS debug (used for local development)
-yarn nx run expo-app:build --configuration=ios-debug
+# Android — any OS with Android SDK
+yarn nx run expo-app:build --configuration=android-release
 
-# Then commit the updated tarballs
-git add apps/expo-app/prebuilds/
-git commit -m "chore: update expo-app prebuilds"
+git add apps/expo-app/prebuilds/ios-release-device/expoapp.ipa \
+        apps/expo-app/prebuilds/android-release/expoapp.apk
+git commit -m "chore(expo-app): update release prebuilds"
 ```
 
-### patch-bundle targets
+See [docs/building-mobile.md](./docs/building-mobile.md) for more detail.
 
-`patch-bundle-ios` and `patch-bundle-android` update the JS bundle inside an already-extracted prebuild without recompiling native code. This is what visreg CI runs instead of a full build:
+### patch-bundle target
 
-1. Extracts `prebuilds/ios-release/expoapp.tar.gz` → `prebuilds/ios-release/expoapp.app`
-2. Runs `expo export` to produce a fresh JS bundle from the current branch
-3. Replaces the JS bundle inside the `.app`
+`patch-bundle` swaps the JS bundle inside a committed native artifact without a native recompile. CI uses this to pick up the latest JS changes cheaply:
 
-The patched `.app` is then installed directly onto the simulator for screenshot capture.
+| Configuration | Artifact patched                                         | Used by                  |
+| ------------- | -------------------------------------------------------- | ------------------------ |
+| `ios-device`  | `prebuilds/ios-release-device/expoapp.ipa` (real device) | CI visreg (BrowserStack) |
+| `android`     | `prebuilds/android-release/expoapp.apk`                  | CI visreg (BrowserStack) |
+
+BrowserStack re-signs the `.ipa` on upload, so no code signing is needed locally.
 
 ## Local development
 
@@ -69,19 +80,16 @@ The patched `.app` is then installed directly onto the simulator for screenshot 
 
 For first-time setup, see the [Expo iOS Simulator guide](https://docs.expo.dev/workflow/ios-simulator/).
 
-1. **Run the app**:
+1. **Run the app:**
 
    ```bash
    yarn nx run expo-app:ios
    ```
 
-   This will:
-   - Build the app if no artifact exists at `prebuilds/ios-debug/expoapp.tar.gz`
-   - Boot the iOS Simulator if not already running
-   - Extract, install, and launch the app
-   - Start Metro bundler (debug only — release builds launch standalone)
+   Builds if needed, boots the simulator, installs, launches, and starts Metro.
 
-2. **Rebuild when native dependencies change**:
+2. **Rebuild when native dependencies change:**
+
    ```bash
    rm -rf prebuilds/ios-debug
    yarn nx run expo-app:ios
@@ -89,41 +97,24 @@ For first-time setup, see the [Expo iOS Simulator guide](https://docs.expo.dev/w
 
 ### Android Emulator
 
-Android requires more manual steps due to expo-dev-client limitations.
-
 For first-time setup, see the [Expo Android Studio Emulator guide](https://docs.expo.dev/workflow/android-studio-emulator/).
 
-1. **Prerequisites**:
-   - Android Studio installed with an emulator configured
-   - `ANDROID_HOME` environment variable set
+Prerequisites: Android Studio with an emulator configured and `ANDROID_HOME` set.
 
-2. **Run the app**:
+1. **Run the app:**
 
    ```bash
    yarn nx run expo-app:android
    ```
 
-   This will:
-   - Build the APK if no artifact exists at `prebuilds/android-debug/expoapp.apk`
-   - Start the Android emulator if not already running
-   - Install and launch the app via adb
-   - Start Metro bundler
-
-3. **Troubleshooting**:
-
-   If the app doesn't connect to Metro automatically:
-   - Press `r` in the Metro terminal to reload the app
-   - Or shake the device / press Cmd+M to open the dev menu and select "Reload"
-
-   If Metro connection fails entirely:
+2. **If Metro doesn't connect:**
 
    ```bash
    adb reverse tcp:8081 tcp:8081
    ```
 
-   Then reload the app.
+3. **Rebuild when native dependencies change:**
 
-4. **Rebuild when native dependencies change**:
    ```bash
    rm -rf prebuilds/android-debug
    yarn nx run expo-app:android
@@ -131,6 +122,4 @@ For first-time setup, see the [Expo Android Studio Emulator guide](https://docs.
 
 ## Expo Go compatibility
 
-This app cannot run in Expo Go due to dependencies on native modules. Specifically, `@react-native-community/datetimepicker` (used by cds-mobile) contains native code not included in Expo Go.
-
-You must use the development build workflow described above.
+This app cannot run in Expo Go — it requires native modules (e.g. `react-native-date-picker`) not included in the Expo Go sandbox. Use the development build workflow above.

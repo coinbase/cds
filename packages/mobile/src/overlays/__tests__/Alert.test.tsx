@@ -1,10 +1,11 @@
-import { useCallback, useState } from 'react';
+import { createRef, useCallback, useState } from 'react';
 import { Animated, Modal as RNModal } from 'react-native';
 import { act, fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Button } from '../../buttons';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Alert, type AlertBaseProps } from '../Alert';
+import type { ModalRefBaseProps } from '../modal/Modal';
 
 const MockAlert = ({
   visible: externalVisible,
@@ -203,5 +204,33 @@ describe('Alert', () => {
       jest.advanceTimersByTime(100);
       expect(onRequestClose).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('exposes imperative onRequestClose via ref', () => {
+    const ref = createRef<ModalRefBaseProps>();
+    const onRequestClose = jest.fn();
+
+    render(
+      <DefaultThemeProvider>
+        <Alert
+          ref={ref}
+          visible
+          body="body"
+          onRequestClose={onRequestClose}
+          pictogram="warning"
+          preferredActionLabel="OK"
+          title="title"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(ref.current).not.toBeNull();
+    expect(typeof ref.current?.onRequestClose).toBe('function');
+
+    act(() => {
+      ref.current?.onRequestClose?.();
+    });
+
+    expect(animationParallelSpy).toHaveBeenCalled();
   });
 });

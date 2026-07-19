@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
 import { XAxis, type XAxisProps } from '../axis/XAxis';
@@ -104,114 +104,141 @@ export type AreaChartProps = AreaChartBaseProps &
   Omit<CartesianChartProps, 'xAxis' | 'yAxis' | 'series'>;
 
 export const AreaChart = memo(
-  forwardRef<View, AreaChartProps>(
-    (
-      {
-        series,
-        stacked,
-        AreaComponent,
-        curve,
-        fillOpacity,
-        type,
-        connectNulls,
-        transition,
-        transitions,
-        LineComponent,
-        strokeWidth,
-        showXAxis,
-        showYAxis,
-        showLines,
-        lineType = 'solid',
-        xAxis,
-        yAxis,
-        inset,
-        children,
-        ...chartProps
-      },
-      ref,
-    ) => {
-      // Convert AreaSeries to Series for Chart context
-      const chartSeries = useMemo(() => {
-        return series?.map(
-          (s): Series => ({
-            id: s.id,
-            data: s.data,
-            label: s.label,
-            color: s.color,
-            gradient: s.gradient,
-            xAxisId: s.xAxisId,
-            yAxisId: s.yAxisId,
-            stackId: s.stackId,
-            legendShape: s.legendShape,
-          }),
-        );
-      }, [series]);
+  ({
+    ref,
+    series,
+    stacked,
+    AreaComponent,
+    curve,
+    fillOpacity,
+    type,
+    connectNulls,
+    transition,
+    transitions,
+    LineComponent,
+    strokeWidth,
+    showXAxis,
+    showYAxis,
+    showLines,
+    lineType = 'solid',
+    xAxis,
+    yAxis,
+    inset,
+    children,
+    ...chartProps
+  }: AreaChartProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    // Convert AreaSeries to Series for Chart context
+    const chartSeries = useMemo(() => {
+      return series?.map(
+        (s): Series => ({
+          id: s.id,
+          data: s.data,
+          label: s.label,
+          color: s.color,
+          gradient: s.gradient,
+          xAxisId: s.xAxisId,
+          yAxisId: s.yAxisId,
+          stackId: s.stackId,
+          legendShape: s.legendShape,
+        }),
+      );
+    }, [series]);
 
-      const transformedSeries = useMemo(() => {
-        if (!stacked || !chartSeries) return chartSeries;
-        return chartSeries.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
-      }, [chartSeries, stacked]);
+    const transformedSeries = useMemo(() => {
+      if (!stacked || !chartSeries) return chartSeries;
+      return chartSeries.map((s) => ({ ...s, stackId: s.stackId ?? defaultStackId }));
+    }, [chartSeries, stacked]);
 
-      const seriesToRender = transformedSeries ?? chartSeries;
+    const seriesToRender = transformedSeries ?? chartSeries;
 
-      // Split axis props into config props for Chart and visual props for axis components
-      const {
-        scaleType: xScaleType,
-        data: xData,
-        categoryPadding: xCategoryPadding,
-        domain: xDomain,
-        domainLimit: xDomainLimit,
-        range: xRange,
-        baseline: xBaseline,
-        id: xAxisId,
-        ...xAxisVisualProps
-      } = xAxis || {};
-      const {
-        scaleType: yScaleType,
-        data: yData,
-        categoryPadding: yCategoryPadding,
-        domain: yDomain,
-        domainLimit: yDomainLimit,
-        range: yRange,
-        baseline: yBaseline,
-        id: yAxisId,
-        ...yAxisVisualProps
-      } = yAxis || {};
-      const isHorizontalLayout = chartProps.layout === 'horizontal';
-      const valueAxisBaseline = isHorizontalLayout ? xBaseline : yBaseline;
+    // Split axis props into config props for Chart and visual props for axis components
+    const {
+      scaleType: xScaleType,
+      data: xData,
+      categoryPadding: xCategoryPadding,
+      domain: xDomain,
+      domainLimit: xDomainLimit,
+      range: xRange,
+      baseline: xBaseline,
+      id: xAxisId,
+      ...xAxisVisualProps
+    } = xAxis || {};
+    const {
+      scaleType: yScaleType,
+      data: yData,
+      categoryPadding: yCategoryPadding,
+      domain: yDomain,
+      domainLimit: yDomainLimit,
+      range: yRange,
+      baseline: yBaseline,
+      id: yAxisId,
+      ...yAxisVisualProps
+    } = yAxis || {};
+    const isHorizontalLayout = chartProps.layout === 'horizontal';
+    const valueAxisBaseline = isHorizontalLayout ? xBaseline : yBaseline;
 
-      const xAxisConfig: Partial<CartesianAxisConfigProps> = {
-        scaleType: xScaleType,
-        data: xData,
-        categoryPadding: xCategoryPadding,
-        domain: isHorizontalLayout ? withBaselineDomain(xDomain, valueAxisBaseline) : xDomain,
-        domainLimit: xDomainLimit,
-        range: xRange,
-        baseline: xBaseline,
-      };
+    const xAxisConfig: Partial<CartesianAxisConfigProps> = {
+      scaleType: xScaleType,
+      data: xData,
+      categoryPadding: xCategoryPadding,
+      domain: isHorizontalLayout ? withBaselineDomain(xDomain, valueAxisBaseline) : xDomain,
+      domainLimit: xDomainLimit,
+      range: xRange,
+      baseline: xBaseline,
+    };
 
-      const yAxisConfig: Partial<CartesianAxisConfigProps> = {
-        scaleType: yScaleType,
-        data: yData,
-        categoryPadding: yCategoryPadding,
-        domain: !isHorizontalLayout ? withBaselineDomain(yDomain, valueAxisBaseline) : yDomain,
-        domainLimit: yDomainLimit,
-        range: yRange,
-        baseline: yBaseline,
-      };
+    const yAxisConfig: Partial<CartesianAxisConfigProps> = {
+      scaleType: yScaleType,
+      data: yData,
+      categoryPadding: yCategoryPadding,
+      domain: !isHorizontalLayout ? withBaselineDomain(yDomain, valueAxisBaseline) : yDomain,
+      domainLimit: yDomainLimit,
+      range: yRange,
+      baseline: yBaseline,
+    };
 
-      return (
-        <CartesianChart
-          ref={ref}
-          inset={inset}
-          series={seriesToRender}
-          xAxis={xAxisConfig}
-          yAxis={yAxisConfig}
-          {...chartProps}
-        >
-          {showXAxis && <XAxis axisId={xAxisId} {...xAxisVisualProps} />}
-          {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
-          {series?.map(
+    return (
+      <CartesianChart
+        ref={ref}
+        inset={inset}
+        series={seriesToRender}
+        xAxis={xAxisConfig}
+        yAxis={yAxisConfig}
+        {...chartProps}
+      >
+        {showXAxis && <XAxis axisId={xAxisId} {...xAxisVisualProps} />}
+        {showYAxis && <YAxis axisId={yAxisId} {...yAxisVisualProps} />}
+        {series?.map(
+          ({
+            id,
+            data,
+            label,
+            color,
+            xAxisId,
+            yAxisId,
+            opacity,
+            LineComponent,
+            stackId,
+            ...areaPropsFromSeries
+          }) => (
+            <Area
+              key={id}
+              AreaComponent={AreaComponent}
+              connectNulls={connectNulls}
+              curve={curve}
+              fillOpacity={fillOpacity}
+              seriesId={id}
+              transition={transition}
+              transitions={transitions}
+              type={type}
+              {...areaPropsFromSeries}
+            />
+          ),
+        )}
+        {showLines &&
+          series?.map(
             ({
               id,
               data,
@@ -219,59 +246,30 @@ export const AreaChart = memo(
               color,
               xAxisId,
               yAxisId,
-              opacity,
-              LineComponent,
+              fill,
+              fillOpacity,
               stackId,
-              ...areaPropsFromSeries
-            }) => (
-              <Area
-                key={id}
-                AreaComponent={AreaComponent}
-                connectNulls={connectNulls}
-                curve={curve}
-                fillOpacity={fillOpacity}
-                seriesId={id}
-                transition={transition}
-                transitions={transitions}
-                type={type}
-                {...areaPropsFromSeries}
-              />
-            ),
+              type, // Area type (don't pass to Line)
+              ...otherPropsFromSeries
+            }) => {
+              return (
+                <Line
+                  key={id}
+                  LineComponent={LineComponent}
+                  connectNulls={connectNulls}
+                  curve={curve}
+                  seriesId={id}
+                  strokeWidth={strokeWidth}
+                  transition={transition}
+                  transitions={transitions}
+                  type={lineType}
+                  {...otherPropsFromSeries}
+                />
+              );
+            },
           )}
-          {showLines &&
-            series?.map(
-              ({
-                id,
-                data,
-                label,
-                color,
-                xAxisId,
-                yAxisId,
-                fill,
-                fillOpacity,
-                stackId,
-                type, // Area type (don't pass to Line)
-                ...otherPropsFromSeries
-              }) => {
-                return (
-                  <Line
-                    key={id}
-                    LineComponent={LineComponent}
-                    connectNulls={connectNulls}
-                    curve={curve}
-                    seriesId={id}
-                    strokeWidth={strokeWidth}
-                    transition={transition}
-                    transitions={transitions}
-                    type={lineType}
-                    {...otherPropsFromSeries}
-                  />
-                );
-              },
-            )}
-          {children}
-        </CartesianChart>
-      );
-    },
-  ),
+        {children}
+      </CartesianChart>
+    );
+  },
 );

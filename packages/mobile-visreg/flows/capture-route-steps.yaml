@@ -1,11 +1,24 @@
 appId: ${APP_ID}
 ---
-# Sub-flow: navigate to a single route via deep link, capture a screenshot.
-# Called from capture-all.yaml for each route via runFlow.
-# Required env vars: ROUTE_NAME, PLATFORM_SUFFIX, SCHEME (inherited from capture-all.yaml env)
+# Open inline search, type the route name, and tap the exact-match shortcut.
+# If "Go to: ${ROUTE_NAME}" is not visible, assertVisible fails — this is intentional.
+# Every route in enabled-routes.mjs must appear in the ExamplesListScreen for the
+# suite to pass, keeping the route list and visreg config in sync.
+# Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
 
-- openLink: ${SCHEME}:///Debug${ROUTE_NAME}
+- tapOn:
+    id: search-button
+- waitForAnimationToEnd
+- inputText: ${ROUTE_NAME}
+- assertVisible:
+    id: exact-match-button-cell-pressable
+- tapOn:
+    id: exact-match-button-cell-pressable
 - assertVisible:
     id: mobile-playground-screen
 - waitForAnimationToEnd
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
+- tapOn:
+    id: nav-back-button
+# No waitForAnimationToEnd here — the next sub-flow starts with
+# tapOn: search-button, which already has implicit element-wait.

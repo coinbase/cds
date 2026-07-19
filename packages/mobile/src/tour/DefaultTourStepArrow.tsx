@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 
 import { Box } from '../layout/Box';
@@ -6,7 +6,14 @@ import { Box } from '../layout/Box';
 import type { TourStepArrowComponentProps } from './Tour';
 
 export const DefaultTourStepArrow = memo(
-  forwardRef<View, TourStepArrowComponentProps>(({ placement, arrow, style }, ref) => {
+  ({
+    ref,
+    placement,
+    arrow,
+    style,
+  }: TourStepArrowComponentProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const width = 24;
     const height = 24;
     const hideArrow = (arrow?.centerOffset ?? 0) > 0;
@@ -36,5 +43,5 @@ export const DefaultTourStepArrow = memo(
         width={24}
       />
     );
-  }),
+  },
 );

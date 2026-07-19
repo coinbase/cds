@@ -72,16 +72,21 @@
         }
       }
     },
-    "patch-bundle-ios": {
-      "command": "node ./scripts/patch-bundle.mjs --platform ios --profile release",
+    "patch-bundle": {
+      "executor": "nx:run-commands",
       "options": {
         "cwd": "apps/expo-app"
-      }
-    },
-    "patch-bundle-android": {
-      "command": "node ./scripts/patch-bundle.mjs --platform android --profile release",
-      "options": {
-        "cwd": "apps/expo-app"
+      },
+      "configurations": {
+        "ios": {
+          "command": "node ./scripts/patch-bundle.mjs --platform ios --profile release"
+        },
+        "ios-device": {
+          "command": "node ./scripts/patch-bundle.mjs --platform ios --profile release --target device"
+        },
+        "android": {
+          "command": "node ./scripts/patch-bundle.mjs --platform android --profile release"
+        }
       }
     },
     "build": {

@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
+import { memo, useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
 import { Modal as RNModal, type ViewStyle } from 'react-native';
 import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
 import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
@@ -60,7 +60,12 @@ export type AlertBaseProps = SharedProps &
 export type AlertProps = AlertBaseProps;
 
 export const Alert = memo(
-  forwardRef<ModalRefBaseProps, AlertProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: AlertProps & {
+    ref?: React.Ref<ModalRefBaseProps>;
+  }) => {
     const mergedProps = useComponentConfig('Alert', _props);
     const {
       title,
@@ -199,5 +204,5 @@ export const Alert = memo(
         </Box>
       </RNModal>
     );
-  }),
+  },
 );

@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { AccessibilityProps, View } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { entries } from '@coinbase/cds-utils';
@@ -39,21 +39,21 @@ type RadioGroupBaseProps<RadioValue extends string> = Omit<
 
 type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
 
-const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends string>(
-  {
-    label,
-    value,
-    onChange,
-    options,
-    testID,
-    controlColor = 'bgPrimary',
-    accessibilityLabel,
-    accessibilityHint,
-    radioAccessibilityLabel,
-    ...props
-  }: RadioGroupProps<RadioValue>,
-  ref: React.ForwardedRef<View>,
-) {
+const RadioGroupWithRef = function RadioGroup<RadioValue extends string>({
+  ref,
+  label,
+  value,
+  onChange,
+  options,
+  testID,
+  controlColor = 'bgPrimary',
+  accessibilityLabel,
+  accessibilityHint,
+  radioAccessibilityLabel,
+  ...props
+}: RadioGroupProps<RadioValue> & {
+  ref?: React.Ref<View>;
+}) {
   if (isDevelopment()) {
     console.warn(
       'RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead.',
@@ -116,12 +116,9 @@ const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends stri
       {...props}
     />
   );
-  // Make forwardRef result function stay generic function type
-}) as <RadioValue extends string>(
-  props: RadioGroupProps<RadioValue> & { ref?: React.Ref<View> },
-) => React.ReactElement;
+};
 
-// Make memoized function stay generic function type
+// Preserve generic call signature through React.memo
 /**
  * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v8

@@ -1,7 +1,8 @@
+import { createRef } from 'react';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';
-import type { CalendarProps } from '../Calendar';
+import type { CalendarProps, CalendarRefHandle } from '../Calendar';
 import { Calendar } from '../Calendar';
 
 const testID = 'test-calendar';
@@ -375,5 +376,20 @@ describe('Calendar', () => {
 
     const calendar = screen.getByTestId(testID);
     expect(calendar).toHaveStyle({ backgroundColor: rootBackgroundColor });
+  });
+
+  it('exposes imperative focusInitialDate via ref', () => {
+    const ref = createRef<CalendarRefHandle>();
+    const seedDate = new Date(2024, 6, 15);
+
+    render(
+      <DefaultThemeProvider>
+        <Calendar ref={ref} seedDate={seedDate} testID={testID} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(ref.current).not.toBeNull();
+    expect(typeof ref.current?.focusInitialDate).toBe('function');
+    expect(() => ref.current?.focusInitialDate()).not.toThrow();
   });
 });

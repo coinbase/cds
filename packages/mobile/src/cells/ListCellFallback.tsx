@@ -6,9 +6,8 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { useTheme } from '../hooks/useTheme';
-import { Fallback } from '../layout/Fallback';
 import { VStack } from '../layout/VStack';
+import { TextFallback } from '../typography/TextFallback';
 
 import { Cell } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
@@ -82,33 +81,23 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     accessibilityLabel = 'Loading',
     ...props
   } = mergedProps;
-  const theme = useTheme();
-
   const descriptionFallback = useMemo(() => {
     if (!description) {
       return null;
     }
 
     return (
-      <Fallback
+      <TextFallback
         aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
-        height={spacingVariant === 'condensed' ? theme.lineHeight.label2 : theme.lineHeight.body}
+        font={spacingVariant === 'condensed' ? 'label2' : 'body'}
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
         style={styles?.description}
         testID="list-cell-fallback-description"
         width={110}
       />
     );
-  }, [
-    description,
-    disableRandomRectWidth,
-    rectWidthVariant,
-    spacingVariant,
-    styles?.description,
-    theme.lineHeight.body,
-    theme.lineHeight.label2,
-  ]);
+  }, [description, disableRandomRectWidth, rectWidthVariant, spacingVariant, styles?.description]);
 
   const detailFallback = useMemo(() => {
     if (!detail && !subdetail) {
@@ -116,12 +105,12 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     }
 
     return (
-      <VStack alignContent="flex-end" alignItems="flex-end" gap={0.5} justifyContent="center">
+      <VStack alignContent="flex-end" alignItems="flex-end" justifyContent="center">
         {!!detail && (
-          <Fallback
+          <TextFallback
             aria-hidden
             disableRandomRectWidth={disableRandomRectWidth}
-            height={theme.lineHeight.body}
+            font="body"
             rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
             style={styles?.detail}
             testID="list-cell-fallback-detail"
@@ -129,12 +118,10 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
           />
         )}
         {!!subdetail && (
-          <Fallback
+          <TextFallback
             aria-hidden
             disableRandomRectWidth={disableRandomRectWidth}
-            height={
-              spacingVariant === 'condensed' ? theme.lineHeight.label2 : theme.lineHeight.body
-            }
+            font={spacingVariant === 'condensed' ? 'label2' : 'body'}
             rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
             style={styles?.subdetail}
             testID="list-cell-fallback-subdetail"
@@ -151,8 +138,6 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     styles?.detail,
     styles?.subdetail,
     subdetail,
-    theme.lineHeight.body,
-    theme.lineHeight.label2,
   ]);
 
   const helperTextFallback = useMemo(() => {
@@ -161,23 +146,17 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     }
 
     return (
-      <Fallback
+      <TextFallback
         aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
-        height={theme.lineHeight.body}
+        font="body"
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 4)}
         style={styles?.helperText}
         testID="list-cell-fallback-helper-text"
         width="85%"
       />
     );
-  }, [
-    disableRandomRectWidth,
-    helperText,
-    rectWidthVariant,
-    styles?.helperText,
-    theme.lineHeight.body,
-  ]);
+  }, [disableRandomRectWidth, helperText, rectWidthVariant, styles?.helperText]);
 
   const subtitleFallback = useMemo(() => {
     if (!subtitle) {
@@ -185,27 +164,21 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     }
 
     return (
-      <Fallback
+      <TextFallback
         aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
-        height={theme.lineHeight.label1}
+        font="label1"
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
         style={styles?.subtitle}
         testID="list-cell-fallback-subtitle"
         width={80}
       />
     );
-  }, [
-    disableRandomRectWidth,
-    rectWidthVariant,
-    styles?.subtitle,
-    subtitle,
-    theme.lineHeight.label1,
-  ]);
+  }, [disableRandomRectWidth, rectWidthVariant, styles?.subtitle, subtitle]);
 
   const mediaFallback = useMemo(() => {
     if (!media) {
-      return;
+      return undefined;
     }
 
     return <MediaFallback aria-hidden testID="list-cell-fallback-media" type={media} />;
@@ -217,17 +190,17 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     }
 
     return (
-      <Fallback
+      <TextFallback
         aria-hidden
         disableRandomRectWidth={disableRandomRectWidth}
-        height={theme.lineHeight.headline}
+        font="headline"
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 3)}
         style={styles?.title}
         testID="list-cell-fallback-title"
         width={90}
       />
     );
-  }, [disableRandomRectWidth, rectWidthVariant, styles?.title, theme.lineHeight.headline, title]);
+  }, [disableRandomRectWidth, rectWidthVariant, styles?.title, title]);
 
   return (
     <Cell
@@ -247,7 +220,7 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
       {...props}
     >
       {accessibilityLabel && <Text style={localStyles.visuallyHidden}>{accessibilityLabel}</Text>}
-      <VStack gap={0.5}>
+      <VStack>
         {titleFallback}
         {subtitleFallback}
         {descriptionFallback}

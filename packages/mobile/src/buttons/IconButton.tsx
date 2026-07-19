@@ -1,4 +1,4 @@
-import { forwardRef, memo } from 'react';
+import { memo } from 'react';
 import { type StyleProp, type TextStyle, type View, type ViewStyle } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type { IconButtonVariant } from '@coinbase/cds-common/types/IconButtonBaseProps';
@@ -50,7 +50,12 @@ export type IconButtonBaseProps = SharedProps &
 export type IconButtonProps = IconButtonBaseProps;
 
 export const IconButton = memo(
-  forwardRef<View, IconButtonProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: IconButtonProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('IconButton', _props);
     const {
       name,
@@ -130,7 +135,7 @@ export const IconButton = memo(
         )}
       </Pressable>
     );
-  }),
+  },
 );
 
 IconButton.displayName = 'IconButton';

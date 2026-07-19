@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
 import type { ScrollViewProps } from 'react-native';
 import Animated, {
@@ -58,7 +58,12 @@ export type CollapsibleBaseProps = SharedProps &
 export type CollapsibleProps = CollapsibleBaseProps;
 
 export const Collapsible = memo(
-  forwardRef((_props: CollapsibleProps, forwardedRef: React.ForwardedRef<View>) => {
+  ({
+    ref: forwardedRef,
+    ..._props
+  }: CollapsibleProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('Collapsible', _props);
     const {
       children,
@@ -202,7 +207,7 @@ export const Collapsible = memo(
         </ScrollView>
       </ReanimatedView>
     );
-  }),
+  },
 );
 
 const styles = StyleSheet.create({

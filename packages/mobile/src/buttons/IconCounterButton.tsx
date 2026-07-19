@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { PressableStateCallbackType, StyleProp, TextStyle, View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { IconSize } from '@coinbase/cds-common/types/IconSize';
@@ -42,68 +42,68 @@ export type IconCounterButtonProps = IconCounterButtonBaseProps &
     };
   };
 
-export const IconCounterButton = memo(
-  forwardRef(function IconCounterButton(
-    _props: IconCounterButtonProps,
-    ref: React.ForwardedRef<View>,
-  ) {
-    const mergedProps = useComponentConfig('IconCounterButton', _props);
-    const {
-      icon,
-      size = 's',
-      active,
-      count = 0,
-      color = 'fg',
-      dangerouslySetColor,
-      styles,
-      style,
-      ...props
-    } = mergedProps;
+export const IconCounterButton = memo(function IconCounterButton({
+  ref,
+  ..._props
+}: IconCounterButtonProps & {
+  ref?: React.Ref<View>;
+}) {
+  const mergedProps = useComponentConfig('IconCounterButton', _props);
+  const {
+    icon,
+    size = 's',
+    active,
+    count = 0,
+    color = 'fg',
+    dangerouslySetColor,
+    styles,
+    style,
+    ...props
+  } = mergedProps;
 
-    const rootStyleOverride = styles?.root;
+  const rootStyleOverride = styles?.root;
 
-    const rootStyle = useMemo<PressableProps['style']>(() => {
-      if (typeof style === 'function' || typeof rootStyleOverride === 'function') {
-        return (state: PressableStateCallbackType) => {
-          const baseStyle = typeof style === 'function' ? style(state) : style;
-          const rootOverride =
-            typeof rootStyleOverride === 'function' ? rootStyleOverride(state) : rootStyleOverride;
-          return [baseStyle, rootOverride];
-        };
-      }
-      return [style, rootStyleOverride];
-    }, [rootStyleOverride, style]);
+  const rootStyle = useMemo<PressableProps['style']>(() => {
+    if (typeof style === 'function' || typeof rootStyleOverride === 'function') {
+      return (state: PressableStateCallbackType) => {
+        const baseStyle = typeof style === 'function' ? style(state) : style;
+        const rootOverride =
+          typeof rootStyleOverride === 'function' ? rootStyleOverride(state) : rootStyleOverride;
+        return [baseStyle, rootOverride];
+      };
+    }
+    return [style, rootStyleOverride];
+  }, [rootStyleOverride, style]);
 
-    return (
-      <Pressable
-        ref={ref}
-        background="transparent"
-        style={rootStyle}
-        {...(props satisfies ValidateProps<
-          typeof props,
-          Omit<IconCounterButtonProps, keyof PressableProps>
-        >)}
-      >
-        <HStack alignItems="center" gap={1}>
-          {typeof icon === 'string' ? (
-            <Icon
-              active={active}
-              color={color}
-              dangerouslySetColor={dangerouslySetColor}
-              name={icon as IconName}
-              size={size}
-              style={styles?.icon}
-            />
-          ) : (
-            icon
-          )}
-          {count > 0 ? (
-            <Text mono font="label1">
-              {formatCount(count)}
-            </Text>
-          ) : null}
-        </HStack>
-      </Pressable>
-    );
-  }),
-);
+  return (
+    <Pressable
+      ref={ref}
+      background="transparent"
+      style={rootStyle}
+      {...(props satisfies ValidateProps<
+        typeof props,
+        Omit<IconCounterButtonProps, keyof PressableProps>
+      >)}
+    >
+      <HStack alignItems="center" gap={1}>
+        {typeof icon === 'string' ? (
+          <Icon
+            active={active}
+            color={color}
+            dangerouslySetColor={dangerouslySetColor}
+            name={icon as IconName}
+            size={size}
+            style={styles?.icon}
+          />
+        ) : (
+          icon
+        )}
+        {count > 0 ? (
+          <Text mono font="label1">
+            {formatCount(count)}
+          </Text>
+        ) : null}
+      </HStack>
+    </Pressable>
+  );
+});

@@ -8,6 +8,49 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.6 (7/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: do not animate initial animated caret render. [[#792](https://github.com/coinbase/cds/pull/792)]
+
+## 9.6.5 (7/13/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore(CDS-2463): Support non-token color customizations in RollingNumber. [[#787](https://github.com/coinbase/cds/pull/787)]
+
+## 9.6.4 (7/13/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: tabs remount single frame delay. [[#791](https://github.com/coinbase/cds/pull/791)]
+- Fix: tabs reanimated value changes during render. [[#791](https://github.com/coinbase/cds/pull/791)]
+
+## 9.6.3 (7/9/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: reconcile drawer pan offset on gesture termination. [[#785](https://github.com/coinbase/cds/pull/785)]
+
+## 9.6.2 (7/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: refactor from React.forwardRef to ref as prop for all cds-mobile components. [[#741](https://github.com/coinbase/cds/pull/741)]
+
+## 9.6.1 (7/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: memoize fallback styles. [[#782](https://github.com/coinbase/cds/pull/782)]
+
+## 9.6.0 (7/6/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add TextFallback. [[#780](https://github.com/coinbase/cds/pull/780)]
+
 ## 9.5.0 (6/25/2026 PST)
 
 #### 🚀 Updates

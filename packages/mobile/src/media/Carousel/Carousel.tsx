@@ -1,5 +1,4 @@
 import React, {
-  forwardRef,
   memo,
   useCallback,
   useEffect,
@@ -46,131 +45,135 @@ export type CarouselProps = {
  * @deprecationExpectedRemoval v8
  */
 export const Carousel = memo(
-  forwardRef<ScrollView, CarouselProps>(
-    (
-      { carouselRef, items, gap = 3, testID = 'Carousel', onReady, ...otherProps },
-      forwardedRef,
-    ) => {
-      /** A key/value object of ids to x coordinates. i.e. { 0: 0, 1: 400, 2: 800 } */
-      const [layoutMap, setLayoutMap] = useState<CarouselLayoutMap>({});
-      /** ScrollRef for wrapping ScrollView */
-      const [scrollRef, { scrollTo, scrollToEnd }] = useScrollTo(forwardedRef);
-      /** Guarantees we only fire onReady once. */
-      const hasFiredOnReady = useRef(false);
-      /** Prevent multiple dismissals at once. */
-      const isAnimating = useRef(false);
-      const [dismissedItems, setDismissedItems] = useState<Set<CarouselItemId>>(() => new Set());
-      const resetDismissedItems = useCallback(() => {
-        setDismissedItems(new Set());
-      }, []);
+  ({
+    ref: forwardedRef,
+    carouselRef,
+    items,
+    gap = 3,
+    testID = 'Carousel',
+    onReady,
+    ...otherProps
+  }: CarouselProps & {
+    ref?: React.Ref<ScrollView>;
+  }) => {
+    /** A key/value object of ids to x coordinates. i.e. { 0: 0, 1: 400, 2: 800 } */
+    const [layoutMap, setLayoutMap] = useState<CarouselLayoutMap>({});
+    /** ScrollRef for wrapping ScrollView */
+    const [scrollRef, { scrollTo, scrollToEnd }] = useScrollTo(forwardedRef);
+    /** Guarantees we only fire onReady once. */
+    const hasFiredOnReady = useRef(false);
+    /** Prevent multiple dismissals at once. */
+    const isAnimating = useRef(false);
+    const [dismissedItems, setDismissedItems] = useState<Set<CarouselItemId>>(() => new Set());
+    const resetDismissedItems = useCallback(() => {
+      setDismissedItems(new Set());
+    }, []);
 
-      const itemsArray = useMemo(
-        () => items.filter((item) => !!item.key && !dismissedItems.has(item.key)),
-        [items, dismissedItems],
-      );
-      /** The number of of CarouselItems */
-      const childrenLength = itemsArray.length;
+    const itemsArray = useMemo(
+      () => items.filter((item) => !!item.key && !dismissedItems.has(item.key)),
+      [items, dismissedItems],
+    );
+    /** The number of of CarouselItems */
+    const childrenLength = itemsArray.length;
 
-      const getDismissHandler = useCallback((shouldAnimateHeight: boolean) => {
-        return ({ height, opacity, width, id, callbackFn }: CarouselDismissItemParams) => {
-          if (isAnimating.current) return;
-          isAnimating.current = true;
-          const opacityMotion = Animated.timing(opacity, opacityConfig);
-          const widthMotion = Animated.timing(width, sizeConfig);
-          const heightMotion = Animated.timing(height, sizeConfig);
-          Animated.parallel([
-            opacityMotion,
-            shouldAnimateHeight ? heightMotion : widthMotion,
-          ]).start(() => {
+    const getDismissHandler = useCallback((shouldAnimateHeight: boolean) => {
+      return ({ height, opacity, width, id, callbackFn }: CarouselDismissItemParams) => {
+        if (isAnimating.current) return;
+        isAnimating.current = true;
+        const opacityMotion = Animated.timing(opacity, opacityConfig);
+        const widthMotion = Animated.timing(width, sizeConfig);
+        const heightMotion = Animated.timing(height, sizeConfig);
+        Animated.parallel([opacityMotion, shouldAnimateHeight ? heightMotion : widthMotion]).start(
+          () => {
             isAnimating.current = false;
             setDismissedItems((prev) => new Set(prev).add(id));
             callbackFn?.();
-          });
-        };
-      }, []);
+          },
+        );
+      };
+    }, []);
 
-      /** Array of x coordinates for snapping the wrapping ScrollView on gesture */
-      const snapPoints = useMemo(() => Object.values(layoutMap), [layoutMap]);
-      /** This is fired in onLayout of CarouselItem. */
-      const updateLayoutMap = useCallback((value: CarouselLayoutMap) => {
-        setLayoutMap((prev) => ({ ...prev, ...value }));
-      }, []);
-      /** Imperatively handling scrolling Carousel to an item. LayoutMap has the index to x coordinate mapping. */
-      const scrollToId = useCallback(
-        (id: CarouselItemId, params: ScrollToParams | undefined = {}) => {
-          scrollTo({ x: layoutMap[id], ...params });
-        },
-        [layoutMap, scrollTo],
-      );
-      /** This object contains any internal data/methods of Carousel that we want to expose to consumers. */
-      const publicData = useMemo(
-        () => ({
-          length: childrenLength,
-          dismissedItems,
-          resetDismissedItems,
-          scrollToId,
-          scrollToEnd,
+    /** Array of x coordinates for snapping the wrapping ScrollView on gesture */
+    const snapPoints = useMemo(() => Object.values(layoutMap), [layoutMap]);
+    /** This is fired in onLayout of CarouselItem. */
+    const updateLayoutMap = useCallback((value: CarouselLayoutMap) => {
+      setLayoutMap((prev) => ({ ...prev, ...value }));
+    }, []);
+    /** Imperatively handling scrolling Carousel to an item. LayoutMap has the index to x coordinate mapping. */
+    const scrollToId = useCallback(
+      (id: CarouselItemId, params: ScrollToParams | undefined = {}) => {
+        scrollTo({ x: layoutMap[id], ...params });
+      },
+      [layoutMap, scrollTo],
+    );
+    /** This object contains any internal data/methods of Carousel that we want to expose to consumers. */
+    const publicData = useMemo(
+      () => ({
+        length: childrenLength,
+        dismissedItems,
+        resetDismissedItems,
+        scrollToId,
+        scrollToEnd,
+      }),
+      [childrenLength, dismissedItems, resetDismissedItems, scrollToId, scrollToEnd],
+    );
+    /** Guarantees that we have x coordinates for each CarouselItem before triggering onReady. */
+    useEffect(() => {
+      const isReady = !!scrollRef && childrenLength === snapPoints.length;
+      if (hasFiredOnReady.current || !isReady) return;
+      onReady?.(publicData);
+      hasFiredOnReady.current = true;
+    }, [publicData, childrenLength, onReady, scrollRef, snapPoints.length]);
+    /**
+     * Useful if you need access to carousel length or scrollToId outside of Carousel. The useCarousel hook exposes these values and requires the ref returned to be passed into Carousel's carouselRef prop.
+     * @example
+     * ```
+     * const carouselRef = useCarousel()
+     * const handlePress = () => carouselRef.current.scrollToId('item3');
+     * <Button onPress={handlePress}>Press me</Button>
+     * <Carousel carouselRef={carouselRef} />
+     * ```
+     */
+    useImperativeHandle(carouselRef, () => publicData, [publicData]);
+    /** Loop over our children and create CarouselItem component. */
+    const content = useMemo(
+      () =>
+        itemsArray.map((child, index) => {
+          const key = child.key ?? index;
+          const shouldAnimateHeight = itemsArray.length === 1;
+          const isLastItem = index === itemsArray.length - 1;
+          return (
+            <CarouselItem
+              key={`carousel-item-${key}`}
+              dismiss={getDismissHandler(shouldAnimateHeight)}
+              id={key}
+              paddingEnd={isLastItem ? 0 : gap}
+              updateLayoutMap={updateLayoutMap}
+            >
+              {child}
+            </CarouselItem>
+          );
         }),
-        [childrenLength, dismissedItems, resetDismissedItems, scrollToId, scrollToEnd],
-      );
-      /** Guarantees that we have x coordinates for each CarouselItem before triggering onReady. */
-      useEffect(() => {
-        const isReady = !!scrollRef && childrenLength === snapPoints.length;
-        if (hasFiredOnReady.current || !isReady) return;
-        onReady?.(publicData);
-        hasFiredOnReady.current = true;
-      }, [publicData, childrenLength, onReady, scrollRef, snapPoints.length]);
-      /**
-       * Useful if you need access to carousel length or scrollToId outside of Carousel. The useCarousel hook exposes these values and requires the ref returned to be passed into Carousel's carouselRef prop.
-       * @example
-       * ```
-       * const carouselRef = useCarousel()
-       * const handlePress = () => carouselRef.current.scrollToId('item3');
-       * <Button onPress={handlePress}>Press me</Button>
-       * <Carousel carouselRef={carouselRef} />
-       * ```
-       */
-      useImperativeHandle(carouselRef, () => publicData, [publicData]);
-      /** Loop over our children and create CarouselItem component. */
-      const content = useMemo(
-        () =>
-          itemsArray.map((child, index) => {
-            const key = child.key ?? index;
-            const shouldAnimateHeight = itemsArray.length === 1;
-            const isLastItem = index === itemsArray.length - 1;
-            return (
-              <CarouselItem
-                key={`carousel-item-${key}`}
-                dismiss={getDismissHandler(shouldAnimateHeight)}
-                id={key}
-                paddingEnd={isLastItem ? 0 : gap}
-                updateLayoutMap={updateLayoutMap}
-              >
-                {child}
-              </CarouselItem>
-            );
-          }),
-        [itemsArray, getDismissHandler, gap, updateLayoutMap],
-      );
+      [itemsArray, getDismissHandler, gap, updateLayoutMap],
+    );
 
-      return (
-        <Animated.ScrollView
-          ref={scrollRef}
-          horizontal
-          contentContainerStyle={styles.scrollViewContainer}
-          decelerationRate="fast"
-          scrollEventThrottle={1}
-          showsHorizontalScrollIndicator={false}
-          snapToOffsets={snapPoints}
-          style={styles.carousel}
-          testID={testID}
-          {...otherProps}
-        >
-          {content}
-        </Animated.ScrollView>
-      );
-    },
-  ),
+    return (
+      <Animated.ScrollView
+        ref={scrollRef}
+        horizontal
+        contentContainerStyle={styles.scrollViewContainer}
+        decelerationRate="fast"
+        scrollEventThrottle={1}
+        showsHorizontalScrollIndicator={false}
+        snapToOffsets={snapPoints}
+        style={styles.carousel}
+        testID={testID}
+        {...otherProps}
+      >
+        {content}
+      </Animated.ScrollView>
+    );
+  },
 );
 
 const styles = StyleSheet.create({

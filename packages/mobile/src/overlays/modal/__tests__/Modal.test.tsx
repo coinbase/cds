@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { createRef, useCallback, useState } from 'react';
 import { Animated, Modal as RNModal, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
@@ -8,7 +8,7 @@ import type { ButtonProps } from '../../../buttons';
 import { Button } from '../../../buttons';
 import { Text } from '../../../typography/Text';
 import { DefaultThemeProvider, SAFE_AREA_METRICS } from '../../../utils/testHelpers';
-import { Modal } from '../Modal';
+import { Modal, type ModalRefBaseProps } from '../Modal';
 import { ModalBody } from '../ModalBody';
 import { ModalFooter } from '../ModalFooter';
 import { ModalHeader, type ModalHeaderProps } from '../ModalHeader';
@@ -403,5 +403,26 @@ describe('Modal', () => {
     });
 
     expect(hasForwardedStyle).toBe(true);
+  });
+
+  it('exposes imperative onRequestClose via ref', () => {
+    const ref = createRef<ModalRefBaseProps>();
+    const onRequestClose = jest.fn();
+
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <Modal ref={ref} visible onRequestClose={onRequestClose}>
+            <ModalHeader title="Test Modal" />
+            <ModalBody>
+              <Text font="body">Modal content</Text>
+            </ModalBody>
+          </Modal>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    expect(ref.current).not.toBeNull();
+    expect(typeof ref.current?.onRequestClose).toBe('function');
   });
 });

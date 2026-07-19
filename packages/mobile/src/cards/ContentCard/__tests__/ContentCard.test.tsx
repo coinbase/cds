@@ -1,4 +1,5 @@
-import { Text } from 'react-native';
+import { createRef } from 'react';
+import { Text, type View } from 'react-native';
 import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -39,6 +40,18 @@ describe('ContentCard', () => {
       </DefaultThemeProvider>,
     );
     expect(screen.getByTestId('content-card-test-id')).toBeTruthy();
+  });
+
+  it('forwards ref to the underlying View', () => {
+    const ref = createRef<View>();
+    render(
+      <DefaultThemeProvider>
+        <ContentCard ref={ref} testID="content-card-ref-test">
+          <Text>Test Content</Text>
+        </ContentCard>
+      </DefaultThemeProvider>,
+    );
+    expect(ref.current).not.toBeNull();
   });
 });
 

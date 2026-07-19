@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { createRef, useCallback, useState } from 'react';
 import { Modal } from 'react-native';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 import { drawerAnimationDefaultDuration } from '@coinbase/cds-common/animation/drawer';
@@ -11,7 +11,7 @@ import { Button } from '../../../buttons';
 import { VStack } from '../../../layout/VStack';
 import { Text } from '../../../typography/Text';
 import { DefaultThemeProvider, SAFE_AREA_METRICS } from '../../../utils/testHelpers';
-import type { DrawerBaseProps } from '../Drawer';
+import type { DrawerBaseProps, DrawerRefBaseProps } from '../Drawer';
 import { Drawer } from '../Drawer';
 
 // We're using the drawers animation time here just to be extra close to the implementation
@@ -176,5 +176,26 @@ describe('Drawer', () => {
       fireEvent(screen.getByTestId('drawer-overlay'), 'onTouchStart');
       await waitFor(() => expect(onCloseComplete).toHaveBeenCalledTimes(1));
     });
+  });
+
+  it('exposes imperative handleClose via ref', async () => {
+    const ref = createRef<DrawerRefBaseProps>();
+    const onCloseComplete = jest.fn();
+
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <Drawer ref={ref} reduceMotion visible onCloseComplete={onCloseComplete}>
+            {() => <Text font="body">Drawer content</Text>}
+          </Drawer>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    expect(ref.current).not.toBeNull();
+    expect(typeof ref.current?.handleClose).toBe('function');
+
+    ref.current?.handleClose();
+    await waitFor(() => expect(onCloseComplete).toHaveBeenCalledTimes(1));
   });
 });

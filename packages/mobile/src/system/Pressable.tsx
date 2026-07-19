@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import {
   type AccessibilityProps,
   type GestureResponderEvent,
@@ -58,275 +58,277 @@ export type PressableBaseProps = AccessibilityProps &
 
 export type PressableProps = PressableBaseProps & NativePressableProps;
 
-export const Pressable = memo(
-  forwardRef(function Pressable(
-    {
-      // Interactable
-      children,
-      disabled,
-      background,
-      block,
-      borderColor,
-      borderRadius,
-      borderWidth,
-      elevation,
-      contentStyle,
-      wrapperStyles,
-      blendStyles,
-      transparentWhileInactive,
-      transparentWhilePressed,
-      pin,
-      bordered,
-      borderedTop,
-      borderedBottom,
-      borderedStart,
-      borderedEnd,
-      borderedHorizontal,
-      borderedVertical,
-      dangerouslySetBackground,
-      display,
-      position,
-      overflow,
-      zIndex,
-      gap,
-      columnGap,
-      rowGap,
-      justifyContent,
-      alignContent,
-      alignItems,
-      alignSelf,
-      flexDirection,
-      flexWrap,
-      color,
-      borderTopLeftRadius,
-      borderTopRightRadius,
-      borderBottomLeftRadius,
-      borderBottomRightRadius,
-      borderTopWidth,
-      borderEndWidth,
-      borderBottomWidth,
-      borderStartWidth,
-      font,
-      fontFamily,
-      fontSize,
-      fontWeight,
-      lineHeight,
-      textAlign,
-      textDecorationStyle,
-      textDecorationLine,
-      textTransform,
-      padding,
-      paddingX,
-      paddingY,
-      paddingTop,
-      paddingBottom,
-      paddingStart,
-      paddingEnd,
-      margin,
-      marginX,
-      marginY,
-      marginTop,
-      marginBottom,
-      marginStart,
-      marginEnd,
-      userSelect,
-      width,
-      height,
-      minWidth,
-      minHeight,
-      maxWidth,
-      maxHeight,
-      aspectRatio,
-      top,
-      bottom,
-      left,
-      right,
-      transform,
-      flexBasis,
-      flexShrink,
-      flexGrow,
-      opacity,
-      // Pressable
-      disableDebounce,
-      feedback = 'none',
-      loading,
-      onPress,
-      onPressIn,
-      onPressOut,
-      noScaleOnPress,
-      style,
-      eventConfig,
-      analyticsId,
-      debounceTime,
-      testID,
-      ...props
-    }: PressableProps,
-    forwardedRef: React.ForwardedRef<View>,
-  ) {
-    const [pressIn, pressOut, pressScale] = usePressAnimation();
-    const [pressed, setPressed] = useState(false);
-    const lastPressedTimeStampRef = useRef<number | null>(null);
+export const Pressable = memo(function Pressable({
+  ref: forwardedRef,
 
-    const onEventHandler = useEventHandler('Button', 'onPress', eventConfig, analyticsId);
+  // Interactable
+  children,
 
-    const onPressHandler = useCallback(
-      (event: GestureResponderEvent) => {
-        if (feedback === 'light') void Haptics.lightImpact();
-        else if (feedback === 'normal') void Haptics.normalImpact();
-        else if (feedback === 'heavy') void Haptics.heavyImpact();
-        onPress?.(event);
-        onEventHandler();
-      },
-      [feedback, onEventHandler, onPress],
-    );
-    const handlePress = useCallback(
-      (event: GestureResponderEvent) => {
-        const now = Date.now();
-        if (disableDebounce || debounceTime === undefined) {
-          onPressHandler(event);
-          lastPressedTimeStampRef.current = now;
-          return;
-        }
-        if (
-          lastPressedTimeStampRef.current === null ||
-          now - lastPressedTimeStampRef.current >= debounceTime
-        ) {
-          onPressHandler(event);
-        }
+  disabled,
+  background,
+  block,
+  borderColor,
+  borderRadius,
+  borderWidth,
+  elevation,
+  contentStyle,
+  wrapperStyles,
+  blendStyles,
+  transparentWhileInactive,
+  transparentWhilePressed,
+  pin,
+  bordered,
+  borderedTop,
+  borderedBottom,
+  borderedStart,
+  borderedEnd,
+  borderedHorizontal,
+  borderedVertical,
+  dangerouslySetBackground,
+  display,
+  position,
+  overflow,
+  zIndex,
+  gap,
+  columnGap,
+  rowGap,
+  justifyContent,
+  alignContent,
+  alignItems,
+  alignSelf,
+  flexDirection,
+  flexWrap,
+  color,
+  borderTopLeftRadius,
+  borderTopRightRadius,
+  borderBottomLeftRadius,
+  borderBottomRightRadius,
+  borderTopWidth,
+  borderEndWidth,
+  borderBottomWidth,
+  borderStartWidth,
+  font,
+  fontFamily,
+  fontSize,
+  fontWeight,
+  lineHeight,
+  textAlign,
+  textDecorationStyle,
+  textDecorationLine,
+  textTransform,
+  padding,
+  paddingX,
+  paddingY,
+  paddingTop,
+  paddingBottom,
+  paddingStart,
+  paddingEnd,
+  margin,
+  marginX,
+  marginY,
+  marginTop,
+  marginBottom,
+  marginStart,
+  marginEnd,
+  userSelect,
+  width,
+  height,
+  minWidth,
+  minHeight,
+  maxWidth,
+  maxHeight,
+  aspectRatio,
+  top,
+  bottom,
+  left,
+  right,
+  transform,
+  flexBasis,
+  flexShrink,
+  flexGrow,
+  opacity,
+
+  // Pressable
+  disableDebounce,
+
+  feedback = 'none',
+  loading,
+  onPress,
+  onPressIn,
+  onPressOut,
+  noScaleOnPress,
+  style,
+  eventConfig,
+  analyticsId,
+  debounceTime,
+  testID,
+  ...props
+}: PressableProps & {
+  ref?: React.Ref<View>;
+}) {
+  const [pressIn, pressOut, pressScale] = usePressAnimation();
+  const [pressed, setPressed] = useState(false);
+  const lastPressedTimeStampRef = useRef<number | null>(null);
+
+  const onEventHandler = useEventHandler('Button', 'onPress', eventConfig, analyticsId);
+
+  const onPressHandler = useCallback(
+    (event: GestureResponderEvent) => {
+      if (feedback === 'light') void Haptics.lightImpact();
+      else if (feedback === 'normal') void Haptics.normalImpact();
+      else if (feedback === 'heavy') void Haptics.heavyImpact();
+      onPress?.(event);
+      onEventHandler();
+    },
+    [feedback, onEventHandler, onPress],
+  );
+  const handlePress = useCallback(
+    (event: GestureResponderEvent) => {
+      const now = Date.now();
+      if (disableDebounce || debounceTime === undefined) {
+        onPressHandler(event);
         lastPressedTimeStampRef.current = now;
-      },
-      [debounceTime, disableDebounce, onPressHandler],
-    );
+        return;
+      }
+      if (
+        lastPressedTimeStampRef.current === null ||
+        now - lastPressedTimeStampRef.current >= debounceTime
+      ) {
+        onPressHandler(event);
+      }
+      lastPressedTimeStampRef.current = now;
+    },
+    [debounceTime, disableDebounce, onPressHandler],
+  );
 
-    const handlePressIn = useCallback(
-      (event: GestureResponderEvent) => {
-        setPressed(true);
-        pressIn(event);
-        onPressIn?.(event);
-      },
-      [pressIn, onPressIn],
-    );
+  const handlePressIn = useCallback(
+    (event: GestureResponderEvent) => {
+      setPressed(true);
+      pressIn(event);
+      onPressIn?.(event);
+    },
+    [pressIn, onPressIn],
+  );
 
-    const handlePressOut = useCallback(
-      (event: GestureResponderEvent) => {
-        setPressed(false);
-        pressOut(event);
-        onPressOut?.(event);
-      },
-      [pressOut, onPressOut],
-    );
+  const handlePressOut = useCallback(
+    (event: GestureResponderEvent) => {
+      setPressed(false);
+      pressOut(event);
+      onPressOut?.(event);
+    },
+    [pressOut, onPressOut],
+  );
 
-    const accessibilityState = useMemo(
-      () => ({ busy: loading, disabled: !!disabled }),
-      [loading, disabled],
-    );
+  const accessibilityState = useMemo(
+    () => ({ busy: loading, disabled: !!disabled }),
+    [loading, disabled],
+  );
 
-    const scaleOnPressStyle = useMemo(() => [{ transform: [{ scale: pressScale }] }], [pressScale]);
+  const scaleOnPressStyle = useMemo(() => [{ transform: [{ scale: pressScale }] }], [pressScale]);
 
-    return (
-      <NativePressable
-        ref={forwardedRef}
-        accessibilityRole="button"
-        accessibilityState={accessibilityState}
-        disabled={disabled || loading}
-        onPress={handlePress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        style={style}
-        testID={testID}
-        // Spread all props except the InteractableBaseProps, which must be destructured
-        {...(props satisfies ValidateProps<typeof props, InteractableBaseProps>)}
+  return (
+    <NativePressable
+      ref={forwardedRef}
+      accessibilityRole="button"
+      accessibilityState={accessibilityState}
+      disabled={disabled || loading}
+      onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={style}
+      testID={testID}
+      // Spread all props except the InteractableBaseProps, which must be destructured
+      {...(props satisfies ValidateProps<typeof props, InteractableBaseProps>)}
+    >
+      <Interactable
+        alignContent={alignContent}
+        alignItems={alignItems}
+        alignSelf={alignSelf}
+        aspectRatio={aspectRatio}
+        background={background}
+        blendStyles={blendStyles}
+        block={block}
+        borderBottomLeftRadius={borderBottomLeftRadius}
+        borderBottomRightRadius={borderBottomRightRadius}
+        borderBottomWidth={borderBottomWidth}
+        borderColor={borderColor}
+        borderEndWidth={borderEndWidth}
+        borderRadius={borderRadius}
+        borderStartWidth={borderStartWidth}
+        borderTopLeftRadius={borderTopLeftRadius}
+        borderTopRightRadius={borderTopRightRadius}
+        borderTopWidth={borderTopWidth}
+        borderWidth={borderWidth}
+        bordered={bordered}
+        borderedBottom={borderedBottom}
+        borderedEnd={borderedEnd}
+        borderedHorizontal={borderedHorizontal}
+        borderedStart={borderedStart}
+        borderedTop={borderedTop}
+        borderedVertical={borderedVertical}
+        bottom={bottom}
+        color={color}
+        columnGap={columnGap}
+        contentStyle={contentStyle}
+        dangerouslySetBackground={dangerouslySetBackground}
+        disabled={disabled}
+        display={display}
+        elevation={elevation}
+        flexBasis={flexBasis}
+        flexDirection={flexDirection}
+        flexGrow={flexGrow}
+        flexShrink={flexShrink}
+        flexWrap={flexWrap}
+        font={font}
+        fontFamily={fontFamily}
+        fontSize={fontSize}
+        fontWeight={fontWeight}
+        gap={gap}
+        height={height}
+        justifyContent={justifyContent}
+        left={left}
+        lineHeight={lineHeight}
+        margin={margin}
+        marginBottom={marginBottom}
+        marginEnd={marginEnd}
+        marginStart={marginStart}
+        marginTop={marginTop}
+        marginX={marginX}
+        marginY={marginY}
+        maxHeight={maxHeight}
+        maxWidth={maxWidth}
+        minHeight={minHeight}
+        minWidth={minWidth}
+        opacity={opacity}
+        overflow={overflow}
+        padding={padding}
+        paddingBottom={paddingBottom}
+        paddingEnd={paddingEnd}
+        paddingStart={paddingStart}
+        paddingTop={paddingTop}
+        paddingX={paddingX}
+        paddingY={paddingY}
+        pin={pin}
+        position={position}
+        pressed={pressed || loading} // loading shares the same styles as pressed
+        right={right}
+        rowGap={rowGap}
+        style={!noScaleOnPress ? scaleOnPressStyle : undefined}
+        textAlign={textAlign}
+        textDecorationLine={textDecorationLine}
+        textDecorationStyle={textDecorationStyle}
+        textTransform={textTransform}
+        top={top}
+        transform={transform}
+        transparentWhileInactive={transparentWhileInactive}
+        transparentWhilePressed={transparentWhilePressed}
+        userSelect={userSelect}
+        width={width}
+        wrapperStyles={wrapperStyles}
+        zIndex={zIndex}
       >
-        <Interactable
-          alignContent={alignContent}
-          alignItems={alignItems}
-          alignSelf={alignSelf}
-          aspectRatio={aspectRatio}
-          background={background}
-          blendStyles={blendStyles}
-          block={block}
-          borderBottomLeftRadius={borderBottomLeftRadius}
-          borderBottomRightRadius={borderBottomRightRadius}
-          borderBottomWidth={borderBottomWidth}
-          borderColor={borderColor}
-          borderEndWidth={borderEndWidth}
-          borderRadius={borderRadius}
-          borderStartWidth={borderStartWidth}
-          borderTopLeftRadius={borderTopLeftRadius}
-          borderTopRightRadius={borderTopRightRadius}
-          borderTopWidth={borderTopWidth}
-          borderWidth={borderWidth}
-          bordered={bordered}
-          borderedBottom={borderedBottom}
-          borderedEnd={borderedEnd}
-          borderedHorizontal={borderedHorizontal}
-          borderedStart={borderedStart}
-          borderedTop={borderedTop}
-          borderedVertical={borderedVertical}
-          bottom={bottom}
-          color={color}
-          columnGap={columnGap}
-          contentStyle={contentStyle}
-          dangerouslySetBackground={dangerouslySetBackground}
-          disabled={disabled}
-          display={display}
-          elevation={elevation}
-          flexBasis={flexBasis}
-          flexDirection={flexDirection}
-          flexGrow={flexGrow}
-          flexShrink={flexShrink}
-          flexWrap={flexWrap}
-          font={font}
-          fontFamily={fontFamily}
-          fontSize={fontSize}
-          fontWeight={fontWeight}
-          gap={gap}
-          height={height}
-          justifyContent={justifyContent}
-          left={left}
-          lineHeight={lineHeight}
-          margin={margin}
-          marginBottom={marginBottom}
-          marginEnd={marginEnd}
-          marginStart={marginStart}
-          marginTop={marginTop}
-          marginX={marginX}
-          marginY={marginY}
-          maxHeight={maxHeight}
-          maxWidth={maxWidth}
-          minHeight={minHeight}
-          minWidth={minWidth}
-          opacity={opacity}
-          overflow={overflow}
-          padding={padding}
-          paddingBottom={paddingBottom}
-          paddingEnd={paddingEnd}
-          paddingStart={paddingStart}
-          paddingTop={paddingTop}
-          paddingX={paddingX}
-          paddingY={paddingY}
-          pin={pin}
-          position={position}
-          pressed={pressed || loading} // loading shares the same styles as pressed
-          right={right}
-          rowGap={rowGap}
-          style={!noScaleOnPress ? scaleOnPressStyle : undefined}
-          textAlign={textAlign}
-          textDecorationLine={textDecorationLine}
-          textDecorationStyle={textDecorationStyle}
-          textTransform={textTransform}
-          top={top}
-          transform={transform}
-          transparentWhileInactive={transparentWhileInactive}
-          transparentWhilePressed={transparentWhilePressed}
-          userSelect={userSelect}
-          width={width}
-          wrapperStyles={wrapperStyles}
-          zIndex={zIndex}
-        >
-          {children}
-        </Interactable>
-      </NativePressable>
-    );
-  }),
-);
+        {children}
+      </Interactable>
+    </NativePressable>
+  );
+});

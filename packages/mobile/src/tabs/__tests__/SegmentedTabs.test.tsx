@@ -1,9 +1,7 @@
 import React from 'react';
-import { type MeasureOnSuccessCallback, View } from 'react-native';
+import { View } from 'react-native';
 import Animated from 'react-native-reanimated';
-import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import { TabsContext } from '@coinbase/cds-common/tabs/TabsContext';
-import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Box } from '../../layout';
@@ -20,22 +18,6 @@ const tabs = [
   { id: 'sell', label: 'Sell', testID: 'sell-tab' },
   { id: 'convert', label: 'Convert', testID: 'convert-tab' },
 ];
-
-jest.mock('@coinbase/cds-common/hooks/useRefMap');
-
-const mockUseRefMap = (mocks: ReturnType<typeof useRefMap>) => {
-  (useRefMap as jest.Mock).mockReturnValue(mocks);
-};
-
-const refMap: ReturnType<typeof useRefMap> = {
-  refs: { current: {} },
-  registerRef: NoopFn,
-  getRef: jest.fn(() => ({
-    measureLayout: jest.fn((_, callback: MeasureOnSuccessCallback) => {
-      callback(0, 0, 68, 40, 0, 0);
-    }),
-  })),
-};
 
 const exampleProps: SegmentedTabsProps = {
   testID: TEST_ID,
@@ -56,9 +38,17 @@ const mockApi = {
   goPreviousTab: jest.fn(),
 };
 
+const layoutTab = (
+  testID: string,
+  layout: { x: number; y: number; width: number; height: number },
+) => {
+  const tab = screen.getByTestId(testID);
+  expect(tab.parent).toBeTruthy();
+  fireEvent(tab.parent!, 'layout', { nativeEvent: { layout } });
+};
+
 describe('SegmentedTabs', () => {
   beforeEach(() => {
-    mockUseRefMap(refMap);
     jest.useFakeTimers();
   });
   afterEach(() => {
@@ -86,11 +76,7 @@ describe('SegmentedTabs', () => {
       </DefaultThemeProvider>,
     );
 
-    const tabsContainer = screen.getByTestId(TEST_ID);
-
-    fireEvent(tabsContainer, 'layout', {
-      nativeEvent: { layout: { x: 0, y: 0, width: 350, height: 40 } },
-    });
+    layoutTab('buy-tab', { x: 0, y: 0, width: 68, height: 40 });
 
     jest.advanceTimersByTime(300);
     expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
@@ -101,15 +87,6 @@ describe('SegmentedTabs', () => {
 
   it('sets the second tab active when clicking on it', () => {
     const onChange = jest.fn();
-    const mockData: ReturnType<typeof useRefMap> = {
-      refs: { current: {} },
-      registerRef: NoopFn,
-      getRef: jest.fn(() => ({
-        measureLayout: jest.fn((_, callback: MeasureOnSuccessCallback) => {
-          callback(68, 0, 68, 40, 0, 0);
-        }),
-      })),
-    };
     const { rerender } = render(
       <DefaultThemeProvider>
         <TabsContext.Provider value={mockApi}>
@@ -117,7 +94,10 @@ describe('SegmentedTabs', () => {
         </TabsContext.Provider>
       </DefaultThemeProvider>,
     );
-    mockUseRefMap(mockData);
+
+    layoutTab('buy-tab', { x: 0, y: 0, width: 68, height: 40 });
+    layoutTab('sell-tab', { x: 68, y: 0, width: 68, height: 40 });
+
     fireEvent.press(screen.getByTestId('sell-tab'));
     expect(onChange).toHaveBeenCalledTimes(1);
 
@@ -130,7 +110,7 @@ describe('SegmentedTabs', () => {
       </DefaultThemeProvider>,
     );
 
-    jest.advanceTimersByTime(300);
+    jest.advanceTimersByTime(1000);
 
     expect(screen.getByTestId(`${TEST_ID}-active-indicator`)).toHaveAnimatedStyle({
       width: 68,
@@ -184,17 +164,6 @@ describe('SegmentedTabs', () => {
   });
 
   it('positions indicator correctly with horizontal padding', () => {
-    const mockPaddedData: ReturnType<typeof useRefMap> = {
-      refs: { current: {} },
-      registerRef: NoopFn,
-      getRef: jest.fn(() => ({
-        measureLayout: jest.fn((_, callback: MeasureOnSuccessCallback) => {
-          callback(20, 0, 68, 40, 0, 0);
-        }),
-      })),
-    };
-    mockUseRefMap(mockPaddedData);
-
     render(
       <DefaultThemeProvider>
         <TabsContext.Provider value={mockApi}>
@@ -203,10 +172,7 @@ describe('SegmentedTabs', () => {
       </DefaultThemeProvider>,
     );
 
-    const tabsContainer = screen.getByTestId(TEST_ID);
-    fireEvent(tabsContainer, 'layout', {
-      nativeEvent: { layout: { x: 0, y: 0, width: 350, height: 40 } },
-    });
+    layoutTab('buy-tab', { x: 20, y: 0, width: 68, height: 40 });
 
     jest.advanceTimersByTime(300);
 
@@ -217,17 +183,6 @@ describe('SegmentedTabs', () => {
   });
 
   it('positions indicator correctly with vertical padding', () => {
-    const mockVerticalPaddedData: ReturnType<typeof useRefMap> = {
-      refs: { current: {} },
-      registerRef: NoopFn,
-      getRef: jest.fn(() => ({
-        measureLayout: jest.fn((_, callback: MeasureOnSuccessCallback) => {
-          callback(0, 8, 68, 40, 0, 0);
-        }),
-      })),
-    };
-    mockUseRefMap(mockVerticalPaddedData);
-
     render(
       <DefaultThemeProvider>
         <TabsContext.Provider value={mockApi}>
@@ -236,10 +191,7 @@ describe('SegmentedTabs', () => {
       </DefaultThemeProvider>,
     );
 
-    const tabsContainer = screen.getByTestId(TEST_ID);
-    fireEvent(tabsContainer, 'layout', {
-      nativeEvent: { layout: { x: 0, y: 0, width: 350, height: 56 } },
-    });
+    layoutTab('buy-tab', { x: 0, y: 8, width: 68, height: 40 });
 
     jest.advanceTimersByTime(300);
 
@@ -250,17 +202,6 @@ describe('SegmentedTabs', () => {
   });
 
   it('positions indicator correctly with both horizontal and vertical padding', () => {
-    const mockBothPaddedData: ReturnType<typeof useRefMap> = {
-      refs: { current: {} },
-      registerRef: NoopFn,
-      getRef: jest.fn(() => ({
-        measureLayout: jest.fn((_, callback: MeasureOnSuccessCallback) => {
-          callback(20, 8, 68, 40, 0, 0);
-        }),
-      })),
-    };
-    mockUseRefMap(mockBothPaddedData);
-
     render(
       <DefaultThemeProvider>
         <TabsContext.Provider value={mockApi}>
@@ -269,10 +210,7 @@ describe('SegmentedTabs', () => {
       </DefaultThemeProvider>,
     );
 
-    const tabsContainer = screen.getByTestId(TEST_ID);
-    fireEvent(tabsContainer, 'layout', {
-      nativeEvent: { layout: { x: 0, y: 0, width: 350, height: 56 } },
-    });
+    layoutTab('buy-tab', { x: 20, y: 8, width: 68, height: 40 });
 
     jest.advanceTimersByTime(300);
 

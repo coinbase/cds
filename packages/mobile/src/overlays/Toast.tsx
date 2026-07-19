@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle } from 'react';
+import React, { memo, useCallback, useEffect, useImperativeHandle } from 'react';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type {
   ToastBaseProps as CommonToastBaseProps,
@@ -21,7 +21,12 @@ export type ToastBaseProps = CommonToastBaseProps;
 export type ToastProps = ToastBaseProps & BoxProps;
 
 export const Toast = memo(
-  forwardRef<ToastRefHandle, ToastProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: ToastProps & {
+    ref?: React.Ref<ToastRefHandle>;
+  }) => {
     const mergedProps = useComponentConfig('Toast', _props);
     const {
       text,
@@ -128,5 +133,5 @@ export const Toast = memo(
         </HStack>
       </Box>
     );
-  }),
+  },
 );

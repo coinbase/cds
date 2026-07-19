@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 import { type SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
@@ -66,105 +66,103 @@ export type ContentCardBodyBaseProps = SharedProps & {
 
 export type ContentCardBodyProps = ContentCardBodyBaseProps & VStackProps;
 
-export const ContentCardBody = memo(
-  forwardRef(function ContentCardBody(
-    {
-      body,
-      label,
-      media,
-      mediaPosition = 'top',
-      mediaPlacement = mapMediaPositionToMediaPlacement[mediaPosition],
-      title,
-      description = body,
-      children,
-      gap = 1,
-      testID,
-      style,
-      styles,
-      ...props
-    }: ContentCardBodyProps,
-    ref: React.ForwardedRef<View>,
-  ) {
-    const hasMedia = !!media;
-    const isHorizontal = mediaPlacement === 'start' || mediaPlacement === 'end';
-    const isMediaFirst = hasMedia && (mediaPlacement === 'top' || mediaPlacement === 'start');
-    const isMediaLast = hasMedia && (mediaPlacement === 'bottom' || mediaPlacement === 'end');
+export const ContentCardBody = memo(function ContentCardBody({
+  ref,
+  body,
+  label,
+  media,
+  mediaPosition = 'top',
+  mediaPlacement = mapMediaPositionToMediaPlacement[mediaPosition],
+  title,
+  description = body,
+  children,
+  gap = 1,
+  testID,
+  style,
+  styles,
+  ...props
+}: ContentCardBodyProps & {
+  ref?: React.Ref<View>;
+}) {
+  const hasMedia = !!media;
+  const isHorizontal = mediaPlacement === 'start' || mediaPlacement === 'end';
+  const isMediaFirst = hasMedia && (mediaPlacement === 'top' || mediaPlacement === 'start');
+  const isMediaLast = hasMedia && (mediaPlacement === 'bottom' || mediaPlacement === 'end');
 
-    const titleNode = useMemo(() => {
-      if (typeof title === 'string') {
-        return (
-          <Text font="headline" numberOfLines={2}>
-            {title}
-          </Text>
-        );
-      }
-      return title;
-    }, [title]);
-
-    const descriptionNode = useMemo(() => {
-      if (typeof description === 'string') {
-        return (
-          <Text color="fgMuted" font="label2" numberOfLines={3}>
-            {description}
-          </Text>
-        );
-      }
-      return description;
-    }, [description]);
-
-    const labelNode = useMemo(() => {
-      if (typeof label === 'string') {
-        return <Text font="label2">{label}</Text>;
-      }
-      return label;
-    }, [label]);
-
-    const textNode = useMemo(() => {
-      if (!titleNode && !descriptionNode && !labelNode) {
-        return null;
-      }
+  const titleNode = useMemo(() => {
+    if (typeof title === 'string') {
       return (
-        <VStack flexShrink={1} gap={isHorizontal ? 1 : 0} style={styles?.textContainer}>
-          {titleNode}
-          {descriptionNode}
-          {labelNode}
-        </VStack>
+        <Text font="headline" numberOfLines={2}>
+          {title}
+        </Text>
       );
-    }, [titleNode, descriptionNode, labelNode, isHorizontal, styles?.textContainer]);
+    }
+    return title;
+  }, [title]);
 
-    const mediaBox = isHorizontal ? (
-      <Box
-        borderRadius={500}
-        flexShrink={0}
-        height={96}
-        overflow="hidden"
-        style={styles?.mediaContainer}
-        width={96}
-      >
-        {media}
-      </Box>
-    ) : (
-      <Box borderRadius={500} overflow="hidden">
-        {media}
-      </Box>
-    );
+  const descriptionNode = useMemo(() => {
+    if (typeof description === 'string') {
+      return (
+        <Text color="fgMuted" font="label2" numberOfLines={3}>
+          {description}
+        </Text>
+      );
+    }
+    return description;
+  }, [description]);
 
+  const labelNode = useMemo(() => {
+    if (typeof label === 'string') {
+      return <Text font="label2">{label}</Text>;
+    }
+    return label;
+  }, [label]);
+
+  const textNode = useMemo(() => {
+    if (!titleNode && !descriptionNode && !labelNode) {
+      return null;
+    }
     return (
-      <VStack ref={ref} gap={gap} style={[styles?.root, style]} testID={testID} {...props}>
-        {(mediaBox || textNode) && (
-          <Box
-            flexDirection={isHorizontal ? 'row' : 'column'}
-            gap={isHorizontal ? 2 : 1}
-            justifyContent={mediaPlacement === 'end' ? 'space-between' : 'flex-start'}
-            style={styles?.contentContainer}
-          >
-            {isMediaFirst && mediaBox}
-            {textNode}
-            {isMediaLast && mediaBox}
-          </Box>
-        )}
-        {children}
+      <VStack flexShrink={1} gap={isHorizontal ? 1 : 0} style={styles?.textContainer}>
+        {titleNode}
+        {descriptionNode}
+        {labelNode}
       </VStack>
     );
-  }),
-);
+  }, [titleNode, descriptionNode, labelNode, isHorizontal, styles?.textContainer]);
+
+  const mediaBox = isHorizontal ? (
+    <Box
+      borderRadius={500}
+      flexShrink={0}
+      height={96}
+      overflow="hidden"
+      style={styles?.mediaContainer}
+      width={96}
+    >
+      {media}
+    </Box>
+  ) : (
+    <Box borderRadius={500} overflow="hidden">
+      {media}
+    </Box>
+  );
+
+  return (
+    <VStack ref={ref} gap={gap} style={[styles?.root, style]} testID={testID} {...props}>
+      {(mediaBox || textNode) && (
+        <Box
+          flexDirection={isHorizontal ? 'row' : 'column'}
+          gap={isHorizontal ? 2 : 1}
+          justifyContent={mediaPlacement === 'end' ? 'space-between' : 'flex-start'}
+          style={styles?.contentContainer}
+        >
+          {isMediaFirst && mediaBox}
+          {textNode}
+          {isMediaLast && mediaBox}
+        </Box>
+      )}
+      {children}
+    </VStack>
+  );
+});

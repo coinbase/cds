@@ -4,20 +4,20 @@
   "sourceRoot": "packages/mobile-visreg/src",
   "projectType": "library",
   "targets": {
-    "setup": {
-      "command": "node ./src/setup.mjs",
+    "browserstack-ios": {
+      "command": "node ./src/browserstack-run.mjs --platform ios --appPath ../../apps/expo-app/prebuilds/ios-release-device/expoapp.ipa --devices 'iPhone 16-18' --appId com.anonymous.expo-app --scheme expoapp --platform-suffix _ios",
       "options": {
         "cwd": "packages/mobile-visreg"
       }
     },
-    "ios": {
-      "command": "node ./src/run.mjs --appId com.anonymous.expo-app --scheme expoapp --platform ios --platform-suffix _ios",
+    "browserstack-android": {
+      "command": "node ./src/browserstack-run.mjs --platform android --appPath ../../apps/expo-app/prebuilds/android-release/expoapp.apk --devices 'Google Pixel 8-14.0' --appId com.anonymous.expoapp --scheme expoapp --platform-suffix _android",
       "options": {
         "cwd": "packages/mobile-visreg"
       }
     },
-    "android": {
-      "command": "node ./src/run.mjs --appId com.anonymous.expoapp --scheme expoapp --platform android --platform-suffix _android",
+    "recover-screenshots": {
+      "command": "node ./src/recover-screenshots.mjs",
       "options": {
         "cwd": "packages/mobile-visreg"
       }
@@ -29,7 +29,7 @@
       }
     },
     "should-run": {
-      "command": "node ./scripts/shouldRunVisreg.mjs",
+      "command": "node ../../tools/ci/shouldRunVisreg.mjs packages/mobile/src",
       "options": {
         "cwd": "packages/mobile-visreg"
       }

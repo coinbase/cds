@@ -6,8 +6,15 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 import { css } from '@linaria/core';
 
-import { Fallback } from '../layout/Fallback';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
+import { TextFallback } from '../typography/TextFallback';
+
+import { Cell } from './Cell';
+import { CellAccessory, type CellAccessoryType } from './CellAccessory';
+import type { CellMediaType } from './CellMedia';
+import { condensedInnerSpacing, condensedOuterSpacing, type ListCellBaseProps } from './ListCell';
+import { MediaFallback } from './MediaFallback';
 
 const visuallyHiddenCss = css`
   position: absolute;
@@ -20,14 +27,6 @@ const visuallyHiddenCss = css`
   white-space: nowrap;
   border: 0;
 `;
-
-import { useComponentConfig } from '../hooks/useComponentConfig';
-
-import { Cell } from './Cell';
-import { CellAccessory, type CellAccessoryType } from './CellAccessory';
-import type { CellMediaType } from './CellMedia';
-import { condensedInnerSpacing, condensedOuterSpacing, type ListCellBaseProps } from './ListCell';
-import { MediaFallback } from './MediaFallback';
 
 export type ListCellFallbackBaseProps = SharedProps &
   FallbackRectWidthProps &
@@ -121,12 +120,12 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     }
 
     return (
-      <Fallback
+      <TextFallback
         aria-hidden
-        percentage
         className={classNames?.helperText}
         disableRandomRectWidth={disableRandomRectWidth}
-        height={22}
+        font="body"
+        percentage
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 4)}
         style={styles?.helperText}
         testID="list-cell-fallback-helper-text"
@@ -147,34 +146,33 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     }
 
     return (
-      <VStack
-        alignItems="flex-end"
-        className={classNames?.detail}
-        flexShrink={0}
-        gap={0.5}
-        style={styles?.detail}
-        testID="list-cell-fallback-detail"
-      >
-        <Fallback
-          aria-hidden
-          percentage
-          className={classNames?.detail}
-          disableRandomRectWidth={disableRandomRectWidth}
-          height={22}
-          rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
-          style={styles?.detail}
-          width={60}
-        />
-        <Fallback
-          aria-hidden
-          percentage
-          className={classNames?.subdetail}
-          disableRandomRectWidth={disableRandomRectWidth}
-          height={spacingVariant === 'condensed' ? 18 : 22}
-          rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
-          style={styles?.subdetail}
-          width={50}
-        />
+      <VStack alignItems="flex-end" flexShrink={0}>
+        {!!detail && (
+          <TextFallback
+            aria-hidden
+            className={classNames?.detail}
+            disableRandomRectWidth={disableRandomRectWidth}
+            font="body"
+            percentage
+            rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
+            style={styles?.detail}
+            testID="list-cell-fallback-detail"
+            width={60}
+          />
+        )}
+        {!!subdetail && (
+          <TextFallback
+            aria-hidden
+            className={classNames?.subdetail}
+            disableRandomRectWidth={disableRandomRectWidth}
+            font={spacingVariant === 'condensed' ? 'label2' : 'body'}
+            percentage
+            rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
+            style={styles?.subdetail}
+            testID="list-cell-fallback-subdetail"
+            width={50}
+          />
+        )}
       </VStack>
     );
   }, [
@@ -195,12 +193,12 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     }
 
     return (
-      <Fallback
+      <TextFallback
         aria-hidden
-        percentage
         className={classNames?.title}
         disableRandomRectWidth={disableRandomRectWidth}
-        height={22}
+        font="headline"
+        percentage
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
         style={styles?.title}
         testID="list-cell-fallback-title"
@@ -215,12 +213,12 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     }
 
     return (
-      <Fallback
+      <TextFallback
         aria-hidden
-        percentage
         className={classNames?.subtitle}
         disableRandomRectWidth={disableRandomRectWidth}
-        height={18}
+        font="label1"
+        percentage
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
         style={styles?.subtitle}
         testID="list-cell-fallback-subtitle"
@@ -235,12 +233,12 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     }
 
     return (
-      <Fallback
+      <TextFallback
         aria-hidden
-        percentage
         className={classNames?.description}
         disableRandomRectWidth={disableRandomRectWidth}
-        height={spacingVariant === 'condensed' ? 18 : 22}
+        font={spacingVariant === 'condensed' ? 'label2' : 'body'}
+        percentage
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 3)}
         style={styles?.description}
         testID="list-cell-fallback-description"
@@ -251,8 +249,8 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     description,
     classNames?.description,
     disableRandomRectWidth,
-    spacingVariant,
     rectWidthVariant,
+    spacingVariant,
     styles?.description,
   ]);
 
@@ -283,7 +281,7 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
       {...props}
     >
       {accessibilityLabel && <span className={visuallyHiddenCss}>{accessibilityLabel}</span>}
-      <VStack gap={0.5}>
+      <VStack>
         {titleFallback}
         {subtitleFallback}
         {descriptionFallback}

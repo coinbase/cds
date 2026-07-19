@@ -1,5 +1,4 @@
 import React, {
-  forwardRef,
   memo,
   useCallback,
   useEffect,
@@ -549,598 +548,570 @@ const animationConfig = {
 };
 
 export const Carousel = memo(
-  forwardRef<CarouselImperativeHandle, CarouselProps>(
-    (_props: CarouselProps, ref: React.ForwardedRef<CarouselImperativeHandle>) => {
-      const mergedProps = useComponentConfig('Carousel', _props);
-      const {
-        children,
-        title,
-        hideNavigation,
-        hidePagination,
-        paginationVariant,
-        drag = 'snap',
-        snapMode = 'page',
-        NavigationComponent = DefaultCarouselNavigation,
-        PaginationComponent = DefaultCarouselPagination,
-        style,
-        styles,
-        nextPageAccessibilityLabel,
-        previousPageAccessibilityLabel,
-        startAutoplayAccessibilityLabel,
-        stopAutoplayAccessibilityLabel,
-        paginationAccessibilityLabel,
-        onChangePage,
-        onDragStart,
-        onDragEnd,
-        loop,
-        autoplay,
-        autoplayInterval = 3000,
-        ...props
-      } = mergedProps;
-      const carouselScrollX = useRef(0);
+  ({
+    ref,
+    ..._props
+  }: CarouselProps & {
+    ref?: React.Ref<CarouselImperativeHandle>;
+  }) => {
+    const mergedProps = useComponentConfig('Carousel', _props);
+    const {
+      children,
+      title,
+      hideNavigation,
+      hidePagination,
+      paginationVariant,
+      drag = 'snap',
+      snapMode = 'page',
+      NavigationComponent = DefaultCarouselNavigation,
+      PaginationComponent = DefaultCarouselPagination,
+      style,
+      styles,
+      nextPageAccessibilityLabel,
+      previousPageAccessibilityLabel,
+      startAutoplayAccessibilityLabel,
+      stopAutoplayAccessibilityLabel,
+      paginationAccessibilityLabel,
+      onChangePage,
+      onDragStart,
+      onDragEnd,
+      loop,
+      autoplay,
+      autoplayInterval = 3000,
+      ...props
+    } = mergedProps;
+    const carouselScrollX = useRef(0);
 
-      const animationApi = useSpring({
-        x: carouselScrollX.current,
-        config: animationConfig,
-      });
+    const animationApi = useSpring({
+      x: carouselScrollX.current,
+      config: animationConfig,
+    });
 
-      const [activePageIndex, setActivePageIndex] = useState(0);
-      const [containerSize, onLayout] = useLayout();
-      const [carouselItemRects, setCarouselItemRects] = useState<{
-        [itemId: string]: Rect;
-      }>({});
-      const [visibleCarouselItems, setVisibleCarouselItems] = useState<Set<string>>(new Set());
+    const [activePageIndex, setActivePageIndex] = useState(0);
+    const [containerSize, onLayout] = useLayout();
+    const [carouselItemRects, setCarouselItemRects] = useState<{
+      [itemId: string]: Rect;
+    }>({});
+    const [visibleCarouselItems, setVisibleCarouselItems] = useState<Set<string>>(new Set());
 
-      const isDragEnabled = drag !== 'none';
+    const isDragEnabled = drag !== 'none';
 
-      const updateActivePageIndex = useCallback(
-        (newPageIndexOrUpdater: number | ((prevIndex: number) => number)) => {
-          setActivePageIndex((prevIndex) => {
-            const newPageIndex =
-              typeof newPageIndexOrUpdater === 'function'
-                ? newPageIndexOrUpdater(prevIndex)
-                : newPageIndexOrUpdater;
+    const updateActivePageIndex = useCallback(
+      (newPageIndexOrUpdater: number | ((prevIndex: number) => number)) => {
+        setActivePageIndex((prevIndex) => {
+          const newPageIndex =
+            typeof newPageIndexOrUpdater === 'function'
+              ? newPageIndexOrUpdater(prevIndex)
+              : newPageIndexOrUpdater;
 
-            if (prevIndex !== newPageIndex) onChangePage?.(newPageIndex);
+          if (prevIndex !== newPageIndex) onChangePage?.(newPageIndex);
 
-            return newPageIndex;
-          });
-        },
-        [onChangePage],
-      );
+          return newPageIndex;
+        });
+      },
+      [onChangePage],
+    );
 
-      const contentWidth = useMemo(() => {
-        if (Object.keys(carouselItemRects).length === 0) return 0;
-        const items = getItemOffsets(carouselItemRects);
-        const lastItem = items[items.length - 1];
-        return lastItem.x + lastItem.width;
-      }, [carouselItemRects]);
+    const contentWidth = useMemo(() => {
+      if (Object.keys(carouselItemRects).length === 0) return 0;
+      const items = getItemOffsets(carouselItemRects);
+      const lastItem = items[items.length - 1];
+      return lastItem.x + lastItem.width;
+    }, [carouselItemRects]);
 
-      const maxScrollOffset = Math.max(0, contentWidth - containerSize.width);
-      const hasCalculatedDimensions = contentWidth > 0 && containerSize.width > 0;
+    const maxScrollOffset = Math.max(0, contentWidth - containerSize.width);
+    const hasCalculatedDimensions = contentWidth > 0 && containerSize.width > 0;
 
-      // Calculate gap between items (needed for loopLength to maintain consistent spacing at wrap seam)
-      const gap = useMemo(() => {
-        if (Object.keys(carouselItemRects).length < 2) return 0;
-        const items = getItemOffsets(carouselItemRects);
-        const firstItemEnd = items[0].x + items[0].width;
-        const secondItemStart = items[1].x;
-        return Math.max(0, secondItemStart - firstItemEnd);
-      }, [carouselItemRects]);
+    // Calculate gap between items (needed for loopLength to maintain consistent spacing at wrap seam)
+    const gap = useMemo(() => {
+      if (Object.keys(carouselItemRects).length < 2) return 0;
+      const items = getItemOffsets(carouselItemRects);
+      const firstItemEnd = items[0].x + items[0].width;
+      const secondItemStart = items[1].x;
+      return Math.max(0, secondItemStart - firstItemEnd);
+    }, [carouselItemRects]);
 
-      const shouldLoop = useMemo(
-        () => loop && hasCalculatedDimensions && maxScrollOffset > 0,
-        [loop, hasCalculatedDimensions, maxScrollOffset],
-      );
+    const shouldLoop = useMemo(
+      () => loop && hasCalculatedDimensions && maxScrollOffset > 0,
+      [loop, hasCalculatedDimensions, maxScrollOffset],
+    );
 
-      const loopLength = useMemo(() => {
-        if (!shouldLoop) return 0;
-        return contentWidth + gap;
-      }, [shouldLoop, contentWidth, gap]);
+    const loopLength = useMemo(() => {
+      if (!shouldLoop) return 0;
+      return contentWidth + gap;
+    }, [shouldLoop, contentWidth, gap]);
 
-      const isLoopingActive = shouldLoop && loopLength > 0;
+    const isLoopingActive = shouldLoop && loopLength > 0;
 
-      // Calculate how many items to clone for each direction (enough to fill viewport)
-      const cloneCounts = useMemo(() => {
-        if (
-          !shouldLoop ||
-          Object.keys(carouselItemRects).length === 0 ||
-          containerSize.width === 0
-        ) {
-          return { forward: 0, backward: 0 };
+    // Calculate how many items to clone for each direction (enough to fill viewport)
+    const cloneCounts = useMemo(() => {
+      if (!shouldLoop || Object.keys(carouselItemRects).length === 0 || containerSize.width === 0) {
+        return { forward: 0, backward: 0 };
+      }
+      const items = getItemOffsets(carouselItemRects);
+      return {
+        forward: getCloneCount(items, containerSize.width),
+        backward: getCloneCount([...items].reverse(), containerSize.width),
+      };
+    }, [shouldLoop, carouselItemRects, containerSize.width]);
+
+    const updateVisibleCarouselItems = useCallback(
+      (scrollOffset: number) => {
+        if (containerSize.width === 0) {
+          setVisibleCarouselItems(new Set());
+          return;
         }
-        const items = getItemOffsets(carouselItemRects);
-        return {
-          forward: getCloneCount(items, containerSize.width),
-          backward: getCloneCount([...items].reverse(), containerSize.width),
-        };
-      }, [shouldLoop, carouselItemRects, containerSize.width]);
 
-      const updateVisibleCarouselItems = useCallback(
-        (scrollOffset: number) => {
-          if (containerSize.width === 0) {
-            setVisibleCarouselItems(new Set());
-            return;
-          }
+        // For original items: wrap the offset to check visibility within one cycle
+        const adjustedOffset = isLoopingActive
+          ? ((scrollOffset % loopLength) + loopLength) % loopLength
+          : scrollOffset;
 
-          // For original items: wrap the offset to check visibility within one cycle
-          const adjustedOffset = isLoopingActive
-            ? ((scrollOffset % loopLength) + loopLength) % loopLength
-            : scrollOffset;
-
-          const visibleItems = getVisibleItems(
-            carouselItemRects,
-            containerSize.width,
-            adjustedOffset,
-          );
-
-          // For clones: check visibility against actual (unwrapped) scroll position
-          if (isLoopingActive && children) {
-            const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
-            const items = getItemOffsets(carouselItemRects);
-            const viewportLeft = scrollOffset;
-            const viewportRight = scrollOffset + containerSize.width;
-
-            // Check backward clones visibility
-            const backwardStartIndex = childrenArray.length - cloneCounts.backward;
-            for (let i = 0; i < cloneCounts.backward; i++) {
-              const originalIndex = backwardStartIndex + i;
-              const itemData = items[originalIndex];
-              if (itemData) {
-                const cloneX = itemData.x - loopLength;
-                const cloneRight = cloneX + itemData.width;
-                if (cloneX < viewportRight && cloneRight > viewportLeft) {
-                  visibleItems.add(`clone-backward-${childrenArray[originalIndex].props.id}`);
-                }
-              }
-            }
-
-            // Check forward clones visibility
-            for (let i = 0; i < cloneCounts.forward; i++) {
-              const itemData = items[i];
-              if (itemData) {
-                const cloneX = itemData.x + loopLength;
-                const cloneRight = cloneX + itemData.width;
-                if (cloneX < viewportRight && cloneRight > viewportLeft) {
-                  visibleItems.add(`clone-forward-${childrenArray[i].props.id}`);
-                }
-              }
-            }
-          }
-
-          setVisibleCarouselItems(visibleItems);
-        },
-        [
+        const visibleItems = getVisibleItems(
           carouselItemRects,
           containerSize.width,
-          isLoopingActive,
-          loopLength,
-          children,
-          cloneCounts,
-        ],
-      );
+          adjustedOffset,
+        );
 
-      // Calculate pages and their offsets based on snapMode
-      const { totalPages, pageOffsets } = useMemo(() => {
-        if (!hasCalculatedDimensions || Object.keys(carouselItemRects).length === 0) {
-          return { totalPages: 0, pageOffsets: [] };
-        }
-
-        let pageOffsets: { totalPages: number; pageOffsets: number[] };
-
-        if (snapMode === 'item') {
-          pageOffsets = getSnapItemPageOffsets(
-            getItemOffsets(carouselItemRects),
-            containerSize.width,
-            maxScrollOffset,
-            shouldLoop,
-          );
-        } else {
-          pageOffsets = getSnapPageOffsets(
-            getItemOffsets(carouselItemRects),
-            containerSize.width,
-            maxScrollOffset,
-          );
-        }
-
-        updateActivePageIndex((pageIndex) => Math.min(pageIndex, pageOffsets.totalPages - 1));
-
-        return pageOffsets;
-      }, [
-        hasCalculatedDimensions,
-        carouselItemRects,
-        snapMode,
-        containerSize.width,
-        maxScrollOffset,
-        shouldLoop,
-        updateActivePageIndex,
-      ]);
-
-      const {
-        isPlaying,
-        isStopped,
-        isPaused,
-        start,
-        stop,
-        toggle,
-        reset,
-        pause,
-        resume,
-        getRemainingTime,
-        addCompletionListener,
-      } = useCarouselAutoplay({
-        enabled: autoplay ?? false,
-        interval: autoplayInterval,
-      });
-
-      const goToPage = useCallback(
-        (page: number) => {
-          const newPage = Math.max(0, Math.min(totalPages - 1, page));
-          updateActivePageIndex(newPage);
-          updateVisibleCarouselItems(pageOffsets[newPage]);
-
-          const targetOffset = isLoopingActive
-            ? findNearestLoopOffset(carouselScrollX.current, [pageOffsets[newPage]], loopLength)
-                .offset
-            : pageOffsets[newPage];
-
-          carouselScrollX.current = targetOffset;
-          animationApi.x.start({ to: targetOffset, config: animationConfig });
-          reset();
-        },
-        [
-          totalPages,
-          updateActivePageIndex,
-          updateVisibleCarouselItems,
-          pageOffsets,
-          isLoopingActive,
-          loopLength,
-          animationApi.x,
-          reset,
-        ],
-      );
-
-      useImperativeHandle(
-        ref,
-        () => ({
-          activePageIndex,
-          totalPages,
-          goToPage,
-        }),
-        [activePageIndex, totalPages, goToPage],
-      );
-
-      useEffect(() => {
-        if (!autoplay || totalPages === 0) return;
-
-        const unsubscribe = addCompletionListener(() => {
-          const nextPage = wrap(0, totalPages, activePageIndex + 1);
-          reset();
-          goToPage(nextPage);
-        });
-        return unsubscribe;
-      }, [autoplay, addCompletionListener, activePageIndex, totalPages, goToPage, reset]);
-
-      const handleGoNext = useCallback(() => {
-        const nextPage = shouldLoop
-          ? wrap(0, totalPages, activePageIndex + 1)
-          : activePageIndex + 1;
-        goToPage(nextPage);
-      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
-
-      const handleGoPrevious = useCallback(() => {
-        const prevPage = shouldLoop
-          ? wrap(0, totalPages, activePageIndex - 1)
-          : activePageIndex - 1;
-        goToPage(prevPage);
-      }, [shouldLoop, totalPages, activePageIndex, goToPage]);
-
-      const handleDragStart = useCallback(() => {
-        onDragStart?.();
-        pause();
-      }, [onDragStart, pause]);
-
-      const handleDragEnd = useCallback(() => {
-        onDragEnd?.();
-        resume();
-      }, [onDragEnd, resume]);
-
-      const handleDragTransition = useCallback(
-        (targetOffsetScroll: number) => {
-          if (drag === 'none') return targetOffsetScroll;
-
-          if (isLoopingActive) {
-            const { offset: nearestOffset, index: pageIndex } = findNearestLoopOffset(
-              targetOffsetScroll,
-              pageOffsets,
-              loopLength,
-            );
-
-            if (pageIndex !== activePageIndex) reset();
-
-            updateActivePageIndex(pageIndex);
-
-            if (drag === 'snap') {
-              updateVisibleCarouselItems(pageOffsets[pageIndex]);
-              return nearestOffset;
-            }
-
-            const currentCycle = Math.floor(targetOffsetScroll / loopLength);
-            const localOffset = targetOffsetScroll - currentCycle * loopLength;
-            updateVisibleCarouselItems(localOffset);
-            return targetOffsetScroll;
-          } else {
-            // Non-looping logic with clamping
-            const clampedScrollOffset = clampWithElasticResistance(
-              targetOffsetScroll,
-              maxScrollOffset,
-              0,
-            );
-            const closestPageIndex = getNearestPageIndexFromOffset(
-              clampedScrollOffset,
-              pageOffsets,
-            );
-
-            if (closestPageIndex !== activePageIndex) reset();
-
-            updateActivePageIndex(closestPageIndex);
-
-            if (drag === 'snap') {
-              const snapOffset = pageOffsets[closestPageIndex];
-              updateVisibleCarouselItems(snapOffset);
-              return snapOffset;
-            }
-
-            updateVisibleCarouselItems(clampedScrollOffset);
-            return targetOffsetScroll;
-          }
-        },
-        [
-          drag,
-          isLoopingActive,
-          loopLength,
-          maxScrollOffset,
-          pageOffsets,
-          activePageIndex,
-          updateVisibleCarouselItems,
-          updateActivePageIndex,
-          reset,
-        ],
-      );
-
-      const panGesture = useMemo(
-        () =>
-          Gesture.Pan()
-            // Only activate when horizontal movement exceeds threshold
-            .activeOffsetX([-10, 10])
-            // Fail (let parent scroll) when vertical movement exceeds threshold first
-            .failOffsetY([-10, 10])
-            .onStart(() => {
-              if (!isDragEnabled) return;
-              handleDragStart();
-            })
-            .onUpdate(({ translationX }) => {
-              if (!isDragEnabled) return;
-
-              let newOffset: number;
-              if (shouldLoop) {
-                newOffset = carouselScrollX.current - translationX;
-              } else {
-                newOffset = clampWithElasticResistance(
-                  carouselScrollX.current - translationX,
-                  maxScrollOffset,
-                );
-              }
-
-              animationApi.x.set(newOffset);
-            })
-            .onEnd(({ translationX, velocityX }) => {
-              if (!isDragEnabled) return;
-
-              let projectedOffset: number;
-
-              if (shouldLoop) {
-                projectedOffset = carouselScrollX.current - translationX;
-              } else {
-                projectedOffset = clampWithElasticResistance(
-                  carouselScrollX.current - translationX,
-                  maxScrollOffset,
-                );
-              }
-
-              const power = drag === 'free' ? 0.25 : 0.125;
-              const momentumDistance = velocityX * power;
-
-              if (shouldLoop) {
-                projectedOffset = projectedOffset - momentumDistance;
-              } else {
-                projectedOffset = clampWithElasticResistance(
-                  projectedOffset - momentumDistance,
-                  maxScrollOffset,
-                  0,
-                );
-              }
-
-              const finalOffset = handleDragTransition(projectedOffset);
-
-              carouselScrollX.current = finalOffset;
-
-              animationApi.x.start({
-                to: finalOffset,
-                config: {
-                  ...animationConfig,
-                },
-              });
-
-              handleDragEnd();
-            })
-            .runOnJS(true),
-        [
-          isDragEnabled,
-          shouldLoop,
-          maxScrollOffset,
-          animationApi,
-          drag,
-          handleDragTransition,
-          handleDragStart,
-          handleDragEnd,
-        ],
-      );
-
-      const childrenWithClones = useMemo(() => {
-        if (!loop) return children;
-
-        const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
-        if (childrenArray.length === 0) return children;
-
-        const result: React.ReactNode[] = [];
-
-        // Add backward clones (only when we have enough data to position them)
-        if (isLoopingActive && cloneCounts.backward > 0) {
+        // For clones: check visibility against actual (unwrapped) scroll position
+        if (isLoopingActive && children) {
+          const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
           const items = getItemOffsets(carouselItemRects);
-          const itemsToCloneBackward = childrenArray.slice(-cloneCounts.backward);
+          const viewportLeft = scrollOffset;
+          const viewportRight = scrollOffset + containerSize.width;
 
-          itemsToCloneBackward.forEach((child, cloneIndex) => {
-            const originalIndex = childrenArray.length - cloneCounts.backward + cloneIndex;
+          // Check backward clones visibility
+          const backwardStartIndex = childrenArray.length - cloneCounts.backward;
+          for (let i = 0; i < cloneCounts.backward; i++) {
+            const originalIndex = backwardStartIndex + i;
             const itemData = items[originalIndex];
-            const cloneId = `clone-backward-${child.props.id}`;
-            result.push(
-              <CarouselItem
-                key={cloneId}
-                aria-hidden
-                id={cloneId}
-                style={{
-                  position: 'absolute',
-                  left: (itemData?.x ?? 0) - loopLength,
-                  width: itemData?.width,
-                  height: itemData?.height,
-                }}
-              >
-                {child.props.children}
-              </CarouselItem>,
-            );
-          });
+            if (itemData) {
+              const cloneX = itemData.x - loopLength;
+              const cloneRight = cloneX + itemData.width;
+              if (cloneX < viewportRight && cloneRight > viewportLeft) {
+                visibleItems.add(`clone-backward-${childrenArray[originalIndex].props.id}`);
+              }
+            }
+          }
+
+          // Check forward clones visibility
+          for (let i = 0; i < cloneCounts.forward; i++) {
+            const itemData = items[i];
+            if (itemData) {
+              const cloneX = itemData.x + loopLength;
+              const cloneRight = cloneX + itemData.width;
+              if (cloneX < viewportRight && cloneRight > viewportLeft) {
+                visibleItems.add(`clone-forward-${childrenArray[i].props.id}`);
+              }
+            }
+          }
         }
 
-        // Add original children (always present, never changes structure)
-        result.push(...childrenArray);
+        setVisibleCarouselItems(visibleItems);
+      },
+      [carouselItemRects, containerSize.width, isLoopingActive, loopLength, children, cloneCounts],
+    );
 
-        // Add forward clones (only when we have enough data)
-        if (isLoopingActive && cloneCounts.forward > 0) {
-          const items = getItemOffsets(carouselItemRects);
-          const itemsToCloneForward = childrenArray.slice(0, cloneCounts.forward);
+    // Calculate pages and their offsets based on snapMode
+    const { totalPages, pageOffsets } = useMemo(() => {
+      if (!hasCalculatedDimensions || Object.keys(carouselItemRects).length === 0) {
+        return { totalPages: 0, pageOffsets: [] };
+      }
 
-          itemsToCloneForward.forEach((child, cloneIndex) => {
-            const itemData = items[cloneIndex];
-            const cloneId = `clone-forward-${child.props.id}`;
-            result.push(
-              <CarouselItem
-                key={cloneId}
-                aria-hidden
-                id={cloneId}
-                style={{
-                  width: itemData?.width,
-                  height: itemData?.height,
-                }}
-              >
-                {child.props.children}
-              </CarouselItem>,
-            );
-          });
+      let pageOffsets: { totalPages: number; pageOffsets: number[] };
+
+      if (snapMode === 'item') {
+        pageOffsets = getSnapItemPageOffsets(
+          getItemOffsets(carouselItemRects),
+          containerSize.width,
+          maxScrollOffset,
+          shouldLoop,
+        );
+      } else {
+        pageOffsets = getSnapPageOffsets(
+          getItemOffsets(carouselItemRects),
+          containerSize.width,
+          maxScrollOffset,
+        );
+      }
+
+      updateActivePageIndex((pageIndex) => Math.min(pageIndex, pageOffsets.totalPages - 1));
+
+      return pageOffsets;
+    }, [
+      hasCalculatedDimensions,
+      carouselItemRects,
+      snapMode,
+      containerSize.width,
+      maxScrollOffset,
+      shouldLoop,
+      updateActivePageIndex,
+    ]);
+
+    const {
+      isPlaying,
+      isStopped,
+      isPaused,
+      start,
+      stop,
+      toggle,
+      reset,
+      pause,
+      resume,
+      getRemainingTime,
+      addCompletionListener,
+    } = useCarouselAutoplay({
+      enabled: autoplay ?? false,
+      interval: autoplayInterval,
+    });
+
+    const goToPage = useCallback(
+      (page: number) => {
+        const newPage = Math.max(0, Math.min(totalPages - 1, page));
+        updateActivePageIndex(newPage);
+        updateVisibleCarouselItems(pageOffsets[newPage]);
+
+        const targetOffset = isLoopingActive
+          ? findNearestLoopOffset(carouselScrollX.current, [pageOffsets[newPage]], loopLength)
+              .offset
+          : pageOffsets[newPage];
+
+        carouselScrollX.current = targetOffset;
+        animationApi.x.start({ to: targetOffset, config: animationConfig });
+        reset();
+      },
+      [
+        totalPages,
+        updateActivePageIndex,
+        updateVisibleCarouselItems,
+        pageOffsets,
+        isLoopingActive,
+        loopLength,
+        animationApi.x,
+        reset,
+      ],
+    );
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        activePageIndex,
+        totalPages,
+        goToPage,
+      }),
+      [activePageIndex, totalPages, goToPage],
+    );
+
+    useEffect(() => {
+      if (!autoplay || totalPages === 0) return;
+
+      const unsubscribe = addCompletionListener(() => {
+        const nextPage = wrap(0, totalPages, activePageIndex + 1);
+        reset();
+        goToPage(nextPage);
+      });
+      return unsubscribe;
+    }, [autoplay, addCompletionListener, activePageIndex, totalPages, goToPage, reset]);
+
+    const handleGoNext = useCallback(() => {
+      const nextPage = shouldLoop ? wrap(0, totalPages, activePageIndex + 1) : activePageIndex + 1;
+      goToPage(nextPage);
+    }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+
+    const handleGoPrevious = useCallback(() => {
+      const prevPage = shouldLoop ? wrap(0, totalPages, activePageIndex - 1) : activePageIndex - 1;
+      goToPage(prevPage);
+    }, [shouldLoop, totalPages, activePageIndex, goToPage]);
+
+    const handleDragStart = useCallback(() => {
+      onDragStart?.();
+      pause();
+    }, [onDragStart, pause]);
+
+    const handleDragEnd = useCallback(() => {
+      onDragEnd?.();
+      resume();
+    }, [onDragEnd, resume]);
+
+    const handleDragTransition = useCallback(
+      (targetOffsetScroll: number) => {
+        if (drag === 'none') return targetOffsetScroll;
+
+        if (isLoopingActive) {
+          const { offset: nearestOffset, index: pageIndex } = findNearestLoopOffset(
+            targetOffsetScroll,
+            pageOffsets,
+            loopLength,
+          );
+
+          if (pageIndex !== activePageIndex) reset();
+
+          updateActivePageIndex(pageIndex);
+
+          if (drag === 'snap') {
+            updateVisibleCarouselItems(pageOffsets[pageIndex]);
+            return nearestOffset;
+          }
+
+          const currentCycle = Math.floor(targetOffsetScroll / loopLength);
+          const localOffset = targetOffsetScroll - currentCycle * loopLength;
+          updateVisibleCarouselItems(localOffset);
+          return targetOffsetScroll;
+        } else {
+          // Non-looping logic with clamping
+          const clampedScrollOffset = clampWithElasticResistance(
+            targetOffsetScroll,
+            maxScrollOffset,
+            0,
+          );
+          const closestPageIndex = getNearestPageIndexFromOffset(clampedScrollOffset, pageOffsets);
+
+          if (closestPageIndex !== activePageIndex) reset();
+
+          updateActivePageIndex(closestPageIndex);
+
+          if (drag === 'snap') {
+            const snapOffset = pageOffsets[closestPageIndex];
+            updateVisibleCarouselItems(snapOffset);
+            return snapOffset;
+          }
+
+          updateVisibleCarouselItems(clampedScrollOffset);
+          return targetOffsetScroll;
         }
+      },
+      [
+        drag,
+        isLoopingActive,
+        loopLength,
+        maxScrollOffset,
+        pageOffsets,
+        activePageIndex,
+        updateVisibleCarouselItems,
+        updateActivePageIndex,
+        reset,
+      ],
+    );
 
-        return result;
-      }, [loop, children, isLoopingActive, loopLength, cloneCounts, carouselItemRects]);
+    const panGesture = useMemo(
+      () =>
+        Gesture.Pan()
+          // Only activate when horizontal movement exceeds threshold
+          .activeOffsetX([-10, 10])
+          // Fail (let parent scroll) when vertical movement exceeds threshold first
+          .failOffsetY([-10, 10])
+          .onStart(() => {
+            if (!isDragEnabled) return;
+            handleDragStart();
+          })
+          .onUpdate(({ translationX }) => {
+            if (!isDragEnabled) return;
 
-      const containerStyle = useMemo(
-        () => [{ flex: 1, overflow: 'hidden' } as const, style, styles?.root],
-        [style, styles?.root],
-      );
+            let newOffset: number;
+            if (shouldLoop) {
+              newOffset = carouselScrollX.current - translationX;
+            } else {
+              newOffset = clampWithElasticResistance(
+                carouselScrollX.current - translationX,
+                maxScrollOffset,
+              );
+            }
 
-      const scrollViewStyle = useMemo(
-        () => [
-          {
-            flex: 1,
-          },
-          styles?.carouselContainer,
-        ],
-        [styles?.carouselContainer],
-      );
+            animationApi.x.set(newOffset);
+          })
+          .onEnd(({ translationX, velocityX }) => {
+            if (!isDragEnabled) return;
 
-      const animatedStyle = useMemo(
-        () => ({
-          flexDirection: 'row' as const,
-          ...(styles?.carousel as any),
-        }),
-        [styles?.carousel],
-      );
+            let projectedOffset: number;
 
-      const animatedTransform = useMemo(
-        () => ({
-          transform: [
-            {
-              translateX: animationApi.x.to((value) => {
-                if (!shouldLoop || !loopLength) return -value;
-                // Wrap the value to stay within one cycle for visual continuity
-                // Ensure wrapped is always in range [0, loopLength)
-                const wrapped = ((value % loopLength) + loopLength) % loopLength;
-                return -wrapped;
-              }),
-            },
-          ],
-        }),
-        [animationApi, shouldLoop, loopLength],
-      );
+            if (shouldLoop) {
+              projectedOffset = carouselScrollX.current - translationX;
+            } else {
+              projectedOffset = clampWithElasticResistance(
+                carouselScrollX.current - translationX,
+                maxScrollOffset,
+              );
+            }
 
-      const registerItem = useCallback(
-        (id: string, rect: Rect) => {
-          setCarouselItemRects((prev) => ({
-            ...prev,
-            [id]: rect,
-          }));
-          updateVisibleCarouselItems(carouselScrollX.current);
-        },
-        [updateVisibleCarouselItems],
-      );
+            const power = drag === 'free' ? 0.25 : 0.125;
+            const momentumDistance = velocityX * power;
 
-      const unregisterItem = useCallback((id: string) => {
-        setCarouselItemRects((prev) => {
-          const newRects = { ...prev };
-          delete newRects[id];
-          return newRects;
+            if (shouldLoop) {
+              projectedOffset = projectedOffset - momentumDistance;
+            } else {
+              projectedOffset = clampWithElasticResistance(
+                projectedOffset - momentumDistance,
+                maxScrollOffset,
+                0,
+              );
+            }
+
+            const finalOffset = handleDragTransition(projectedOffset);
+
+            carouselScrollX.current = finalOffset;
+
+            animationApi.x.start({
+              to: finalOffset,
+              config: {
+                ...animationConfig,
+              },
+            });
+
+            handleDragEnd();
+          })
+          .runOnJS(true),
+      [
+        isDragEnabled,
+        shouldLoop,
+        maxScrollOffset,
+        animationApi,
+        drag,
+        handleDragTransition,
+        handleDragStart,
+        handleDragEnd,
+      ],
+    );
+
+    const childrenWithClones = useMemo(() => {
+      if (!loop) return children;
+
+      const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
+      if (childrenArray.length === 0) return children;
+
+      const result: React.ReactNode[] = [];
+
+      // Add backward clones (only when we have enough data to position them)
+      if (isLoopingActive && cloneCounts.backward > 0) {
+        const items = getItemOffsets(carouselItemRects);
+        const itemsToCloneBackward = childrenArray.slice(-cloneCounts.backward);
+
+        itemsToCloneBackward.forEach((child, cloneIndex) => {
+          const originalIndex = childrenArray.length - cloneCounts.backward + cloneIndex;
+          const itemData = items[originalIndex];
+          const cloneId = `clone-backward-${child.props.id}`;
+          result.push(
+            <CarouselItem
+              key={cloneId}
+              aria-hidden
+              id={cloneId}
+              style={{
+                position: 'absolute',
+                left: (itemData?.x ?? 0) - loopLength,
+                width: itemData?.width,
+                height: itemData?.height,
+              }}
+            >
+              {child.props.children}
+            </CarouselItem>,
+          );
         });
-      }, []);
+      }
 
-      const carouselContextValue: CarouselContextValue = useMemo(
-        () => ({
-          registerItem,
-          unregisterItem,
-          visibleCarouselItems,
-        }),
-        [registerItem, unregisterItem, visibleCarouselItems],
-      );
+      // Add original children (always present, never changes structure)
+      result.push(...childrenArray);
 
-      const autoplayContextValue = useMemo<CarouselAutoplayContextValue>(() => {
-        return {
-          isEnabled: !!autoplay,
-          isStopped,
-          isPaused,
-          isPlaying,
-          interval: autoplayInterval,
-          getRemainingTime,
-          start,
-          stop,
-          toggle,
-          reset,
-          pause,
-          resume,
-        };
-      }, [
-        autoplay,
+      // Add forward clones (only when we have enough data)
+      if (isLoopingActive && cloneCounts.forward > 0) {
+        const items = getItemOffsets(carouselItemRects);
+        const itemsToCloneForward = childrenArray.slice(0, cloneCounts.forward);
+
+        itemsToCloneForward.forEach((child, cloneIndex) => {
+          const itemData = items[cloneIndex];
+          const cloneId = `clone-forward-${child.props.id}`;
+          result.push(
+            <CarouselItem
+              key={cloneId}
+              aria-hidden
+              id={cloneId}
+              style={{
+                width: itemData?.width,
+                height: itemData?.height,
+              }}
+            >
+              {child.props.children}
+            </CarouselItem>,
+          );
+        });
+      }
+
+      return result;
+    }, [loop, children, isLoopingActive, loopLength, cloneCounts, carouselItemRects]);
+
+    const containerStyle = useMemo(
+      () => [{ flex: 1, overflow: 'hidden' } as const, style, styles?.root],
+      [style, styles?.root],
+    );
+
+    const scrollViewStyle = useMemo(
+      () => [
+        {
+          flex: 1,
+        },
+        styles?.carouselContainer,
+      ],
+      [styles?.carouselContainer],
+    );
+
+    const animatedStyle = useMemo(
+      () => ({
+        flexDirection: 'row' as const,
+        ...(styles?.carousel as any),
+      }),
+      [styles?.carousel],
+    );
+
+    const animatedTransform = useMemo(
+      () => ({
+        transform: [
+          {
+            translateX: animationApi.x.to((value) => {
+              if (!shouldLoop || !loopLength) return -value;
+              // Wrap the value to stay within one cycle for visual continuity
+              // Ensure wrapped is always in range [0, loopLength)
+              const wrapped = ((value % loopLength) + loopLength) % loopLength;
+              return -wrapped;
+            }),
+          },
+        ],
+      }),
+      [animationApi, shouldLoop, loopLength],
+    );
+
+    const registerItem = useCallback(
+      (id: string, rect: Rect) => {
+        setCarouselItemRects((prev) => ({
+          ...prev,
+          [id]: rect,
+        }));
+        updateVisibleCarouselItems(carouselScrollX.current);
+      },
+      [updateVisibleCarouselItems],
+    );
+
+    const unregisterItem = useCallback((id: string) => {
+      setCarouselItemRects((prev) => {
+        const newRects = { ...prev };
+        delete newRects[id];
+        return newRects;
+      });
+    }, []);
+
+    const carouselContextValue: CarouselContextValue = useMemo(
+      () => ({
+        registerItem,
+        unregisterItem,
+        visibleCarouselItems,
+      }),
+      [registerItem, unregisterItem, visibleCarouselItems],
+    );
+
+    const autoplayContextValue = useMemo<CarouselAutoplayContextValue>(() => {
+      return {
+        isEnabled: !!autoplay,
         isStopped,
         isPaused,
         isPlaying,
-        autoplayInterval,
+        interval: autoplayInterval,
         getRemainingTime,
         start,
         stop,
@@ -1148,69 +1119,82 @@ export const Carousel = memo(
         reset,
         pause,
         resume,
-      ]);
+      };
+    }, [
+      autoplay,
+      isStopped,
+      isPaused,
+      isPlaying,
+      autoplayInterval,
+      getRemainingTime,
+      start,
+      stop,
+      toggle,
+      reset,
+      pause,
+      resume,
+    ]);
 
-      return (
-        <CarouselContext.Provider value={carouselContextValue}>
-          <CarouselAutoplayContext.Provider value={autoplayContextValue}>
-            <VStack
-              aria-live="polite"
-              aria-roledescription="carousel"
-              gap={2}
-              role="group"
-              style={containerStyle}
-              {...props}
-            >
-              {(title || !hideNavigation) && (
-                <HStack alignItems="center" justifyContent={title ? 'space-between' : 'flex-end'}>
-                  {typeof title === 'string' ? (
-                    <Text flexShrink={1} font="title3" numberOfLines={1} style={styles?.title}>
-                      {title}
-                    </Text>
-                  ) : (
-                    title
-                  )}
-                  {!hideNavigation && (
-                    <NavigationComponent
-                      autoplay={autoplay}
-                      disableGoNext={
-                        totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
-                      }
-                      disableGoPrevious={totalPages <= 1 || (!shouldLoop && activePageIndex <= 0)}
-                      isAutoplayStopped={isStopped}
-                      nextPageAccessibilityLabel={nextPageAccessibilityLabel}
-                      onGoNext={handleGoNext}
-                      onGoPrevious={handleGoPrevious}
-                      onToggleAutoplay={toggle}
-                      previousPageAccessibilityLabel={previousPageAccessibilityLabel}
-                      startAutoplayAccessibilityLabel={startAutoplayAccessibilityLabel}
-                      stopAutoplayAccessibilityLabel={stopAutoplayAccessibilityLabel}
-                      style={styles?.navigation}
-                    />
-                  )}
-                </HStack>
-              )}
-              <GestureDetector gesture={panGesture}>
-                <View onLayout={onLayout} style={scrollViewStyle}>
-                  <animated.View style={[animatedStyle, animatedTransform]}>
-                    {childrenWithClones}
-                  </animated.View>
-                </View>
-              </GestureDetector>
-              {!hidePagination && (
-                <PaginationComponent
-                  activePageIndex={activePageIndex}
-                  onPressPage={goToPage}
-                  paginationAccessibilityLabel={paginationAccessibilityLabel}
-                  style={styles?.pagination}
-                  totalPages={totalPages}
-                  variant={paginationVariant}
-                />
-              )}
-            </VStack>
-          </CarouselAutoplayContext.Provider>
-        </CarouselContext.Provider>
-      );
-    },
-  ),
+    return (
+      <CarouselContext.Provider value={carouselContextValue}>
+        <CarouselAutoplayContext.Provider value={autoplayContextValue}>
+          <VStack
+            aria-live="polite"
+            aria-roledescription="carousel"
+            gap={2}
+            role="group"
+            style={containerStyle}
+            {...props}
+          >
+            {(title || !hideNavigation) && (
+              <HStack alignItems="center" justifyContent={title ? 'space-between' : 'flex-end'}>
+                {typeof title === 'string' ? (
+                  <Text flexShrink={1} font="title3" numberOfLines={1} style={styles?.title}>
+                    {title}
+                  </Text>
+                ) : (
+                  title
+                )}
+                {!hideNavigation && (
+                  <NavigationComponent
+                    autoplay={autoplay}
+                    disableGoNext={
+                      totalPages <= 1 || (!shouldLoop && activePageIndex >= totalPages - 1)
+                    }
+                    disableGoPrevious={totalPages <= 1 || (!shouldLoop && activePageIndex <= 0)}
+                    isAutoplayStopped={isStopped}
+                    nextPageAccessibilityLabel={nextPageAccessibilityLabel}
+                    onGoNext={handleGoNext}
+                    onGoPrevious={handleGoPrevious}
+                    onToggleAutoplay={toggle}
+                    previousPageAccessibilityLabel={previousPageAccessibilityLabel}
+                    startAutoplayAccessibilityLabel={startAutoplayAccessibilityLabel}
+                    stopAutoplayAccessibilityLabel={stopAutoplayAccessibilityLabel}
+                    style={styles?.navigation}
+                  />
+                )}
+              </HStack>
+            )}
+            <GestureDetector gesture={panGesture}>
+              <View onLayout={onLayout} style={scrollViewStyle}>
+                <animated.View style={[animatedStyle, animatedTransform]}>
+                  {childrenWithClones}
+                </animated.View>
+              </View>
+            </GestureDetector>
+            {!hidePagination && (
+              <PaginationComponent
+                activePageIndex={activePageIndex}
+                onPressPage={goToPage}
+                paginationAccessibilityLabel={paginationAccessibilityLabel}
+                style={styles?.pagination}
+                totalPages={totalPages}
+                variant={paginationVariant}
+              />
+            )}
+          </VStack>
+        </CarouselAutoplayContext.Provider>
+      </CarouselContext.Provider>
+    );
+  },
 );

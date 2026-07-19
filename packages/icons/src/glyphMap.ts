@@ -3314,5 +3314,11 @@ export const glyphMap = {
   'liveEvents-16-active': '󰳛',
   'liveEvents-16-inactive': '󰳜',
   'liveEvents-24-active': '󰳝',
-  'liveEvents-24-inactive': '󰳞'
+  'liveEvents-24-inactive': '󰳞',
+  'lineChartPoints-12-active': '󰳱',
+  'lineChartPoints-12-inactive': '󰳲',
+  'lineChartPoints-16-active': '󰳳',
+  'lineChartPoints-16-inactive': '󰳴',
+  'lineChartPoints-24-active': '󰳵',
+  'lineChartPoints-24-inactive': '󰳶'
 };

@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { ScrollView, View } from 'react-native';
 import {
   interpolateColor,
@@ -191,7 +191,13 @@ const BTCActiveExcludingLiveIndicator = memo((props: TabsActiveIndicatorProps) =
 });
 
 const BTCTab: TabComponent = memo(
-  forwardRef(({ label, ...props }: SegmentedTabProps, ref: React.ForwardedRef<any>) => {
+  ({
+    ref,
+    label,
+    ...props
+  }: SegmentedTabProps & {
+    ref?: React.Ref<any>;
+  }) => {
     const { activeTab } = useTabsContext();
     const isActive = activeTab?.id === props.id;
     const theme = useTheme();
@@ -208,44 +214,51 @@ const BTCTab: TabComponent = memo(
       );
 
     return <SegmentedTab ref={ref} label={wrappedLabel} {...props} />;
-  }),
+  },
 );
 
 const BTCLiveLabel = memo(
-  forwardRef<View, LiveTabLabelProps>(
-    ({ label = 'LIVE', font = 'label1', hideDot, style, ...props }, ref) => {
-      const theme = useTheme();
+  ({
+    ref,
+    label = 'LIVE',
+    font = 'label1',
+    hideDot,
+    style,
+    ...props
+  }: LiveTabLabelProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const theme = useTheme();
 
-      const dotStyle = useMemo(
-        () => ({
-          width: theme.space[1],
-          height: theme.space[1],
-          borderRadius: 1000,
-          marginRight: theme.space[0.75],
-          backgroundColor: btcColor,
-        }),
-        [theme.space],
-      );
+    const dotStyle = useMemo(
+      () => ({
+        width: theme.space[1],
+        height: theme.space[1],
+        borderRadius: 1000,
+        marginRight: theme.space[0.75],
+        backgroundColor: btcColor,
+      }),
+      [theme.space],
+    );
 
-      return (
-        <View
-          ref={ref}
-          style={[
-            {
-              flexDirection: 'row',
-              alignItems: 'center',
-            },
-            style,
-          ]}
-        >
-          {!hideDot && <View style={dotStyle} />}
-          <Text font={font} style={{ color: btcColor }} {...props}>
-            {label}
-          </Text>
-        </View>
-      );
-    },
-  ),
+    return (
+      <View
+        ref={ref}
+        style={[
+          {
+            flexDirection: 'row',
+            alignItems: 'center',
+          },
+          style,
+        ]}
+      >
+        {!hideDot && <View style={dotStyle} />}
+        <Text font={font} style={{ color: btcColor }} {...props}>
+          {label}
+        </Text>
+      </View>
+    );
+  },
 );
 
 const ColoredPeriodSelectorExample = () => {

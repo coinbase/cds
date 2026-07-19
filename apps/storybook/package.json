@@ -4,7 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "should-run-visreg": "node ./scripts/shouldRunVisreg.mjs"
+    "should-run-visreg": "node ../../tools/ci/shouldRunVisreg.mjs packages/web/src packages/common/src packages/icons/src packages/illustrations/src"
   },
   "dependencies": {
     "@coinbase/cds-common": "workspace:^",

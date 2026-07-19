@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo, useRef } from 'react';
+import React, { memo, useMemo, useRef } from 'react';
 import { Defs, G, LinearGradient, Mask, Path, Rect, Stop, Svg } from 'react-native-svg';
 import { getAccessibleForegroundGradient } from '@coinbase/cds-common/color/getAccessibleForegroundGradient';
 import { borderWidth } from '@coinbase/cds-common/tokens/sparkline';
@@ -55,158 +55,156 @@ export type SparklineProps = SparklineBaseProps;
  * @deprecationExpectedRemoval v4
  */
 export const Sparkline = memo(
-  forwardRef<Path | null, SparklineProps>(
-    (
-      {
-        background,
+  ({
+    ref,
+    background,
+    color,
+    height,
+    path,
+    width,
+    yAxisScalingFactor,
+    children,
+    strokeType = 'solid',
+    fillType = 'dotted',
+  }: SparklineProps & {
+    ref?: React.Ref<Path | null>;
+  }) => {
+    const theme = useTheme();
+    const patternId = useRef<string>(generateRandomId());
+
+    const strokeColor =
+      color !== 'auto'
+        ? color
+        : getAccessibleColor({
+            background: background ?? theme.color.bg,
+            foreground: 'auto',
+            usage: 'graphic',
+          });
+
+    const translateProps = getSparklineTransform(width, height, yAxisScalingFactor);
+    const hasChildren = !!children;
+    const useModernFill = fillType === 'gradient' || fillType === 'gradientDotted';
+
+    // Stroke gradient (for strokeType='gradient')
+    const strokeGradient = useMemo(() => {
+      if (strokeType !== 'gradient') return null;
+
+      return getAccessibleForegroundGradient({
+        background: background ?? theme.color.bg,
         color,
-        height,
-        path,
-        width,
-        yAxisScalingFactor,
-        children,
-        strokeType = 'solid',
-        fillType = 'dotted',
-      },
-      ref,
-    ) => {
-      const theme = useTheme();
-      const patternId = useRef<string>(generateRandomId());
+        colorScheme: theme.activeColorScheme,
+        usage: 'graphic',
+      });
+    }, [strokeType, background, color, theme]);
 
-      const strokeColor =
-        color !== 'auto'
-          ? color
-          : getAccessibleColor({
-              background: background ?? theme.color.bg,
-              foreground: 'auto',
-              usage: 'graphic',
-            });
+    // Calculate gradient coordinates for modern fills
+    const { gradientY1, gradientY2 } = useMemo(() => {
+      if (!useModernFill) return { gradientY1: 0, gradientY2: 0 };
 
-      const translateProps = getSparklineTransform(width, height, yAxisScalingFactor);
-      const hasChildren = !!children;
-      const useModernFill = fillType === 'gradient' || fillType === 'gradientDotted';
+      if (!Number.isFinite(yAxisScalingFactor)) {
+        return { gradientY1: 2, gradientY2: height - 2 };
+      }
 
-      // Stroke gradient (for strokeType='gradient')
-      const strokeGradient = useMemo(() => {
-        if (strokeType !== 'gradient') return null;
+      const { yRange } = getSparklineRange({ height, width, yAxisScalingFactor });
+      const pathHeight = Math.abs(yRange[0] - yRange[1]);
+      const yTranslate = height / 2 - pathHeight / 2;
 
-        return getAccessibleForegroundGradient({
-          background: background ?? theme.color.bg,
-          color,
-          colorScheme: theme.activeColorScheme,
-          usage: 'graphic',
-        });
-      }, [strokeType, background, color, theme]);
+      return {
+        gradientY1: yRange[1],
+        gradientY2: height - yTranslate,
+      };
+    }, [useModernFill, height, width, yAxisScalingFactor]);
 
-      // Calculate gradient coordinates for modern fills
-      const { gradientY1, gradientY2 } = useMemo(() => {
-        if (!useModernFill) return { gradientY1: 0, gradientY2: 0 };
+    const maskGradientId = `${patternId.current}-mask-gradient`;
+    const maskId = `${patternId.current}-mask`;
 
-        if (!Number.isFinite(yAxisScalingFactor)) {
-          return { gradientY1: 2, gradientY2: height - 2 };
-        }
+    const defs = useMemo(() => {
+      if (!strokeGradient && !hasChildren) return null;
 
-        const { yRange } = getSparklineRange({ height, width, yAxisScalingFactor });
-        const pathHeight = Math.abs(yRange[0] - yRange[1]);
-        const yTranslate = height / 2 - pathHeight / 2;
-
-        return {
-          gradientY1: yRange[1],
-          gradientY2: height - yTranslate,
-        };
-      }, [useModernFill, height, width, yAxisScalingFactor]);
-
-      const maskGradientId = `${patternId.current}-mask-gradient`;
-      const maskId = `${patternId.current}-mask`;
-
-      const defs = useMemo(() => {
-        if (!strokeGradient && !hasChildren) return null;
-
-        return (
-          <Defs>
-            {strokeGradient && (
-              <LinearGradient id="gradient" x1="0%" x2="100%" y1="0%" y2="0%">
-                {strokeGradient.map((item, i) => (
-                  <Stop key={`${i}_${item}`} offset={item.offset} stopColor={item.color} />
-                ))}
-              </LinearGradient>
-            )}
-            {hasChildren && fillType === 'dotted' && (
-              <SparklineAreaPattern color={strokeColor} id={patternId.current} />
-            )}
-            {hasChildren && fillType === 'gradient' && (
+      return (
+        <Defs>
+          {strokeGradient && (
+            <LinearGradient id="gradient" x1="0%" x2="100%" y1="0%" y2="0%">
+              {strokeGradient.map((item, i) => (
+                <Stop key={`${i}_${item}`} offset={item.offset} stopColor={item.color} />
+              ))}
+            </LinearGradient>
+          )}
+          {hasChildren && fillType === 'dotted' && (
+            <SparklineAreaPattern color={strokeColor} id={patternId.current} />
+          )}
+          {hasChildren && fillType === 'gradient' && (
+            <LinearGradient
+              gradientUnits="userSpaceOnUse"
+              id={patternId.current}
+              x1="0"
+              x2="0"
+              y1={gradientY1}
+              y2={gradientY2}
+            >
+              <Stop offset="0%" stopColor={strokeColor} stopOpacity={0.3} />
+              <Stop offset="100%" stopColor={strokeColor} stopOpacity={0} />
+            </LinearGradient>
+          )}
+          {hasChildren && fillType === 'gradientDotted' && (
+            <>
+              <SparklineAreaPattern color={strokeColor} id={patternId.current} opacity={1} />
               <LinearGradient
                 gradientUnits="userSpaceOnUse"
-                id={patternId.current}
+                id={maskGradientId}
                 x1="0"
                 x2="0"
                 y1={gradientY1}
                 y2={gradientY2}
               >
-                <Stop offset="0%" stopColor={strokeColor} stopOpacity={0.3} />
-                <Stop offset="100%" stopColor={strokeColor} stopOpacity={0} />
+                <Stop offset="0%" stopColor="white" stopOpacity={1} />
+                <Stop offset="100%" stopColor="white" stopOpacity={0} />
               </LinearGradient>
-            )}
-            {hasChildren && fillType === 'gradientDotted' && (
-              <>
-                <SparklineAreaPattern color={strokeColor} id={patternId.current} opacity={1} />
-                <LinearGradient
-                  gradientUnits="userSpaceOnUse"
-                  id={maskGradientId}
-                  x1="0"
-                  x2="0"
-                  y1={gradientY1}
-                  y2={gradientY2}
-                >
-                  <Stop offset="0%" stopColor="white" stopOpacity={1} />
-                  <Stop offset="100%" stopColor="white" stopOpacity={0} />
-                </LinearGradient>
-                <Mask id={maskId}>
-                  <Rect fill={`url(#${maskGradientId})`} height={height} width={width} />
-                </Mask>
-              </>
-            )}
-          </Defs>
-        );
-      }, [
-        strokeGradient,
-        hasChildren,
-        fillType,
-        strokeColor,
-        gradientY1,
-        gradientY2,
-        height,
-        width,
-        maskGradientId,
-        maskId,
-      ]);
-
-      const stroke = strokeType === 'gradient' ? 'url(#gradient)' : strokeColor;
-      const shouldPlaceDefsInside = useModernFill;
-
-      return (
-        <Svg fill="none" height={height} width={width}>
-          {!shouldPlaceDefsInside && defs}
-          <G {...translateProps}>
-            {shouldPlaceDefsInside && defs}
-            <Path
-              ref={ref}
-              d={path}
-              stroke={stroke}
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={borderWidth}
-            />
-            {generateSparklineAreaWithId(
-              patternId.current,
-              children,
-              fillType === 'gradientDotted' ? maskId : undefined,
-            )}
-          </G>
-        </Svg>
+              <Mask id={maskId}>
+                <Rect fill={`url(#${maskGradientId})`} height={height} width={width} />
+              </Mask>
+            </>
+          )}
+        </Defs>
       );
-    },
-  ),
+    }, [
+      strokeGradient,
+      hasChildren,
+      fillType,
+      strokeColor,
+      gradientY1,
+      gradientY2,
+      height,
+      width,
+      maskGradientId,
+      maskId,
+    ]);
+
+    const stroke = strokeType === 'gradient' ? 'url(#gradient)' : strokeColor;
+    const shouldPlaceDefsInside = useModernFill;
+
+    return (
+      <Svg fill="none" height={height} width={width}>
+        {!shouldPlaceDefsInside && defs}
+        <G {...translateProps}>
+          {shouldPlaceDefsInside && defs}
+          <Path
+            ref={ref}
+            d={path}
+            stroke={stroke}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={borderWidth}
+          />
+          {generateSparklineAreaWithId(
+            patternId.current,
+            children,
+            fillType === 'gradientDotted' ? maskId : undefined,
+          )}
+        </G>
+      </Svg>
+    );
+  },
 );
 
 Sparkline.displayName = 'Sparkline';

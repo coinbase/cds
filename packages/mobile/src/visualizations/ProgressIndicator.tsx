@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Animated, StyleSheet } from 'react-native';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
@@ -19,51 +19,54 @@ export type ProgressIndicatorProps = {
 } & BoxProps &
   SharedProps;
 
-export const ProgressIndicator = memo(
-  forwardRef<View, ProgressIndicatorProps>(function ProgressIndicator(
-    { progress, style, testID, ...boxProps },
-    ref,
-  ) {
-    const theme = useTheme();
-    const outerStyles = useMemo(
-      () => [styles.dash, { backgroundColor: theme.color.bgLine }],
-      [theme.color.bgLine],
-    );
-    const innerStyles = useMemo(
-      () => [
-        styles.dashOverlay,
-        { backgroundColor: theme.color.bgInverse, zIndex: 2 },
-        progress && {
-          transform: [
-            {
-              translateX: progress.interpolate({
-                inputRange: [0, 1],
-                outputRange: [-PROGRESS_INDICATOR_WIDTH, 0],
-              }),
-            },
-          ],
-        },
-      ],
-      [theme.color.bgInverse, progress],
-    );
+export const ProgressIndicator = memo(function ProgressIndicator({
+  ref,
+  progress,
+  style,
+  testID,
+  ...boxProps
+}: ProgressIndicatorProps & {
+  ref?: React.Ref<View>;
+}) {
+  const theme = useTheme();
+  const outerStyles = useMemo(
+    () => [styles.dash, { backgroundColor: theme.color.bgLine }],
+    [theme.color.bgLine],
+  );
+  const innerStyles = useMemo(
+    () => [
+      styles.dashOverlay,
+      { backgroundColor: theme.color.bgInverse, zIndex: 2 },
+      progress && {
+        transform: [
+          {
+            translateX: progress.interpolate({
+              inputRange: [0, 1],
+              outputRange: [-PROGRESS_INDICATOR_WIDTH, 0],
+            }),
+          },
+        ],
+      },
+    ],
+    [theme.color.bgInverse, progress],
+  );
 
-    return (
-      <Box
-        ref={ref}
-        animated
-        alignItems="center"
-        justifyContent="center"
-        style={style}
-        testID={testID}
-        {...boxProps}
-      >
-        <Animated.View style={outerStyles}>
-          <Animated.View style={innerStyles} />
-        </Animated.View>
-      </Box>
-    );
-  }),
-);
+  return (
+    <Box
+      ref={ref}
+      animated
+      alignItems="center"
+      justifyContent="center"
+      style={style}
+      testID={testID}
+      {...boxProps}
+    >
+      <Animated.View style={outerStyles}>
+        <Animated.View style={innerStyles} />
+      </Animated.View>
+    </Box>
+  );
+});
 
 const styles = StyleSheet.create({
   dash: {

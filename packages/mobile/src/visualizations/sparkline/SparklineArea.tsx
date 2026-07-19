@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import { Path } from 'react-native-svg';
 
 export type SparklineAreaBaseProps = {
@@ -12,16 +12,21 @@ export type SparklineAreaBaseProps = {
  * @deprecationExpectedRemoval v4
  */
 export const SparklineArea = memo(
-  forwardRef<Path | null, SparklineAreaBaseProps>(
-    ({ area, patternId, maskId }: SparklineAreaBaseProps, ref) => {
-      return (
-        <Path
-          ref={ref}
-          d={area}
-          fill={`url(#${patternId})`}
-          mask={maskId ? `url(#${maskId})` : undefined}
-        />
-      );
-    },
-  ),
+  ({
+    ref,
+    area,
+    patternId,
+    maskId,
+  }: SparklineAreaBaseProps & {
+    ref?: React.Ref<Path | null>;
+  }) => {
+    return (
+      <Path
+        ref={ref}
+        d={area}
+        fill={`url(#${patternId})`}
+        mask={maskId ? `url(#${maskId})` : undefined}
+      />
+    );
+  },
 );

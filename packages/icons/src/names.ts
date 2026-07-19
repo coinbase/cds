@@ -556,5 +556,6 @@ export const names: IconName[] = [
   'record',
   'stop',
   'desktop',
-  'liveEvents'
+  'liveEvents',
+  'lineChartPoints'
 ];

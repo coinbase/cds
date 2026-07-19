@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -36,30 +36,33 @@ type SegmentedTabsFC = <TabId extends string = string>(
 ) => React.ReactElement;
 
 const SegmentedTabsComponent = memo(
-  forwardRef(
-    <TabId extends string>(_props: SegmentedTabsProps<TabId>, ref: React.ForwardedRef<View>) => {
-      const mergedProps = useComponentConfig('SegmentedTabs', _props);
-      const {
-        TabComponent = SegmentedTab,
-        TabsActiveIndicatorComponent = SegmentedTabsActiveIndicator,
-        activeBackground = 'bgInverse',
-        background = 'bgSecondary',
-        borderRadius = 700,
-        ...props
-      } = mergedProps;
-      return (
-        <Tabs
-          ref={ref}
-          TabComponent={TabComponent}
-          TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
-          activeBackground={activeBackground}
-          background={background}
-          borderRadius={borderRadius}
-          {...props}
-        />
-      );
-    },
-  ),
+  <TabId extends string>({
+    ref,
+    ..._props
+  }: SegmentedTabsProps<TabId> & {
+    ref?: React.Ref<View>;
+  }) => {
+    const mergedProps = useComponentConfig('SegmentedTabs', _props);
+    const {
+      TabComponent = SegmentedTab,
+      TabsActiveIndicatorComponent = SegmentedTabsActiveIndicator,
+      activeBackground = 'bgInverse',
+      background = 'bgSecondary',
+      borderRadius = 700,
+      ...props
+    } = mergedProps;
+    return (
+      <Tabs
+        ref={ref}
+        TabComponent={TabComponent}
+        TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
+        activeBackground={activeBackground}
+        background={background}
+        borderRadius={borderRadius}
+        {...props}
+      />
+    );
+  },
 );
 
 SegmentedTabsComponent.displayName = 'SegmentedTabs';

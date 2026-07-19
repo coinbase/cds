@@ -107,3 +107,42 @@ In a nutshell, you can reference the following for the most common text semantic
 - `time`, `abbr`, `sup`, `kbd`, etc, for granular semantics.
 - `pre` and `code` for preformatted code blocks.
 - `span` when no semantics are required (within buttons for example) and it also has default inline display.
+
+### Fallback
+
+You can use `TextFallback` as a placeholder for `Text`.
+
+:::warning
+`TextFallback` requires theme `fontSize` and `lineHeight` tokens to be length values (such as `rem` or `px`); unitless or percentage values will not size accurately.
+:::
+
+```jsx live
+function TextFallbackExample() {
+  const [loading, setLoading] = React.useState(true);
+
+  return (
+    <VStack gap={2}>
+      <VStack>
+        {loading ? (
+          <VStack>
+            <TextFallback font="headline" width={60} />
+            <TextFallback font="body" width={45} />
+          </VStack>
+        ) : (
+          <VStack>
+            <Text font="headline" as="p">
+              Headline
+            </Text>
+            <Text font="body" as="p">
+              Body
+            </Text>
+          </VStack>
+        )}
+      </VStack>
+      <Button onClick={() => setLoading((value) => !value)}>
+        {loading ? 'Show text' : 'Show fallback'}
+      </Button>
+    </VStack>
+  );
+}
+```

@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import { StyleSheet, type View } from 'react-native';
 
 import { HStack } from '../../layout/HStack';
@@ -13,12 +13,19 @@ const baseStylesheet = StyleSheet.create({
 });
 
 export const DefaultRollingNumberMask: RollingNumberMaskComponent = memo(
-  forwardRef<View, RollingNumberMaskProps>(({ children, style, ...props }, ref) => {
+  ({
+    ref,
+    children,
+    style,
+    ...props
+  }: RollingNumberMaskProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const containerStyle = useMemo(() => [baseStylesheet.mask, style], [style]);
     return (
       <HStack ref={ref} style={containerStyle} {...props}>
         {children}
       </HStack>
     );
-  }),
+  },
 );

@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import {
   type NativeSyntheticEvent,
   type StyleProp,
@@ -110,7 +110,12 @@ export type DatePickerProps = DatePickerBaseProps &
   };
 
 export const DatePicker = memo(
-  forwardRef<View, DatePickerProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: DatePickerProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('DatePicker', _props);
     const {
       date,
@@ -312,7 +317,7 @@ export const DatePicker = memo(
         )}
       </Box>
     );
-  }),
+  },
 );
 
 DatePicker.displayName = 'DatePicker';
