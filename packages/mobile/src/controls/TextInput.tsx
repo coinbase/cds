@@ -147,9 +147,6 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   secondary: 'bgSecondary',
 };
 
-/** The field container (InputStack) owns the padding, so the input itself has none. */
-const zeroPaddingStyle: ViewStyle = { padding: 0 };
-
 export const TextInput = memo(
   ({
     ref,
@@ -245,24 +242,36 @@ export const TextInput = memo(
     const showLabelInStack = hasLabel && !showLabelInStartSlot;
     const inputStackLabelVariant = isVerticalLabel ? 'inside' : 'outside';
 
-    // The field's inner spacing is applied to the InputStack field container (via
-    // styles.input): the content padding box goes on the container and a gap spaces
-    // the start / input / end slots. TextInput only decides placement (via
-    // useTextInputPlacement) and spacing (via useTextInputDensity) — no per-element
-    // padding distribution.
-    const inputStackStyles = useMemo(() => {
-      const { top, right, bottom, left } = contentPadding;
-      return {
+    // Spacing is split by axis (see the model on ContentPadding). The InputStack
+    // field container owns the horizontal outer padding + the inter-slot gap.
+    const inputStackStyles = useMemo(
+      () => ({
         input: {
           alignItems: 'center',
           gap: theme.space[contentGap],
-          paddingTop: theme.space[top],
-          paddingBottom: theme.space[bottom],
-          paddingStart: theme.space[left],
-          paddingEnd: theme.space[right],
+          paddingStart: theme.space[contentPadding.left],
+          paddingEnd: theme.space[contentPadding.right],
         } as ViewStyle,
-      };
-    }, [contentPadding, contentGap, theme.space]);
+      }),
+      [contentPadding.left, contentPadding.right, contentGap, theme.space],
+    );
+
+    // Vertical padding = the height-defining band, applied to the content (not the
+    // container). Normally both bands sit on the input; for a stacked
+    // (inside-vertical) label the top band moves onto the label.
+    const inputPaddingTop = isVerticalLabel ? 0 : contentPadding.top;
+    const inputPaddingBottom = contentPadding.bottom;
+    const stackedLabelPaddingTop = contentPadding.top;
+
+    const inputVerticalPaddingStyle = useMemo<ViewStyle>(
+      () => ({
+        paddingTop: theme.space[inputPaddingTop],
+        paddingBottom: theme.space[inputPaddingBottom],
+        paddingStart: 0,
+        paddingEnd: 0,
+      }),
+      [inputPaddingTop, inputPaddingBottom, theme.space],
+    );
 
     // Get the accessability label from the start node child
     const startIconA11yLabel = useMemo(() => {
@@ -360,7 +369,7 @@ export const TextInput = memo(
             selectionColor={variantColorMap[focusedVariant]}
             testID={testID}
             {...editableInputAddonProps}
-            style={[zeroPaddingStyle, editableInputAddonProps.style]}
+            style={[inputVerticalPaddingStyle, editableInputAddonProps.style]}
           />
         }
         labelNode={
@@ -370,13 +379,17 @@ export const TextInput = memo(
             : hasLabel && (
                 <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
                   {isVerticalLabel && labelNode ? (
-                    <Box background={readOnlyInputBackground}>{labelNode}</Box>
+                    // Stacked label owns the top vertical band; the input owns the bottom.
+                    <Box background={readOnlyInputBackground} paddingTop={stackedLabelPaddingTop}>
+                      {labelNode}
+                    </Box>
                   ) : isVerticalLabel ? (
                     <InputLabel
                       background={readOnlyInputBackground}
                       color={labelColor}
                       font={labelFont}
-                      paddingY={0}
+                      paddingBottom={0}
+                      paddingTop={stackedLabelPaddingTop}
                       testID={testIDMap?.label ?? ''}
                     >
                       {label}
@@ -412,6 +425,8 @@ export const TextInput = memo(
                     (labelNode
                       ? labelNode
                       : !!label && (
+                          // Inline label: zero its vertical padding so it never out-talls
+                          // the input, which owns the field's height.
                           <InputLabel color={labelColor} font={labelFont} paddingY={0}>
                             {label}
                           </InputLabel>

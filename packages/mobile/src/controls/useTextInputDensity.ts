@@ -40,9 +40,25 @@ export const useTextInputPlacement = ({
 };
 
 /**
- * The padding box between the field border and its content, expressed as space
- * tokens. TextInput applies it to the field container (via InputStack's
- * styles.input) and uses `contentGap` between the start / input / end slots.
+ * The field content padding, expressed as space tokens. TextInput does NOT apply
+ * all of this to one element — it splits it by axis so the field height stays
+ * predictable:
+ *
+ *   - VERTICAL (top/bottom) lives on the CONTENT (the input, and the stacked
+ *     inside-vertical label). The padded input defines the field height, so a tall
+ *     start/end adornment centers within it instead of stretching the field taller.
+ *   - HORIZONTAL (left/right) + the inter-slot GAP live on the InputStack field
+ *     CONTAINER (via `styles.input`). Adornments get the outer padding + a gap
+ *     without owning any vertical padding.
+ *
+ * Where each edge lands, per label placement:
+ *
+ *   placement           container (styles.input)     content (input / label)
+ *   ─────────────────   ─────────────────────────    ────────────────────────────
+ *   outside / no label  left, right, gap             input: top + bottom
+ *   inside-horizontal   left, right, gap             input: top + bottom
+ *     (label in start slot: paddingY 0 so it never out-talls the input)
+ *   inside-vertical     left, right, gap             label: top · input: bottom
  */
 export type ContentPadding = {
   top: ThemeVars.Space;

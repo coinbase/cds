@@ -236,24 +236,26 @@ export const TextInput = memo(
     const inputStackLabelVariant = isVerticalLabel ? 'inside' : 'outside';
     const dataSize = nativeCompact ? undefined : resolvedSize;
 
-    // The field's inner spacing is applied to the InputStack field container (via
-    // styles.input): the content padding box goes on the container and a gap spaces
-    // the start / input / end slots. TextInput only decides placement (via
-    // useTextInputPlacement) and spacing (via useTextInputDensity) — no per-element
-    // padding distribution.
-    const inputStackStyles = useMemo(() => {
-      const { top, right, bottom, left } = contentPadding;
-      return {
+    // Spacing is split by axis (see the model on ContentPadding). The InputStack
+    // field container owns the horizontal outer padding + the inter-slot gap.
+    const inputStackStyles = useMemo(
+      () => ({
         input: {
           alignItems: 'center',
           gap: theme.space[contentGap],
-          paddingTop: theme.space[top],
-          paddingBottom: theme.space[bottom],
-          paddingInlineStart: theme.space[left],
-          paddingInlineEnd: theme.space[right],
+          paddingInlineStart: theme.space[contentPadding.left],
+          paddingInlineEnd: theme.space[contentPadding.right],
         } as React.CSSProperties,
-      };
-    }, [contentPadding, contentGap, theme.space]);
+      }),
+      [contentPadding.left, contentPadding.right, contentGap, theme.space],
+    );
+
+    // Vertical padding = the height-defining band, applied to the content (not the
+    // container). Normally both bands sit on the input; for a stacked
+    // (inside-vertical) label the top band moves onto the label.
+    const inputPaddingTop = isVerticalLabel ? 0 : contentPadding.top;
+    const inputPaddingBottom = contentPadding.bottom;
+    const stackedLabelPaddingTop = contentPadding.top;
 
     const inputElement = useMemo(() => {
       /** Ensures that the renderedInput has the blurring, focusing, disabled features */
@@ -293,7 +295,10 @@ export const TextInput = memo(
           id={shouldSetLabelId ? labelId : undefined}
           onBlur={handleOnBlur}
           onFocus={handleOnFocus}
-          padding={0} // reset default padding on input element
+          paddingBottom={inputPaddingBottom}
+          paddingEnd={0}
+          paddingStart={0}
+          paddingTop={inputPaddingTop}
           testID={testID}
           {...nativeInputRestProps}
         />
@@ -310,6 +315,8 @@ export const TextInput = memo(
       focusedVariant,
       nativeCompact,
       dataSize,
+      inputPaddingBottom,
+      inputPaddingTop,
       disabled,
       font,
       shouldSetLabelId,
@@ -374,7 +381,10 @@ export const TextInput = memo(
             showLabelInStack &&
             (labelNode ? (
               isVerticalLabel ? (
-                <Box background={readOnlyInputBackground}>{labelNode}</Box>
+                // Stacked label owns the top vertical band; the input owns the bottom.
+                <Box background={readOnlyInputBackground} paddingTop={stackedLabelPaddingTop}>
+                  {labelNode}
+                </Box>
               ) : (
                 labelNode
               )
@@ -385,7 +395,8 @@ export const TextInput = memo(
                   color={labelColor}
                   font={labelFont}
                   htmlFor={shouldSetLabelId ? labelId : undefined}
-                  paddingY={isVerticalLabel ? 0 : undefined}
+                  paddingBottom={isVerticalLabel ? 0 : undefined}
+                  paddingTop={isVerticalLabel ? stackedLabelPaddingTop : undefined}
                   testID={testIDMap?.label ?? ''}
                 >
                   {label}
@@ -408,6 +419,8 @@ export const TextInput = memo(
                   (labelNode
                     ? labelNode
                     : !!label && (
+                        // Inline label: zero its vertical padding so it never out-talls
+                        // the input, which owns the field's height.
                         <InputLabel
                           color={labelColor}
                           font={labelFont}

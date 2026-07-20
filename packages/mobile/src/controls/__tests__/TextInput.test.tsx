@@ -706,7 +706,7 @@ describe('TextInput', () => {
     expect(screen.queryByTestId('start-test')).toBeFalsy();
   });
 
-  it('delegates field padding to the container, so the input carries none', () => {
+  it('carries vertical padding on the input and delegates horizontal to the container', () => {
     const testID = 'input-testid';
     render(
       <DefaultThemeProvider>
@@ -715,6 +715,10 @@ describe('TextInput', () => {
     );
 
     const flattenedStyle = StyleSheet.flatten(screen.getByTestId(testID).props.style);
-    expect(flattenedStyle?.padding).toBe(0);
+    // size s -> space-1 top/bottom on the input; horizontal padding lives on the container.
+    expect(flattenedStyle?.paddingTop).toBe(defaultTheme.space[1]);
+    expect(flattenedStyle?.paddingBottom).toBe(defaultTheme.space[1]);
+    expect(flattenedStyle?.paddingStart).toBe(0);
+    expect(flattenedStyle?.paddingEnd).toBe(0);
   });
 });
