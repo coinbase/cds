@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { TextInput } from 'react-native';
-import type { StyleProp, TextInputProps, TextStyle, ViewStyle } from 'react-native';
+import type { TextInputProps, TextStyle, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
@@ -9,44 +9,52 @@ import { useTextAlign } from '../hooks/useTextAlign';
 import { useTheme } from '../hooks/useTheme';
 import type { TextBaseProps } from '../typography/Text';
 
-import type { TextInputBaseProps } from './TextInput';
-
-export type NativeInputProps = {
-  /**
-   * Text Align Input
-   * @default start
-   * */
-  align?: TextBaseProps['align'];
-  /** Custom container spacing if needed. This will add to the existing spacing */
-  containerSpacing?: ViewStyle | undefined;
-  /**
-   * Disables input
-   * @default false
-   * */
-  disabled?: boolean;
-  /**
-   * Native TextInput textAlign with the extra unset option to remove the textAlign style.
-   * Use this to workaround the issue where long text does not ellipsis in TextInput
-   * @warning Setting this to unset will break alignment for RTL languages.
-   */
-  textAlign?: TextInputProps['textAlign'] | 'unset';
-  /**
-   * Typography font token used for typed input text.
-   * @default body
-   */
-  font?: ThemeVars.Font;
-  /**
-   * Color of the selection (including caret).
-   * @default fgPrimary
-   */
-  selectionColor?: ThemeVars.Color;
-} & SharedProps &
-  Pick<TextInputBaseProps, 'compact'> &
+export type NativeInputProps = SharedProps &
+  Omit<TextInputProps, 'textAlign' | 'selectionColor'> &
   Pick<
     SharedAccessibilityProps,
     'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
-  > &
-  Omit<TextInputProps, 'textAlign' | 'selectionColor'>;
+  > & {
+    /**
+     * Text Align Input
+     * @default start
+     * */
+    align?: TextBaseProps['align'];
+    /**
+     * Custom container spacing if needed. This will add to the existing spacing.
+     * @deprecated Use style object instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    containerSpacing?: ViewStyle | undefined;
+    /**
+     * Decreases the padding within the input element
+     * @default false
+     * @deprecated Use style object instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
+    /**
+     * Disables input
+     * @default false
+     * */
+    disabled?: boolean;
+    /**
+     * Native TextInput textAlign with the extra unset option to remove the textAlign style.
+     * Use this to workaround the issue where long text does not ellipsis in TextInput
+     * @warning Setting this to unset will break alignment for RTL languages.
+     */
+    textAlign?: TextInputProps['textAlign'] | 'unset';
+    /**
+     * Typography font token used for typed input text.
+     * @default body
+     */
+    font?: ThemeVars.Font;
+    /**
+     * Color of the selection (including caret).
+     * @default fgPrimary
+     */
+    selectionColor?: ThemeVars.Color;
+  };
 
 export const NativeInput = memo(
   ({
@@ -74,45 +82,43 @@ export const NativeInput = memo(
         fontFamily: theme.fontFamily[font],
         minHeight: theme.lineHeight[font],
         fontWeight: theme.fontWeight[font],
-        padding: 0,
         margin: 0,
         color: theme.color.fg,
-      }),
-      [theme.fontSize, theme.fontFamily, theme.lineHeight, theme.fontWeight, theme.color.fg, font],
-    );
-
-    const containerStyle: ViewStyle = useMemo(() => {
-      return {
         flex: 2,
         minWidth: 0,
         padding: theme.space[compact ? 1 : 2],
-        ...containerSpacing,
         ...(!disabled &&
           editableInputAddonProps.readOnly && {
             backgroundColor: theme.color.bgSecondary,
           }),
-      };
-    }, [
-      containerSpacing,
-      theme.space,
-      theme.color,
-      compact,
-      editableInputAddonProps.readOnly,
-      disabled,
-    ]);
+      }),
+      [
+        theme.fontSize,
+        theme.fontFamily,
+        theme.lineHeight,
+        compact,
+        theme.fontWeight,
+        theme.color.fg,
+        theme.color.bgSecondary,
+        theme.space,
+        font,
+        disabled,
+        editableInputAddonProps.readOnly,
+      ],
+    );
 
     const inputRootStyles = useMemo(() => {
       return [
         inputTextStyle,
-        containerStyle,
         /**
          * To workaround a known RN bug (link below) where long text does not ellipsis correctly in TextInput
          * @link https://github.com/facebook/react-native/issues/29068
          */
         { textAlign: textAlign === 'unset' ? undefined : textAlignInputTransformed },
+        containerSpacing,
         style,
       ];
-    }, [inputTextStyle, containerStyle, textAlign, textAlignInputTransformed, style]);
+    }, [inputTextStyle, textAlign, textAlignInputTransformed, containerSpacing, style]);
 
     return (
       <TextInput

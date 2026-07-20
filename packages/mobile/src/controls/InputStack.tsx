@@ -77,7 +77,8 @@ export type InputStackBaseProps = SharedProps & {
   /** Border overlay to animate border when focused */
   borderFocusedStyle?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
   /**
-   * The variant of the label. Only used when compact is not true.
+   * Determines where the provided label/labelNode is rendered.
+   * By default, the label is rendered outisde, above the input element.
    * @default 'outside'
    */
   labelVariant?: 'inside' | 'outside';

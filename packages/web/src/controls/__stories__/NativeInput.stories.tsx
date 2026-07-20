@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { css } from '@linaria/core';
 
 import { InputStack } from '../InputStack';
 import { NativeInput } from '../NativeInput';
@@ -13,14 +12,10 @@ export const NativeInputBasic = function NativeInputBasic() {
   return <InputStack inputNode={<NativeInput accessibilityLabel="Label" />} labelNode="Label" />;
 };
 
-const containerSpacingCss = css`
-  padding: var(--space-1);
-`;
-
-export const NativeInputCustomContainerSpacing = function NativeInputCustomContainerSpacing() {
+export const NativeInputCustomSpacing = function NativeInputCustomSpacing() {
   return (
     <InputStack
-      inputNode={<NativeInput accessibilityLabel="Label" containerSpacing={containerSpacingCss} />}
+      inputNode={<NativeInput accessibilityLabel="Label" padding={4} />}
       labelNode="Label"
     />
   );

@@ -1,157 +1,81 @@
 import { renderHook } from '@testing-library/react-native';
 
-import { defaultTheme } from '../../themes/defaultTheme';
-import { textInputSizePaddingY, useTextInputDensity } from '../useTextInputDensity';
+import { useTextInputDensity, useTextInputPlacement } from '../useTextInputDensity';
+
+describe('useTextInputPlacement', () => {
+  it('places the label outside by default', () => {
+    const { result } = renderHook(() =>
+      useTextInputPlacement({ hasLabel: true, labelVariant: 'outside', size: 'l' }),
+    );
+
+    expect(result.current).toBe('outside');
+  });
+
+  it('renders the label inline (inside-horizontal) when compact', () => {
+    const { result } = renderHook(() =>
+      useTextInputPlacement({ compact: true, hasLabel: true, labelVariant: 'inside', size: 'l' }),
+    );
+
+    expect(result.current).toBe('inside-horizontal');
+  });
+
+  it('places the label outside when compact but there is no label', () => {
+    const { result } = renderHook(() =>
+      useTextInputPlacement({ compact: true, hasLabel: false, labelVariant: 'inside', size: 'l' }),
+    );
+
+    expect(result.current).toBe('outside');
+  });
+
+  it('stacks the inside label vertically at size l and horizontally at s/m', () => {
+    const { result: large } = renderHook(() =>
+      useTextInputPlacement({ hasLabel: true, labelVariant: 'inside', size: 'l' }),
+    );
+    expect(large.current).toBe('inside-vertical');
+
+    const { result: small } = renderHook(() =>
+      useTextInputPlacement({ hasLabel: true, labelVariant: 'inside', size: 's' }),
+    );
+    expect(small.current).toBe('inside-horizontal');
+  });
+});
 
 describe('useTextInputDensity', () => {
-  it('defaults to size l with outside label placement', () => {
+  it('uses per-size vertical padding with constant horizontal padding', () => {
+    const { result: large } = renderHook(() =>
+      useTextInputDensity({ labelPlacement: 'outside', size: 'l' }),
+    );
+    expect(large.current.contentPadding).toEqual({ top: 2, right: 2, bottom: 2, left: 2 });
+
+    const { result: medium } = renderHook(() =>
+      useTextInputDensity({ labelPlacement: 'outside', size: 'm' }),
+    );
+    expect(medium.current.contentPadding).toEqual({ top: 1.5, right: 2, bottom: 1.5, left: 2 });
+
+    const { result: small } = renderHook(() =>
+      useTextInputDensity({ labelPlacement: 'outside', size: 's' }),
+    );
+    expect(small.current.contentPadding).toEqual({ top: 1, right: 2, bottom: 1, left: 2 });
+  });
+
+  it('collapses to space-1 all around for legacy compact', () => {
     const { result } = renderHook(() =>
-      useTextInputDensity({
-        hasLabel: true,
-        hasStart: false,
-        labelVariant: 'outside',
-        theme: defaultTheme,
-      }),
+      useTextInputDensity({ compact: true, labelPlacement: 'inside-horizontal', size: 'l' }),
     );
-
-    expect(result.current.resolvedSize).toBe('l');
-    expect(result.current.labelPlacement).toBe('outside');
-    expect(result.current.showLabelInStack).toBe(true);
-    expect(result.current.showLabelInStartSlot).toBe(false);
-    expect(result.current.nativeCompact).toBeUndefined();
-    expect(result.current.inputStackLabelVariant).toBe('outside');
+    expect(result.current.contentPadding).toEqual({ top: 1, right: 1, bottom: 1, left: 1 });
   });
 
-  it('uses legacy compact when compact is true and size is undefined', () => {
+  it('tightens vertical padding for a vertically-stacked inside label', () => {
     const { result } = renderHook(() =>
-      useTextInputDensity({
-        compact: true,
-        hasLabel: true,
-        hasStart: false,
-        labelVariant: 'inside',
-        theme: defaultTheme,
-      }),
+      useTextInputDensity({ labelPlacement: 'inside-vertical', size: 'l' }),
     );
-
-    expect(result.current.useLegacyCompact).toBe(true);
-    expect(result.current.labelPlacement).toBe('legacy-compact');
-    expect(result.current.showLabelInStartSlot).toBe(true);
-    expect(result.current.showLabelInStack).toBe(false);
-    expect(result.current.nativeCompact).toBe(true);
+    expect(result.current.contentPadding).toEqual({ top: 0.75, right: 2, bottom: 0.75, left: 2 });
   });
 
-  it('ignores compact when size is explicitly set', () => {
+  it('exposes a content gap for spacing between slots', () => {
     const { result } = renderHook(() =>
-      useTextInputDensity({
-        compact: true,
-        hasLabel: true,
-        hasStart: false,
-        labelVariant: 'outside',
-        size: 's',
-        theme: defaultTheme,
-      }),
+      useTextInputDensity({ labelPlacement: 'outside', size: 'l' }),
     );
-
-    expect(result.current.useLegacyCompact).toBe(false);
-    expect(result.current.resolvedSize).toBe('s');
-    expect(result.current.nativeCompact).toBeUndefined();
-  });
-
-  it('uses inside-vertical placement for size l with inside label', () => {
-    const { result } = renderHook(() =>
-      useTextInputDensity({
-        hasLabel: true,
-        hasStart: false,
-        labelVariant: 'inside',
-        size: 'l',
-        theme: defaultTheme,
-      }),
-    );
-
-    expect(result.current.labelPlacement).toBe('inside-vertical');
-    expect(result.current.inputStackLabelVariant).toBe('inside');
-    expect(result.current.showLabelInStack).toBe(true);
-  });
-
-  it('uses inside-horizontal placement for size s/m with inside label', () => {
-    const { result: smallResult } = renderHook(() =>
-      useTextInputDensity({
-        hasLabel: true,
-        hasStart: false,
-        labelVariant: 'inside',
-        size: 's',
-        theme: defaultTheme,
-      }),
-    );
-
-    expect(smallResult.current.labelPlacement).toBe('inside-horizontal');
-    expect(smallResult.current.showLabelInStartSlot).toBe(true);
-
-    const { result: mediumResult } = renderHook(() =>
-      useTextInputDensity({
-        hasLabel: true,
-        hasStart: false,
-        labelVariant: 'inside',
-        size: 'm',
-        theme: defaultTheme,
-      }),
-    );
-
-    expect(mediumResult.current.labelPlacement).toBe('inside-horizontal');
-  });
-
-  it('allows outside label with size s', () => {
-    const { result } = renderHook(() =>
-      useTextInputDensity({
-        hasLabel: true,
-        hasStart: false,
-        labelVariant: 'outside',
-        size: 's',
-        theme: defaultTheme,
-      }),
-    );
-
-    expect(result.current.labelPlacement).toBe('outside');
-    expect(result.current.showLabelInStack).toBe(true);
-    expect(result.current.showLabelInStartSlot).toBe(false);
-  });
-
-  it('applies size paddingY overrides through containerSpacing', () => {
-    const { result: smallResult } = renderHook(() =>
-      useTextInputDensity({
-        hasLabel: false,
-        hasStart: false,
-        size: 's',
-        theme: defaultTheme,
-      }),
-    );
-
-    expect(smallResult.current.containerSpacing.paddingVertical).toBe(
-      defaultTheme.space[textInputSizePaddingY.s],
-    );
-
-    const { result: mediumResult } = renderHook(() =>
-      useTextInputDensity({
-        hasLabel: false,
-        hasStart: false,
-        size: 'm',
-        theme: defaultTheme,
-      }),
-    );
-
-    expect(mediumResult.current.containerSpacing.paddingVertical).toBe(
-      defaultTheme.space[textInputSizePaddingY.m],
-    );
-
-    const { result: largeResult } = renderHook(() =>
-      useTextInputDensity({
-        hasLabel: false,
-        hasStart: false,
-        size: 'l',
-        theme: defaultTheme,
-      }),
-    );
-
-    expect(largeResult.current.containerSpacing.paddingVertical).toBeUndefined();
+    expect(result.current.contentGap).toBe(0.5);
   });
 });

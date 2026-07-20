@@ -1,7 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
-import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
 import { css } from '@linaria/core';
 
@@ -72,21 +70,19 @@ const baseCss = css`
   }
 `;
 
-const originalContainerPaddingCss = css`
-  padding: var(--space-2);
-`;
-
-const compactContainerPaddingCss = css`
-  padding: var(--space-1);
-`;
-
 export type NativeInputBaseProps = BoxBaseProps & {
   /**
    * Decreases the padding within the input element
    * @default false
+   * @deprecated Use `padding` props instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   compact?: boolean;
-  /** Custom container spacing if needed. This will add to the existing spacing */
+  /**
+   * Custom container spacing if needed. This will add to the existing spacing.
+   * @deprecated Use `padding` props instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
   containerSpacing?: string;
   /**
    * Text Align Input
@@ -100,18 +96,7 @@ export type NativeInputBaseProps = BoxBaseProps & {
   caretColor?: ThemeVars.Color;
 };
 
-export type NativeInputProps = NativeInputBaseProps &
-  BoxProps<'input'> &
-  SharedProps &
-  Pick<
-    SharedAccessibilityProps,
-    'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
-  > & {
-    /**
-     * Callback fired when pressed/clicked
-     */
-    onClick?: React.MouseEventHandler;
-  };
+export type NativeInputProps = NativeInputBaseProps & BoxProps<'input'>;
 
 export const NativeInput = memo(
   forwardRef(function NativeInput(
@@ -129,6 +114,7 @@ export const NativeInput = memo(
       accessibilityLabelledBy,
       accessibilityHint,
       compact,
+      padding = compact ? 1 : 2,
       className,
       caretColor = 'fgPrimary',
       style,
@@ -137,9 +123,6 @@ export const NativeInput = memo(
     ref: React.ForwardedRef<HTMLInputElement>,
   ) {
     const { activeColorScheme } = useTheme();
-    const defaultContainerPadding = compact
-      ? compactContainerPaddingCss
-      : originalContainerPaddingCss;
 
     const dynamicStyles = useMemo(
       () => ({
@@ -158,7 +141,7 @@ export const NativeInput = memo(
         aria-label={accessibilityLabel}
         aria-labelledby={accessibilityLabelledBy}
         as="input"
-        className={cx(baseCss, containerSpacing ?? defaultContainerPadding, className)}
+        className={cx(baseCss, containerSpacing, className)}
         data-testid={testID}
         font={font}
         onBlur={onBlur}
@@ -166,6 +149,7 @@ export const NativeInput = memo(
         onClick={onClick}
         onFocus={onFocus}
         onKeyDown={onKeyDown}
+        padding={padding}
         style={dynamicStyles}
         tabIndex={0}
         {...props}

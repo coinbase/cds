@@ -12,10 +12,9 @@ import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
 import type { InputVariant, SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
 import { mergeReactElementRef, mergeRefs } from '@coinbase/cds-common/utils/mergeRefs';
-import { css } from '@linaria/core';
 
-import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { Text } from '../typography/Text';
@@ -27,58 +26,7 @@ import type { InputStackBaseProps } from './InputStack';
 import { InputStack } from './InputStack';
 import { NativeInput, type NativeInputBaseProps, type NativeInputProps } from './NativeInput';
 import type { TextInputSize } from './useTextInputDensity';
-import { useTextInputDensity } from './useTextInputDensity';
-
-/**
- * In normal circumstances, padding horizontal should be 2 (16px).
- * Size path: only paddingY changes (s=8, m=12, l=16); paddingX stays space-2.
- * Legacy compact: all-around space-1 (unchanged).
- * Vertical inside label (size l): padding-top 0, padding-bottom space-1.
- * If start exists, padding between input area and icon should be 0.5 (4px).
- */
-const nativeInputContainerCss = css`
-  padding-top: var(--space-2);
-  padding-bottom: var(--space-2);
-  padding-inline-start: var(--space-2);
-  padding-inline-end: var(--space-2);
-
-  &[data-size='s'] {
-    padding-top: var(--space-1);
-    padding-bottom: var(--space-1);
-  }
-
-  &[data-size='m'] {
-    padding-top: var(--space-1_5);
-    padding-bottom: var(--space-1_5);
-  }
-
-  &[data-labelvariant='inside'] {
-    padding-top: 0;
-    padding-bottom: var(--space-1);
-  }
-
-  &[data-start='true'] {
-    padding-inline-start: var(--space-0_5);
-  }
-
-  &[data-compact='true'] {
-    padding-top: var(--space-1);
-    padding-bottom: var(--space-1);
-    padding-inline-start: var(--space-1);
-    padding-inline-end: var(--space-1);
-  }
-`;
-
-const insideLabelCss = css`
-  padding-top: var(--space-1);
-  padding-bottom: 0;
-  padding-inline-start: var(--space-2);
-  padding-inline-end: var(--space-2);
-`;
-
-const insideLabelCssStartCss = css`
-  padding-inline-start: var(--space-0_5);
-`;
+import { useTextInputDensity, useTextInputPlacement } from './useTextInputDensity';
 
 export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
   Omit<SharedInputProps, 'compact'> &
@@ -90,21 +38,27 @@ export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
     | 'disabled'
     | 'borderRadius'
     | 'enableColorSurge'
-    | 'labelVariant'
     | 'inputBackground'
   > & {
     /**
      * Enables compact variation. Prefer `size="s"` or `size="m"` with an explicit `labelVariant`.
      *
-     * @deprecated Use `size` instead. This will be removed in a future major release.
+     * @deprecated Unset and use `size="s"` instead. This will be removed in a future major release.
      * @deprecationExpectedRemoval v10
      */
     compact?: boolean;
     /**
-     * Controls vertical density of the input field.
+     * Controls overall density of the input field, inside of the border.
      * @default 'l'
      */
     size?: TextInputSize;
+    /**
+     * Determines where the provided label/labelNode is rendered.
+     * By default, the label is rendered outisde, above the input element.
+     * When size is `l` (the default), an `inside` label is stacked vertically with the input; otherwise is rendered horizontally.
+     * @default 'outside'
+     */
+    labelVariant?: InputStackBaseProps['labelVariant'];
     /**
      * Customize the element which the input area will be rendered as.
      * Adds ability to render the input area as a `<textarea />`, `<input />` etc...
@@ -203,6 +157,7 @@ export const TextInput = memo(
       inputBackground,
       ...nativeInputRestProps
     } = mergedProps;
+    const theme = useTheme();
     const [focused, setFocused] = useState(false);
     const focusedVariant = useInputVariant(focused, variant);
     const internalRef = useRef<HTMLInputElement | null>(null);
@@ -254,14 +209,51 @@ export const TextInput = memo(
       return undefined;
     }, [disabled, nativeInputRestProps.readOnly]);
 
-    const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
+    const hasLabel = !!label || !!labelNode;
 
-    const density = useTextInputDensity({
-      compact,
+    // `size` wins over the deprecated `compact`: compact only takes effect when no
+    // size is set. Resolve both here, then hand the resolved values to the hooks.
+    const resolvedSize: TextInputSize = size ?? 'l';
+    const nativeCompact = Boolean(compact) && size === undefined;
+
+    const labelPlacement = useTextInputPlacement({
+      compact: nativeCompact,
       hasLabel,
       labelVariant,
-      size,
+      size: resolvedSize,
     });
+
+    const { contentPadding, contentGap } = useTextInputDensity({
+      compact: nativeCompact,
+      labelPlacement,
+      size: resolvedSize,
+    });
+
+    // View flags derived from the placement decision.
+    const isVerticalLabel = labelPlacement === 'inside-vertical';
+    const showLabelInStartSlot = hasLabel && labelPlacement === 'inside-horizontal';
+    const showLabelInStack = hasLabel && !showLabelInStartSlot;
+    const inputStackLabelVariant = isVerticalLabel ? 'inside' : 'outside';
+    const dataSize = nativeCompact ? undefined : resolvedSize;
+
+    // The field's inner spacing is applied to the InputStack field container (via
+    // styles.input): the content padding box goes on the container and a gap spaces
+    // the start / input / end slots. TextInput only decides placement (via
+    // useTextInputPlacement) and spacing (via useTextInputDensity) — no per-element
+    // padding distribution.
+    const inputStackStyles = useMemo(() => {
+      const { top, right, bottom, left } = contentPadding;
+      return {
+        input: {
+          alignItems: 'center',
+          gap: theme.space[contentGap],
+          paddingTop: theme.space[top],
+          paddingBottom: theme.space[bottom],
+          paddingInlineStart: theme.space[left],
+          paddingInlineEnd: theme.space[right],
+        } as React.CSSProperties,
+      };
+    }, [contentPadding, contentGap, theme.space]);
 
     const inputElement = useMemo(() => {
       /** Ensures that the renderedInput has the blurring, focusing, disabled features */
@@ -294,17 +286,14 @@ export const TextInput = memo(
           align={align}
           aria-invalid={variant === 'negative'}
           caretColor={variantColorMap[focusedVariant]}
-          compact={density.nativeCompact}
-          containerSpacing={nativeInputContainerCss}
-          data-compact={density.nativeCompact || undefined}
-          data-labelvariant={density.inputStackLabelVariant}
-          data-size={density.dataSize}
-          data-start={!!start || density.showLabelInStartSlot}
+          data-compact={nativeCompact || undefined}
+          data-size={dataSize}
           disabled={disabled}
           font={font}
           id={shouldSetLabelId ? labelId : undefined}
           onBlur={handleOnBlur}
           onFocus={handleOnFocus}
+          padding={0} // reset default padding on input element
           testID={testID}
           {...nativeInputRestProps}
         />
@@ -319,11 +308,8 @@ export const TextInput = memo(
       align,
       variant,
       focusedVariant,
-      density.nativeCompact,
-      density.inputStackLabelVariant,
-      density.dataSize,
-      density.showLabelInStartSlot,
-      start,
+      nativeCompact,
+      dataSize,
       disabled,
       font,
       shouldSetLabelId,
@@ -385,37 +371,21 @@ export const TextInput = memo(
           inputBackground={readOnlyInputBackground ?? inputBackground}
           inputNode={inputElement}
           labelNode={
-            density.showLabelInStack &&
+            showLabelInStack &&
             (labelNode ? (
-              density.labelPlacement === 'inside-vertical' ? (
-                <Box
-                  background={readOnlyInputBackground}
-                  paddingEnd={2}
-                  paddingStart={start ? 0.5 : 2}
-                  paddingTop={1}
-                >
-                  {labelNode}
-                </Box>
+              isVerticalLabel ? (
+                <Box background={readOnlyInputBackground}>{labelNode}</Box>
               ) : (
                 labelNode
               )
             ) : (
               !!label && (
                 <InputLabel
-                  background={
-                    density.labelPlacement === 'inside-vertical'
-                      ? readOnlyInputBackground
-                      : undefined
-                  }
-                  className={cx(
-                    density.labelPlacement === 'inside-vertical' && insideLabelCss,
-                    density.labelPlacement === 'inside-vertical' &&
-                      !!start &&
-                      insideLabelCssStartCss,
-                  )}
+                  background={isVerticalLabel ? readOnlyInputBackground : undefined}
                   color={labelColor}
                   font={labelFont}
                   htmlFor={shouldSetLabelId ? labelId : undefined}
+                  paddingY={isVerticalLabel ? 0 : undefined}
                   testID={testIDMap?.label ?? ''}
                 >
                   {label}
@@ -423,19 +393,18 @@ export const TextInput = memo(
               )
             ))
           }
-          labelVariant={density.inputStackLabelVariant}
+          labelVariant={inputStackLabelVariant}
           startNode={
-            (density.showLabelInStartSlot || !!start) && (
+            (showLabelInStartSlot || !!start) && (
               <HStack
                 alignItems="center"
                 background={readOnlyInputBackground}
                 gap={2}
                 justifyContent="center"
                 onClick={handleNodePress}
-                paddingStart={density.showLabelInStartSlot ? 2 : undefined}
                 testID={testIDMap?.start ?? ''}
               >
-                {density.showLabelInStartSlot &&
+                {showLabelInStartSlot &&
                   (labelNode
                     ? labelNode
                     : !!label && (
@@ -443,6 +412,7 @@ export const TextInput = memo(
                           color={labelColor}
                           font={labelFont}
                           htmlFor={shouldSetLabelId ? labelId : undefined}
+                          paddingY={0}
                         >
                           {label}
                         </InputLabel>
@@ -451,6 +421,7 @@ export const TextInput = memo(
               </HStack>
             )
           }
+          styles={inputStackStyles}
           variant={variant}
           width={width}
         />

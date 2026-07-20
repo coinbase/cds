@@ -263,38 +263,56 @@ describe('Search', () => {
     expect(onClearSpy).toHaveBeenCalled();
   });
 
-  /** Testing t-shirt sizing */
-  it('applies no extra vertical padding by default (size l)', () => {
+  /**
+   * Testing t-shirt sizing. Field padding lives on the InputStack container (the
+   * input's parent), not the input itself, so we read the container's style.
+   */
+  const getContainerStyle = () => {
+    // Walk up from the input to the field container — the first ancestor that
+    // carries the content padding (InputStack applies it via styles.input).
+    let node: ReturnType<typeof screen.getByTestId> | null = screen.getByTestId(TEST_ID);
+    while (node) {
+      const flat = StyleSheet.flatten(node.props.style);
+      if (flat?.paddingTop !== undefined) return flat;
+      node = node.parent;
+    }
+    return undefined;
+  };
+
+  it('applies size l vertical padding by default', () => {
     render(
       <DefaultThemeProvider>
         <SearchInput onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
       </DefaultThemeProvider>,
     );
 
-    const flattenedStyle = StyleSheet.flatten(screen.getByTestId(TEST_ID).props.style);
-    expect(flattenedStyle?.paddingVertical).toBeUndefined();
+    const containerStyle = getContainerStyle();
+    expect(containerStyle?.paddingTop).toBe(defaultTheme.space[2]);
+    expect(containerStyle?.paddingBottom).toBe(defaultTheme.space[2]);
   });
 
-  it('forwards size s vertical padding through to the text input', () => {
+  it('forwards size s vertical padding through to the field container', () => {
     render(
       <DefaultThemeProvider>
         <SearchInput onChangeText={onChangeTextSpy} size="s" testID={TEST_ID} value="value" />
       </DefaultThemeProvider>,
     );
 
-    const flattenedStyle = StyleSheet.flatten(screen.getByTestId(TEST_ID).props.style);
-    expect(flattenedStyle?.paddingVertical).toBe(defaultTheme.space[1]);
+    const containerStyle = getContainerStyle();
+    expect(containerStyle?.paddingTop).toBe(defaultTheme.space[1]);
+    expect(containerStyle?.paddingBottom).toBe(defaultTheme.space[1]);
   });
 
-  it('forwards size m vertical padding through to the text input', () => {
+  it('forwards size m vertical padding through to the field container', () => {
     render(
       <DefaultThemeProvider>
         <SearchInput onChangeText={onChangeTextSpy} size="m" testID={TEST_ID} value="value" />
       </DefaultThemeProvider>,
     );
 
-    const flattenedStyle = StyleSheet.flatten(screen.getByTestId(TEST_ID).props.style);
-    expect(flattenedStyle?.paddingVertical).toBe(defaultTheme.space[1.5]);
+    const containerStyle = getContainerStyle();
+    expect(containerStyle?.paddingTop).toBe(defaultTheme.space[1.5]);
+    expect(containerStyle?.paddingBottom).toBe(defaultTheme.space[1.5]);
   });
 
   it('lets size win over compact (size m padding applied, not legacy compact)', () => {
@@ -310,7 +328,8 @@ describe('Search', () => {
       </DefaultThemeProvider>,
     );
 
-    const flattenedStyle = StyleSheet.flatten(screen.getByTestId(TEST_ID).props.style);
-    expect(flattenedStyle?.paddingVertical).toBe(defaultTheme.space[1.5]);
+    const containerStyle = getContainerStyle();
+    expect(containerStyle?.paddingTop).toBe(defaultTheme.space[1.5]);
+    expect(containerStyle?.paddingBottom).toBe(defaultTheme.space[1.5]);
   });
 });

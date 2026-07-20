@@ -706,7 +706,7 @@ describe('TextInput', () => {
     expect(screen.queryByTestId('start-test')).toBeFalsy();
   });
 
-  it('applies size s paddingY through containerSpacing', () => {
+  it('delegates field padding to the container, so the input carries none', () => {
     const testID = 'input-testid';
     render(
       <DefaultThemeProvider>
@@ -715,7 +715,6 @@ describe('TextInput', () => {
     );
 
     const flattenedStyle = StyleSheet.flatten(screen.getByTestId(testID).props.style);
-    expect(flattenedStyle?.paddingVertical).toBe(defaultTheme.space[1]);
-    expect(flattenedStyle?.padding).toBe(defaultTheme.space[2]);
+    expect(flattenedStyle?.padding).toBe(0);
   });
 });

@@ -13,6 +13,7 @@ import type {
   DimensionValue,
   TextInput as RNTextInput,
   TextInputProps as RNTextInputProps,
+  ViewStyle,
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
@@ -37,7 +38,7 @@ import { InputLabel } from './InputLabel';
 import { InputStack, type InputStackBaseProps } from './InputStack';
 import { NativeInput } from './NativeInput';
 import type { TextInputSize } from './useTextInputDensity';
-import { useTextInputDensity } from './useTextInputDensity';
+import { useTextInputDensity, useTextInputPlacement } from './useTextInputDensity';
 
 export type TextInputBaseProps = SharedProps &
   Pick<
@@ -54,21 +55,27 @@ export type TextInputBaseProps = SharedProps &
     | 'borderRadius'
     | 'enableColorSurge'
     | 'focusedBorderWidth'
-    | 'labelVariant'
     | 'inputBackground'
   > & {
     /**
      * Enables compact variation. Prefer `size="s"` or `size="m"` with an explicit `labelVariant`.
      *
-     * @deprecated Use `size` instead. This will be removed in a future major release.
+     * @deprecated Unset and use `size="s"` instead. This will be removed in a future major release.
      * @deprecationExpectedRemoval v10
      */
     compact?: boolean;
     /**
-     * Controls vertical density of the input field.
+     * Controls overall density of the input field, inside of the border.
      * @default 'l'
      */
     size?: TextInputSize;
+    /**
+     * Determines where the provided label/labelNode is rendered.
+     * By default, the label is rendered outisde, above the input element.
+     * When size is `l` (the default), an `inside` label is stacked vertically with the input; otherwise is rendered horizontally.
+     * @default 'outside'
+     */
+    labelVariant?: 'inside' | 'outside';
     /**
      * Aligns text inside input and helperText
      * @default start
@@ -140,6 +147,9 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   secondary: 'bgSecondary',
 };
 
+/** The field container (InputStack) owns the padding, so the input itself has none. */
+const zeroPaddingStyle: ViewStyle = { padding: 0 };
+
 export const TextInput = memo(
   ({
     ref,
@@ -162,7 +172,7 @@ export const TextInput = memo(
       disabled = false,
       align = 'start',
       font = 'body',
-      compact,
+      compact = false,
       size,
       suffix = '',
       accessibilityLabel,
@@ -211,14 +221,48 @@ export const TextInput = memo(
 
     const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
 
-    const density = useTextInputDensity({
-      compact,
+    // `size` wins over the deprecated `compact`: compact only takes effect when no
+    // size is set. Resolve both here, then hand the resolved values to the hooks.
+    const resolvedSize: TextInputSize = size ?? 'l';
+    const nativeCompact = Boolean(compact) && size === undefined;
+
+    const labelPlacement = useTextInputPlacement({
+      compact: nativeCompact,
       hasLabel,
-      hasStart: !!start,
       labelVariant,
-      size,
-      theme,
+      size: resolvedSize,
     });
+
+    const { contentPadding, contentGap } = useTextInputDensity({
+      compact: nativeCompact,
+      labelPlacement,
+      size: resolvedSize,
+    });
+
+    // View flags derived from the placement decision.
+    const isVerticalLabel = labelPlacement === 'inside-vertical';
+    const showLabelInStartSlot = hasLabel && labelPlacement === 'inside-horizontal';
+    const showLabelInStack = hasLabel && !showLabelInStartSlot;
+    const inputStackLabelVariant = isVerticalLabel ? 'inside' : 'outside';
+
+    // The field's inner spacing is applied to the InputStack field container (via
+    // styles.input): the content padding box goes on the container and a gap spaces
+    // the start / input / end slots. TextInput only decides placement (via
+    // useTextInputPlacement) and spacing (via useTextInputDensity) — no per-element
+    // padding distribution.
+    const inputStackStyles = useMemo(() => {
+      const { top, right, bottom, left } = contentPadding;
+      return {
+        input: {
+          alignItems: 'center',
+          gap: theme.space[contentGap],
+          paddingTop: theme.space[top],
+          paddingBottom: theme.space[bottom],
+          paddingStart: theme.space[left],
+          paddingEnd: theme.space[right],
+        } as ViewStyle,
+      };
+    }, [contentPadding, contentGap, theme.space]);
 
     // Get the accessability label from the start node child
     const startIconA11yLabel = useMemo(() => {
@@ -311,36 +355,27 @@ export const TextInput = memo(
             accessibilityHint={typeof helperText === 'string' ? helperText : undefined}
             accessibilityLabel={accessibilityLabel ?? label}
             align={align}
-            compact={density.nativeCompact}
-            containerSpacing={density.containerSpacing}
             disabled={disabled}
             font={font}
             selectionColor={variantColorMap[focusedVariant]}
             testID={testID}
             {...editableInputAddonProps}
+            style={[zeroPaddingStyle, editableInputAddonProps.style]}
           />
         }
         labelNode={
-          density.showLabelInStack &&
-          (labelNode && density.labelPlacement !== 'inside-vertical'
+          showLabelInStack &&
+          (labelNode && !isVerticalLabel
             ? labelNode
             : hasLabel && (
                 <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                  {density.labelPlacement === 'inside-vertical' && labelNode ? (
-                    <Box
-                      background={readOnlyInputBackground}
-                      paddingEnd={2}
-                      paddingStart={start ? 0.5 : 2}
-                    >
-                      {labelNode}
-                    </Box>
-                  ) : density.labelPlacement === 'inside-vertical' ? (
+                  {isVerticalLabel && labelNode ? (
+                    <Box background={readOnlyInputBackground}>{labelNode}</Box>
+                  ) : isVerticalLabel ? (
                     <InputLabel
                       background={readOnlyInputBackground}
                       color={labelColor}
                       font={labelFont}
-                      paddingEnd={2}
-                      paddingStart={start ? 0.5 : 2}
                       paddingY={0}
                       testID={testIDMap?.label ?? ''}
                     >
@@ -354,9 +389,9 @@ export const TextInput = memo(
                 </Pressable>
               ))
         }
-        labelVariant={density.inputStackLabelVariant}
+        labelVariant={inputStackLabelVariant}
         startNode={
-          (density.showLabelInStartSlot || !!start) && (
+          (showLabelInStartSlot || !!start) && (
             <Box
               alignItems="center"
               background={readOnlyInputBackground}
@@ -372,12 +407,12 @@ export const TextInput = memo(
                 importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
                 onPress={handleNodePress}
               >
-                <HStack paddingStart={density.showLabelInStartSlot ? 2 : undefined}>
-                  {density.showLabelInStartSlot &&
+                <HStack>
+                  {showLabelInStartSlot &&
                     (labelNode
                       ? labelNode
                       : !!label && (
-                          <InputLabel color={labelColor} font={labelFont}>
+                          <InputLabel color={labelColor} font={labelFont} paddingY={0}>
                             {label}
                           </InputLabel>
                         ))}
@@ -391,6 +426,7 @@ export const TextInput = memo(
             </Box>
           )
         }
+        styles={inputStackStyles}
         variant={variant}
         width={width}
       />
