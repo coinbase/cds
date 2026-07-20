@@ -80,6 +80,7 @@ export const NativeInput = memo(
       () => ({
         fontSize: theme.fontSize[font],
         fontFamily: theme.fontFamily[font],
+        lineHeight: theme.lineHeight[font],
         minHeight: theme.lineHeight[font],
         fontWeight: theme.fontWeight[font],
         margin: 0,
