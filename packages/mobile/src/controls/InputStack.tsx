@@ -273,7 +273,7 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
             )}
             {!!startNode && <>{startNode}</>}
             {!!labelNode && labelVariant === 'inside' ? (
-              <VStack flexGrow={1}>
+              <VStack flexGrow={1} paddingY={1}>
                 {labelNode}
                 {inputNode}
               </VStack>
