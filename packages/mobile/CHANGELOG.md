@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.7 (7/20/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: TextInput inside labelVariant padding. [[#797](https://github.com/coinbase/cds/pull/797)]
+
 ## 9.6.6 (7/14/2026 PST)
 
 #### 🐞 Fixes
