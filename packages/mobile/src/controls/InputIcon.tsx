@@ -16,6 +16,10 @@ export type InputIconProps = {
    * @default false
    * */
   disableInheritFocusStyle?: boolean;
+  /**
+   * Kept for backward compatibility. Spacing is no longer applied by InputIcon —
+   * apply padding at the call site instead.
+   */
   compact?: boolean;
 } & Omit<IconProps, 'size'> &
   SharedProps &
@@ -30,11 +34,21 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   secondary: 'fgMuted',
 };
 
+/**
+ * Decorative icon adornment for a parent input's `start` or `end` slot.
+ *
+ * Reads {@link TextInputFocusVariantContext} so the icon color stays in sync with the
+ * parent input's focused variant. Prefer this over a plain {@link Icon} inside
+ * `TextInput`, `SearchInput`, or `Select` start/end content.
+ *
+ * The context is provided by {@link TextInput} (and also by `Select`) when the input
+ * is focused.
+ */
 export const InputIcon = memo(function InputIcon({
   disableInheritFocusStyle = false,
   testID,
   color = 'fg',
-  compact,
+  compact: _compact,
   accessibilityLabel,
   accessibilityHint,
   ...props
@@ -46,7 +60,6 @@ export const InputIcon = memo(function InputIcon({
     <Box
       accessibilityHint={accessibilityHint ?? props.name}
       accessibilityLabel={accessibilityLabel ?? props.name}
-      paddingX={compact ? 1 : 2}
       testID={testID}
     >
       <Icon

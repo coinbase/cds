@@ -191,14 +191,12 @@ export const SearchInput = memo(
         end={
           end ??
           (!!value && !hideEndIcon && (
-            <Box paddingEnd={0.5}>
-              <InputIconButton
-                accessibilityLabel={clearIconAccessibilityLabel}
-                name="close"
-                onPress={handleOnClear}
-                testID={testID && `${testID}-close-iconbtn`}
-              />
-            </Box>
+            <InputIconButton
+              accessibilityLabel={clearIconAccessibilityLabel}
+              name="close"
+              onPress={handleOnClear}
+              testID={testID && `${testID}-close-iconbtn`}
+            />
           ))
         }
         keyboardType="web-search"
@@ -208,15 +206,17 @@ export const SearchInput = memo(
         onSubmitEditing={handleOnSearch}
         start={
           !hideStartIcon && (
-            <InputIconButton
-              accessibilityElementsHidden // The pressable wrapper will be accessible, not the icon
-              accessibilityLabel={determineStartIconAccessibilityLabel} // A11y props will get passed to the pressable wrapper
-              disabled={disabled}
-              importantForAccessibility="no"
-              name={startIconName}
-              onPress={startIconName === 'backArrow' ? handleOnBack : handleOnSearch}
-              testID={testID && `${testID}-searchinput-iconbtn`}
-            />
+            <Box paddingEnd={2}>
+              <InputIconButton
+                accessibilityElementsHidden // The pressable wrapper will be accessible, not the icon
+                accessibilityLabel={determineStartIconAccessibilityLabel} // A11y props will get passed to the pressable wrapper
+                disabled={disabled}
+                importantForAccessibility="no"
+                name={startIconName}
+                onPress={startIconName === 'backArrow' ? handleOnBack : handleOnSearch}
+                testID={testID && `${testID}-searchinput-iconbtn`}
+              />
+            </Box>
           )
         }
         testID={testID}

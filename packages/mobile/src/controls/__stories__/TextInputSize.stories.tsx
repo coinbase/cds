@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
+import { InputIcon } from '../InputIcon';
 import type { TextInputProps } from '../TextInput';
 import { TextInput } from '../TextInput';
 
@@ -36,7 +37,13 @@ const TextInputSizeScreen = () => {
         <MockTextInput compact label="Username" placeholder="john.doe@coinbase.com" size="m" />
       </Example>
       <Example title='size="s" with outside label'>
-        <MockTextInput label="Amount" placeholder="0.00" size="s" suffix="USD" />
+        <MockTextInput
+          end={<InputIcon name="close" />}
+          label="Amount"
+          placeholder="0.00"
+          size="s"
+          suffix="USD"
+        />
       </Example>
       <Example title='size="s" with inside label (horizontal)'>
         <MockTextInput

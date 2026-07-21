@@ -27,6 +27,16 @@ export const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   secondary: 'bgSecondary',
 };
 
+/**
+ * Decorative icon adornment for a parent input's `start` or `end` slot.
+ *
+ * Reads {@link TextInputFocusVariantContext} so the icon color stays in sync with the
+ * parent input's focused variant. Prefer this over a plain {@link Icon} inside
+ * `TextInput`, `SearchInput`, or `Select` start/end content.
+ *
+ * The context is provided by {@link TextInput} (and also by `Select` / `SelectTrigger`)
+ * when the input is focused.
+ */
 export const InputIcon = memo(
   forwardRef(
     (
@@ -37,7 +47,7 @@ export const InputIcon = memo(
       const variantColor = variant ? variantColorMap[variant] : undefined;
 
       return (
-        <Box paddingX={2} testID={testID}>
+        <Box testID={testID}>
           <Icon
             ref={ref}
             color={disableInheritFocusStyle ? color : (variantColor ?? color)}

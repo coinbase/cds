@@ -25,6 +25,17 @@ export type InputIconButtonProps = IconButtonProps & {
   disableInheritFocusStyle?: boolean;
 };
 
+/**
+ * Interactive icon-button adornment for a parent input's `start` or `end` slot
+ * (e.g. clear, calendar, or custom actions).
+ *
+ * Reads {@link TextInputFocusVariantContext} so the button variant stays in sync with
+ * the parent input's focused variant. Prefer this over a plain {@link IconButton}
+ * inside `TextInput`, `SearchInput`, or `Select` start/end content.
+ *
+ * The context is provided by {@link TextInput} (and also by `Select`) when the input
+ * is focused.
+ */
 export const InputIconButton = memo(function InputIconButton({
   ref,
   disableInheritFocusStyle = false,
@@ -40,7 +51,7 @@ export const InputIconButton = memo(function InputIconButton({
   const transformedVariant = contextVariant ? variantTransformMap[contextVariant] : variant;
 
   return (
-    <Box paddingEnd={0.5} paddingStart={1} testID={testID}>
+    <Box testID={testID}>
       <IconButton
         ref={ref}
         transparent

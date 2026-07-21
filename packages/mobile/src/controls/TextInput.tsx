@@ -7,8 +7,8 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import type { ReactNode } from 'react';
 import { Pressable } from 'react-native';
-import type { ForwardedRef } from 'react';
 import type {
   DimensionValue,
   TextInput as RNTextInput,
@@ -256,47 +256,72 @@ export const TextInput = memo(
       [contentPadding.left, contentPadding.right, contentGap, theme.space],
     );
 
-    // Vertical padding = the height-defining band, applied to the content (not the
-    // container). Normally both bands sit on the input; for a stacked
-    // (inside-vertical) label the top band moves onto the label.
+    // Vertical field sizing lives on a wrapper View around NativeInput — never on
+    // the RN TextInput (padding/lineHeight/height on TextInput mis-center glyphs).
+    // The wrapper's minHeight is padding + theme line box so sizes match web/design
+    // while NativeInput keeps natural text metrics and stays centered via
+    // justifyContent. Tall adornments still center in the field without inflating it.
+    // For a stacked (inside-vertical) label the top band moves onto the label.
     const inputPaddingTop = isVerticalLabel ? 0 : contentPadding.top;
     const inputPaddingBottom = contentPadding.bottom;
     const stackedLabelPaddingTop = contentPadding.top;
+    const inputPaddingTopPx = theme.space[inputPaddingTop];
+    const inputPaddingBottomPx = theme.space[inputPaddingBottom];
+    const inputLineBoxPx = theme.lineHeight[font];
 
-    const inputVerticalPaddingStyle = useMemo<ViewStyle>(
+    const inputPaddingWrapperStyle = useMemo<ViewStyle>(
       () => ({
-        paddingTop: theme.space[inputPaddingTop],
-        paddingBottom: theme.space[inputPaddingBottom],
-        paddingStart: 0,
-        paddingEnd: 0,
+        flexGrow: 2,
+        flexShrink: 1,
+        minWidth: 0,
+        justifyContent: 'center',
+        paddingTop: inputPaddingTopPx,
+        paddingBottom: inputPaddingBottomPx,
+        // Theme line box floor (e.g. body 24) without setting height/lineHeight on
+        // the TextInput itself — RN treats View minHeight reliably.
+        minHeight: inputPaddingTopPx + inputLineBoxPx + inputPaddingBottomPx,
       }),
-      [inputPaddingTop, inputPaddingBottom, theme.space],
+      [inputPaddingTopPx, inputPaddingBottomPx, inputLineBoxPx],
     );
 
-    // Get the accessability label from the start node child
-    const startIconA11yLabel = useMemo(() => {
-      if (isValidElement(start) && start.type === InputIconButton) {
-        return (start.props as InputIconButtonProps).accessibilityLabel;
-      }
+    const nativeInputStyle = useMemo(
+      () => [{ width: '100%' as const, padding: 0 }, editableInputAddonProps.style],
+      [editableInputAddonProps.style],
+    );
+
+    // Resolve InputIconButton whether it's the start root or nested in a spacing wrapper (e.g. Box).
+    const startInputIconButton = useMemo(() => {
+      if (!isValidElement(start)) return undefined;
+      if (start.type === InputIconButton) return start;
+
+      const child = (start.props as { children?: ReactNode }).children;
+      if (isValidElement(child) && child.type === InputIconButton) return child;
 
       return undefined;
     }, [start]);
 
+    // Get the accessability label from the start node child
+    const startIconA11yLabel = useMemo(() => {
+      return (startInputIconButton?.props as InputIconButtonProps | undefined)?.accessibilityLabel;
+    }, [startInputIconButton]);
+
     // The Pressable element steals the accessability props 🥷
     const inaccessibleStart = useMemo(() => {
-      if (isValidElement(start) && start.type === InputIconButton) {
-        return cloneElement(start, {
-          // ReactElement default props is unknown, so we need to cast to the correct type
-          ...(start.props as InputIconButtonProps),
-          accessibilityLabel: undefined,
-          accessibilityHint: undefined,
-          accessibilityElementsHidden: true,
-          importantForAccessibility: 'no',
-        } as InputIconButtonProps);
-      }
+      if (!isValidElement(start) || !startInputIconButton) return start;
 
-      return start;
-    }, [start]);
+      const inaccessibleButton = cloneElement(startInputIconButton, {
+        // ReactElement default props is unknown, so we need to cast to the correct type
+        ...(startInputIconButton.props as InputIconButtonProps),
+        accessibilityLabel: undefined,
+        accessibilityHint: undefined,
+        accessibilityElementsHidden: true,
+        importantForAccessibility: 'no',
+      } as InputIconButtonProps);
+
+      if (start.type === InputIconButton) return inaccessibleButton;
+
+      return cloneElement(start, undefined, inaccessibleButton);
+    }, [start, startInputIconButton]);
 
     const readOnlyInputBackground = useMemo(() => {
       if (!disabled && editableInputAddonProps.readOnly) {
@@ -323,9 +348,13 @@ export const TextInput = memo(
               testID={testIDMap?.end ?? ''}
             >
               <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                <HStack>
+                {/*
+                  Must center — RN's default alignItems is stretch, which would grow the
+                  16px InputIcon box to the suffix's label1 line box (20px).
+                */}
+                <HStack alignItems="center" gap={2}>
                   {suffix !== '' && (
-                    <Text color="fgMuted" font="label1" paddingEnd={2}>
+                    <Text color="fgMuted" font="label1">
                       {suffix}
                     </Text>
                   )}
@@ -359,18 +388,20 @@ export const TextInput = memo(
         }
         inputBackground={readOnlyInputBackground ?? inputBackground}
         inputNode={
-          <NativeInput
-            ref={refs}
-            accessibilityHint={typeof helperText === 'string' ? helperText : undefined}
-            accessibilityLabel={accessibilityLabel ?? label}
-            align={align}
-            disabled={disabled}
-            font={font}
-            selectionColor={variantColorMap[focusedVariant]}
-            testID={testID}
-            {...editableInputAddonProps}
-            style={[inputVerticalPaddingStyle, editableInputAddonProps.style]}
-          />
+          <Box style={inputPaddingWrapperStyle} testID={testID ? `${testID}-padding` : undefined}>
+            <NativeInput
+              ref={refs}
+              accessibilityHint={typeof helperText === 'string' ? helperText : undefined}
+              accessibilityLabel={accessibilityLabel ?? label}
+              align={align}
+              disabled={disabled}
+              font={font}
+              selectionColor={variantColorMap[focusedVariant]}
+              testID={testID}
+              {...editableInputAddonProps}
+              style={nativeInputStyle}
+            />
+          </Box>
         }
         labelNode={
           showLabelInStack &&
@@ -405,9 +436,10 @@ export const TextInput = memo(
         labelVariant={inputStackLabelVariant}
         startNode={
           (showLabelInStartSlot || !!start) && (
-            <Box
+            <HStack
               alignItems="center"
               background={readOnlyInputBackground}
+              gap={2}
               justifyContent="center"
               testID={testIDMap?.start}
             >
@@ -420,7 +452,7 @@ export const TextInput = memo(
                 importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
                 onPress={handleNodePress}
               >
-                <HStack>
+                <HStack alignItems="center" gap={2}>
                   {showLabelInStartSlot &&
                     (labelNode
                       ? labelNode
@@ -438,7 +470,7 @@ export const TextInput = memo(
                   )}
                 </HStack>
               </Pressable>
-            </Box>
+            </HStack>
           )
         }
         styles={inputStackStyles}

@@ -74,9 +74,14 @@ describe('Search', () => {
     expect(flattenedStyle).toEqual(
       expect.objectContaining({
         fontSize: defaultTheme.fontSize.label1,
-        minHeight: defaultTheme.lineHeight.label1,
         fontWeight: defaultTheme.fontWeight.label1,
       }),
+    );
+
+    // Theme line box is enforced on the padding wrapper, not on RN TextInput.
+    const wrapperStyle = StyleSheet.flatten(screen.getByTestId(`${TEST_ID}-padding`).props.style);
+    expect(wrapperStyle?.minHeight).toBe(
+      defaultTheme.space[2] + defaultTheme.lineHeight.label1 + defaultTheme.space[2],
     );
   });
 
@@ -264,10 +269,11 @@ describe('Search', () => {
   });
 
   /**
-   * Testing t-shirt sizing. Vertical padding lives on the input (horizontal is on
-   * the InputStack container), so we read the input's own style here.
+   * Testing t-shirt sizing. Vertical padding lives on a wrapper around the RN
+   * TextInput (horizontal is on the InputStack container).
    */
-  const getInputStyle = () => StyleSheet.flatten(screen.getByTestId(TEST_ID).props.style);
+  const getPaddingWrapperStyle = () =>
+    StyleSheet.flatten(screen.getByTestId(`${TEST_ID}-padding`).props.style);
 
   it('applies size l vertical padding by default', () => {
     render(
@@ -276,33 +282,33 @@ describe('Search', () => {
       </DefaultThemeProvider>,
     );
 
-    const inputStyle = getInputStyle();
-    expect(inputStyle?.paddingTop).toBe(defaultTheme.space[2]);
-    expect(inputStyle?.paddingBottom).toBe(defaultTheme.space[2]);
+    const wrapperStyle = getPaddingWrapperStyle();
+    expect(wrapperStyle?.paddingTop).toBe(defaultTheme.space[2]);
+    expect(wrapperStyle?.paddingBottom).toBe(defaultTheme.space[2]);
   });
 
-  it('forwards size s vertical padding through to the input', () => {
+  it('forwards size s vertical padding through to the input wrapper', () => {
     render(
       <DefaultThemeProvider>
         <SearchInput onChangeText={onChangeTextSpy} size="s" testID={TEST_ID} value="value" />
       </DefaultThemeProvider>,
     );
 
-    const inputStyle = getInputStyle();
-    expect(inputStyle?.paddingTop).toBe(defaultTheme.space[1]);
-    expect(inputStyle?.paddingBottom).toBe(defaultTheme.space[1]);
+    const wrapperStyle = getPaddingWrapperStyle();
+    expect(wrapperStyle?.paddingTop).toBe(defaultTheme.space[1]);
+    expect(wrapperStyle?.paddingBottom).toBe(defaultTheme.space[1]);
   });
 
-  it('forwards size m vertical padding through to the input', () => {
+  it('forwards size m vertical padding through to the input wrapper', () => {
     render(
       <DefaultThemeProvider>
         <SearchInput onChangeText={onChangeTextSpy} size="m" testID={TEST_ID} value="value" />
       </DefaultThemeProvider>,
     );
 
-    const inputStyle = getInputStyle();
-    expect(inputStyle?.paddingTop).toBe(defaultTheme.space[1.5]);
-    expect(inputStyle?.paddingBottom).toBe(defaultTheme.space[1.5]);
+    const wrapperStyle = getPaddingWrapperStyle();
+    expect(wrapperStyle?.paddingTop).toBe(defaultTheme.space[1.5]);
+    expect(wrapperStyle?.paddingBottom).toBe(defaultTheme.space[1.5]);
   });
 
   it('lets size win over compact (size m padding applied, not legacy compact)', () => {
@@ -318,8 +324,8 @@ describe('Search', () => {
       </DefaultThemeProvider>,
     );
 
-    const inputStyle = getInputStyle();
-    expect(inputStyle?.paddingTop).toBe(defaultTheme.space[1.5]);
-    expect(inputStyle?.paddingBottom).toBe(defaultTheme.space[1.5]);
+    const wrapperStyle = getPaddingWrapperStyle();
+    expect(wrapperStyle?.paddingTop).toBe(defaultTheme.space[1.5]);
+    expect(wrapperStyle?.paddingBottom).toBe(defaultTheme.space[1.5]);
   });
 });

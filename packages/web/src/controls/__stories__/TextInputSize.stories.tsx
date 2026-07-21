@@ -3,6 +3,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 
 import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
+import { InputIcon } from '../InputIcon';
 import type { TextInputProps } from '../TextInput';
 import { TextInput } from '../TextInput';
 
@@ -55,7 +56,13 @@ export const Size: Story = {
         <MockTextInput compact label="Username" placeholder="john.doe@coinbase.com" size="m" />
       </LabeledExample>
       <LabeledExample title='size="s" with outside label'>
-        <MockTextInput label="Amount" placeholder="0.00" size="s" suffix="USD" />
+        <MockTextInput
+          end={<InputIcon name="close" />}
+          label="Amount"
+          placeholder="0.00"
+          size="s"
+          suffix="USD"
+        />
       </LabeledExample>
       <LabeledExample title='size="s" with inside label (horizontal)'>
         <MockTextInput

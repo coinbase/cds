@@ -80,14 +80,21 @@ export const NativeInput = memo(
       () => ({
         fontSize: theme.fontSize[font],
         fontFamily: theme.fontFamily[font],
-        lineHeight: theme.lineHeight[font],
-        minHeight: theme.lineHeight[font],
         fontWeight: theme.fontWeight[font],
         margin: 0,
         color: theme.color.fg,
-        flex: 2,
+        flexGrow: 2,
+        flexShrink: 1,
         minWidth: 0,
-        padding: theme.space[compact ? 1 : 2],
+        // Do not set `height`, `minHeight`, or `lineHeight` on RN TextInput:
+        // - `lineHeight` > fontSize shifts glyphs down and clips descenders
+        // - explicit heights fight RN's native text layout
+        // TextInput owns the theme line-box via a wrapper View minHeight instead.
+        // Prefer padding: 0 — vertical field padding is also on that wrapper.
+        // Legacy `compact` still applies space-1 for direct NativeInput callers.
+        padding: compact ? theme.space[1] : 0,
+        // Android: center the value within the input's bounds.
+        textAlignVertical: 'center',
         ...(!disabled &&
           editableInputAddonProps.readOnly && {
             backgroundColor: theme.color.bgSecondary,
@@ -96,7 +103,6 @@ export const NativeInput = memo(
       [
         theme.fontSize,
         theme.fontFamily,
-        theme.lineHeight,
         compact,
         theme.fontWeight,
         theme.color.fg,

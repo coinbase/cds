@@ -114,10 +114,6 @@ export const SearchInput = memo(
     const internalRef = useRef<HTMLInputElement>(null);
     const refs = useMergeRefs(ref, internalRef);
 
-    // Mirror TextInput's precedence for SearchInput's own cosmetics only:
-    // `size` wins over `compact`; compact-only maps to `s`; otherwise `l`.
-    const resolvedSize: SearchInputSize = size ?? (compact ? 's' : 'l');
-
     const handleOnChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
         onChange?.(e);
@@ -158,17 +154,12 @@ export const SearchInput = memo(
         end={
           end ??
           (!!value && !hideEndIcon && (
-            <Box
-              marginEnd={resolvedSize === 's' ? -0.5 : 0}
-              paddingEnd={resolvedSize === 's' ? 0 : 0.5}
-            >
-              <InputIconButton
-                accessibilityLabel={clearIconAccessibilityLabel}
-                name="close"
-                onClick={handleOnClear}
-                testID={testID && `${testID}-close-iconbtn`}
-              />
-            </Box>
+            <InputIconButton
+              accessibilityLabel={clearIconAccessibilityLabel}
+              name="close"
+              onClick={handleOnClear}
+              testID={testID && `${testID}-close-iconbtn`}
+            />
           ))
         }
         onChange={handleOnChange}
@@ -177,11 +168,13 @@ export const SearchInput = memo(
         size={size}
         start={
           !hideStartIcon && (
-            <InputIcon
-              accessibilityLabel={determineStartIconAccessibilityLabel}
-              name={startIcon ?? 'search'}
-              testID={testID && `${testID}-search-icon`}
-            />
+            <Box paddingEnd={2}>
+              <InputIcon
+                accessibilityLabel={determineStartIconAccessibilityLabel}
+                name={startIcon ?? 'search'}
+                testID={testID && `${testID}-search-icon`}
+              />
+            </Box>
           )
         }
         testID={testID}

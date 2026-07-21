@@ -276,19 +276,17 @@ export const DatePicker = memo(
 
     const dateInputCalendarButton = useMemo(
       () => (
-        <VStack paddingEnd={0.5}>
-          <InputIconButton
-            disableInheritFocusStyle
-            transparent
-            accessibilityLabel={
-              calendarIconButtonAccessibilityLabel ??
-              (showCalendar ? closeCalendarAccessibilityLabel : openCalendarAccessibilityLabel)
-            }
-            name="calendarEmpty"
-            onClick={handleOpenCalendar}
-            variant="secondary"
-          />
-        </VStack>
+        <InputIconButton
+          disableInheritFocusStyle
+          transparent
+          accessibilityLabel={
+            calendarIconButtonAccessibilityLabel ??
+            (showCalendar ? closeCalendarAccessibilityLabel : openCalendarAccessibilityLabel)
+          }
+          name="calendarEmpty"
+          onClick={handleOpenCalendar}
+          variant="secondary"
+        />
       ),
       [
         handleOpenCalendar,
@@ -306,7 +304,6 @@ export const DatePicker = memo(
           accessibilityLabelledBy={accessibilityLabelledBy}
           className={cx(classNames?.dateInput, dateInputClassName)}
           compact={compact}
-          size={size}
           date={date}
           disabled={disabled}
           disabledDateError={disabledDateError}
@@ -323,6 +320,7 @@ export const DatePicker = memo(
           onErrorDate={onErrorDate}
           required={required}
           requiredError={requiredError}
+          size={size}
           style={{ ...dateInputStyle, ...styles?.dateInput }}
           variant={variant}
           {...props}

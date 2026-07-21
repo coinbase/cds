@@ -100,9 +100,14 @@ describe('TextInput', () => {
     expect(flattenedStyle).toEqual(
       expect.objectContaining({
         fontSize: defaultTheme.fontSize.label1,
-        minHeight: defaultTheme.lineHeight.label1,
         fontWeight: defaultTheme.fontWeight.label1,
       }),
+    );
+
+    // Theme line box is enforced on the padding wrapper, not on RN TextInput.
+    const wrapperStyle = StyleSheet.flatten(screen.getByTestId(`${testID}-padding`).props.style);
+    expect(wrapperStyle?.minHeight).toBe(
+      defaultTheme.space[2] + defaultTheme.lineHeight.label1 + defaultTheme.space[2],
     );
   });
 
@@ -706,7 +711,7 @@ describe('TextInput', () => {
     expect(screen.queryByTestId('start-test')).toBeFalsy();
   });
 
-  it('carries vertical padding on the input and delegates horizontal to the container', () => {
+  it('carries vertical padding on a wrapper around the input (not on RN TextInput)', () => {
     const testID = 'input-testid';
     render(
       <DefaultThemeProvider>
@@ -714,11 +719,20 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const flattenedStyle = StyleSheet.flatten(screen.getByTestId(testID).props.style);
-    // size s -> space-1 top/bottom on the input; horizontal padding lives on the container.
-    expect(flattenedStyle?.paddingTop).toBe(defaultTheme.space[1]);
-    expect(flattenedStyle?.paddingBottom).toBe(defaultTheme.space[1]);
-    expect(flattenedStyle?.paddingStart).toBe(0);
-    expect(flattenedStyle?.paddingEnd).toBe(0);
+    // Vertical padding + theme line-box floor live on the wrapper; the native
+    // input itself stays unpadded with no explicit height. Horizontal padding is
+    // on the container.
+    const wrapperStyle = StyleSheet.flatten(screen.getByTestId(`${testID}-padding`).props.style);
+    expect(wrapperStyle?.paddingTop).toBe(defaultTheme.space[1]);
+    expect(wrapperStyle?.paddingBottom).toBe(defaultTheme.space[1]);
+    expect(wrapperStyle?.minHeight).toBe(
+      defaultTheme.space[1] + defaultTheme.lineHeight.body + defaultTheme.space[1],
+    );
+
+    const inputStyle = StyleSheet.flatten(screen.getByTestId(testID).props.style);
+    expect(inputStyle?.padding).toBe(0);
+    expect(inputStyle?.height).toBeUndefined();
+    expect(inputStyle?.minHeight).toBeUndefined();
+    expect(inputStyle?.lineHeight).toBeUndefined();
   });
 });

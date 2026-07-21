@@ -179,13 +179,8 @@ export const Select = memo(
               borderStyle={borderUnfocusedStyle}
               disabled={disabled}
               endNode={
-                <HStack alignItems="center">
-                  <InputIcon
-                    animated
-                    compact={compact}
-                    name="caretDown"
-                    style={rotateAnimationStyles}
-                  />
+                <HStack alignItems="center" paddingX={compact ? 1 : 2}>
+                  <InputIcon animated name="caretDown" style={rotateAnimationStyles} />
                 </HStack>
               }
               focused={isSelectTrayOpen}
