@@ -100,6 +100,45 @@ describe('Numpad', () => {
     expect(screen.queryByText('.')).toBeNull();
   });
 
+  it('hides the separator from the accessibility tree when separator is empty', () => {
+    render(
+      <DefaultThemeProvider>
+        <Numpad onPress={NoopFn} separator="" />
+      </DefaultThemeProvider>,
+    );
+
+    const separator = screen.getByTestId('numpad-separator', { includeHiddenElements: true });
+    expect(separator.props.accessible).toBe(false);
+    expect(separator.props.accessibilityElementsHidden).toBe(true);
+    expect(separator.props.importantForAccessibility).toBe('no-hide-descendants');
+  });
+
+  it('hides the separator from the accessibility tree when hideSeparator is true', () => {
+    render(
+      <DefaultThemeProvider>
+        <Numpad hideSeparator onPress={NoopFn} />
+      </DefaultThemeProvider>,
+    );
+
+    const separator = screen.getByTestId('numpad-separator', { includeHiddenElements: true });
+    expect(separator.props.accessible).toBe(false);
+    expect(separator.props.accessibilityElementsHidden).toBe(true);
+    expect(separator.props.importantForAccessibility).toBe('no-hide-descendants');
+  });
+
+  it('keeps the separator accessible when a separator is provided', () => {
+    render(
+      <DefaultThemeProvider>
+        <Numpad onPress={NoopFn} />
+      </DefaultThemeProvider>,
+    );
+
+    const separator = screen.getByTestId('numpad-separator');
+    expect(separator.props.accessible).not.toBe(false);
+    expect(separator.props.accessibilityElementsHidden).toBe(false);
+    expect(separator.props.importantForAccessibility).toBeUndefined();
+  });
+
   it('forwards ref', () => {
     const ref = createRef<View>();
     render(
