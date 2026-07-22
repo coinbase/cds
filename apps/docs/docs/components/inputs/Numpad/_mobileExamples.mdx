@@ -5,6 +5,8 @@ import ThemedImage from '@theme/ThemedImage';
 
 Primary use case for this is when a user is inputing a PIN code. Notice it does not have any of the hallmarks of a transactional numpad (CTA, utility button, suggested amounts).
 
+When the decimal separator isn't needed, pass `hideSeparator` to fully hide it. This visually removes the separator key and also removes it from the accessibility tree, so it is not focusable by screen readers such as VoiceOver and TalkBack.
+
 <ThemedImage
   sources={{
     light: useBaseUrl('/img/docs/numpad/pin_numpad.png'),
@@ -68,7 +70,7 @@ const PinNumpadExample = () => {
           </VStack>
         </ModalBody>
         <Box bottom={0} position="absolute" paddingBottom={safeBottomPadding}>
-          <Numpad onLongPress={onLongPress} onPress={onPress} separator="" />
+          <Numpad hideSeparator onLongPress={onLongPress} onPress={onPress} />
         </Box>
       </Modal>
     </VStack>

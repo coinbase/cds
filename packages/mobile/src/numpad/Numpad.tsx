@@ -24,6 +24,7 @@ export type NumpadButtonProps = {
   onPress: (value: NumpadValue) => void;
   onLongPress?: (value: NumpadValue) => void;
   separator?: string;
+  hideSeparator?: boolean;
   disabled?: boolean;
   separatorAccessibilityLabel?: string;
   deleteAccessibilityLabel?: string;
@@ -32,6 +33,8 @@ export type NumpadButtonProps = {
 
 export type NumpadBaseProps = BoxBaseProps & {
   separator?: string;
+  /** When `true`, hides the separator key and removes it from the accessibility tree. */
+  hideSeparator?: boolean;
   disabled?: boolean;
   accessory?: React.ReactNode;
   action?: React.ReactNode;
@@ -82,6 +85,7 @@ export const Numpad = memo(
     const mergedProps = useComponentConfig('Numpad', _props);
     const {
       separator = '.',
+      hideSeparator = false,
       disabled,
       onPress,
       onLongPress,
@@ -114,6 +118,7 @@ export const Numpad = memo(
                 deleteAccessibilityLabel={deleteAccessibilityLabel}
                 disabled={disabled}
                 feedback={feedback}
+                hideSeparator={hideSeparator}
                 onLongPress={onLongPress}
                 onPress={onPress}
                 separator={separator}
@@ -128,6 +133,7 @@ export const Numpad = memo(
       deleteAccessibilityLabel,
       disabled,
       feedback,
+      hideSeparator,
       onLongPress,
       onPress,
       separator,
@@ -159,6 +165,7 @@ const NumpadButton = memo(function NumpadButton({
   onPress,
   onLongPress,
   separator = '.',
+  hideSeparator = false,
   disabled,
   separatorAccessibilityLabel,
   deleteAccessibilityLabel,
@@ -192,26 +199,31 @@ const NumpadButton = memo(function NumpadButton({
     return `numpad-${value}`;
   }, [value]);
 
+  const isSeparatorHidden = value === 'SEPARATOR' && (hideSeparator || separator === '');
+
   const pressableStyles = useMemo(
     () => ({
       ...styles.button,
-      opacity: value === 'SEPARATOR' && separator === '' ? 0 : undefined,
-      pointerEvents: value === 'SEPARATOR' && separator === '' ? ('none' as const) : undefined,
+      opacity: isSeparatorHidden ? 0 : undefined,
+      pointerEvents: isSeparatorHidden ? ('none' as const) : undefined,
     }),
-    [separator, value],
+    [isSeparatorHidden],
   );
 
   return (
     <Pressable
+      accessibilityElementsHidden={isSeparatorHidden}
       accessibilityLabel={accessibilityLabel}
       accessibilityRole="button"
       accessibilityState={{ disabled }}
+      accessible={isSeparatorHidden ? false : undefined}
       background="transparent"
       blendStyles={{ pressedBackground: theme.color.bg, disabledBackground: theme.color.bg }}
       borderRadius={200}
       debounceTime={100}
       disabled={disabled}
       feedback={feedback}
+      importantForAccessibility={isSeparatorHidden ? 'no-hide-descendants' : undefined}
       onLongPress={handleLongPress}
       onPress={handleOnPress}
       style={pressableStyles}
