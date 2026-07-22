@@ -1,5 +1,5 @@
 import React, { createRef, useCallback, useState } from 'react';
-import { Animated, Modal as RNModal, StyleSheet } from 'react-native';
+import { Animated, Dimensions, Modal as RNModal, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react-native';
@@ -403,6 +403,26 @@ describe('Modal', () => {
     });
 
     expect(hasForwardedStyle).toBe(true);
+  });
+
+  it('sizes the modal container to the full window so it cannot collapse to 0x0 under Fabric', () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <Modal visible onRequestClose={jest.fn()}>
+            <Text testID="modal-content">Content</Text>
+          </Modal>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    const { width, height } = Dimensions.get('window');
+    const hasFullWindowSize = screen.UNSAFE_getAllByType(Animated.View).some((node) => {
+      const flattened = StyleSheet.flatten(node.props.style);
+      return flattened?.width === width && flattened?.height === height;
+    });
+
+    expect(hasFullWindowSize).toBe(true);
   });
 
   it('exposes imperative onRequestClose via ref', () => {
