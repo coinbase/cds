@@ -1,12 +1,10 @@
 ---
 name: cds-code
 description: |
-  Provides a structured workflow for writing and reviewing high quality Coinbase Design System (CDS) presentation code.
-  Use this skill when a request changes rendered React or React Native UI presentation or CDS usage.
-  Examples include CDS component choices, JSX layout or structure, spacing, color, typography, icons, illustrations, images, loading states, empty states, error states, interactive control accessibility labels, or user-facing copy.
-  Use this skill for explicit CDS audits, reviews, or adherence checks.
-  Do not use this skill for logic-only changes, hooks, tests, Relay or data fetching, analytics, navigation wiring, feature flags, generated artifacts, performance-only refactors, or edits in component files that do not alter rendered presentation or CDS usage.
-  Trigger examples: "build this screen", "fix spacing on this component", "replace this UI with CDS components",
+  Provides a workflow for building and reviewing high-quality React and React Native UI with the Coinbase Design System (CDS).
+  Use this skill to create UI or make visual changes to existing UI with CDS components, tokens, style props, icons, and illustrations.
+  Use it for explicit CDS-adherence audits and reviews, not non-visual logic, data, analytics, navigation, tests, generated code, or refactoring.
+  Examples: "build this screen", "fix spacing on this component", "replace this UI with CDS components",
   "perform a CDS audit on our changes", "check our codebase for CDS adherence", "does this feature use CDS well?"
 license: Apache-2.0
 metadata:
@@ -19,15 +17,13 @@ metadata:
 
 Before responding, determine what the user needs:
 
-**Coding** — the user wants to create or update rendered UI presentation or CDS usage → follow the Coding Workflow.
+**Coding** — the user wants to create new UI or make visual changes to existing UI with CDS → follow the Coding Workflow.
 
 **Review** — the user explicitly asks to audit, review, or check existing code for CDS adherence → read `guidelines/code-review.md` and follow it instead.
 
-**Out of scope** — the user wants logic-only changes, hooks, tests, Relay or data fetching, analytics, navigation wiring, feature flags, generated artifacts, performance-only refactors, or edits in component files that do not alter rendered presentation or CDS usage → do not follow this skill's coding or review workflows.
+**Out of scope** — the user wants non-visual work such as business logic, data handling, analytics, navigation wiring, tests, generated code, or refactoring → do not follow this skill's coding or review workflows.
 
-**Default in-scope work to coding.** For requests that affect rendered UI presentation or CDS usage, only treat the request as a review if the user's audit/review intent is explicit. Writing code is the primary use case for this skill.
-
-If the request is ambiguous, inspect the requested change first. Only enter the Coding Workflow when the change affects rendered UI presentation or CDS usage. Do not treat "component" or "frontend repo" as sufficient signal by itself.
+**Default in-scope work to coding.** Only treat the user's request as a review or audit if the intent is explicit. Building or updating UI is the primary use case for this skill.
 
 ## Initialization
 
@@ -47,7 +43,7 @@ If the script cannot be run, much of the information it provides can be determin
 
 ## Coding Workflow
 
-For coding tasks that change rendered UI presentation or CDS usage, follow these steps in order.
+For in-scope coding tasks, follow these steps in order.
 
 **YOU MUST** perform steps 1 and 2 before writing any code!
 
