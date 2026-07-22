@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.9 (7/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust messaging card imports. [[#800](https://github.com/coinbase/cds/pull/800)]
+
 ## 9.6.8 (7/22/2026 PST)
 
 #### 🐞 Fixes
