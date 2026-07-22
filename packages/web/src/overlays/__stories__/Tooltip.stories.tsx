@@ -357,6 +357,7 @@ export const TooltipWithRichDynamicContent = () => (
     <HStack alignItems="center" gap={1}>
       <TextBody as="span">&quot;Test&quot;</TextBody>
       <Tooltip
+        background="bgAlternate"
         content={
           <VStack gap={1}>
             <VStack gap={0.5}>
