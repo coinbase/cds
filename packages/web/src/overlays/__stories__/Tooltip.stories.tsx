@@ -2,13 +2,17 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import type { Meta, StoryObj } from '@storybook/react';
 
+import { Banner } from '../../banner/Banner';
 import { Button } from '../../buttons/Button';
 import { IconButton } from '../../buttons/IconButton';
+import { ListCell } from '../../cells/ListCell';
 import { DotSymbol } from '../../dots/DotSymbol';
 import { Icon } from '../../icons/Icon';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
+import { TextBody } from '../../typography/TextBody';
+import { TextLabel2 } from '../../typography/TextLabel2';
 import { PortalProvider } from '../PortalProvider';
 import { Tooltip } from '../tooltip/Tooltip';
 import type { TooltipProps } from '../tooltip/TooltipProps';
@@ -344,6 +348,53 @@ export const TooltipOnIconReactNode = () => (
       <Text as="span" color="fgMuted" font="body">
         Focus the icon to hear the tooltip announced.
       </Text>
+    </HStack>
+  </PortalProvider>
+);
+
+export const TooltipWithRichDynamicContent = () => (
+  <PortalProvider>
+    <HStack alignItems="center" gap={1}>
+      <TextBody as="span">&quot;Test&quot;</TextBody>
+      <Tooltip
+        content={
+          <VStack gap={1}>
+            <VStack gap={0.5}>
+              <TextLabel2 as="span">Vault name</TextLabel2>
+            </VStack>
+            <ListCell
+              detail={
+                <VStack alignItems="flex-end">
+                  <TextBody as="span">+ 1.11%</TextBody>
+                </VStack>
+              }
+              spacingVariant="compact"
+              title="List title"
+            />
+            <Banner
+              startIconActive
+              bordered={false}
+              showDismiss={false}
+              startIcon="info"
+              styleVariant="contextual"
+              variant="promotional"
+            >
+              Description
+            </Banner>
+          </VStack>
+        }
+        invertColorScheme={false}
+      >
+        <Icon
+          active
+          color="fgMuted"
+          name="info"
+          role="button"
+          size="xs"
+          tabIndex={0}
+          testID="rich-dynamic-tooltip-trigger"
+        />
+      </Tooltip>
     </HStack>
   </PortalProvider>
 );

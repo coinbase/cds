@@ -1,5 +1,6 @@
-import type { BaseTooltipPlacement } from '@coinbase/cds-common/types';
-import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import type { BaseTooltipPlacement } from '@cbhq/cds-common/types';
+import { tooltipMaxWidth } from '@cbhq/cds-common/tokens/tooltip';
+import { renderA11y } from '@cbhq/cds-web-utils/jest';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -88,6 +89,34 @@ describe('Tooltip', () => {
     fireEvent.mouseEnter(button as Element);
 
     expect(await screen.findByTestId(tooltipTestID)).toBeInTheDocument();
+  });
+
+  it('keeps the default max width for string content', async () => {
+    render(<StoryExample />);
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    expect(tooltip).toHaveStyle({
+      '--maxWidth': `${tooltipMaxWidth}px`,
+      '--width': 'max-content',
+    });
+  });
+
+  it('does not apply the default text max width to React node content', async () => {
+    render(
+      <StoryExample
+        tooltipProps={{
+          content: <div style={{ minWidth: 320 }}>Rich content</div>,
+        }}
+      />,
+    );
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    expect(tooltip).toHaveStyle({ '--width': 'max-content' });
+    expect(tooltip.style.getPropertyValue('--maxWidth')).toBe('');
   });
 
   it('delays showing tooltip content based on openDelay', async () => {
