@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.7.1 (7/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Prevent Overlay/Modal scrim collapsing to 0x0 under Fabric. [[#804](https://github.com/coinbase/cds/pull/804)]
+
 ## 9.7.0 (7/22/2026 PST)
 
 #### 🚀 Updates
