@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.11 (7/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Reduce top padding of mobile Tray content when handle bar is positioned inside. [[#802](https://github.com/coinbase/cds/pull/802)]
+
 ## 9.6.10 ((7/22/2026, 08:37 AM PST))
 
 This is an artificial version bump with no new change.
