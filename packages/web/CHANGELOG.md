@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.6.10 (7/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Remove max-width constraint for ReactNode children of Tooltip. [[#801](https://github.com/coinbase/cds/pull/801)]
+
 ## 9.6.9 (7/22/2026 PST)
 
 #### 🐞 Fixes
