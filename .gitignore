@@ -186,6 +186,8 @@ barrel-files.md
 base-props.json
 component-peer-dependencies.md
 component-peer-dependencies.json
+**/__pycache__/
+skills/*-workspace/
 
 # temp directory created when running podium scripts. this gets deleted after the script is done, but for the sake of your sanity, let's not track it
 **/.podium/
