@@ -86,7 +86,7 @@ const rule = createRule({
         }
 
         // Find what props the component expects (<Button> expects ButtonProps)
-        const componentPropsType = findComponentPropsType(
+        const componentPropsTypes = findComponentPropsTypes(
           jsxElement,
           componentName,
           services,
@@ -95,19 +95,25 @@ const rule = createRule({
         );
 
         // Skip components with unknown or 'any' prop types
-        if (!componentPropsType || isTypeAnyType(componentPropsType)) {
+        const knownComponentPropsTypes = componentPropsTypes.filter(
+          (componentPropsType) => componentPropsType && !isTypeAnyType(componentPropsType),
+        );
+
+        if (knownComponentPropsTypes.length === 0) {
           return;
         }
 
         // Check for props that don't belong and report errors
         checkForInvalidProps(
-          componentPropsType,
+          knownComponentPropsTypes,
           spreadObjectType,
           typeChecker,
           node,
           context,
           componentName,
           options.maxInvalidPropsInMessage,
+          jsxElement,
+          services,
         );
       },
     };
@@ -145,7 +151,7 @@ function extractComponentName(jsxElement) {
  * @param context - ESLint rule context (for reporting and source code)
  * @returns The TypeScript type for the component's props, or null if not found
  */
-function findComponentPropsType(jsxElement, componentName, services, typeChecker, context) {
+function findComponentPropsTypes(jsxElement, componentName, services, typeChecker, context) {
   // Bundle all parameters into a single object for easier passing between functions
   const resolutionContext = {
     jsxElement,
@@ -163,7 +169,7 @@ function findComponentPropsType(jsxElement, componentName, services, typeChecker
   const componentType = typeChecker.getTypeAtLocation(jsxElementTsNode);
 
   // Try all available strategies to find the component's props type
-  return resolvePropsType(componentType, resolutionContext);
+  return resolvePropsTypes(componentType, resolutionContext);
 }
 
 /**
@@ -174,17 +180,184 @@ function findComponentPropsType(jsxElement, componentName, services, typeChecker
  * @param context - Object containing all necessary resolution info
  * @returns The component's props type or null if not found
  */
-function resolvePropsType(componentType, context) {
+function resolvePropsTypes(componentType, context) {
+  const propsTypes = [];
+
   // Strategy 1: Look at the component's type directly (fastest)
   const directPropsType = resolvePropsTypeFromComponentType(componentType, context);
-  if (directPropsType) return directPropsType;
+  if (directPropsType) propsTypes.push(directPropsType);
+
+  propsTypes.push(...resolvePropsTypesFromHigherOrderComponent(context));
+
+  if (propsTypes.length > 0) return propsTypes;
 
   // Strategy 2: Check for component defined in current file
   const scopePropsType = resolvePropsTypeFromScope(context);
-  if (scopePropsType) return scopePropsType;
+  if (scopePropsType) return [scopePropsType];
 
   // Strategy 3: Look for component in imported files (slowest)
-  return resolvePropsTypeFromImports(context);
+  const importPropsType = resolvePropsTypeFromImports(context);
+  return importPropsType ? [importPropsType] : [];
+}
+
+function resolvePropsTypesFromHigherOrderComponent({
+  componentName,
+  context,
+  jsxElement,
+  services,
+  sourceCode,
+  typeChecker,
+}) {
+  const scope = sourceCode?.getScope ? sourceCode.getScope(jsxElement) : context.getScope?.();
+  if (!scope) return [];
+
+  const componentVariable = findVariableInScopeChain(scope, componentName);
+  const definition = componentVariable?.defs?.[0];
+  if (definition?.node?.type !== 'VariableDeclarator') return [];
+
+  const init = definition.node.init;
+  if (!init) {
+    return [];
+  }
+
+  if (init.type === 'CallExpression' && !isPropForwardingHoc(init, { services, typeChecker })) {
+    return [];
+  }
+
+  return resolvePropsTypesFromComponentExpression(
+    init.type === 'CallExpression' ? init.arguments[0] : init,
+    {
+      context,
+      services,
+      sourceCode,
+      typeChecker,
+    },
+  );
+}
+
+function resolvePropsTypesFromComponentExpression(expression, context, visited = new Set()) {
+  const { services, sourceCode, typeChecker } = context;
+  if (!expression || visited.has(expression)) return [];
+  visited.add(expression);
+
+  const expressionTsNode = services.esTreeNodeToTSNodeMap.get(expression);
+  const expressionType = expressionTsNode ? typeChecker.getTypeAtLocation(expressionTsNode) : null;
+  const directPropsType = resolvePropsTypeFromComponentType(expressionType, { typeChecker });
+  const propsTypes = directPropsType ? [directPropsType] : [];
+
+  if (expression.type === 'CallExpression') {
+    if (isPropForwardingHoc(expression, { services, typeChecker })) {
+      propsTypes.push(
+        ...resolvePropsTypesFromComponentExpression(expression.arguments[0], context, visited),
+      );
+    }
+  } else if (expression.type === 'Identifier') {
+    const variable = findVariableForIdentifier(expression, sourceCode);
+    const init = variable?.defs?.[0]?.node?.init;
+    if (init && init !== expression) {
+      propsTypes.push(...resolvePropsTypesFromComponentExpression(init, context, visited));
+    }
+
+    if (!directPropsType) {
+      propsTypes.push(
+        resolvePropsTypeFromScope({
+          componentName: expression.name,
+          context: context.context,
+          jsxElement: expression,
+          services,
+          typeChecker,
+        }),
+        resolvePropsTypeFromImports({
+          componentName: expression.name,
+          services,
+          sourceCode,
+          typeChecker,
+        }),
+      );
+    }
+  }
+
+  return propsTypes.filter(Boolean);
+}
+
+function findVariableForIdentifier(identifier, sourceCode) {
+  const scope = sourceCode?.getScope ? sourceCode.getScope(identifier) : null;
+  return scope ? findVariableInScopeChain(scope, identifier.name) : null;
+}
+
+function isPropForwardingHoc(callExpression, { services, typeChecker }) {
+  if (callExpression.arguments.length === 0) return false;
+
+  const callTsNode = services.esTreeNodeToTSNodeMap.get(callExpression);
+  const signature = callTsNode ? typeChecker.getResolvedSignature(callTsNode) : null;
+  if (!signature) return false;
+
+  const declaration = signature.getDeclaration?.() ?? signature.declaration;
+  const typeParameterNames = new Set(
+    declaration?.typeParameters?.map((typeParameter) => typeParameter.name.text) ?? [],
+  );
+
+  if (typeParameterNames.size === 0) return false;
+
+  const componentParameterType = declaration?.parameters?.[0]?.type;
+  if (
+    componentParameterType &&
+    isComponentParameterType(componentParameterType) &&
+    containsTypeParameter(componentParameterType, typeParameterNames)
+  ) {
+    return true;
+  }
+
+  const parameter = signature.getParameters?.()[0];
+  const parameterType = parameter?.valueDeclaration
+    ? typeChecker.getTypeOfSymbolAtLocation(parameter, parameter.valueDeclaration)
+    : null;
+  return isComponentType(parameterType) && containsTypeParameterInType(parameterType, typeChecker);
+}
+
+function isComponentParameterType(type) {
+  if (ts.isFunctionTypeNode(type)) return true;
+  if (!ts.isTypeReferenceNode(type)) return false;
+
+  const typeName = type.typeName.getText();
+  return ['ComponentType', 'FunctionComponent', 'FC', 'ComponentClass'].includes(
+    typeName.split('.').at(-1),
+  );
+}
+
+function isComponentType(type) {
+  return Boolean(type?.getCallSignatures?.().length);
+}
+
+function containsTypeParameter(node, typeParameterNames) {
+  if (ts.isTypeReferenceNode(node) && ts.isIdentifier(node.typeName)) {
+    if (typeParameterNames.has(node.typeName.text)) return true;
+  }
+
+  return (
+    ts.forEachChild(node, (child) => containsTypeParameter(child, typeParameterNames)) ?? false
+  );
+}
+
+function containsTypeParameterInType(type, typeChecker, visited = new Set()) {
+  if (!type || visited.has(type)) return false;
+  visited.add(type);
+
+  if ((type.flags & ts.TypeFlags.TypeParameter) !== 0) return true;
+
+  return [
+    ...(type.typeArguments ?? []),
+    ...(type.aliasTypeArguments ?? []),
+    ...(type.getCallSignatures?.() ?? []).flatMap((signature) =>
+      signature
+        .getParameters()
+        .map((parameter) =>
+          parameter.valueDeclaration
+            ? typeChecker.getTypeOfSymbolAtLocation(parameter, parameter.valueDeclaration)
+            : null,
+        ),
+    ),
+  ].some((childType) => containsTypeParameterInType(childType, typeChecker, visited));
 }
 
 /**
@@ -246,14 +419,14 @@ function resolvePropsTypeFromComponentType(componentType, { typeChecker }) {
  * @param context - Resolution context with component info and services
  * @returns The component's props type or null if not found
  */
-function resolvePropsTypeFromScope({ componentName, context, services, typeChecker }) {
+function resolvePropsTypeFromScope({ componentName, context, jsxElement, services, typeChecker }) {
   const sourceCode = context.sourceCode ?? context.getSourceCode?.();
-  const scope = sourceCode?.getScope ? sourceCode.getScope(sourceCode.ast) : context.getScope?.();
+  const scope = sourceCode?.getScope ? sourceCode.getScope(jsxElement) : context.getScope?.();
 
   if (!scope) return null;
 
   // Find the component in the scope chain
-  const componentVariable = findVariableInNestedScopes(scope, componentName);
+  const componentVariable = findVariableInScopeChain(scope, componentName);
   if (!componentVariable?.defs?.length) return null;
 
   // Get the component definition
@@ -379,21 +552,19 @@ function isReactComponentClassName(typeName) {
 }
 
 /**
- * Recursively finds a variable in the scope chain, including nested child scopes.
+ * Finds a variable by walking outward through its lexical scope chain.
  *
  * @param scope - The ESLint scope to search in
  * @param variableName - The name of the variable to find
  * @returns The variable if found, or null
  */
-function findVariableInNestedScopes(scope, variableName) {
-  // Check variables in the current scope
-  const variable = scope.variables.find((v) => v.name === variableName);
-  if (variable) return variable;
+function findVariableInScopeChain(scope, variableName) {
+  let currentScope = scope;
 
-  // Recursively check child scopes
-  for (const childScope of scope.childScopes) {
-    const result = findVariableInNestedScopes(childScope, variableName);
-    if (result) return result;
+  while (currentScope) {
+    const variable = currentScope.variables.find((candidate) => candidate.name === variableName);
+    if (variable) return variable;
+    currentScope = currentScope.upper;
   }
 
   return null;
@@ -599,20 +770,30 @@ function getTypePropertyNames(type, typeChecker) {
  * @param maxInvalidPropsInMessage - Max number of props to show in error message
  */
 function checkForInvalidProps(
-  componentPropsType,
+  componentPropsTypes,
   spreadObjectType,
   typeChecker,
   node,
   context,
   componentName,
   maxInvalidPropsInMessage,
+  jsxElement,
+  services,
 ) {
   // React automatically handles these props, so they're always allowed in spreads
   const REACT_SPECIAL_PROPS = new Set(['key', 'ref', 'children']);
 
   // Extract property names from both types to compare them
-  const validComponentProps = getTypePropertyNames(componentPropsType, typeChecker);
+  const validComponentProps = getPropertyNamesFromTypes(componentPropsTypes, typeChecker);
   const spreadObjectProps = getTypePropertyNames(spreadObjectType, typeChecker);
+
+  const hasKnownPolymorphicTarget = addPolymorphicIntrinsicProps(
+    validComponentProps,
+    jsxElement,
+    services,
+    typeChecker,
+  );
+  if (!hasKnownPolymorphicTarget) return;
 
   // If component has no known props, we can't check for invalid ones
   if (validComponentProps.size === 0) return;
@@ -661,6 +842,73 @@ function checkForInvalidProps(
       invalidProps: invalidProps.join(', '),
     },
   });
+}
+
+function getPropertyNamesFromTypes(types, typeChecker) {
+  const propertyNames = new Set();
+
+  for (const type of types) {
+    for (const propertyName of getTypePropertyNames(type, typeChecker)) {
+      propertyNames.add(propertyName);
+    }
+  }
+
+  return propertyNames;
+}
+
+function addPolymorphicIntrinsicProps(validComponentProps, jsxElement, services, typeChecker) {
+  if (!validComponentProps.has('as')) return true;
+
+  const asElementName = getAsElementName(jsxElement);
+  if (asElementName === null) return false;
+
+  const intrinsicElementName = asElementName ?? 'div';
+  for (const propertyName of getIntrinsicElementPropNames(
+    intrinsicElementName,
+    jsxElement,
+    services,
+    typeChecker,
+  )) {
+    validComponentProps.add(propertyName);
+  }
+
+  return true;
+}
+
+function getAsElementName(jsxElement) {
+  const asAttribute = jsxElement.attributes.find(
+    (attribute) => attribute.type === 'JSXAttribute' && attribute.name?.name === 'as',
+  );
+
+  if (!asAttribute) return undefined;
+
+  if (asAttribute?.value?.type === 'Literal' && typeof asAttribute.value.value === 'string') {
+    return asAttribute.value.value;
+  }
+
+  const asExpression = asAttribute.value?.expression;
+  if (asExpression?.type === 'Literal' && typeof asExpression.value === 'string') {
+    return asExpression.value;
+  }
+
+  return null;
+}
+
+function getIntrinsicElementPropNames(elementName, jsxElement, services, typeChecker) {
+  const jsxElementTsNode = services.esTreeNodeToTSNodeMap.get(jsxElement);
+  if (!jsxElementTsNode) return new Set();
+
+  const intrinsicTagSymbols = typeChecker.getJsxIntrinsicTagNamesAt?.(jsxElementTsNode) ?? [];
+  const matchingSymbol = intrinsicTagSymbols.find(
+    (symbol) => symbol.name === elementName || symbol.escapedName === elementName,
+  );
+
+  if (!matchingSymbol) return new Set();
+
+  return getTypePropertyNames(
+    typeChecker.getTypeOfSymbolAtLocation(matchingSymbol, jsxElementTsNode),
+    typeChecker,
+  );
 }
 
 export default rule;
