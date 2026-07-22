@@ -27,7 +27,7 @@ const RUNNING_STATUSES = new Set([
 ]);
 
 const POLL_INTERVAL_MS = 15_000;
-const POLL_TIMEOUT_MS = 20 * 60 * 1000;
+const POLL_TIMEOUT_MS = 30 * 60 * 1000;
 
 function authHeader() {
   const username = process.env.BROWSERSTACK_USERNAME;
