@@ -1,5 +1,5 @@
 import React, { cloneElement, memo, useCallback, useMemo, useRef } from 'react';
-import { tooltipPaddingX, tooltipPaddingY } from '@cbhq/cds-common/tokens/tooltip';
+import { tooltipPaddingX, tooltipPaddingY } from '@coinbase/cds-common/tokens/tooltip';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Popover } from '../popover/Popover';

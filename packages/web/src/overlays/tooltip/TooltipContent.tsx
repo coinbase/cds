@@ -3,9 +3,13 @@ import {
   animateInOpacityConfig,
   animateOutOpacityConfig,
   getTranslateConfigByPlacement,
-} from '@cbhq/cds-common/animation/tooltip';
-import { tooltipMaxWidth, tooltipPaddingX, tooltipPaddingY } from '@cbhq/cds-common/tokens/tooltip';
-import { zIndex as zIndexTokens } from '@cbhq/cds-common/tokens/zIndex';
+} from '@coinbase/cds-common/animation/tooltip';
+import {
+  tooltipMaxWidth,
+  tooltipPaddingX,
+  tooltipPaddingY,
+} from '@coinbase/cds-common/tokens/tooltip';
+import { zIndex as zIndexTokens } from '@coinbase/cds-common/tokens/zIndex';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 

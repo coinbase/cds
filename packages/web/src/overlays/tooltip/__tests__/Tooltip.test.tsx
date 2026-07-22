@@ -1,6 +1,6 @@
-import type { BaseTooltipPlacement } from '@cbhq/cds-common/types';
-import { tooltipMaxWidth } from '@cbhq/cds-common/tokens/tooltip';
-import { renderA11y } from '@cbhq/cds-web-utils/jest';
+import { tooltipMaxWidth } from '@coinbase/cds-common/tokens/tooltip';
+import type { BaseTooltipPlacement } from '@coinbase/cds-common/types';
+import { renderA11y } from '@coinbase/cds-web-utils/jest';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
@@ -12,6 +12,9 @@ import { Tooltip } from '../Tooltip';
 import type { TooltipProps } from '../TooltipProps';
 
 const tooltipTestID = 'tooltip-test';
+const richContentTestID = 'rich-content';
+const richContentWidth = 320;
+const richContentHeight = 480;
 
 const StoryExample = ({
   placement = 'top',
@@ -115,6 +118,32 @@ describe('Tooltip', () => {
     fireEvent.mouseEnter(screen.getByRole('button'));
 
     const tooltip = await screen.findByTestId(tooltipTestID);
+    expect(tooltip).toHaveStyle({ '--width': 'max-content' });
+    expect(tooltip.style.getPropertyValue('--maxWidth')).toBe('');
+  });
+
+  it('sizes to fit arbitrarily tall and wide React node content', async () => {
+    render(
+      <StoryExample
+        tooltipProps={{
+          content: (
+            <div
+              data-testid={richContentTestID}
+              style={{ height: richContentHeight, width: richContentWidth }}
+            >
+              Rich content
+            </div>
+          ),
+        }}
+      />,
+    );
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    const richContent = screen.getByTestId(richContentTestID);
+    expect(getComputedStyle(richContent).width).toBe(`${richContentWidth}px`);
+    expect(getComputedStyle(richContent).height).toBe(`${richContentHeight}px`);
     expect(tooltip).toHaveStyle({ '--width': 'max-content' });
     expect(tooltip.style.getPropertyValue('--maxWidth')).toBe('');
   });
