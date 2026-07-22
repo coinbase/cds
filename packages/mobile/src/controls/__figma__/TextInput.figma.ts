@@ -22,13 +22,10 @@ const state = instance.getEnum('state', {
 const variant = state === 'positive' ? 'positive' : state === 'negative' ? 'negative' : undefined;
 const readOnly = state === 'read-only';
 
-// disabled is a VARIANT type with string "true"/"false" values
+// disabled and compact are VARIANT types with string "true"/"false" values
 const disabled = instance.getEnum('disabled', { true: true, false: false });
-// Figma TextInput still exposes `compact` (no `size` property yet in the component set).
-// Prefer emitting size="s" for compact=true so generated code follows the new API;
-// consumers needing legacy compact label behavior can still pass compact explicitly in code.
 const compact = instance.getEnum('compact', { true: true, false: false });
-const size = compact ? 's' : undefined;
+
 // label inside controls labelVariant prop
 const labelInside = instance.getEnum('label inside', { true: true, false: false });
 const labelVariant = labelInside ? 'inside' : undefined;
@@ -71,7 +68,7 @@ export default {
   placeholder="Enter value"
   ${variant ? figma.code`variant="${variant}"` : ''}
   ${disabled ? 'disabled' : ''}
-  ${size ? figma.code`size="${size}"` : ''}
+  ${compact ? 'compact' : ''}
   ${labelVariant ? figma.code`labelVariant="${labelVariant}"` : ''}
   ${align ? figma.code`align="${align}"` : ''}
   ${readOnly ? 'readOnly' : ''}

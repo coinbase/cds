@@ -8,9 +8,8 @@ const instance = figma.selectedInstance;
 // Placeholder text shown in the chip when no value is selected
 const placeholder = instance.getString('↳ value');
 
-// size: VARIANT "s"/"xs" → size prop
-const size = instance.getEnum('size', { s: 's', xs: 'xs' });
-const isXs = size === 'xs';
+// compact: VARIANT "true"/"false" → compact boolean prop
+const compact = instance.getEnum('compact', { true: true, false: false });
 
 // state: disabled maps to disabled prop; other states are interaction-only
 const disabled = instance.getEnum('state', {
@@ -25,10 +24,10 @@ const disabled = instance.getEnum('state', {
 // show start: whether the startNode slot is populated
 const showStart = instance.getEnum('show start', { true: true, false: false });
 
-// The start element uses different instance swaps for xs vs s mode
+// The start element uses different instance swaps for compact vs regular mode
 const startCompact = instance.getInstanceSwap('↳ startCompact');
 const startRegular = instance.getInstanceSwap('↳ start');
-const startHandle = isXs ? startCompact : startRegular;
+const startHandle = compact ? startCompact : startRegular;
 let startCode;
 if (showStart && startHandle && startHandle.type === 'INSTANCE') {
   startCode = startHandle.executeTemplate().example;
@@ -37,7 +36,7 @@ if (showStart && startHandle && startHandle.type === 'INSTANCE') {
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<SelectChip
-  ${isXs ? 'size="xs"' : ''}
+  ${compact ? 'compact' : ''}
   ${disabled ? 'disabled' : ''}
   ${startCode ? figma.code`startNode={${startCode}}` : ''}
   onChange={() => {}}

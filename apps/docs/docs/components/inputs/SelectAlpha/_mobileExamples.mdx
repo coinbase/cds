@@ -347,56 +347,38 @@ function DisabledGroupExample() {
 }
 ```
 
-## Size
+## Compact Mode
 
-Use the `size` prop to control the density of the Select input. `size` defaults to `l`, and
-`size="s"` replaces the deprecated `compact` prop.
+The Select component can be rendered in a compact size for denser mobile UIs.
 
 ```jsx
-function SizeExample() {
+function CompactExample() {
   const [value, setValue] = useState('1');
 
   const options = [
-    { value: '1', label: 'Option A' },
-    { value: '2', label: 'Option B' },
-    { value: '3', label: 'Option C' },
+    { value: '1', label: 'Small Option 1' },
+    { value: '2', label: 'Small Option 2' },
+    { value: '3', label: 'Small Option 3' },
   ];
 
   return (
-    <VStack gap={3}>
-      <Select
-        size="s"
-        label="Small (size=s, replaces compact)"
-        value={value}
-        onChange={setValue}
-        options={options}
-        placeholder="Select an option"
-      />
-      <Select
-        size="m"
-        label="Medium (size=m, new)"
-        value={value}
-        onChange={setValue}
-        options={options}
-        placeholder="Select an option"
-      />
-      <Select
-        size="l"
-        label="Large (size=l, default)"
-        value={value}
-        onChange={setValue}
-        options={options}
-        placeholder="Select an option"
-      />
-    </VStack>
+    <Select
+      compact
+      label="Compact Select"
+      value={value}
+      onChange={setValue}
+      options={options}
+      placeholder="Select an option"
+      helperText="This is a compact select component"
+    />
   );
 }
 ```
 
-The `size` prop works with multi-selection mode as well.
+You can also use multi-selection mode while in a compact size.
 
 ```jsx
-function MultiSelectSizeExample() {
+function MultiSelectExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '3'],
   });
@@ -411,7 +393,7 @@ function MultiSelectSizeExample() {
 
   return (
     <Select
-      size="m"
+      compact
       type="multi"
       label="Choose multiple options"
       value={value}
@@ -890,7 +872,7 @@ function MixedOptionsExample() {
 
 ## Variant Combinations
 
-Combine the small size with different variants.
+Combine compact mode with different variants.
 
 ```jsx
 function VariantCombinationsExample() {
@@ -906,23 +888,23 @@ function VariantCombinationsExample() {
   return (
     <VStack gap={4}>
       <Select
-        size="s"
+        compact
         variant="positive"
-        label="Small + Positive"
+        label="Compact + Positive"
         value={value1}
         onChange={setValue1}
         options={options}
-        helperText="Success state in small size"
+        helperText="Success state in compact mode"
       />
 
       <Select
-        size="s"
+        compact
         variant="negative"
-        label="Small + Negative"
+        label="Compact + Negative"
         value={value2}
         onChange={setValue2}
         options={options}
-        helperText="Error state in small size"
+        helperText="Error state in compact mode"
       />
     </VStack>
   );

@@ -87,8 +87,8 @@ Loading works with all variants and transparent. The label is hidden and the pro
   <Button loading transparent variant="secondary">
     Transparent
   </Button>
-  <Button loading size="s">
-    Small
+  <Button loading compact>
+    Compact
   </Button>
 </HStack>
 ```
@@ -126,24 +126,16 @@ Use the `disabled` prop to prevent interaction and indicate the action is unavai
 
 ## Sizing
 
-### Size
+### Compact
 
-Use `size` to choose a t-shirt size (`xs`, `s`, `m`, `l`). It defaults to `l` and replaces the deprecated `compact` prop — `size="s"` is the direct equivalent of the old `compact`.
+Use `compact` for smaller buttons with reduced padding. Useful in dense UIs or alongside other compact elements.
 
 ```jsx
-<HStack gap={2} flexWrap="wrap" alignItems="center">
-  <Button onPress={console.log} size="xs">
-    Extra small
+<HStack gap={2} alignItems="center">
+  <Button onPress={console.log} compact>
+    Compact
   </Button>
-  <Button onPress={console.log} size="s">
-    Small
-  </Button>
-  <Button onPress={console.log} size="m">
-    Medium
-  </Button>
-  <Button onPress={console.log} size="l">
-    Large (default)
-  </Button>
+  <Button onPress={console.log}>Default</Button>
 </HStack>
 ```
 
@@ -189,10 +181,10 @@ Add an icon after the label to provide additional context or indicate direction.
 
 ```jsx
 <HStack gap={2}>
-  <Button onPress={console.log} endIcon="forwardArrow" variant="secondary" size="s">
+  <Button onPress={console.log} endIcon="forwardArrow" variant="secondary" compact>
     See more
   </Button>
-  <Button onPress={console.log} endIcon="externalLink" variant="secondary" size="s">
+  <Button onPress={console.log} endIcon="externalLink" variant="secondary" compact>
     Open link
   </Button>
 </HStack>
@@ -204,10 +196,10 @@ Add an icon before the label to reinforce the action.
 
 ```jsx
 <HStack gap={2}>
-  <Button onPress={console.log} startIcon="add" startIconActive variant="secondary" size="s">
+  <Button onPress={console.log} startIcon="add" startIconActive variant="secondary" compact>
     Add item
   </Button>
-  <Button onPress={console.log} startIcon="download" variant="secondary" size="s">
+  <Button onPress={console.log} startIcon="download" variant="secondary" compact>
     Download
   </Button>
 </HStack>
@@ -265,7 +257,7 @@ Use negative buttons with a secondary cancel option for destructive actions.
 
 ### Form Actions
 
-A full-width primary action with a secondary option.
+A full-width primary action with a compact secondary option.
 
 ```jsx
 <VStack gap={2}>

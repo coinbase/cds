@@ -19,9 +19,9 @@ Default composition of Inputs.
   />
 
   <VStack>
-    <Text as="p">Use a smaller size when space is tight.</Text>
+    <Text as="p">Use the compact variant when space is tight.</Text>
     <TextInput
-      size="s"
+      compact
       type="number"
       step="0.01"
       label="Amount"
@@ -201,10 +201,10 @@ composition.
   </VStack>
 
   <VStack>
-    <Text as="p">Right aligned (with size s):</Text>
+    <Text as="p">Right aligned (with compact):</Text>
     <TextInput
       label="Limit price"
-      size="s"
+      compact
       align="end"
       type="number"
       step="0.01"
@@ -215,21 +215,9 @@ composition.
 </VStack>
 ```
 
-### Size
-
-Controls vertical density of the input. Defaults to `l` (16px paddingY). Use `size="s"` instead of the deprecated `compact` prop when you want a denser field that still allows an outside or inside label.
-
-```jsx live
-<VStack gap={2}>
-  <TextInput label="Small" placeholder="size s" size="s" />
-  <TextInput label="Medium" placeholder="size m" size="m" />
-  <TextInput label="Large (default)" placeholder="size l" size="l" />
-</VStack>
-```
-
 ### Label Variants
 
-TextInput supports two label variants: `outside` (default) and `inside`. For `size="s"` or `size="m"`, an inside label renders horizontally in the start slot; for `size="l"`, it stacks vertically inside the field. The deprecated `compact` prop forces the label into the start slot regardless of `labelVariant`.
+TextInput supports two label variants: `outside` (default) and `inside`. Note that the `compact` prop, when set to true, will override label variant preference.
 
 :::warning
 
@@ -302,7 +290,7 @@ You can pass a ReactNode to `labelNode` to render a custom label. If you want to
   />
   <TextInput
     accessibilityLabel="Amount"
-    size="s"
+    compact
     labelNode={
       <InputLabel>
         <HStack alignItems="center" gap={0.5}>
@@ -440,7 +428,7 @@ Here are some examples and best practices when using end content in a TextField.
       label="Amount"
       type="number"
       step="0.01"
-      size="s"
+      compact
       placeholder="98329.23"
       suffix="USD"
     />
@@ -543,7 +531,7 @@ function CopyTextField() {
 ```jsx live
 <VStack gap={3}>
   <TextInput label="Label" disabled />
-  <TextInput label="Label" size="s" disabled />
+  <TextInput label="Label" compact disabled />
 </VStack>
 ```
 

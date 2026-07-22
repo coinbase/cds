@@ -81,7 +81,7 @@ Use the `loading` prop when an action is in progress. The button becomes non-int
 
 #### Loading by variant
 
-Loading works with all variants and transparent. Provide `accessibilityLabel` so screen readers announce the loading state (e.g. "Loading").
+Loading works with all variants, transparent, and compact. Provide `accessibilityLabel` so screen readers announce the loading state (e.g. "Loading").
 
 ```jsx live
 <HStack gap={2} flexWrap="wrap" alignItems="center">
@@ -121,8 +121,14 @@ Loading works with all variants and transparent. Provide `accessibilityLabel` so
     variant="secondary"
     onClick={console.log}
   />
-  <IconButton loading name="refresh" accessibilityLabel="Loading" size="s" onClick={console.log} />
-  <IconButton loading name="refresh" accessibilityLabel="Loading" size="l" onClick={console.log} />
+  <IconButton loading compact name="refresh" accessibilityLabel="Loading" onClick={console.log} />
+  <IconButton
+    loading
+    name="refresh"
+    accessibilityLabel="Loading"
+    compact={false}
+    onClick={console.log}
+  />
 </HStack>
 ```
 
@@ -187,16 +193,26 @@ Use the `disabled` prop to prevent interaction and show a disabled visual state.
 
 ## Sizing
 
-### Size
-
-Use the `size` prop to control the button's dimensions. It defaults to `l`. Use `size="s"` in place of the deprecated `compact` prop (the historic implicit default was `s`).
+IconButtons are compact by default. Use `compact={false}` for larger touch targets.
 
 ```jsx live
 <HStack gap={2} flexWrap="wrap" alignItems="center">
-  <IconButton name="gear" accessibilityLabel="Extra small" size="xs" onClick={console.log} />
-  <IconButton name="gear" accessibilityLabel="Small" size="s" onClick={console.log} />
-  <IconButton name="gear" accessibilityLabel="Medium" size="m" onClick={console.log} />
-  <IconButton name="gear" accessibilityLabel="Large (default)" size="l" onClick={console.log} />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="Settings - compact"
+    variant="primary"
+    compact
+    onClick={console.log}
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="Settings - regular"
+    variant="primary"
+    compact={false}
+    onClick={console.log}
+  />
 </HStack>
 ```
 

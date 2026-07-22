@@ -6,8 +6,10 @@ import figma from 'figma';
 const instance = figma.selectedInstance;
 
 // --- property extractions ---
-// size is a VARIANT type with values l | m | s; l is the default and is omitted from the snippet
-const size = instance.getEnum('size', { l: '', m: 'm', s: 's' });
+const compact = instance.getEnum('compact', {
+  true: true,
+  false: false,
+});
 const disabled = instance.getEnum('disabled', {
   true: true,
   false: false,
@@ -20,7 +22,7 @@ const placeholder =
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<SearchInput
-  ${size ? figma.code`size="${size}"` : ''}
+  ${compact ? 'compact' : ''}
   ${disabled ? 'disabled' : ''}
   ${placeholder ? figma.code`placeholder="${placeholder}"` : ''}
   onChangeText={(text) => {}}

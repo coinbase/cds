@@ -231,13 +231,10 @@ function ExampleMultiAssets() {
 
 ## Customization
 
-### Size
-
-Use `size` to control chip height and spacing. `size` defaults to `s`; use `size="xs"` for dense
-layouts (this replaces the deprecated `compact` prop).
+### Compact
 
 ```tsx
-function ExampleSize() {
+function ExampleCompact() {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
     { value: '2', label: 'Option 2' },
@@ -247,10 +244,10 @@ function ExampleSize() {
   const [value, setValue] = useState<string | null>('1');
   return (
     <SelectChip
+      compact
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
-      size="xs"
       value={value}
     />
   );

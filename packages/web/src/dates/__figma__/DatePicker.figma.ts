@@ -14,11 +14,9 @@ const required = instance.getBoolean('↳ required');
 // show calendar maps to the defaultOpen prop
 const defaultOpen = instance.getEnum('show calendar', { false: false, true: true });
 
-// disabled is a VARIANT type with string "true"/"false" values
+// disabled and compact are VARIANT types with string "true"/"false" values
 const disabled = instance.getEnum('disabled', { false: false, true: true });
-
-// size is a VARIANT type controlling the input's vertical density; defaults to l
-const size = instance.getEnum('size', { s: 's', m: 'm', l: 'l' });
+const compact = instance.getEnum('compact', { false: false, true: true });
 
 // state (default, focused, typing, filled, error) are interaction-only states with no direct code equivalent
 // date (TEXT) is a visual display of the typed input value and does not map to the date: Date | null prop
@@ -34,7 +32,7 @@ export default {
   ${required ? 'required' : ''}
   ${defaultOpen ? 'defaultOpen' : ''}
   ${disabled ? 'disabled' : ''}
-  ${size && size !== 'l' ? figma.code`size="${size}"` : ''}
+  ${compact ? 'compact' : ''}
 />`,
   imports: ['import { DatePicker } from "@coinbase/cds-web/dates"'],
   id: 'date-picker',
