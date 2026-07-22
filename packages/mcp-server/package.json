@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-mcp-server",
-  "version": "9.6.11",
+  "version": "9.7.0",
   "description": "Coinbase Design System - MCP Server",
   "repository": {
     "type": "git",

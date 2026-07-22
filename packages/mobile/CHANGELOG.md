@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.7.0 (7/22/2026 PST)
+
+#### 🚀 Updates
+
+- Add hideSeparator prop to numpad. [[#799](https://github.com/coinbase/cds/pull/799)]
+
 ## 9.6.11 (7/22/2026 PST)
 
 #### 🐞 Fixes
