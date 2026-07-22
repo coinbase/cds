@@ -70,6 +70,38 @@ const IconButtonScreen = () => {
       <Example inline title="Default">
         <IconButton accessibilityLabel={accessibilityLabel} name={iconName} onPress={onPress} />
       </Example>
+      <Example inline title='size="xs"'>
+        <IconButton
+          accessibilityLabel={accessibilityLabel}
+          name={iconName}
+          onPress={onPress}
+          size="xs"
+        />
+      </Example>
+      <Example inline title='size="s"'>
+        <IconButton
+          accessibilityLabel={accessibilityLabel}
+          name={iconName}
+          onPress={onPress}
+          size="s"
+        />
+      </Example>
+      <Example inline title="Deprecated compact (renders as size s)">
+        <IconButton
+          compact
+          accessibilityLabel={accessibilityLabel}
+          name={iconName}
+          onPress={onPress}
+        />
+      </Example>
+      <Example inline title='size="m"'>
+        <IconButton
+          accessibilityLabel={accessibilityLabel}
+          name={iconName}
+          onPress={onPress}
+          size="m"
+        />
+      </Example>
 
       <Example inline title="States">
         <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
@@ -219,10 +251,10 @@ const IconButtonScreen = () => {
           </Box>
           <Box>
             <Text font="label2" style={{ marginBottom: 8 }}>
-              Loading compact vs regular
+              Loading size s vs compact false
             </Text>
             <HStack alignItems="center" gap={2}>
-              <IconButton compact loading accessibilityLabel="Loading" name={iconName} />
+              <IconButton loading accessibilityLabel="Loading" name={iconName} size="s" />
               <IconButton loading accessibilityLabel="Loading" compact={false} name={iconName} />
             </HStack>
           </Box>
@@ -272,20 +304,20 @@ const IconButtonScreen = () => {
           width={32}
         />
         <IconButton
-          compact
           accessibilityLabel={accessibilityLabel}
           height={24}
           name={iconName}
           onPress={onPress}
+          size="s"
           width={24}
         />
         <IconButton
-          compact
           loading
           accessibilityLabel={accessibilityLabel}
           height={24}
           name={iconName}
           onPress={onPress}
+          size="s"
           width={24}
         />
       </Example>

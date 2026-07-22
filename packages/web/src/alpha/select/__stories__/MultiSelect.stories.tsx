@@ -66,6 +66,35 @@ export const Default = () => {
   );
 };
 
+export const SizeS = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  return (
+    <Select
+      label="Multi select - size s"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      size="s"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 export const Compact = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
@@ -89,6 +118,35 @@ export const Compact = () => {
       onChange={onChange}
       options={exampleOptions}
       placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
+export const SizeM = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  return (
+    <Select
+      label="Multi select - size m"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      size="m"
       type="multi"
       value={value}
     />
@@ -120,7 +178,7 @@ export const InsideLabelVariant = () => {
   );
 };
 
-export const CompactManySelected = () => {
+export const SizeSManySelected = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
     { value: '1', label: 'Apple' },
@@ -140,11 +198,11 @@ export const CompactManySelected = () => {
 
   return (
     <Select
-      compact
-      label="Multi select - compact with many selected"
+      label="Multi select - size s with many selected"
       onChange={onChange}
       options={exampleOptions}
       placeholder="Empty value"
+      size="s"
       type="multi"
       value={value}
     />
@@ -225,31 +283,31 @@ export const Alignments = () => {
         value={value}
       />
       <Select
-        compact
-        label="Compact align - start"
+        label="Size s align - start"
         onChange={onChange}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         type="multi"
         value={value}
       />
       <Select
-        compact
         align="center"
-        label="Compact align - center"
+        label="Size s align - center"
         onChange={onChange}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         type="multi"
         value={value}
       />
       <Select
-        compact
         align="end"
-        label="Compact align - end"
+        label="Size s align - end"
         onChange={onChange}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         type="multi"
         value={value}
       />

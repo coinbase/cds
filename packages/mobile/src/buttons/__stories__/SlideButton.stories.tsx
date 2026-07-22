@@ -27,7 +27,7 @@ const SlideButtonExample = ({
     <VStack gap={1}>
       <HStack alignItems="center" gap={1} justifyContent="flex-end" paddingBottom={2}>
         <Text font="label1">Reset</Text>
-        <IconButton compact name="refresh" onPress={toggleOff} />
+        <IconButton name="refresh" size="s" onPress={toggleOff} />
       </HStack>
       <SlideButton
         checked={checked}
@@ -84,9 +84,9 @@ export const SlideButtonStories = () => {
       <Example title="Long label">
         <SlideButtonExample uncheckedLabel="Super long label that will get truncated when it exceeds the available space" />
       </Example>
-      <Example title="Compact & long label">
+      <Example title='size="s" & long label'>
         <SlideButtonExample
-          compact
+          size="s"
           uncheckedLabel="Super long label that will get truncated when it exceeds the available space"
         />
       </Example>
@@ -124,11 +124,17 @@ export const SlideButtonStories = () => {
       <Example title="Checked and Disabled">
         <SlideButtonExample checked disabled />
       </Example>
-      <Example title="Compact">
+      <Example title='size="s"'>
+        <SlideButtonExample size="s" />
+      </Example>
+      <Example title="Deprecated compact (renders as size s)">
         <SlideButtonExample compact />
       </Example>
-      <Example title="Compact and disabled">
-        <SlideButtonExample compact disabled />
+      <Example title='size="m"'>
+        <SlideButtonExample size="m" />
+      </Example>
+      <Example title='size="s" and disabled'>
+        <SlideButtonExample disabled size="s" />
       </Example>
       <Example title="Custom components">
         <SlideButtonExample

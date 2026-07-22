@@ -27,7 +27,7 @@ Given a Linear issue ID/URL, the skill walks the full discovery-to-plan flow:
 - Size/property maps are defined **per package**, never shared via `cds-common` (differing
   style-prop types can't be strongly typed by a shared map).
 - Deprecating `compact` always targets **v10**.
-- Verification stories are **one-off standalone files**, not added to existing story files.
+- Verification stories live in each component's **main** story file (no separate `*Size.stories.tsx`).
 - Docs **remove** the deprecated `compact` section and **add** a `size` section per existing
   conventions.
 

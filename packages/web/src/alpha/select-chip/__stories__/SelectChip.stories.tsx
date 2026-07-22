@@ -58,6 +58,26 @@ export const DefaultMulti = () => {
   );
 };
 
+export const SizeXs = () => {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <SelectChip
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      size="xs"
+      value={value}
+    />
+  );
+};
+
 export const Compact = () => {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },

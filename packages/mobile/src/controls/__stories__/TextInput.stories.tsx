@@ -21,14 +21,6 @@ const MockTextInput = ({ ...props }: TextInputProps) => {
   return <TextInput editable={__DEV__} onChangeText={onChangeText} value={text} {...props} />;
 };
 
-const MockCompactTextInput = ({ ...props }: TextInputProps) => {
-  const [text, onChangeText] = useState('');
-
-  return (
-    <TextInput compact editable={__DEV__} onChangeText={onChangeText} value={text} {...props} />
-  );
-};
-
 const MockComplexInput = () => {
   const [text, onChangeText] = useState('');
 
@@ -300,17 +292,35 @@ const InputScreen = () => {
       <Example inline title="TextInput No Label">
         <MockTextInput placeholder="189-280-1111" variant="foregroundMuted" />
       </Example>
-      <Example inline title="CompactTextInput">
-        <MockCompactTextInput
+      <Example inline title='size="s"'>
+        <MockTextInput
+          label="One Time Password"
+          placeholder="189-280-1111"
+          size="s"
+          variant="foregroundMuted"
+        />
+      </Example>
+      <Example inline title="Deprecated compact (renders as size s)">
+        <MockTextInput
+          compact
           label="One Time Password"
           placeholder="189-280-1111"
           variant="foregroundMuted"
         />
       </Example>
-      <Example inline title="CompactTextInput with start node">
-        <MockCompactTextInput
-          label="Compact Start Node"
+      <Example inline title='size="m"'>
+        <MockTextInput
+          label="One Time Password"
           placeholder="189-280-1111"
+          size="m"
+          variant="foregroundMuted"
+        />
+      </Example>
+      <Example inline title='size="s" with start node'>
+        <MockTextInput
+          label="Start Node"
+          placeholder="189-280-1111"
+          size="s"
           start={
             <HStack accessibilityHint="Start Node" accessibilityLabel="Start Node">
               <Text font="body">Start Node</Text>
@@ -319,62 +329,77 @@ const InputScreen = () => {
           variant="foregroundMuted"
         />
       </Example>
-      <Example inline title="CompactTextInput with suffix">
-        <MockCompactTextInput
-          label="Compact Suffix"
+      <Example inline title='size="s" with suffix'>
+        <MockTextInput
+          label="Suffix"
           placeholder="189-280-1111"
+          size="s"
           suffix="Suffix"
           variant="foregroundMuted"
         />
       </Example>
-      <Example inline title="CompactTextInput with End Node">
-        <MockCompactTextInput
+      <Example inline title='size="s" with End Node'>
+        <MockTextInput
           end={
             <Text accessibilityHint="Cancel" accessibilityLabel="Cancel" font="body">
               End Node
             </Text>
           }
-          label="Compact Suffix"
+          label="End Node"
           placeholder="189-280-1111"
+          size="s"
           variant="foregroundMuted"
         />
       </Example>
-      <Example inline title="CompactTextInput Negative">
-        <MockCompactTextInput
+      <Example inline title='size="s" Negative'>
+        <MockTextInput
           helperText="Password is in an incorrect format"
           label="One Time Password"
           placeholder="189-280-1111"
+          size="s"
           variant="negative"
         />
       </Example>
-      <Example inline title="CompactTextInput Positive">
-        <MockCompactTextInput
+      <Example inline title='size="s" Positive'>
+        <MockTextInput
           helperText="Password is looking good!"
           label="One Time Password"
           placeholder="189-280-1111"
+          size="s"
           variant="positive"
         />
       </Example>
-      <Example inline title="CompactTextInput Start Align Input Text and HelperText">
-        <MockCompactTextInput
+      <Example inline title='size="s" Start Align Input Text and HelperText'>
+        <MockTextInput
           align="start"
           helperText="Password is looking good!"
           label="One Time Password"
           placeholder="189-280-1111"
+          size="s"
         />
       </Example>
-      <Example inline title="CompactTextInput 50%">
-        <MockCompactTextInput label="Bitcoin" placeholder="190" width="50%" />
-        <MockCompactTextInput />
+      <Example inline title='size="s" 50%'>
+        <MockTextInput label="Bitcoin" placeholder="190" size="s" width="50%" />
+        <MockTextInput size="s" />
       </Example>
-      <Example inline title="CompactTextInput Disabled">
-        <MockCompactTextInput disabled editable={false} label="Bitcoin" />
+      <Example inline title='size="s" Disabled'>
+        <MockTextInput disabled editable={false} label="Bitcoin" size="s" />
+      </Example>
+      <Example inline title='size="s" with outside label'>
+        <MockTextInput
+          end={<InputIcon name="close" />}
+          label="Amount"
+          placeholder="0.00"
+          size="s"
+          suffix="USD"
+        />
       </Example>
       <Example inline title="Accessibility Test">
-        <MockCompactTextInput
+        <MockTextInput
           accessibilityHint="Bitcoin search"
           accessibilityLabel="Bitcoin search"
           label="Bitcoin"
+          size="s"
         />
       </Example>
       <Example>
@@ -426,7 +451,7 @@ const InputScreen = () => {
               <Icon color="fg" name="qrCode" size="m" />
             </Box>
           }
-          label="Compact Read-Only with End Node"
+          label="Read-Only with End Node"
           placeholder="Placeholder"
         />
         <MockTextInput
@@ -464,12 +489,20 @@ const InputScreen = () => {
           start={<InputIconButton transparent name="search" />}
         />
       </Example>
-      <Example inline title="TextInput with inside label and compact">
+      <Example inline title='size="s" with inside label'>
         <MockTextInput
-          compact
           label="Username"
           labelVariant="inside"
           placeholder="john.doe@coinbase.com"
+          size="s"
+        />
+      </Example>
+      <Example inline title='size="m" with inside label'>
+        <MockTextInput
+          label="Username"
+          labelVariant="inside"
+          placeholder="john.doe@coinbase.com"
+          size="m"
         />
       </Example>
       <Example inline title="TextInput with inside label and error state">
@@ -494,7 +527,7 @@ const InputScreen = () => {
           }
           placeholder="Satoshi Nakamoto"
         />
-        <MockCompactTextInput
+        <MockTextInput
           accessibilityLabel="Amount"
           labelNode={
             <HStack alignItems="center" gap={0.5}>
@@ -505,9 +538,10 @@ const InputScreen = () => {
             </HStack>
           }
           placeholder="0.00"
+          size="s"
           suffix="USD"
         />
-        <MockCompactTextInput
+        <MockTextInput
           accessibilityLabel="Search"
           labelNode={
             <VStack justifyContent="center">
@@ -515,6 +549,7 @@ const InputScreen = () => {
             </VStack>
           }
           placeholder="Search..."
+          size="s"
           start={<InputIconButton transparent name="search" />}
         />
         <MockTextInput

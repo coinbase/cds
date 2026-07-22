@@ -169,11 +169,6 @@ const calendarAnimation: AnimationProps = getMotionProps({
   exit: 'exit',
 });
 
-const calendarPopoverPosition: PopoverContentPositionConfig = {
-  placement: 'bottom-start',
-  offsetGap: 16,
-};
-
 export const DatePicker = memo(
   forwardRef<HTMLDivElement, DatePickerProps>((_props, ref) => {
     const mergedProps = useComponentConfig('DatePicker', _props);
@@ -224,6 +219,22 @@ export const DatePicker = memo(
     } = mergedProps;
     const [showCalendar, setShowCalendar] = useState<boolean>(defaultOpen);
     const calendarRef = useRef<HTMLDivElement | null>(null);
+
+    // Web-only: the calendar Popover is anchored to the whole DateInput (field +
+    // helper text). By default DateInput always shows a helper line (format string
+    // or error), so offsetGap pulls the calendar up by that line height to sit
+    // against the field border. When helper text is suppressed with
+    // `helperText=""` (empty string — null/undefined still show the format), that
+    // line is gone, so we skip the offset; otherwise the calendar overlaps the
+    // input. Mobile does not need this: it presents the calendar in a tray/modal,
+    // not a positioned popover.
+    const calendarPopoverPosition = useMemo<PopoverContentPositionConfig>(
+      () => ({
+        placement: 'bottom-start',
+        ...(helperText === '' ? {} : { offsetGap: 16 }),
+      }),
+      [helperText],
+    );
 
     /**
      * Be careful to preserve the correct event orders

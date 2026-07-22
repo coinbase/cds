@@ -84,10 +84,10 @@ export const InsideLabel = function InsideLabel() {
         variant="secondary"
       />
       <TextInput
-        compact
-        label="Compact+Inside"
+        label="Size s + Inside"
         labelVariant="inside"
         placeholder="Placeholder"
+        size="s"
         variant="secondary"
       />
       <TextInput
@@ -281,9 +281,8 @@ export const CustomLabel = function CustomLabel() {
         }
         placeholder="Satoshi Nakamoto"
       />
-      {/* Compact with required indicator */}
+      {/* Size s with required indicator */}
       <TextInput
-        compact
         accessibilityLabel="Amount"
         labelNode={
           <InputLabel>
@@ -296,19 +295,19 @@ export const CustomLabel = function CustomLabel() {
           </InputLabel>
         }
         placeholder="0.00"
+        size="s"
         suffix="USD"
       />
-      {/* Compact with start icon */}
+      {/* Size s with start icon */}
       <TextInput
-        compact
         accessibilityLabel="Search"
         labelNode={<InputLabel>Search</InputLabel>}
         placeholder="Search..."
+        size="s"
         start={<InputIconButton transparent accessibilityLabel="Search" name="search" />}
       />
-      {/* Compact with start avatar */}
+      {/* Size s with start avatar */}
       <TextInput
-        compact
         accessibilityLabel="Amount"
         labelNode={
           <InputLabel>
@@ -321,6 +320,7 @@ export const CustomLabel = function CustomLabel() {
           </InputLabel>
         }
         placeholder="0.00"
+        size="s"
         start={
           <Box paddingX={1}>
             <Avatar
@@ -402,18 +402,60 @@ export const SuffixAndEndContent = function SuffixAndEndContent() {
 };
 
 /**
- * COMPACT TEXT INPUT VARIATIONS
+ * T-SHIRT SIZE TEXT INPUT VARIATIONS
  */
 
-export const CompactInput = function CompactInput() {
+export const SizeS = function SizeS() {
+  return <TextInput label="Label" size="s" />;
+};
+
+export const Compact = function Compact() {
   return <TextInput compact label="Label" />;
 };
 
-export const CompactInputStart = function CompactInputStart() {
+export const SizeM = function SizeM() {
+  return <TextInput label="Label" size="m" />;
+};
+
+export const SizeSWithOutsideLabel = function SizeSWithOutsideLabel() {
   return (
     <TextInput
-      compact
+      end={<InputIcon name="close" />}
+      label="Amount"
+      placeholder="0.00"
+      size="s"
+      suffix="USD"
+    />
+  );
+};
+
+export const SizeSWithInsideLabel = function SizeSWithInsideLabel() {
+  return (
+    <TextInput
+      label="Username"
+      labelVariant="inside"
+      placeholder="john.doe@coinbase.com"
+      size="s"
+    />
+  );
+};
+
+export const SizeMWithInsideLabel = function SizeMWithInsideLabel() {
+  return (
+    <TextInput
+      label="Username"
+      labelVariant="inside"
+      placeholder="john.doe@coinbase.com"
+      size="m"
+    />
+  );
+};
+
+export const SizeSStart = function SizeSStart() {
+  return (
+    <TextInput
       label="Label"
+      size="s"
       start={
         <Box>
           <Avatar
@@ -427,26 +469,26 @@ export const CompactInputStart = function CompactInputStart() {
   );
 };
 
-export const CompactInputEnd = function CompactInputEnd() {
+export const SizeSEnd = function SizeSEnd() {
   return (
     <TextInput
-      compact
       end={
         <Link font="headline" href="">
           Hello
         </Link>
       }
       label="Label"
+      size="s"
     />
   );
 };
 
-export const CompactInputSuffix = function CompactInputSuffix() {
-  return <TextInput compact label="Label" suffix="USD" />;
+export const SizeSSuffix = function SizeSSuffix() {
+  return <TextInput label="Label" size="s" suffix="USD" />;
 };
 
-export const CompactHelperText = function CompactHelperText() {
-  return <TextInput compact helperText="helperText" label="Label" suffix="USD" />;
+export const SizeSHelperText = function SizeSHelperText() {
+  return <TextInput helperText="helperText" label="Label" size="s" suffix="USD" />;
 };
 
 export const InputOnChange = function InputOnChange() {
@@ -521,6 +563,29 @@ export const RenderInputDisabled: Story = {
       },
     },
   },
+};
+
+export const RenderInputSizeS = () => {
+  const [inputText, setInputText] = useState('Test');
+  const ref = useRef<HTMLInputElement>(null);
+
+  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+  }, []);
+
+  const renderInput = (
+    <input
+      className={nativeInputCustomCss}
+      onChange={onChange}
+      style={{ width: '100%', borderRadius: 'var(--borderRadius-200)' }}
+    />
+  );
+
+  return (
+    <div>
+      <TextInput ref={ref} helperText={inputText} inputNode={renderInput} label="Label" size="s" />
+    </div>
+  );
 };
 
 export const RenderInputCompact = () => {
@@ -682,15 +747,15 @@ export const ReadOnly = function ReadOnly() {
         value="Some text"
       />
       <TextInput
-        compact
         readOnly
         end={
           <Box paddingX={2}>
             <Icon color="fg" name="qrCode" size="m" />
           </Box>
         }
-        label="Compact Read-Only with End Node"
+        label="Size s Read-Only with End Node"
         placeholder="Placeholder"
+        size="s"
       />
     </VStack>
   );

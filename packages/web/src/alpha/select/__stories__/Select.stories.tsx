@@ -74,6 +74,33 @@ export const Default = () => {
   );
 };
 
+export const SizeS = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
+    { value: '9', label: 'Jackfruit' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Single select - size s"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      size="s"
+      value={value}
+    />
+  );
+};
+
 export const Compact = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
@@ -96,6 +123,33 @@ export const Compact = () => {
       onChange={setValue}
       options={exampleOptions}
       placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
+export const SizeM = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+    { value: '6', label: 'Fig' },
+    { value: '7', label: 'Grape' },
+    { value: '8', label: 'Honeydew' },
+    { value: '9', label: 'Jackfruit' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Single select - size m"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      size="m"
       value={value}
     />
   );
@@ -160,15 +214,15 @@ export const ExampleForm = () => {
       </HStack>
       <HStack gap={1}>
         <Select
-          compact
-          label="Single select - compact"
+          label="Single select - size s"
           onChange={setValue}
           options={exampleOptions}
           placeholder="Empty value"
+          size="s"
           style={{ flexGrow: 1 }}
           value={value}
         />
-        <TextInput compact label="Text input" width="40%" />
+        <TextInput label="Text input" size="s" width="40%" />
       </HStack>
       <HStack gap={1}>
         <Select
@@ -185,17 +239,17 @@ export const ExampleForm = () => {
       </HStack>
       <HStack gap={1}>
         <Select
-          compact
           controlAccessibilityLabel="Multi select control with selected options"
-          label="Multi select - compact"
+          label="Multi select - size s"
           onChange={multiSelectOnChange}
           options={exampleOptions}
           placeholder="Empty value"
+          size="s"
           style={{ flexGrow: 1 }}
           type="multi"
           value={multiSelectValue}
         />
-        <TextInput compact label="Text input" width="40%" />
+        <TextInput label="Text input" size="s" width="40%" />
       </HStack>
     </VStack>
   );
@@ -364,29 +418,29 @@ export const Alignments = () => {
         value={value}
       />
       <Select
-        compact
-        label="Compact align - start"
+        label="Size s align - start"
         onChange={setValue}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         value={value}
       />
       <Select
-        compact
         align="center"
-        label="Compact align - center"
+        label="Size s align - center"
         onChange={setValue}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         value={value}
       />
       <Select
-        compact
         align="end"
-        label="Compact align - end"
+        label="Size s align - end"
         onChange={setValue}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         value={value}
       />
     </VStack>
@@ -1104,11 +1158,11 @@ export const VeryLongLabels = () => {
         value={value}
       />
       <Select
-        compact
-        label="Single select - very long option labels - compact"
+        label="Single select - very long option labels - size s"
         onChange={setValue}
         options={longOptions}
         placeholder="Empty value"
+        size="s"
         value={value}
       />
       <Select
@@ -1215,7 +1269,7 @@ export const OptionsWithOnlyMedia = () => {
   );
 };
 
-export const CompactWithVariants = () => {
+export const SizeSWithVariants = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
     { value: '1', label: 'Apple' },
@@ -1234,22 +1288,22 @@ export const CompactWithVariants = () => {
   return (
     <div style={{ display: 'flex', gap: '20px', flexDirection: 'column' }}>
       <Select
-        compact
-        helperText="Compact positive variant"
-        label="Compact + Positive"
+        helperText="Size s positive variant"
+        label="Size s + Positive"
         onChange={setPositiveValue}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         value={positiveValue}
         variant="positive"
       />
       <Select
-        compact
-        helperText="Compact negative variant"
-        label="Compact + Negative"
+        helperText="Size s negative variant"
+        label="Size s + Negative"
         onChange={setNegativeValue}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         value={negativeValue}
         variant="negative"
       />

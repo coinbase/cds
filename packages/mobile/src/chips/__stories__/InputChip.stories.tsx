@@ -15,7 +15,7 @@ const InputChipScreen = () => {
     width: 24,
   };
 
-  const compactMediaProps: RemoteImageProps = {
+  const smallMediaProps: RemoteImageProps = {
     height: 16,
     shape: 'circle',
     source: assets.eth.imageUrl,
@@ -33,14 +33,19 @@ const InputChipScreen = () => {
           USD
         </InputChip>
       </Example>
-      <Example title="Compact">
+      <Example title='size="xs"'>
+        <InputChip onPress={NoopFn} size="xs">
+          USD
+        </InputChip>
+        <InputChip onPress={NoopFn} size="xs" start={<RemoteImage {...smallMediaProps} />}>
+          USD
+        </InputChip>
+        <InputChip disabled onPress={NoopFn} size="xs" start={<RemoteImage {...smallMediaProps} />}>
+          USD
+        </InputChip>
+      </Example>
+      <Example title="Deprecated compact (renders as size xs)">
         <InputChip compact onPress={NoopFn}>
-          USD
-        </InputChip>
-        <InputChip compact onPress={NoopFn} start={<RemoteImage {...compactMediaProps} />}>
-          USD
-        </InputChip>
-        <InputChip compact disabled onPress={NoopFn} start={<RemoteImage {...compactMediaProps} />}>
           USD
         </InputChip>
       </Example>

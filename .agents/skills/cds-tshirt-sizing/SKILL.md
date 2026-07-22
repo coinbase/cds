@@ -151,10 +151,14 @@ worked example to mirror). It must contain every section below:
 - **Testing**:
   - Unit: default→`l` geometry; each of xs/s/m/l; `compact` alone still exact; `size`+`compact`→
     size wins; explicit style props still override; mobile `feedback` mapping.
-  - **One-off standalone stories** — a **new dedicated story file per package** (do **not** edit the
-    existing `Button.stories.tsx`). Both platforms render the **same** examples (no code reuse
-    required): **default**, deprecated **`compact`**, each **size variant** (xs/s/m/l), and a
-    **`compact` + `size` combo** proving `size` wins. Label each example.
+  - **Stories in the main story file** — edit each package's existing
+    `__stories__/<Component>.stories.tsx` (create it if missing). Do **not** add a separate
+    `*Size.stories.tsx`. Add non-default size variants (e.g. `xs`/`s`/`m` as applicable). Skip a
+    dedicated story for the default size (`l`, or whatever the component defaults to). Where a
+    story used deprecated `compact`, replace it with the superseding size (typically `s`, or `xs`
+    for chips); then add a dedicated deprecated-`compact` story **immediately after** that size
+    story. Composite examples that mixed `compact` with other props should just switch to the
+    superseding `size`.
 - **Docs** — follow existing conventions in the example `.mdx` files:
   - **Remove** the deprecated `### Compact` section (under `## Sizing`) in both `_webExamples.mdx`
     and `_mobileExamples.mdx`.
@@ -179,8 +183,9 @@ worked example to mirror). It must contain every section below:
   over `compact`.
 - **No fixed heights/sizes** anywhere; dimensions stay content/spacing-derived.
 - Size config is **per-package**, not shared via `cds-common`.
-- Stories are **one-off standalone files**, not added to existing story files, and cover default /
-  `compact` / xs-s-m-l / `compact`+`size`.
+- Stories live in the **main** story file (no `*Size.stories.tsx`): non-default sizes, superseding
+  size in place of former `compact` usages, and a deprecated-`compact` story placed immediately
+  after that size story.
 - Docs plan removes the deprecated `compact` section and adds a `size` section per existing
   conventions.
 - The default-height vs `size=l` check is stated (match or explicit mismatch call-out).

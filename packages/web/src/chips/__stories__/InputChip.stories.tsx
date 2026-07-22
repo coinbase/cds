@@ -43,21 +43,29 @@ export const Default = () => {
           </InputChip>
         </HStack>
         <Text as="h3" display="block" font="headline" paddingTop={3}>
-          Compact
+          Size xs
         </Text>
         <HStack gap={2}>
-          <InputChip compact onClick={NoopFn}>
+          <InputChip onClick={NoopFn} size="xs">
             USD
           </InputChip>
-          <InputChip compact onClick={NoopFn} start={<RemoteImage {...compactMediaProps} />}>
+          <InputChip onClick={NoopFn} size="xs" start={<RemoteImage {...compactMediaProps} />}>
             USD
           </InputChip>
           <InputChip
-            compact
             disabled
             onClick={NoopFn}
+            size="xs"
             start={<RemoteImage {...compactMediaProps} />}
           >
+            USD
+          </InputChip>
+        </HStack>
+        <Text as="h3" display="block" font="headline" paddingTop={3}>
+          Compact (deprecated)
+        </Text>
+        <HStack gap={2}>
+          <InputChip compact onClick={NoopFn}>
             USD
           </InputChip>
         </HStack>

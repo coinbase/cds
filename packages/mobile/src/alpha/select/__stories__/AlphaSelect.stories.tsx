@@ -187,6 +187,21 @@ const TypedSelectExample = () => {
   );
 };
 
+const SizeSExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Small"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      size="s"
+      value={value}
+    />
+  );
+};
+
 const CompactExample = () => {
   const [value, setValue] = useState<string | null>('1');
 
@@ -197,6 +212,21 @@ const CompactExample = () => {
       onChange={setValue}
       options={exampleOptions}
       placeholder="Empty value"
+      value={value}
+    />
+  );
+};
+
+const SizeMExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <Select
+      label="Medium"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Empty value"
+      size="m"
       value={value}
     />
   );
@@ -333,29 +363,29 @@ const SingleAlignExample = () => {
         value={singleValue}
       />
       <Select
-        compact
-        label="Compact align - left"
+        label="Small align - left"
         onChange={setSingleValue}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         value={singleValue}
       />
       <Select
-        compact
         align="center"
-        label="Compact align - center"
+        label="Small align - center"
         onChange={setSingleValue}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         value={singleValue}
       />
       <Select
-        compact
         align="end"
-        label="Compact align - right"
+        label="Small align - right"
         onChange={setSingleValue}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         value={singleValue}
       />
     </VStack>
@@ -396,31 +426,31 @@ const MultiAlignExample = () => {
         value={value}
       />
       <Select
-        compact
-        label="Compact align - left"
+        label="Small align - left"
         onChange={onChange}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         type="multi"
         value={value}
       />
       <Select
-        compact
         align="center"
-        label="Compact align - center"
+        label="Small align - center"
         onChange={onChange}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         type="multi"
         value={value}
       />
       <Select
-        compact
         align="end"
-        label="Compact align - right"
+        label="Small align - right"
         onChange={onChange}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         type="multi"
         value={value}
       />
@@ -763,6 +793,24 @@ const MultiSelectDefaultExample = () => {
   );
 };
 
+const MultiSelectSizeSExample = () => {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <Select
+      label="Multi small"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      size="s"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
 const MultiSelectCompactExample = () => {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1'],
@@ -775,6 +823,24 @@ const MultiSelectCompactExample = () => {
       onChange={onChange}
       options={exampleOptions}
       placeholder="Empty value"
+      type="multi"
+      value={value}
+    />
+  );
+};
+
+const MultiSelectSizeMExample = () => {
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1'],
+  });
+
+  return (
+    <Select
+      label="Multi medium"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Empty value"
+      size="m"
       type="multi"
       value={value}
     />
@@ -1122,11 +1188,11 @@ const VeryLongLabelsExample = () => {
         value={value}
       />
       <Select
-        compact
-        label="Single select - very long option labels - compact"
+        label="Single select - very long option labels - size s"
         onChange={setValue}
         options={longOptions}
         placeholder="Empty value"
+        size="s"
         value={value}
       />
     </VStack>
@@ -1169,29 +1235,29 @@ const MixedOptionsWithAndWithoutDescriptionsExample = () => {
   );
 };
 
-const CompactWithVariantsExample = () => {
+const SizeSWithVariantsExample = () => {
   const [positiveValue, setPositiveValue] = useState<string | null>('1');
   const [negativeValue, setNegativeValue] = useState<string | null>('2');
 
   return (
     <VStack gap={4}>
       <Select
-        compact
-        helperText="Compact positive variant"
-        label="Compact + Positive"
+        helperText="Small positive variant"
+        label="Small + Positive"
         onChange={setPositiveValue}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         value={positiveValue}
         variant="positive"
       />
       <Select
-        compact
-        helperText="Compact negative variant"
-        label="Compact + Negative"
+        helperText="Small negative variant"
+        label="Small + Negative"
         onChange={setNegativeValue}
         options={exampleOptions}
         placeholder="Empty value"
+        size="s"
         value={negativeValue}
         variant="negative"
       />
@@ -1322,8 +1388,14 @@ const SelectV3Screen = () => {
       <Example title="Typed">
         <TypedSelectExample />
       </Example>
-      <Example title="Compact">
+      <Example title='size="s"'>
+        <SizeSExample />
+      </Example>
+      <Example title="Deprecated compact (renders as size s)">
         <CompactExample />
+      </Example>
+      <Example title='size="m"'>
+        <SizeMExample />
       </Example>
       <Example title="Inside label variant">
         <InsideLabelVariantExample />
@@ -1412,8 +1484,14 @@ const SelectV3Screen = () => {
       <Example title="Multi Select Default">
         <MultiSelectDefaultExample />
       </Example>
-      <Example title="Multi Select Compact">
+      <Example title='Multi Select size="s"'>
+        <MultiSelectSizeSExample />
+      </Example>
+      <Example title="Multi Select Deprecated compact (renders as size s)">
         <MultiSelectCompactExample />
+      </Example>
+      <Example title='Multi Select size="m"'>
+        <MultiSelectSizeMExample />
       </Example>
       <Example title="Multi Select Inside Label Variant">
         <MultiSelectInsideLabelVariantExample />
@@ -1469,8 +1547,8 @@ const SelectV3Screen = () => {
       <Example title="Mixed Options With and Without Descriptions">
         <MixedOptionsWithAndWithoutDescriptionsExample />
       </Example>
-      <Example title="Compact With Variants">
-        <CompactWithVariantsExample />
+      <Example title='size="s" With Variants'>
+        <SizeSWithVariantsExample />
       </Example>
       <Example title="Multi Select With Descriptions">
         <MultiSelectWithDescriptionsExample />

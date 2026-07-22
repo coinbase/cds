@@ -119,6 +119,23 @@ export const FullExample = () => {
           />
         </HStack>
       </Example>
+      <Example title='size="s"'>
+        <ExampleDatePicker label="Small" openCalendarAccessibilityLabel="Small calendar" size="s" />
+      </Example>
+      <Example title="Deprecated compact (renders as size s)">
+        <ExampleDatePicker
+          compact
+          label="Compact"
+          openCalendarAccessibilityLabel="Compact calendar"
+        />
+      </Example>
+      <Example title='size="m"'>
+        <ExampleDatePicker
+          label="Medium"
+          openCalendarAccessibilityLabel="Medium calendar"
+          size="m"
+        />
+      </Example>
       <Example title="DatePicker with seed date (next month)">
         <ExampleDatePicker
           label="Event date"
@@ -163,9 +180,8 @@ export const CustomLabel = () => {
             }
             openCalendarAccessibilityLabel="Date of birth calendar"
           />
-          {/* Compact with required indicator */}
+          {/* size="s" with required indicator */}
           <ExampleDatePicker
-            compact
             accessibilityLabel="Start date"
             labelNode={
               <HStack alignItems="center" gap={0.5}>
@@ -176,6 +192,7 @@ export const CustomLabel = () => {
               </HStack>
             }
             openCalendarAccessibilityLabel="Start date calendar"
+            size="s"
           />
           {/* Inside variant with optional indicator */}
           <ExampleDatePicker

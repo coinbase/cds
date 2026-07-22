@@ -117,7 +117,7 @@ export const DateInput = memo(
         <TextInput
           ref={ref}
           end={end}
-          helperText={helperText || error?.message || intlDateFormat.dateStringFormat}
+          helperText={helperText ?? error?.message ?? intlDateFormat.dateStringFormat}
           onBlur={handleBlur}
           onChange={handleChange}
           onClick={onClick}

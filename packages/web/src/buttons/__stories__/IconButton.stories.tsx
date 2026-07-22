@@ -90,6 +90,29 @@ export const Default = () => (
       <IconButton accessibilityLabel={accessibilityLabel} compact={false} name={iconName} />
     </VStack>
     <VStack gap={2}>
+      <Text font="title3">T-shirt Sizes</Text>
+      <HStack alignItems="center" gap={4}>
+        <IconButton accessibilityLabel="Extra small" name={iconName} size="xs" />
+        <Text font="body">size=&quot;xs&quot;</Text>
+      </HStack>
+      <HStack alignItems="center" gap={4}>
+        <IconButton accessibilityLabel="Small" name={iconName} size="s" />
+        <Text font="body">size=&quot;s&quot;</Text>
+      </HStack>
+      <HStack alignItems="center" gap={4}>
+        <IconButton accessibilityLabel="Compact (deprecated)" compact name={iconName} />
+        <Text font="body">compact (deprecated)</Text>
+      </HStack>
+      <HStack alignItems="center" gap={4}>
+        <IconButton accessibilityLabel="Medium" name={iconName} size="m" />
+        <Text font="body">size=&quot;m&quot;</Text>
+      </HStack>
+      <HStack alignItems="center" gap={4}>
+        <IconButton accessibilityLabel="Large" name={iconName} size="l" />
+        <Text font="body">size=&quot;l&quot;</Text>
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
       <Text font="title3">Icon Sizes</Text>
       <HStack alignItems="center" gap={4}>
         <IconButton accessibilityLabel="Extra small icon" iconSize="xs" name={iconName} />

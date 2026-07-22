@@ -38,7 +38,9 @@ export const Examples = () => {
           <ThemeProvider activeColorScheme="dark" theme={defaultTheme}>
             <DateInput {...sharedProps} {...props} />
           </ThemeProvider>
+          <DateInput size="s" {...sharedProps} {...props} />
           <DateInput compact {...sharedProps} {...props} />
+          <DateInput size="m" {...sharedProps} {...props} />
           <DateInput {...sharedProps} {...props} maxDate={today} minDate={oneDayAgo} />
           <DateInput {...sharedProps} {...props} separator="-" />
           <DateInput
@@ -93,9 +95,8 @@ export const CustomLabel = () => {
               </HStack>
             }
           />
-          {/* Compact with required indicator */}
+          {/* size="s" with required indicator */}
           <DateInput
-            compact
             {...sharedProps}
             {...props}
             accessibilityLabel="Start date"
@@ -107,6 +108,7 @@ export const CustomLabel = () => {
                 </Text>
               </HStack>
             }
+            size="s"
           />
           {/* Inside variant with optional indicator */}
           <DateInput

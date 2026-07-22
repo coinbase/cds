@@ -63,8 +63,16 @@ export const Examples = () => {
         </ThemeProvider>
       </VStack>
       <VStack>
-        <Note>DatePicker compact</Note>
+        <Note>DatePicker size s</Note>
+        <DatePicker size="s" {...exampleProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>DatePicker compact (deprecated)</Note>
         <DatePicker compact {...exampleProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>DatePicker size m</Note>
+        <DatePicker size="m" {...exampleProps} {...props} />
       </VStack>
       <VStack>
         <Note>DatePicker with labelNode</Note>
@@ -385,9 +393,8 @@ export const CustomLabel = () => {
           </InputLabel>
         }
       />
-      {/* Compact with required indicator */}
+      {/* Size s with required indicator */}
       <DatePicker
-        compact
         {...exampleProps}
         {...props}
         accessibilityLabel="Start date"
@@ -399,6 +406,7 @@ export const CustomLabel = () => {
             </HStack>
           </InputLabel>
         }
+        size="s"
       />
       {/* Inside variant with optional indicator */}
       <DatePicker

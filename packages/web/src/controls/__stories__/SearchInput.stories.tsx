@@ -29,21 +29,21 @@ const Shrunken = () => {
   return (
     <VStack gap={2}>
       <SearchInput
-        compact
         accessibilityLabel="Search"
         height={32}
         onChangeText={setText}
         onClear={() => {}}
         placeholder="Placeholder"
+        size="s"
         value={text}
       />
       <SearchInput
-        compact
         accessibilityLabel="Search"
         height={24}
         onChangeText={setText}
         onClear={() => {}}
         placeholder="Placeholder"
+        size="s"
         value={text}
       />
     </VStack>
@@ -78,6 +78,20 @@ const HideEndIcon = () => {
   );
 };
 
+const SizeS = () => {
+  const [text, setText] = useState('');
+
+  return (
+    <SearchInput
+      accessibilityLabel="searchbox"
+      onChangeText={setText}
+      onClear={() => {}}
+      size="s"
+      value={text}
+    />
+  );
+};
+
 const Compact = () => {
   const [text, setText] = useState('');
 
@@ -87,6 +101,20 @@ const Compact = () => {
       accessibilityLabel="searchbox"
       onChangeText={setText}
       onClear={() => {}}
+      value={text}
+    />
+  );
+};
+
+const SizeM = () => {
+  const [text, setText] = useState('');
+
+  return (
+    <SearchInput
+      accessibilityLabel="searchbox"
+      onChangeText={setText}
+      onClear={() => {}}
+      size="m"
       value={text}
     />
   );
@@ -124,7 +152,9 @@ export const Default = () => (
   <VStack gap={2}>
     <Basic />
     <Disabled />
+    <SizeS />
     <Compact />
+    <SizeM />
     <HideStartIcon />
     <HideEndIcon />
     <CustomEndNode

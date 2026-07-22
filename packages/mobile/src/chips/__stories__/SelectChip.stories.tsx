@@ -86,7 +86,11 @@ const SelectChipScreen = () => (
       <SelectChipExample placeholder="Sort" />
       <SelectChipExample placeholder="Sort" value="Balance" />
     </Example>
-    <Example title="Compact">
+    <Example title='size="xs"'>
+      <SelectChipExample placeholder="Sort" size="xs" />
+      <SelectChipExample placeholder="Sort" size="xs" value="Balance" />
+    </Example>
+    <Example title="Deprecated compact (renders as size xs)">
       <SelectChipExample compact placeholder="Sort" />
       <SelectChipExample compact placeholder="Sort" value="Balance" />
     </Example>

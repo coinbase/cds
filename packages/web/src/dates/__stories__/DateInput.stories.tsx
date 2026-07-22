@@ -51,8 +51,16 @@ export const Examples = () => {
         </ThemeProvider>
       </VStack>
       <VStack>
-        <Note>DateInput compact</Note>
+        <Note>DateInput size s</Note>
+        <DateInput size="s" {...sharedProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>DateInput compact (deprecated)</Note>
         <DateInput compact {...sharedProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>DateInput size m</Note>
+        <DateInput size="m" {...sharedProps} {...props} />
       </VStack>
     </Group>
   );
@@ -164,9 +172,8 @@ export const CustomLabel = () => {
           </InputLabel>
         }
       />
-      {/* Compact with required indicator */}
+      {/* size="s" with required indicator */}
       <DateInput
-        compact
         {...sharedProps}
         {...props}
         accessibilityLabel="Start date"
@@ -178,6 +185,7 @@ export const CustomLabel = () => {
             </HStack>
           </InputLabel>
         }
+        size="s"
       />
       {/* Inside variant with optional indicator */}
       <DateInput

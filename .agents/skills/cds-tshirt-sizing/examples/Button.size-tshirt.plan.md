@@ -238,18 +238,17 @@ compact?: boolean;
   - `size` + `compact` together → `compact` ignored, `size` wins.
   - Mobile: `feedback` resolves `light` for `xs`/`s` and compact-only; `normal` for `m`/`l`.
   - Explicit `paddingX`/`paddingY`/`borderRadius`/`font`/`padding` still override size defaults.
-- **Visual/stories (one-off, standalone):** create a **new dedicated story file** in each package
-  for quick/efficient testing — **do not** add these to the existing `__stories__/Button.stories.tsx`.
-  - Web: e.g. `packages/web/src/buttons/__stories__/ButtonSize.stories.tsx`
-  - Mobile: e.g. `packages/mobile/src/buttons/__stories__/ButtonSize.stories.tsx`
+- **Visual/stories (main story file):** fold sizing examples into each package's existing
+  `__stories__/Button.stories.tsx` — **do not** create a separate `ButtonSize.stories.tsx`.
+  - Web: `packages/web/src/buttons/__stories__/Button.stories.tsx`
+  - Mobile: `packages/mobile/src/buttons/__stories__/Button.stories.tsx`
   - Both platforms render the **same set of examples** (parity), but code does **not** need to be
     shared/reused between them — write each natively for its platform.
-  - Examples to render, in this order:
-    1. **Default** `<Button>` (no `size`, no `compact`) — should render as `l`.
-    2. **Deprecated `compact`** `<Button compact>` — unchanged legacy behavior (renders as `s`).
-    3. **Size variants** — one button each for `size="xs"`, `"s"`, `"m"`, `"l"`.
-    4. **`compact` + `size` combo** — e.g. `<Button compact size="m">` to visually confirm
-       **`size` wins** and `compact` is ignored (renders as `m`, not `s`).
+  - Examples to render:
+    1. **Non-default size variants** — `size="xs"`, `"s"`, `"m"` (skip a dedicated `"l"` / default
+       story; default stories already cover that).
+    2. Place **deprecated `compact`** immediately after the `size="s"` story.
+    3. Existing stories that used `compact` (including composites) should use `size="s"` instead.
   - Label each example so the rendered output is self-describing for visual review/visreg.
 - Run only the touched files:
   `yarn nx run web:test --testNamePattern=Button` and `yarn nx run mobile:test --testNamePattern=Button`.

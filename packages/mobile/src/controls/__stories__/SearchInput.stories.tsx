@@ -12,9 +12,19 @@ const Basic = () => {
   return <SearchInput editable={__DEV__} onChangeText={setText} value={text} />;
 };
 
+const SizeS = () => {
+  const [text, setText] = useState('');
+  return <SearchInput editable={__DEV__} onChangeText={setText} size="s" value={text} />;
+};
+
 const Compact = () => {
   const [text, setText] = useState('');
   return <SearchInput compact editable={__DEV__} onChangeText={setText} value={text} />;
+};
+
+const SizeM = () => {
+  const [text, setText] = useState('');
+  return <SearchInput editable={__DEV__} onChangeText={setText} size="m" value={text} />;
 };
 
 const BorderlessVariants = () => {
@@ -186,8 +196,14 @@ const SearchInputScreen = () => {
       <Example title="Custom Ref">
         <CustomRef />
       </Example>
-      <Example title="Compact">
+      <Example title='size="s"'>
+        <SizeS />
+      </Example>
+      <Example title="Deprecated compact (renders as size s)">
         <Compact />
+      </Example>
+      <Example title='size="m"'>
+        <SizeM />
       </Example>
       <Example title="Borderless variants">
         <BorderlessVariants />
