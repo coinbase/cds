@@ -68,6 +68,14 @@
       "types": "./dts/cards/ContentCard/index.d.ts",
       "default": "./esm/cards/ContentCard/index.js"
     },
+    "./cards/MediaCard": {
+      "types": "./dts/cards/MediaCard/index.d.ts",
+      "default": "./esm/cards/MediaCard/index.js"
+    },
+    "./cards/MessagingCard": {
+      "types": "./dts/cards/MessagingCard/index.d.ts",
+      "default": "./esm/cards/MessagingCard/index.js"
+    },
     "./carousel": {
       "types": "./dts/carousel/index.d.ts",
       "default": "./esm/carousel/index.js"

@@ -1,5 +1,5 @@
 // url=https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=72941-18302
-// source=packages/mobile/src/cards/MediaCard/index.tsx
+// source=packages/mobile/src/cards/MediaCard/MediaCard.tsx
 // component=MediaCard
 import figma from 'figma';
 
@@ -47,7 +47,7 @@ export default {
   ${mediaCode ? figma.code`media={${mediaCode}}` : ''}
   ${hasMedia && imagePlacement === 'start' ? 'mediaPlacement="start"' : ''}
 />`,
-  imports: ['import { MediaCard } from "@coinbase/cds-mobile/cards"'],
+  imports: ['import { MediaCard } from "@coinbase/cds-mobile/cards/MediaCard"'],
   id: 'media-card-mobile',
   metadata: { nestable: false },
 };
