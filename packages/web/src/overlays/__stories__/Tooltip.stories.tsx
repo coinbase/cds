@@ -388,6 +388,7 @@ export const TooltipWithRichDynamicContent = () => (
       >
         <Icon
           active
+          accessibilityLabel="Info"
           color="fgMuted"
           name="info"
           role="button"
