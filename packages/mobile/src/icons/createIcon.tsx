@@ -93,10 +93,11 @@ export type IconBaseProps<Name extends string = string> = SharedProps &
      */
     dangerouslySetColor?: string | Animated.AnimatedInterpolation<string>;
     animated?: boolean;
-    style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
   };
 
 export type IconProps<Name extends string = string> = IconBaseProps<Name> & {
+  /** Custom style applied to the outer container. */
+  style?: Animated.WithAnimatedValue<StyleProp<TextStyle>>;
   /** Custom styles for individual elements of the Icon component */
   styles?: {
     /** Outer Box wrapper element */
@@ -136,7 +137,7 @@ export function createIcon<Name extends string>({
   fontFamily = DEFAULT_ICON_FONT_FAMILY,
   getGlyph = defaultGetGlyph,
 }: CreateIconConfig<Name>) {
-  const Icon = memo((_props: IconProps<Name>) => {
+  const Icon = memo(({ ref, ..._props }: IconProps<Name> & { ref?: React.Ref<Text> }) => {
     const mergedProps = useComponentConfig('Icon', _props);
     const {
       accessibilityLabel,
@@ -227,6 +228,7 @@ export function createIcon<Name extends string>({
     return (
       <Box animated={animated} style={rootStyle} testID={testID}>
         <TextComponent
+          ref={ref}
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
           accessibilityRole="image"

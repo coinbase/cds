@@ -1,4 +1,5 @@
-import { View } from 'react-native';
+import { createRef } from 'react';
+import { Text, View } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';
@@ -66,6 +67,15 @@ describe('createIcon', () => {
     expect(screen.getByTestId('fallback')).toBeTruthy();
 
     consoleError.mockRestore();
+  });
+
+  it('forwards a ref to the glyph element', () => {
+    const ref = createRef<Text>();
+    const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+    renderIcon(<Icon ref={ref} name="star" />);
+
+    expect(ref.current).not.toBeNull();
   });
 
   it('resolves the glyph via a custom getGlyph resolver', () => {
