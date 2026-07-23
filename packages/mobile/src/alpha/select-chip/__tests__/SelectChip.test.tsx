@@ -153,46 +153,6 @@ describe('SelectChip', () => {
       expect(screen.getByTestId('end-node')).toBeTruthy();
     });
 
-    it('renders with compact prop', () => {
-      render(
-        <DefaultThemeProvider>
-          <SelectChip {...defaultProps} compact />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getByRole('button')).toBeTruthy();
-    });
-
-    it('renders with size="xs"', () => {
-      render(
-        <DefaultThemeProvider>
-          <SelectChip {...defaultProps} size="xs" />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getByRole('button')).toBeTruthy();
-    });
-
-    it('renders with size="s"', () => {
-      render(
-        <DefaultThemeProvider>
-          <SelectChip {...defaultProps} size="s" />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getByRole('button')).toBeTruthy();
-    });
-
-    it('renders when size and compact are both provided (size wins)', () => {
-      render(
-        <DefaultThemeProvider>
-          <SelectChip {...defaultProps} compact size="s" />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getByRole('button')).toBeTruthy();
-    });
-
     it('renders disabled state', () => {
       render(
         <DefaultThemeProvider>

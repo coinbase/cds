@@ -10,7 +10,7 @@ import { SelectChipControl } from './SelectChipControl';
 
 export type SelectChipBaseProps = Pick<
   ChipBaseProps,
-  'invertColorScheme' | 'numberOfLines' | 'maxWidth'
+  'invertColorScheme' | 'numberOfLines' | 'maxWidth' | 'size' | 'compact'
 > & {
   /**
    * Override the displayed value in the chip control.
@@ -18,17 +18,6 @@ export type SelectChipBaseProps = Pick<
    * When provided, this value takes precedence over the default label generation.
    */
   displayValue?: React.ReactNode;
-  /**
-   * Reduces spacing around the chip control.
-   * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
-   */
-  compact?: boolean;
-  /**
-   * Set the size of the chip control.
-   * @default s
-   */
-  size?: ChipSize;
 };
 
 export type SelectChipProps<

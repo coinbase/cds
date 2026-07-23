@@ -18,12 +18,7 @@ import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 import { ProgressCircle } from '../visualizations/ProgressCircle';
 
-import {
-  resolveSlideButtonSize,
-  type SlideButtonBaseProps,
-  type SlideButtonHandleProps,
-  slideButtonSizes,
-} from './SlideButton';
+import { type SlideButtonHandleProps, type SlideButtonSize, slideButtonSizes } from './SlideButton';
 
 export const slideButtonSpringConfig = {
   stiffness: 300,
@@ -38,10 +33,9 @@ export const slideButtonSpringConfig = {
  */
 export const animationConfig = { tension: 300, clamp: true } as const satisfies SpringConfig;
 
-export type SlideButtonHandleCheckedProps = Pick<
-  SlideButtonBaseProps,
-  'variant' | 'compact' | 'size'
-> & {
+export type SlideButtonHandleCheckedProps = Pick<SlideButtonHandleProps, 'variant'> & {
+  /** Resolved size, forwarded from the parent SlideButton. */
+  size: SlideButtonSize;
   label?: React.ReactNode;
   end?: React.ReactNode;
   disabled?: boolean;
@@ -51,10 +45,9 @@ export type SlideButtonHandleCheckedComponent = (
   props: SlideButtonHandleCheckedProps,
 ) => React.ReactElement | null;
 
-export type SlideButtonHandleUncheckedProps = Pick<
-  SlideButtonBaseProps,
-  'variant' | 'compact' | 'size'
-> & {
+export type SlideButtonHandleUncheckedProps = Pick<SlideButtonHandleProps, 'variant'> & {
+  /** Resolved size, forwarded from the parent SlideButton. */
+  size: SlideButtonSize;
   disabled?: boolean;
   start?: React.ReactNode;
 };
@@ -82,9 +75,9 @@ export const styles = StyleSheet.create({
 });
 
 export const SlideButtonHandleChecked = memo(
-  ({ label, end, compact, size }: SlideButtonHandleCheckedProps) => {
+  ({ label, end, size }: SlideButtonHandleCheckedProps) => {
     const theme = useTheme();
-    const sizeConfig = slideButtonSizes[resolveSlideButtonSize(size, compact)];
+    const sizeConfig = slideButtonSizes[size];
     const iconSizeValue = theme.iconSize[sizeConfig.iconSize];
 
     return (
@@ -113,8 +106,8 @@ export const SlideButtonHandleChecked = memo(
 );
 
 export const SlideButtonHandleUnchecked = memo(
-  ({ start, compact, size }: SlideButtonHandleUncheckedProps) => {
-    const sizeConfig = slideButtonSizes[resolveSlideButtonSize(size, compact)];
+  ({ start, size }: SlideButtonHandleUncheckedProps) => {
+    const sizeConfig = slideButtonSizes[size];
 
     return (
       <Box
@@ -134,7 +127,6 @@ export const DefaultSlideButtonHandle = memo(
   ({
     ref,
     checked,
-    compact,
     size,
     disabled,
     style,
@@ -193,7 +185,6 @@ export const DefaultSlideButtonHandle = memo(
       >
         <Animated.View style={[styles.absoluteContainer, animatedCheckedStyle]}>
           <SlideButtonHandleChecked
-            compact={compact}
             disabled={disabled}
             end={endCheckedNode}
             label={checkedLabel}
@@ -203,7 +194,6 @@ export const DefaultSlideButtonHandle = memo(
         </Animated.View>
         <Animated.View style={[styles.absoluteContainer, animatedUncheckedStyle]}>
           <SlideButtonHandleUnchecked
-            compact={compact}
             disabled={disabled}
             size={size}
             start={startUncheckedNode}

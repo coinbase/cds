@@ -58,13 +58,6 @@ describe('useTextInputDensity', () => {
     expect(small.current.contentPadding).toEqual({ top: 1, right: 2, bottom: 1, left: 2 });
   });
 
-  it('collapses to space-1 all around for legacy compact', () => {
-    const { result } = renderHook(() =>
-      useTextInputDensity({ compact: true, labelPlacement: 'inside-horizontal', size: 'l' }),
-    );
-    expect(result.current.contentPadding).toEqual({ top: 1, right: 1, bottom: 1, left: 1 });
-  });
-
   it('tightens vertical padding for a vertically-stacked inside label', () => {
     const { result } = renderHook(() =>
       useTextInputDensity({ labelPlacement: 'inside-vertical', size: 'l' }),

@@ -16,7 +16,6 @@ import { Text } from '../typography/Text';
 import type { ChipProps, ChipSize } from './ChipProps';
 export type { ChipProps, ChipSize };
 
-// values chosen to reproduce today's byte-for-byte top-level Chip defaults
 const chipSizes = {
   xs: { paddingX: 1.5, paddingY: 0.5, font: 'label1', borderRadius: 700 },
   s: { paddingX: 2, paddingY: 1, font: 'headline', borderRadius: 700 },
@@ -47,7 +46,8 @@ export const Chip = memo(
     ref: React.ForwardedRef<HTMLButtonElement | HTMLDivElement>,
   ) {
     const mergedProps = useComponentConfig('Chip', _props);
-    const cfg = chipSizes[mergedProps.size ?? (mergedProps.compact ? 'xs' : defaultChipSize)];
+    const sizeConfig =
+      chipSizes[mergedProps.size ?? (mergedProps.compact ? 'xs' : defaultChipSize)];
     const {
       as,
       alignItems = 'center',
@@ -58,8 +58,8 @@ export const Chip = memo(
       gap = 1,
       start,
       end,
-      paddingX = cfg.paddingX,
-      paddingY = cfg.paddingY,
+      paddingX = sizeConfig.paddingX,
+      paddingY = sizeConfig.paddingY,
       padding,
       paddingTop,
       paddingBottom,
@@ -73,13 +73,13 @@ export const Chip = memo(
       numberOfLines = 1,
       testID,
       contentStyle,
-      borderRadius = cfg.borderRadius,
+      borderRadius = sizeConfig.borderRadius,
       background = 'bgSecondary',
       style,
       className,
       styles,
       classNames,
-      font = cfg.font,
+      font = sizeConfig.font,
       color = 'fg',
       onClick,
       ...props

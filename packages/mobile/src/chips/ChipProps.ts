@@ -35,7 +35,7 @@ export type ChipBaseProps = SharedProps &
      */
     invertColorScheme?: boolean;
     /**
-     * Reduces spacing around Chip content.
+     * Reduces spacing around the chip.
      * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
      * @deprecationExpectedRemoval v10
      */

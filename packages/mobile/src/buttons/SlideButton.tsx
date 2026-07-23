@@ -9,6 +9,7 @@ import Animated, {
   withSpring,
 } from 'react-native-reanimated';
 import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
@@ -24,14 +25,6 @@ export const DEFAULT_REGULAR_HEIGHT = 56;
 export const DEFAULT_MEDIUM_HEIGHT = 48;
 
 export type SlideButtonSize = 's' | 'm' | 'l';
-
-type SlideButtonSizeConfig = {
-  height: number;
-  borderRadius: number;
-  iconSize: 's' | 'm';
-  handlePadding: number;
-  backgroundPadding: number;
-};
 
 export const slideButtonSizes = {
   s: {
@@ -55,14 +48,16 @@ export const slideButtonSizes = {
     handlePadding: 2,
     backgroundPadding: 9,
   },
-} as const satisfies Record<SlideButtonSize, SlideButtonSizeConfig>;
+} as const satisfies Record<
+  SlideButtonSize,
+  Pick<SlideButtonBaseProps, 'height' | 'borderRadius'> & {
+    iconSize: Extract<IconSize, 's' | 'm'>;
+    handlePadding: NonNullable<PressableProps['padding']>;
+    backgroundPadding: NonNullable<PressableProps['padding']>;
+  }
+>;
 
 const defaultSlideButtonSize: SlideButtonSize = 'l';
-
-export const resolveSlideButtonSize = (
-  size?: SlideButtonSize,
-  compact?: boolean,
-): SlideButtonSize => size ?? (compact ? 's' : defaultSlideButtonSize);
 
 export type SlideButtonBackgroundProps = Pick<
   SlideButtonBaseProps,
@@ -72,12 +67,12 @@ export type SlideButtonBackgroundProps = Pick<
   | 'borderTopLeftRadius'
   | 'borderTopRightRadius'
   | 'checked'
-  | 'compact'
   | 'disabled'
-  | 'size'
   | 'uncheckedLabel'
   | 'variant'
 > & {
+  /** Resolved size, forwarded from the parent SlideButton. */
+  size: SlideButtonSize;
   progress: SharedValue<number>;
   style?: StyleProp<ViewStyle>;
 };
@@ -85,15 +80,10 @@ export type SlideButtonBackgroundProps = Pick<
 export type SlideButtonHandleProps = PressableProps &
   Pick<
     SlideButtonBaseProps,
-    | 'checked'
-    | 'checkedLabel'
-    | 'compact'
-    | 'disabled'
-    | 'size'
-    | 'startUncheckedNode'
-    | 'endCheckedNode'
-    | 'variant'
+    'checked' | 'checkedLabel' | 'disabled' | 'startUncheckedNode' | 'endCheckedNode' | 'variant'
   > & {
+    /** Resolved size, forwarded from the parent SlideButton. */
+    size: SlideButtonSize;
     progress: SharedValue<number>;
     style?: StyleProp<ViewStyle>;
   };
@@ -221,7 +211,8 @@ export const SlideButton = memo(
     ref?: React.Ref<View>;
   }) => {
     const mergedProps = useComponentConfig('SlideButton', _props);
-    const resolvedSize = resolveSlideButtonSize(mergedProps.size, mergedProps.compact);
+    // `size` wins when both `size` and `compact` are set; compact-only maps to `s`.
+    const resolvedSize = mergedProps.size ?? (mergedProps.compact ? 's' : defaultSlideButtonSize);
     const sizeConfig = slideButtonSizes[resolvedSize];
     const {
       checked,

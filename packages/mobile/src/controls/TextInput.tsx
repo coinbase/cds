@@ -147,6 +147,8 @@ const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   secondary: 'bgSecondary',
 };
 
+const defaultTextInputSize: TextInputSize = 'l';
+
 export const TextInput = memo(
   ({
     ref,
@@ -219,19 +221,19 @@ export const TextInput = memo(
     const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
 
     // `size` wins over the deprecated `compact`: compact only takes effect when no
-    // size is set. Resolve both here, then hand the resolved values to the hooks.
-    const resolvedSize: TextInputSize = size ?? 'l';
-    const nativeCompact = Boolean(compact) && size === undefined;
+    // size is set, resolving to its size equivalent (`s`). The one place compact
+    // still steers layout on its own is the label placement (see below).
+    const resolvedSize: TextInputSize = size ?? (compact ? 's' : defaultTextInputSize);
+    const isCompactLabel = Boolean(compact) && size === undefined;
 
     const labelPlacement = useTextInputPlacement({
-      compact: nativeCompact,
+      compact: isCompactLabel,
       hasLabel,
       labelVariant,
       size: resolvedSize,
     });
 
     const { contentPadding, contentGap } = useTextInputDensity({
-      compact: nativeCompact,
       labelPlacement,
       size: resolvedSize,
     });

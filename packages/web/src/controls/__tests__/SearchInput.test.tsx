@@ -220,7 +220,7 @@ describe('Search', () => {
     expect(inputArea.style.height).toBe('');
   });
 
-  it('gives compact the legacy density (data-compact set, no data-size)', () => {
+  it('resolves compact to its size equivalent (s) while keeping data-compact', () => {
     render(
       <DefaultThemeProvider>
         <SearchInput compact onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
@@ -229,7 +229,7 @@ describe('Search', () => {
 
     const searchbox = screen.getByRole('searchbox');
     expect(searchbox).toHaveAttribute('data-compact', 'true');
-    expect(searchbox).not.toHaveAttribute('data-size');
+    expect(searchbox).toHaveAttribute('data-size', 's');
   });
 
   it('forwards size to the underlying input via data-size', () => {
@@ -242,7 +242,7 @@ describe('Search', () => {
     expect(screen.getByRole('searchbox')).toHaveAttribute('data-size', 'm');
   });
 
-  it('lets size win over compact (size="m" resolves to data-size=m, no legacy compact)', () => {
+  it('lets size win over compact for sizing (data-size=m) while still reflecting data-compact', () => {
     render(
       <DefaultThemeProvider>
         <SearchInput
@@ -257,7 +257,9 @@ describe('Search', () => {
 
     const searchbox = screen.getByRole('searchbox');
     expect(searchbox).toHaveAttribute('data-size', 'm');
-    expect(searchbox).not.toHaveAttribute('data-compact');
+    // `size` wins for the resolved sizing, but `data-compact` must still reflect the
+    // `compact` prop so customer styles keyed on it keep working (matches master).
+    expect(searchbox).toHaveAttribute('data-compact', 'true');
   });
 
   /** Testing for events */

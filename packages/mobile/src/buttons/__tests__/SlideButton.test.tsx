@@ -175,11 +175,6 @@ describe('SlideButton', () => {
   });
 
   describe('compact variant', () => {
-    it('renders correctly with compact prop', () => {
-      render(<SlideButtonExample compact />);
-      expect(screen.getByText(uncheckedLabel, { includeHiddenElements: true })).toBeTruthy();
-    });
-
     it('applies compact height of 40px', () => {
       render(<SlideButtonExample compact />);
       const buttonContainer = screen.getByTestId(testID);

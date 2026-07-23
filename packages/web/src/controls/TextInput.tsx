@@ -113,6 +113,8 @@ export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
 
 export type TextInputProps = TextInputBaseProps & Omit<NativeInputProps, 'caretColor' | 'size'>;
 
+const defaultTextInputSize: TextInputSize = 'l';
+
 const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   primary: 'fgPrimary',
   positive: 'fgPositive',
@@ -212,19 +214,19 @@ export const TextInput = memo(
     const hasLabel = !!label || !!labelNode;
 
     // `size` wins over the deprecated `compact`: compact only takes effect when no
-    // size is set. Resolve both here, then hand the resolved values to the hooks.
-    const resolvedSize: TextInputSize = size ?? 'l';
-    const nativeCompact = Boolean(compact) && size === undefined;
+    // size is set, resolving to its size equivalent (`s`). The one place compact
+    // still steers layout on its own is the label placement (see below).
+    const resolvedSize: TextInputSize = size ?? (compact ? 's' : defaultTextInputSize);
+    const isCompactLabel = Boolean(compact) && size === undefined;
 
     const labelPlacement = useTextInputPlacement({
-      compact: nativeCompact,
+      compact: isCompactLabel,
       hasLabel,
       labelVariant,
       size: resolvedSize,
     });
 
     const { contentPadding, contentGap } = useTextInputDensity({
-      compact: nativeCompact,
       labelPlacement,
       size: resolvedSize,
     });
@@ -234,7 +236,6 @@ export const TextInput = memo(
     const showLabelInStartSlot = hasLabel && labelPlacement === 'inside-horizontal';
     const showLabelInStack = hasLabel && !showLabelInStartSlot;
     const inputStackLabelVariant = isVerticalLabel ? 'inside' : 'outside';
-    const dataSize = nativeCompact ? undefined : resolvedSize;
 
     // Spacing is split by axis (see the model on ContentPadding). The InputStack
     // field container owns the horizontal outer padding + the inter-slot gap.
@@ -288,8 +289,8 @@ export const TextInput = memo(
           align={align}
           aria-invalid={variant === 'negative'}
           caretColor={variantColorMap[focusedVariant]}
-          data-compact={nativeCompact || undefined}
-          data-size={dataSize}
+          data-compact={compact}
+          data-size={resolvedSize}
           disabled={disabled}
           font={font}
           id={shouldSetLabelId ? labelId : undefined}
@@ -313,8 +314,8 @@ export const TextInput = memo(
       align,
       variant,
       focusedVariant,
-      nativeCompact,
-      dataSize,
+      isCompactLabel,
+      resolvedSize,
       inputPaddingBottom,
       inputPaddingTop,
       disabled,

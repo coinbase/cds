@@ -3,6 +3,7 @@ import { type PressableStateCallbackType, StyleSheet, type View } from 'react-na
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
 import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { NegativeSpace } from '@coinbase/cds-common/types/SpacingProps';
@@ -18,15 +19,6 @@ import { ProgressCircle } from '../visualizations/ProgressCircle';
 const defaultProgressCircleSize = 24;
 
 export type ButtonSize = 'xs' | 's' | 'm' | 'l';
-
-type ButtonSizeConfig = {
-  paddingX: number;
-  paddingY: number;
-  borderRadius: number;
-  iconSize: 's' | 'm';
-  font: 'label1' | 'headline';
-  feedback: 'light' | 'normal';
-};
 
 const buttonSizes = {
   xs: {
@@ -61,7 +53,12 @@ const buttonSizes = {
     font: 'headline',
     feedback: 'normal',
   },
-} as const satisfies Record<ButtonSize, ButtonSizeConfig>;
+} as const satisfies Record<
+  ButtonSize,
+  Pick<ButtonBaseProps, 'paddingX' | 'paddingY' | 'borderRadius' | 'font' | 'feedback'> & {
+    iconSize: Extract<IconSize, 's' | 'm'>;
+  }
+>;
 
 const defaultButtonSize: ButtonSize = 'l';
 
@@ -197,14 +194,14 @@ export const Button = memo(function Button({
 
   // `size` wins when both `size` and `compact` are set; compact-only maps to `s`.
   const resolvedSize = size ?? (compact ? 's' : defaultButtonSize);
-  const cfg = buttonSizes[resolvedSize];
+  const sizeConfig = buttonSizes[resolvedSize];
 
-  const font = fontProp ?? cfg.font;
-  const feedback = feedbackProp ?? cfg.feedback;
-  const borderRadius = borderRadiusProp ?? cfg.borderRadius;
-  const paddingX = paddingXProp ?? cfg.paddingX;
-  const paddingY = paddingYProp ?? cfg.paddingY;
-  const iconSize = cfg.iconSize;
+  const font = fontProp ?? sizeConfig.font;
+  const feedback = feedbackProp ?? sizeConfig.feedback;
+  const borderRadius = borderRadiusProp ?? sizeConfig.borderRadius;
+  const paddingX = paddingXProp ?? sizeConfig.paddingX;
+  const paddingY = paddingYProp ?? sizeConfig.paddingY;
+  const iconSize = sizeConfig.iconSize;
   const hasIcon = Boolean(startIcon || endIcon);
 
   const variantMap = transparent ? transparentVariants : variants;

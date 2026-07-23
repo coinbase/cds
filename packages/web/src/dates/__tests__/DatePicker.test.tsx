@@ -31,20 +31,22 @@ describe('DatePicker size', () => {
     expect(screen.getByRole('textbox')).toHaveAttribute('data-size', size);
   });
 
-  it('compact alone produces legacy compact density (no data-size)', () => {
+  it('compact alone resolves to its size equivalent (s) while keeping data-compact', () => {
     render(<DatePickerExample compact label="Date" />);
 
     const input = screen.getByRole('textbox');
-    expect(input).not.toHaveAttribute('data-size');
+    expect(input).toHaveAttribute('data-size', 's');
     expect(input).toHaveAttribute('data-compact', 'true');
   });
 
-  it('size wins over compact when both are provided', () => {
+  it('size wins over compact for sizing but data-compact still reflects the prop', () => {
     render(<DatePickerExample compact label="Date" size="m" />);
 
     const input = screen.getByRole('textbox');
     expect(input).toHaveAttribute('data-size', 'm');
-    expect(input).not.toHaveAttribute('data-compact');
+    // `size` wins for sizing, but `data-compact` must still reflect the `compact`
+    // prop so customer styles keyed on it keep working (matches master).
+    expect(input).toHaveAttribute('data-compact', 'true');
   });
 
   it('size="s" reproduces the legacy compact label placement (inline in start slot)', () => {

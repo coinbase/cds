@@ -2,6 +2,7 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
 import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
@@ -27,20 +28,17 @@ const defaultProgressCircleSize = 24;
 
 export type ButtonSize = 'xs' | 's' | 'm' | 'l';
 
-type ButtonSizeConfig = {
-  paddingX: number;
-  paddingY: number;
-  borderRadius: number;
-  iconSize: 's' | 'm';
-  font: 'label1' | 'headline';
-};
-
 const buttonSizes = {
   xs: { paddingX: 2, paddingY: 0.75, borderRadius: 700, iconSize: 's', font: 'label1' },
   s: { paddingX: 2, paddingY: 1, borderRadius: 700, iconSize: 's', font: 'headline' },
   m: { paddingX: 3, paddingY: 1.5, borderRadius: 900, iconSize: 'm', font: 'headline' },
   l: { paddingX: 4, paddingY: 2, borderRadius: 900, iconSize: 'm', font: 'headline' },
-} as const satisfies Record<ButtonSize, ButtonSizeConfig>;
+} as const satisfies Record<
+  ButtonSize,
+  Pick<ButtonBaseProps, 'paddingX' | 'paddingY' | 'borderRadius' | 'font'> & {
+    iconSize: Extract<IconSize, 's' | 'm'>;
+  }
+>;
 
 const defaultButtonSize: ButtonSize = 'l';
 
@@ -246,13 +244,13 @@ export const Button: ButtonComponent = memo(
 
       // `size` wins when both `size` and `compact` are set; compact-only maps to `s`.
       const resolvedSize = size ?? (compact ? 's' : defaultButtonSize);
-      const cfg = buttonSizes[resolvedSize];
+      const sizeConfig = buttonSizes[resolvedSize];
 
-      const font = fontProp ?? cfg.font;
-      const borderRadius = borderRadiusProp ?? cfg.borderRadius;
-      const paddingX = paddingXProp ?? padding ?? cfg.paddingX;
-      const paddingY = paddingYProp ?? padding ?? cfg.paddingY;
-      const iconSize = cfg.iconSize;
+      const font = fontProp ?? sizeConfig.font;
+      const borderRadius = borderRadiusProp ?? sizeConfig.borderRadius;
+      const paddingX = paddingXProp ?? padding ?? sizeConfig.paddingX;
+      const paddingY = paddingYProp ?? padding ?? sizeConfig.paddingY;
+      const iconSize = sizeConfig.iconSize;
       const hasIcon = Boolean(startIcon ?? endIcon);
 
       const variantMap = transparent ? transparentVariants : variants;

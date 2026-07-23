@@ -1,7 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
-import type { ChipBaseProps, ChipSize } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import {
@@ -37,7 +36,7 @@ const SelectChipControlComponent = memo(
     maxWidth,
     displayValue,
   }: Omit<SelectControlProps<Type, SelectOptionValue>, 'size' | 'compact'> &
-    SelectChipBaseProps & { displayValue?: React.ReactNode } & {
+    SelectChipBaseProps & {
       ref?: React.Ref<View>;
     }) => {
     const isMultiSelect = type === 'multi';
@@ -170,8 +169,7 @@ export const SelectChipControl = SelectChipControlComponent as <
   SelectOptionValue extends string = string,
 >(
   props: Omit<SelectControlProps<Type, SelectOptionValue>, 'size' | 'compact'> &
-    Partial<Pick<ChipBaseProps, 'invertColorScheme' | 'numberOfLines' | 'size' | 'compact'>> & {
+    SelectChipBaseProps & {
       ref?: React.Ref<View>;
-      displayValue?: React.ReactNode;
     },
 ) => React.ReactElement;

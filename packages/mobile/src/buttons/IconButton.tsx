@@ -18,27 +18,18 @@ import { type ButtonBaseProps } from './Button';
 
 export type IconButtonSize = 'xs' | 's' | 'm' | 'l';
 
-type IconButtonFeedback = 'light' | 'normal';
-
-type IconButtonSizeConfig = {
-  padding: number;
-  iconSize: 's' | 'm';
-  borderRadius: number;
-  feedback: IconButtonFeedback;
-};
-
 const iconButtonSizes = {
   xs: { padding: 1, iconSize: 's', borderRadius: 1000, feedback: 'light' },
   s: { padding: 1.5, iconSize: 's', borderRadius: 1000, feedback: 'light' },
   m: { padding: 1.5, iconSize: 'm', borderRadius: 1000, feedback: 'normal' },
   l: { padding: 2, iconSize: 'm', borderRadius: 1000, feedback: 'normal' },
-} as const satisfies Record<IconButtonSize, IconButtonSizeConfig>;
+} as const satisfies Record<
+  IconButtonSize,
+  Pick<IconButtonBaseProps, 'padding' | 'borderRadius' | 'feedback'> & {
+    iconSize: Extract<IconSize, 's' | 'm'>;
+  }
+>;
 
-/**
- * Nominal default of the size scale. NOTE: this only takes effect when `compact` is
- * explicitly `false`. IconButton defaults `compact` to `true`, so the *effective* default
- * size is `s` — see the `compact`/`size` prop docs and the `resolvedSize` logic below.
- */
 const defaultIconButtonSize: IconButtonSize = 'l';
 
 export type IconButtonBaseProps = SharedProps &
@@ -59,22 +50,18 @@ export type IconButtonBaseProps = SharedProps &
      */
     variant?: IconButtonVariant;
     /**
-     * Reduce the inner padding within the button itself.
-     *
-     * NOTE: unlike most CDS components, IconButton defaults `compact` to `true`, so an
-     * IconButton with no `size` prop renders at `size="s"`. Pass `compact={false}` (or an
-     * explicit `size`) to opt out of the compact default.
+     * Reduces the button's padding and icon size. Unlike most CDS components, IconButton
+     * enables `compact` by default, so an IconButton with no `size` renders at `size="s"`.
+     * Set `compact={false}` (or pass an explicit `size`) to opt out.
      * @deprecated Use `size="s"` instead. This will be removed in a future major release.
      * @deprecationExpectedRemoval v10
      */
     compact?: boolean;
     /**
-     * Sets the size of the button.
-     *
-     * IconButton is a special case: because `compact` defaults to `true`, an IconButton
-     * with no `size` (and no `compact={false}`) resolves to `s`, NOT `l`. An explicit
-     * `size` always wins over `compact` when both are provided.
-     * @default 's' (because `compact` defaults to `true`; resolves to `l` only when `compact={false}`)
+     * Sets the size of the button. An explicit `size` always takes precedence over `compact`.
+     * IconButton enables `compact` by default, so until `compact` is removed an IconButton
+     * with no `size` renders at `s`.
+     * @default l
      */
     size?: IconButtonSize;
     /** Custom styles for individual elements of the IconButton component */
@@ -124,17 +111,15 @@ export const IconButton = memo(
       ...props
     } = mergedProps;
 
-    // IconButton is a special case: `compact` defaults to `true` (see the prop default
-    // above), so with no explicit `size` the button resolves to `s` rather than the `l`
-    // nominal default of the size scale. `compact={false}` yields `defaultIconButtonSize`
-    // (`l`). An explicit `size` always wins over `compact` when both are provided. The
-    // resolved size also drives haptic `feedback` (xs/s -> light, m/l -> normal).
+    // `size` wins when both `size` and `compact` are set. IconButton defaults `compact`
+    // to `true`, so with no explicit `size` the button resolves to `s`. The resolved size
+    // also drives haptic `feedback` (xs/s -> light, m/l -> normal).
     const resolvedSize = size ?? (compact ? 's' : defaultIconButtonSize);
-    const cfg = iconButtonSizes[resolvedSize];
-    const padding = paddingProp ?? cfg.padding;
-    const iconSize = iconSizeProp ?? cfg.iconSize;
-    const borderRadius = borderRadiusProp ?? cfg.borderRadius;
-    const feedback = feedbackProp ?? cfg.feedback;
+    const sizeConfig = iconButtonSizes[resolvedSize];
+    const padding = paddingProp ?? sizeConfig.padding;
+    const iconSize = iconSizeProp ?? sizeConfig.iconSize;
+    const borderRadius = borderRadiusProp ?? sizeConfig.borderRadius;
+    const feedback = feedbackProp ?? sizeConfig.feedback;
     const theme = useTheme();
     const iconSizeValue = theme.iconSize[iconSize];
     const variantMap = transparent ? transparentVariants : variants;

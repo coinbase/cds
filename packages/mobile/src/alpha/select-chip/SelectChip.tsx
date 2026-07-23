@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
 
-import type { ChipBaseProps, ChipSize } from '../../chips/ChipProps';
+import type { ChipBaseProps } from '../../chips/ChipProps';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Select, type SelectRef } from '../select/Select';
 import type { SelectControlProps, SelectProps, SelectType } from '../select/types';
@@ -9,7 +9,7 @@ import { SelectChipControl } from './SelectChipControl';
 
 export type SelectChipBaseProps = Pick<
   ChipBaseProps,
-  'invertColorScheme' | 'numberOfLines' | 'maxWidth'
+  'invertColorScheme' | 'numberOfLines' | 'maxWidth' | 'size' | 'compact'
 > & {
   /**
    * Override the displayed value in the chip control.
@@ -17,17 +17,6 @@ export type SelectChipBaseProps = Pick<
    * When provided, this value takes precedence over the default label generation.
    */
   displayValue?: React.ReactNode;
-  /**
-   * Reduces spacing around the chip control.
-   * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
-   */
-  compact?: boolean;
-  /**
-   * Set the size of the chip control.
-   * @default s
-   */
-  size?: ChipSize;
 };
 
 export type SelectChipProps<
@@ -60,16 +49,20 @@ const SelectChipComponent = memo(
     const { invertColorScheme, numberOfLines, maxWidth, displayValue, size, compact, ...props } =
       mergedProps;
     const SelectChipControlComponent = useCallback(
-      (controlProps: SelectControlProps<Type, SelectOptionValue>) => {
+      ({
+        size: _controlSize,
+        compact: _controlCompact,
+        ...controlProps
+      }: SelectControlProps<Type, SelectOptionValue>) => {
         return (
           <SelectChipControl
-            {...controlProps}
             compact={compact}
             displayValue={displayValue}
             invertColorScheme={invertColorScheme}
             maxWidth={maxWidth}
             numberOfLines={numberOfLines}
             size={size}
+            {...controlProps}
           />
         );
       },

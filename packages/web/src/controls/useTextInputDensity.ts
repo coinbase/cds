@@ -9,7 +9,8 @@ export type TextInputLabelPlacement = 'outside' | 'inside-horizontal' | 'inside-
  * Resolves where the label sits — the one genuinely branchy decision in a
  * TextInput's layout. Takes the already-resolved `compact` (legacy compact
  * active) and `size`, plus `labelVariant`/`hasLabel`, and returns just the
- * placement. The size-vs-compact precedence lives in the caller.
+ * placement. The size-vs-compact precedence lives in the caller; `compact`
+ * resolves to size `s` for spacing and only steers the label placement here.
  */
 export type UseTextInputPlacementParams = {
   /** Legacy compact density is active (already resolved by the caller). */
@@ -28,7 +29,7 @@ export const useTextInputPlacement = ({
 }: UseTextInputPlacementParams): TextInputLabelPlacement => {
   return useMemo(() => {
     // Legacy compact renders the label inline (inside-horizontal) regardless of
-    // labelVariant; its space-1 padding is carried by the compact flag.
+    // labelVariant; its spacing comes from the resolved size (`s`), not this flag.
     if (compact) {
       return hasLabel ? 'inside-horizontal' : 'outside';
     }
@@ -84,9 +85,6 @@ const sizeContentPadding: Record<TextInputSize, ContentPadding> = {
   s: { top: 1, right: horizontalContentPadding, bottom: 1, left: horizontalContentPadding },
 };
 
-/** Legacy compact collapses to space-1 all around. */
-const compactContentPadding: ContentPadding = { top: 1, right: 1, bottom: 1, left: 1 };
-
 /**
  * A vertically-stacked inside label (size l) tightens the vertical padding so the
  * stacked label (20px) + input (24px) fit a 58px field: 6px above and below the
@@ -106,8 +104,6 @@ export type UseTextInputDensityParams = {
   labelPlacement: TextInputLabelPlacement;
   /** Resolved size (default already applied). */
   size: TextInputSize;
-  /** Legacy compact density — collapses padding to space-1 all around. */
-  compact?: boolean;
 };
 
 export type TextInputDensity = {
@@ -118,24 +114,19 @@ export type TextInputDensity = {
 };
 
 /**
- * Resolves the spacing for a TextInput's content area from its compact flag,
- * label placement, and (resolved) size. Spacing only.
+ * Resolves the spacing for a TextInput's content area from its label placement
+ * and (resolved) size. Spacing only.
  */
 export const useTextInputDensity = ({
   labelPlacement,
   size,
-  compact,
 }: UseTextInputDensityParams): TextInputDensity => {
   return useMemo(() => {
-    let contentPadding: ContentPadding;
-    if (compact) {
-      contentPadding = compactContentPadding;
-    } else if (labelPlacement === 'inside-vertical') {
-      contentPadding = insideVerticalContentPadding;
-    } else {
-      contentPadding = sizeContentPadding[size];
-    }
+    const contentPadding =
+      labelPlacement === 'inside-vertical'
+        ? insideVerticalContentPadding
+        : sizeContentPadding[size];
 
     return { contentPadding, contentGap };
-  }, [compact, labelPlacement, size]);
+  }, [labelPlacement, size]);
 };
