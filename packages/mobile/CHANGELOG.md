@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.8.0 (7/23/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add createIcon factory to decouple Icon from a single icon set. [[#786](https://github.com/coinbase/cds/pull/786)]
+
 ## 9.7.2 (7/23/2026 PST)
 
 #### 🐞 Fixes
