@@ -204,6 +204,9 @@ describe('DefaultSelectControl', () => {
 
   describe('Size', () => {
     const getInputArea = () => screen.getByTestId('input-interactable-area');
+    // Vertical (size-derived) padding lives on the control content, not the field container.
+    // The control is the only non-hidden button with aria-expanded (chips don't have it).
+    const getControl = () => screen.getByRole('button', { expanded: false });
     // The label is rendered inline (inside the input area) for the legacy compact layout and for
     // inside labels; an outside label is rendered above the input (outside the input area).
     // labelVariant is decoupled from size, so this is driven by labelVariant/compact, not size.
@@ -239,21 +242,33 @@ describe('DefaultSelectControl', () => {
           <DefaultSelectControl {...defaultProps} size="s" />
         </DefaultThemeProvider>,
       );
-      expect(getInputArea()).toHaveStyle({ paddingTop: '8px', paddingBottom: '8px' });
+      expect(getControl()).toHaveStyle({ paddingTop: '8px', paddingBottom: '8px' });
 
       rerender(
         <DefaultThemeProvider>
           <DefaultSelectControl {...defaultProps} size="m" />
         </DefaultThemeProvider>,
       );
-      expect(getInputArea()).toHaveStyle({ paddingTop: '12px', paddingBottom: '12px' });
+      expect(getControl()).toHaveStyle({ paddingTop: '12px', paddingBottom: '12px' });
 
       rerender(
         <DefaultThemeProvider>
           <DefaultSelectControl {...defaultProps} size="l" />
         </DefaultThemeProvider>,
       );
-      expect(getInputArea()).toHaveStyle({ paddingTop: '16px', paddingBottom: '16px' });
+      expect(getControl()).toHaveStyle({ paddingTop: '16px', paddingBottom: '16px' });
+    });
+
+    // Regression: a size l inside (vertically-stacked) label tightens the vertical padding to
+    // 6px so the label (20px) + value (24px) + border fit a 58px field instead of 62px.
+    it('tightens vertical padding to 6px for a size l inside label', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="inside" size="l" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getControl()).toHaveStyle({ paddingTop: '6px', paddingBottom: '6px' });
     });
 
     // With no selection a multi-select uses its full size-derived padding; once chips are
@@ -273,7 +288,7 @@ describe('DefaultSelectControl', () => {
             <DefaultSelectControl {...defaultProps} size={size} type="multi" value={[]} />
           </DefaultThemeProvider>,
         );
-        expect(getInputArea()).toHaveStyle({ paddingTop: empty, paddingBottom: empty });
+        expect(getControl()).toHaveStyle({ paddingTop: empty, paddingBottom: empty });
         unmount();
 
         const { unmount: unmountSelected } = render(
@@ -281,7 +296,7 @@ describe('DefaultSelectControl', () => {
             <DefaultSelectControl {...defaultProps} size={size} type="multi" value={['option1']} />
           </DefaultThemeProvider>,
         );
-        expect(getInputArea()).toHaveStyle({ paddingTop: selected, paddingBottom: selected });
+        expect(getControl()).toHaveStyle({ paddingTop: selected, paddingBottom: selected });
         unmountSelected();
       });
     });

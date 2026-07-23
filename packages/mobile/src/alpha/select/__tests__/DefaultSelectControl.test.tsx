@@ -193,9 +193,10 @@ describe('DefaultSelectControl', () => {
 
   describe('Size', () => {
     const TEST_ID = 'select';
-    const getInputAreaPadding = () => {
-      const inputArea = screen.getByTestId(`${TEST_ID}-input-area`);
-      return StyleSheet.flatten(inputArea.props.style);
+    // Vertical (size-derived) padding lives on the control content, not the field container.
+    const getControlPadding = () => {
+      const control = screen.getByTestId(`${TEST_ID}-input`);
+      return StyleSheet.flatten(control.props.style);
     };
 
     it('defaults to size l geometry (space[2] padding)', () => {
@@ -205,7 +206,7 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      const style = getInputAreaPadding();
+      const style = getControlPadding();
       expect(style?.paddingTop).toBe(defaultTheme.space[2]);
       expect(style?.paddingBottom).toBe(defaultTheme.space[2]);
     });
@@ -217,7 +218,7 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      const style = getInputAreaPadding();
+      const style = getControlPadding();
       expect(style?.paddingTop).toBe(defaultTheme.space[1.5]);
       expect(style?.paddingBottom).toBe(defaultTheme.space[1.5]);
     });
@@ -229,9 +230,23 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      const style = getInputAreaPadding();
+      const style = getControlPadding();
       expect(style?.paddingTop).toBe(defaultTheme.space[1]);
       expect(style?.paddingBottom).toBe(defaultTheme.space[1]);
+    });
+
+    // Regression: a size l inside (vertically-stacked) label tightens the vertical padding to
+    // space[0.75] (6px) so the label + value + border fit a 58px field instead of 62px.
+    it('tightens vertical padding for a size l inside label', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="inside" size="l" testID={TEST_ID} />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getControlPadding();
+      expect(style?.paddingTop).toBe(defaultTheme.space[0.75]);
+      expect(style?.paddingBottom).toBe(defaultTheme.space[0.75]);
     });
 
     it('deprecated compact (alone) still yields size s geometry', () => {
@@ -241,7 +256,7 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      const style = getInputAreaPadding();
+      const style = getControlPadding();
       expect(style?.paddingTop).toBe(defaultTheme.space[1]);
       expect(style?.paddingBottom).toBe(defaultTheme.space[1]);
     });
@@ -253,7 +268,7 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
-      const style = getInputAreaPadding();
+      const style = getControlPadding();
       expect(style?.paddingTop).toBe(defaultTheme.space[1.5]);
       expect(style?.paddingBottom).toBe(defaultTheme.space[1.5]);
     });

@@ -22,20 +22,7 @@ import {
   type SelectSize,
   type SelectType,
 } from './Select';
-
-// Multi-select selected chips add their own height.
-// `multiSelectPaddingY` tightens the row so the overall height stays in check per size.
-const selectSizes = {
-  s: { paddingY: 1 },
-  m: { paddingY: 1.5 },
-  l: { paddingY: 2 },
-} as const satisfies Record<SelectSize, Partial<SelectControlProps>>;
-
-const multiSelectSizes = {
-  s: { paddingY: 0.5 },
-  m: { paddingY: 1 },
-  l: { paddingY: 1 },
-} as const satisfies Record<SelectSize, Partial<SelectControlProps>>;
+import { useSelectDensity, useSelectPlacement } from './useSelectDensity';
 
 const defaultSelectSize: SelectSize = 'l';
 
@@ -141,16 +128,28 @@ const DefaultSelectControlComponent = memo(
       // inline label ONLY when `size` is unset — `size` wins over `compact`.
       const useLegacyCompact = Boolean(compact) && size === undefined;
       const labelVariant = useLegacyCompact ? undefined : labelVariantProp;
+      const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
+
+      // Where the label sits (outside / inline / stacked) and the size-derived spacing
+      // both come from the density hooks — the whole size story lives there.
+      const labelPlacement = useSelectPlacement({
+        compact: useLegacyCompact,
+        hasLabel: !!label,
+        isMultiSelect,
+        labelVariant,
+        size: resolvedSize,
+      });
+      const { contentPadding, chipSize } = useSelectDensity({
+        hasValue,
+        isMultiSelect,
+        labelPlacement,
+        size: resolvedSize,
+      });
+
       // An inside label stacks vertically at size `l` (and for multi-select, which can't host an
       // inline label); at `s`/`m` it sits inline in the start slot. Legacy compact is always inline.
-      // Multi-selects otherwise render their label outside the control.
-      const shouldShowInsideLabel =
-        !!label && labelVariant === 'inside' && (resolvedSize === 'l' || isMultiSelect);
-      const shouldShowCompactLabel =
-        !!label &&
-        !isMultiSelect &&
-        (useLegacyCompact || (labelVariant === 'inside' && resolvedSize !== 'l'));
-      const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
+      const shouldShowInsideLabel = labelPlacement === 'inside-vertical';
+      const shouldShowCompactLabel = labelPlacement === 'inside-horizontal';
       // Map of options to their values
       // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
       const optionsMap = useMemo(() => {
@@ -373,7 +372,7 @@ const DefaultSelectControlComponent = memo(
                         : (event) => handleUnselectValue(event, index)
                     }
                     // larger select allows for larger chip size
-                    size={size === 'l' ? 's' : 'xs'}
+                    size={chipSize}
                   >
                     {option.label ?? option.description ?? option.value ?? ''}
                   </InputChip>
@@ -416,8 +415,22 @@ const DefaultSelectControlComponent = memo(
         removeSelectedOptionAccessibilityLabel,
         handleUnselectValue,
         isInteractionBlocked,
-        size,
+        chipSize,
       ]);
+
+      // Vertical field padding lives on the content (this pressable), not the field
+      // container — so the caret / start adornment centers within it instead of
+      // stretching the field taller. For a stacked (inside-vertical) label the
+      // pressable wraps both the label and value, so uniform top/bottom padding
+      // fits the 58px inside-label field.
+      const controlInputNodeStyle = useMemo(
+        () => ({
+          paddingTop: theme.space[contentPadding.top],
+          paddingBottom: theme.space[contentPadding.bottom],
+          ...styles?.controlInputNode,
+        }),
+        [contentPadding.top, contentPadding.bottom, theme.space, styles?.controlInputNode],
+      );
 
       const inputNode = useMemo(
         () => (
@@ -441,7 +454,7 @@ const DefaultSelectControlComponent = memo(
             onClick={handleToggleOpen}
             onKeyDown={onKeyDown}
             role={role}
-            style={styles?.controlInputNode}
+            style={controlInputNodeStyle}
             tabIndex={tabIndex}
           >
             {!!startNode && (
@@ -525,7 +538,7 @@ const DefaultSelectControlComponent = memo(
           classNames?.controlValueNode,
           disabled,
           readOnly,
-          styles?.controlInputNode,
+          controlInputNodeStyle,
           styles?.controlStartNode,
           styles?.controlValueNode,
           tabIndex,
@@ -567,30 +580,15 @@ const DefaultSelectControlComponent = memo(
         ],
       );
 
-      const inputStackStyles = useMemo(() => {
-        // An inline (start-slot) or inside label tightens the row. Otherwise use size-derived
-        // padding — except a multi-select with selected chips, whose chip height already makes
-        // the row tall, so cap the vertical padding at space 1.5 to keep the height in check.
-        const paddingY =
-          shouldShowCompactLabel || shouldShowInsideLabel
-            ? theme.space[1]
-            : isMultiSelect && hasValue
-              ? theme.space[multiSelectSizes[resolvedSize].paddingY]
-              : theme.space[selectSizes[resolvedSize].paddingY];
-        return {
-          paddingTop: paddingY,
-          paddingBottom: paddingY,
-          paddingLeft: theme.space[2],
-          paddingRight: theme.space[2],
-        };
-      }, [
-        shouldShowCompactLabel,
-        shouldShowInsideLabel,
-        isMultiSelect,
-        hasValue,
-        theme.space,
-        resolvedSize,
-      ]);
+      // The field container owns only the horizontal outer padding; the vertical
+      // (height-defining) band lives on the content pressable (see controlInputNodeStyle).
+      const inputStackStyles = useMemo(
+        () => ({
+          paddingLeft: theme.space[contentPadding.left],
+          paddingRight: theme.space[contentPadding.right],
+        }),
+        [contentPadding.left, contentPadding.right, theme.space],
+      );
 
       return (
         <InputStack
