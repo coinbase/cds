@@ -84,6 +84,8 @@ export type NativeInputBaseProps = BoxBaseProps & {
   /**
    * Decreases the padding within the input element
    * @default false
+   * @deprecated Use `padding` props instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   compact?: boolean;
   /** Custom container spacing if needed. This will add to the existing spacing */
@@ -137,6 +139,9 @@ export const NativeInput = memo(
     ref: React.ForwardedRef<HTMLInputElement>,
   ) {
     const { activeColorScheme } = useTheme();
+    // NativeInput has no `size` prop, so the deprecated `compact` still drives its own
+    // padding here. When rendered inside TextInput, `containerSpacing` (size-derived) is
+    // passed and overrides this fallback.
     const defaultContainerPadding = compact
       ? compactContainerPaddingCss
       : originalContainerPaddingCss;

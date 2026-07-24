@@ -631,3 +631,112 @@ describe('TextInput', () => {
     expect(endContent).toHaveTextContent('End');
   });
 });
+
+describe('TextInput size', () => {
+  const inputTestID = 'size-input';
+
+  const getInputVerticalPadding = () => {
+    const style = StyleSheet.flatten(screen.getByTestId(inputTestID).props.style);
+    return { paddingTop: style?.paddingTop, paddingBottom: style?.paddingBottom };
+  };
+
+  it('defaults to size "l" vertical padding', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput accessibilityLabel="Field" testID={inputTestID} />
+      </DefaultThemeProvider>,
+    );
+    expect(getInputVerticalPadding()).toEqual({
+      paddingTop: defaultTheme.space[2],
+      paddingBottom: defaultTheme.space[2],
+    });
+  });
+
+  it('applies size "m" vertical padding', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput accessibilityLabel="Field" size="m" testID={inputTestID} />
+      </DefaultThemeProvider>,
+    );
+    expect(getInputVerticalPadding()).toEqual({
+      paddingTop: defaultTheme.space[1.5],
+      paddingBottom: defaultTheme.space[1.5],
+    });
+  });
+
+  it('applies size "s" vertical padding', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput accessibilityLabel="Field" size="s" testID={inputTestID} />
+      </DefaultThemeProvider>,
+    );
+    expect(getInputVerticalPadding()).toEqual({
+      paddingTop: defaultTheme.space[1],
+      paddingBottom: defaultTheme.space[1],
+    });
+  });
+
+  it('maps compact (alone) to size "s" padding and forces the label into the start slot', () => {
+    const startTestID = 'start-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          compact
+          accessibilityLabel="Field"
+          label="Label"
+          testID={inputTestID}
+          testIDMap={{ start: startTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputVerticalPadding()).toEqual({
+      paddingTop: defaultTheme.space[1],
+      paddingBottom: defaultTheme.space[1],
+    });
+    expect(screen.getByTestId(startTestID)).toHaveTextContent('Label');
+  });
+
+  it('lets size win over compact for padding and does not force the label inline', () => {
+    const startTestID = 'start-test';
+    const labelTestID = 'label-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          compact
+          accessibilityLabel="Field"
+          label="Label"
+          size="m"
+          testID={inputTestID}
+          testIDMap={{ label: labelTestID, start: startTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputVerticalPadding()).toEqual({
+      paddingTop: defaultTheme.space[1.5],
+      paddingBottom: defaultTheme.space[1.5],
+    });
+    expect(screen.queryByTestId(startTestID)).toBeNull();
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Label');
+  });
+
+  it('decouples label placement from size: size="s" keeps the label outside by default', () => {
+    const labelTestID = 'label-test';
+    const startTestID = 'start-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityLabel="Field"
+          label="Label"
+          size="s"
+          testID={inputTestID}
+          testIDMap={{ label: labelTestID, start: startTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Label');
+    expect(screen.queryByTestId(startTestID)).toBeNull();
+  });
+});

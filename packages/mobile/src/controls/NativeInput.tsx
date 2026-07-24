@@ -9,8 +9,6 @@ import { useTextAlign } from '../hooks/useTextAlign';
 import { useTheme } from '../hooks/useTheme';
 import type { TextBaseProps } from '../typography/Text';
 
-import type { TextInputBaseProps } from './TextInput';
-
 export type NativeInputProps = {
   /**
    * Text Align Input
@@ -19,6 +17,13 @@ export type NativeInputProps = {
   align?: TextBaseProps['align'];
   /** Custom container spacing if needed. This will add to the existing spacing */
   containerSpacing?: ViewStyle | undefined;
+  /**
+   * Decreases the padding within the input element
+   * @default false
+   * @deprecated Use style object instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  compact?: boolean;
   /**
    * Disables input
    * @default false
@@ -41,7 +46,6 @@ export type NativeInputProps = {
    */
   selectionColor?: ThemeVars.Color;
 } & SharedProps &
-  Pick<TextInputBaseProps, 'compact'> &
   Pick<
     SharedAccessibilityProps,
     'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
@@ -82,6 +86,9 @@ export const NativeInput = memo(
     );
 
     const containerStyle: ViewStyle = useMemo(() => {
+      // NativeInput has no `size` prop, so the deprecated `compact` still drives its own base
+      // padding here. When rendered inside TextInput, `containerSpacing` (size-derived) is
+      // spread after and overrides this fallback.
       return {
         flex: 2,
         minWidth: 0,

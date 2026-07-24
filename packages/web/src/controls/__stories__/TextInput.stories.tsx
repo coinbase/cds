@@ -402,18 +402,34 @@ export const SuffixAndEndContent = function SuffixAndEndContent() {
 };
 
 /**
- * COMPACT TEXT INPUT VARIATIONS
+ * T-SHIRT SIZE VARIATIONS
  */
 
-export const CompactInput = function CompactInput() {
-  return <TextInput compact label="Label" />;
+export const SizeS = function SizeS() {
+  return <TextInput label="Label" placeholder="Small" size="s" />;
 };
 
-export const CompactInputStart = function CompactInputStart() {
+export const SizeM = function SizeM() {
+  return <TextInput label="Label" placeholder="Medium" size="m" />;
+};
+
+export const SizeSWithOutsideLabel = function SizeSWithOutsideLabel() {
+  return <TextInput label="Outside Label" placeholder="Small" size="s" />;
+};
+
+export const SizeSWithInsideLabel = function SizeSWithInsideLabel() {
+  return <TextInput label="Inside Label" labelVariant="inside" placeholder="Small" size="s" />;
+};
+
+export const SizeMWithInsideLabel = function SizeMWithInsideLabel() {
+  return <TextInput label="Inside Label" labelVariant="inside" placeholder="Medium" size="m" />;
+};
+
+export const SizeSStart = function SizeSStart() {
   return (
     <TextInput
-      compact
       label="Label"
+      size="s"
       start={
         <Box>
           <Avatar
@@ -427,10 +443,9 @@ export const CompactInputStart = function CompactInputStart() {
   );
 };
 
-export const CompactInputEnd = function CompactInputEnd() {
+export const SizeSEnd = function SizeSEnd() {
   return (
     <TextInput
-      compact
       end={
         <HStack paddingEnd={1}>
           <Link font="headline" href="">
@@ -439,16 +454,25 @@ export const CompactInputEnd = function CompactInputEnd() {
         </HStack>
       }
       label="Label"
+      size="s"
     />
   );
 };
 
-export const CompactInputSuffix = function CompactInputSuffix() {
-  return <TextInput compact label="Label" suffix="USD" />;
+export const SizeSSuffix = function SizeSSuffix() {
+  return <TextInput label="Label" size="s" suffix="USD" />;
 };
 
-export const CompactHelperText = function CompactHelperText() {
-  return <TextInput compact helperText="helperText" label="Label" suffix="USD" />;
+export const SizeSHelperText = function SizeSHelperText() {
+  return <TextInput helperText="helperText" label="Label" size="s" suffix="USD" />;
+};
+
+/**
+ * DEPRECATED: `compact` is superseded by `size="s"`. Kept as a regression demo of the
+ * legacy behavior where `compact` also forces the label into the inline start slot.
+ */
+export const CompactInput = function CompactInput() {
+  return <TextInput compact label="Label" />;
 };
 
 export const InputOnChange = function InputOnChange() {

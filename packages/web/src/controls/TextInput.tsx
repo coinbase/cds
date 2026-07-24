@@ -41,6 +41,16 @@ const nativeInputContainerCss = css`
   padding-inline-start: var(--space-2);
   padding-inline-end: var(--space-2);
 
+  &[data-size='m'] {
+    padding-top: var(--space-1_5);
+    padding-bottom: var(--space-1_5);
+  }
+
+  &[data-size='s'] {
+    padding-top: var(--space-1);
+    padding-bottom: var(--space-1);
+  }
+
   &[data-labelvariant='inside'] {
     padding-top: 0;
     padding-bottom: var(--space-1);
@@ -48,13 +58,6 @@ const nativeInputContainerCss = css`
 
   &[data-start='true'] {
     padding-inline-start: var(--space-0_5);
-  }
-
-  &[data-compact='true'] {
-    padding-top: var(--space-1);
-    padding-bottom: var(--space-1);
-    padding-inline-start: var(--space-1);
-    padding-inline-end: var(--space-1);
   }
 `;
 
@@ -69,6 +72,10 @@ const insideLabelCssStartCss = css`
   padding-inline-start: var(--space-0_5);
 `;
 
+export type TextInputSize = 's' | 'm' | 'l';
+
+const defaultTextInputSize: TextInputSize = 'l';
+
 export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
   SharedInputProps &
   Pick<
@@ -79,7 +86,6 @@ export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
     | 'disabled'
     | 'borderRadius'
     | 'enableColorSurge'
-    | 'labelVariant'
     | 'inputBackground'
   > & {
     /**
@@ -94,6 +100,25 @@ export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
      * Supplying a `ref` on the `inputNode` element is redundant; if present, it will be merged with the component's ref.
      * */
     inputNode?: React.ReactElement;
+    /**
+     * Controls overall density of the input field, inside of the border.
+     * @default 'l'
+     */
+    size?: TextInputSize;
+    /**
+     * Enables compact variation. Prefer `size="s"` or `size="m"` with an explicit `labelVariant`.
+     *
+     * @deprecated Unset and use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
+    /**
+     * Determines where the provided label/labelNode is rendered.
+     * By default, the label is rendered outisde, above the input element.
+     * When size is `l` (the default), an `inside` label is stacked vertically with the input; otherwise is rendered horizontally.
+     * @default 'outside'
+     */
+    labelVariant?: InputStackBaseProps['labelVariant'];
     /**
      * Adds border to input.
      * When set to `false`, focus border styling is disabled by default.
@@ -134,7 +159,7 @@ export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
     labelNode?: React.ReactNode;
   };
 
-export type TextInputProps = TextInputBaseProps & Omit<NativeInputProps, 'caretColor'>;
+export type TextInputProps = TextInputBaseProps & Omit<NativeInputProps, 'caretColor' | 'size'>;
 
 const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   primary: 'fgPrimary',
@@ -164,6 +189,7 @@ export const TextInput = memo(
       align = 'start',
       font = 'body',
       compact = false,
+      size,
       suffix = '',
       onFocus,
       onBlur,
@@ -232,6 +258,13 @@ export const TextInput = memo(
 
     const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
 
+    // Geometry is driven entirely by the resolved size. An explicit `size` always wins;
+    // the deprecated `compact` only maps to `s` as a fallback so legacy callers keep dense spacing.
+    const resolvedSize: TextInputSize = size ?? (compact ? 's' : defaultTextInputSize);
+    // compact only forces label placement (inline start slot) when the caller did NOT set an
+    // explicit size. Once `size` is provided, label placement follows normal `labelVariant` rules.
+    const isCompactLabel = Boolean(compact) && size === undefined;
+
     const inputElement = useMemo(() => {
       /** Ensures that the renderedInput has the blurring, focusing, disabled features */
       if (inputNode) {
@@ -263,11 +296,12 @@ export const TextInput = memo(
           align={align}
           aria-invalid={variant === 'negative'}
           caretColor={variantColorMap[focusedVariant]}
-          compact={compact}
+          compact={resolvedSize === 's'}
           containerSpacing={nativeInputContainerCss}
           data-compact={compact}
-          data-labelvariant={compact || !hasLabel ? 'outside' : labelVariant}
-          data-start={!!start || compact}
+          data-labelvariant={isCompactLabel || !hasLabel ? 'outside' : labelVariant}
+          data-size={resolvedSize}
+          data-start={!!start || isCompactLabel}
           disabled={disabled}
           font={font}
           id={shouldSetLabelId ? labelId : undefined}
@@ -288,6 +322,8 @@ export const TextInput = memo(
       variant,
       focusedVariant,
       compact,
+      resolvedSize,
+      isCompactLabel,
       hasLabel,
       labelVariant,
       start,
@@ -352,7 +388,7 @@ export const TextInput = memo(
           inputBackground={readOnlyInputBackground ?? inputBackground}
           inputNode={inputElement}
           labelNode={
-            !compact &&
+            !isCompactLabel &&
             (labelNode ? (
               labelVariant === 'inside' ? (
                 <Box
@@ -386,17 +422,17 @@ export const TextInput = memo(
           }
           labelVariant={labelVariant}
           startNode={
-            (compact || !!start) && (
+            (isCompactLabel || !!start) && (
               <HStack
                 alignItems="center"
                 background={readOnlyInputBackground}
                 gap={2}
                 justifyContent="center"
                 onClick={handleNodePress}
-                paddingStart={compact && hasLabel ? 2 : undefined}
+                paddingStart={isCompactLabel && hasLabel ? 2 : undefined}
                 testID={testIDMap?.start ?? ''}
               >
-                {compact &&
+                {isCompactLabel &&
                   (labelNode
                     ? labelNode
                     : !!label && (

@@ -38,6 +38,10 @@ import { InputLabel } from './InputLabel';
 import { InputStack, type InputStackBaseProps } from './InputStack';
 import { NativeInput } from './NativeInput';
 
+export type TextInputSize = 's' | 'm' | 'l';
+
+const defaultTextInputSize: TextInputSize = 'l';
+
 export type TextInputBaseProps = SharedProps &
   Pick<
     SharedAccessibilityProps,
@@ -53,7 +57,6 @@ export type TextInputBaseProps = SharedProps &
     | 'borderRadius'
     | 'enableColorSurge'
     | 'focusedBorderWidth'
-    | 'labelVariant'
     | 'inputBackground'
   > & {
     /**
@@ -99,6 +102,25 @@ export type TextInputBaseProps = SharedProps &
      * @default true
      */
     bordered?: boolean;
+    /**
+     * Controls overall density of the input field, inside of the border.
+     * @default 'l'
+     */
+    size?: TextInputSize;
+    /**
+     * Enables compact variation. Prefer `size="s"` or `size="m"` with an explicit `labelVariant`.
+     *
+     * @deprecated Unset and use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
+    /**
+     * Determines where the provided label/labelNode is rendered.
+     * By default, the label is rendered outisde, above the input element.
+     * When size is `l` (the default), an `inside` label is stacked vertically with the input; otherwise is rendered horizontally.
+     * @default 'outside'
+     */
+    labelVariant?: 'inside' | 'outside';
   };
 
 export type TextInputProps = TextInputBaseProps &
@@ -149,7 +171,8 @@ export const TextInput = memo(
       disabled = false,
       align = 'start',
       font = 'body',
-      compact,
+      compact = false,
+      size,
       suffix = '',
       accessibilityLabel,
       borderRadius,
@@ -197,18 +220,23 @@ export const TextInput = memo(
 
     const hasLabel = useMemo(() => !!label || !!labelNode, [label, labelNode]);
 
-    const containerSpacing: ViewStyle = useMemo(
-      () => ({
-        ...(!!start && { paddingStart: theme.space[0.5] }),
-        ...(labelVariant === 'inside' &&
-          hasLabel &&
-          !compact && {
-            paddingBottom: 0,
-            paddingTop: 0,
-          }),
-      }),
-      [start, theme.space, labelVariant, hasLabel, compact],
-    );
+    // Geometry is driven entirely by the resolved size. An explicit `size` always wins;
+    // the deprecated `compact` only maps to `s` as a fallback so legacy callers keep dense spacing.
+    const resolvedSize: TextInputSize = size ?? (compact ? 's' : defaultTextInputSize);
+    // compact only forces label placement (inline start slot) when the caller did NOT set an
+    // explicit size. Once `size` is provided, label placement follows normal `labelVariant` rules.
+    const isCompactLabel = Boolean(compact) && size === undefined;
+
+    const containerSpacing: ViewStyle = useMemo(() => {
+      const verticalPad = resolvedSize === 'l' ? 2 : resolvedSize === 'm' ? 1.5 : 1;
+      const isInsideLabel = labelVariant === 'inside' && hasLabel && !isCompactLabel;
+      return {
+        paddingStart: theme.space[start ? 0.5 : 2],
+        paddingEnd: theme.space[2],
+        paddingTop: isInsideLabel ? 0 : theme.space[verticalPad],
+        paddingBottom: isInsideLabel ? 0 : theme.space[verticalPad],
+      };
+    }, [start, theme.space, labelVariant, hasLabel, resolvedSize, isCompactLabel]);
 
     // Get the accessability label from the start node child
     const startIconA11yLabel = useMemo(() => {
@@ -301,7 +329,7 @@ export const TextInput = memo(
             accessibilityHint={typeof helperText === 'string' ? helperText : undefined}
             accessibilityLabel={accessibilityLabel ?? label}
             align={align}
-            compact={compact}
+            compact={resolvedSize === 's'}
             containerSpacing={containerSpacing}
             disabled={disabled}
             font={font}
@@ -311,7 +339,7 @@ export const TextInput = memo(
           />
         }
         labelNode={
-          !compact &&
+          !isCompactLabel &&
           (labelNode && labelVariant !== 'inside'
             ? labelNode
             : hasLabel && (
@@ -346,7 +374,7 @@ export const TextInput = memo(
         }
         labelVariant={labelVariant}
         startNode={
-          ((compact && hasLabel) || !!start) && (
+          ((isCompactLabel && hasLabel) || !!start) && (
             <Box
               alignItems="center"
               background={readOnlyInputBackground}
@@ -362,8 +390,8 @@ export const TextInput = memo(
                 importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
                 onPress={handleNodePress}
               >
-                <HStack paddingStart={compact && hasLabel ? 2 : undefined}>
-                  {compact &&
+                <HStack paddingStart={isCompactLabel && hasLabel ? 2 : undefined}>
+                  {isCompactLabel &&
                     (labelNode
                       ? labelNode
                       : !!label && (
