@@ -6,7 +6,7 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import type { ChipProps } from '../../chips/ChipProps';
+import type { ChipProps, ChipSize } from '../../chips/ChipProps';
 import { MediaChip, type MediaChipBaseProps } from '../../chips/MediaChip';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
@@ -75,8 +75,15 @@ export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
   /**
    * Turn on to use a compact Chip component for each tab.
    * @default false
+   * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   compact?: boolean;
+  /**
+   * Set the size of each tab chip.
+   * @default s
+   */
+  size?: ChipSize;
   /**
    * X position offset when auto-scrolling to active tab (to avoid active tab being covered by the overflow gradient on the left side, default: 30px)
    * @default 30
@@ -125,10 +132,13 @@ const TabbedChipsComponent = memo(function TabbedChips<TabId extends string = st
     width,
     gap = 1,
     compact,
+    size,
     styles,
     autoScrollOffset = 30,
     ...accessibilityProps
   } = mergedProps;
+  // Size is driven by `size`; deprecated `compact` falls back to its legacy `xs` size.
+  const resolvedSize: ChipSize = size ?? (compact ? 'xs' : 's');
   const [scrollTarget, setScrollTarget] = useState<View | null>(null);
   const {
     scrollRef,
@@ -140,11 +150,11 @@ const TabbedChipsComponent = memo(function TabbedChips<TabId extends string = st
     handleScrollContentSizeChange,
   } = useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset });
 
-  const TabComponentWithCompact = useCallback(
+  const TabComponentWithSize = useCallback(
     (props: TabValue<TabId>) => {
-      return <TabComponent compact={compact} {...props} />;
+      return <TabComponent size={resolvedSize} {...props} />;
     },
-    [TabComponent, compact],
+    [TabComponent, resolvedSize],
   );
 
   return (
@@ -165,7 +175,7 @@ const TabbedChipsComponent = memo(function TabbedChips<TabId extends string = st
         showsHorizontalScrollIndicator={false}
       >
         <Tabs
-          TabComponent={TabComponentWithCompact}
+          TabComponent={TabComponentWithSize}
           TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
           activeTab={activeTab || null}
           gap={gap}
