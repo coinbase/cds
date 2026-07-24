@@ -433,4 +433,29 @@ describe('Combobox', () => {
       expect(CustomDropdown).toHaveBeenCalled();
     });
   });
+
+  describe('Sizing', () => {
+    it('forwards size and the deprecated compact through to the select control', () => {
+      const SelectControlComponent = jest.fn(
+        (_props: { size?: string; compact?: boolean }) => null,
+      );
+
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <Combobox {...defaultProps} SelectControlComponent={SelectControlComponent} size="s" />
+        </DefaultThemeProvider>,
+      );
+      expect(SelectControlComponent.mock.calls.some(([props]) => props.size === 's')).toBe(true);
+
+      SelectControlComponent.mockClear();
+      rerender(
+        <DefaultThemeProvider>
+          <Combobox {...defaultProps} compact SelectControlComponent={SelectControlComponent} />
+        </DefaultThemeProvider>,
+      );
+      expect(SelectControlComponent.mock.calls.some(([props]) => props.compact === true)).toBe(
+        true,
+      );
+    });
+  });
 });

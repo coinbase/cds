@@ -598,6 +598,48 @@ export const Disabled = () => {
   );
 };
 
+export const Sizes = () => {
+  const [value, setValue] = useState<string | null>(null);
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        label="Small (s)"
+        onChange={setValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
+        size="s"
+        value={value}
+      />
+      <Combobox
+        label="Medium (m)"
+        onChange={setValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
+        size="m"
+        value={value}
+      />
+      <Combobox
+        label="Large (l) - default"
+        onChange={setValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
+        size="l"
+        value={value}
+      />
+      {/* `compact` is deprecated and renders as size="s" */}
+      <Combobox
+        compact
+        label="Deprecated compact (renders as size s)"
+        onChange={setValue}
+        options={singleFruitOptions}
+        placeholder="Search and select fruits..."
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 export const Compact = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
