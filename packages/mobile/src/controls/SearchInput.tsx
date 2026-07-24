@@ -13,7 +13,15 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import { InputIconButton } from './InputIconButton';
-import { TextInput, type TextInputBaseProps, type TextInputProps } from './TextInput';
+import {
+  TextInput,
+  type TextInputBaseProps,
+  type TextInputProps,
+  type TextInputSize,
+} from './TextInput';
+
+/** T-shirt size for SearchInput. Aliases the TextInput size union. */
+export type SearchInputSize = TextInputSize;
 
 export type SearchInputBaseProps = Pick<
   TextInputBaseProps,
@@ -31,6 +39,7 @@ export type SearchInputBaseProps = Pick<
   | 'labelFont'
   | 'labelColor'
   | 'placeholder'
+  | 'size'
   | 'testID'
   | 'testIDMap'
   | 'width'

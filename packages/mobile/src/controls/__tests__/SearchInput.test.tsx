@@ -262,4 +262,64 @@ describe('Search', () => {
 
     expect(onClearSpy).toHaveBeenCalled();
   });
+
+  /** T-shirt sizing. Vertical padding is derived from size on the input's container spacing. */
+  const getSearchboxStyle = () =>
+    StyleSheet.flatten(screen.getByRole('search').props.style) as { paddingTop?: number };
+
+  it('applies size l vertical padding by default', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getSearchboxStyle().paddingTop).toBe(defaultTheme.space[2]);
+  });
+
+  it('forwards size s vertical padding through to the input', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} size="s" testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getSearchboxStyle().paddingTop).toBe(defaultTheme.space[1]);
+  });
+
+  it('forwards size m vertical padding through to the input', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} size="m" testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getSearchboxStyle().paddingTop).toBe(defaultTheme.space[1.5]);
+  });
+
+  it('resolves compact alone to size s vertical padding', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput compact onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getSearchboxStyle().paddingTop).toBe(defaultTheme.space[1]);
+  });
+
+  it('lets size win over compact for vertical padding', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput
+          compact
+          onChangeText={onChangeTextSpy}
+          size="m"
+          testID={TEST_ID}
+          value="value"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getSearchboxStyle().paddingTop).toBe(defaultTheme.space[1.5]);
+  });
 });
