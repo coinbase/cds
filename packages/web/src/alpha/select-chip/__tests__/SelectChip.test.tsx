@@ -191,6 +191,39 @@ describe('SelectChip', () => {
       expect(content).toHaveStyle('padding: var(--space-1-5) var(--space-0-75)');
     });
 
+    it('defaults to s spacing', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const content = screen.getByRole('button').firstElementChild;
+      expect(content).toHaveStyle('padding: var(--space-1-5) var(--space-1)');
+    });
+
+    it('applies xs spacing when size="xs" (matching legacy compact)', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} size="xs" />
+        </DefaultThemeProvider>,
+      );
+
+      const content = screen.getByRole('button').firstElementChild;
+      expect(content).toHaveStyle('padding: var(--space-1-5) var(--space-0-75)');
+    });
+
+    it('resolves size over compact when both are provided', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} compact size="s" />
+        </DefaultThemeProvider>,
+      );
+
+      const content = screen.getByRole('button').firstElementChild;
+      expect(content).toHaveStyle('padding: var(--space-1-5) var(--space-1)');
+    });
+
     it('renders disabled state', () => {
       render(
         <DefaultThemeProvider>

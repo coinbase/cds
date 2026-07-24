@@ -9,7 +9,7 @@ import { SelectChipControl } from './SelectChipControl';
 
 export type SelectChipBaseProps = Pick<
   ChipBaseProps,
-  'invertColorScheme' | 'numberOfLines' | 'maxWidth'
+  'invertColorScheme' | 'numberOfLines' | 'maxWidth' | 'size' | 'compact'
 > & {
   /**
    * Override the displayed value in the chip control.
@@ -25,7 +25,13 @@ export type SelectChipProps<
 > = SelectChipBaseProps &
   Omit<
     SelectProps<Type, SelectOptionValue>,
-    'SelectControlComponent' | 'helperText' | 'labelVariant' | 'variant' | 'maxWidth'
+    | 'SelectControlComponent'
+    | 'helperText'
+    | 'labelVariant'
+    | 'variant'
+    | 'maxWidth'
+    | 'size'
+    | 'compact'
   >;
 
 /**
@@ -40,20 +46,26 @@ const SelectChipComponent = memo(
     ref?: React.Ref<SelectRef>;
   }) => {
     const mergedProps = useComponentConfig('SelectChip', _props);
-    const { invertColorScheme, numberOfLines, maxWidth, displayValue, ...props } = mergedProps;
+    const { invertColorScheme, numberOfLines, maxWidth, displayValue, size, compact, ...props } =
+      mergedProps;
     const SelectChipControlComponent = useCallback(
-      (props: SelectControlProps<Type, SelectOptionValue>) => {
+      ({
+        compact: _controlCompact,
+        ...controlProps
+      }: SelectControlProps<Type, SelectOptionValue>) => {
         return (
           <SelectChipControl
+            {...controlProps}
+            compact={compact}
             displayValue={displayValue}
             invertColorScheme={invertColorScheme}
             maxWidth={maxWidth}
             numberOfLines={numberOfLines}
-            {...props}
+            size={size}
           />
         );
       },
-      [displayValue, invertColorScheme, maxWidth, numberOfLines],
+      [displayValue, invertColorScheme, maxWidth, numberOfLines, size, compact],
     );
 
     return (

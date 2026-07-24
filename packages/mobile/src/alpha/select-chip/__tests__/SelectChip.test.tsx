@@ -1,5 +1,5 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
@@ -153,14 +153,63 @@ describe('SelectChip', () => {
       expect(screen.getByTestId('end-node')).toBeTruthy();
     });
 
-    it('renders with compact prop', () => {
-      render(
-        <DefaultThemeProvider>
-          <SelectChip {...defaultProps} compact />
-        </DefaultThemeProvider>,
-      );
+    describe('size', () => {
+      const findPaddedStyle = (node: any): Record<string, unknown> | null => {
+        if (!node || typeof node !== 'object') return null;
+        const style = StyleSheet.flatten(node.props?.style) as Record<string, unknown>;
+        if (
+          style &&
+          (style.paddingTop !== undefined ||
+            style.paddingStart !== undefined ||
+            style.paddingVertical !== undefined)
+        ) {
+          return style;
+        }
+        for (const child of node.children ?? []) {
+          const found = findPaddedStyle(child);
+          if (found) return found;
+        }
+        return null;
+      };
 
-      expect(screen.getByRole('button')).toBeTruthy();
+      const renderChipSpacing = (props: Partial<SelectChipProps<'single'>>) => {
+        const { unmount } = render(
+          <DefaultThemeProvider>
+            <SelectChip {...defaultProps} {...props} />
+          </DefaultThemeProvider>,
+        );
+        const style = findPaddedStyle(screen.getByRole('button')) ?? {};
+        const spacing = {
+          paddingLeft: style.paddingLeft,
+          paddingRight: style.paddingRight,
+          paddingStart: style.paddingStart,
+          paddingEnd: style.paddingEnd,
+          paddingTop: style.paddingTop,
+          paddingBottom: style.paddingBottom,
+          paddingHorizontal: style.paddingHorizontal,
+          paddingVertical: style.paddingVertical,
+        };
+        unmount();
+        return spacing;
+      };
+
+      it('defaults to the s geometry', () => {
+        expect(renderChipSpacing({})).toEqual(renderChipSpacing({ size: 's' }));
+      });
+
+      it('treats size="xs" and legacy compact identically', () => {
+        expect(renderChipSpacing({ size: 'xs' })).toEqual(renderChipSpacing({ compact: true }));
+      });
+
+      it('produces distinct geometry for xs and s', () => {
+        expect(renderChipSpacing({ size: 'xs' })).not.toEqual(renderChipSpacing({ size: 's' }));
+      });
+
+      it('resolves size over compact when both are provided', () => {
+        expect(renderChipSpacing({ size: 's', compact: true })).toEqual(
+          renderChipSpacing({ size: 's' }),
+        );
+      });
     });
 
     it('renders disabled state', () => {

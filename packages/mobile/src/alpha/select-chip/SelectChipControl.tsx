@@ -1,7 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import type { View } from 'react-native';
 
-import type { ChipBaseProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import {
@@ -31,12 +30,13 @@ const SelectChipControlComponent = memo(
     hiddenSelectedOptionsLabel = 'more',
     label,
     compact,
+    size,
     invertColorScheme,
     numberOfLines,
     maxWidth,
     displayValue,
-  }: SelectControlProps<Type, SelectOptionValue> &
-    SelectChipBaseProps & { displayValue?: React.ReactNode } & {
+  }: Omit<SelectControlProps<Type, SelectOptionValue>, 'size' | 'compact'> &
+    SelectChipBaseProps & {
       ref?: React.Ref<View>;
     }) => {
     const isMultiSelect = type === 'multi';
@@ -155,6 +155,7 @@ const SelectChipControlComponent = memo(
         maxWidth={maxWidth}
         numberOfLines={numberOfLines}
         onPress={() => setOpen((s) => !s)}
+        size={size}
         start={startNode}
       >
         {labelContent}
@@ -167,9 +168,8 @@ export const SelectChipControl = SelectChipControlComponent as <
   Type extends SelectType,
   SelectOptionValue extends string = string,
 >(
-  props: SelectControlProps<Type, SelectOptionValue> &
-    Partial<Pick<ChipBaseProps, 'invertColorScheme' | 'numberOfLines'>> & {
+  props: Omit<SelectControlProps<Type, SelectOptionValue>, 'size' | 'compact'> &
+    SelectChipBaseProps & {
       ref?: React.Ref<View>;
-      displayValue?: React.ReactNode;
     },
 ) => React.ReactElement;
