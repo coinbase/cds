@@ -74,8 +74,10 @@ describe('Search', () => {
     expect(flattenedStyle).toEqual(
       expect.objectContaining({
         fontSize: defaultTheme.fontSize.label1,
-        minHeight: defaultTheme.lineHeight.label1,
         fontWeight: defaultTheme.fontWeight.label1,
+        // The field is floored to `padding + line-height token` (size "l": 16*2 + label1 20 = 52) so
+        // the natural (shorter) font metric doesn't leave it short of its size.
+        minHeight: defaultTheme.space[2] * 2 + defaultTheme.lineHeight.label1,
       }),
     );
   });

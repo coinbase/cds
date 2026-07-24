@@ -53,7 +53,7 @@ const nativeInputContainerCss = css`
 
   &[data-labelvariant='inside'] {
     padding-top: 0;
-    padding-bottom: var(--space-1);
+    padding-bottom: var(--space-0_75);
   }
 
   &[data-start='true'] {
@@ -62,7 +62,7 @@ const nativeInputContainerCss = css`
 `;
 
 const insideLabelCss = css`
-  padding-top: var(--space-1);
+  padding-top: var(--space-0_75);
   padding-bottom: 0;
   padding-inline-start: var(--space-2);
   padding-inline-end: var(--space-2);
@@ -265,6 +265,13 @@ export const TextInput = memo(
     // explicit size. Once `size` is provided, label placement follows normal `labelVariant` rules.
     const isCompactLabel = Boolean(compact) && size === undefined;
 
+    // Label placement is independent of size. `compact` (set alone) forces an inside label;
+    // otherwise placement follows `labelVariant`. An inside label sits horizontally in the start
+    // slot at every size EXCEPT `l`, where it stacks vertically above the input.
+    const wantsInsideLabel = hasLabel && (isCompactLabel || labelVariant === 'inside');
+    const insideVerticalLabel = wantsInsideLabel && !isCompactLabel && resolvedSize === 'l';
+    const insideHorizontalLabel = wantsInsideLabel && !insideVerticalLabel;
+
     const inputElement = useMemo(() => {
       /** Ensures that the renderedInput has the blurring, focusing, disabled features */
       if (inputNode) {
@@ -299,9 +306,9 @@ export const TextInput = memo(
           compact={resolvedSize === 's'}
           containerSpacing={nativeInputContainerCss}
           data-compact={compact}
-          data-labelvariant={isCompactLabel || !hasLabel ? 'outside' : labelVariant}
+          data-labelvariant={insideVerticalLabel ? 'inside' : 'outside'}
           data-size={resolvedSize}
-          data-start={!!start || isCompactLabel}
+          data-start={!!start || insideHorizontalLabel}
           disabled={disabled}
           font={font}
           id={shouldSetLabelId ? labelId : undefined}
@@ -323,9 +330,8 @@ export const TextInput = memo(
       focusedVariant,
       compact,
       resolvedSize,
-      isCompactLabel,
-      hasLabel,
-      labelVariant,
+      insideVerticalLabel,
+      insideHorizontalLabel,
       start,
       disabled,
       font,
@@ -388,9 +394,9 @@ export const TextInput = memo(
           inputBackground={readOnlyInputBackground ?? inputBackground}
           inputNode={inputElement}
           labelNode={
-            !isCompactLabel &&
+            !insideHorizontalLabel &&
             (labelNode ? (
-              labelVariant === 'inside' ? (
+              insideVerticalLabel ? (
                 <Box
                   background={readOnlyInputBackground}
                   paddingEnd={2}
@@ -405,10 +411,10 @@ export const TextInput = memo(
             ) : (
               !!label && (
                 <InputLabel
-                  background={labelVariant === 'inside' ? readOnlyInputBackground : undefined}
+                  background={insideVerticalLabel ? readOnlyInputBackground : undefined}
                   className={cx(
-                    labelVariant === 'inside' && insideLabelCss,
-                    labelVariant === 'inside' && !!start && insideLabelCssStartCss,
+                    insideVerticalLabel && insideLabelCss,
+                    insideVerticalLabel && !!start && insideLabelCssStartCss,
                   )}
                   color={labelColor}
                   font={labelFont}
@@ -420,19 +426,19 @@ export const TextInput = memo(
               )
             ))
           }
-          labelVariant={labelVariant}
+          labelVariant={insideVerticalLabel ? 'inside' : 'outside'}
           startNode={
-            (isCompactLabel || !!start) && (
+            (insideHorizontalLabel || !!start) && (
               <HStack
                 alignItems="center"
                 background={readOnlyInputBackground}
                 gap={2}
                 justifyContent="center"
                 onClick={handleNodePress}
-                paddingStart={isCompactLabel && hasLabel ? 2 : undefined}
+                paddingStart={insideHorizontalLabel && hasLabel ? 2 : undefined}
                 testID={testIDMap?.start ?? ''}
               >
-                {isCompactLabel &&
+                {insideHorizontalLabel &&
                   (labelNode
                     ? labelNode
                     : !!label && (

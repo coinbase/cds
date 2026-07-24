@@ -273,7 +273,9 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
             )}
             {!!startNode && <>{startNode}</>}
             {!!labelNode && labelVariant === 'inside' ? (
-              <VStack flexGrow={1} paddingY={1}>
+              // A stacked inside label tightens its top/bottom spacing so the label + input still
+              // fit the same natural field height an outside label produces.
+              <VStack flexGrow={1} paddingY={0.75}>
                 {labelNode}
                 {inputNode}
               </VStack>

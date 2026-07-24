@@ -53,8 +53,19 @@ describe('DateInput size', () => {
   });
 
   it('does not force the compact label exception once an explicit size is set', () => {
-    render(<DateInputExample compact label="Date" labelVariant="inside" size="m" />);
+    // With an explicit size, compact no longer forces placement — labelVariant is honored. At size
+    // `l` an inside label stacks vertically (data-labelvariant="inside").
+    render(<DateInputExample compact label="Date" labelVariant="inside" size="l" />);
 
+    expect(screen.getByRole('textbox')).toHaveAttribute('data-labelvariant', 'inside');
+  });
+
+  it('keeps an inside label horizontal at sizes "s" and "m" (only "l" stacks vertically)', () => {
+    const { rerender } = render(<DateInputExample label="Date" labelVariant="inside" size="m" />);
+    // A horizontal inside label sits in the start slot, so the container keeps outside padding.
+    expect(screen.getByRole('textbox')).toHaveAttribute('data-labelvariant', 'outside');
+
+    rerender(<DateInputExample label="Date" labelVariant="inside" size="l" />);
     expect(screen.getByRole('textbox')).toHaveAttribute('data-labelvariant', 'inside');
   });
 });

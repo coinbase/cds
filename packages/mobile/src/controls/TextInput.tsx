@@ -227,16 +227,39 @@ export const TextInput = memo(
     // explicit size. Once `size` is provided, label placement follows normal `labelVariant` rules.
     const isCompactLabel = Boolean(compact) && size === undefined;
 
+    // Label placement is independent of size. `compact` (set alone) forces an inside label;
+    // otherwise placement follows `labelVariant`. An inside label sits horizontally in the start
+    // slot at every size EXCEPT `l`, where it stacks vertically above the input.
+    const wantsInsideLabel = hasLabel && (isCompactLabel || labelVariant === 'inside');
+    const insideVerticalLabel = wantsInsideLabel && !isCompactLabel && resolvedSize === 'l';
+    const insideHorizontalLabel = wantsInsideLabel && !insideVerticalLabel;
+
     const containerSpacing: ViewStyle = useMemo(() => {
       const verticalPad = resolvedSize === 'l' ? 2 : resolvedSize === 'm' ? 1.5 : 1;
-      const isInsideLabel = labelVariant === 'inside' && hasLabel && !isCompactLabel;
       return {
-        paddingStart: theme.space[start ? 0.5 : 2],
+        paddingStart: theme.space[start || insideHorizontalLabel ? 0.5 : 2],
         paddingEnd: theme.space[2],
-        paddingTop: isInsideLabel ? 0 : theme.space[verticalPad],
-        paddingBottom: isInsideLabel ? 0 : theme.space[verticalPad],
+        // A vertical inside label (size `l`) gets its top/bottom spacing from the stacking wrapper;
+        // every other placement keeps the per-size padding here.
+        paddingTop: insideVerticalLabel ? 0 : theme.space[verticalPad],
+        paddingBottom: insideVerticalLabel ? 0 : theme.space[verticalPad],
+        // The native input renders text at the font's natural (shorter, fractional) metric, so the
+        // field lands short of its intended size. Floor it to `padding + line-height token` so it
+        // hits the target height. minHeight only adds space — it can't clip or shift while typing.
+        // The stacked case is sized by InputStack, so it's excluded.
+        ...(insideVerticalLabel
+          ? null
+          : { minHeight: theme.space[verticalPad] * 2 + theme.lineHeight[font] }),
       };
-    }, [start, theme.space, labelVariant, hasLabel, resolvedSize, isCompactLabel]);
+    }, [
+      start,
+      theme.space,
+      theme.lineHeight,
+      font,
+      insideHorizontalLabel,
+      insideVerticalLabel,
+      resolvedSize,
+    ]);
 
     // Get the accessability label from the start node child
     const startIconA11yLabel = useMemo(() => {
@@ -339,12 +362,12 @@ export const TextInput = memo(
           />
         }
         labelNode={
-          !isCompactLabel &&
-          (labelNode && labelVariant !== 'inside'
+          !insideHorizontalLabel &&
+          (labelNode && !insideVerticalLabel
             ? labelNode
             : hasLabel && (
                 <Pressable accessibilityRole="button" disabled={disabled} onPress={handleNodePress}>
-                  {labelVariant === 'inside' && labelNode ? (
+                  {insideVerticalLabel && labelNode ? (
                     <Box
                       background={readOnlyInputBackground}
                       paddingEnd={2}
@@ -352,7 +375,7 @@ export const TextInput = memo(
                     >
                       {labelNode}
                     </Box>
-                  ) : labelVariant === 'inside' ? (
+                  ) : insideVerticalLabel ? (
                     <InputLabel
                       background={readOnlyInputBackground}
                       color={labelColor}
@@ -372,9 +395,9 @@ export const TextInput = memo(
                 </Pressable>
               ))
         }
-        labelVariant={labelVariant}
+        labelVariant={insideVerticalLabel ? 'inside' : 'outside'}
         startNode={
-          ((isCompactLabel && hasLabel) || !!start) && (
+          ((insideHorizontalLabel && hasLabel) || !!start) && (
             <Box
               alignItems="center"
               background={readOnlyInputBackground}
@@ -390,8 +413,8 @@ export const TextInput = memo(
                 importantForAccessibility={startIconA11yLabel ? 'auto' : 'no'}
                 onPress={handleNodePress}
               >
-                <HStack paddingStart={isCompactLabel && hasLabel ? 2 : undefined}>
-                  {isCompactLabel &&
+                <HStack paddingStart={insideHorizontalLabel && hasLabel ? 2 : undefined}>
+                  {insideHorizontalLabel &&
                     (labelNode
                       ? labelNode
                       : !!label && (

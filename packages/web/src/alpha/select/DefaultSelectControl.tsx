@@ -30,6 +30,18 @@ const selectSizeVerticalSpaceVar: Record<SelectSize, string> = {
   l: 'var(--space-2)',
 };
 
+// A multi-select's selected-value chips add their own height, so the vertical padding is
+// tightened per size to keep the overall field height aligned with the single-select scale.
+const multiSelectVerticalSpaceVar: Record<SelectSize, string> = {
+  s: 'var(--space-0_5)',
+  m: 'var(--space-1)',
+  l: 'var(--space-1_5)',
+};
+
+// Multi-select value chips always use the compact `xs` size (even at size `l`) so several chips —
+// and a stacked inside label — stay within the field's natural height.
+const selectValueChipSize = 'xs';
+
 const noFocusOutlineCss = css`
   &:focus,
   &:focus-visible,
@@ -129,10 +141,15 @@ const DefaultSelectControlComponent = memo(
       // `size` is unset. When `size` is provided, label placement follows the normal labelVariant rules.
       const useLegacyCompact = Boolean(compact) && size === undefined;
       const labelVariant = useLegacyCompact ? undefined : labelVariantProp;
-      // horizontal/inline label is used for legacy compact selects except for multi-selects
-      // multi-selects render their label outside of the control unless labelVariant is set to 'inside'
-      const shouldShowCompactLabel = useLegacyCompact && label && !isMultiSelect;
-      const shouldShowInsideLabel = labelVariant === 'inside' && !useLegacyCompact && label;
+      // Label placement is independent of size. An inside label stacks vertically at size `l`
+      // (single or multi) and sits horizontally in the start slot at every other size. The legacy
+      // compact single-select also uses the horizontal inline label.
+      const shouldShowInsideLabel =
+        labelVariant === 'inside' && !useLegacyCompact && !!label && resolvedSize === 'l';
+      const shouldShowCompactLabel =
+        !!label &&
+        !shouldShowInsideLabel &&
+        ((useLegacyCompact && !isMultiSelect) || (labelVariant === 'inside' && !useLegacyCompact));
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
       // Map of options to their values
       // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
@@ -349,7 +366,6 @@ const DefaultSelectControlComponent = memo(
                 return (
                   <InputChip
                     key={option.value}
-                    compact
                     data-selected-value
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
                     borderWidth={0}
@@ -362,15 +378,19 @@ const DefaultSelectControlComponent = memo(
                         ? undefined
                         : (event) => handleUnselectValue(event, index)
                     }
+                    size={selectValueChipSize}
                   >
-                    <Text color="fg" flexShrink={1} font="label1" overflow="truncate">
-                      {option.label ?? option.description ?? option.value ?? ''}
-                    </Text>
+                    {option.label ?? option.description ?? option.value ?? ''}
                   </InputChip>
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <InputChip compact borderWidth={0} end={null} invertColorScheme={false}>
+                <InputChip
+                  borderWidth={0}
+                  end={null}
+                  invertColorScheme={false}
+                  size={selectValueChipSize}
+                >
                   {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
                 </InputChip>
               )}
@@ -448,7 +468,7 @@ const DefaultSelectControlComponent = memo(
               </HStack>
             )}
             {shouldShowCompactLabel ? (
-              <HStack alignItems="center" paddingEnd={1}>
+              <HStack alignItems="center" flexShrink={0} paddingEnd={1}>
                 {inlineLabelNode}
               </HStack>
             ) : null}
@@ -539,7 +559,7 @@ const DefaultSelectControlComponent = memo(
               className={classNames?.controlEndNode}
               flexGrow={1}
               height="100%"
-              justifyContent={labelVariant === 'inside' ? 'flex-end' : undefined}
+              justifyContent={shouldShowInsideLabel ? 'flex-end' : undefined}
               paddingStart={2}
               style={styles?.controlEndNode}
             >
@@ -549,7 +569,7 @@ const DefaultSelectControlComponent = memo(
         ),
         [
           classNames?.controlEndNode,
-          labelVariant,
+          shouldShowInsideLabel,
           styles?.controlEndNode,
           customEndNode,
           open,
@@ -558,15 +578,24 @@ const DefaultSelectControlComponent = memo(
       );
 
       const inputStackStyles = useMemo(() => {
-        const verticalSpaceVar =
-          labelVariant === 'inside' ? 'var(--space-1)' : selectSizeVerticalSpaceVar[resolvedSize];
+        let verticalSpaceVar: string;
+        if (shouldShowInsideLabel) {
+          // A vertically-stacked inside label (size `l`) tightens the padding so the stacked label +
+          // value fit the same 58px field an outside label produces. A multi-select with chips
+          // (taller than a single text line) tightens further.
+          verticalSpaceVar = isMultiSelect && hasValue ? 'var(--space-0_25)' : 'var(--space-0_75)';
+        } else if (isMultiSelect && hasValue) {
+          verticalSpaceVar = multiSelectVerticalSpaceVar[resolvedSize];
+        } else {
+          verticalSpaceVar = selectSizeVerticalSpaceVar[resolvedSize];
+        }
         return {
           paddingTop: verticalSpaceVar,
           paddingBottom: verticalSpaceVar,
           paddingLeft: 'var(--space-2)',
           paddingRight: 'var(--space-2)',
         };
-      }, [labelVariant, resolvedSize]);
+      }, [shouldShowInsideLabel, resolvedSize, isMultiSelect, hasValue]);
 
       return (
         <InputStack
@@ -583,7 +612,7 @@ const DefaultSelectControlComponent = memo(
           inputBackground={inputBackground}
           inputNode={inputNode}
           labelNode={labelNode}
-          labelVariant={labelVariant}
+          labelVariant={shouldShowInsideLabel ? 'inside' : 'outside'}
           styles={{ input: inputStackStyles }}
           variant={variant}
           {...props}

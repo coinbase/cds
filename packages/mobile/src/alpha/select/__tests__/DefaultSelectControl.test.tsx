@@ -610,7 +610,7 @@ describe('DefaultSelectControl', () => {
       expect(screen.getByText('Test Select Control')).toBeTruthy();
     });
 
-    it('stacks the label inside and uses 8px padding independent of size', () => {
+    it('stacks an inside label vertically at size "l" and tightens padding to keep the field height', () => {
       render(
         <DefaultThemeProvider>
           <DefaultSelectControl
@@ -622,9 +622,102 @@ describe('DefaultSelectControl', () => {
         </DefaultThemeProvider>,
       );
 
+      // Stacked label + value fit the same field an outside label produces (6px top/bottom).
       const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[0.75]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[0.75]);
+    });
+
+    it('keeps an inside label horizontal (per-size padding) at sizes "s" and "m"', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...defaultProps}
+            labelVariant="inside"
+            size="s"
+            testID="select-control"
+          />
+        </DefaultThemeProvider>,
+      );
+      let style = getInputAreaStyle();
       expect(style.paddingTop).toBe(defaultTheme.space[1]);
       expect(style.paddingBottom).toBe(defaultTheme.space[1]);
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...defaultProps}
+            labelVariant="inside"
+            size="m"
+            testID="select-control"
+          />
+        </DefaultThemeProvider>,
+      );
+      style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1.5]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1.5]);
+    });
+
+    it('tightens vertical padding for a multi-select with selected values', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...(multiSelectProps as any)}
+            testID="select-control"
+            value={['option1']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      // Selected value chips add their own height, so a size "l" multi-select drops from 16px to 12px.
+      let style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1.5]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1.5]);
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...(multiSelectProps as any)}
+            size="s"
+            testID="select-control"
+            value={['option1']}
+          />
+        </DefaultThemeProvider>,
+      );
+      style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[0.5]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[0.5]);
+    });
+
+    it('tightens padding hardest for a size "l" multi-select with a stacked inside label', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...(multiSelectProps as any)}
+            labelVariant="inside"
+            size="l"
+            testID="select-control"
+            value={['option1']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      // Stacked label + xs chips fit the field (2px top/bottom).
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[0.25]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[0.25]);
+    });
+
+    it('keeps the full size padding for an empty multi-select', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...(multiSelectProps as any)} testID="select-control" value={[]} />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[2]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[2]);
     });
   });
 });

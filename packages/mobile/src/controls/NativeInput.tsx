@@ -81,8 +81,20 @@ export const NativeInput = memo(
         padding: 0,
         margin: 0,
         color: theme.color.fg,
+        // When the field is floored to a taller target height (TextInput passes a size-derived
+        // minHeight), keep the single-line text centered in the extra space. Multiline inputs must
+        // grow and top-align, so this is skipped for them.
+        ...(editableInputAddonProps.multiline ? null : { textAlignVertical: 'center' as const }),
       }),
-      [theme.fontSize, theme.fontFamily, theme.lineHeight, theme.fontWeight, theme.color.fg, font],
+      [
+        theme.fontSize,
+        theme.fontFamily,
+        theme.lineHeight,
+        theme.fontWeight,
+        theme.color.fg,
+        font,
+        editableInputAddonProps.multiline,
+      ],
     );
 
     const containerStyle: ViewStyle = useMemo(() => {
