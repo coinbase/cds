@@ -1,3 +1,4 @@
+import { StyleSheet } from 'react-native';
 import type { Shape } from '@coinbase/cds-common';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { fireEvent, render, screen } from '@testing-library/react-native';
@@ -74,5 +75,57 @@ describe('Chip', () => {
 
     expect(screen.getByTestId(chipTestID)).toHaveStyle({ borderWidth: 2 });
     expect(screen.getByTestId(`${chipTestID}-content`)).toHaveStyle({ paddingVertical: 10 });
+  });
+
+  describe('size', () => {
+    const renderLabelChipSpacing = (props: Omit<ChipProps, 'children'>) => {
+      const { unmount } = render(
+        <DefaultThemeProvider>
+          <Chip testID={chipTestID} {...props}>
+            Label
+          </Chip>
+        </DefaultThemeProvider>,
+      );
+      const content = screen.getByTestId(`${chipTestID}-content`);
+      const style = StyleSheet.flatten(content.props.style);
+      const spacing = {
+        paddingLeft: style.paddingLeft,
+        paddingRight: style.paddingRight,
+        paddingStart: style.paddingStart,
+        paddingEnd: style.paddingEnd,
+        paddingTop: style.paddingTop,
+        paddingBottom: style.paddingBottom,
+      };
+      unmount();
+      return spacing;
+    };
+
+    it('defaults to the s geometry', () => {
+      expect(renderLabelChipSpacing({})).toEqual(renderLabelChipSpacing({ size: 's' }));
+    });
+
+    it('treats size="xs" and legacy compact identically', () => {
+      expect(renderLabelChipSpacing({ size: 'xs' })).toEqual(
+        renderLabelChipSpacing({ compact: true }),
+      );
+    });
+
+    it('produces distinct geometry for xs and s', () => {
+      expect(renderLabelChipSpacing({ size: 'xs' })).not.toEqual(
+        renderLabelChipSpacing({ size: 's' }),
+      );
+    });
+
+    it('resolves size over compact when both are provided', () => {
+      expect(renderLabelChipSpacing({ size: 's', compact: true })).toEqual(
+        renderLabelChipSpacing({ size: 's' }),
+      );
+    });
+
+    it('lets an explicit paddingY override win over size', () => {
+      expect(renderLabelChipSpacing({ size: 'xs', paddingY: 3 }).paddingTop).toEqual(
+        renderLabelChipSpacing({ size: 's', paddingY: 3 }).paddingTop,
+      );
+    });
   });
 });

@@ -57,7 +57,16 @@ export const Default = () => (
     </VStack>
     <VStack gap={2}>
       <Text as="h3" display="block" font="headline">
-        Compact
+        Size xs
+      </Text>
+      <HStack gap={2}>
+        <ExampleSelectChip size="xs" value="Balance" />
+        <ExampleSelectChip placeholder="Sort by" size="xs" />
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        Compact (deprecated)
       </Text>
       <HStack gap={2}>
         <ExampleSelectChip compact value="Balance" />
@@ -87,7 +96,25 @@ export const CustomEndNode = () => (
     </VStack>
     <VStack gap={2}>
       <Text as="h3" display="block" font="headline">
-        Compact
+        Size xs
+      </Text>
+      <HStack gap={2}>
+        <ExampleSelectChip
+          end={<Icon active color="fg" name="filter" size="xs" />}
+          placeholder="Filter"
+          size="xs"
+        />
+        <ExampleSelectChip
+          end={<Icon active color="fg" name="filter" size="xs" />}
+          placeholder="Filter"
+          size="xs"
+          value="Balance"
+        />
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        Compact (deprecated)
       </Text>
       <HStack gap={2}>
         <ExampleSelectChip

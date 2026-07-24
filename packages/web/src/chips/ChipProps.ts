@@ -7,6 +7,8 @@ import type {
   PressableProps,
 } from '../system/Pressable';
 
+export type ChipSize = 'xs' | 's';
+
 export type ChipBaseProps = SharedProps &
   Omit<
     PressableProps<PressableDefaultElement>,
@@ -45,8 +47,17 @@ export type ChipBaseProps = SharedProps &
      * @default false
      */
     invertColorScheme?: boolean;
-    /** Reduces spacing around Chip content */
+    /**
+     * Reduces spacing around the chip.
+     * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     compact?: boolean;
+    /**
+     * Set the size of the chip.
+     * @default s
+     */
+    size?: ChipSize;
     /**
      * How many lines the text in the chip will be broken into.
      * @default 1

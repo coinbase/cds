@@ -19,12 +19,13 @@ const ChipExamples = ({
   ...props
 }: { label?: string; direction?: 'row' | 'column' } & Pick<
   ChipBaseProps,
-  'inverted' | 'compact'
+  'inverted' | 'compact' | 'size'
 >) => {
   const divRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const mediaSize = props.compact ? 16 : 24;
-  const textFont = props.compact ? 'label1' : 'headline';
+  const isCompactSize = props.compact || props.size === 'xs';
+  const mediaSize = isCompactSize ? 16 : 24;
+  const textFont = isCompactSize ? 'label1' : 'headline';
   const assetIconProps: RemoteImageProps = {
     height: mediaSize,
     shape: 'circle',
@@ -106,8 +107,12 @@ export const Default = () => (
       Inverted
     </Text>
     <ChipExamples inverted />
-    <Text as="h3" display="block" font="headline">
-      Compact
+    <Text as="h3" display="block" font="headline" paddingTop={3}>
+      Size xs
+    </Text>
+    <ChipExamples size="xs" />
+    <Text as="h3" display="block" font="headline" paddingTop={3}>
+      Compact (deprecated)
     </Text>
     <ChipExamples compact />
     <Text as="h3" display="block" font="headline" paddingTop={3}>
