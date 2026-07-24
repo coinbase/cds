@@ -21,7 +21,7 @@ const accessibilityLabel = 'Horizontal arrows';
 const variants = [
   {
     component: (props?: Partial<IconButtonBaseProps>) => (
-      <IconButton compact={false} name={iconName} variant="primary" {...props} />
+      <IconButton name={iconName} size="l" variant="primary" {...props} />
     ),
     title: 'Non-compact',
   },
@@ -86,8 +86,21 @@ export const Default = () => (
       </HStack>
     </VStack>
     <VStack gap={2}>
-      <Text font="title3">Without Compact Styles</Text>
-      <IconButton accessibilityLabel={accessibilityLabel} compact={false} name={iconName} />
+      <Text font="title3">T-shirt Sizes</Text>
+      <HStack alignItems="center" gap={4}>
+        <IconButton accessibilityLabel="Extra small" name={iconName} size="xs" />
+        <IconButton accessibilityLabel="Small" name={iconName} size="s" />
+        <IconButton accessibilityLabel="Medium" name={iconName} size="m" />
+        <IconButton accessibilityLabel="Large" name={iconName} size="l" />
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
+      <Text font="title3">{'Deprecated compact (renders as size "s")'}</Text>
+      <IconButton compact accessibilityLabel={accessibilityLabel} name={iconName} />
+    </VStack>
+    <VStack gap={2}>
+      <Text font="title3">Non-compact (equivalent to size l)</Text>
+      <IconButton accessibilityLabel={accessibilityLabel} name={iconName} size="l" />
     </VStack>
     <VStack gap={2}>
       <Text font="title3">Icon Sizes</Text>
@@ -95,15 +108,15 @@ export const Default = () => (
         <IconButton accessibilityLabel="Extra small icon" iconSize="xs" name={iconName} />
         <IconButton accessibilityLabel="Small icon" iconSize="s" name={iconName} />
         <IconButton accessibilityLabel="Medium icon" iconSize="m" name={iconName} />
-        <IconButton accessibilityLabel="Large icon" compact={false} iconSize="l" name={iconName} />
+        <IconButton accessibilityLabel="Large icon" iconSize="l" name={iconName} size="l" />
       </HStack>
     </VStack>
     <VStack gap={2}>
       <Text font="title3">Custom Style</Text>
       <IconButton
         accessibilityLabel={accessibilityLabel}
-        compact={false}
         name={iconName}
+        size="l"
         style={{ backgroundColor: 'red', transform: 'scale(0.5)' }}
       />
     </VStack>
@@ -160,7 +173,7 @@ export const Default = () => (
       <Text font="title3">Variants Loading</Text>
       {variants.map((variant, index) => (
         <HStack key={index} alignItems="center" gap={4}>
-          {variant.component({ accessibilityLabel, loading: true, compact: false })}
+          {variant.component({ accessibilityLabel, loading: true, size: 'l' })}
           <Text font="body">{variant.title}</Text>
         </HStack>
       ))}

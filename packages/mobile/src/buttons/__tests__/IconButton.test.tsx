@@ -143,6 +143,91 @@ describe('IconButton', () => {
     expect(button.props.accessibilityLabel).toBe(', loading');
   });
 
+  describe('size', () => {
+    const getGeometry = () => {
+      const node = screen
+        .UNSAFE_getAllByProps({})
+        .find(
+          (n) =>
+            n.props &&
+            n.props.feedback !== undefined &&
+            n.props.padding !== undefined &&
+            n.props.borderRadius !== undefined,
+        );
+      return {
+        padding: node?.props.padding,
+        borderRadius: node?.props.borderRadius,
+        feedback: node?.props.feedback,
+      };
+    };
+
+    it('defaults to the "s" geometry (padding 1.5, feedback light) via compact-by-default', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton name={name} />
+        </DefaultThemeProvider>,
+      );
+      expect(getGeometry()).toEqual({ padding: 1.5, borderRadius: 1000, feedback: 'light' });
+    });
+
+    it('resolves each t-shirt size to the expected geometry', () => {
+      const cases = [
+        { size: 'xs', expected: { padding: 1, borderRadius: 1000, feedback: 'light' } },
+        { size: 's', expected: { padding: 1.5, borderRadius: 1000, feedback: 'light' } },
+        { size: 'm', expected: { padding: 1.5, borderRadius: 1000, feedback: 'normal' } },
+        { size: 'l', expected: { padding: 2, borderRadius: 1000, feedback: 'normal' } },
+      ] as const;
+
+      cases.forEach(({ size, expected }) => {
+        const { unmount } = render(
+          <DefaultThemeProvider>
+            <IconButton name={name} size={size} />
+          </DefaultThemeProvider>,
+        );
+        expect(getGeometry()).toEqual(expected);
+        unmount();
+      });
+    });
+
+    it('renders `compact` alone as the "s" geometry (padding 1.5, feedback light)', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton compact name={name} />
+        </DefaultThemeProvider>,
+      );
+      expect(getGeometry()).toEqual({ padding: 1.5, borderRadius: 1000, feedback: 'light' });
+    });
+
+    it('renders `compact={false}` as the "l" geometry (padding 2, feedback normal)', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton compact={false} name={name} />
+        </DefaultThemeProvider>,
+      );
+      expect(getGeometry()).toEqual({ padding: 2, borderRadius: 1000, feedback: 'normal' });
+    });
+
+    it('lets `size` win over `compact` for geometry', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton compact name={name} size="m" />
+        </DefaultThemeProvider>,
+      );
+      expect(getGeometry()).toEqual({ padding: 1.5, borderRadius: 1000, feedback: 'normal' });
+    });
+
+    it('lets explicit style props override the size-derived defaults', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton feedback="heavy" name={name} padding={3} size="xs" />
+        </DefaultThemeProvider>,
+      );
+      const geometry = getGeometry();
+      expect(geometry.padding).toBe(3);
+      expect(geometry.feedback).toBe('heavy');
+    });
+  });
+
   it('applies styles.icon to the inner icon glyph', () => {
     const customIconStyle = { fontSize: 99 };
     const { UNSAFE_getAllByType } = render(
