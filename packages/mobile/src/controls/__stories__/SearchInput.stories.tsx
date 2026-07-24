@@ -12,14 +12,15 @@ const Basic = () => {
   return <SearchInput editable={__DEV__} onChangeText={setText} value={text} />;
 };
 
-const SizeS = () => {
+const Sizes = () => {
   const [text, setText] = useState('');
-  return <SearchInput editable={__DEV__} onChangeText={setText} size="s" value={text} />;
-};
-
-const SizeM = () => {
-  const [text, setText] = useState('');
-  return <SearchInput editable={__DEV__} onChangeText={setText} size="m" value={text} />;
+  return (
+    <VStack gap={2}>
+      <SearchInput editable={__DEV__} onChangeText={setText} size="s" value={text} />
+      <SearchInput editable={__DEV__} onChangeText={setText} size="m" value={text} />
+      <SearchInput editable={__DEV__} onChangeText={setText} size="l" value={text} />
+    </VStack>
+  );
 };
 
 /** `compact` is deprecated in favor of `size="s"`; kept here to verify legacy behavior. */
@@ -197,13 +198,10 @@ const SearchInputScreen = () => {
       <Example title="Custom Ref">
         <CustomRef />
       </Example>
-      <Example title="Size S">
-        <SizeS />
+      <Example title="Sizes">
+        <Sizes />
       </Example>
-      <Example title="Size M">
-        <SizeM />
-      </Example>
-      <Example title="Compact">
+      <Example title="Deprecated compact (renders as size s)">
         <Compact />
       </Example>
       <Example title="Borderless variants">

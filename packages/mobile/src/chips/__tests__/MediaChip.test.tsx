@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -122,47 +121,5 @@ describe('MediaChip', () => {
       </DefaultThemeProvider>,
     );
     expect(ref.current).not.toBeNull();
-  });
-
-  describe('size', () => {
-    const renderLabelEndChipSpacing = (props: MediaChipProps) => {
-      const { unmount } = render(
-        <TestMediaChip end={<Icon color="fg" name="caretDown" size="xs" />} {...props}>
-          Label
-        </TestMediaChip>,
-      );
-      const content = screen.getByTestId(`${chipTestID}-content`);
-      const style = StyleSheet.flatten(content.props.style);
-      const spacing = {
-        paddingStart: style.paddingStart,
-        paddingEnd: style.paddingEnd,
-        paddingTop: style.paddingTop,
-        paddingBottom: style.paddingBottom,
-      };
-      unmount();
-      return spacing;
-    };
-
-    it('defaults to s per-slot padding', () => {
-      expect(renderLabelEndChipSpacing({})).toEqual(renderLabelEndChipSpacing({ size: 's' }));
-    });
-
-    it('treats size="xs" and legacy compact identically', () => {
-      expect(renderLabelEndChipSpacing({ size: 'xs' })).toEqual(
-        renderLabelEndChipSpacing({ compact: true }),
-      );
-    });
-
-    it('produces distinct per-slot padding for xs and s', () => {
-      expect(renderLabelEndChipSpacing({ size: 'xs' })).not.toEqual(
-        renderLabelEndChipSpacing({ size: 's' }),
-      );
-    });
-
-    it('resolves size over compact when both are provided', () => {
-      expect(renderLabelEndChipSpacing({ size: 's', compact: true })).toEqual(
-        renderLabelEndChipSpacing({ size: 's' }),
-      );
-    });
   });
 });

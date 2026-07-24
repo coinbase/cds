@@ -102,16 +102,15 @@ const TabbedChipsScreen = () => {
       <Example title="With enum values">
         <EnumDemo />
       </Example>
-      <Example title="With start">
-        <Demo tabs={tabsWithStart} />
-      </Example>
-      <Example title='size="xs"'>
+      <Example title="Sizes">
+        <Demo size="s" />
         <Demo size="xs" />
       </Example>
       <Example title="Deprecated compact (renders as size xs)">
         <Demo compact />
       </Example>
-      <Example title='size="xs" with start'>
+      <Example title="Sizes with start">
+        <Demo tabs={tabsWithStart} />
         <Demo size="xs" tabs={smallTabsWithStart} />
       </Example>
       <Example title="With auto scroll offset">

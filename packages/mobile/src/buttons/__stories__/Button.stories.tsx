@@ -20,10 +20,6 @@ const buttonStories: Omit<ButtonProps, 'children'>[] = [
   { variant: 'negative', transparent: true },
   { variant: 'inverse', transparent: true },
   { block: true },
-  { size: 'xs' },
-  { size: 's' },
-  { size: 'm' },
-  { size: 'l' },
   { size: 's', block: true },
   { transparent: true },
   { disabled: true },
@@ -131,6 +127,14 @@ const ButtonScreen = () => {
             I am a button
           </Button>
         </HStack>
+      </Example>
+      <Example title="Sizes">
+        <VStack alignItems="flex-start" gap={2}>
+          <Button size="xs">Extra small (xs)</Button>
+          <Button size="s">Small (s)</Button>
+          <Button size="m">Medium (m)</Button>
+          <Button size="l">Large (l)</Button>
+        </VStack>
       </Example>
       <Example title="Deprecated compact (use size='s')">
         <VStack alignItems="flex-start" gap={2}>

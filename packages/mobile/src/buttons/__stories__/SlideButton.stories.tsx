@@ -124,13 +124,9 @@ export const SlideButtonStories = () => {
       <Example title="Checked and Disabled">
         <SlideButtonExample checked disabled />
       </Example>
-      <Example title={'size="s"'}>
+      <Example title="Sizes">
         <SlideButtonExample size="s" />
-      </Example>
-      <Example title={'size="m"'}>
         <SlideButtonExample size="m" />
-      </Example>
-      <Example title={'size="l"'}>
         <SlideButtonExample size="l" />
       </Example>
       <Example title={'size="s" and disabled'}>

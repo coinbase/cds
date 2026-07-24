@@ -27,7 +27,7 @@ const multiSelectVerticalSpace: Record<SelectSize, 0.5 | 1 | 1.5> = { s: 0.5, m:
 
 // Multi-select value chips always use the compact `xs` size (even at size `l`) so several chips —
 // and a stacked inside label — stay within the field's natural height.
-const selectValueChipSize = 'xs';
+const multiSelectValueChipSize = 'xs';
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -105,19 +105,21 @@ export const DefaultSelectControlComponent = memo(
     const isMultiSelect = type === 'multi';
     // `size` wins over the deprecated `compact` for geometry.
     const resolvedSize = size ?? (compact ? 's' : defaultSelectSize);
-    // LABEL-PLACEMENT EXCEPTION: compact historically FORCES the inline label, but only when
-    // `size` is unset. When `size` is provided, label placement follows the normal labelVariant rules.
+    // The deprecated `compact` only forces label placement when the caller did NOT set an explicit
+    // `size`; once `size` is provided, placement follows the normal `labelVariant` rules.
     const useLegacyCompact = Boolean(compact) && size === undefined;
     const labelVariant = useLegacyCompact ? undefined : labelVariantProp;
-    // Label placement is independent of size. An inside label stacks vertically at size `l`
-    // (single or multi) and sits horizontally in the start slot at every other size. The legacy
-    // compact single-select also uses the horizontal inline label.
-    const shouldShowInsideLabel =
-      labelVariant === 'inside' && !useLegacyCompact && !!label && resolvedSize === 'l';
-    const shouldShowCompactLabel =
-      !!label &&
-      !shouldShowInsideLabel &&
-      ((useLegacyCompact && !isMultiSelect) || (labelVariant === 'inside' && !useLegacyCompact));
+    const hasLabel = !!label;
+
+    // Label placement mirrors TextInput: `compact` (set alone) forces an inside label; otherwise
+    // placement follows `labelVariant`. An inside label sits horizontally in the start slot at every
+    // size EXCEPT `l`, where it stacks vertically above the value. Multi-select is the one exception:
+    // its value chips can't share a row with an inline label, so legacy compact multi-select keeps
+    // its label outside (only an explicit `inside` labelVariant places a multi-select's label inside).
+    const isCompactLabel = useLegacyCompact && !isMultiSelect;
+    const wantsInsideLabel = hasLabel && (isCompactLabel || labelVariant === 'inside');
+    const insideVerticalLabel = wantsInsideLabel && !isCompactLabel && resolvedSize === 'l';
+    const insideHorizontalLabel = wantsInsideLabel && !insideVerticalLabel;
     const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
     // Map of options to their values
@@ -231,7 +233,7 @@ export const DefaultSelectControlComponent = memo(
     );
 
     const labelNode = useMemo(() => {
-      if (shouldShowInsideLabel || shouldShowCompactLabel) return null;
+      if (insideVerticalLabel || insideHorizontalLabel) return null;
 
       if (typeof label === 'string') {
         return (
@@ -248,8 +250,8 @@ export const DefaultSelectControlComponent = memo(
 
       return label;
     }, [
-      shouldShowInsideLabel,
-      shouldShowCompactLabel,
+      insideVerticalLabel,
+      insideHorizontalLabel,
       label,
       labelColor,
       labelFont,
@@ -257,16 +259,16 @@ export const DefaultSelectControlComponent = memo(
     ]);
 
     const inlineLabelNode = useMemo(() => {
-      if (!shouldShowInsideLabel && !shouldShowCompactLabel) return null;
+      if (!insideVerticalLabel && !insideHorizontalLabel) return null;
 
       if (typeof label === 'string') {
         return (
           <InputLabel
             color={labelColor}
             font={labelFont}
-            // The legacy compact (inline) label shares its row with the value, so keep it to a
-            // single line — otherwise a long label wraps and stretches the field past its size.
-            numberOfLines={shouldShowCompactLabel ? 1 : undefined}
+            // A horizontal inline label shares its row with the value, so keep it to a single line —
+            // otherwise a long label wraps and stretches the field past its size.
+            numberOfLines={insideHorizontalLabel ? 1 : undefined}
             paddingY={0}
             style={styles?.controlLabelNode}
           >
@@ -277,8 +279,8 @@ export const DefaultSelectControlComponent = memo(
 
       return label;
     }, [
-      shouldShowInsideLabel,
-      shouldShowCompactLabel,
+      insideVerticalLabel,
+      insideHorizontalLabel,
       label,
       labelColor,
       labelFont,
@@ -331,7 +333,7 @@ export const DefaultSelectControlComponent = memo(
                           onChange?.(option.value as ValueType);
                         }
                   }
-                  size={selectValueChipSize}
+                  size={multiSelectValueChipSize}
                 >
                   {option.label ?? option.description ?? option.value ?? ''}
                 </InputChip>
@@ -342,7 +344,7 @@ export const DefaultSelectControlComponent = memo(
                 borderWidth={0}
                 end={null}
                 invertColorScheme={false}
-                size={selectValueChipSize}
+                size={multiSelectValueChipSize}
               >
                 {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
               </InputChip>
@@ -410,12 +412,12 @@ export const DefaultSelectControlComponent = memo(
                   {startNode}
                 </HStack>
               )}
-              {shouldShowCompactLabel ? (
+              {insideHorizontalLabel ? (
                 <HStack alignItems="center" maxWidth="40%" paddingEnd={1}>
                   {inlineLabelNode}
                 </HStack>
               ) : null}
-              {shouldShowInsideLabel ? (
+              {insideVerticalLabel ? (
                 <VStack flexGrow={1} minWidth={0} width="100%">
                   {inlineLabelNode}
                   <VStack
@@ -456,8 +458,8 @@ export const DefaultSelectControlComponent = memo(
         styles?.controlStartNode,
         styles?.controlValueNode,
         startNode,
-        shouldShowCompactLabel,
-        shouldShowInsideLabel,
+        insideHorizontalLabel,
+        insideVerticalLabel,
         inlineLabelNode,
         valueAlignment,
         valueNode,
@@ -483,7 +485,7 @@ export const DefaultSelectControlComponent = memo(
 
     const inputStackStyles: StyleProp<ViewStyle> = useMemo(() => {
       let verticalSpace: 0.25 | 0.5 | 0.75 | 1 | 1.5 | 2;
-      if (shouldShowInsideLabel) {
+      if (insideVerticalLabel) {
         // A vertically-stacked inside label (size `l`) tightens the padding so the stacked label +
         // value fit the same field height an outside label produces. A multi-select with chips
         // (taller than a single text line) tightens further.
@@ -499,7 +501,7 @@ export const DefaultSelectControlComponent = memo(
         paddingLeft: theme.space[2],
         paddingRight: theme.space[2],
       };
-    }, [shouldShowInsideLabel, resolvedSize, isMultiSelect, hasValue, theme.space]);
+    }, [insideVerticalLabel, resolvedSize, isMultiSelect, hasValue, theme.space]);
 
     return (
       <InputStack
@@ -515,7 +517,7 @@ export const DefaultSelectControlComponent = memo(
         inputBackground={inputBackground}
         inputNode={inputNode}
         labelNode={labelNode}
-        labelVariant={shouldShowInsideLabel ? 'inside' : 'outside'}
+        labelVariant={insideVerticalLabel ? 'inside' : 'outside'}
         onBlur={onBlur}
         onFocus={onFocus}
         style={style}

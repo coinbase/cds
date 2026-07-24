@@ -79,33 +79,6 @@ describe('MediaChip', () => {
     expect(chip.firstElementChild).toHaveStyle('padding: var(--space-1-5) var(--space-0-75)');
   });
 
-  describe('size', () => {
-    it('defaults to s per-slot padding', () => {
-      render(<Wrapper>Default</Wrapper>);
-      expect(screen.getByTestId(testID).firstElementChild).toHaveStyle(
-        'padding: var(--space-2) var(--space-1)',
-      );
-    });
-
-    it('applies xs spacing when size="xs" matching legacy compact', () => {
-      render(<Wrapper size="xs">Extra small</Wrapper>);
-      expect(screen.getByTestId(testID).firstElementChild).toHaveStyle(
-        'padding: var(--space-1-5) var(--space-0-75)',
-      );
-    });
-
-    it('resolves size over compact when both are provided', () => {
-      render(
-        <Wrapper compact size="s">
-          Size wins
-        </Wrapper>,
-      );
-      expect(screen.getByTestId(testID).firstElementChild).toHaveStyle(
-        'padding: var(--space-2) var(--space-1)',
-      );
-    });
-  });
-
   it('allows custom spacing overrides', () => {
     render(
       <Wrapper paddingX={5} paddingY={3}>

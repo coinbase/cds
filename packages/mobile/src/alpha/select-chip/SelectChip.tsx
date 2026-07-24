@@ -48,11 +48,11 @@ const SelectChipComponent = memo(
     const mergedProps = useComponentConfig('SelectChip', _props);
     const { invertColorScheme, numberOfLines, maxWidth, displayValue, size, compact, ...props } =
       mergedProps;
+    // Select doesn't pass the chip-specific props (size/compact/displayValue/etc.) down to the
+    // control, so they're injected here. They're listed AFTER the `controlProps` spread so the
+    // chip-level values win — matching the web SelectChip wrapper.
     const SelectChipControlComponent = useCallback(
-      ({
-        compact: _controlCompact,
-        ...controlProps
-      }: SelectControlProps<Type, SelectOptionValue>) => {
+      (controlProps: SelectControlProps<Type, SelectOptionValue>) => {
         return (
           <SelectChipControl
             {...controlProps}

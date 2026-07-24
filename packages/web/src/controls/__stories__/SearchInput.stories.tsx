@@ -78,31 +78,33 @@ const HideEndIcon = () => {
   );
 };
 
-const SizeS = () => {
+export const Sizes = () => {
   const [text, setText] = useState('');
 
   return (
-    <SearchInput
-      accessibilityLabel="searchbox"
-      onChangeText={setText}
-      onClear={() => {}}
-      size="s"
-      value={text}
-    />
-  );
-};
-
-const SizeM = () => {
-  const [text, setText] = useState('');
-
-  return (
-    <SearchInput
-      accessibilityLabel="searchbox"
-      onChangeText={setText}
-      onClear={() => {}}
-      size="m"
-      value={text}
-    />
+    <VStack gap={2}>
+      <SearchInput
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        size="s"
+        value={text}
+      />
+      <SearchInput
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        size="m"
+        value={text}
+      />
+      <SearchInput
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        size="l"
+        value={text}
+      />
+    </VStack>
   );
 };
 
@@ -153,9 +155,7 @@ export const Default = () => (
   <VStack gap={2}>
     <Basic />
     <Disabled />
-    <SizeS />
     <Compact />
-    <SizeM />
     <HideStartIcon />
     <HideEndIcon />
     <CustomEndNode

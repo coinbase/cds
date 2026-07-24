@@ -306,11 +306,10 @@ const InputScreen = () => {
       <Example inline title="TextInput No Label">
         <MockTextInput placeholder="189-280-1111" variant="foregroundMuted" />
       </Example>
-      <Example inline title="TextInput Size S">
-        <MockSizeTextInput label="Label" placeholder="Small" size="s" />
-      </Example>
-      <Example inline title="TextInput Size M">
-        <MockSizeTextInput label="Label" placeholder="Medium" size="m" />
+      <Example inline title="TextInput Sizes">
+        <MockSizeTextInput label="Small (s)" placeholder="Small" size="s" />
+        <MockSizeTextInput label="Medium (m)" placeholder="Medium" size="m" />
+        <MockSizeTextInput label="Large (l) - default" placeholder="Large" size="l" />
       </Example>
       <Example inline title="TextInput Size S Inside Label">
         <MockSizeTextInput

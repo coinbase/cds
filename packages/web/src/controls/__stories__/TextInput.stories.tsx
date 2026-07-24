@@ -405,12 +405,14 @@ export const SuffixAndEndContent = function SuffixAndEndContent() {
  * T-SHIRT SIZE VARIATIONS
  */
 
-export const SizeS = function SizeS() {
-  return <TextInput label="Label" placeholder="Small" size="s" />;
-};
-
-export const SizeM = function SizeM() {
-  return <TextInput label="Label" placeholder="Medium" size="m" />;
+export const Sizes = function Sizes() {
+  return (
+    <VStack gap={2}>
+      <TextInput label="Small (s)" placeholder="Small" size="s" />
+      <TextInput label="Medium (m)" placeholder="Medium" size="m" />
+      <TextInput label="Large (l) - default" placeholder="Large" size="l" />
+    </VStack>
+  );
 };
 
 export const SizeSWithOutsideLabel = function SizeSWithOutsideLabel() {

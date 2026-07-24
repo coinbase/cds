@@ -21,10 +21,6 @@ const buttonStories: Omit<ButtonBaseProps, 'children'>[] = [
   { variant: 'negative', transparent: true },
   { variant: 'inverse', transparent: true },
   { block: true },
-  { size: 'xs' },
-  { size: 's' },
-  { size: 'm' },
-  { size: 'l' },
   { size: 's', block: true },
   { transparent: true },
   { disabled: true },
@@ -91,6 +87,15 @@ export const CustomEndIconButton = () => (
         Test
       </Button>
     </ButtonGroup>
+  </VStack>
+);
+
+export const Sizes = () => (
+  <VStack alignItems="flex-start" gap={2}>
+    <Button size="xs">Extra small (xs)</Button>
+    <Button size="s">Small (s)</Button>
+    <Button size="m">Medium (m)</Button>
+    <Button size="l">Large (l)</Button>
   </VStack>
 );
 
