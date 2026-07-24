@@ -1,7 +1,8 @@
 import React from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { defaultTheme } from '../../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
 import { DefaultSelectControl } from '../DefaultSelectControl';
 import type { SelectControlProps, SelectOption } from '../Select';
@@ -107,6 +108,57 @@ describe('DefaultSelectControl', () => {
       );
 
       expect(screen.getByText('Select an option')).toBeTruthy();
+    });
+
+    it('renders placeholder with fgMuted when value is null', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      const placeholder = screen.getByText('Select an option');
+      expect(StyleSheet.flatten(placeholder.props.style).color).toBe(
+        defaultTheme.lightColor.fgMuted,
+      );
+    });
+
+    it('renders placeholder with fgMuted when value is empty string', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value={''} />
+        </DefaultThemeProvider>,
+      );
+
+      const placeholder = screen.getByText('Select an option');
+      expect(placeholder).toBeTruthy();
+      expect(StyleSheet.flatten(placeholder.props.style).color).toBe(
+        defaultTheme.lightColor.fgMuted,
+      );
+    });
+
+    it('renders placeholder with fgMuted when value is not in options', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="unknown" />
+        </DefaultThemeProvider>,
+      );
+
+      const placeholder = screen.getByText('Select an option');
+      expect(StyleSheet.flatten(placeholder.props.style).color).toBe(
+        defaultTheme.lightColor.fgMuted,
+      );
+    });
+
+    it('renders selected option with fg when value matches an option', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      const selectedValue = screen.getByText('Option 1');
+      expect(StyleSheet.flatten(selectedValue.props.style).color).toBe(defaultTheme.lightColor.fg);
     });
 
     it('calls setOpen when pressed', () => {

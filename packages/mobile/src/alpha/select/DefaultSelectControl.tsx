@@ -142,11 +142,17 @@ export const DefaultSelectControlComponent = memo(
       return map;
     }, [options]);
 
+    const matchedOption = useMemo(() => {
+      if (isMultiSelect || value === null || Array.isArray(value)) return undefined;
+      return optionsMap.get(value as SelectOptionValue);
+    }, [isMultiSelect, optionsMap, value]);
+
+    const isShowingPlaceholder = matchedOption === undefined;
+
     const singleValueContent = useMemo(() => {
-      const option = !isMultiSelect ? optionsMap.get(value as SelectOptionValue) : undefined;
-      const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
-      return hasValue ? label : placeholder;
-    }, [hasValue, isMultiSelect, optionsMap, placeholder, value]);
+      if (!matchedOption) return placeholder;
+      return matchedOption.label ?? matchedOption.description ?? matchedOption.value;
+    }, [matchedOption, placeholder]);
 
     const computedControlAccessibilityLabel = useMemo(() => {
       // For multi-select, set the label to the content of each selected value and the hidden selected options label
@@ -314,7 +320,12 @@ export const DefaultSelectControlComponent = memo(
       }
 
       return typeof singleValueContent === 'string' ? (
-        <Text align={align} color={hasValue ? 'fg' : 'fgMuted'} ellipsize="tail" font={font}>
+        <Text
+          align={align}
+          color={isShowingPlaceholder ? 'fgMuted' : 'fg'}
+          ellipsize="tail"
+          font={font}
+        >
           {singleValueContent}
         </Text>
       ) : (
@@ -323,6 +334,7 @@ export const DefaultSelectControlComponent = memo(
     }, [
       hasValue,
       isMultiSelect,
+      isShowingPlaceholder,
       singleValueContent,
       font,
       align,

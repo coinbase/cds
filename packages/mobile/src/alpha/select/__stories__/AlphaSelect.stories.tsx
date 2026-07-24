@@ -166,6 +166,20 @@ const DefaultExample = () => {
   );
 };
 
+const EmptyStringValueExample = () => {
+  const [value, setValue] = useState<string | null>('');
+
+  return (
+    <Select
+      label="Empty string value"
+      onChange={setValue}
+      options={exampleOptionsWithoutNull}
+      placeholder="Select an option"
+      value={value}
+    />
+  );
+};
+
 const TypedSelectExample = () => {
   type TestValue = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
   const typedOptions: SelectOption<TestValue>[] = [
@@ -1318,6 +1332,9 @@ const SelectV3Screen = () => {
     <ExampleScreen>
       <Example title="Default">
         <DefaultExample />
+      </Example>
+      <Example title="Empty string value">
+        <EmptyStringValueExample />
       </Example>
       <Example title="Typed">
         <TypedSelectExample />

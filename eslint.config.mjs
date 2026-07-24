@@ -279,6 +279,7 @@ const typescriptRules = {
   '@typescript-eslint/prefer-namespace-keyword': 'off',
   '@coinbase/cds/control-has-associated-label-extended': 'warn',
   '@coinbase/cds/has-valid-accessibility-descriptors-extended': 'warn',
+  '@coinbase/cds/list-cell-jsx-requires-node-props': 'warn',
   '@coinbase/cds/web-tooltip-interactive-content': 'warn',
   '@coinbase/cds/web-chart-scrubbing-accessibility': 'warn',
   '@coinbase/cds/mobile-chart-scrubbing-accessibility': 'warn',

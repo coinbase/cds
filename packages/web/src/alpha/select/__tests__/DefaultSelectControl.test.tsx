@@ -93,6 +93,46 @@ describe('DefaultSelectControl', () => {
       expect(screen.getByText('Select an option')).toBeInTheDocument();
     });
 
+    it('renders placeholder with fgMuted when value is null', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toHaveStyle({ color: 'var(--color-fgMuted)' });
+    });
+
+    it('renders placeholder with fgMuted when value is empty string', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toHaveStyle({ color: 'var(--color-fgMuted)' });
+    });
+
+    it('renders placeholder with fgMuted when value is not in options', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="unknown" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toHaveStyle({ color: 'var(--color-fgMuted)' });
+    });
+
+    it('renders selected option with fg when value matches an option', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Option 1')).toHaveStyle({ color: 'var(--color-fg)' });
+    });
+
     it('calls setOpen when clicked', async () => {
       const setOpen = jest.fn();
       const user = userEvent.setup();
