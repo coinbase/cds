@@ -37,22 +37,6 @@ Token counts were unavailable from the Cursor eval runner for this iteration.
 
 The biggest gains come from domain-specific knowledge the base model lacks: deprecated API awareness (TextHeadline/TextBody trap), illustration component selection and token hygiene, and structured ESLint-style audit output.
 
-### Out-of-scope near-misses (iteration 5, 2026-07-22)
-
-Added two evals that intentionally look like component work but must **not** enter the cds-code coding/review workflows. Compared the narrowed skill against the pre-PR skill snapshot:
-
-| Metric    | Narrowed skill | Pre-PR skill | Delta  |
-| --------- | -------------- | ------------ | ------ |
-| Pass rate | **100%**       | 73%          | +27pp  |
-| Avg time  | 56.5s          | 87.5s        | −31.1s |
-
-| Task                                       | Narrowed | Pre-PR |
-| ------------------------------------------ | -------- | ------ |
-| Logic-only ProfileCard Relay/hook refactor | 100%     | 80%    |
-| Navigation-only Settings Security wiring   | 100%     | 67%    |
-
-The narrowed skill correctly skips discovery/docs for non-visual edits inside component files, while still completing the requested logic/navigation change and preserving CDS presentation. The pre-PR skill still entered the full coding workflow on both cases.
-
 ## Running evaluations
 
 Use the `skill-creator` skill to run the evals.

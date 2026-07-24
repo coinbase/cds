@@ -8,7 +8,7 @@ description: |
   "perform a CDS audit on our changes", "check our codebase for CDS adherence", "does this feature use CDS well?"
 license: Apache-2.0
 metadata:
-  version: '2.1.0'
+  version: '2.2.0'
 ---
 
 # CDS Code Skill
