@@ -1,4 +1,4 @@
-import { execSync, spawn } from 'node:child_process';
+import { execFileSync, spawn } from 'node:child_process';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 
@@ -183,15 +183,16 @@ android.buildTypes.release.shrinkResources = true
 
     // Replace assets/index.android.bundle in the APK (cd into patchDir so zip path is correct)
     console.log(`\nPatching bundle into APK: ${apk}...`);
-    execSync(`zip -u ${apk} assets/index.android.bundle`, { cwd: patchDir, stdio: 'inherit' });
+    execFileSync('zip', ['-u', apk, 'assets/index.android.bundle'], { cwd: patchDir, stdio: 'inherit' });
 
     // Re-align (zip modification breaks alignment) then re-sign with debug keystore
-    execSync(`zipalign -f 4 ${apk} ${alignedApk}`, { stdio: 'inherit' });
+    execFileSync('zipalign', ['-f', '4', apk, alignedApk], { stdio: 'inherit' });
     await fs.rename(alignedApk, apk);
 
     const debugKeystore = path.resolve(process.env.HOME, '.android/debug.keystore');
-    execSync(
-      `apksigner sign --ks ${debugKeystore} --ks-pass pass:android --key-pass pass:android ${apk}`,
+    execFileSync(
+      'apksigner',
+      ['sign', '--ks', debugKeystore, '--ks-pass', 'pass:android', '--key-pass', 'pass:android', apk],
       { stdio: 'inherit' },
     );
 
