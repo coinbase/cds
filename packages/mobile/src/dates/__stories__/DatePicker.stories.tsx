@@ -145,6 +145,22 @@ export const FullExample = () => {
   );
 };
 
+export const Sizes = () => {
+  return (
+    <ExampleScreen>
+      <Example title="DatePicker sizes">
+        <VStack gap={2}>
+          <ExampleDatePicker openCalendarAccessibilityLabel="Small calendar" size="s" />
+          <ExampleDatePicker openCalendarAccessibilityLabel="Medium calendar" size="m" />
+          <ExampleDatePicker openCalendarAccessibilityLabel="Large calendar" size="l" />
+          {/* compact is deprecated and maps to size="s" */}
+          <ExampleDatePicker compact openCalendarAccessibilityLabel="Compact calendar" />
+        </VStack>
+      </Example>
+    </ExampleScreen>
+  );
+};
+
 export const CustomLabel = () => {
   return (
     <ExampleScreen>

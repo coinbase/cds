@@ -60,6 +60,34 @@ export const Examples = () => {
 
 Examples.parameters = { a11y: { disable: true } };
 
+export const Sizes = () => {
+  const [date, setDate] = useState<Date | null>(null);
+  const [error, setError] = useState<DateInputValidationError | null>(null);
+  const props = { date, onChangeDate: setDate, error, onErrorDate: setError };
+  return (
+    <Group gap={8} paddingEnd={8}>
+      <VStack>
+        <Note>{'size="s"'}</Note>
+        <DateInput size="s" {...sharedProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>{'size="m"'}</Note>
+        <DateInput size="m" {...sharedProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>{'size="l" (default)'}</Note>
+        <DateInput size="l" {...sharedProps} {...props} />
+      </VStack>
+      <VStack>
+        <Note>{'compact (deprecated, maps to size="s")'}</Note>
+        <DateInput compact {...sharedProps} {...props} />
+      </VStack>
+    </Group>
+  );
+};
+
+Sizes.parameters = { a11y: { disable: true } };
+
 export const Props = () => {
   const [date, setDate] = useState<Date | null>(today);
   const [error, setError] = useState<DateInputValidationError | null>(null);

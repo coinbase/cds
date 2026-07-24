@@ -566,3 +566,39 @@ describe('DatePicker', () => {
     expect(mockOnChangeDate).not.toHaveBeenCalled();
   });
 });
+
+describe('DatePicker size', () => {
+  const labelTestID = 'label-test';
+  const startTestID = 'start-test';
+
+  it('renders the label above the input (in stack) by default', () => {
+    render(<DatePickerExample label="Birthdate" testIDMap={{ label: labelTestID }} />);
+
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Birthdate');
+  });
+
+  it.each(['s', 'm', 'l'] as const)(
+    'forwards size="%s" while keeping the label above the input',
+    (size) => {
+      render(
+        <DatePickerExample label="Birthdate" size={size} testIDMap={{ label: labelTestID }} />,
+      );
+
+      expect(screen.getByTestId(labelTestID)).toHaveTextContent('Birthdate');
+    },
+  );
+
+  it('reproduces the legacy inline start-slot label placement for compact alone', () => {
+    render(<DatePickerExample compact label="Birthdate" testIDMap={{ start: startTestID }} />);
+
+    expect(screen.getByTestId(startTestID)).toHaveTextContent('Birthdate');
+  });
+
+  it('lets size win over compact: size="m" keeps the label above the input', () => {
+    render(
+      <DatePickerExample compact label="Birthdate" size="m" testIDMap={{ label: labelTestID }} />,
+    );
+
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Birthdate');
+  });
+});
