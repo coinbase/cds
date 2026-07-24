@@ -101,6 +101,47 @@ export const Compact = () => {
   );
 };
 
+export const Sizes = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={3}>
+      <Select
+        label="Small (s)"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="s"
+        value={value}
+      />
+      <Select
+        label="Medium (m)"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="m"
+        value={value}
+      />
+      <Select
+        label="Large (l) - default"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="l"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 export const LabelVariant = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },

@@ -14,8 +14,12 @@ import { VStack } from '../../layout/VStack';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import { Text } from '../../typography/Text';
 
-import type { SelectControlProps, SelectOption, SelectType } from './Select';
+import type { SelectControlProps, SelectOption, SelectSize, SelectType } from './Select';
 import { isSelectOptionGroup } from './Select';
+
+const defaultSelectSize: SelectSize = 'l';
+
+const selectSizeVerticalSpace: Record<SelectSize, 1 | 1.5 | 2> = { s: 1, m: 1.5, l: 2 };
 
 const variantColor: Record<string, ThemeVars.Color> = {
   foreground: 'fg',
@@ -55,6 +59,7 @@ export const DefaultSelectControlComponent = memo(
     startNode,
     endNode: customEndNode,
     compact,
+    size,
     align = 'start',
     font = 'body',
     labelColor = 'fg',
@@ -89,11 +94,15 @@ export const DefaultSelectControlComponent = memo(
     }, [isInteractionBlocked, setOpen]);
 
     const theme = useTheme();
-    // When compact, labelVariant is ignored
-    const labelVariant = compact ? undefined : labelVariantProp;
     const isMultiSelect = type === 'multi';
-    const shouldShowCompactLabel = compact && label && !isMultiSelect;
-    const shouldShowInsideLabel = labelVariant === 'inside' && !compact && label;
+    // `size` wins over the deprecated `compact` for geometry.
+    const resolvedSize = size ?? (compact ? 's' : defaultSelectSize);
+    // LABEL-PLACEMENT EXCEPTION: compact historically FORCES the inline label, but only when
+    // `size` is unset. When `size` is provided, label placement follows the normal labelVariant rules.
+    const useLegacyCompact = Boolean(compact) && size === undefined;
+    const labelVariant = useLegacyCompact ? undefined : labelVariantProp;
+    const shouldShowCompactLabel = useLegacyCompact && label && !isMultiSelect;
+    const shouldShowInsideLabel = labelVariant === 'inside' && !useLegacyCompact && label;
     const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
 
     // Map of options to their values
@@ -449,15 +458,15 @@ export const DefaultSelectControlComponent = memo(
       [styles?.controlEndNode, disabled, customEndNode, open, handleToggleOpen],
     );
 
-    const inputStackStyles: StyleProp<ViewStyle> = useMemo(
-      () => ({
-        paddingTop: compact || labelVariant === 'inside' ? theme.space[1] : theme.space[2],
-        paddingBottom: compact || labelVariant === 'inside' ? theme.space[1] : theme.space[2],
+    const inputStackStyles: StyleProp<ViewStyle> = useMemo(() => {
+      const verticalSpace = labelVariant === 'inside' ? 1 : selectSizeVerticalSpace[resolvedSize];
+      return {
+        paddingTop: theme.space[verticalSpace],
+        paddingBottom: theme.space[verticalSpace],
         paddingLeft: theme.space[2],
         paddingRight: theme.space[2],
-      }),
-      [compact, labelVariant, theme.space],
-    );
+      };
+    }, [labelVariant, resolvedSize, theme.space]);
 
     return (
       <InputStack

@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { DefaultThemeProvider } from '../../../utils/test';
@@ -349,6 +349,134 @@ describe('DefaultSelectControl', () => {
       const chip2 = screen.getByRole('button', { name: 'Remove Option 2' });
       await user.click(chip2);
       expect(onChange).toHaveBeenCalledWith('option2');
+    });
+  });
+
+  describe('Size', () => {
+    const getInputArea = () => screen.getByTestId('input-interactable-area');
+
+    it('defaults to size "l" (16px vertical padding)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-2)',
+        paddingBottom: 'var(--space-2)',
+      });
+    });
+
+    it('applies 8px vertical padding for size "s"', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-1)',
+        paddingBottom: 'var(--space-1)',
+      });
+    });
+
+    it('applies 12px vertical padding for size "m"', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="m" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-1_5)',
+        paddingBottom: 'var(--space-1_5)',
+      });
+    });
+
+    it('applies 16px vertical padding for size "l"', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="l" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-2)',
+        paddingBottom: 'var(--space-2)',
+      });
+    });
+
+    it('does not change horizontal padding across sizes', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingLeft: 'var(--space-2)',
+        paddingRight: 'var(--space-2)',
+      });
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="l" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingLeft: 'var(--space-2)',
+        paddingRight: 'var(--space-2)',
+      });
+    });
+
+    it('renders the label inline and uses 8px padding for the deprecated compact prop', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact />
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = getInputArea();
+      expect(inputArea).toHaveStyle({
+        paddingTop: 'var(--space-1)',
+        paddingBottom: 'var(--space-1)',
+      });
+      // Compact forces the inline label inside the control.
+      expect(within(inputArea).getByText('Test Select Control')).toBeInTheDocument();
+    });
+
+    it('lets size win over compact (label above, 12px padding)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact size="m" />
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = getInputArea();
+      expect(inputArea).toHaveStyle({
+        paddingTop: 'var(--space-1_5)',
+        paddingBottom: 'var(--space-1_5)',
+      });
+      // Size wins, so the label is not forced inline.
+      expect(within(inputArea).queryByText('Test Select Control')).not.toBeInTheDocument();
+      expect(screen.getByText('Test Select Control')).toBeInTheDocument();
+    });
+
+    it('stacks the label inside and uses 8px padding independent of size', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="inside" size="l" />
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = getInputArea();
+      expect(inputArea).toHaveStyle({
+        paddingTop: 'var(--space-1)',
+        paddingBottom: 'var(--space-1)',
+      });
+      expect(within(inputArea).getByText('Test Select Control')).toBeInTheDocument();
     });
   });
 

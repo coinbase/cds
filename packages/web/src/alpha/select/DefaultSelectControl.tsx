@@ -18,8 +18,17 @@ import {
   isSelectOptionGroup,
   type SelectControlProps,
   type SelectOption,
+  type SelectSize,
   type SelectType,
 } from './Select';
+
+const defaultSelectSize: SelectSize = 'l';
+
+const selectSizeVerticalSpaceVar: Record<SelectSize, string> = {
+  s: 'var(--space-1)',
+  m: 'var(--space-1_5)',
+  l: 'var(--space-2)',
+};
 
 const noFocusOutlineCss = css`
   &:focus,
@@ -78,6 +87,7 @@ const DefaultSelectControlComponent = memo(
         startNode,
         endNode: customEndNode,
         compact,
+        size,
         blendStyles,
         align = 'start',
         font = 'body',
@@ -113,12 +123,16 @@ const DefaultSelectControlComponent = memo(
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
       const isMultiSelect = type === 'multi';
-      // When compact, labelVariant is ignored
-      const labelVariant = compact ? undefined : labelVariantProp;
-      // horizontal/inline label is used for compact selesct exepct for multi-selects
+      // `size` wins over the deprecated `compact` for geometry.
+      const resolvedSize = size ?? (compact ? 's' : defaultSelectSize);
+      // LABEL-PLACEMENT EXCEPTION: compact historically FORCES the inline label, but only when
+      // `size` is unset. When `size` is provided, label placement follows the normal labelVariant rules.
+      const useLegacyCompact = Boolean(compact) && size === undefined;
+      const labelVariant = useLegacyCompact ? undefined : labelVariantProp;
+      // horizontal/inline label is used for legacy compact selects except for multi-selects
       // multi-selects render their label outside of the control unless labelVariant is set to 'inside'
-      const shouldShowCompactLabel = compact && label && !isMultiSelect;
-      const shouldShowInsideLabel = labelVariant === 'inside' && !compact && label;
+      const shouldShowCompactLabel = useLegacyCompact && label && !isMultiSelect;
+      const shouldShowInsideLabel = labelVariant === 'inside' && !useLegacyCompact && label;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
       // Map of options to their values
       // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
@@ -543,15 +557,16 @@ const DefaultSelectControlComponent = memo(
         ],
       );
 
-      const inputStackStyles = useMemo(
-        () => ({
-          paddingTop: compact || labelVariant === 'inside' ? 'var(--space-1)' : 'var(--space-2)',
-          paddingBottom: compact || labelVariant === 'inside' ? 'var(--space-1)' : 'var(--space-2)',
+      const inputStackStyles = useMemo(() => {
+        const verticalSpaceVar =
+          labelVariant === 'inside' ? 'var(--space-1)' : selectSizeVerticalSpaceVar[resolvedSize];
+        return {
+          paddingTop: verticalSpaceVar,
+          paddingBottom: verticalSpaceVar,
           paddingLeft: 'var(--space-2)',
           paddingRight: 'var(--space-2)',
-        }),
-        [compact, labelVariant],
-      );
+        };
+      }, [labelVariant, resolvedSize]);
 
       return (
         <InputStack

@@ -13,6 +13,12 @@ import type { PressableDefaultElement, PressableProps } from '../../system/Press
 export type SelectType = 'single' | 'multi';
 
 /**
+ * T-shirt size scale for the Select control. The Figma Select component set exposes
+ * three sizes (`s | m | l`); there is intentionally no `xs`.
+ */
+export type SelectSize = 's' | 'm' | 'l';
+
+/**
  * Configuration for a single option in the Select component
  */
 export type SelectOption<SelectOptionValue extends string = string> = {
@@ -450,8 +456,17 @@ export type SelectControlProps<
     blendStyles?: InteractableBlendStyles;
     /** ARIA haspopup attribute value */
     ariaHaspopup?: AriaHasPopupType;
-    /** Whether to use compact styling for the control */
+    /**
+     * Whether to use compact styling for the control.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     compact?: boolean;
+    /**
+     * Set the size of the select input.
+     * @default l
+     */
+    size?: SelectSize;
     /** Inline styles for the control element */
     style?: React.CSSProperties;
     /** Custom styles for individual elements of the control */
@@ -544,8 +559,17 @@ export type SelectBaseProps<
     setOpen?: (open: boolean | ((open: boolean) => boolean)) => void;
     /** Whether clicking outside the dropdown should close it */
     disableClickOutsideClose?: boolean;
-    /** Whether to use compact styling for the select */
+    /**
+     * Whether to use compact styling for the select.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     compact?: boolean;
+    /**
+     * Set the size of the select input.
+     * @default l
+     */
+    size?: SelectSize;
     /** Initial open state when component mounts (uncontrolled mode) */
     defaultOpen?: boolean;
     /** Maximum number of selected options to show before truncating */

@@ -216,6 +216,39 @@ const CompactExample = () => {
   );
 };
 
+const SizesExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={2}>
+      <Select
+        label="Small (s)"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="s"
+        value={value}
+      />
+      <Select
+        label="Medium (m)"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="m"
+        value={value}
+      />
+      <Select
+        label="Large (l) - default"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="l"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 const InsideLabelVariantExample = () => {
   const [value, setValue] = useState<string | null>('1');
 
@@ -1341,6 +1374,9 @@ const SelectV3Screen = () => {
       </Example>
       <Example title="Compact">
         <CompactExample />
+      </Example>
+      <Example title="Sizes">
+        <SizesExample />
       </Example>
       <Example title="Inside label variant">
         <InsideLabelVariantExample />

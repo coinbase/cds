@@ -1,6 +1,6 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { fireEvent, render, screen, within } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
@@ -519,6 +519,112 @@ describe('DefaultSelectControl', () => {
       // First occurrence should be used for display
       expect(screen.getByText('First Option')).toBeTruthy();
       expect(screen.queryByText('Second Option')).toBeNull();
+    });
+  });
+
+  describe('Size', () => {
+    const getInputAreaStyle = () =>
+      StyleSheet.flatten(screen.getByTestId('select-control-input-area').props.style);
+
+    it('defaults to size "l" (16px vertical padding)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[2]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[2]);
+    });
+
+    it('applies per-size vertical padding for "s", "m" and "l"', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+      let style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1]);
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="m" testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+      style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1.5]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1.5]);
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="l" testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+      style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[2]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[2]);
+    });
+
+    it('does not change horizontal padding across sizes', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingLeft).toBe(defaultTheme.space[2]);
+      expect(style.paddingRight).toBe(defaultTheme.space[2]);
+    });
+
+    it('renders the label inline and uses 8px padding for the deprecated compact prop', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1]);
+      // Compact forces the inline label inside the control.
+      const inputArea = screen.getByTestId('select-control-input-area');
+      expect(within(inputArea).getByText('Test Select Control')).toBeTruthy();
+    });
+
+    it('lets size win over compact (label above, 12px padding)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact size="m" testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1.5]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1.5]);
+      // Size wins, so the label is not forced inline.
+      const inputArea = screen.getByTestId('select-control-input-area');
+      expect(within(inputArea).queryByText('Test Select Control')).toBeNull();
+      expect(screen.getByText('Test Select Control')).toBeTruthy();
+    });
+
+    it('stacks the label inside and uses 8px padding independent of size', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...defaultProps}
+            labelVariant="inside"
+            size="l"
+            testID="select-control"
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1]);
     });
   });
 });

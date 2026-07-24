@@ -95,6 +95,52 @@ export const Compact = () => {
   );
 };
 
+export const Sizes = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  return (
+    <VStack gap={3}>
+      <Select
+        label="Small (s)"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="s"
+        type="multi"
+        value={value}
+      />
+      <Select
+        label="Medium (m)"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="m"
+        type="multi"
+        value={value}
+      />
+      <Select
+        label="Large (l) - default"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="l"
+        type="multi"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 export const InsideLabelVariant = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
