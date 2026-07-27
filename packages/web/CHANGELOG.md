@@ -8,6 +8,10 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.9.0 ((7/27/2026, 12:00 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 9.8.0 (7/23/2026 PST)
 
 #### 🚀 Updates

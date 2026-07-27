@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.9.0 (7/27/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support disabling icon scaling. [[#811](https://github.com/coinbase/cds/pull/811)]
+
 ## 9.8.0 (7/23/2026 PST)
 
 #### 🚀 Updates
