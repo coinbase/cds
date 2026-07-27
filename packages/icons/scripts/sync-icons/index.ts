@@ -545,6 +545,9 @@ export const descriptionMap: Record<string, IconName[]> = ${descriptionMapConten
     console.log(`\n⚠️ Warning: ${breakingChanges} breaking changes detected`);
 
   await syncIconCodeConnect(config.repoRoot);
+
+  console.log('Generating expo-app icon SVG map...');
+  execSync('yarn nx run codegen:icon-svg-map', { cwd: config.repoRoot, stdio: 'inherit' });
 };
 
 process.on('exit', (code) => {
