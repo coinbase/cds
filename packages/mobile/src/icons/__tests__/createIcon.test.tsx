@@ -1,4 +1,5 @@
 import { createRef } from 'react';
+import * as ReactNative from 'react-native';
 import { Text, View } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
@@ -21,6 +22,15 @@ const demoGlyphMap: GlyphMap<DemoIconName> = {
 
 const renderIcon = (ui: React.ReactElement) =>
   render(<DefaultThemeProvider>{ui}</DefaultThemeProvider>);
+
+const mockFontScale = (fontScale: number) => {
+  jest.spyOn(ReactNative, 'useWindowDimensions').mockReturnValue({
+    fontScale,
+    height: 812,
+    scale: 2,
+    width: 375,
+  });
+};
 
 describe('createIcon', () => {
   it('renders the inactive glyph from the provided glyph map by default', () => {
@@ -88,5 +98,86 @@ describe('createIcon', () => {
     expect(getGlyph).toHaveBeenCalledWith(
       expect.objectContaining({ name: 'star', size: 'l', active: true }),
     );
+  });
+
+  describe('allowFontScaling', () => {
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('scales icon size with the device font scale by default', () => {
+      mockFontScale(2);
+      const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+      renderIcon(<Icon name="star" size="m" />);
+
+      expect(screen.getByText(INACTIVE_GLYPH)).toHaveStyle({
+        fontSize: 48,
+        height: 48,
+        width: 48,
+        lineHeight: 48,
+      });
+    });
+
+    it('scales icon size when allowFontScaling is explicitly enabled', () => {
+      mockFontScale(2);
+      const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+      renderIcon(<Icon allowFontScaling name="star" size="m" />);
+
+      expect(screen.getByText(INACTIVE_GLYPH)).toHaveStyle({
+        fontSize: 48,
+        height: 48,
+        width: 48,
+        lineHeight: 48,
+      });
+    });
+
+    it('uses the base icon size when allowFontScaling is disabled', () => {
+      mockFontScale(2);
+      const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+      renderIcon(<Icon allowFontScaling={false} name="star" size="m" />);
+
+      expect(screen.getByText(INACTIVE_GLYPH)).toHaveStyle({
+        fontSize: 24,
+        height: 24,
+        width: 24,
+        lineHeight: 24,
+      });
+    });
+
+    it('passes scaled pixelSize to getGlyph when allowFontScaling is enabled', () => {
+      mockFontScale(2);
+      const getGlyph = jest.fn(() => INACTIVE_GLYPH);
+      const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap, getGlyph });
+
+      renderIcon(<Icon name="star" size="m" />);
+
+      expect(getGlyph).toHaveBeenCalledWith(
+        expect.objectContaining({ name: 'star', size: 'm', pixelSize: 48 }),
+      );
+    });
+
+    it('passes base pixelSize to getGlyph when allowFontScaling is disabled', () => {
+      mockFontScale(2);
+      const getGlyph = jest.fn(() => INACTIVE_GLYPH);
+      const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap, getGlyph });
+
+      renderIcon(<Icon allowFontScaling={false} name="star" size="m" />);
+
+      expect(getGlyph).toHaveBeenCalledWith(
+        expect.objectContaining({ name: 'star', size: 'm', pixelSize: 24 }),
+      );
+    });
+
+    it('does not forward allowFontScaling to the glyph Text element', () => {
+      mockFontScale(2);
+      const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+      renderIcon(<Icon allowFontScaling name="star" />);
+
+      expect(screen.getByText(INACTIVE_GLYPH)).toHaveProp('allowFontScaling', false);
+    });
   });
 });

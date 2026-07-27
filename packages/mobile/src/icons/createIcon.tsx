@@ -3,6 +3,7 @@ import {
   Animated,
   type StyleProp,
   Text,
+  type TextProps as NativeTextProps,
   type TextStyle,
   useWindowDimensions,
   type ViewStyle,
@@ -65,7 +66,8 @@ export type CreateIconConfig<Name extends string> = {
 
 export type IconBaseProps<Name extends string = string> = SharedProps &
   PaddingProps &
-  Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityHint'> & {
+  Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityHint'> &
+  Pick<NativeTextProps, 'allowFontScaling'> & {
     /**
      * Size for a given icon.
      * @default m
@@ -159,13 +161,13 @@ export function createIcon<Name extends string>({
       paddingBottom,
       paddingStart,
       active,
+      allowFontScaling = true,
     } = mergedProps;
     const TextComponent = animated ? Animated.Text : Text;
     const theme = useTheme();
     const { fontScale } = useWindowDimensions();
 
-    // Scale according to device a11y font size settings
-    const iconSize = theme.iconSize[size] * fontScale;
+    const iconSize = allowFontScaling ? theme.iconSize[size] * fontScale : theme.iconSize[size];
 
     const iconColor = theme.color[color];
     const finalColor = dangerouslySetColor ?? iconColor;
