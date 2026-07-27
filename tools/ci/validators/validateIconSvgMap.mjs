@@ -2,7 +2,12 @@ import path from 'node:path';
 import { execSync } from 'node:child_process';
 
 import { getChangedFiles } from '../getChangedFiles.mjs';
-import { color, logInfo as logInfoBase, logSuccess, logError as logErrorBase } from '../logging.mjs';
+import {
+  color,
+  logInfo as logInfoBase,
+  logSuccess,
+  logError as logErrorBase,
+} from '../logging.mjs';
 
 const ICON_SVG_PATH_PATTERN = /^packages\/icons\/src\/svgs\//;
 const OUTPUT_PATH = 'apps/expo-app/src/__generated__/iconSvgMap.ts';
