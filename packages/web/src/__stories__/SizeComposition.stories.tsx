@@ -3,6 +3,7 @@ import type { DateInputValidationError } from '@coinbase/cds-common/dates/DateIn
 import { sampleTabs } from '@coinbase/cds-common/internal/data/tabs';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 
+import { Combobox } from '../alpha/combobox/Combobox';
 import { Select } from '../alpha/select/Select';
 import { SelectChip } from '../alpha/select-chip/SelectChip';
 import { TabbedChips } from '../alpha/tabbed-chips/TabbedChips';
@@ -44,6 +45,7 @@ const tabbedChipTabs = sampleTabs.slice(0, 4);
 
 const InputRow = ({ size }: { size?: TextInputSize }) => {
   const [selectValue, setSelectValue] = useState<string | null>('1');
+  const [comboboxValue, setComboboxValue] = useState<string | null>('1');
   const [text, setText] = useState('');
   const [search, setSearch] = useState('');
   const [pickerDate, setPickerDate] = useState<Date | null>(null);
@@ -59,6 +61,15 @@ const InputRow = ({ size }: { size?: TextInputSize }) => {
         size={size}
         style={{ width: 160 }}
         value={selectValue}
+      />
+      <Combobox
+        label="Combobox"
+        onChange={setComboboxValue}
+        options={selectOptions}
+        placeholder="Search"
+        size={size}
+        style={{ width: 160 }}
+        value={comboboxValue}
       />
       <TextInput
         label="Text"

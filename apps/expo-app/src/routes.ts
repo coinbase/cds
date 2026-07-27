@@ -636,6 +636,10 @@ export const routes = [
       require('@coinbase/cds-mobile/controls/__stories__/SelectOption.stories').default,
   },
   {
+    key: 'SizeComposition',
+    getComponent: () => require('@coinbase/cds-mobile/__stories__/SizeComposition.stories').default,
+  },
+  {
     key: 'SlideButton',
     getComponent: () =>
       require('@coinbase/cds-mobile/buttons/__stories__/SlideButton.stories').default,
