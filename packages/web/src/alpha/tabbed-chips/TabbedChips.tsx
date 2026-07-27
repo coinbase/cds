@@ -232,6 +232,7 @@ const TabbedChipsComponent = memo(
           onClick={handleScrollLeft}
           paddleStyle={styles?.paddle}
           show={isScrollContentOffscreenLeft}
+          size={resolvedSize}
           variant="secondary"
         />
         <HStack
@@ -265,6 +266,7 @@ const TabbedChipsComponent = memo(
           onClick={handleScrollRight}
           paddleStyle={styles?.paddle}
           show={isScrollContentOffscreenRight}
+          size={resolvedSize}
           variant="secondary"
         />
       </HStack>
