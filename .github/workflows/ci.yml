@@ -50,6 +50,8 @@ jobs:
         run: node ./tools/validateCDSVersions.mjs
       - name: Validate Constraints
         run: yarn constraints || exit 1
+      - name: Validate Icon SVG Map
+        run: node ./tools/ci/validators/validateIconSvgMap.mjs
 
   lint:
     name: Lint
