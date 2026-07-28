@@ -28,12 +28,13 @@ import { InputStack } from './InputStack';
 import { NativeInput, type NativeInputBaseProps, type NativeInputProps } from './NativeInput';
 
 /**
- * In normal circumstances, padding horizontal should be 2 (16px).
- * If compact is true, the padding top should be 1.
- * If labelVariant is 'inside', the padding top should be 3.5 (28px).
- * This gives the absolute positioning of the label space.
- * The bottom will be 1 (8px) in this case to equal padding of inside label.
- * If start exist, the padding between input area and icon should be 0.5 (4px).
+ * Horizontal padding is size-invariant: 2 (16px) at every size. Only vertical padding
+ * varies with size — 2 (16px) at `l`, 1.5 (12px) at `m`, 1 (8px) at `s`.
+ * If labelVariant is 'inside' and stacked, the input yields its top padding to the label
+ * and keeps 0.75 (6px) at the bottom to match the label's top padding.
+ * When an inline label precedes the input, the gap between them is 1 (8px).
+ * When a start node precedes the input, the gap contributed here is 0.5 (4px); the start
+ * node supplies the rest of the spacing (e.g. InputIcon's own paddingX).
  */
 const nativeInputContainerCss = css`
   padding-top: var(--space-2);
@@ -56,6 +57,11 @@ const nativeInputContainerCss = css`
     padding-bottom: var(--space-0_75);
   }
 
+  &[data-inlinelabel='true'] {
+    padding-inline-start: var(--space-1);
+  }
+
+  /* Declared last so a start node wins when it sits between an inline label and the input. */
   &[data-start='true'] {
     padding-inline-start: var(--space-0_5);
   }
@@ -306,9 +312,10 @@ export const TextInput = memo(
           compact={resolvedSize === 's'}
           containerSpacing={nativeInputContainerCss}
           data-compact={compact}
+          data-inlinelabel={insideHorizontalLabel}
           data-labelvariant={insideVerticalLabel ? 'inside' : 'outside'}
           data-size={resolvedSize}
-          data-start={!!start || insideHorizontalLabel}
+          data-start={!!start}
           disabled={disabled}
           font={font}
           id={shouldSetLabelId ? labelId : undefined}

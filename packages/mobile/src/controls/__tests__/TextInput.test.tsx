@@ -6,6 +6,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { defaultTheme } from '../../themes/defaultTheme';
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
+import { InputIcon } from '../InputIcon';
 import { TextInput } from '../TextInput';
 
 describe('TextInput', () => {
@@ -740,5 +741,63 @@ describe('TextInput size', () => {
 
     expect(screen.getByTestId(labelTestID)).toHaveTextContent('Label');
     expect(screen.queryByTestId(startTestID)).toBeNull();
+  });
+});
+
+describe('TextInput inline label spacing', () => {
+  const inputTestID = 'inline-label-input';
+
+  const getInputPaddingStart = () =>
+    StyleSheet.flatten(screen.getByTestId(inputTestID).props.style)?.paddingStart;
+
+  it('gives an inline label a wider gap to the input text than a start node', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput compact accessibilityLabel="Field" label="Label" testID={inputTestID} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputPaddingStart()).toBe(defaultTheme.space[1]);
+  });
+
+  it('keeps the full padding when there is no inline label or start node', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput compact accessibilityLabel="Field" testID={inputTestID} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputPaddingStart()).toBe(defaultTheme.space[2]);
+  });
+
+  it('lets a start node take precedence over an inline label, since it neighbors the input', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          compact
+          accessibilityLabel="Field"
+          label="Label"
+          start={<InputIcon name="search" />}
+          testID={inputTestID}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputPaddingStart()).toBe(defaultTheme.space[0.5]);
+  });
+
+  it('keeps the start node gap at every size, since horizontal padding is size-invariant', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityLabel="Field"
+          size="l"
+          start={<InputIcon name="search" />}
+          testID={inputTestID}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputPaddingStart()).toBe(defaultTheme.space[0.5]);
   });
 });

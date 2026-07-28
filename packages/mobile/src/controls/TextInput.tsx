@@ -237,7 +237,10 @@ export const TextInput = memo(
     const containerSpacing: ViewStyle = useMemo(() => {
       const verticalPad = resolvedSize === 'l' ? 2 : resolvedSize === 'm' ? 1.5 : 1;
       return {
-        paddingStart: theme.space[start || insideHorizontalLabel ? 0.5 : 2],
+        // Horizontal padding is size-invariant. A start node contributes 0.5 here and supplies the
+        // rest of the gap itself (e.g. InputIcon's own padding); an inline label needs a 1 gap to
+        // the input text. A start node wins when both are present, since it's the input's neighbor.
+        paddingStart: theme.space[start ? 0.5 : insideHorizontalLabel ? 1 : 2],
         paddingEnd: theme.space[2],
         // A vertical inside label (size `l`) gets its top/bottom spacing from the stacking wrapper;
         // every other placement keeps the per-size padding here.
