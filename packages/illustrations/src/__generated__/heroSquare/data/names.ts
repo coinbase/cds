@@ -24,6 +24,7 @@ const names: HeroSquareName[] = [
   'alienDonutSystemError',
   'anonymous',
   'appTrackingTransparency',
+  'arrowsUpDown',
   'artFrameEmptyState',
   'automaticPayments',
   'backedByUsDollar',

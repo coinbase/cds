@@ -1067,6 +1067,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/pixDeposits-6.js').content,
     themeable: () => require('../svgJs/cjs/themeable/pixDeposits-6.js').content,
   },
+  playButton: {
+    light: () => require('../svgJs/cjs/light/playButton-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/playButton-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/playButton-0.js').content,
+  },
   portfolioPerformance: {
     light: () => require('../svgJs/cjs/light/portfolioPerformance-4.js').content,
     dark: () => require('../svgJs/cjs/dark/portfolioPerformance-4.js').content,

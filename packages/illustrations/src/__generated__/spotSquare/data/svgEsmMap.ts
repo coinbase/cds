@@ -878,6 +878,10 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/pixDeposits-6.js').then((m) => m.default as string),
   },
+  playButton: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/playButton-0.js').then((m) => m.default as string),
+  },
   portfolioPerformance: {
     themeable: () =>
       import('../svgJs/esm/themeable/portfolioPerformance-4.js').then((m) => m.default as string),

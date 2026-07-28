@@ -245,6 +245,7 @@ const versionMap: Record<SpotRectangleName, number> = {
   instoKey: 0,
   instoDesignateSigner: 0,
   instoOnchainSetupInProgress: 0,
+  keyAdv: 0,
 };
 
 export default versionMap;

@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-06-25T18:21:24.624Z",
+  "lastUpdated": "2026-07-28T18:25:03.059Z",
   "colors": {
     "light": [
       {
@@ -14,6 +14,30 @@
         },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
+      },
+      {
+        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
+        "name": "positive",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#3CC28A"
+        },
+        "cssVarSetter": "--illustration-positive",
+        "cssVarGetter": "var(--illustration-positive)"
+      },
+      {
+        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
+        "name": "negative",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#E13947"
+        },
+        "cssVarSetter": "--illustration-negative",
+        "cssVarGetter": "var(--illustration-negative)"
       },
       {
         "key": "fce273f0c64220566930049a74153f19612ecb11",
@@ -76,6 +100,18 @@
         "cssVarGetter": "var(--illustration-gray)"
       },
       {
+        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
+        "name": "accent-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#5DE2F8"
+        },
+        "cssVarSetter": "--illustration-accent-2",
+        "cssVarGetter": "var(--illustration-accent-2)"
+      },
+      {
         "key": "3d45bc2dca486cbc8a7780ca07372258524f9a6a",
         "name": "accent-3",
         "type": "light",
@@ -98,42 +134,6 @@
         },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
-      },
-      {
-        "key": "8271abef0dea9d201283c417e6b6752edd928481",
-        "name": "base-gray",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#B1B7C3"
-        },
-        "cssVarSetter": "--illustration-base-gray",
-        "cssVarGetter": "var(--illustration-base-gray)"
-      },
-      {
-        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
-        "name": "positive",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#3CC28A"
-        },
-        "cssVarSetter": "--illustration-positive",
-        "cssVarGetter": "var(--illustration-positive)"
-      },
-      {
-        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
-        "name": "negative",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#E13947"
-        },
-        "cssVarSetter": "--illustration-negative",
-        "cssVarGetter": "var(--illustration-negative)"
       },
       {
         "key": "932552c58e590ee79409364aad163a6ae566f46f",
@@ -172,18 +172,6 @@
         "cssVarGetter": "var(--illustration-black)"
       },
       {
-        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
-        "name": "accent-2",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#5DE2F8"
-        },
-        "cssVarSetter": "--illustration-accent-2",
-        "cssVarGetter": "var(--illustration-accent-2)"
-      },
-      {
         "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
         "name": "gray-2",
         "type": "light",
@@ -208,6 +196,30 @@
         },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
+      },
+      {
+        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
+        "name": "positive",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#44C28D"
+        },
+        "cssVarSetter": "--illustration-positive",
+        "cssVarGetter": "var(--illustration-positive)"
+      },
+      {
+        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
+        "name": "negative",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#F0616D"
+        },
+        "cssVarSetter": "--illustration-negative",
+        "cssVarGetter": "var(--illustration-negative)"
       },
       {
         "key": "fce273f0c64220566930049a74153f19612ecb11",
@@ -270,6 +282,18 @@
         "cssVarGetter": "var(--illustration-gray)"
       },
       {
+        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
+        "name": "accent-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": {
+          "type": "solid",
+          "value": "#45D9F5"
+        },
+        "cssVarSetter": "--illustration-accent-2",
+        "cssVarGetter": "var(--illustration-accent-2)"
+      },
+      {
         "key": "3d45bc2dca486cbc8a7780ca07372258524f9a6a",
         "name": "accent-3",
         "type": "dark",
@@ -292,42 +316,6 @@
         },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
-      },
-      {
-        "key": "8271abef0dea9d201283c417e6b6752edd928481",
-        "name": "base-gray",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#727886"
-        },
-        "cssVarSetter": "--illustration-base-gray",
-        "cssVarGetter": "var(--illustration-base-gray)"
-      },
-      {
-        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
-        "name": "positive",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#44C28D"
-        },
-        "cssVarSetter": "--illustration-positive",
-        "cssVarGetter": "var(--illustration-positive)"
-      },
-      {
-        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
-        "name": "negative",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F0616D"
-        },
-        "cssVarSetter": "--illustration-negative",
-        "cssVarGetter": "var(--illustration-negative)"
       },
       {
         "key": "932552c58e590ee79409364aad163a6ae566f46f",
@@ -364,18 +352,6 @@
         },
         "cssVarSetter": "--illustration-black",
         "cssVarGetter": "var(--illustration-black)"
-      },
-      {
-        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
-        "name": "accent-2",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#45D9F5"
-        },
-        "cssVarSetter": "--illustration-accent-2",
-        "cssVarGetter": "var(--illustration-accent-2)"
       },
       {
         "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
@@ -33716,6 +33692,69 @@
         "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/usdr-0.js",
         "pngLight": "./heroSquare/png/light/usdr-0.png",
         "pngDark": "./heroSquare/png/dark/usdr-0.png"
+      },
+      "version": 0
+    },
+    "30997:62424": {
+      "type": "heroSquare",
+      "name": "arrowsUpDown",
+      "hash": "DvHKsqgdEDdTM8BYsyqxFC9N8h2vIAw2CAan43VJxCI=",
+      "width": 240,
+      "height": 240,
+      "description": "arrows, up, down",
+      "createdAt": "2026-07-27T20:06:27.536Z",
+      "lastUpdated": "2026-07-28T15:46:53.218Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/arrowsUpDown-0.svg",
+        "svgDark": "./heroSquare/svg/dark/arrowsUpDown-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/cjs/light/arrowsUpDown-0.js",
+        "svgJsDark": "./heroSquare/svgJs/cjs/dark/arrowsUpDown-0.js",
+        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/arrowsUpDown-0.js",
+        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/arrowsUpDown-0.js",
+        "pngLight": "./heroSquare/png/light/arrowsUpDown-0.png",
+        "pngDark": "./heroSquare/png/dark/arrowsUpDown-0.png"
+      },
+      "version": 0
+    },
+    "30997:62425": {
+      "type": "spotRectangle",
+      "name": "keyAdv",
+      "hash": "CQJPrpGsll2NXDp9bvVCxteFM4bAtGBJJqcpMQk5vr8=",
+      "width": 240,
+      "height": 120,
+      "description": "key, adv, advanced",
+      "createdAt": "2026-07-27T20:06:27.531Z",
+      "lastUpdated": "2026-07-27T20:06:27.531Z",
+      "outputs": {
+        "svgLight": "./spotRectangle/svg/light/keyAdv-0.svg",
+        "svgDark": "./spotRectangle/svg/dark/keyAdv-0.svg",
+        "svgJsLight": "./spotRectangle/svgJs/cjs/light/keyAdv-0.js",
+        "svgJsDark": "./spotRectangle/svgJs/cjs/dark/keyAdv-0.js",
+        "svgJsThemed": "./spotRectangle/svgJs/cjs/themeable/keyAdv-0.js",
+        "svgEsmThemed": "./spotRectangle/svgJs/esm/themeable/keyAdv-0.js",
+        "pngLight": "./spotRectangle/png/light/keyAdv-0.png",
+        "pngDark": "./spotRectangle/png/dark/keyAdv-0.png"
+      },
+      "version": 0
+    },
+    "30997:62426": {
+      "type": "spotSquare",
+      "name": "playButton",
+      "hash": "YUr50NcWkm5YwUwuKr9eGMqs8CJzoRp3Sdg8JUyOcwM=",
+      "width": 96,
+      "height": 96,
+      "description": "play, playbutton, button",
+      "createdAt": "2026-07-27T20:06:27.522Z",
+      "lastUpdated": "2026-07-27T20:06:27.522Z",
+      "outputs": {
+        "svgLight": "./spotSquare/svg/light/playButton-0.svg",
+        "svgDark": "./spotSquare/svg/dark/playButton-0.svg",
+        "svgJsLight": "./spotSquare/svgJs/cjs/light/playButton-0.js",
+        "svgJsDark": "./spotSquare/svgJs/cjs/dark/playButton-0.js",
+        "svgJsThemed": "./spotSquare/svgJs/cjs/themeable/playButton-0.js",
+        "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/playButton-0.js",
+        "pngLight": "./spotSquare/png/light/playButton-0.png",
+        "pngDark": "./spotSquare/png/dark/playButton-0.png"
       },
       "version": 0
     }

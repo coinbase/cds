@@ -670,6 +670,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/invest-4.js').content,
     themeable: () => require('../svgJs/cjs/themeable/invest-4.js').content,
   },
+  keyAdv: {
+    light: () => require('../svgJs/cjs/light/keyAdv-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/keyAdv-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/keyAdv-0.js').content,
+  },
   layeredNetworks: {
     light: () => require('../svgJs/cjs/light/layeredNetworks-4.js').content,
     dark: () => require('../svgJs/cjs/dark/layeredNetworks-4.js').content,

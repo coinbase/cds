@@ -8,6 +8,26 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.45.0 (7/28/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-07-28. [[#814](https://github.com/coinbase/cds/pull/814)]
+
+##### ⭐️ Added (3)
+
+###### HeroSquare (1)
+
+- arrowsUpDown
+
+###### SpotRectangle (1)
+
+- keyAdv
+
+###### SpotSquare (1)
+
+- playButton
+
 ## 4.44.0 (6/25/2026 PST)
 
 #### 🚀 Updates

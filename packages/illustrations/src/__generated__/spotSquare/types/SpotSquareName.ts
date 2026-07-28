@@ -215,6 +215,7 @@ export type SpotSquareName =
   | 'pieChartWithArrowBlue'
   | 'pixBankDeposits'
   | 'pixDeposits'
+  | 'playButton'
   | 'portfolioPerformance'
   | 'poweredByEthereum'
   | 'predictionsMarkets'
