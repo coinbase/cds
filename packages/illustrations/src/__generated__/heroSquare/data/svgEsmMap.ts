@@ -64,6 +64,10 @@ const svgEsmMap = {
         (m) => m.default as string,
       ),
   },
+  arrowsUpDown: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/arrowsUpDown-0.js').then((m) => m.default as string),
+  },
   artFrameEmptyState: {
     themeable: () =>
       import('../svgJs/esm/themeable/artFrameEmptyState-5.js').then((m) => m.default as string),

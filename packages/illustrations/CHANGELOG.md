@@ -8,6 +8,20 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (3)
+
+###### HeroSquare (1)
+
+- arrowsUpDown
+
+###### SpotRectangle (1)
+
+- keyAdv
+
+###### SpotSquare (1)
+
+- playButton
+
 ## 4.44.0 (6/25/2026 PST)
 
 #### 🚀 Updates

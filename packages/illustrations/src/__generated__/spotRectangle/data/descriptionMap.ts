@@ -11,6 +11,17 @@
 const descriptionMap: Record<string, string[]> = {
   '1': ['layeredNetworks'],
   '2': ['layeredNetworks'],
+  key: ['keyAdv', 'apiKey', 'protectedNotes', 'walletSecurity', 'instoApiKey'],
+  adv: ['keyAdv'],
+  advanced: [
+    'keyAdv',
+    'accessToAdvancedCharts',
+    'advancedTradeCharts',
+    'switchAdvancedToSimpleTrading',
+    'advancedTradingUi',
+    'advancedTrading',
+    'focusLimitOrders',
+  ],
   leverage: [
     'leverage',
     'browserExtension',
@@ -367,14 +378,6 @@ const descriptionMap: Record<string, string[]> = {
     'portfolioOverview',
     'trendingHotAssets',
     'portfolioOverviewRelaunch',
-  ],
-  advanced: [
-    'accessToAdvancedCharts',
-    'advancedTradeCharts',
-    'switchAdvancedToSimpleTrading',
-    'advancedTradingUi',
-    'advancedTrading',
-    'focusLimitOrders',
   ],
   '🕯': ['accessToAdvancedCharts', 'advancedTradeCharts'],
   '🪔': ['accessToAdvancedCharts', 'advancedTradeCharts'],
@@ -1043,7 +1046,6 @@ const descriptionMap: Record<string, string[]> = {
   exclamation: ['primeOrderConfirmation'],
   yes: ['primeOrderConfirmation', 'governance'],
   API: ['apiKey', 'instoApiKey'],
-  key: ['apiKey', 'protectedNotes', 'walletSecurity', 'instoApiKey'],
   access: ['apiKey', 'stayInControlSelfHostedWalletsStorage', 'instoApiKey'],
   account: [
     'apiKey',
