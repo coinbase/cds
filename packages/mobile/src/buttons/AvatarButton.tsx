@@ -4,8 +4,6 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Avatar, type AvatarBaseProps } from '../media/Avatar';
 import { Pressable, type PressableBaseProps, type PressableProps } from '../system/Pressable';
 
-import type { ButtonBaseProps } from './Button';
-
 type DeprecatedAvatarButtonBorderProps = {
   /**
    * @deprecated Border props on `AvatarButton` have no effect. This will be removed in a future major release.
@@ -96,8 +94,16 @@ type DeprecatedAvatarButtonBorderProps = {
 
 export type AvatarButtonBaseProps = PressableBaseProps &
   DeprecatedAvatarButtonBorderProps &
-  Pick<ButtonBaseProps, 'compact'> &
-  Pick<AvatarBaseProps, 'src' | 'shape' | 'colorScheme' | 'borderColor' | 'name'>;
+  Pick<AvatarBaseProps, 'src' | 'shape' | 'colorScheme' | 'borderColor' | 'name'> & {
+    // Declared here rather than picked from `ButtonBaseProps` so it does not inherit Button's
+    // `compact` → `size="s"` deprecation: `AvatarButton` has no `size` prop and maps `compact`
+    // onto the Avatar scale instead, so it keeps a binary density toggle.
+    /**
+     * Renders the smaller `xl` avatar instead of the default `xxxl`.
+     * @default false
+     */
+    compact?: boolean;
+  };
 
 export type AvatarButtonProps = AvatarButtonBaseProps & PressableProps;
 

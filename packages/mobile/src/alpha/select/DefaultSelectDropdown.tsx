@@ -185,7 +185,6 @@ const DefaultSelectDropdownComponent = memo(
           end={
             end ?? (
               <Button
-                compact
                 transparent
                 // This button is not accessible to users using screen readers since it's
                 // the child of a button. Clearing the a11y label ensures it isn't announced
@@ -194,6 +193,9 @@ const DefaultSelectDropdownComponent = memo(
                 accessible={false}
                 flush="end"
                 onPress={handleClearAll}
+                // Intentionally always the densest size: the dropdown's inline affordances stay
+                // compact regardless of the control's size.
+                size="s"
               >
                 {clearAllLabel}
               </Button>

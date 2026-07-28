@@ -21,8 +21,7 @@ import {
   type SelectSize,
   type SelectType,
 } from './Select';
-
-const defaultSelectSize: SelectSize = 'l';
+import { defaultSelectSize } from './types';
 
 const selectSizeVerticalSpaceVar: Record<SelectSize, string> = {
   s: 'var(--space-1)',

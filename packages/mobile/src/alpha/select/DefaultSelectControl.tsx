@@ -16,8 +16,7 @@ import { Text } from '../../typography/Text';
 
 import type { SelectControlProps, SelectOption, SelectSize, SelectType } from './Select';
 import { isSelectOptionGroup } from './Select';
-
-const defaultSelectSize: SelectSize = 'l';
+import { defaultSelectSize } from './types';
 
 const selectSizeVerticalSpace: Record<SelectSize, 1 | 1.5 | 2> = { s: 1, m: 1.5, l: 2 };
 

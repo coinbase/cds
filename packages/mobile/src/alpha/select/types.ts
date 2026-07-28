@@ -21,6 +21,9 @@ export type SelectType = 'single' | 'multi';
  */
 export type SelectSize = 's' | 'm' | 'l';
 
+/** Size the Select control resolves to when neither `size` nor the deprecated `compact` is set. */
+export const defaultSelectSize: SelectSize = 'l';
+
 /**
  * Configuration for a single option in the Select component
  */
@@ -399,6 +402,11 @@ export type SelectDropdownProps<
       /** Empty contents text element */
       emptyContentsText?: StyleProp<ViewStyle>;
     };
+    // Unlike the control, the dropdown deliberately keeps a binary density toggle instead of
+    // adopting the t-shirt `size` scale for now: option rows only have two densities, so a third
+    // step would be meaningless. `Select` owns the translation, deriving this from its own
+    // resolved size (`size === 's'`), so consumers set `size` on `Select` and never set this
+    // directly. Revisit if option rows ever need per-size spacing.
     /** Whether to use compact styling for the dropdown */
     compact?: boolean;
     /** Custom component to render individual options */

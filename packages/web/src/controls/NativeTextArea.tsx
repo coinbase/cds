@@ -6,8 +6,6 @@ import { cx } from '../cx';
 import type { BoxProps } from '../layout/Box';
 import { Box } from '../layout/Box';
 
-import type { TextInputBaseProps } from './TextInput';
-
 const baseCss = css`
   min-width: 0;
   flex-grow: 2;
@@ -51,8 +49,17 @@ export type NativeTextAreaBaseProp = {
    * Callback fired when pressed/clicked
    */
   onClick?: React.MouseEventHandler;
-} & SharedProps &
-  Pick<TextInputBaseProps, 'compact'>;
+  // Declared locally rather than picked from `TextInputBaseProps` so it does not inherit
+  // TextInput's `compact` → `size="s"` deprecation: `NativeTextArea` has no `size` prop, so the
+  // replacement here is `padding` props — matching `NativeInput`.
+  /**
+   * Decreases the padding within the textarea element.
+   * @default false
+   * @deprecated Use `padding` props instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  compact?: boolean;
+} & SharedProps;
 
 export type NativeTextAreaProp = NativeTextAreaBaseProp & BoxProps<'textarea'>;
 
