@@ -235,6 +235,7 @@ export function createIcon<Name extends string>({
           accessibilityLabel={accessibilityLabel}
           accessibilityRole="image"
           accessible={!!accessibilityLabel}
+          // We do not use the built in scaling because it changes the icon thickness
           allowFontScaling={false}
           // TODO https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
           style={iconStyle as StyleProp<TextStyle>}
