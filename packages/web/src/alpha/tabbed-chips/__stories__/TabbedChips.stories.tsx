@@ -118,17 +118,24 @@ export const Default = () => {
       </Text>
       <Demo tabs={tabsWithStart} />
       <Text as="p" display="block" font="headline">
-        Size xs
+        Compact with start
+      </Text>
+      <Demo compact tabs={compactTabsWithStart} />
+      <Text as="p" display="block" font="headline">
+        Sizes
+      </Text>
+      <Text as="p" color="fgMuted" display="block" font="label1">
+        {'size="s" (default)'}
+      </Text>
+      <Demo size="s" />
+      <Text as="p" color="fgMuted" display="block" font="label1">
+        {'size="xs"'}
       </Text>
       <Demo size="xs" />
-      <Text as="p" display="block" font="headline">
-        Compact (deprecated)
+      <Text as="p" color="fgMuted" display="block" font="label1">
+        {'compact (deprecated, renders as size="xs")'}
       </Text>
       <Demo compact />
-      <Text as="p" display="block" font="headline">
-        Size xs with start
-      </Text>
-      <Demo size="xs" tabs={compactTabsWithStart} />
       <Text as="p" display="block" font="headline">
         With auto scroll offset
       </Text>

@@ -138,6 +138,14 @@ export const Sizes = () => {
         size="l"
         value={value}
       />
+      <Select
+        compact
+        label='Compact (deprecated, renders as size "s")'
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
     </VStack>
   );
 };

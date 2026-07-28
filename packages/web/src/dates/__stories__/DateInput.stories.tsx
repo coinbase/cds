@@ -79,7 +79,7 @@ export const Sizes = () => {
         <DateInput size="l" {...sharedProps} {...props} />
       </VStack>
       <VStack>
-        <Note>{'compact (deprecated, maps to size="s")'}</Note>
+        <Note>{'compact (deprecated, renders as size="s")'}</Note>
         <DateInput compact {...sharedProps} {...props} />
       </VStack>
     </Group>

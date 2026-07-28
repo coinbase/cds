@@ -48,7 +48,7 @@ export const Examples = () => {
     <VStack gap={8}>
       <VStack>
         <Note>DatePicker</Note>
-        <DatePicker helperText="" {...exampleProps} {...props} />
+        <DatePicker {...exampleProps} {...props} />
       </VStack>
       <VStack>
         <Note>DatePicker ES-es locale</Note>
@@ -144,7 +144,7 @@ export const Sizes = () => {
         <DatePicker size="l" {...exampleProps} {...props} />
       </VStack>
       <VStack>
-        <Note>{'compact (deprecated, maps to size="s")'}</Note>
+        <Note>{'compact (deprecated, renders as size="s")'}</Note>
         <DatePicker compact {...exampleProps} {...props} />
       </VStack>
       <Box height={100} />

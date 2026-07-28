@@ -107,12 +107,23 @@ export const Default = () => (
       Inverted
     </Text>
     <ChipExamples inverted />
+    <Text as="h3" display="block" font="headline">
+      Compact
+    </Text>
+    <ChipExamples compact />
     <Text as="h3" display="block" font="headline" paddingTop={3}>
-      Size xs
+      Sizes
+    </Text>
+    <Text as="h4" color="fgMuted" display="block" font="label1">
+      {'size="s" (default)'}
+    </Text>
+    <ChipExamples size="s" />
+    <Text as="h4" color="fgMuted" display="block" font="label1">
+      {'size="xs"'}
     </Text>
     <ChipExamples size="xs" />
-    <Text as="h3" display="block" font="headline" paddingTop={3}>
-      Compact (deprecated)
+    <Text as="h4" color="fgMuted" display="block" font="label1">
+      {'compact (deprecated, renders as size="xs")'}
     </Text>
     <ChipExamples compact />
     <Text as="h3" display="block" font="headline" paddingTop={3}>

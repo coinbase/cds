@@ -366,38 +366,110 @@ export const CustomLabel = function CustomLabel() {
   );
 };
 
-export const StartContent = function StartContent() {
-  return (
-    <TextInput label="Label" start={<InputIconButton accessibilityLabel="Add" name="add" />} />
-  );
-};
+/**
+ * START, END, AND SUFFIX CONTENT
+ *
+ * Each feature is rendered at both `size="l"` (the default) and `size="s"` to show how the
+ * surrounding content adapts.
+ */
 
-export const EndContent = function EndContent() {
+export const StartEndAndSuffixContent = function StartEndAndSuffixContent() {
   return (
-    <TextInput
-      end={
-        <HStack paddingEnd={1}>
-          <Link font="headline" href="">
-            Hello
-          </Link>
-        </HStack>
-      }
-      label="Label"
-    />
-  );
-};
-
-export const Suffix = function Suffix() {
-  return <TextInput label="Label" suffix="USD" />;
-};
-
-export const SuffixAndEndContent = function SuffixAndEndContent() {
-  return (
-    <TextInput
-      end={<InputIconButton active transparent accessibilityLabel="Add" name="add" />}
-      label="Label"
-      suffix="USD"
-    />
+    <VStack gap={4}>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Start content
+        </Text>
+        <TextInput
+          label="Large (l) - default"
+          start={<InputIconButton accessibilityLabel="Add" name="add" />}
+        />
+        <TextInput
+          label="Small (s)"
+          size="s"
+          start={<InputIconButton accessibilityLabel="Add" name="add" />}
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Start avatar
+        </Text>
+        <TextInput
+          label="Large (l) - default"
+          start={
+            <Box>
+              <Avatar
+                alt="address"
+                size="l"
+                src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+              />
+            </Box>
+          }
+        />
+        <TextInput
+          label="Small (s)"
+          size="s"
+          start={
+            <Box>
+              <Avatar
+                alt="address"
+                size="l"
+                src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+              />
+            </Box>
+          }
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          End content
+        </Text>
+        <TextInput
+          end={
+            <HStack paddingEnd={1}>
+              <Link font="headline" href="">
+                Hello
+              </Link>
+            </HStack>
+          }
+          label="Large (l) - default"
+        />
+        <TextInput
+          end={
+            <HStack paddingEnd={1}>
+              <Link font="headline" href="">
+                Hello
+              </Link>
+            </HStack>
+          }
+          label="Small (s)"
+          size="s"
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Suffix
+        </Text>
+        <TextInput label="Large (l) - default" suffix="USD" />
+        <TextInput label="Small (s)" size="s" suffix="USD" />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Suffix and end content
+        </Text>
+        <TextInput
+          end={<InputIconButton active transparent accessibilityLabel="Add" name="add" />}
+          label="Large (l) - default"
+          suffix="USD"
+        />
+        <TextInput
+          end={<InputIconButton active transparent accessibilityLabel="Add" name="add" />}
+          label="Small (s)"
+          size="s"
+          suffix="USD"
+        />
+      </VStack>
+    </VStack>
   );
 };
 
@@ -407,31 +479,54 @@ export const SuffixAndEndContent = function SuffixAndEndContent() {
 
 export const Sizes = function Sizes() {
   return (
-    <VStack gap={2}>
-      <TextInput label="Small (s)" placeholder="Small" size="s" />
-      <TextInput label="Medium (m)" placeholder="Medium" size="m" />
-      <TextInput label="Large (l) - default" placeholder="Large" size="l" />
+    <VStack gap={4}>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Outside label (default)
+        </Text>
+        <TextInput label="Small (s)" placeholder="Small" size="s" />
+        <TextInput label="Medium (m)" placeholder="Medium" size="m" />
+        <TextInput label="Large (l) - default" placeholder="Large" size="l" />
+        <TextInput
+          compact
+          label='Compact (deprecated, renders as size "s")'
+          placeholder="Compact"
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Inside label
+        </Text>
+        <TextInput label="Small (s)" labelVariant="inside" placeholder="Small" size="s" />
+        <TextInput label="Medium (m)" labelVariant="inside" placeholder="Medium" size="m" />
+        <TextInput label="Large (l) - default" labelVariant="inside" placeholder="Large" size="l" />
+        <TextInput
+          compact
+          label="Compact (deprecated, label forced outside)"
+          labelVariant="inside"
+          placeholder="Compact"
+        />
+      </VStack>
     </VStack>
   );
 };
 
-export const SizeSWithOutsideLabel = function SizeSWithOutsideLabel() {
-  return <TextInput label="Outside Label" placeholder="Small" size="s" />;
+/**
+ * DEPRECATED COMPACT VARIATIONS
+ *
+ * `compact` is superseded by `size="s"`. These are kept as regression demos of the legacy
+ * behavior, which also forces the label into the inline start slot.
+ */
+
+export const CompactInput = function CompactInput() {
+  return <TextInput compact label="Label" />;
 };
 
-export const SizeSWithInsideLabel = function SizeSWithInsideLabel() {
-  return <TextInput label="Inside Label" labelVariant="inside" placeholder="Small" size="s" />;
-};
-
-export const SizeMWithInsideLabel = function SizeMWithInsideLabel() {
-  return <TextInput label="Inside Label" labelVariant="inside" placeholder="Medium" size="m" />;
-};
-
-export const SizeSStart = function SizeSStart() {
+export const CompactInputStart = function CompactInputStart() {
   return (
     <TextInput
+      compact
       label="Label"
-      size="s"
       start={
         <Box>
           <Avatar
@@ -445,9 +540,10 @@ export const SizeSStart = function SizeSStart() {
   );
 };
 
-export const SizeSEnd = function SizeSEnd() {
+export const CompactInputEnd = function CompactInputEnd() {
   return (
     <TextInput
+      compact
       end={
         <HStack paddingEnd={1}>
           <Link font="headline" href="">
@@ -456,25 +552,16 @@ export const SizeSEnd = function SizeSEnd() {
         </HStack>
       }
       label="Label"
-      size="s"
     />
   );
 };
 
-export const SizeSSuffix = function SizeSSuffix() {
-  return <TextInput label="Label" size="s" suffix="USD" />;
+export const CompactInputSuffix = function CompactInputSuffix() {
+  return <TextInput compact label="Label" suffix="USD" />;
 };
 
-export const SizeSHelperText = function SizeSHelperText() {
-  return <TextInput helperText="helperText" label="Label" size="s" suffix="USD" />;
-};
-
-/**
- * DEPRECATED: `compact` is superseded by `size="s"`. Kept as a regression demo of the
- * legacy behavior where `compact` also forces the label into the inline start slot.
- */
-export const CompactInput = function CompactInput() {
-  return <TextInput compact label="Label" />;
+export const CompactHelperText = function CompactHelperText() {
+  return <TextInput compact helperText="helperText" label="Label" suffix="USD" />;
 };
 
 export const InputOnChange = function InputOnChange() {

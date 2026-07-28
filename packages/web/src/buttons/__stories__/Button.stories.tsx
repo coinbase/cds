@@ -21,30 +21,31 @@ const buttonStories: Omit<ButtonBaseProps, 'children'>[] = [
   { variant: 'negative', transparent: true },
   { variant: 'inverse', transparent: true },
   { block: true },
-  { size: 's', block: true },
+  { compact: true },
+  { compact: true, block: true },
   { transparent: true },
   { disabled: true },
   { loading: true },
-  { loading: true, size: 's' },
+  { loading: true, compact: true },
   { loading: true, transparent: true },
-  { loading: true, transparent: true, size: 's' },
+  { loading: true, transparent: true, compact: true },
   { loading: true, variant: 'secondary' },
-  { loading: true, variant: 'secondary', size: 's' },
+  { loading: true, variant: 'secondary', compact: true },
   { loading: true, variant: 'positive' },
-  { loading: true, variant: 'positive', size: 's' },
+  { loading: true, variant: 'positive', compact: true },
   { loading: true, variant: 'negative' },
-  { loading: true, variant: 'negative', size: 's' },
+  { loading: true, variant: 'negative', compact: true },
   { startIcon: 'backArrow' },
   { endIcon: 'backArrow' },
   { startIcon: 'backArrow', endIcon: 'forwardArrow' },
   { startIcon: 'backArrow', endIcon: 'forwardArrow', block: true },
-  { transparent: true, flush: 'start', size: 's', endIcon: 'forwardArrow' },
-  { transparent: true, flush: 'end', size: 's', endIcon: 'forwardArrow' },
+  { transparent: true, flush: 'start', compact: true, endIcon: 'forwardArrow' },
+  { transparent: true, flush: 'end', compact: true, endIcon: 'forwardArrow' },
   { flush: 'start', endIcon: 'forwardArrow' },
   { flush: 'end', endIcon: 'forwardArrow' },
-  { startIcon: 'backArrow', endIcon: 'forwardArrow', size: 's' },
-  { startIcon: 'backArrow', size: 's' },
-  { endIcon: 'forwardArrow', size: 's' },
+  { startIcon: 'backArrow', endIcon: 'forwardArrow', compact: true },
+  { startIcon: 'backArrow', compact: true },
+  { endIcon: 'forwardArrow', compact: true },
   { padding: 5 },
   { paddingX: 5, padding: 4 },
   { paddingY: 4 },
@@ -95,14 +96,8 @@ export const Sizes = () => (
     <Button size="xs">Extra small (xs)</Button>
     <Button size="s">Small (s)</Button>
     <Button size="m">Medium (m)</Button>
-    <Button size="l">Large (l)</Button>
-  </VStack>
-);
-
-export const DeprecatedCompact = () => (
-  <VStack alignItems="flex-start" gap={2}>
-    <Button compact>{'Compact (deprecated, use size="s")'}</Button>
-    <Button size="s">{'Equivalent size="s"'}</Button>
+    <Button size="l">Large (l) - default</Button>
+    <Button compact>{'Compact (deprecated, renders as size="s")'}</Button>
   </VStack>
 );
 

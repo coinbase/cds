@@ -627,10 +627,9 @@ export const Sizes = () => {
         size="l"
         value={value}
       />
-      {/* `compact` is deprecated and renders as size="s" */}
       <Combobox
         compact
-        label="Deprecated compact (renders as size s)"
+        label='Compact (deprecated, renders as size "s")'
         onChange={setValue}
         options={singleFruitOptions}
         placeholder="Search and select fruits..."

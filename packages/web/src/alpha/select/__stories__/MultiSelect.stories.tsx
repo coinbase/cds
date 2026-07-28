@@ -137,6 +137,15 @@ export const Sizes = () => {
         type="multi"
         value={value}
       />
+      <Select
+        compact
+        label='Compact (deprecated, renders as size "s")'
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
     </VStack>
   );
 };

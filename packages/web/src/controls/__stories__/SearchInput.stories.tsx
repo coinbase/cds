@@ -29,21 +29,21 @@ const Shrunken = () => {
   return (
     <VStack gap={2}>
       <SearchInput
+        compact
         accessibilityLabel="Search"
         height={32}
         onChangeText={setText}
         onClear={() => {}}
         placeholder="Placeholder"
-        size="s"
         value={text}
       />
       <SearchInput
+        compact
         accessibilityLabel="Search"
         height={24}
         onChangeText={setText}
         onClear={() => {}}
         placeholder="Placeholder"
-        size="s"
         value={text}
       />
     </VStack>
@@ -87,6 +87,7 @@ export const Sizes = () => {
         accessibilityLabel="searchbox"
         onChangeText={setText}
         onClear={() => {}}
+        placeholder='size="s"'
         size="s"
         value={text}
       />
@@ -94,6 +95,7 @@ export const Sizes = () => {
         accessibilityLabel="searchbox"
         onChangeText={setText}
         onClear={() => {}}
+        placeholder='size="m"'
         size="m"
         value={text}
       />
@@ -101,7 +103,16 @@ export const Sizes = () => {
         accessibilityLabel="searchbox"
         onChangeText={setText}
         onClear={() => {}}
+        placeholder='size="l" (default)'
         size="l"
+        value={text}
+      />
+      <SearchInput
+        compact
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder='compact (deprecated, renders as size "s")'
         value={text}
       />
     </VStack>
