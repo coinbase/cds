@@ -10,7 +10,6 @@
  */
 const descriptionMap: Record<string, string[]> = {
   '': [
-    'newTradeError',
     'derivativesNavigation',
     'coinbaseLogoNavigation',
     'walletLogoNavigation',
@@ -154,6 +153,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoCoinFocus',
     'instoGlobalConnections',
     'instoDecentralizedExchange',
+    'newTradeError',
   ],
   searching: ['noNftFound'],
   search: ['noNftFound', 'reviewAndAdd', 'explore', 'newUserChecklistVerifyId', 'priceTracking'],

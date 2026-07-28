@@ -18,6 +18,7 @@ export type HeroSquareName =
   | 'alienDonutSystemError'
   | 'anonymous'
   | 'appTrackingTransparency'
+  | 'arrowsUpDown'
   | 'artFrameEmptyState'
   | 'automaticPayments'
   | 'backedByUsDollar'

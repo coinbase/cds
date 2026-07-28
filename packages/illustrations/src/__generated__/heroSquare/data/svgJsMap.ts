@@ -77,6 +77,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/appTrackingTransparency-5.js').content,
     themeable: () => require('../svgJs/cjs/themeable/appTrackingTransparency-5.js').content,
   },
+  arrowsUpDown: {
+    light: () => require('../svgJs/cjs/light/arrowsUpDown-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/arrowsUpDown-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/arrowsUpDown-0.js').content,
+  },
   artFrameEmptyState: {
     light: () => require('../svgJs/cjs/light/artFrameEmptyState-5.js').content,
     dark: () => require('../svgJs/cjs/dark/artFrameEmptyState-5.js').content,
