@@ -33,6 +33,19 @@ export const RUNNER_IGNORE_PATTERNS = [
   '**/build/**',
 ];
 
+/**
+ * Built-file candidates for a manifest/CLI transform path, in resolution order. A transform is
+ * either a single module (`v9/button-variant-values`) or a self-contained folder with an `index`
+ * entry (`compact-to-size`), so both spellings resolve from the same short path.
+ */
+function getTransformPathCandidates(transformsDir: string, transformPath: string): string[] {
+  const withoutExtension = transformPath.replace(/\.js$/, '');
+  return [
+    path.join(transformsDir, `${withoutExtension}.js`),
+    path.join(transformsDir, withoutExtension, 'index.js'),
+  ];
+}
+
 type RunMigrationOptions = {
   preset?: string; // Optional - not needed for direct transform execution
   path: string;
@@ -107,23 +120,20 @@ export async function runMigration(options: RunMigrationOptions): Promise<void> 
     console.log(`    ${transform.description}`);
     logger.info(`Running transform: ${transform.name}`);
 
-    // Add .js extension if not present (transforms are compiled from .ts to .js)
-    const transformFile = transformFilePath.endsWith('.js')
-      ? transformFilePath
-      : `${transformFilePath}.js`;
     // Transforms are in src/transforms/, built to cjs/transforms/
     const transformsDir = path.join(__dirname, 'transforms');
-    const fullTransformPath = path.join(transformsDir, transformFile);
+    const candidatePaths = getTransformPathCandidates(transformsDir, transformFilePath);
+    const fullTransformPath = candidatePaths.find((candidate) => fs.existsSync(candidate));
 
     // Check if transform file exists before running
-    if (!fs.existsSync(fullTransformPath)) {
+    if (!fullTransformPath) {
       console.error(`\n  ✗ Transform failed: ${transform.name}`);
-      console.error(`     Transform file not found: ${fullTransformPath}\n`);
+      console.error(`     Transform file not found: ${candidatePaths.join(' or ')}\n`);
       logger.error(
         `Transform file not found: ${transform.name}`,
-        fullTransformPath,
+        candidatePaths[0],
         undefined,
-        `File does not exist at: ${fullTransformPath}`,
+        `No file exists at: ${candidatePaths.join(' or ')}`,
       );
       results.failure++;
       continue; // Skip this transform and continue with others

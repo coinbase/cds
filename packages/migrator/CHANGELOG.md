@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.0 (7/29/2026 PST)
+
+#### 🚀 Updates
+
+- Add `compact-to-size` transform, which migrates the deprecated `compact` prop to the t-shirt `size` prop. [[#816](https://github.com/coinbase/cds/pull/816)]
+
 ## 1.0.0 (05/20/2026 PST)
 
 Initial release of `@coinbase/cds-migrator`.

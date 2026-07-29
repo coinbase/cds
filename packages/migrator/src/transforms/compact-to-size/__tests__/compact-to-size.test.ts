@@ -1,15 +1,10 @@
 import { runInlineTest, runTest } from 'jscodeshift/src/testUtils';
 
 import { tsxTestOptions } from '../../../test-utils/codemodTestUtils';
-import transform from '../compact-to-size';
-
-const FIXTURE_SUITE = 'compact-to-size';
+import transform from '../index';
 
 /** Only consumer-style E2E goldens (all other cases are inline below). */
-const E2E_PAIRED_PREFIXES = [
-  `${FIXTURE_SUITE}/e2e-web-transfer-form`,
-  `${FIXTURE_SUITE}/e2e-mobile-filter-tray`,
-] as const;
+const E2E_PAIRED_PREFIXES = ['e2e-web-transfer-form', 'e2e-mobile-filter-tray'] as const;
 
 /** Asserts the exact transformed output; pass `''` when the transform must no-op. */
 const expectTransform = (path: string, source: string, expected: string, options = {}) =>
@@ -709,6 +704,6 @@ const App = ({ size }) => (
   });
 
   it.each(E2E_PAIRED_PREFIXES)('%s', (prefix) => {
-    runTest(__dirname, 'compact-to-size', {}, prefix, tsxTestOptions);
+    runTest(__dirname, 'index', {}, prefix, tsxTestOptions);
   });
 });

@@ -127,14 +127,14 @@ npx @coinbase/cds-migrator ./src -t components/button-variant
 
 These aren't part of any preset — run them directly with `-t`.
 
-| Transform             | What it does                                                                          |
-| --------------------- | ------------------------------------------------------------------------------------- |
-| `v10/compact-to-size` | Replaces the deprecated `compact` prop with the t-shirt `size` prop (removed in v10). |
+| Transform         | What it does                                                                                   |
+| ----------------- | ---------------------------------------------------------------------------------------------- |
+| `compact-to-size` | Replaces the deprecated `compact` prop with the t-shirt `size` prop (expected removal in v10). |
 
-#### `v10/compact-to-size`
+#### `compact-to-size`
 
 ```bash
-npx @coinbase/cds-migrator ./src -t v10/compact-to-size --dry-run
+npx @coinbase/cds-migrator ./src -t compact-to-size --dry-run
 ```
 
 `compact` is deprecated in favour of `size` on the components below, and maps to a different
@@ -294,11 +294,13 @@ packages/migrator/
 │   ├── presets/                   # Preset configurations (auto-discovered!)
 │   │   └── v8-to-v9/
 │   │       └── manifest.json
-│   ├── transforms/                # Jscodeshift codemods (e.g. versioned v9/, v10/)
-│   │   ├── v9/
+│   ├── transforms/                # Jscodeshift codemods (a module, or a folder with index.ts)
+│   │   ├── v9/                    #   Grouped by target version when part of a preset
 │   │   │   └── migrate-use-merge-refs.ts
-│   │   └── v10/
-│   │       └── compact-to-size.ts
+│   │   └── compact-to-size/       #   Self-contained standalone transform
+│   │       ├── __testfixtures__/
+│   │       ├── __tests__/
+│   │       └── index.ts
 │   └── utils/                     # Shared utilities
 │       ├── import-mapping.ts      #   Import prefix rewrites (-ir / config)
 │       ├── package-scope.ts       #   Package scope filtering (-ps)

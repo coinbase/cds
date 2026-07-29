@@ -1,8 +1,8 @@
 /**
- * Compact → Size Transform (v9 → v10)
+ * Compact → Size Transform
  *
  * Replaces the deprecated `compact` boolean with the t-shirt `size` prop on the components
- * where `compact` was deprecated in favour of `size`:
+ * where `compact` was deprecated in favour of `size` (expected removal in v10):
  *
  *   - `size="s"`  → Button, IconButton, SlideButton, TextInput, SearchInput, DateInput,
  *                   DatePicker, and the alpha Select / Combobox controls
