@@ -37,13 +37,13 @@ export type IconButtonDefaultElement = typeof iconButtonDefaultElement;
 export type IconButtonSize = 'xs' | 's' | 'm' | 'l';
 
 const iconButtonSizes = {
-  xs: { padding: 1, iconSize: 's', borderRadius: 1000 },
-  s: { padding: 1.5, iconSize: 's', borderRadius: 1000 },
-  m: { padding: 1.5, iconSize: 'm', borderRadius: 1000 },
-  l: { padding: 2, iconSize: 'm', borderRadius: 1000 },
+  xs: { padding: 1, iconSize: 's' },
+  s: { padding: 1.5, iconSize: 's' },
+  m: { padding: 1.5, iconSize: 'm' },
+  l: { padding: 2, iconSize: 'm' },
 } as const satisfies Record<
   IconButtonSize,
-  Pick<IconButtonBaseProps, 'padding' | 'borderRadius'> & {
+  Pick<IconButtonBaseProps, 'padding'> & {
     iconSize: Extract<IconSize, 's' | 'm'>;
   }
 >;
@@ -117,7 +117,7 @@ export const IconButton: IconButtonComponent = memo(
         background,
         color,
         borderColor,
-        borderRadius: borderRadiusProp,
+        borderRadius = 1000, // fully rounded at every size
         borderWidth = 0, // remove Pressable's default transparent border
         alignItems = 'center',
         justifyContent = 'center',
@@ -145,7 +145,6 @@ export const IconButton: IconButtonComponent = memo(
       const sizeConfig = iconButtonSizes[resolvedSize];
       const padding = paddingProp ?? sizeConfig.padding;
       const iconSize = iconSizeProp ?? sizeConfig.iconSize;
-      const borderRadius = borderRadiusProp ?? sizeConfig.borderRadius;
 
       const iconSizeValue = theme.iconSize[iconSize];
       const spinnerSize = iconSizeValue / 10;

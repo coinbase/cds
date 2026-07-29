@@ -19,6 +19,7 @@ import { Text } from '../typography/Text';
 import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 import {
+  defaultSlideButtonSize,
   type SlideButtonBaseProps,
   type SlideButtonHandleProps,
   type SlideButtonSize,
@@ -39,7 +40,11 @@ export const slideButtonSpringConfig = {
 export const animationConfig = { tension: 300, clamp: true } as const satisfies SpringConfig;
 
 export type SlideButtonHandleCheckedProps = Pick<SlideButtonBaseProps, 'variant'> & {
-  size: SlideButtonSize;
+  /**
+   * Size of the slide button handle.
+   * @default l
+   */
+  size?: SlideButtonSize;
   label?: React.ReactNode;
   end?: React.ReactNode;
   disabled?: boolean;
@@ -50,7 +55,11 @@ export type SlideButtonHandleCheckedComponent = (
 ) => React.ReactElement | null;
 
 export type SlideButtonHandleUncheckedProps = Pick<SlideButtonBaseProps, 'variant'> & {
-  size: SlideButtonSize;
+  /**
+   * Size of the slide button handle.
+   * @default l
+   */
+  size?: SlideButtonSize;
   disabled?: boolean;
   start?: React.ReactNode;
 };
@@ -78,7 +87,7 @@ export const styles = StyleSheet.create({
 });
 
 export const SlideButtonHandleChecked = memo(
-  ({ label, end, size }: SlideButtonHandleCheckedProps) => {
+  ({ label, end, size = defaultSlideButtonSize }: SlideButtonHandleCheckedProps) => {
     const theme = useTheme();
     const sizeConfig = slideButtonSizes[size];
     const iconSizeValue = theme.iconSize[sizeConfig.iconSize];
@@ -109,7 +118,7 @@ export const SlideButtonHandleChecked = memo(
 );
 
 export const SlideButtonHandleUnchecked = memo(
-  ({ start, size }: SlideButtonHandleUncheckedProps) => {
+  ({ start, size = defaultSlideButtonSize }: SlideButtonHandleUncheckedProps) => {
     const sizeConfig = slideButtonSizes[size];
 
     return (
@@ -130,7 +139,7 @@ export const DefaultSlideButtonHandle = memo(
   ({
     ref,
     checked,
-    size,
+    size = defaultSlideButtonSize,
     disabled,
     style,
     variant = 'primary',

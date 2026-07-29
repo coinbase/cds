@@ -5,7 +5,11 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Box } from '../layout/Box';
 import { Text } from '../typography/Text';
 
-import { type SlideButtonBackgroundProps, slideButtonSizes } from './SlideButton';
+import {
+  defaultSlideButtonSize,
+  type SlideButtonBackgroundProps,
+  slideButtonSizes,
+} from './SlideButton';
 
 export const DefaultSlideButtonBackground = memo(
   ({
@@ -13,7 +17,7 @@ export const DefaultSlideButtonBackground = memo(
     progress,
     uncheckedLabel,
     disabled,
-    size,
+    size = defaultSlideButtonSize,
     style,
     borderRadius,
     borderTopLeftRadius,

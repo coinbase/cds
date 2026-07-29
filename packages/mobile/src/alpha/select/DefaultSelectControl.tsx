@@ -18,11 +18,11 @@ import type { SelectControlProps, SelectOption, SelectSize, SelectType } from '.
 import { isSelectOptionGroup } from './Select';
 import { defaultSelectSize } from './types';
 
-const selectSizeVerticalSpace: Record<SelectSize, 1 | 1.5 | 2> = { s: 1, m: 1.5, l: 2 };
+const selectSizeVerticalSpace: Record<SelectSize, ThemeVars.Space> = { s: 1, m: 1.5, l: 2 };
 
 // A multi-select's selected-value chips add their own height, so the vertical space is
 // tightened per size to keep the overall field height aligned with the single-select scale.
-const multiSelectVerticalSpace: Record<SelectSize, 0.5 | 1 | 1.5> = { s: 0.5, m: 1, l: 1.5 };
+const multiSelectVerticalSpace: Record<SelectSize, ThemeVars.Space> = { s: 0.5, m: 1, l: 1.5 };
 
 // Multi-select value chips always use the compact `xs` size (even at size `l`) so several chips —
 // and a stacked inside label — stay within the field's natural height.
@@ -265,9 +265,9 @@ export const DefaultSelectControlComponent = memo(
           <InputLabel
             color={labelColor}
             font={labelFont}
-            // A horizontal inline label shares its row with the value, so keep it to a single line —
-            // otherwise a long label wraps and stretches the field past its size.
-            numberOfLines={insideHorizontalLabel ? 1 : undefined}
+            // An inside label — horizontal or vertically stacked — is kept to a single line so a
+            // long label can't wrap and stretch the field past the height its size defines.
+            numberOfLines={1}
             paddingY={0}
             style={styles?.controlLabelNode}
           >
@@ -483,7 +483,7 @@ export const DefaultSelectControlComponent = memo(
     );
 
     const inputStackStyles: StyleProp<ViewStyle> = useMemo(() => {
-      let verticalSpace: 0.25 | 0.5 | 0.75 | 1 | 1.5 | 2;
+      let verticalSpace: ThemeVars.Space;
       if (insideVerticalLabel) {
         // A vertically-stacked inside label (size `l`) tightens the padding so the stacked label +
         // value fit the same field height an outside label produces. A multi-select with chips

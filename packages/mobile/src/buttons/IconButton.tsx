@@ -19,13 +19,13 @@ import { type ButtonBaseProps } from './Button';
 export type IconButtonSize = 'xs' | 's' | 'm' | 'l';
 
 const iconButtonSizes = {
-  xs: { padding: 1, iconSize: 's', borderRadius: 1000, feedback: 'light' },
-  s: { padding: 1.5, iconSize: 's', borderRadius: 1000, feedback: 'light' },
-  m: { padding: 1.5, iconSize: 'm', borderRadius: 1000, feedback: 'normal' },
-  l: { padding: 2, iconSize: 'm', borderRadius: 1000, feedback: 'normal' },
+  xs: { padding: 1, iconSize: 's', feedback: 'light' },
+  s: { padding: 1.5, iconSize: 's', feedback: 'light' },
+  m: { padding: 1.5, iconSize: 'm', feedback: 'normal' },
+  l: { padding: 2, iconSize: 'm', feedback: 'normal' },
 } as const satisfies Record<
   IconButtonSize,
-  Pick<IconButtonBaseProps, 'padding' | 'borderRadius' | 'feedback'> & {
+  Pick<IconButtonBaseProps, 'padding' | 'feedback'> & {
     iconSize: Extract<IconSize, 's' | 'm'>;
   }
 >;
@@ -98,7 +98,7 @@ export const IconButton = memo(
       borderColor,
       iconSize: iconSizeProp,
       borderWidth = 0, // remove Pressable's default transparent border
-      borderRadius: borderRadiusProp,
+      borderRadius = 1000, // fully rounded at every size
       feedback: feedbackProp,
       flush,
       padding: paddingProp,
@@ -118,7 +118,6 @@ export const IconButton = memo(
     const sizeConfig = iconButtonSizes[resolvedSize];
     const padding = paddingProp ?? sizeConfig.padding;
     const iconSize = iconSizeProp ?? sizeConfig.iconSize;
-    const borderRadius = borderRadiusProp ?? sizeConfig.borderRadius;
     const feedback = feedbackProp ?? sizeConfig.feedback;
     const theme = useTheme();
     const iconSizeValue = theme.iconSize[iconSize];

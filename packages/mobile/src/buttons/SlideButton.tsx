@@ -57,7 +57,7 @@ export const slideButtonSizes = {
   }
 >;
 
-const defaultSlideButtonSize: SlideButtonSize = 'l';
+export const defaultSlideButtonSize: SlideButtonSize = 'l';
 
 export type SlideButtonBackgroundProps = Pick<
   SlideButtonBaseProps,
@@ -71,7 +71,12 @@ export type SlideButtonBackgroundProps = Pick<
   | 'uncheckedLabel'
   | 'variant'
 > & {
-  size: SlideButtonSize;
+  /**
+   * Size of the slide button. `SlideButton` always passes this to its background component;
+   * it is optional so a consumer rendering `DefaultSlideButtonBackground` directly keeps working.
+   * @default l
+   */
+  size?: SlideButtonSize;
   progress: SharedValue<number>;
   style?: StyleProp<ViewStyle>;
 };
@@ -81,7 +86,12 @@ export type SlideButtonHandleProps = PressableProps &
     SlideButtonBaseProps,
     'checked' | 'checkedLabel' | 'disabled' | 'startUncheckedNode' | 'endCheckedNode' | 'variant'
   > & {
-    size: SlideButtonSize;
+    /**
+     * Size of the slide button. `SlideButton` always passes this to its handle component;
+     * it is optional so a consumer rendering `DefaultSlideButtonHandle` directly keeps working.
+     * @default l
+     */
+    size?: SlideButtonSize;
     progress: SharedValue<number>;
     style?: StyleProp<ViewStyle>;
   };
