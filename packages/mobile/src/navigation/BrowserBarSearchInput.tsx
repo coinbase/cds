@@ -19,13 +19,7 @@ export type BrowserBarSearchInputProps = SearchInputProps & {
  * for collapsing the start and end node of the browser bar when the input is focused.
  */
 export const BrowserBarSearchInput = memo(
-  ({
-    onFocus,
-    onBlur,
-    compact = true,
-    expandOnFocus = true,
-    ...props
-  }: BrowserBarSearchInputProps) => {
+  ({ onFocus, onBlur, size = 's', expandOnFocus = true, ...props }: BrowserBarSearchInputProps) => {
     const { setHideStart, setHideEnd } = useBrowserBarContext();
 
     const handleFocus = useCallback(
@@ -48,7 +42,10 @@ export const BrowserBarSearchInput = memo(
       [onBlur, setHideEnd, setHideStart],
     );
 
-    return <SearchInput compact={compact} onBlur={handleBlur} onFocus={handleFocus} {...props} />;
+    // The browser bar always wants the dense input, so the density default moved from the deprecated
+    // `compact` onto `size`. A consumer-supplied `compact` still arrives via the spread but is inert,
+    // since `SearchInput` resolves `size` first.
+    return <SearchInput onBlur={handleBlur} onFocus={handleFocus} size={size} {...props} />;
   },
 );
 

@@ -91,6 +91,7 @@ export type DatePickerProps = DatePickerBaseProps &
     | 'maxDate'
     | 'disabledDateError'
     | 'style'
+    | 'compact'
   > & {
     /** Callback function fired when the DateInput text value changes. Prefer to use `onChangeDate` instead. Will always be called before `onChangeDate`. This prop should only be used for edge cases, such as custom error handling.  */
     onChange?: (event: NativeSyntheticEvent<TextInputChangeEventData>) => void;
@@ -283,7 +284,6 @@ export const DatePicker = memo(
               <StickyFooter role="none">
                 <Button
                   block
-                  compact
                   accessibilityHint={confirmButtonAccessibilityHint}
                   disabled={disabled || !calendarSelectedDate}
                   onPress={() => {
@@ -292,6 +292,7 @@ export const DatePicker = memo(
                       handleClose();
                     }
                   }}
+                  size="s"
                 >
                   {confirmText}
                 </Button>

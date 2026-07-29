@@ -34,11 +34,11 @@ export const ProgressContainerWithButtons = ({
   return (
     <VStack key={num} gap={2}>
       {children({ calculateProgress })}
-      <Button compact onPress={reRender}>
+      <Button onPress={reRender} size="s">
         Re-render
       </Button>
       {!hideIncrease && (
-        <Button compact onPress={increase}>
+        <Button onPress={increase} size="s">
           Increase 20%
         </Button>
       )}

@@ -17,7 +17,7 @@ import type { ChipProps, ChipSize } from './ChipProps';
 export type { ChipProps, ChipSize };
 
 const chipSizes = {
-  xs: { paddingX: 1.5, paddingY: 0.5, font: 'label1', borderRadius: 700 },
+  xs: { paddingX: 1.5, paddingY: 0.75, font: 'label1', borderRadius: 700 },
   s: { paddingX: 2, paddingY: 1, font: 'headline', borderRadius: 700 },
 } as const satisfies Record<
   ChipSize,

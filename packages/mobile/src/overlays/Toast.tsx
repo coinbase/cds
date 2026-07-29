@@ -122,9 +122,9 @@ export const Toast = memo(
           </Box>
           {!!action && (
             <Button
-              compact
               transparent
               onPress={handleActionPress}
+              size="s"
               testID={action.testID ?? 'toast-action'}
             >
               {action.label}

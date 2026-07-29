@@ -13,7 +13,7 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
 
 export type DateInputBaseProps = Omit<DateInputOptions, 'intlDateFormat'> &
-  Omit<TextInputBaseProps, 'inputNode' | 'value' | 'defaultValue' | 'style'> & {
+  Omit<TextInputBaseProps, 'inputNode' | 'value' | 'defaultValue' | 'style' | 'compact'> & {
     /** Date format separator character, e.g. the / in "MM/DD/YYYY". Defaults to forward slash (/). */
     separator?: string;
     /**
@@ -30,7 +30,7 @@ export type DateInputBaseProps = Omit<DateInputOptions, 'intlDateFormat'> &
   };
 
 export type DateInputProps = DateInputBaseProps &
-  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style'> & {
+  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style' | 'compact'> & {
     className?: string;
     style?: React.CSSProperties;
   };

@@ -81,7 +81,7 @@ export type NudgeCardProps = NudgeCardBaseProps;
  *   title="Title"
  *   description="Description"
  *   media={<Pictogram dimension="48x48" name="addToWatchlist" />}
- *   actions={<Button compact variant="secondary">Learn more</Button>}
+ *   actions={<Button size="s" variant="secondary">Learn more</Button>}
  *   onDismiss={handleDismiss}
  *   mediaPlacement="end"
  * />

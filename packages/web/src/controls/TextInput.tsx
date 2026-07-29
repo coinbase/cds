@@ -82,8 +82,13 @@ export type TextInputSize = 's' | 'm' | 'l';
 
 const defaultTextInputSize: TextInputSize = 'l';
 
-export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
-  SharedInputProps &
+// Keep `compact` excluded from every inherited source: TypeScript only reports a merged property as
+// deprecated when *every* declaration is, so letting one back in silently disables the deprecation.
+export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor' | 'compact'> &
+  Pick<
+    SharedInputProps,
+    'label' | 'labelFont' | 'labelColor' | 'placeholder' | 'helperText' | 'readOnly'
+  > &
   Pick<
     InputStackBaseProps,
     | 'height'
@@ -165,7 +170,8 @@ export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor'> &
     labelNode?: React.ReactNode;
   };
 
-export type TextInputProps = TextInputBaseProps & Omit<NativeInputProps, 'caretColor' | 'size'>;
+export type TextInputProps = TextInputBaseProps &
+  Omit<NativeInputProps, 'caretColor' | 'compact' | 'size'>;
 
 const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   primary: 'fgPrimary',

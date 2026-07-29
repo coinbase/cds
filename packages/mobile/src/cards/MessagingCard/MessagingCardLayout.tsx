@@ -110,9 +110,9 @@ export const MessagingCardLayout = memo(
         if (type === 'upsell') {
           return (
             <Button
-              compact
               accessibilityLabel={actionButtonAccessibilityLabel ?? action}
               onPress={onActionButtonPress}
+              size="s"
               variant="secondary"
             >
               {action}
@@ -158,10 +158,10 @@ export const MessagingCardLayout = memo(
             top={0}
           >
             <IconButton
-              compact
               accessibilityLabel={computedDismissButtonAccessibilityLabel}
               name="close"
               onPress={onDismissButtonPress}
+              size="s"
               variant="secondary"
             />
           </HStack>

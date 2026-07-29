@@ -21,12 +21,12 @@ export const DefaultPaginationNavigationButton = forwardRef(
     return (
       <IconButton
         ref={ref}
-        compact
         transparent
         accessibilityLabel={accessibilityLabel}
         disabled={disabled}
         name={iconMap[direction]}
         onClick={onClick}
+        size="s"
         testID={testID}
         variant="secondary"
       />

@@ -99,6 +99,7 @@ export type DatePickerProps = DatePickerBaseProps &
     | 'disabledDateError'
     | 'className'
     | 'style'
+    | 'compact'
   > & {
     /** Control the default open state of the Calendar popover. */
     defaultOpen?: boolean;

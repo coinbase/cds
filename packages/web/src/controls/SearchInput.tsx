@@ -15,7 +15,7 @@ import {
 } from './TextInput';
 
 /**
- * @deprecated Use local constants or the `compact` prop instead. This will be removed in a future major release.
+ * @deprecated Use local constants or the `size` prop instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
  */
 export const scales = {
