@@ -196,9 +196,9 @@ function Example() {
 
 DateInput supports the same styling functionality as [TextInput](/components/inputs/TextInput/).
 
-### Compact
+### Sizes
 
-Use the `compact` prop for a smaller input size.
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
 
 ```jsx live
 function Example() {
@@ -208,20 +208,30 @@ function Example() {
   return (
     <VStack gap={3}>
       <DateInput
+        size="s"
         date={date}
         error={error}
         onChangeDate={setDate}
         onErrorDate={setError}
-        label="Default size"
+        label="Small (s)"
         invalidDateError="Please enter a valid date"
       />
       <DateInput
-        compact
+        size="m"
         date={date}
         error={error}
         onChangeDate={setDate}
         onErrorDate={setError}
-        label="Compact size"
+        label="Medium (m)"
+        invalidDateError="Please enter a valid date"
+      />
+      <DateInput
+        size="l"
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Large (l, default)"
         invalidDateError="Please enter a valid date"
       />
     </VStack>

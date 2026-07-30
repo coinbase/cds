@@ -125,28 +125,16 @@ Use the `disabled` prop to prevent interaction and show a disabled visual state.
 </HStack>
 ```
 
-## Sizing
+## Sizes
 
-IconButtons are compact by default. Use `compact={false}` for larger touch targets.
+`size` accepts `xs`, `s`, `m`, and `l`. It renders at `s` when unset, because IconButton still enables the deprecated `compact` prop by default; this becomes `l` once `compact` is removed.
 
 ```jsx
-<HStack gap={2} alignItems="center">
-  <IconButton
-    active
-    name="gear"
-    accessibilityLabel="Settings - compact"
-    variant="primary"
-    compact
-    onPress={console.log}
-  />
-  <IconButton
-    active
-    name="gear"
-    accessibilityLabel="Settings - regular"
-    variant="primary"
-    compact={false}
-    onPress={console.log}
-  />
+<HStack alignItems="center" flexWrap="wrap" gap={2}>
+  <IconButton accessibilityLabel="Settings (xs)" name="gear" onPress={console.log} size="xs" />
+  <IconButton accessibilityLabel="Settings (s)" name="gear" onPress={console.log} size="s" />
+  <IconButton accessibilityLabel="Settings (m)" name="gear" onPress={console.log} size="m" />
+  <IconButton accessibilityLabel="Settings (l)" name="gear" onPress={console.log} size="l" />
 </HStack>
 ```
 

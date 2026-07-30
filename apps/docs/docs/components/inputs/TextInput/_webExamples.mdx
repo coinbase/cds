@@ -5,30 +5,28 @@
 Default composition of Inputs.
 
 ```jsx live
-<VStack gap={3}>
-  <TextInput
-    label="API Access Token"
-    placeholder="HaeJiWplJohn6W42eCq0Qqft0"
-    end={
-      <Box paddingX={2}>
-        <Link variant="caption" color="primary" to="">
-          COPY
-        </Link>
-      </Box>
-    }
-  />
+<TextInput
+  label="API Access Token"
+  placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+  end={
+    <Box paddingX={2}>
+      <Link variant="caption" color="primary" to="">
+        COPY
+      </Link>
+    </Box>
+  }
+/>
+```
 
-  <VStack>
-    <Text as="p">Use the compact variant when space is tight.</Text>
-    <TextInput
-      compact
-      type="number"
-      step="0.01"
-      label="Amount"
-      placeholder="8293323.23"
-      suffix="USD"
-    />
-  </VStack>
+### Sizes
+
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
+
+```jsx live
+<VStack gap={3}>
+  <TextInput label="Small (s)" placeholder="Small" size="s" />
+  <TextInput label="Medium (m)" placeholder="Medium" size="m" />
+  <TextInput label="Large (l) — default" placeholder="Large" size="l" />
 </VStack>
 ```
 
@@ -201,10 +199,11 @@ composition.
   </VStack>
 
   <VStack>
-    <Text as="p">Right aligned (with compact):</Text>
+    <Text as="p">Right aligned:</Text>
     <TextInput
       label="Limit price"
-      compact
+      size="s"
+      labelVariant="inside"
       align="end"
       type="number"
       step="0.01"
@@ -217,7 +216,7 @@ composition.
 
 ### Label Variants
 
-TextInput supports two label variants: `outside` (default) and `inside`. Note that the `compact` prop, when set to true, will override label variant preference.
+TextInput supports two label variants: `outside` (default) and `inside`. `size` and `labelVariant` are independent — use `labelVariant="inside"` with any size. At sizes `s` and `m`, an inside label sits inline in the start slot; at size `l`, it stacks vertically above the field.
 
 :::warning
 
@@ -290,7 +289,8 @@ You can pass a ReactNode to `labelNode` to render a custom label. If you want to
   />
   <TextInput
     accessibilityLabel="Amount"
-    compact
+    size="s"
+    labelVariant="inside"
     labelNode={
       <InputLabel>
         <HStack alignItems="center" gap={0.5}>
@@ -428,7 +428,8 @@ Here are some examples and best practices when using end content in a TextField.
       label="Amount"
       type="number"
       step="0.01"
-      compact
+      size="s"
+      labelVariant="inside"
       placeholder="98329.23"
       suffix="USD"
     />
@@ -531,7 +532,7 @@ function CopyTextField() {
 ```jsx live
 <VStack gap={3}>
   <TextInput label="Label" disabled />
-  <TextInput label="Label" compact disabled />
+  <TextInput label="Label" size="s" labelVariant="inside" disabled />
 </VStack>
 ```
 

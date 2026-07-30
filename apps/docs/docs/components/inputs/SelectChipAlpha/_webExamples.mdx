@@ -235,10 +235,12 @@ function ExampleMultiAssets() {
 
 ## Customization
 
-### Compact
+### Sizes
+
+`size` accepts `xs` and `s`. Defaults to `s`.
 
 ```jsx live
-function ExampleCompact() {
+function ExampleSizes() {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
     { value: '2', label: 'Option 2' },
@@ -247,13 +249,30 @@ function ExampleCompact() {
   ];
   const [value, setValue] = useState('1');
   return (
-    <SelectChip
-      compact
-      onChange={setValue}
-      options={exampleOptions}
-      placeholder="Choose an option"
-      value={value}
-    />
+    <HStack alignItems="flex-start" flexWrap="wrap" gap={4}>
+      <VStack gap={1}>
+        <Text>s (default)</Text>
+        <SelectChip
+          accessibilityLabel="Select a value"
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Choose an option"
+          size="s"
+          value={value}
+        />
+      </VStack>
+      <VStack gap={1}>
+        <Text>xs</Text>
+        <SelectChip
+          accessibilityLabel="Select a value"
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Choose an option"
+          size="xs"
+          value={value}
+        />
+      </VStack>
+    </HStack>
   );
 }
 ```

@@ -91,3 +91,42 @@ function SearchInputVariants() {
   );
 }
 ```
+
+### Sizes
+
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
+
+```tsx
+function SearchInputSizes() {
+  const [value, setValue] = useState('');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        accessibilityLabel="Small search"
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        placeholder='size="s"'
+        size="s"
+        value={value}
+      />
+      <SearchInput
+        accessibilityLabel="Medium search"
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        placeholder='size="m"'
+        size="m"
+        value={value}
+      />
+      <SearchInput
+        accessibilityLabel="Large search"
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        placeholder='size="l" (default)'
+        size="l"
+        value={value}
+      />
+    </VStack>
+  );
+}
+```
