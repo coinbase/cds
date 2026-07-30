@@ -64,32 +64,6 @@ export const Default = () => (
         <ExampleSelectChip compact placeholder="Sort by" />
       </HStack>
     </VStack>
-    <VStack gap={2}>
-      <Text as="h3" display="block" font="headline">
-        Sizes
-      </Text>
-      <Text as="h4" color="fgMuted" display="block" font="label1">
-        {'size="s" (default)'}
-      </Text>
-      <HStack gap={2}>
-        <ExampleSelectChip size="s" value="Balance" />
-        <ExampleSelectChip placeholder="Sort by" size="s" />
-      </HStack>
-      <Text as="h4" color="fgMuted" display="block" font="label1">
-        {'size="xs"'}
-      </Text>
-      <HStack gap={2}>
-        <ExampleSelectChip size="xs" value="Balance" />
-        <ExampleSelectChip placeholder="Sort by" size="xs" />
-      </HStack>
-      <Text as="h4" color="fgMuted" display="block" font="label1">
-        {'compact (deprecated, renders as size="xs")'}
-      </Text>
-      <HStack gap={2}>
-        <ExampleSelectChip compact value="Balance" />
-        <ExampleSelectChip compact placeholder="Sort by" />
-      </HStack>
-    </VStack>
   </VStack>
 );
 
