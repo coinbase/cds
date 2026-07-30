@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react-native';
 
 import { Avatar } from '../../../media/Avatar';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
-import { MediaCard } from '..';
+import { MediaCard, type MediaCardBaseProps } from '..';
 
 const exampleProps = {
   title: 'Test Title',
@@ -13,6 +13,20 @@ const exampleProps = {
 };
 
 describe('MediaCard', () => {
+  it('includes CardRoot props in its base props', () => {
+    const cardRootConfig = {
+      background: 'bgPrimary',
+      borderColor: 'bgLine',
+      borderWidth: 100,
+    } satisfies Partial<MediaCardBaseProps>;
+
+    expect(cardRootConfig).toEqual({
+      background: 'bgPrimary',
+      borderColor: 'bgLine',
+      borderWidth: 100,
+    });
+  });
+
   it('passes accessibility', () => {
     render(
       <DefaultThemeProvider>

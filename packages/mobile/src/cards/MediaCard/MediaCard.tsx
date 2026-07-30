@@ -6,15 +6,14 @@ import { CardRoot, type CardRootProps } from '../CardRoot';
 
 import { MediaCardLayout, type MediaCardLayoutProps } from './MediaCardLayout';
 
-export type MediaCardBaseProps = MediaCardLayoutProps;
+export type MediaCardBaseProps = MediaCardLayoutProps & Omit<CardRootProps, 'children'>;
 
-export type MediaCardProps = MediaCardBaseProps &
-  Omit<CardRootProps, 'children'> & {
-    styles?: {
-      /** Root element */
-      root?: StyleProp<ViewStyle>;
-    };
+export type MediaCardProps = MediaCardBaseProps & {
+  styles?: {
+    /** Root element */
+    root?: StyleProp<ViewStyle>;
   };
+};
 
 const mediaCardContainerProps = {
   borderRadius: 500 as ThemeVars.BorderRadius,
