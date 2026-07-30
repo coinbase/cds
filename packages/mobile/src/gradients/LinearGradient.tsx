@@ -14,7 +14,7 @@ function getAlpha(color: string) {
 
 type Coordinate = { x: number; y: number };
 
-type PixelSize = { width: number; height: number } | null;
+type PixelSize = Pick<LayoutChangeEvent['nativeEvent']['layout'], 'width' | 'height'> | null;
 
 type LinearGradientProps = {
   /**
@@ -89,20 +89,23 @@ export function LinearGradient({
     );
   }, []);
 
+  const svgWidth = pixelSize ? pixelSize.width : 0;
+  const svgHeight = pixelSize ? pixelSize.height : 0;
+
+  const containerStyle = useMemo(
+    () => ({ position: 'absolute' as const, top: 0, left: 0, width: svgWidth, height: svgHeight }),
+    [svgWidth, svgHeight],
+  );
+
   const svg = useMemo(() => {
     const anglePI = (-angle * Math.PI) / 180;
     const x1 = start?.x ?? Math.round(50 + Math.sin(anglePI) * 50) / 100;
     const y1 = start?.y ?? Math.round(50 + Math.cos(anglePI) * 50) / 100;
     const x2 = end?.x ?? Math.round(50 + Math.sin(anglePI + Math.PI) * 50) / 100;
     const y2 = end?.y ?? Math.round(50 + Math.cos(anglePI + Math.PI) * 50) / 100;
-    const svgWidth = pixelSize ? pixelSize.width : 0;
-    const svgHeight = pixelSize ? pixelSize.height : 0;
 
     return (
-      <View
-        key="GrandientSvgContainer"
-        style={{ position: 'absolute', top: 0, left: 0, width: svgWidth, height: svgHeight }}
-      >
+      <View key="GrandientSvgContainer" style={containerStyle}>
         <Svg height={svgHeight} width={svgWidth}>
           <Defs>
             <Lg id="LinearGradient" x1={x1} x2={x2} y1={y1} y2={y2}>
@@ -120,7 +123,7 @@ export function LinearGradient({
         </Svg>
       </View>
     );
-  }, [colors, start, end, angle, stops, pixelSize]);
+  }, [colors, start, end, angle, stops, containerStyle, svgWidth, svgHeight]);
 
   const items = !elevated ? [svg, children] : [children, svg];
   return (
