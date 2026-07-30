@@ -13,10 +13,11 @@ const checked = instance.getEnum('Position', {
   End: true,
 });
 
-// compact maps the Figma string variant "true"/"false" to a boolean prop
-const compact = instance.getEnum('compact', {
-  false: false,
-  true: true,
+// size maps directly — Figma uses the same t-shirt values as code
+const size = instance.getEnum('size', {
+  s: 's',
+  m: 'm',
+  l: 'l',
 });
 
 // Retrieve the unchecked and checked label text from the nested string.slide button instance
@@ -35,7 +36,7 @@ export default {
   onChange={setChecked}
   ${uncheckedLabel ? figma.code`uncheckedLabel="${uncheckedLabel}"` : ''}
   ${checkedLabel ? figma.code`checkedLabel="${checkedLabel}"` : ''}
-  ${compact ? 'compact' : ''}
+  ${size !== 'l' ? figma.code`size="${size}"` : ''}
 />`,
   imports: ['import { SlideButton } from "@coinbase/cds-mobile/buttons"'],
   id: 'slide-button-mobile',

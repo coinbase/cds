@@ -22,9 +22,11 @@ const state = instance.getEnum('state', {
 const variant = state === 'positive' ? 'positive' : state === 'negative' ? 'negative' : undefined;
 const readOnly = state === 'read-only';
 
-// disabled and compact are VARIANT types with string "true"/"false" values
+// disabled is a VARIANT type with string "true"/"false" values
 const disabled = instance.getEnum('disabled', { true: true, false: false });
-const compact = instance.getEnum('compact', { true: true, false: false });
+
+// size maps directly to the t-shirt size prop; 'l' is the default
+const size = instance.getEnum('size', { l: 'l', m: 'm', s: 's' });
 
 // label inside controls labelVariant prop
 const labelInside = instance.getEnum('label inside', { true: true, false: false });
@@ -68,7 +70,7 @@ export default {
   placeholder="Enter value"
   ${variant ? figma.code`variant="${variant}"` : ''}
   ${disabled ? 'disabled' : ''}
-  ${compact ? 'compact' : ''}
+  ${size !== 'l' ? figma.code`size="${size}"` : ''}
   ${labelVariant ? figma.code`labelVariant="${labelVariant}"` : ''}
   ${align ? figma.code`align="${align}"` : ''}
   ${readOnly ? 'readOnly' : ''}

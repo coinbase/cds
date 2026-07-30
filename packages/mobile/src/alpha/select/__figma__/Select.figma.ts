@@ -14,8 +14,8 @@ const type = instance.getEnum('type', {
 // disabled: VARIANT "true"/"false" → disabled boolean prop
 const disabled = instance.getEnum('disabled', { true: true, false: false });
 
-// compact: VARIANT "true"/"false" → compact boolean prop
-const compact = instance.getEnum('compact', { true: true, false: false });
+// size: VARIANT "s"/"m"/"l" → size prop (defaults to 'l')
+const size = instance.getEnum('size', { s: 's', m: 'm', l: 'l' });
 
 // state: only 'positive' and 'negative' map to the variant prop
 // default, active-mobile, active-desktop, filled, hover, read-only are interaction/display states with no code equivalent
@@ -63,7 +63,7 @@ export default {
   placeholder="${placeholder}"
   ${helperText ? figma.code`helperText="${helperText}"` : ''}
   ${variant ? figma.code`variant="${variant}"` : ''}
-  ${compact ? 'compact' : ''}
+  ${size !== 'l' ? figma.code`size="${size}"` : ''}
   ${disabled ? 'disabled' : ''}
   ${startNodeCode ? figma.code`startNode={${startNodeCode}}` : ''}
   options={[]}

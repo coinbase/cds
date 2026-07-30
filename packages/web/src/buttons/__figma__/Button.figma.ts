@@ -38,8 +38,15 @@ const width = instance.getEnum('width', {
 const isBlock = width === 'full';
 const isFlush = width === 'flush';
 
-// compact and transparent are VARIANT types with string "true"/"false" values
-const isCompact = instance.getEnum('compact', { true: true, false: false });
+// size maps directly — Figma uses the same t-shirt values as code
+const size = instance.getEnum('size', {
+  l: 'l',
+  m: 'm',
+  s: 's',
+  xs: 'xs',
+});
+
+// transparent is a VARIANT type with string "true"/"false" values
 const isTransparent = instance.getEnum('transparent', { true: true, false: false });
 
 // icon position: none, leading (start), trailing (end)
@@ -49,10 +56,10 @@ const iconPosition = instance.getEnum('icon', {
   trailing: 'trailing',
 });
 
-// Use the compact icon instance swap when compact, regular otherwise
-const iconInstance = isCompact
-  ? instance.getInstanceSwap('↳ iconCompact')
-  : instance.getInstanceSwap('↳ icon');
+// Figma binds two icon swap slots to specific sizes: '↳ icon' to size=l and '↳ iconCompact' to
+// size=s. Sizes m and xs have no icon layers yet, so they fall through to the '↳ icon' slot.
+const iconInstance =
+  size === 's' ? instance.getInstanceSwap('↳ iconCompact') : instance.getInstanceSwap('↳ icon');
 
 let iconCode;
 if (iconInstance && iconInstance.type === 'INSTANCE') {
@@ -64,7 +71,7 @@ export default {
   example: figma.code`<Button
   ${variant !== 'primary' ? figma.code`variant="${variant}"` : ''}
   ${isBlock ? 'block' : ''}
-  ${isCompact ? 'compact' : ''}
+  ${size !== 'l' ? figma.code`size="${size}"` : ''}
   ${isTransparent ? 'transparent' : ''}
   ${isLoading ? 'loading' : ''}
   ${isDisabled ? 'disabled' : ''}

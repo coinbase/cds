@@ -1,4 +1,4 @@
-// url=https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=155-10032
+// url=https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=55097-4215
 // source=packages/mobile/src/controls/ControlGroup.tsx
 // component=ControlGroup
 import figma from 'figma';

@@ -23,8 +23,17 @@ const state = instance.getEnum('state', {
 const isLoading = state === 'loading';
 const isDisabled = state === 'disabled';
 
-// compact and transparent are VARIANT types with string "true"/"false" values; code default for compact is true
-const isCompact = instance.getEnum('compact', { true: true, false: false });
+// size maps directly — Figma uses the same lowercase values as the IconButtonSize union.
+// Emitted unconditionally: IconButton still defaults deprecated `compact` to true, so an
+// IconButton with no `size` renders at 's' while the documented `size` default is 'l'.
+const size = instance.getEnum('size', {
+  l: 'l',
+  m: 'm',
+  s: 's',
+  xs: 'xs',
+});
+
+// transparent is a VARIANT type with string "true"/"false" values
 const isTransparent = instance.getEnum('transparent', { true: true, false: false });
 
 // eslint-disable-next-line no-restricted-exports
@@ -32,7 +41,7 @@ export default {
   example: figma.code`<IconButton
   name="add"
   ${variant !== 'secondary' ? figma.code`variant="${variant}"` : ''}
-  ${!isCompact ? 'compact={false}' : ''}
+  size="${size}"
   ${isTransparent ? 'transparent' : ''}
   ${isLoading ? 'loading' : ''}
   ${isDisabled ? 'disabled' : ''}
