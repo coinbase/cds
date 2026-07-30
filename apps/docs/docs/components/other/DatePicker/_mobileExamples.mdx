@@ -203,35 +203,15 @@ function Example() {
   const [error, setError] = useState(null);
 
   return (
-    <VStack gap={3}>
-      <DatePicker
-        size="s"
-        date={date}
-        error={error}
-        onChangeDate={setDate}
-        onErrorDate={setError}
-        label="Small (s)"
-        invalidDateError="Please enter a valid date"
-      />
-      <DatePicker
-        size="m"
-        date={date}
-        error={error}
-        onChangeDate={setDate}
-        onErrorDate={setError}
-        label="Medium (m)"
-        invalidDateError="Please enter a valid date"
-      />
-      <DatePicker
-        size="l"
-        date={date}
-        error={error}
-        onChangeDate={setDate}
-        onErrorDate={setError}
-        label="Large (l) — default"
-        invalidDateError="Please enter a valid date"
-      />
-    </VStack>
+    <DatePicker
+      size="s"
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Start date"
+      invalidDateError="Please enter a valid date"
+    />
   );
 }
 ```

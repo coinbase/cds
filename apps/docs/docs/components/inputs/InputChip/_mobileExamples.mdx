@@ -74,16 +74,9 @@ function Example() {
 `size` accepts `xs` and `s`. Defaults to `s`.
 
 ```tsx
-function Example() {
-  return (
-    <HStack gap={2} flexWrap="wrap">
-      <InputChip onPress={() => {}}>s (default)</InputChip>
-      <InputChip onPress={() => {}} size="xs">
-        xs
-      </InputChip>
-    </HStack>
-  );
-}
+<InputChip onPress={() => {}} size="xs">
+  Ethereum
+</InputChip>
 ```
 
 ### Invert color scheme

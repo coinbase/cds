@@ -68,20 +68,12 @@ MediaChip supports all six content combinations automatically.
   :::
 
 ```tsx
-<HStack flexWrap="wrap" gap={2}>
-  <MediaChip
-    size="s"
-    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
-  >
-    s
-  </MediaChip>
-  <MediaChip
-    size="xs"
-    start={<RemoteImage height={16} shape="circle" source={assets.eth.imageUrl} width={16} />}
-  >
-    xs
-  </MediaChip>
-</HStack>
+<MediaChip
+  size="xs"
+  start={<RemoteImage height={16} shape="circle" source={assets.eth.imageUrl} width={16} />}
+>
+  Ethereum
+</MediaChip>
 ```
 
 ### Invert color scheme

@@ -26,12 +26,7 @@ function ExampleSizes() {
     { id: 'bridge', label: 'Bridge' },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  return (
-    <VStack gap={2}>
-      <TabbedChips activeTab={activeTab} onChange={setActiveTab} size="s" tabs={tabs} />
-      <TabbedChips activeTab={activeTab} onChange={setActiveTab} size="xs" tabs={tabs} />
-    </VStack>
-  );
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} size="xs" tabs={tabs} />;
 }
 ```
 

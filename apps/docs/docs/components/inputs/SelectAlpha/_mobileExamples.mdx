@@ -362,32 +362,14 @@ function SizesExample() {
   ];
 
   return (
-    <VStack gap={3}>
-      <Select
-        label="Small (s)"
-        onChange={setValue}
-        options={options}
-        placeholder="Select an option"
-        size="s"
-        value={value}
-      />
-      <Select
-        label="Medium (m)"
-        onChange={setValue}
-        options={options}
-        placeholder="Select an option"
-        size="m"
-        value={value}
-      />
-      <Select
-        label="Large (l) — default"
-        onChange={setValue}
-        options={options}
-        placeholder="Select an option"
-        size="l"
-        value={value}
-      />
-    </VStack>
+    <Select
+      label="Fruit"
+      onChange={setValue}
+      options={options}
+      placeholder="Select an option"
+      size="s"
+      value={value}
+    />
   );
 }
 ```

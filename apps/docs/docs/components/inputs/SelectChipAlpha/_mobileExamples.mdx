@@ -245,28 +245,13 @@ function ExampleSizes() {
   ];
   const [value, setValue] = useState<string | null>('1');
   return (
-    <VStack gap={4}>
-      <VStack gap={1}>
-        <Text>s (default)</Text>
-        <SelectChip
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Choose an option"
-          size="s"
-          value={value}
-        />
-      </VStack>
-      <VStack gap={1}>
-        <Text>xs</Text>
-        <SelectChip
-          onChange={setValue}
-          options={exampleOptions}
-          placeholder="Choose an option"
-          size="xs"
-          value={value}
-        />
-      </VStack>
-    </VStack>
+    <SelectChip
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      size="xs"
+      value={value}
+    />
   );
 }
 ```

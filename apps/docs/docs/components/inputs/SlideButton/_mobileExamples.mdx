@@ -73,29 +73,13 @@ function Example() {
   const [checked, setChecked] = useState(false);
 
   return (
-    <VStack gap={2}>
-      <SlideButton
-        checked={checked}
-        onChange={setChecked}
-        uncheckedLabel="Swipe to confirm (s)"
-        checkedLabel="Confirming..."
-        size="s"
-      />
-      <SlideButton
-        checked={checked}
-        onChange={setChecked}
-        uncheckedLabel="Swipe to confirm (m)"
-        checkedLabel="Confirming..."
-        size="m"
-      />
-      <SlideButton
-        checked={checked}
-        onChange={setChecked}
-        uncheckedLabel="Swipe to confirm (l) — default"
-        checkedLabel="Confirming..."
-        size="l"
-      />
-    </VStack>
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      size="s"
+    />
   );
 }
 ```

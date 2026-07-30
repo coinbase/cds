@@ -267,39 +267,25 @@ function BorderlessExample() {
 `size` accepts `s`, `m`, and `l`. Defaults to `l`.
 
 ```jsx
-const fruitOptions = [
-  { value: 'apple', label: 'Apple' },
-  { value: 'banana', label: 'Banana' },
-  { value: 'cherry', label: 'Cherry' },
-];
-const [value, setValue] = useState(null);
+function Example() {
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+  ];
+  const [value, setValue] = useState(null);
 
-<VStack gap={2}>
-  <Combobox
-    label="Small (s)"
-    onChange={setValue}
-    options={fruitOptions}
-    placeholder="Search..."
-    size="s"
-    value={value}
-  />
-  <Combobox
-    label="Medium (m)"
-    onChange={setValue}
-    options={fruitOptions}
-    placeholder="Search..."
-    size="m"
-    value={value}
-  />
-  <Combobox
-    label="Large (l) — default"
-    onChange={setValue}
-    options={fruitOptions}
-    placeholder="Search..."
-    size="l"
-    value={value}
-  />
-</VStack>;
+  return (
+    <Combobox
+      label="Fruit"
+      onChange={setValue}
+      options={fruitOptions}
+      placeholder="Search..."
+      size="s"
+      value={value}
+    />
+  );
+}
 ```
 
 ### Helper Text
