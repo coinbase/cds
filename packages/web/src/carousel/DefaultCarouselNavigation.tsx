@@ -12,8 +12,6 @@ import type { CarouselNavigationComponentProps } from './Carousel';
 
 /** Size the navigation buttons render at when neither `iconButtonSize` nor `compact` is set. */
 const defaultIconButtonSize: IconButtonSize = 's';
-/** Size the deprecated `compact={false}` resolves to — `IconButton`'s own default. */
-const nonCompactIconButtonSize: IconButtonSize = 'l';
 
 const navigationCss = css`
   padding: var(--space-0_5) 0;
@@ -156,7 +154,7 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
   // so these buttons have always rendered dense unless a caller explicitly passed `compact={false}`,
   // which then fell back to IconButton's `l`. `iconButtonSize` wins when set.
   const resolvedIconButtonSize =
-    iconButtonSize ?? ((compact ?? true) ? defaultIconButtonSize : nonCompactIconButtonSize);
+    iconButtonSize ?? ((compact ?? true) ? defaultIconButtonSize : 'l');
 
   return (
     <HStack

@@ -82,8 +82,6 @@ export type TextInputSize = 's' | 'm' | 'l';
 
 const defaultTextInputSize: TextInputSize = 'l';
 
-// Keep `compact` excluded from every inherited source: TypeScript only reports a merged property as
-// deprecated when *every* declaration is, so letting one back in silently disables the deprecation.
 export type TextInputBaseProps = Omit<NativeInputBaseProps, 'caretColor' | 'compact'> &
   Pick<
     SharedInputProps,

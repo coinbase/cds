@@ -12,7 +12,7 @@ export type SharedInputProps = {
   /**
    * Enables compact variation
    * @default false
-   * @deprecated Use the consuming component's own sizing prop instead. This will be removed in a future major release.
+   * @deprecated This will be removed in a future major release.
    * @deprecationExpectedRemoval v10
    */
   compact?: boolean;
