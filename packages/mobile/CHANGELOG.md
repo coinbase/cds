@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.10.1 (7/30/2026 PST)
+
+#### 🐞 Fixes
+
+- Size LinearGradient svg to measured pixels under Fabric. [[#810](https://github.com/coinbase/cds/pull/810)]
+
 ## 9.10.0 (7/30/2026 PST)
 
 #### 🚀 Updates
