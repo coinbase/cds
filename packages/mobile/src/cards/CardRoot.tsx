@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import type { StyleProp, View, ViewStyle } from 'react-native';
 
 import { HStack } from '../layout/HStack';
-import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import { Pressable, type PressableBaseProps, type PressableProps } from '../system/Pressable';
 
 export type CardRootBaseProps = Omit<PressableBaseProps, 'style'> & {
   /** Content to render inside the card. */
@@ -15,9 +15,10 @@ export type CardRootBaseProps = Omit<PressableBaseProps, 'style'> & {
   renderAsPressable?: boolean;
 };
 
-export type CardRootProps = CardRootBaseProps & {
-  style?: StyleProp<ViewStyle>;
-};
+export type CardRootProps = CardRootBaseProps &
+  Omit<PressableProps, 'style'> & {
+    style?: StyleProp<ViewStyle>;
+  };
 
 /**
  * CardRoot is the foundational wrapper component for card layouts.
