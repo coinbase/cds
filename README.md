@@ -58,6 +58,14 @@ yarn nx run expo-app:android
 
 See [apps/expo-app/README.md](apps/expo-app/README.md) for details.
 
+## PR Preview Deployments
+
+All pull requests automatically get a live preview of the documentation site deployed to GitHub Pages. This makes it easy to review documentation changes before merging.
+
+**For PR Authors:** No setup required! Just open a PR and check the comments for your preview link.
+
+**For Maintainers:** See [docs/pr-preview/](docs/pr-preview/) for setup and configuration.
+
 ## Contributing
 
 We welcome contributions to the Coinbase Design System! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our development process, coding standards, and how to submit pull requests.

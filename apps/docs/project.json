@@ -49,6 +49,13 @@
         "^typecheck",
         "peer-dependencies-check"
       ],
+      "inputs": [
+        "production",
+        "^production",
+        {
+          "env": "BASE_URL"
+        }
+      ],
       "options": {
         "commands": [
           "docusaurus build --out-dir dist",

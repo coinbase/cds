@@ -22,7 +22,10 @@
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
         "{workspaceRoot}/packages/web/**/*.stories.*",
-        "!{projectRoot}/scripts/**"
+        "!{projectRoot}/scripts/**",
+        {
+          "env": "STORYBOOK_BASE_PATH"
+        }
       ],
       "outputs": [
         "{projectRoot}/dist"

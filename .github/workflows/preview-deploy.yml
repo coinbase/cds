@@ -1,0 +1,579 @@
+name: Deploy PR Preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to deploy'
+        required: true
+        type: number
+      deploy_docs:
+        description: 'Deploy documentation preview'
+        required: false
+        default: false
+        type: boolean
+      deploy_storybook:
+        description: 'Deploy Storybook preview'
+        required: false
+        default: false
+        type: boolean
+  pull_request:
+    types: [opened, synchronize, reopened, edited]
+
+concurrency:
+  group: preview-deploy-${{ github.event.pull_request.number || github.event.inputs.pr_number }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+env:
+  CI: true
+  NODE_ENV: production
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+jobs:
+  # Lightweight pre-check: parses the preview checkboxes from the PR body and
+  # gates the expensive deploy job. Only a sparse checkout of .github/scripts is
+  # needed (no yarn install), so it still completes in a few seconds.
+  check:
+    name: Check deploy options
+    # Only run on the public repo, so this stays inert on any synced mirror
+    # (the repo string is not rewritten during sync).
+    if: github.repository == 'coinbase/cds'
+    runs-on: ubuntu-latest
+    outputs:
+      deploy_docs: ${{ steps.parse.outputs.deploy_docs }}
+      deploy_storybook: ${{ steps.parse.outputs.deploy_storybook }}
+      should_run: ${{ steps.parse.outputs.should_run }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      # Sparse checkout of just the scripts dir so we can share the checkbox
+      # parser with the deploy job without pulling the whole repo or installing.
+      - name: Checkout preview scripts
+        if: github.event_name == 'pull_request'
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          sparse-checkout: .github/scripts
+          sparse-checkout-cone-mode: false
+
+      - name: Parse deploy options from PR body
+        id: parse
+        if: github.event_name == 'pull_request'
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+          PR_ACTION: ${{ github.event.action }}
+          PR_BODY_BEFORE: ${{ github.event.changes.body.from }}
+          BODY_CHANGED: ${{ github.event.changes.body.from != null }}
+        run: |
+          read -r DEPLOY_DOCS DEPLOY_STORYBOOK < <(node .github/scripts/parse-preview-flags.mjs "$PR_BODY")
+          echo "deploy_docs=$DEPLOY_DOCS" >> $GITHUB_OUTPUT
+          echo "deploy_storybook=$DEPLOY_STORYBOOK" >> $GITHUB_OUTPUT
+
+          SHOULD_RUN=false
+          if [ "$DEPLOY_DOCS" = "true" ] || [ "$DEPLOY_STORYBOOK" = "true" ]; then
+            SHOULD_RUN=true
+          fi
+
+          # On "edited" events, run only when a preview checkbox actually changed.
+          # This lets authors toggle previews without a new commit, while ignoring
+          # unrelated description edits. A change in EITHER direction runs the job:
+          # newly-checked boxes deploy, newly-unchecked boxes tear their preview down.
+          if [ "$PR_ACTION" = "edited" ]; then
+            if [ "$BODY_CHANGED" != "true" ]; then
+              SHOULD_RUN=false
+              echo "ℹ️ Edit did not change the PR body — skipping."
+            else
+              read -r OLD_DOCS OLD_STORYBOOK < <(node .github/scripts/parse-preview-flags.mjs "$PR_BODY_BEFORE")
+              if [ "$DEPLOY_DOCS" = "$OLD_DOCS" ] && [ "$DEPLOY_STORYBOOK" = "$OLD_STORYBOOK" ]; then
+                SHOULD_RUN=false
+                echo "ℹ️ Preview checkboxes unchanged by this edit — skipping."
+              else
+                # A checkbox flipped — run to reconcile (deploy and/or remove).
+                SHOULD_RUN=true
+              fi
+            fi
+          fi
+
+          echo "should_run=$SHOULD_RUN" >> $GITHUB_OUTPUT
+          if [ "$SHOULD_RUN" != "true" ]; then
+            echo "ℹ️ No preview deploy will run for this event."
+          fi
+
+  deploy:
+    name: Deploy Previews
+    needs: check
+    # Guard on the public repo too: workflow_dispatch would otherwise let this job
+    # run on a synced mirror even though the check job is skipped there.
+    if: |
+      github.repository == 'coinbase/cds' &&
+      (github.event_name == 'workflow_dispatch' ||
+      needs.check.outputs.should_run == 'true')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      # Checkout the PR branch
+      - name: Checkout PR
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || format('refs/pull/{0}/head', github.event.inputs.pr_number) }}
+
+      # Setup Node and dependencies
+      - name: Setup
+        uses: ./.github/actions/setup
+
+      # NOTE: We intentionally do NOT persist Nx's computation cache here.
+      # This job checks out untrusted PR code and can run via workflow_dispatch in
+      # the default-branch cache scope, so saving a cache would let an untrusted
+      # build poison a cache that privileged workflows later restore (CodeQL
+      # actions/cache-poisoning/direct-cache). Preview builds simply run cold;
+      # nx affected still limits what gets rebuilt.
+
+      # Resolve PR metadata + deploy options into a single set of outputs so the
+      # rest of the job never has to branch on event type. All PR-controlled
+      # values (title/branch/author) come in via env — never interpolated into
+      # the script — so a crafted PR title can't inject shell commands.
+      - name: Get PR metadata and deploy options
+        id: pr-metadata
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          # pull_request context (empty on workflow_dispatch)
+          PR_EVENT_NUMBER: ${{ github.event.pull_request.number }}
+          PR_EVENT_TITLE: ${{ github.event.pull_request.title }}
+          PR_EVENT_BRANCH: ${{ github.event.pull_request.head.ref }}
+          PR_EVENT_AUTHOR: ${{ github.event.pull_request.user.login }}
+          PR_EVENT_COMMIT: ${{ github.event.pull_request.head.sha }}
+          CHECK_DEPLOY_DOCS: ${{ needs.check.outputs.deploy_docs }}
+          CHECK_DEPLOY_STORYBOOK: ${{ needs.check.outputs.deploy_storybook }}
+          # workflow_dispatch inputs (empty on pull_request)
+          INPUT_PR_NUMBER: ${{ github.event.inputs.pr_number }}
+          INPUT_DEPLOY_DOCS: ${{ github.event.inputs.deploy_docs }}
+          INPUT_DEPLOY_STORYBOOK: ${{ github.event.inputs.deploy_storybook }}
+        run: |
+          set -euo pipefail
+
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            PR_NUMBER="$PR_EVENT_NUMBER"
+            PR_TITLE="$PR_EVENT_TITLE"
+            PR_BRANCH="$PR_EVENT_BRANCH"
+            PR_AUTHOR="$PR_EVENT_AUTHOR"
+            PR_COMMIT="$PR_EVENT_COMMIT"
+            DEPLOY_DOCS="$CHECK_DEPLOY_DOCS"
+            DEPLOY_STORYBOOK="$CHECK_DEPLOY_STORYBOOK"
+          else
+            PR_NUMBER="$INPUT_PR_NUMBER"
+            # One API call for all four fields (tab-separated to survive spaces in the title).
+            IFS=$'\t' read -r PR_TITLE PR_BRANCH PR_AUTHOR PR_COMMIT < <(
+              gh pr view "$PR_NUMBER" --json title,headRefName,author,headRefOid \
+                -q '[.title, .headRefName, .author.login, .headRefOid] | @tsv'
+            )
+            DEPLOY_DOCS="$INPUT_DEPLOY_DOCS"
+            DEPLOY_STORYBOOK="$INPUT_DEPLOY_STORYBOOK"
+          fi
+
+          {
+            echo "pr_number=$PR_NUMBER"
+            echo "pr_title=$PR_TITLE"
+            echo "pr_branch=$PR_BRANCH"
+            echo "pr_author=$PR_AUTHOR"
+            echo "pr_commit=$PR_COMMIT"
+            echo "deploy_docs=$DEPLOY_DOCS"
+            echo "deploy_storybook=$DEPLOY_STORYBOOK"
+          } >> "$GITHUB_OUTPUT"
+
+      # Decide which apps actually need rebuilding. Skip an app's build when it is
+      # both unaffected by this PR and already has a live preview — its existing
+      # deploy is kept as-is. Always build when there is no existing preview so
+      # links never 404, and always build on manual dispatch.
+      - name: Determine which apps to build
+        id: builds
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          DEPLOY_DOCS: ${{ steps.pr-metadata.outputs.deploy_docs }}
+          DEPLOY_STORYBOOK: ${{ steps.pr-metadata.outputs.deploy_storybook }}
+          PR_NUMBER: ${{ steps.pr-metadata.outputs.pr_number }}
+        run: |
+          set -euo pipefail
+
+          # Detect an existing preview by inspecting the gh-pages tree directly via
+          # git — WITHOUT checking it out into the workspace. A second checkout inside
+          # the repo makes Nx see a duplicate "storybook"/"docs" project and abort the
+          # build. cat-file -e probes blob existence without writing any files.
+          docs_exists=false
+          storybook_exists=false
+          if git fetch origin gh-pages --depth=1 2>/dev/null; then
+            git cat-file -e "FETCH_HEAD:pr-${PR_NUMBER}/docs/index.html" 2>/dev/null && docs_exists=true || true
+            git cat-file -e "FETCH_HEAD:pr-${PR_NUMBER}/storybook/index.html" 2>/dev/null && storybook_exists=true || true
+          fi
+
+          # Manual dispatch always (re)builds whatever was requested.
+          if [ "$EVENT_NAME" != "pull_request" ]; then
+            echo "build_docs=$DEPLOY_DOCS" >> $GITHUB_OUTPUT
+            echo "build_storybook=$DEPLOY_STORYBOOK" >> $GITHUB_OUTPUT
+            echo "Manual dispatch — building all requested previews."
+            exit 0
+          fi
+
+          # nx affected reads NX_BASE/NX_HEAD (set by the setup action).
+          set +e
+          AFFECTED_RAW="$(yarn nx show projects --affected 2>/dev/null)"
+          NX_EXIT=$?
+          set -e
+          if [ "$NX_EXIT" -ne 0 ]; then
+            echo "⚠️  nx affected detection failed — building requested previews to be safe."
+            echo "build_docs=$DEPLOY_DOCS" >> $GITHUB_OUTPUT
+            echo "build_storybook=$DEPLOY_STORYBOOK" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
+          # Normalize to one project per line (nx may emit comma- or newline-separated).
+          AFFECTED="$(printf '%s' "$AFFECTED_RAW" | tr ',' '\n')"
+          docs_affected=false
+          storybook_affected=false
+          printf '%s\n' "$AFFECTED" | grep -qx docs && docs_affected=true || true
+          printf '%s\n' "$AFFECTED" | grep -qx storybook && storybook_affected=true || true
+
+          build_docs=false
+          build_storybook=false
+          if [ "$DEPLOY_DOCS" = "true" ] && { [ "$docs_affected" = "true" ] || [ "$docs_exists" != "true" ]; }; then
+            build_docs=true
+          fi
+          if [ "$DEPLOY_STORYBOOK" = "true" ] && { [ "$storybook_affected" = "true" ] || [ "$storybook_exists" != "true" ]; }; then
+            build_storybook=true
+          fi
+
+          echo "build_docs=$build_docs" >> $GITHUB_OUTPUT
+          echo "build_storybook=$build_storybook" >> $GITHUB_OUTPUT
+          echo "docs: requested=$DEPLOY_DOCS affected=$docs_affected exists=$docs_exists -> build=$build_docs"
+          echo "storybook: requested=$DEPLOY_STORYBOOK affected=$storybook_affected exists=$storybook_exists -> build=$build_storybook"
+
+      # Build docs with a per-PR baseUrl (part of the Nx cache key via the BASE_URL input).
+      - name: Build Docs
+        if: steps.builds.outputs.build_docs == 'true'
+        run: BASE_URL=/cds/pr-${{ steps.pr-metadata.outputs.pr_number }}/docs/ yarn nx run docs:build
+
+      # Build Storybook with relative asset URLs so it can be served from the
+      # per-PR sub-path. STORYBOOK_BASE_PATH is unset for the prod build, so this
+      # only affects previews (and is part of the Storybook build's cache key).
+      - name: Build Storybook
+        if: steps.builds.outputs.build_storybook == 'true'
+        env:
+          STORYBOOK_BASE_PATH: './'
+        run: yarn nx run storybook:build
+
+      # Check if selector has changes
+      - name: Check selector changes
+        id: check-selector
+        run: |
+          # Check if any files in apps/preview-selector/ changed
+          if git diff --name-only ${{ github.event.pull_request.base.sha || 'origin/master' }} HEAD | grep -q '^apps/preview-selector/'; then
+            echo "selector_changed=true" >> $GITHUB_OUTPUT
+            echo "✅ Selector has changes, will rebuild"
+          else
+            echo "selector_changed=false" >> $GITHUB_OUTPUT
+            echo "⏭️  Selector unchanged, will skip rebuild"
+          fi
+
+      # Build selector page (only if it has changes)
+      - name: Build selector page
+        if: steps.check-selector.outputs.selector_changed == 'true'
+        run: yarn nx run preview-selector:build
+
+      # Checkout gh-pages only AFTER every Nx build has run. Placing it inside the
+      # workspace earlier makes Nx discover a duplicate project graph and fail.
+      # fetch-depth: 1 since we squash history on every push — full history is never needed.
+      - name: Checkout gh-pages
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: gh-pages
+          path: gh-pages-checkout
+          fetch-depth: 1
+
+      # Copy builds, update manifest, and push to gh-pages.
+      # Uses orphan commits (git commit-tree) so the branch always has a single root commit —
+      # no binary blobs accumulate in history. On concurrent push conflicts, re-fetches the
+      # latest state, re-applies this PR's changes on top, and retries with --force-with-lease.
+      - name: Deploy previews to gh-pages
+        id: deploy
+        working-directory: gh-pages-checkout
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER: ${{ steps.pr-metadata.outputs.pr_number }}
+          PR_TITLE: ${{ steps.pr-metadata.outputs.pr_title }}
+          PR_BRANCH: ${{ steps.pr-metadata.outputs.pr_branch }}
+          PR_AUTHOR: ${{ steps.pr-metadata.outputs.pr_author }}
+          PR_COMMIT: ${{ steps.pr-metadata.outputs.pr_commit }}
+          DEPLOY_DOCS: ${{ steps.pr-metadata.outputs.deploy_docs }}
+          DEPLOY_STORYBOOK: ${{ steps.pr-metadata.outputs.deploy_storybook }}
+          COPY_DOCS: ${{ steps.builds.outputs.build_docs }}
+          COPY_STORYBOOK: ${{ steps.builds.outputs.build_storybook }}
+          SELECTOR_CHANGED: ${{ steps.check-selector.outputs.selector_changed }}
+        run: |
+          set -e
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Re-read the live checkbox state at push time so a stale run (e.g. one
+          # superseded by a quick check→uncheck) reconciles to the PR's current
+          # intent rather than the state captured when it was triggered.
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            if LIVE_BODY="$(gh pr view "$PR_NUMBER" --json body -q '.body' 2>/dev/null)"; then
+              # Same shared parser the check job uses, so checkbox logic never drifts.
+              read -r LIVE_DOCS LIVE_STORYBOOK < <(node ../.github/scripts/parse-preview-flags.mjs "$LIVE_BODY")
+              [ "$LIVE_DOCS" = "$DEPLOY_DOCS" ] || echo "↻ Docs checkbox changed since trigger — now ${LIVE_DOCS}"
+              [ "$LIVE_STORYBOOK" = "$DEPLOY_STORYBOOK" ] || echo "↻ Storybook checkbox changed since trigger — now ${LIVE_STORYBOOK}"
+              DEPLOY_DOCS="$LIVE_DOCS"
+              DEPLOY_STORYBOOK="$LIVE_STORYBOOK"
+              # Never copy an artifact whose box is no longer checked.
+              { [ "$COPY_DOCS" = "true" ] && [ "$LIVE_DOCS" = "true" ]; } && COPY_DOCS=true || COPY_DOCS=false
+              { [ "$COPY_STORYBOOK" = "true" ] && [ "$LIVE_STORYBOOK" = "true" ]; } && COPY_STORYBOOK=true || COPY_STORYBOOK=false
+            else
+              echo "⚠️  Could not fetch live PR body — using trigger-time checkbox state."
+            fi
+          fi
+
+          # Expose the reconciled state so the PR comment reflects what actually happened.
+          echo "final_docs=$DEPLOY_DOCS" >> "$GITHUB_OUTPUT"
+          echo "final_storybook=$DEPLOY_STORYBOOK" >> "$GITHUB_OUTPUT"
+
+          # Copies this PR's build artifacts and updates manifest.json.
+          # Safe to call multiple times — idempotent for this PR's files.
+          # COPY_* reflects what was rebuilt this run; when an app was skipped as
+          # unchanged, its existing files are preserved by the reset to origin/gh-pages.
+          apply_changes() {
+            PR_DIR="pr-${PR_NUMBER}"
+
+            # If neither preview is requested, tear the whole PR directory down and
+            # drop it from the manifest — the author unchecked all preview boxes.
+            if [ "$DEPLOY_DOCS" != "true" ] && [ "$DEPLOY_STORYBOOK" != "true" ]; then
+              if [ -d "$PR_DIR" ]; then
+                rm -rf "$PR_DIR"
+                echo "🧹 All preview checkboxes unchecked — removed ${PR_DIR}"
+              else
+                echo "ℹ️  No previews requested and none exist for ${PR_DIR}"
+              fi
+              node ../.github/scripts/remove-from-manifest.mjs "$PR_NUMBER"
+              return
+            fi
+
+            # Docs: rebuild, keep, or remove to match the checkbox.
+            if [ "$COPY_DOCS" = "true" ]; then
+              rm -rf "${PR_DIR}/docs"
+              mkdir -p "${PR_DIR}/docs"
+              cp -r ../apps/docs/dist/* "${PR_DIR}/docs/"
+              echo "✅ Docs copied"
+            elif [ "$DEPLOY_DOCS" = "true" ]; then
+              echo "⏭️  Docs unchanged — keeping existing preview"
+            elif [ -d "${PR_DIR}/docs" ]; then
+              rm -rf "${PR_DIR}/docs"
+              echo "🗑️  Docs preview removed (checkbox unchecked)"
+            fi
+            # Storybook: rebuild, keep, or remove to match the checkbox.
+            if [ "$COPY_STORYBOOK" = "true" ]; then
+              rm -rf "${PR_DIR}/storybook"
+              mkdir -p "${PR_DIR}/storybook"
+              cp -r ../apps/storybook/dist/* "${PR_DIR}/storybook/"
+              echo "✅ Storybook copied"
+            elif [ "$DEPLOY_STORYBOOK" = "true" ]; then
+              echo "⏭️  Storybook unchanged — keeping existing preview"
+            elif [ -d "${PR_DIR}/storybook" ]; then
+              rm -rf "${PR_DIR}/storybook"
+              echo "🗑️  Storybook preview removed (checkbox unchecked)"
+            fi
+            if [ "$SELECTOR_CHANGED" = "true" ]; then
+              cp -r ../apps/preview-selector/dist/* ./
+              echo "✅ Selector updated"
+            else
+              echo "⏭️  Selector unchanged, keeping existing version"
+            fi
+
+            # Disable Jekyll so Pages serves the built assets verbatim (Storybook and
+            # Docusaurus emit files/dirs Jekyll would otherwise skip or rewrite).
+            touch .nojekyll
+
+            if [ ! -f "manifest.json" ]; then
+              echo '{"previews":[],"lastUpdated":"'$(date -u +%Y-%m-%dT%H:%M:%S.000Z)'"}' > manifest.json
+            fi
+
+            node ../.github/scripts/update-manifest.mjs \
+              "$PR_NUMBER" "$PR_TITLE" "$PR_BRANCH" "$PR_AUTHOR" "$PR_COMMIT" \
+              "$DEPLOY_DOCS" "$DEPLOY_STORYBOOK"
+          }
+
+          # Start from the authoritative remote state
+          git fetch origin gh-pages
+          git reset --hard origin/gh-pages
+
+          apply_changes
+          git add -A
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          # Size guardrail: GitHub Pages publishes at most ~1GB per site. Warn as the
+          # accumulated previews approach that so it degrades loudly, not silently.
+          SITE_SIZE_MB=$(du -sm --exclude=.git . | cut -f1)
+          echo "📦 gh-pages content size: ${SITE_SIZE_MB} MB"
+          if [ "$SITE_SIZE_MB" -gt 900 ]; then
+            echo "::warning::gh-pages preview content is ${SITE_SIZE_MB} MB, approaching GitHub Pages' ~1GB limit. Prune old previews (see the cleanup reaper workflow)."
+          fi
+
+          # Non-lossy concurrency handling: every writer re-applies only its own PR's
+          # changes on top of the latest gh-pages and retries. GitHub Actions' native
+          # concurrency queue only holds one pending run (newer cancels older), so it
+          # would silently drop previews under contention — this retry loop does not.
+          # Exponential backoff (capped) with jitter desyncs concurrent writers.
+          MAX_ATTEMPTS=8
+          MAX_BACKOFF_SECONDS=30
+          attempt=1
+          while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+            # Create an orphan root commit from the current tree.
+            # This replaces history entirely — the branch stays at depth 1 forever.
+            SQUASHED=$(git commit-tree HEAD^{tree} -m "Deploy preview for PR #${PR_NUMBER}")
+
+            # --force-with-lease ensures we don't overwrite a concurrent push we haven't seen
+            if git push --force-with-lease origin "${SQUASHED}:refs/heads/gh-pages"; then
+              echo "✅ Deployed to gh-pages (attempt ${attempt}/${MAX_ATTEMPTS})"
+              exit 0
+            fi
+
+            if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+              break
+            fi
+
+            BACKOFF=$(( (1 << (attempt - 1)) + RANDOM % 5 ))
+            if [ "$BACKOFF" -gt "$MAX_BACKOFF_SECONDS" ]; then
+              BACKOFF=$MAX_BACKOFF_SECONDS
+            fi
+            echo "Push failed (concurrent update?), re-merging and retrying in ${BACKOFF}s (${attempt}/${MAX_ATTEMPTS})..."
+            sleep "$BACKOFF"
+            git fetch origin gh-pages
+            git reset --hard origin/gh-pages
+            apply_changes
+            git add -A
+            attempt=$((attempt + 1))
+          done
+
+          echo "❌ Failed to push after ${MAX_ATTEMPTS} attempts"
+          exit 1
+
+      # Comment on PR with preview link
+      - name: Comment on PR
+        if: success()
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const prNumber = ${{ steps.pr-metadata.outputs.pr_number }};
+            const deployDocs = '${{ steps.deploy.outputs.final_docs }}' === 'true';
+            const deployStorybook = '${{ steps.deploy.outputs.final_storybook }}' === 'true';
+
+            // Hidden marker on the one comment we keep updating, so we always find
+            // and edit the same comment across deploy/removal states.
+            const marker = '<!-- cds-preview-bot -->';
+            // Matches this PR's preview comments (current marker + older ones posted
+            // before the marker existed, which always link this PR's preview URL).
+            const previewUrlFragment = `coinbase.github.io/cds/pr-${prNumber}/`;
+
+            const comments = await github.paginate(github.rest.issues.listComments, {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              per_page: 100,
+            });
+            const ours = comments.filter(
+              (c) =>
+                c.user.type === 'Bot' &&
+                (c.body.includes(marker) || c.body.includes(previewUrlFragment)),
+            );
+            // Reuse the marked comment if one exists; every other match (duplicates
+            // and pre-marker comments) is stale and gets deleted below.
+            const botComment = ours.find((c) => c.body.includes(marker));
+            const stale = ours.filter((c) => c !== botComment);
+
+            const deleteStale = async () => {
+              for (const dup of stale) {
+                await github.rest.issues.deleteComment({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  comment_id: dup.id,
+                });
+              }
+            };
+
+            let body;
+            if (!deployDocs && !deployStorybook) {
+              // Reconciled to no previews (all checkboxes unchecked).
+              if (!botComment) {
+                // Nothing to update — just clear out any stale comments and stop.
+                await deleteStale();
+                console.log('No previews; removed stale comments if any.');
+                return;
+              }
+              body = `${marker}
+            ## 🧹 Previews Removed
+
+            All preview checkboxes are unchecked, so the preview for this PR has been removed.
+
+            ---
+
+            📝 Updated: \`${new Date().toISOString()}\``;
+            } else {
+              const docsUrl = `https://coinbase.github.io/cds/pr-${prNumber}/docs/`;
+              const storybookUrl = `https://coinbase.github.io/cds/pr-${prNumber}/storybook/`;
+              const multiple = deployDocs && deployStorybook;
+
+              let previewLinks = '';
+              if (deployDocs) {
+                previewLinks += `\n📄 **Documentation:** [View Docs →](${docsUrl})`;
+              }
+              if (deployStorybook) {
+                previewLinks += `\n📚 **Storybook:** [View Storybook →](${storybookUrl})`;
+              }
+
+              body = `${marker}
+            ## 🚀 Preview${multiple ? 's' : ''} Deployed
+
+            Your preview${multiple ? 's are' : ' is'} ready!
+            ${previewLinks}
+
+            ---
+
+            📝 Updated: \`${new Date().toISOString()}\`
+            🔨 Commit: \`${{ steps.pr-metadata.outputs.pr_commit }}\`
+
+            > Preview${multiple ? 's' : ''} are removed when the PR is closed or all checkboxes are unchecked.
+            > To change what's deployed, edit the checkboxes in the PR description.`;
+            }
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: prNumber,
+                body,
+              });
+            }
+
+            // Remove any older/duplicate preview comments so only the one above remains.
+            await deleteStale();
