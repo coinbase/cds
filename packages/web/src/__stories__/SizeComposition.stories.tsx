@@ -200,5 +200,3 @@ export const SizeComposition = () => (
     </VStack>
   </VStack>
 );
-
-SizeComposition.parameters = { a11y: { disable: true } };

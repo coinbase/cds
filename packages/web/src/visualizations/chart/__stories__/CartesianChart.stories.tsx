@@ -21,11 +21,6 @@ import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubb
 export default {
   component: CartesianChart,
   title: 'Components/Chart/CartesianChart',
-  parameters: {
-    a11y: {
-      test: 'todo',
-    },
-  },
 };
 
 const MultipleChart = () => {

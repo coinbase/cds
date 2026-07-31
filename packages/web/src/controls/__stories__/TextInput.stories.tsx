@@ -238,17 +238,6 @@ const DisabledRender = () => {
 
 export const Disabled: Story = {
   render: () => <DisabledRender />,
-  parameters: {
-    a11y: {
-      config: {
-        /**
-         * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
-         * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-         */
-        rules: [{ id: 'color-contrast', enabled: false }],
-      },
-    },
-  },
 };
 
 export const NoLabel = function NoLabel() {
@@ -627,15 +616,6 @@ const RenderInputDisabledRender = () => {
 
 export const RenderInputDisabled: Story = {
   render: () => <RenderInputDisabledRender />,
-  parameters: {
-    a11y: {
-      options: {
-        rules: {
-          'color-contrast': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 export const RenderInputCompact = () => {

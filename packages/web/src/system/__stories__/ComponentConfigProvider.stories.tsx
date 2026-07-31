@@ -9,14 +9,6 @@ export default {
 };
 
 export const Default = () => <StickerSheet />;
-Default.parameters = {
-  a11y: {
-    context: {
-      include: ['body'],
-      exclude: ['.no-a11y-checks'],
-    },
-  },
-};
 
 export const Custom = () => (
   <ThemeProvider activeColorScheme="dark" theme={customTheme}>
@@ -25,5 +17,3 @@ export const Custom = () => (
     </ComponentConfigProvider>
   </ThemeProvider>
 );
-
-Custom.parameters = { a11y: { disable: true } };

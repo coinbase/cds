@@ -8,14 +8,6 @@ import { Text } from '../../typography/Text';
 import type { ContainedAssetCardProps } from '../ContainedAssetCard';
 import { ContainedAssetCard } from '../ContainedAssetCard';
 
-const a11ySkipConfig = {
-  options: {
-    rules: {
-      'color-contrast': { enabled: false },
-    },
-  },
-};
-
 const onClickConsole = console.log;
 
 const exampleProps: ContainedAssetCardProps = {
@@ -124,7 +116,6 @@ export const Custom = (): JSX.Element => {
 
 Custom.parameters = {
   percy: { enableJavaScript: true },
-  a11y: a11ySkipConfig,
 };
 
 export const Carousel = (): JSX.Element => (

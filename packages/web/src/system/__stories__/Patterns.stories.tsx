@@ -11,11 +11,6 @@ import { Text } from '../../typography/Text';
 
 export default {
   title: 'Components/Patterns',
-  parameters: {
-    a11y: {
-      test: 'off',
-    },
-  },
 };
 
 export const Error = () => {

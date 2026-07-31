@@ -146,23 +146,6 @@ export const ThemeProviderTest = () => {
   );
 };
 
-ThemeProviderTest.parameters = {
-  a11y: {
-    config: {
-      /**
-       * Color contrast ratio doesn't need to meet 4.5:1, as these are test examples for color override
-       * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-       */
-      rules: [{ id: 'color-contrast', enabled: false }],
-    },
-  },
-};
-
 export default {
   title: 'Components/ThemeProvider',
-  parameters: {
-    a11y: {
-      test: 'off',
-    },
-  },
 };

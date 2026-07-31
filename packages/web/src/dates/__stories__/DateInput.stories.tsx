@@ -58,8 +58,6 @@ export const Examples = () => {
   );
 };
 
-Examples.parameters = { a11y: { disable: true } };
-
 export const Sizes = () => {
   const [date, setDate] = useState<Date | null>(null);
   const [error, setError] = useState<DateInputValidationError | null>(null);
@@ -85,8 +83,6 @@ export const Sizes = () => {
     </Group>
   );
 };
-
-Sizes.parameters = { a11y: { disable: true } };
 
 export const Props = () => {
   const [date, setDate] = useState<Date | null>(today);
@@ -167,8 +163,6 @@ export const Props = () => {
   );
 };
 
-Props.parameters = { a11y: { disable: true } };
-
 export const CustomLabel = () => {
   const [date, setDate] = useState<Date | null>(null);
   const [error, setError] = useState<DateInputValidationError | null>(null);
@@ -228,5 +222,3 @@ export const CustomLabel = () => {
     </VStack>
   );
 };
-
-CustomLabel.parameters = { a11y: { disable: true } };

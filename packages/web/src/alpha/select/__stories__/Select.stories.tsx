@@ -24,15 +24,6 @@ import {
 export default {
   title: 'Components/Alpha/Select/SingleSelect',
   component: Select,
-  parameters: {
-    a11y: {
-      options: {
-        rules: {
-          'nested-interactive': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 const paddingCss = css`
@@ -492,21 +483,6 @@ export const Disabled = () => {
       value={value}
     />
   );
-};
-
-Disabled.parameters = {
-  a11y: {
-    options: {
-      /**
-       * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled.
-       * Use axe run options (instead of config.rules) to reliably disable this rule.
-       * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-       */
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
 };
 
 export const DisabledOptions = () => {
@@ -989,15 +965,6 @@ export const DefaultOpen = () => {
   );
 };
 
-DefaultOpen.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};
 export const DisabledClickOutsideClose = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
@@ -1346,16 +1313,6 @@ export const DisabledWithVariants = () => {
       />
     </div>
   );
-};
-
-DisabledWithVariants.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
 };
 
 export const StartNodeWithVariants = () => {

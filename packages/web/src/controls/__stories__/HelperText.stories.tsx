@@ -5,9 +5,6 @@ import { HelperText } from '../HelperText';
 export default {
   title: 'Components/Inputs/HelperText',
   component: HelperText,
-  parameters: {
-    a11y: { options: { rules: { 'color-contrast': { enabled: false } } } },
-  },
 };
 
 export const MessageAreaBasic = () => {

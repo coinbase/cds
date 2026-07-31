@@ -14,14 +14,6 @@ import { TabsActiveIndicator } from '../Tabs';
 export default {
   title: 'Components/Tabs/Segmented Tabs',
   component: SegmentedTabs,
-  parameters: {
-    a11y: {
-      context: {
-        include: ['body'],
-        exclude: ['.no-a11y-checks'],
-      },
-    },
-  },
 };
 
 const CustomActiveIndicator = ({
@@ -269,15 +261,3 @@ export const All = () => {
     </VStack>
   );
 };
-
-const disableA11yCheck = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};
-
-All.parameters = disableA11yCheck;

@@ -15,9 +15,6 @@ import {
 export default {
   component: SparklineInteractiveHeader,
   title: 'Components/SparklineInteractiveHeader',
-  parameters: {
-    a11y: { test: 'off' },
-  },
 };
 
 type SparklinePeriod = 'hour' | 'day' | 'week' | 'month' | 'year' | 'all';
@@ -246,11 +243,6 @@ export const Default = () => {
 Default.bind({});
 Default.parameters = {
   percy: { enableJavaScript: true },
-  a11y: {
-    config: {
-      rules: [{ id: 'color-contrast', enabled: false }],
-    },
-  },
 };
 
 export const CustomLabel = () => {
@@ -262,11 +254,6 @@ export const CustomLabel = () => {
 CustomLabel.bind({});
 CustomLabel.parameters = {
   percy: { enableJavaScript: true },
-  a11y: {
-    config: {
-      rules: [{ id: 'color-contrast', enabled: false }],
-    },
-  },
 };
 
 export const Compact = () => {
@@ -276,11 +263,6 @@ export const Compact = () => {
 Compact.bind({});
 Compact.parameters = {
   percy: { enableJavaScript: true },
-  a11y: {
-    config: {
-      rules: [{ id: 'color-contrast', enabled: false }],
-    },
-  },
 };
 
 export const BottomPeriodSelector = () => {
@@ -302,11 +284,6 @@ export const AlternatePeriods = () => {
 AlternatePeriods.bind({});
 AlternatePeriods.parameters = {
   percy: { enableJavaScript: true },
-  a11y: {
-    config: {
-      rules: [{ id: 'color-contrast', enabled: false }],
-    },
-  },
 };
 
 export const CustomTitle = () => {

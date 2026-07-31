@@ -50,9 +50,6 @@ export const Opacity = () => (
     <Lipsum />
   </Box>
 );
-//  This is just testing opacity so color contrast failure is expected
-Opacity.parameters = { a11y: { options: { rules: { 'color-contrast': { enabled: false } } } } };
-
 export const FlexControls = () => (
   <Box alignContent="center" alignItems="center" flexDirection="row" justifyContent="space-between">
     <Box alignSelf="flex-end" background="bgPositive" padding={1}>
@@ -282,14 +279,4 @@ export const BooleanStyleProps = () => {
       <Text font="body">HELLO WORLD</Text>
     </Box>
   );
-};
-
-BooleanStyleProps.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
 };

@@ -45,15 +45,6 @@
         "{projectRoot}/dist"
       ],
       "options": {
-        "cwd": "apps/storybook",
-        "env": {
-          "STORYBOOK_PERCY": "true"
-        }
-      }
-    },
-    "test-a11y": {
-      "command": "vitest --project=storybook",
-      "options": {
         "cwd": "apps/storybook"
       }
     },
@@ -136,18 +127,6 @@
         "env": {
           "STORYBOOK_SKIP_ANIMATION": "true"
         }
-      }
-    },
-    "a11y-web_TODO": {
-      "command": "tsx ./scripts/run-a11y-tests.ts",
-      "dependsOn": [
-        "build-for-tests"
-      ],
-      "inputs": [
-        "{projectRoot}/dist"
-      ],
-      "options": {
-        "cwd": "apps/storybook"
       }
     },
     "percy": {

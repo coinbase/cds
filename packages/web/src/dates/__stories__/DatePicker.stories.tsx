@@ -123,8 +123,6 @@ export const Examples = () => {
   );
 };
 
-Examples.parameters = { a11y: { disable: true } };
-
 export const Sizes = () => {
   const [date, setDate] = useState<Date | null>(null);
   const [error, setError] = useState<DateInputValidationError | null>(null);
@@ -151,8 +149,6 @@ export const Sizes = () => {
     </VStack>
   );
 };
-
-Sizes.parameters = { a11y: { disable: true } };
 
 export const AccessibilityLabels = () => {
   const [date, setDate] = useState<Date | null>(null);
@@ -280,8 +276,6 @@ export const MultiplePickers = () => {
   );
 };
 
-MultiplePickers.parameters = { a11y: { disable: true } };
-
 export const CustomErrors = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [startError, setStartError] = useState<DateInputValidationError | null>(null);
@@ -389,8 +383,6 @@ export const CustomErrors = () => {
   );
 };
 
-CustomErrors.parameters = { a11y: { disable: true } };
-
 export const CustomLabel = () => {
   const [date, setDate] = useState<Date | null>(null);
   const [error, setError] = useState<DateInputValidationError | null>(null);
@@ -451,5 +443,3 @@ export const CustomLabel = () => {
     </VStack>
   );
 };
-
-CustomLabel.parameters = { a11y: { disable: true } };

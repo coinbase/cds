@@ -20,17 +20,6 @@ import {
 export default {
   title: 'Components/Carousel',
   component: Carousel,
-  parameters: {
-    a11y: {
-      options: {
-        rules: {
-          // It's accepted to have a small target size for the carousel pagination buttons
-          'target-size': { enabled: false },
-          'color-contrast': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 const SampleCard = ({ text }: { text: string }) => (

@@ -98,20 +98,6 @@ const ExamplesRender = () => {
 
 export const Examples: Story = {
   render: () => <ExamplesRender />,
-  parameters: {
-    a11y: {
-      config: {
-        /**
-         * It is expected to include multiple PageFooter with same landmark in this story
-         * @link https://dequeuniversity.com/rules/axe/4.6/landmark-no-duplicate-contentinfo?application=axeAPI
-         */
-        rules: [
-          { id: 'landmark-no-duplicate-contentinfo', enabled: false },
-          { id: 'landmark-unique', enabled: false },
-        ],
-      },
-    },
-  },
 };
 
 const PageFooterInPageRender = () => {

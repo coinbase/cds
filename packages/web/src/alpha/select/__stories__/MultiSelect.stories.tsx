@@ -12,16 +12,6 @@ import { Select, type SelectOptionComponent } from '../Select';
 export default {
   title: 'Components/Alpha/Select/MultiSelect',
   component: Select,
-  parameters: {
-    // Due to the InputChips rendered inside the Select control, there's an a11y violation.
-    a11y: {
-      options: {
-        rules: {
-          'nested-interactive': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 const paddingCss = css`
@@ -480,15 +470,6 @@ export const Disabled = () => {
   );
 };
 
-Disabled.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};
 export const DisabledOptions = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },

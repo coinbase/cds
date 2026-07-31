@@ -12,15 +12,6 @@ import { FullscreenModal } from '../modal/FullscreenModal';
 export default {
   title: 'Components/FullscreenModal',
   component: FullscreenModal,
-  parameters: {
-    a11y: {
-      options: {
-        rules: {
-          'color-contrast': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 const useTriggerFocus = () => {

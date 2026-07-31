@@ -188,15 +188,6 @@ export const ThemeColors = () => {
   );
 };
 
-ThemeColors.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};
 export const ThemeColorsWithDisabled = () => {
   const theme = useTheme();
   return (
