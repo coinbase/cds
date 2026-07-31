@@ -11,9 +11,6 @@
 const descriptionMap: Record<string, string[]> = {
   '1': ['layeredNetworks'],
   '2': ['layeredNetworks'],
-  play: ['playButton', 'collectingNfts', 'watchVideos'],
-  playbutton: ['playButton'],
-  button: ['playButton', 'watchVideos'],
   asset: [
     'unsupportedAsset',
     'coinbaseOneStarToken',
@@ -922,6 +919,7 @@ const descriptionMap: Record<string, string[]> = {
   ownership: ['decentralizedWebWeb3'],
   data: ['decentralizedWebWeb3'],
   nfts: ['collectingNfts', 'walletApp'],
+  play: ['collectingNfts', 'watchVideos', 'playButton'],
   file: ['collectingNfts', 'fileYourCryptoTaxesOther', 'fileYourCryptoTaxesCheckOther'],
   document: [
     'collectingNfts',
@@ -1198,6 +1196,7 @@ const descriptionMap: Record<string, string[]> = {
   eye: ['watchVideos'],
   browser: ['watchVideos', 'browserExtension', 'switchAdvancedToSimpleTrading', 'estimatedAmount'],
   window: ['watchVideos'],
+  button: ['watchVideos', 'playButton'],
   incentives: ['coinbaseOneTokenRewards'],
   gift: ['coinbaseOneTokenRewards', 'rewardExpiring', 'giftBoxCrypto', 'gifting', 'switchReward'],
   surprise: ['coinbaseOneTokenRewards'],
@@ -1804,6 +1803,7 @@ const descriptionMap: Record<string, string[]> = {
   satoshi: ['inrTrade'],
   giveaway: ['inrTrade'],
   competition: ['inrTrade'],
+  playbutton: ['playButton'],
 };
 
 export default descriptionMap;

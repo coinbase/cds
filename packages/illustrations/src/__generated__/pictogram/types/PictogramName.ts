@@ -423,6 +423,7 @@ export type PictogramName =
   | 'notifications'
   | 'noVisibility'
   | 'noWiFi'
+  | 'options'
   | 'orders'
   | 'outage'
   | 'partialCoins'

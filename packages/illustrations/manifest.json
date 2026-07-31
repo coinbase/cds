@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-07-28T18:25:03.059Z",
+  "lastUpdated": "2026-07-31T20:27:00.190Z",
   "colors": {
     "light": [
       {
@@ -8,10 +8,7 @@
         "name": "gray-3",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DC"
-        },
+        "paint": { "type": "solid", "value": "#CED2DC" },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
       },
@@ -20,10 +17,7 @@
         "name": "positive",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#3CC28A"
-        },
+        "paint": { "type": "solid", "value": "#3CC28A" },
         "cssVarSetter": "--illustration-positive",
         "cssVarGetter": "var(--illustration-positive)"
       },
@@ -32,10 +26,7 @@
         "name": "negative",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#E13947"
-        },
+        "paint": { "type": "solid", "value": "#E13947" },
         "cssVarSetter": "--illustration-negative",
         "cssVarGetter": "var(--illustration-negative)"
       },
@@ -44,10 +35,7 @@
         "name": "gray-4",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#C8CBD2"
-        },
+        "paint": { "type": "solid", "value": "#C8CBD2" },
         "cssVarSetter": "--illustration-gray-4",
         "cssVarGetter": "var(--illustration-gray-4)"
       },
@@ -56,10 +44,7 @@
         "name": "invert-2",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFE"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFE" },
         "cssVarSetter": "--illustration-invert-2",
         "cssVarGetter": "var(--illustration-invert-2)"
       },
@@ -68,10 +53,7 @@
         "name": "primary",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0052FF"
-        },
+        "paint": { "type": "solid", "value": "#0052FF" },
         "cssVarSetter": "--illustration-primary",
         "cssVarGetter": "var(--illustration-primary)"
       },
@@ -80,10 +62,7 @@
         "name": "invert",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0E"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0E" },
         "cssVarSetter": "--illustration-invert",
         "cssVarGetter": "var(--illustration-invert)"
       },
@@ -92,10 +71,7 @@
         "name": "gray",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DB"
-        },
+        "paint": { "type": "solid", "value": "#CED2DB" },
         "cssVarSetter": "--illustration-gray",
         "cssVarGetter": "var(--illustration-gray)"
       },
@@ -104,10 +80,7 @@
         "name": "accent-2",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#5DE2F8"
-        },
+        "paint": { "type": "solid", "value": "#5DE2F8" },
         "cssVarSetter": "--illustration-accent-2",
         "cssVarGetter": "var(--illustration-accent-2)"
       },
@@ -116,10 +89,7 @@
         "name": "accent-3",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ED702F"
-        },
+        "paint": { "type": "solid", "value": "#ED702F" },
         "cssVarSetter": "--illustration-accent-3",
         "cssVarGetter": "var(--illustration-accent-3)"
       },
@@ -128,10 +98,7 @@
         "name": "white",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
       },
@@ -140,10 +107,7 @@
         "name": "accent-4",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#73A2FF"
-        },
+        "paint": { "type": "solid", "value": "#73A2FF" },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
       },
@@ -152,10 +116,7 @@
         "name": "accent-1",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFD200"
-        },
+        "paint": { "type": "solid", "value": "#FFD200" },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
       },
@@ -164,10 +125,7 @@
         "name": "black",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-black",
         "cssVarGetter": "var(--illustration-black)"
       },
@@ -176,10 +134,7 @@
         "name": "gray-2",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0F"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0F" },
         "cssVarSetter": "--illustration-gray-2",
         "cssVarGetter": "var(--illustration-gray-2)"
       }
@@ -190,10 +145,7 @@
         "name": "gray-3",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-gray-3",
         "cssVarGetter": "var(--illustration-gray-3)"
       },
@@ -202,10 +154,7 @@
         "name": "positive",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#44C28D"
-        },
+        "paint": { "type": "solid", "value": "#44C28D" },
         "cssVarSetter": "--illustration-positive",
         "cssVarGetter": "var(--illustration-positive)"
       },
@@ -214,10 +163,7 @@
         "name": "negative",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F0616D"
-        },
+        "paint": { "type": "solid", "value": "#F0616D" },
         "cssVarSetter": "--illustration-negative",
         "cssVarGetter": "var(--illustration-negative)"
       },
@@ -226,10 +172,7 @@
         "name": "gray-4",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-gray-4",
         "cssVarGetter": "var(--illustration-gray-4)"
       },
@@ -238,10 +181,7 @@
         "name": "invert-2",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-invert-2",
         "cssVarGetter": "var(--illustration-invert-2)"
       },
@@ -250,10 +190,7 @@
         "name": "primary",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#578BFA"
-        },
+        "paint": { "type": "solid", "value": "#578BFA" },
         "cssVarSetter": "--illustration-primary",
         "cssVarGetter": "var(--illustration-primary)"
       },
@@ -262,10 +199,7 @@
         "name": "invert",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-invert",
         "cssVarGetter": "var(--illustration-invert)"
       },
@@ -274,10 +208,7 @@
         "name": "gray",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
+        "paint": { "type": "solid", "value": "#464B55" },
         "cssVarSetter": "--illustration-gray",
         "cssVarGetter": "var(--illustration-gray)"
       },
@@ -286,10 +217,7 @@
         "name": "accent-2",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#45D9F5"
-        },
+        "paint": { "type": "solid", "value": "#45D9F5" },
         "cssVarSetter": "--illustration-accent-2",
         "cssVarGetter": "var(--illustration-accent-2)"
       },
@@ -298,10 +226,7 @@
         "name": "accent-3",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F07836"
-        },
+        "paint": { "type": "solid", "value": "#F07836" },
         "cssVarSetter": "--illustration-accent-3",
         "cssVarGetter": "var(--illustration-accent-3)"
       },
@@ -310,10 +235,7 @@
         "name": "white",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
       },
@@ -322,10 +244,7 @@
         "name": "accent-4",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#84AAFD"
-        },
+        "paint": { "type": "solid", "value": "#84AAFD" },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
       },
@@ -334,10 +253,7 @@
         "name": "accent-1",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ECD069"
-        },
+        "paint": { "type": "solid", "value": "#ECD069" },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
       },
@@ -346,10 +262,7 @@
         "name": "black",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-black",
         "cssVarGetter": "var(--illustration-black)"
       },
@@ -358,10 +271,7 @@
         "name": "gray-2",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
+        "paint": { "type": "solid", "value": "#464B55" },
         "cssVarSetter": "--illustration-gray-2",
         "cssVarGetter": "var(--illustration-gray-2)"
       }
@@ -33755,6 +33665,27 @@
         "svgEsmThemed": "./spotSquare/svgJs/esm/themeable/playButton-0.js",
         "pngLight": "./spotSquare/png/light/playButton-0.png",
         "pngDark": "./spotSquare/png/dark/playButton-0.png"
+      },
+      "version": 0
+    },
+    "31087:8": {
+      "type": "pictogram",
+      "name": "options",
+      "hash": "l2lf4/iDDMEH99SnOwt1Dsh3DUo9W0cQximM+GxExC4=",
+      "width": 40,
+      "height": 40,
+      "description": "product, icon, options, hourglass, hour, glass, time, crypto, coin, contract, expire, expiration, target, date",
+      "createdAt": "2026-07-29T15:57:33.077Z",
+      "lastUpdated": "2026-07-29T15:57:33.077Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/options-0.svg",
+        "svgDark": "./pictogram/svg/dark/options-0.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/options-0.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/options-0.js",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/options-0.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/options-0.js",
+        "pngLight": "./pictogram/png/light/options-0.png",
+        "pngDark": "./pictogram/png/dark/options-0.png"
       },
       "version": 0
     }
