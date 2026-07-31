@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.10.2 (7/31/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: move Pressalbe props from MediaCardProps to MediaCardBaseProps to allow them to be accessed in ComponentConfig settings which only manages -BaseProps". [[#819](https://github.com/coinbase/cds/pull/819)]
+
 ## 9.10.1 (7/30/2026 PST)
 
 #### 🐞 Fixes
