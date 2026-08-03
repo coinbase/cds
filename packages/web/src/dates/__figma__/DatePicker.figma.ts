@@ -1,4 +1,4 @@
-// url=https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=14743-53206
+// url=https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=84760-22722
 // source=packages/web/src/dates/DatePicker.tsx
 // component=DatePicker
 import figma from 'figma';

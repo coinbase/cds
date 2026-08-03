@@ -262,27 +262,26 @@ function BorderlessExample() {
 }
 ```
 
-### Compact
+### Sizes
 
-Use smaller sizing with `compact`.
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
 
 ```jsx
-function CompactExample() {
+function Example() {
   const fruitOptions = [
     { value: 'apple', label: 'Apple' },
     { value: 'banana', label: 'Banana' },
     { value: 'cherry', label: 'Cherry' },
   ];
-  const { value, onChange } = useMultiSelect({ initialValue: ['apple'] });
+  const [value, setValue] = useState(null);
 
   return (
     <Combobox
-      compact
-      label="Compact"
-      onChange={onChange}
+      label="Fruit"
+      onChange={setValue}
       options={fruitOptions}
-      placeholder="Compact combobox..."
-      type="multi"
+      placeholder="Search..."
+      size="s"
       value={value}
     />
   );

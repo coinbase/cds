@@ -65,18 +65,6 @@ export const Default = () => {
   );
 };
 
-const a11ySkipConfig = {
-  config: {
-    rules: [
-      { id: 'aria-valid-attr-value', enabled: false },
-      { id: 'duplicate-id-active', enabled: false },
-      { id: 'duplicate-id', enabled: false },
-      { id: 'duplicate-id-aria', enabled: false },
-    ],
-  },
-};
-
 Default.parameters = {
   percy: { enableJavaScript: true },
-  a11y: a11ySkipConfig,
 };

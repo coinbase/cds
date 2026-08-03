@@ -15,7 +15,7 @@ import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import { NewAnimatePresence } from '../animation/NewAnimatePresence';
-import { IconButton } from '../buttons/IconButton';
+import { IconButton, type IconButtonSize } from '../buttons/IconButton';
 import { cx } from '../cx';
 import { Box } from '../layout/Box';
 import { useMotionProps } from '../motion/useMotionProps';
@@ -55,6 +55,11 @@ export type PaddleProps = {
    * Web only. Styling for the paddle icon button. Mobile does not have paddles.
    */
   paddleStyle?: React.CSSProperties;
+  /**
+   * Size of the paddle icon button, so the paddle can track the size of the
+   * content it scrolls. Defaults to the `IconButton` default size.
+   */
+  size?: IconButtonSize;
 } & SharedProps &
   SharedAccessibilityProps;
 
@@ -97,6 +102,7 @@ export const Paddle = ({
   testID = `cds-paddle--${direction}`,
   accessibilityLabel,
   paddleStyle,
+  size,
 }: PaddleProps) => {
   const buttonMotionProps = useMotionProps({
     enterConfigs: [
@@ -136,6 +142,7 @@ export const Paddle = ({
               accessibilityLabel={accessibilityLabel}
               name={direction === 'left' ? 'caretLeft' : 'caretRight'}
               onClick={onClick}
+              size={size}
               style={paddleStyle}
               testID={testID}
               variant="secondary"

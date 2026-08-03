@@ -20,11 +20,6 @@ export default {
         component: 'Pagination component allows users to navigate through paginated content.',
       },
     },
-    a11y: {
-      config: {
-        // Add any specific a11y configs if needed
-      },
-    },
   },
 } as Meta;
 

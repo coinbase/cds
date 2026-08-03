@@ -14,15 +14,6 @@ import { FullscreenModalLayout } from '../modal/FullscreenModalLayout';
 export default {
   title: 'Components/FullscreenModalLayout',
   component: FullscreenModalLayout,
-  parameters: {
-    a11y: {
-      options: {
-        rules: {
-          'color-contrast': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 // Shared setup hook (copied from original)

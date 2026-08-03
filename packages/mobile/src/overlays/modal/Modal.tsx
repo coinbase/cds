@@ -1,5 +1,11 @@
 import React, { memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
-import { Modal as RNModal, Platform, StatusBar, StyleSheet } from 'react-native';
+import {
+  Modal as RNModal,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import type { ModalProps as RNModalProps, StyleProp, ViewStyle } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
@@ -145,6 +151,7 @@ export const Modal = memo(
     const [{ opacity, scale }, animateIn, animateOut] = useModalAnimation();
     const [internalVisible, setInternalVisible] = useState(visible);
     const prevVisible = usePreviousValue(visible);
+    const { width, height } = useWindowDimensions();
 
     const handleClose = useCallback(() => {
       animateOut.start(({ finished }) => {
@@ -222,6 +229,7 @@ export const Modal = memo(
             borderedVertical={borderedVertical}
             color={color}
             elevation={elevation}
+            height={height}
             maxHeight={maxHeight}
             maxWidth={maxWidth}
             minHeight={minHeight}
@@ -235,6 +243,7 @@ export const Modal = memo(
             paddingY={paddingY}
             pin="all"
             style={[{ transform: [{ scale }], opacity }, customStyles?.modal]}
+            width={width}
           >
             <SafeAreaView style={[styles.safeAreaContainer, customStyles?.safeArea]}>
               <ModalContext.Provider value={modalData}>

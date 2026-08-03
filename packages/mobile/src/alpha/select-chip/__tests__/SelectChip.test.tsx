@@ -153,16 +153,6 @@ describe('SelectChip', () => {
       expect(screen.getByTestId('end-node')).toBeTruthy();
     });
 
-    it('renders with compact prop', () => {
-      render(
-        <DefaultThemeProvider>
-          <SelectChip {...defaultProps} compact />
-        </DefaultThemeProvider>,
-      );
-
-      expect(screen.getByRole('button')).toBeTruthy();
-    });
-
     it('renders disabled state', () => {
       render(
         <DefaultThemeProvider>

@@ -71,6 +71,25 @@ export const Examples = () => {
   );
 };
 
+export const Sizes = () => {
+  const [date, setDate] = useState<Date | null>(null);
+  const [error, setError] = useState<DateInputValidationError | null>(null);
+  const props = { date, onChangeDate: setDate, error, onErrorDate: setError };
+  return (
+    <ExampleScreen>
+      <Example title="DateInput sizes">
+        <Group gap={8} paddingEnd={8}>
+          <DateInput size="s" {...sharedProps} {...props} />
+          <DateInput size="m" {...sharedProps} {...props} />
+          <DateInput size="l" {...sharedProps} {...props} />
+          {/* compact is deprecated and maps to size="s" */}
+          <DateInput compact {...sharedProps} {...props} />
+        </Group>
+      </Example>
+    </ExampleScreen>
+  );
+};
+
 export const CustomLabel = () => {
   const [date, setDate] = useState<Date | null>(null);
   const [error, setError] = useState<DateInputValidationError | null>(null);

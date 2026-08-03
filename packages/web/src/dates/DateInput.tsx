@@ -3,18 +3,34 @@ import { IntlDateFormat } from '@coinbase/cds-common/dates/IntlDateFormat';
 import { type DateInputOptions, useDateInput } from '@coinbase/cds-common/dates/useDateInput';
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 
-import { TextInput, type TextInputBaseProps, type TextInputProps } from '../controls/TextInput';
+import {
+  TextInput,
+  type TextInputBaseProps,
+  type TextInputProps,
+  type TextInputSize,
+} from '../controls/TextInput';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
 
 export type DateInputBaseProps = Omit<DateInputOptions, 'intlDateFormat'> &
-  Omit<TextInputBaseProps, 'inputNode' | 'value' | 'defaultValue' | 'style'> & {
+  Omit<TextInputBaseProps, 'inputNode' | 'value' | 'defaultValue' | 'style' | 'compact'> & {
     /** Date format separator character, e.g. the / in "MM/DD/YYYY". Defaults to forward slash (/). */
     separator?: string;
+    /**
+     * Controls the vertical density (size) of the input field.
+     * @default 'l'
+     */
+    size?: TextInputSize;
+    /**
+     * Enables a smaller, compact input.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
   };
 
 export type DateInputProps = DateInputBaseProps &
-  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style'> & {
+  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style' | 'compact'> & {
     className?: string;
     style?: React.CSSProperties;
   };
@@ -105,7 +121,7 @@ export const DateInput = memo(
         <TextInput
           ref={ref}
           end={end}
-          helperText={helperText || error?.message || intlDateFormat.dateStringFormat}
+          helperText={helperText ?? error?.message ?? intlDateFormat.dateStringFormat}
           onBlur={handleBlur}
           onChange={handleChange}
           onClick={onClick}

@@ -8,6 +8,60 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.10.2 ((7/31/2026, 08:22 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.10.1 ((7/30/2026, 10:07 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.10.0 (7/30/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add new prop, size to input & control components, deprecating compact. [[#809](https://github.com/coinbase/cds/pull/809)]
+
+## 9.9.0 ((7/27/2026, 12:00 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.8.0 ((7/23/2026, 11:18 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.7.2 ((7/23/2026, 10:17 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.7.1 ((7/22/2026, 01:58 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.7.0 ((7/22/2026, 12:14 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.11 ((7/22/2026, 10:11 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.10 ((7/22/2026, 08:37 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.9 ((7/22/2026, 07:52 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.8 ((7/22/2026, 06:23 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.7 ((7/20/2026, 09:01 AM PST))
+
+This is an artificial version bump with no new change.
+
 ## 9.6.6 (7/14/2026 PST)
 
 This is an artificial version bump with no new change.

@@ -16,17 +16,30 @@ import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 import { type ButtonBaseProps } from './Button';
 
+export type IconButtonSize = 'xs' | 's' | 'm' | 'l';
+
+const iconButtonSizes = {
+  xs: { padding: 1, iconSize: 's', feedback: 'light' },
+  s: { padding: 1.5, iconSize: 's', feedback: 'light' },
+  m: { padding: 1.5, iconSize: 'm', feedback: 'normal' },
+  l: { padding: 2, iconSize: 'm', feedback: 'normal' },
+} as const satisfies Record<
+  IconButtonSize,
+  Pick<IconButtonBaseProps, 'padding' | 'feedback'> & {
+    iconSize: Extract<IconSize, 's' | 'm'>;
+  }
+>;
+
+const defaultIconButtonSize: IconButtonSize = 'l';
+
 export type IconButtonBaseProps = SharedProps &
   Omit<PressableBaseProps, 'children'> &
-  Pick<
-    ButtonBaseProps,
-    'disabled' | 'transparent' | 'compact' | 'flush' | 'loading' | 'progressCircleSize'
-  > & {
+  Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'flush' | 'loading' | 'progressCircleSize'> & {
     /** Name of the icon, as defined in Figma. */
     name: IconName;
     /**
      * Size for the icon rendered inside the button.
-     * @default compact ? 's' : 'm'
+     * @default 's' for size xs/s, 'm' for size m/l
      */
     iconSize?: IconSize;
     /** Whether the icon is active */
@@ -36,6 +49,21 @@ export type IconButtonBaseProps = SharedProps &
      * @default primary
      */
     variant?: IconButtonVariant;
+    /**
+     * Reduces the button's padding and icon size. Unlike most CDS components, IconButton
+     * enables `compact` by default, so an IconButton with no `size` renders at `size="s"`.
+     * Set `compact={false}` (or pass an explicit `size`) to opt out.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
+    /**
+     * Sets the size of the button. An explicit `size` always takes precedence over `compact`.
+     * IconButton enables `compact` by default, so until `compact` is removed an IconButton
+     * with no `size` renders at `s`.
+     * @default l
+     */
+    size?: IconButtonSize;
     /** Custom styles for individual elements of the IconButton component */
     styles?: {
       /** Root Pressable element */
@@ -64,15 +92,16 @@ export const IconButton = memo(
       alignSelf = 'flex-start', // prevents stretching when placed in a flex container
       transparent,
       compact = true,
+      size,
       background,
       color,
       borderColor,
-      iconSize = compact ? 's' : 'm',
+      iconSize: iconSizeProp,
       borderWidth = 0, // remove Pressable's default transparent border
-      borderRadius = 1000,
-      feedback = compact ? 'light' : 'normal',
+      borderRadius = 1000, // fully rounded at every size
+      feedback: feedbackProp,
       flush,
-      padding = compact ? 1.5 : 2,
+      padding: paddingProp,
       loading,
       progressCircleSize,
       style,
@@ -81,6 +110,15 @@ export const IconButton = memo(
       accessibilityLabel,
       ...props
     } = mergedProps;
+
+    // `size` wins when both `size` and `compact` are set. IconButton defaults `compact`
+    // to `true`, so with no explicit `size` the button resolves to `s`. The resolved size
+    // also drives haptic `feedback` (xs/s -> light, m/l -> normal).
+    const resolvedSize = size ?? (compact ? 's' : defaultIconButtonSize);
+    const sizeConfig = iconButtonSizes[resolvedSize];
+    const padding = paddingProp ?? sizeConfig.padding;
+    const iconSize = iconSizeProp ?? sizeConfig.iconSize;
+    const feedback = feedbackProp ?? sizeConfig.feedback;
     const theme = useTheme();
     const iconSizeValue = theme.iconSize[iconSize];
     const variantMap = transparent ? transparentVariants : variants;

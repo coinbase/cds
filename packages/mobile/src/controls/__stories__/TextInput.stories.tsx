@@ -29,6 +29,12 @@ const MockCompactTextInput = ({ ...props }: TextInputProps) => {
   );
 };
 
+const MockSizeTextInput = ({ ...props }: TextInputProps) => {
+  const [text, onChangeText] = useState('');
+
+  return <TextInput editable={__DEV__} onChangeText={onChangeText} value={text} {...props} />;
+};
+
 const MockComplexInput = () => {
   const [text, onChangeText] = useState('');
 
@@ -300,6 +306,56 @@ const InputScreen = () => {
       <Example inline title="TextInput No Label">
         <MockTextInput placeholder="189-280-1111" variant="foregroundMuted" />
       </Example>
+      <Example inline title="TextInput Sizes">
+        <MockSizeTextInput label="Small (s)" placeholder="Small" size="s" />
+        <MockSizeTextInput label="Medium (m)" placeholder="Medium" size="m" />
+        <MockSizeTextInput label="Large (l) - default" placeholder="Large" size="l" />
+      </Example>
+      <Example inline title="TextInput Size S Inside Label">
+        <MockSizeTextInput
+          label="Inside Label"
+          labelVariant="inside"
+          placeholder="Small"
+          size="s"
+        />
+      </Example>
+      <Example inline title="TextInput Size M Inside Label">
+        <MockSizeTextInput
+          label="Inside Label"
+          labelVariant="inside"
+          placeholder="Medium"
+          size="m"
+        />
+      </Example>
+      <Example inline title="TextInput Size S with suffix">
+        <MockSizeTextInput label="Label" placeholder="0.00" size="s" suffix="USD" />
+      </Example>
+      <Example inline title="TextInput Size S with start node">
+        <MockSizeTextInput
+          label="Label"
+          placeholder="189-280-1111"
+          size="s"
+          start={
+            <HStack accessibilityHint="Start Node" accessibilityLabel="Start Node">
+              <Text font="body">Start</Text>
+            </HStack>
+          }
+        />
+      </Example>
+      <Example inline title="TextInput Size S with end node">
+        <MockSizeTextInput
+          end={
+            <Text accessibilityHint="Cancel" accessibilityLabel="Cancel" font="body">
+              End
+            </Text>
+          }
+          label="Label"
+          placeholder="189-280-1111"
+          size="s"
+        />
+      </Example>
+      {/* DEPRECATED: `compact` is superseded by `size="s"`; kept as a regression demo of
+          the legacy behavior where `compact` also forces the label into the start slot. */}
       <Example inline title="CompactTextInput">
         <MockCompactTextInput
           label="One Time Password"

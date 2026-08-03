@@ -11,6 +11,7 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { type AnimationProps, m as motion } from 'framer-motion';
 
 import { InputIconButton } from '../controls/InputIconButton';
+import type { TextInputSize } from '../controls/TextInput';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
@@ -72,6 +73,17 @@ export type DatePickerBaseProps = Pick<
    * @default 'Close calendar'
    */
   closeCalendarAccessibilityLabel?: string;
+  /**
+   * Controls the vertical density (size) of the DatePicker's input field.
+   * @default 'l'
+   */
+  size?: TextInputSize;
+  /**
+   * Enables a smaller, compact input.
+   * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  compact?: boolean;
 };
 
 export type DatePickerProps = DatePickerBaseProps &
@@ -87,6 +99,7 @@ export type DatePickerProps = DatePickerBaseProps &
     | 'disabledDateError'
     | 'className'
     | 'style'
+    | 'compact'
   > & {
     /** Control the default open state of the Calendar popover. */
     defaultOpen?: boolean;
@@ -191,6 +204,7 @@ export const DatePicker = memo(
       nextArrowAccessibilityLabel,
       previousArrowAccessibilityLabel,
       compact,
+      size,
       variant,
       helperText,
       showOverlay,
@@ -309,6 +323,7 @@ export const DatePicker = memo(
           onErrorDate={onErrorDate}
           required={required}
           requiredError={requiredError}
+          size={size}
           style={{ ...dateInputStyle, ...styles?.dateInput }}
           variant={variant}
           {...props}
@@ -321,6 +336,7 @@ export const DatePicker = memo(
         onErrorDate,
         required,
         compact,
+        size,
         disabled,
         dateInputCalendarButton,
         requiredError,

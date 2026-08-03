@@ -72,6 +72,64 @@ const validTrayWithA11yProps = `
   };
 `;
 
+const validTextInputWithoutNegativeVariant = `
+  import { TextInput } from '@coinbase/cds-mobile';
+  const Component = () => {
+    return (
+      <TextInput
+        width="auto"
+        style={{ flex: 0, minWidth: theme.space[4] }}
+        compact
+        editable={false}
+        disabled={isDisabled}
+        value={String(value)}
+        textAlign="center"
+        accessibilityLabel={formatMessage(optionChainMessages.atmTitle)}
+        start={
+          <InputIconButton
+            name="minus"
+            compact
+            disabled={isDecrementDisabled}
+            onPress={handleDecrement}
+            accessibilityLabel={formatMessage(optionChainMessages.decreaseAtmRangeLabel)}
+          />
+        }
+        end={
+          <InputIconButton
+            name="add"
+            compact
+            disabled={isDisabled}
+            onPress={handleIncrement}
+            accessibilityLabel={formatMessage(optionChainMessages.increaseAtmRangeLabel)}
+          />
+        }
+      />
+    );
+  };
+`;
+
+const validSwitchWithAccessibleFalse = `
+  import { Switch } from '@coinbase/cds-mobile';
+  const Component = () => {
+    return (
+      <Box pointerEvents="none">
+        <Switch accessible={false} checked={checked} disabled={disabled} />
+      </Box>
+    );
+  };
+`;
+
+const validCheckboxWithAccessibleFalse = `
+  import { Checkbox } from '@coinbase/cds-mobile';
+  const Component = () => {
+    return (
+      <Box pointerEvents="none">
+        <Checkbox accessible={false} checked={isSelected} />
+      </Box>
+    );
+  };
+`;
+
 const valid = [
   validButtonWithInnerText,
   validButtonWithCorrectLabel,
@@ -79,6 +137,9 @@ const valid = [
   validButtonWithNestedExpression,
   validComboboxWithRequiredA11yProps,
   validTrayWithA11yProps,
+  validTextInputWithoutNegativeVariant,
+  validSwitchWithAccessibleFalse,
+  validCheckboxWithAccessibleFalse,
 ];
 
 // @ts-expect-error - not sure why the rule type is not matching up with the rule tester
@@ -290,6 +351,56 @@ ruleTester.run('has-valid-accessibility-descriptors-extended', rule, {
       errors: [
         { messageId: 'missingAccessibleName' },
         { messageId: 'missingHandleBarAccessibilityLabel' },
+      ],
+    },
+    // Switch without accessibilityLabel
+    {
+      code: normalizeIndent`
+        import { Switch } from '@coinbase/cds-mobile';
+        const Component = () => {
+          return <Switch checked={checked} disabled={disabled} />;
+        }
+      `,
+      errors: [
+        {
+          messageId: 'missingAccessibilityLabel',
+          suggestions: [
+            {
+              messageId: 'missingAccessibilityLabelSuggestion',
+              output: normalizeIndent`
+                import { Switch } from '@coinbase/cds-mobile';
+                const Component = () => {
+                  return <Switch accessibilityLabel="" checked={checked} disabled={disabled} />;
+                }
+              `,
+            },
+          ],
+        },
+      ],
+    },
+    // Checkbox without accessibilityLabel
+    {
+      code: normalizeIndent`
+        import { Checkbox } from '@coinbase/cds-mobile';
+        const Component = () => {
+          return <Checkbox checked={isSelected} />;
+        }
+      `,
+      errors: [
+        {
+          messageId: 'missingAccessibilityLabel',
+          suggestions: [
+            {
+              messageId: 'missingAccessibilityLabelSuggestion',
+              output: normalizeIndent`
+                import { Checkbox } from '@coinbase/cds-mobile';
+                const Component = () => {
+                  return <Checkbox accessibilityLabel="" checked={isSelected} />;
+                }
+              `,
+            },
+          ],
+        },
       ],
     },
   ],

@@ -348,38 +348,55 @@ function DisabledGroupExample() {
 }
 ```
 
-## Compact Mode
+## Sizes
 
-The Select component can be rendered in a compact size for denser UIs.
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
 
 ```jsx live
-function CompactExample() {
+function SizesExample() {
   const [value, setValue] = useState('1');
 
   const options = [
-    { value: '1', label: 'Small Option 1' },
-    { value: '2', label: 'Small Option 2' },
-    { value: '3', label: 'Small Option 3' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
   ];
 
   return (
-    <Select
-      compact
-      label="Compact Select"
-      value={value}
-      onChange={setValue}
-      options={options}
-      placeholder="Select an option"
-      helperText="This is a compact select component"
-    />
+    <VStack gap={3}>
+      <Select
+        label="Small (s)"
+        onChange={setValue}
+        options={options}
+        placeholder="Select an option"
+        size="s"
+        value={value}
+      />
+      <Select
+        label="Medium (m)"
+        onChange={setValue}
+        options={options}
+        placeholder="Select an option"
+        size="m"
+        value={value}
+      />
+      <Select
+        label="Large (l) — default"
+        onChange={setValue}
+        options={options}
+        placeholder="Select an option"
+        size="l"
+        value={value}
+      />
+    </VStack>
   );
 }
 ```
 
-You can also use multi-selection mode while in a compact size.
+Multi-selection mode works at every size. When `size="s"`, the dropdown uses compact row density to match the smaller control.
 
 ```jsx live
-function CompactMultiSelectExample() {
+function SizesMultiSelectExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '3', '7', '8', '9', '10'],
   });
@@ -399,7 +416,7 @@ function CompactMultiSelectExample() {
 
   return (
     <Select
-      compact
+      size="s"
       type="multi"
       label="Choose multiple options"
       value={value}
@@ -929,10 +946,10 @@ function VariantCombinationsExample() {
   return (
     <VStack gap={4}>
       <Select
-        compact
+        size="s"
         variant="positive"
         startNode={<Icon color="fg" name="checkmark" />}
-        label="Compact + Positive + Icon"
+        label="Small (s) + Positive + Icon"
         value={value1}
         onChange={setValue1}
         options={options}

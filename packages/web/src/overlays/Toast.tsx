@@ -173,9 +173,9 @@ export const Toast = memo(
               <HStack>
                 {!!action && (
                   <Button
-                    compact
                     transparent
                     onClick={handleActionPress}
+                    size="s"
                     testID={action.testID ?? 'toast-action'}
                   >
                     {action.label}

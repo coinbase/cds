@@ -2101,6 +2101,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/noWiFi-3.js').content,
     themeable: () => require('../svgJs/cjs/themeable/noWiFi-3.js').content,
   },
+  options: {
+    light: () => require('../svgJs/cjs/light/options-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/options-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/options-0.js').content,
+  },
   orders: {
     light: () => require('../svgJs/cjs/light/orders-2.js').content,
     dark: () => require('../svgJs/cjs/dark/orders-2.js').content,

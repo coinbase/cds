@@ -1,14 +1,14 @@
 ---
 name: cds-code
 description: |
-  Provides a structured workflow for writing high quality Coinbase Design System (CDS) code.
-  Use this skill every time you are asked to create or update a user interface using React or React Native.
-  Additinoally, this skill may be used to conduct a code review on existing code for CDS adherence.
-  Trigger examples: "build this screen", "update this component", "perform a CDS audit on our changes", 
-  "check our codebase for CDS adherence", "does this feature use CDS well?"
+  Provides a workflow for building and reviewing high-quality React and React Native UI with the Coinbase Design System (CDS).
+  Use this skill to create UI or make visual changes to existing UI with CDS components, tokens, style props, icons, and illustrations.
+  Use it for explicit CDS-adherence audits and reviews, not non-visual logic, data, analytics, navigation, tests, generated code, or refactoring.
+  Examples: "build this screen", "fix spacing on this component", "replace this UI with CDS components",
+  "perform a CDS audit on our changes", "check our codebase for CDS adherence", "does this feature use CDS well?"
 license: Apache-2.0
 metadata:
-  version: '2.1.0'
+  version: '2.2.0'
 ---
 
 # CDS Code Skill
@@ -17,11 +17,13 @@ metadata:
 
 Before responding, determine what the user needs:
 
-**Coding** — the user wants to create or update UI → follow the Coding Workflow.
+**Coding** — the user wants to create new UI or make visual changes to existing UI with CDS → follow the Coding Workflow.
 
 **Review** — the user explicitly asks to audit, review, or check existing code for CDS adherence → read `guidelines/code-review.md` and follow it instead.
 
-**Default to coding.** Only treat a request as a review if the user's intent is explicit. Writing code is the primary use case for this skill.
+**Out of scope** — the user wants non-visual work such as business logic, data handling, analytics, navigation wiring, tests, generated code, or refactoring → do not follow this skill's coding or review workflows.
+
+**Default in-scope work to coding.** Only treat the user's request as a review or audit if the intent is explicit. Building or updating UI is the primary use case for this skill.
 
 ## Initialization
 
@@ -41,7 +43,7 @@ If the script cannot be run, much of the information it provides can be determin
 
 ## Coding Workflow
 
-For all frontend coding tasks, follow these steps in order.
+For in-scope coding tasks, follow these steps in order.
 
 **YOU MUST** perform steps 1 and 2 before writing any code!
 

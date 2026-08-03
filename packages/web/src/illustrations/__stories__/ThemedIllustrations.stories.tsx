@@ -21,11 +21,6 @@ import {
 
 export default {
   title: 'Illustrations/Themed',
-  parameters: {
-    // Accessibility checks are disabled for theming stories: custom palettes
-    // (e.g. garish) intentionally use colors that may not meet contrast ratios.
-    a11y: { disable: true },
-  },
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────

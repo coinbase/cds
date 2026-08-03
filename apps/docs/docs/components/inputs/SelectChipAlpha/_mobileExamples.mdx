@@ -231,10 +231,12 @@ function ExampleMultiAssets() {
 
 ## Customization
 
-### Compact
+### Sizes
+
+`size` accepts `xs` and `s`. Defaults to `s`.
 
 ```tsx
-function ExampleCompact() {
+function ExampleSizes() {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
     { value: '2', label: 'Option 2' },
@@ -244,10 +246,10 @@ function ExampleCompact() {
   const [value, setValue] = useState<string | null>('1');
   return (
     <SelectChip
-      compact
       onChange={setValue}
       options={exampleOptions}
       placeholder="Choose an option"
+      size="xs"
       value={value}
     />
   );

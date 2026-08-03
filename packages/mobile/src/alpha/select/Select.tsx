@@ -10,6 +10,7 @@ import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdown
 import { DefaultSelectOption } from './DefaultSelectOption';
 import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
 import {
+  defaultSelectSize,
   isSelectOptionGroup,
   type SelectComponent,
   type SelectDropdownProps,
@@ -42,6 +43,7 @@ export type {
   SelectOptionProps,
   SelectProps,
   SelectRef,
+  SelectSize,
   SelectType,
 } from './types';
 
@@ -68,6 +70,7 @@ const SelectBase = memo(
       placeholder,
       helperText,
       compact,
+      size,
       label,
       labelVariant,
       accessibilityLabel = typeof label === 'string' ? label : 'Select control',
@@ -107,6 +110,10 @@ const SelectBase = memo(
       testID,
       ...props
     } = mergedProps;
+    // The dropdown keeps a binary density toggle instead of the t-shirt scale, so Select owns the
+    // translation: only the smallest control size renders a compact dropdown. The control still
+    // receives the raw `compact` because it needs it for legacy label placement.
+    const dropdownCompact = (size ?? (compact ? 's' : defaultSelectSize)) === 's';
     const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
     const open = openProp ?? openInternal;
     const setOpen = setOpenProp ?? setOpenInternal;
@@ -210,6 +217,7 @@ const SelectBase = memo(
           readOnly={readOnly}
           removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
           setOpen={setOpen}
+          size={size}
           startNode={startNode}
           style={styles?.control}
           styles={controlStyles}
@@ -225,7 +233,7 @@ const SelectBase = memo(
           accessibilityRoles={accessibilityRoles}
           accessory={accessory}
           clearAllLabel={clearAllLabel}
-          compact={compact}
+          compact={dropdownCompact}
           controlRef={containerRef}
           disabled={disabled}
           emptyOptionsLabel={emptyOptionsLabel}

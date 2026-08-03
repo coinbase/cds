@@ -24,15 +24,6 @@ import {
 export default {
   title: 'Components/Alpha/Select/SingleSelect',
   component: Select,
-  parameters: {
-    a11y: {
-      options: {
-        rules: {
-          'nested-interactive': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 const paddingCss = css`
@@ -98,6 +89,55 @@ export const Compact = () => {
       placeholder="Empty value"
       value={value}
     />
+  );
+};
+
+export const Sizes = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={3}>
+      <Select
+        label="Small (s)"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="s"
+        value={value}
+      />
+      <Select
+        label="Medium (m)"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="m"
+        value={value}
+      />
+      <Select
+        label="Large (l) - default"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="l"
+        value={value}
+      />
+      <Select
+        compact
+        label='Compact (deprecated, renders as size "s")'
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        value={value}
+      />
+    </VStack>
   );
 };
 
@@ -443,21 +483,6 @@ export const Disabled = () => {
       value={value}
     />
   );
-};
-
-Disabled.parameters = {
-  a11y: {
-    options: {
-      /**
-       * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled.
-       * Use axe run options (instead of config.rules) to reliably disable this rule.
-       * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-       */
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
 };
 
 export const DisabledOptions = () => {
@@ -940,15 +965,6 @@ export const DefaultOpen = () => {
   );
 };
 
-DefaultOpen.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};
 export const DisabledClickOutsideClose = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },
@@ -1297,16 +1313,6 @@ export const DisabledWithVariants = () => {
       />
     </div>
   );
-};
-
-DisabledWithVariants.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
 };
 
 export const StartNodeWithVariants = () => {

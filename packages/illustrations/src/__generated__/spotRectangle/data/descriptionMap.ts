@@ -375,6 +375,7 @@ const descriptionMap: Record<string, string[]> = {
     'advancedTradingUi',
     'advancedTrading',
     'focusLimitOrders',
+    'keyAdv',
   ],
   '🕯': ['accessToAdvancedCharts', 'advancedTradeCharts'],
   '🪔': ['accessToAdvancedCharts', 'advancedTradeCharts'],
@@ -1043,7 +1044,7 @@ const descriptionMap: Record<string, string[]> = {
   exclamation: ['primeOrderConfirmation'],
   yes: ['primeOrderConfirmation', 'governance'],
   API: ['apiKey', 'instoApiKey'],
-  key: ['apiKey', 'protectedNotes', 'walletSecurity', 'instoApiKey'],
+  key: ['apiKey', 'protectedNotes', 'walletSecurity', 'instoApiKey', 'keyAdv'],
   access: ['apiKey', 'stayInControlSelfHostedWalletsStorage', 'instoApiKey'],
   account: [
     'apiKey',
@@ -1946,6 +1947,7 @@ const descriptionMap: Record<string, string[]> = {
     'instoCryptoAndMore',
     'instoEmptyTrading',
   ],
+  adv: ['keyAdv'],
 };
 
 export default descriptionMap;

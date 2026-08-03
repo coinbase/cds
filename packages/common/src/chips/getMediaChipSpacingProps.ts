@@ -1,14 +1,23 @@
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
+export type ChipSizeCommon = 'xs' | 's';
+
 type GetMediaChipSpacingPropsParams = {
   start?: boolean;
   end?: boolean;
   children?: boolean;
+  /**
+   * Retained for backward compatibility; when `size` is omitted it is derived from `compact`.
+   * @deprecated Pass `size` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
   compact?: boolean;
+  size?: ChipSizeCommon;
 };
 
 export const getMediaChipSpacingProps = ({
   compact,
+  size,
   start,
   end,
   children,
@@ -22,9 +31,12 @@ export const getMediaChipSpacingProps = ({
   paddingBottom?: ThemeVars.Space;
   gap?: ThemeVars.Space;
 } => {
+  const resolvedSize = size ?? (compact ? 'xs' : 's'); // size wins; compact is the fallback
+  const isXs = resolvedSize === 'xs';
+
   if (!start && children && !end) {
     // children (label) only
-    return compact
+    return isXs
       ? {
           paddingX: 1.5,
           paddingY: 0.75,
@@ -49,7 +61,7 @@ export const getMediaChipSpacingProps = ({
   }
   if (start && children && !end) {
     // start (media) and children (label) only
-    return compact
+    return isXs
       ? {
           paddingStart: 1,
           paddingY: 0.75,
@@ -65,7 +77,7 @@ export const getMediaChipSpacingProps = ({
   }
   if (!start && children && end) {
     // children (label) and end (icon) only
-    return compact
+    return isXs
       ? {
           paddingStart: 1.5,
           paddingY: 0.75,
@@ -81,7 +93,7 @@ export const getMediaChipSpacingProps = ({
   }
   if (start && children && end) {
     // start (media) and children (label) and end (icon) only
-    return compact
+    return isXs
       ? {
           paddingStart: 1,
           paddingY: 0.75,

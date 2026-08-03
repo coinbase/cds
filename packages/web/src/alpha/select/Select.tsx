@@ -24,7 +24,12 @@ import { DefaultSelectDropdown } from './DefaultSelectDropdown';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
-import { type SelectDropdownProps, type SelectProps, type SelectType } from './types';
+import {
+  defaultSelectSize,
+  type SelectDropdownProps,
+  type SelectProps,
+  type SelectType,
+} from './types';
 
 // Re-export all types for backward compatibility
 export type {
@@ -44,6 +49,7 @@ export type {
   SelectOptionGroupProps,
   SelectOptionProps,
   SelectProps,
+  SelectSize,
   SelectType,
 } from './types';
 
@@ -87,6 +93,7 @@ const SelectBase = memo(
         placeholder,
         helperText,
         compact,
+        size,
         label,
         labelVariant,
         accessibilityLabel = typeof label === 'string' ? label : 'Select dropdown',
@@ -128,6 +135,10 @@ const SelectBase = memo(
         testID,
       } = mergedProps;
       const hasMounted = useHasMounted();
+      // The dropdown keeps a binary density toggle instead of the t-shirt scale, so Select owns
+      // the translation: only the smallest control size renders a compact dropdown. The control
+      // still receives the raw `compact` because it needs it for legacy label placement.
+      const dropdownCompact = (size ?? (compact ? 's' : defaultSelectSize)) === 's';
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
       const setOpen = setOpenProp ?? setOpenInternal;
@@ -340,6 +351,7 @@ const SelectBase = memo(
             readOnly={readOnly}
             removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
             setOpen={setOpen}
+            size={size}
             startNode={startNode}
             style={styles?.control}
             styles={controlStyles}
@@ -359,7 +371,7 @@ const SelectBase = memo(
               accessory={accessory}
               classNames={dropdownClassNames}
               clearAllLabel={clearAllLabel}
-              compact={compact}
+              compact={dropdownCompact}
               controlRef={refs.reference as React.MutableRefObject<HTMLElement>}
               disabled={disabled}
               emptyOptionsLabel={emptyOptionsLabel}

@@ -8,8 +8,8 @@ const instance = figma.selectedInstance;
 // Label text
 const label = instance.getString('↳ value');
 
-// compact: VARIANT "true"/"false" → compact boolean prop
-const compact = instance.getEnum('compact', { true: true, false: false });
+// size: VARIANT → size prop
+const size = instance.getEnum('size', { s: 's', xs: 'xs' });
 
 // state: disabled maps to disabled prop; focused/hovered/pressed are interaction-only states
 const disabled = instance.getEnum('state', {
@@ -26,10 +26,10 @@ const showStart = instance.getEnum('show start', { true: true, false: false });
 // show label: whether the label text is visible (false = icon-only chip)
 const showLabel = instance.getEnum('show label', { true: true, false: false });
 
-// The start element uses different instance swaps for compact vs regular mode
+// The start element uses different instance swaps depending on the size
 const startCompact = instance.getInstanceSwap('↳ startCompact');
 const startRegular = instance.getInstanceSwap('↳ start');
-const startHandle = compact ? startCompact : startRegular;
+const startHandle = size === 'xs' ? startCompact : startRegular;
 let startCode;
 if (showStart && startHandle && startHandle.type === 'INSTANCE') {
   startCode = startHandle.executeTemplate().example;
@@ -38,7 +38,7 @@ if (showStart && startHandle && startHandle.type === 'INSTANCE') {
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<InputChip
-  ${compact ? 'compact' : ''}
+  ${size !== 's' ? figma.code`size="${size}"` : ''}
   ${disabled ? 'disabled' : ''}
   ${startCode ? figma.code`start={${startCode}}` : ''}
 >${showLabel ? label : ''}</InputChip>`,

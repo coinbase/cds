@@ -57,13 +57,3 @@ export const TileButtonPictogram = () => {
     </VStack>
   );
 };
-
-TileButtonPictogram.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};

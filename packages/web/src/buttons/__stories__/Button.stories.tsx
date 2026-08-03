@@ -91,6 +91,16 @@ export const CustomEndIconButton = () => (
   </VStack>
 );
 
+export const Sizes = () => (
+  <VStack alignItems="flex-start" gap={2}>
+    <Button size="xs">Extra small (xs)</Button>
+    <Button size="s">Small (s)</Button>
+    <Button size="m">Medium (m)</Button>
+    <Button size="l">Large (l) - default</Button>
+    <Button compact>{'Compact (deprecated, renders as size="s")'}</Button>
+  </VStack>
+);
+
 export const FlushProps = () => (
   <VStack background="bgSecondary" gap={4} paddingX={2}>
     <Button onClick={() => {}} variant="positive">

@@ -13,15 +13,6 @@ import { ModalHeader } from '../modal/ModalHeader';
 export default {
   title: 'Components/Modal',
   component: Modal,
-  parameters: {
-    a11y: {
-      options: {
-        rules: {
-          'color-contrast': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 type ModalA11yProps = {

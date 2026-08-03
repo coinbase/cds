@@ -298,7 +298,9 @@ const ComboboxBase = memo(
                     paddingBottom: safeBottomPadding,
                   }}
                 >
-                  <Button compact onPress={handleClose}>
+                  {/* Intentionally always the densest size, matching the dropdown's inline
+                      affordances, regardless of the Combobox's own size. */}
+                  <Button onPress={handleClose} size="s">
                     {closeButtonLabel}
                   </Button>
                 </StickyFooter>

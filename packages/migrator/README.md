@@ -123,6 +123,52 @@ npx @coinbase/cds-migrator ./src -t button-variant-values -t input-size-values
 npx @coinbase/cds-migrator ./src -t components/button-variant
 ```
 
+### Standalone Transforms
+
+These aren't part of any preset — run them directly with `-t`.
+
+| Transform         | What it does                                                                                   |
+| ----------------- | ---------------------------------------------------------------------------------------------- |
+| `compact-to-size` | Replaces the deprecated `compact` prop with the t-shirt `size` prop (expected removal in v10). |
+
+#### `compact-to-size`
+
+```bash
+npx @coinbase/cds-migrator ./src -t compact-to-size --dry-run
+```
+
+`compact` is deprecated in favour of `size` on the components below, and maps to a different
+size depending on which scale the component uses:
+
+| Components                                                                                                              | `compact` becomes |
+| ----------------------------------------------------------------------------------------------------------------------- | ----------------- |
+| `Button`, `IconButton`, `SlideButton`, `TextInput`, `SearchInput`, `DateInput`, `DatePicker`, alpha `Select`/`Combobox` | `size="s"`        |
+| `Chip`, `InputChip`, `MediaChip`, `SelectChip`, alpha `SelectChip`, alpha `TabbedChips`                                 | `size="xs"`       |
+
+The transform matches on **(import path, component name)** pairs, so the many other components
+that happen to have a `compact` prop meaning something unrelated — `AvatarButton`, `NativeInput`,
+`NativeTextArea`, `InputIcon`, the legacy `controls/Select`, `ContentCell`/`ListCell` (whose
+`compact` became `spacingVariant` in v9), `Table`, `CardBody`, and the alpha dropdown/option
+components — are left untouched even when imported from the same barrel.
+
+It also preserves behaviour that `compact` carried beyond spacing:
+
+- `IconButton`'s `compact` defaults to `true`, so `compact={false}` becomes `size="l"` instead of
+  being dropped.
+- On the input and select families, `compact` (set without `size`) also forced the label into the
+  inline start slot, so `labelVariant="inside"` is added when the element has a label. Multi-select
+  (`type="multi"`) is excluded, because legacy `compact` deliberately kept its label outside.
+- A dynamic `compact={expr}` becomes `size={expr ? 's' : 'l'}` (or `'xs' : 's'` for chips) rather
+  than being left behind.
+
+`TODO [cds-migrator:compact-to-size]` comments are inserted for the cases it can't fully resolve —
+a dynamic `size`, a dynamic `compact` on a labelled input, a `label` arriving through a spread, and
+a dynamic `type` on a `Select` (where the label rule differs between single- and multi-select).
+
+The alpha `Select` dropdown needs no migration: it keeps a binary `compact` density toggle, and
+`Select` derives it from its own resolved size, so setting `size="s"` still yields a compact
+dropdown.
+
 ### Wrapper Packages / Import Rewrites
 
 If your repo re-exports CDS through a wrapper package (e.g. `@acme/shared/cds/buttons/Button` instead of `@coinbase/cds-web/buttons/Button`), transforms will skip those call sites by default because they don't match the CDS package names.
@@ -248,9 +294,13 @@ packages/migrator/
 │   ├── presets/                   # Preset configurations (auto-discovered!)
 │   │   └── v8-to-v9/
 │   │       └── manifest.json
-│   ├── transforms/                # Jscodeshift codemods (e.g. versioned v9/)
-│   │   └── v9/
-│   │       └── migrate-use-merge-refs.ts
+│   ├── transforms/                # Jscodeshift codemods (a module, or a folder with index.ts)
+│   │   ├── v9/                    #   Grouped by target version when part of a preset
+│   │   │   └── migrate-use-merge-refs.ts
+│   │   └── compact-to-size/       #   Self-contained standalone transform
+│   │       ├── __testfixtures__/
+│   │       ├── __tests__/
+│   │       └── index.ts
 │   └── utils/                     # Shared utilities
 │       ├── import-mapping.ts      #   Import prefix rewrites (-ir / config)
 │       ├── package-scope.ts       #   Package scope filtering (-ps)

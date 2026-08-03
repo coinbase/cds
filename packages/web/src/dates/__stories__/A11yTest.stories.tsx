@@ -13,16 +13,6 @@ import { DatePicker } from '../DatePicker';
 export default {
   title: 'Components/Dates/A11yTest',
   component: Calendar,
-  parameters: {
-    a11y: {
-      options: {
-        rules: {
-          'color-contrast': { enabled: false },
-          'aria-required-children': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 const today = new Date(new Date(2024, 7, 18).setHours(0, 0, 0, 0));

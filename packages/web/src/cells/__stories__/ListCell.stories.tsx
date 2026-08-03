@@ -17,15 +17,6 @@ import { ListCellFallback } from '../ListCellFallback';
 
 const parameters = {
   percy: { enableJavaScript: true },
-  a11y: {
-    config: {
-      rules: [{ id: 'color-contrast', enabled: false }],
-    },
-    context: {
-      include: ['body'],
-      exclude: ['.no-a11y-check'],
-    },
-  },
 };
 
 export default {

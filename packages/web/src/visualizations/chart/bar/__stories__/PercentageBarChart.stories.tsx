@@ -15,11 +15,6 @@ import { PercentageBarChart, type PercentageBarSeries } from '../PercentageBarCh
 export default {
   title: 'Components/Chart/PercentageBarChart',
   component: PercentageBarChart,
-  parameters: {
-    a11y: {
-      test: 'todo',
-    },
-  },
 };
 
 const DOTTED_BAR_OUTLINE_STROKE_WIDTH = 2;

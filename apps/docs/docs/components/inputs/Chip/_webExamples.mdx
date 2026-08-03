@@ -65,16 +65,16 @@ function Example() {
 }
 ```
 
-### Compact
+### Sizes
 
-Use `compact` for smaller chips with reduced padding.
+`size` accepts `xs` and `s`. Defaults to `s`.
 
 ```tsx live
 function Example() {
   return (
     <HStack gap={2} flexWrap="wrap">
-      <Chip>Default</Chip>
-      <Chip compact>Compact</Chip>
+      <Chip size="s">size="s" (default)</Chip>
+      <Chip size="xs">size="xs"</Chip>
     </HStack>
   );
 }

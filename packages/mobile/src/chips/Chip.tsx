@@ -9,8 +9,23 @@ import { Pressable } from '../system/Pressable';
 import { InvertedThemeProvider } from '../system/ThemeProvider';
 import { Text } from '../typography/Text';
 
-import type { ChipProps } from './ChipProps';
-export type { ChipProps };
+import type { ChipProps, ChipSize } from './ChipProps';
+export type { ChipProps, ChipSize };
+
+const chipSizes = {
+  xs: { paddingX: 1.5, paddingY: 0.75, font: 'label1', borderRadius: 700 },
+  s: { paddingX: 2, paddingY: 1, font: 'headline', borderRadius: 700 },
+} as const satisfies Record<
+  ChipSize,
+  {
+    paddingX: NonNullable<ChipProps['paddingX']>;
+    paddingY: NonNullable<ChipProps['paddingY']>;
+    font: NonNullable<ChipProps['font']>;
+    borderRadius: NonNullable<ChipProps['borderRadius']>;
+  }
+>;
+
+const defaultChipSize: ChipSize = 's';
 
 /**
  * This is a basic Chip component used to create all Chip components.
@@ -22,6 +37,8 @@ export const Chip = memo(function Chip({
   ref?: React.Ref<View>;
 }) {
   const mergedProps = useComponentConfig('Chip', _props);
+  // Geometry is driven by `size`; deprecated `compact` falls back to its legacy `xs` size.
+  const sizeConfig = chipSizes[mergedProps.size ?? (mergedProps.compact ? 'xs' : defaultChipSize)];
   const {
     alignSelf = 'flex-start',
     children,
@@ -31,9 +48,10 @@ export const Chip = memo(function Chip({
     inverted,
     maxWidth = chipMaxWidth,
     compact,
+    size: _size,
     gap = 1,
-    paddingX = compact ? 1.5 : 2,
-    paddingY = compact ? 0.5 : 1,
+    paddingX = sizeConfig.paddingX,
+    paddingY = sizeConfig.paddingY,
     alignItems = 'center',
     justifyContent,
     padding,
@@ -44,13 +62,13 @@ export const Chip = memo(function Chip({
     numberOfLines = 1,
     testID,
     contentStyle,
-    borderRadius = 700,
+    borderRadius = sizeConfig.borderRadius,
     background = 'bgSecondary',
     style,
     styles,
     onPress,
     color = 'fg',
-    font = compact ? 'label1' : 'headline',
+    font = sizeConfig.font,
     ...props
   } = mergedProps;
   const WrapperComponent = (invertColorScheme ?? inverted) ? InvertedThemeProvider : Fragment;

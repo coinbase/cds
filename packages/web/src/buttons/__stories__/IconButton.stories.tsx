@@ -86,6 +86,16 @@ export const Default = () => (
       </HStack>
     </VStack>
     <VStack gap={2}>
+      <Text font="title3">Sizes</Text>
+      <HStack alignItems="center" gap={4}>
+        <IconButton accessibilityLabel="Extra small" name={iconName} size="xs" />
+        <IconButton accessibilityLabel="Small" name={iconName} size="s" />
+        <IconButton accessibilityLabel="Medium" name={iconName} size="m" />
+        <IconButton accessibilityLabel="Large (default)" name={iconName} size="l" />
+        <IconButton compact accessibilityLabel="Compact (deprecated)" name={iconName} />
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
       <Text font="title3">Without Compact Styles</Text>
       <IconButton accessibilityLabel={accessibilityLabel} compact={false} name={iconName} />
     </VStack>

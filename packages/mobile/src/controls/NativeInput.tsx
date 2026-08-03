@@ -9,8 +9,6 @@ import { useTextAlign } from '../hooks/useTextAlign';
 import { useTheme } from '../hooks/useTheme';
 import type { TextBaseProps } from '../typography/Text';
 
-import type { TextInputBaseProps } from './TextInput';
-
 export type NativeInputProps = {
   /**
    * Text Align Input
@@ -19,6 +17,13 @@ export type NativeInputProps = {
   align?: TextBaseProps['align'];
   /** Custom container spacing if needed. This will add to the existing spacing */
   containerSpacing?: ViewStyle | undefined;
+  /**
+   * Decreases the padding within the input element
+   * @default false
+   * @deprecated Use style object instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  compact?: boolean;
   /**
    * Disables input
    * @default false
@@ -41,7 +46,6 @@ export type NativeInputProps = {
    */
   selectionColor?: ThemeVars.Color;
 } & SharedProps &
-  Pick<TextInputBaseProps, 'compact'> &
   Pick<
     SharedAccessibilityProps,
     'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
@@ -77,11 +81,26 @@ export const NativeInput = memo(
         padding: 0,
         margin: 0,
         color: theme.color.fg,
+        // When the field is floored to a taller target height (TextInput passes a size-derived
+        // minHeight), keep the single-line text centered in the extra space. Multiline inputs must
+        // grow and top-align, so this is skipped for them.
+        ...(editableInputAddonProps.multiline ? null : { textAlignVertical: 'center' as const }),
       }),
-      [theme.fontSize, theme.fontFamily, theme.lineHeight, theme.fontWeight, theme.color.fg, font],
+      [
+        theme.fontSize,
+        theme.fontFamily,
+        theme.lineHeight,
+        theme.fontWeight,
+        theme.color.fg,
+        font,
+        editableInputAddonProps.multiline,
+      ],
     );
 
     const containerStyle: ViewStyle = useMemo(() => {
+      // NativeInput has no `size` prop, so the deprecated `compact` still drives its own base
+      // padding here. When rendered inside TextInput, `containerSpacing` (size-derived) is
+      // spread after and overrides this fallback.
       return {
         flex: 2,
         minWidth: 0,

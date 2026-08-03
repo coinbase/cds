@@ -1,69 +1,60 @@
-# React + TypeScript + Vite
+# CDS Storybook
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Storybook is the development environment and interactive component catalog for CDS web components. Stories live with their components in `packages/web` and are discovered by `apps/storybook/.storybook/main.ts`.
 
-Currently, two official plugins are available:
+## Prerequisites
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+Follow the repository [setup instructions](../../README.md#setup) to select Node.js and install dependencies. Run the Nx commands below from the repository root.
 
-## Expanding the ESLint configuration
+## Local Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```sh
+yarn nx run storybook:dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Storybook starts at `http://localhost:6006` and reloads as component, story, or Storybook configuration files change. Use the Nx target rather than invoking the Storybook CLI directly; the configuration resolves aliases from the monorepo root.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+## Build and Preview
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+Create a production build with:
+
+```sh
+yarn nx run storybook:build
 ```
+
+The static site is written to `apps/storybook/dist`. To preview that static output, first build it and then serve the directory:
+
+```sh
+yarn dlx http-server apps/storybook/dist --port 6006
+```
+
+## Files and Maintenance
+
+- Add or update `*.stories.tsx` or `*.stories.mdx` files under `packages/web`.
+- Update `apps/storybook/.storybook/main.ts` for Storybook addons, Vite configuration, aliases, or story discovery.
+- Update `apps/storybook/.storybook/preview.ts` for global decorators, parameters, and toolbar controls.
+- Update `apps/storybook/.storybook/manager.tsx` for the Storybook manager UI.
+- Keep stories focused on useful component states and interactions, including accessibility behavior.
+- `apps/storybook/dist` and bundle-analysis output are generated files. Do not edit or commit them.
+
+## Validation
+
+Run the focused checks before submitting Storybook changes:
+
+```sh
+yarn nx run storybook:test-a11y
+yarn nx run storybook:typecheck
+yarn nx run storybook:lint
+yarn nx run storybook:build
+yarn nx format:write
+```
+
+The accessibility target runs the stories in a headless Chromium browser. On a new checkout, install the browser from the Storybook workspace if it is not already available:
+
+```sh
+cd apps/storybook
+yarn exec playwright install chromium
+cd ../..
+```
+
+If the test runner reports missing Linux browser libraries, install the dependencies required by Playwright for the current operating system and rerun the target. If a build fails after changing a package alias or Storybook setting, rerun it through `yarn nx run storybook:build` so Nx supplies the monorepo environment.

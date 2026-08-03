@@ -17,19 +17,6 @@ export default {
   title: 'Components/Navigation/NavigationBar',
 };
 
-const a11ySkipConfig = {
-  options: {
-    /**
-     * The TabNavigation docs explain the proper way to setup the tabpanel.
-     * Disabled because CDS TabNavigation doesn't have associated panels.
-     * @link https://cds.coinbase.com/components/tab-navigation#accessibility
-     * */
-    rules: {
-      'aria-valid-attr-value': { enabled: false },
-    },
-  },
-};
-
 // Helper function for demo interactions
 const handlePress = (name: string) => console.log(`Pressed ${name}`);
 
@@ -94,10 +81,6 @@ export const NavigationBarFullExampleDefault = () => {
       </NavigationBar>
     </VStack>
   );
-};
-
-NavigationBarFullExampleDefault.parameters = {
-  a11y: a11ySkipConfig,
 };
 
 export const NavigationBarMobileExample = () => {
@@ -318,10 +301,6 @@ export const NavigationBarWithTabs = () => {
   );
 };
 
-NavigationBarWithTabs.parameters = {
-  a11y: a11ySkipConfig,
-};
-
 export const NavigationBarWithCustomBackground = () => {
   return (
     <VStack alignItems="flex-start" gap={4}>
@@ -461,10 +440,6 @@ export const NavigationBarWithCustomGap = () => {
       </VStack>
     </VStack>
   );
-};
-
-NavigationBarWithCustomGap.parameters = {
-  a11y: a11ySkipConfig,
 };
 
 export const NavigationBarWithCustomStyles = () => {

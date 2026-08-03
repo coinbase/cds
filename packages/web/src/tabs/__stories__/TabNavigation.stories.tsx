@@ -18,29 +18,11 @@ import { type CustomTabProps, TabNavigation, type TabProps } from '../TabNavigat
 
 import { MockTabPanel } from './MockTabPanel';
 
-const a11ySkipConfig = {
-  config: {
-    /**
-     * The TabNavigation docs explain the proper way to setup the tabpanel.
-     * Disabled because CDS TabNavigation doesn't have associated panels.
-     * @link https://cds.coinbase.com/components/tab-navigation#accessibility
-     * */
-    rules: [
-      { id: 'aria-valid-attr-value', enabled: false },
-      { id: 'duplicate-id-active', enabled: false },
-      { id: 'duplicate-id', enabled: false },
-    ],
-  },
-};
-
 const tabs = sampleTabs.slice(0, 5);
 
 const meta: Meta = {
   title: 'Components/Tabs/TabNavigation',
   component: TabNavigation,
-  parameters: {
-    a11y: { test: 'off' },
-  },
 };
 
 export default meta;
@@ -81,7 +63,6 @@ export const Default: Story = {
   render: () => <DefaultRender />,
   parameters: {
     percy: { enableJavaScript: true },
-    a11y: a11ySkipConfig,
   },
 };
 
@@ -152,7 +133,7 @@ const CustomTabRender = () => {
 
 export const CustomTab: Story = {
   render: () => <CustomTabRender />,
-  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+  parameters: { percy: { enableJavaScript: true } },
 };
 
 const WithPaddlesRender = () => {
@@ -163,7 +144,7 @@ const WithPaddlesRender = () => {
 
 export const WithPaddles: Story = {
   render: () => <WithPaddlesRender />,
-  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+  parameters: { percy: { enableJavaScript: true } },
 };
 
 const WithCustomPaddlesRender = () => {
@@ -181,7 +162,7 @@ const WithCustomPaddlesRender = () => {
 
 export const WithCustomPaddles: Story = {
   render: () => <WithCustomPaddlesRender />,
-  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+  parameters: { percy: { enableJavaScript: true } },
 };
 
 type TradingActivity = 'buy' | 'sell' | 'convert' | 'send' | 'receive';
@@ -211,7 +192,7 @@ const WithEnumRender = () => {
 
 export const WithEnum: Story = {
   render: () => <WithEnumRender />,
-  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+  parameters: { percy: { enableJavaScript: true } },
 };
 
 const WithDotCountChangeRender = () => {
@@ -267,7 +248,7 @@ const WithDotCountChangeRender = () => {
 
 export const WithDotCountChange: Story = {
   render: () => <WithDotCountChangeRender />,
-  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+  parameters: { percy: { enableJavaScript: true } },
 };
 
 const SecondaryRender = () => {
@@ -301,7 +282,7 @@ const SecondaryRender = () => {
 
 export const Secondary: Story = {
   render: () => <SecondaryRender />,
-  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+  parameters: { percy: { enableJavaScript: true } },
 };
 
 const AccessibilityTestRender = () => {
@@ -375,7 +356,7 @@ const DisabledRender = () => {
 
 export const Disabled: Story = {
   render: () => <DisabledRender />,
-  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+  parameters: { percy: { enableJavaScript: true } },
 };
 
 const WithPaddingRender = () => {
@@ -394,5 +375,5 @@ const WithPaddingRender = () => {
 
 export const WithPadding: Story = {
   render: () => <WithPaddingRender />,
-  parameters: { percy: { enableJavaScript: true }, a11y: a11ySkipConfig },
+  parameters: { percy: { enableJavaScript: true } },
 };

@@ -17,9 +17,6 @@ import { MenuItem } from '../MenuItem';
 export default {
   title: 'Components/Dropdown/Dropdown',
   component: Dropdown,
-  parameters: {
-    a11y: { test: 'off' },
-  },
 };
 
 const defaultOptions = [

@@ -2,6 +2,7 @@ import React, { forwardRef, memo, useMemo } from 'react';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
 import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
@@ -24,6 +25,22 @@ const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
 export const spinnerHeight = 2.5;
 
 const defaultProgressCircleSize = 24;
+
+export type ButtonSize = 'xs' | 's' | 'm' | 'l';
+
+const buttonSizes = {
+  xs: { paddingX: 2, paddingY: 0.75, borderRadius: 700, iconSize: 's', font: 'label1' },
+  s: { paddingX: 2, paddingY: 1, borderRadius: 700, iconSize: 's', font: 'headline' },
+  m: { paddingX: 3, paddingY: 1.5, borderRadius: 900, iconSize: 'm', font: 'headline' },
+  l: { paddingX: 4, paddingY: 2, borderRadius: 900, iconSize: 'm', font: 'headline' },
+} as const satisfies Record<
+  ButtonSize,
+  Pick<ButtonBaseProps, 'paddingX' | 'paddingY' | 'borderRadius' | 'font'> & {
+    iconSize: Extract<IconSize, 's' | 'm'>;
+  }
+>;
+
+const defaultButtonSize: ButtonSize = 'l';
 
 const baseCss = css`
   text-decoration: none;
@@ -124,8 +141,17 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
       transparent?: boolean;
       /** Change to block and expand to 100% of parent width. */
       block?: boolean;
-      /** Reduce the inner padding within the button itself. */
+      /**
+       * Reduce the inner padding within the button itself.
+       * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+       * @deprecationExpectedRemoval v10
+       */
       compact?: boolean;
+      /**
+       * Set the size of the button.
+       * @default l
+       */
+      size?: ButtonSize;
       /** Children to render within the button. */
       children: React.ReactNode;
       /** Set the start node */
@@ -180,6 +206,7 @@ export const Button: ButtonComponent = memo(
         transparent,
         block,
         compact,
+        size,
         children,
         start,
         startIcon,
@@ -190,7 +217,7 @@ export const Button: ButtonComponent = memo(
         flush,
         noScaleOnPress,
         numberOfLines,
-        font = 'headline',
+        font: fontProp,
         fontFamily,
         fontSize,
         fontWeight,
@@ -201,11 +228,11 @@ export const Button: ButtonComponent = memo(
         className,
         borderColor,
         borderWidth = 0, // remove Pressable's default transparent border
-        borderRadius = compact ? 700 : 900,
+        borderRadius: borderRadiusProp,
         accessibilityLabel,
         padding,
-        paddingX = padding ?? (compact ? 2 : 4),
-        paddingY = padding ?? (compact ? 1 : 2),
+        paddingX: paddingXProp,
+        paddingY: paddingYProp,
         margin = 0,
         minWidth = 'auto',
         style,
@@ -214,7 +241,16 @@ export const Button: ButtonComponent = memo(
       } = mergedProps;
       const theme = useTheme();
       const Component = (as ?? buttonDefaultElement) satisfies React.ElementType;
-      const iconSize = compact ? 's' : 'm';
+
+      // `size` wins when both `size` and `compact` are set; compact-only maps to `s`.
+      const resolvedSize = size ?? (compact ? 's' : defaultButtonSize);
+      const sizeConfig = buttonSizes[resolvedSize];
+
+      const font = fontProp ?? sizeConfig.font;
+      const borderRadius = borderRadiusProp ?? sizeConfig.borderRadius;
+      const paddingX = paddingXProp ?? padding ?? sizeConfig.paddingX;
+      const paddingY = paddingYProp ?? padding ?? sizeConfig.paddingY;
+      const iconSize = sizeConfig.iconSize;
       const hasIcon = Boolean(startIcon ?? endIcon);
 
       const variantMap = transparent ? transparentVariants : variants;

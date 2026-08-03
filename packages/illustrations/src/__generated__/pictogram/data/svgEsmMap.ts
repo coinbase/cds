@@ -1706,6 +1706,9 @@ const svgEsmMap = {
   noWiFi: {
     themeable: () => import('../svgJs/esm/themeable/noWiFi-3.js').then((m) => m.default as string),
   },
+  options: {
+    themeable: () => import('../svgJs/esm/themeable/options-0.js').then((m) => m.default as string),
+  },
   orders: {
     themeable: () => import('../svgJs/esm/themeable/orders-2.js').then((m) => m.default as string),
   },

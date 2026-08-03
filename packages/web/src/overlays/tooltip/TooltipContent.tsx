@@ -51,7 +51,7 @@ export const TooltipContent = memo(
         placement = 'top',
         background = 'bg',
         borderRadius = 200,
-        maxWidth = tooltipMaxWidth,
+        maxWidth,
         paddingX = tooltipPaddingX,
         paddingY = tooltipPaddingY,
         color = 'fg',
@@ -72,6 +72,9 @@ export const TooltipContent = memo(
         [gap, zIndex],
       );
 
+      const isTextContent = typeof content === 'string';
+      const contentMaxWidth = maxWidth ?? (isTextContent ? tooltipMaxWidth : undefined);
+
       const motionProps = useMotionProps({
         style: outerStyle,
         enterConfigs: [animateInOpacityConfig, getTranslateConfigByPlacement({ placement })],
@@ -91,13 +94,14 @@ export const TooltipContent = memo(
             data-testid={testID}
             elevation={elevation}
             id={tooltipId}
-            maxWidth={maxWidth}
+            maxWidth={contentMaxWidth}
             paddingX={paddingX}
             paddingY={paddingY}
             role="tooltip"
+            width="max-content"
             {...props}
           >
-            {typeof content === 'string' ? (
+            {isTextContent ? (
               <Text
                 className={textCss}
                 color={color}

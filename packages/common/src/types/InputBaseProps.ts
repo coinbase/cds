@@ -12,6 +12,8 @@ export type SharedInputProps = {
   /**
    * Enables compact variation
    * @default false
+   * @deprecated This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   compact?: boolean;
   /** Short messageArea indicating purpose of input */

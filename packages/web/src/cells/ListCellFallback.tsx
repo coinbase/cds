@@ -122,10 +122,10 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     return (
       <TextFallback
         aria-hidden
+        percentage
         className={classNames?.helperText}
         disableRandomRectWidth={disableRandomRectWidth}
         font="body"
-        percentage
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 4)}
         style={styles?.helperText}
         testID="list-cell-fallback-helper-text"
@@ -150,10 +150,10 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
         {!!detail && (
           <TextFallback
             aria-hidden
+            percentage
             className={classNames?.detail}
             disableRandomRectWidth={disableRandomRectWidth}
             font="body"
-            percentage
             rectWidthVariant={getRectWidthVariant(rectWidthVariant, 0)}
             style={styles?.detail}
             testID="list-cell-fallback-detail"
@@ -163,10 +163,10 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
         {!!subdetail && (
           <TextFallback
             aria-hidden
+            percentage
             className={classNames?.subdetail}
             disableRandomRectWidth={disableRandomRectWidth}
             font={spacingVariant === 'condensed' ? 'label2' : 'body'}
-            percentage
             rectWidthVariant={getRectWidthVariant(rectWidthVariant, 1)}
             style={styles?.subdetail}
             testID="list-cell-fallback-subdetail"
@@ -195,10 +195,10 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     return (
       <TextFallback
         aria-hidden
+        percentage
         className={classNames?.title}
         disableRandomRectWidth={disableRandomRectWidth}
         font="headline"
-        percentage
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
         style={styles?.title}
         testID="list-cell-fallback-title"
@@ -215,10 +215,10 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     return (
       <TextFallback
         aria-hidden
+        percentage
         className={classNames?.subtitle}
         disableRandomRectWidth={disableRandomRectWidth}
         font="label1"
-        percentage
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 2)}
         style={styles?.subtitle}
         testID="list-cell-fallback-subtitle"
@@ -235,10 +235,10 @@ export const ListCellFallback = memo(function ListCellFallback(_props: ListCellF
     return (
       <TextFallback
         aria-hidden
+        percentage
         className={classNames?.description}
         disableRandomRectWidth={disableRandomRectWidth}
         font={spacingVariant === 'condensed' ? 'label2' : 'body'}
-        percentage
         rectWidthVariant={getRectWidthVariant(rectWidthVariant, 3)}
         style={styles?.description}
         testID="list-cell-fallback-description"

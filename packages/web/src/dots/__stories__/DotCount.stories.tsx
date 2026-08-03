@@ -176,15 +176,6 @@ export const AllDotCount = () => {
   );
 };
 
-AllDotCount.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};
 export const DotCountPressable = () => {
   return (
     <HStack gap={4}>

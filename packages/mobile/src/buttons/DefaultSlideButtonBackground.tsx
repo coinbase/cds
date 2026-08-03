@@ -5,7 +5,11 @@ import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { Box } from '../layout/Box';
 import { Text } from '../typography/Text';
 
-import type { SlideButtonBackgroundProps } from './SlideButton';
+import {
+  defaultSlideButtonSize,
+  type SlideButtonBackgroundProps,
+  slideButtonSizes,
+} from './SlideButton';
 
 export const DefaultSlideButtonBackground = memo(
   ({
@@ -13,7 +17,7 @@ export const DefaultSlideButtonBackground = memo(
     progress,
     uncheckedLabel,
     disabled,
-    compact,
+    size = defaultSlideButtonSize,
     style,
     borderRadius,
     borderTopLeftRadius,
@@ -23,7 +27,7 @@ export const DefaultSlideButtonBackground = memo(
   }: SlideButtonBackgroundProps & {
     ref?: React.Ref<View>;
   }) => {
-    const horizontalPadding = compact ? 7 : 9;
+    const horizontalPadding = slideButtonSizes[size].backgroundPadding;
 
     const animatedStyle = useAnimatedStyle(
       () => ({ opacity: disabled ? 0.5 : 1 - progress.value }),

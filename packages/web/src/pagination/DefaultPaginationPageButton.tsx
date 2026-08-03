@@ -31,12 +31,12 @@ export const DefaultPaginationPageButton = forwardRef(
     return (
       <Button
         ref={ref}
-        compact
         accessibilityLabel={accessibilityLabel}
         aria-current={isCurrentPage ? 'page' : undefined}
         className={cx(isSingleDigit && circularButtonCss)}
         disabled={disabled}
         onClick={handleClick}
+        size="s"
         testID={testID}
         transparent={!isCurrentPage}
         variant={isCurrentPage ? 'primary' : 'secondary'}

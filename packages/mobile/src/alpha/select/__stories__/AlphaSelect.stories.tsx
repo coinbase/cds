@@ -166,6 +166,20 @@ const DefaultExample = () => {
   );
 };
 
+const EmptyStringValueExample = () => {
+  const [value, setValue] = useState<string | null>('');
+
+  return (
+    <Select
+      label="Empty string value"
+      onChange={setValue}
+      options={exampleOptionsWithoutNull}
+      placeholder="Select an option"
+      value={value}
+    />
+  );
+};
+
 const TypedSelectExample = () => {
   type TestValue = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9';
   const typedOptions: SelectOption<TestValue>[] = [
@@ -199,6 +213,39 @@ const CompactExample = () => {
       placeholder="Empty value"
       value={value}
     />
+  );
+};
+
+const SizesExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={2}>
+      <Select
+        label="Small (s)"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="s"
+        value={value}
+      />
+      <Select
+        label="Medium (m)"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="m"
+        value={value}
+      />
+      <Select
+        label="Large (l) - default"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="l"
+        value={value}
+      />
+    </VStack>
   );
 };
 
@@ -1319,11 +1366,17 @@ const SelectV3Screen = () => {
       <Example title="Default">
         <DefaultExample />
       </Example>
+      <Example title="Empty string value">
+        <EmptyStringValueExample />
+      </Example>
       <Example title="Typed">
         <TypedSelectExample />
       </Example>
       <Example title="Compact">
         <CompactExample />
+      </Example>
+      <Example title="Sizes">
+        <SizesExample />
       </Example>
       <Example title="Inside label variant">
         <InsideLabelVariantExample />

@@ -324,10 +324,12 @@ const DefaultSelectDropdownComponent = memo(
                         end={
                           end ?? (
                             <Button
-                              compact
                               transparent
                               onClick={handleClearAll}
                               role="option"
+                              // Intentionally always the densest size: the dropdown's inline
+                              // affordances stay compact regardless of the control's size.
+                              size="s"
                               style={{ margin: 'var(--space-0_5)' }}
                               width="fit-content"
                             >

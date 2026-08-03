@@ -22,6 +22,7 @@ export const MediaChip = memo(function MediaChip({
     children,
     end,
     compact,
+    size,
     padding,
     paddingX,
     paddingY,
@@ -31,9 +32,11 @@ export const MediaChip = memo(function MediaChip({
     paddingEnd,
     ...props
   } = mergedProps;
+  // Spacing is driven by `size`; deprecated `compact` falls back to its legacy `xs` size.
+  const resolvedSize = size ?? (compact ? 'xs' : 's');
   const spacingProps = useMemo(() => {
     const defaults = getMediaChipSpacingProps({
-      compact: !!compact,
+      size: resolvedSize,
       start: !!start,
       end: !!end,
       children: !!children,
@@ -48,7 +51,7 @@ export const MediaChip = memo(function MediaChip({
       paddingEnd: paddingEnd ?? defaults.paddingEnd,
     };
   }, [
-    compact,
+    resolvedSize,
     start,
     end,
     children,
@@ -61,7 +64,15 @@ export const MediaChip = memo(function MediaChip({
     paddingEnd,
   ]);
   return (
-    <Chip ref={ref} compact={compact} end={end} start={start} {...spacingProps} {...props}>
+    <Chip
+      ref={ref}
+      compact={compact}
+      end={end}
+      size={size}
+      start={start}
+      {...spacingProps}
+      {...props}
+    >
       {children}
     </Chip>
   );

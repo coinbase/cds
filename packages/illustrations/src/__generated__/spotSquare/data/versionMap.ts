@@ -280,6 +280,7 @@ const versionMap: Record<SpotSquareName, number> = {
   instoPixDeposits: 1,
   instoProgressCircle: 1,
   inrTrade: 0,
+  playButton: 0,
 };
 
 export default versionMap;

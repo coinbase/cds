@@ -12,6 +12,7 @@ import type { DateInputValidationError } from '@coinbase/cds-common/dates/DateIn
 
 import { Button } from '../buttons/Button';
 import { InputIconButton } from '../controls/InputIconButton';
+import type { TextInputSize } from '../controls/TextInput';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 import { VStack } from '../layout/VStack';
@@ -66,6 +67,17 @@ export type DatePickerBaseProps = Pick<
    * @default 'Close calendar without selecting a date'
    */
   closeCalendarAccessibilityLabel?: string;
+  /**
+   * Controls the vertical density (size) of the DatePicker's input field.
+   * @default 'l'
+   */
+  size?: TextInputSize;
+  /**
+   * Enables a smaller, compact input.
+   * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  compact?: boolean;
 };
 
 export type DatePickerProps = DatePickerBaseProps &
@@ -79,6 +91,7 @@ export type DatePickerProps = DatePickerBaseProps &
     | 'maxDate'
     | 'disabledDateError'
     | 'style'
+    | 'compact'
   > & {
     /** Callback function fired when the DateInput text value changes. Prefer to use `onChangeDate` instead. Will always be called before `onChangeDate`. This prop should only be used for edge cases, such as custom error handling.  */
     onChange?: (event: NativeSyntheticEvent<TextInputChangeEventData>) => void;
@@ -145,6 +158,7 @@ export const DatePicker = memo(
       closeCalendarAccessibilityLabel = 'Close calendar without selecting a date',
       dateInputStyle,
       compact,
+      size,
       variant,
       confirmText = 'Confirm',
       confirmButtonAccessibilityHint,
@@ -258,6 +272,7 @@ export const DatePicker = memo(
           onErrorDate={onErrorDate}
           required={required}
           requiredError={requiredError}
+          size={size}
           style={[dateInputStyle, styles?.dateInput]}
           variant={variant}
           {...props}
@@ -269,7 +284,6 @@ export const DatePicker = memo(
               <StickyFooter role="none">
                 <Button
                   block
-                  compact
                   accessibilityHint={confirmButtonAccessibilityHint}
                   disabled={disabled || !calendarSelectedDate}
                   onPress={() => {
@@ -278,6 +292,7 @@ export const DatePicker = memo(
                       handleClose();
                     }
                   }}
+                  size="s"
                 >
                   {confirmText}
                 </Button>

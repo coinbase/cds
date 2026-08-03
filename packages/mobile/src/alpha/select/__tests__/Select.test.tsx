@@ -5,7 +5,12 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { ComponentConfigProvider } from '../../../system/ComponentConfigProvider';
 import { Text } from '../../../typography/Text';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
-import { Select, type SelectOption, type SelectProps } from '../Select';
+import {
+  Select,
+  type SelectDropdownComponent,
+  type SelectOption,
+  type SelectProps,
+} from '../Select';
 
 jest.mock('react-native-safe-area-context', () => {
   return {
@@ -678,6 +683,45 @@ describe('Select', () => {
       // Should render without performance issues
       expect(screen.getByText('Option 0')).toBeTruthy();
       expect(screen.getByText('Option 99')).toBeTruthy();
+    });
+  });
+
+  describe('Dropdown density', () => {
+    /**
+     * The dropdown keeps a binary `compact` toggle instead of the t-shirt scale, so Select is
+     * responsible for translating its own resolved size into it.
+     */
+    const captureDropdownCompact = (props: Partial<SelectProps<'single' | 'multi'>>) => {
+      let captured: boolean | undefined;
+      const CapturingDropdown: SelectDropdownComponent<'single' | 'multi'> = ({ compact }) => {
+        captured = compact;
+        return null;
+      };
+
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} SelectDropdownComponent={CapturingDropdown} {...props} />
+        </DefaultThemeProvider>,
+      );
+
+      return captured;
+    };
+
+    it.each([
+      ['size="s"', true, { size: 's' as const }],
+      ['size="m"', false, { size: 'm' as const }],
+      ['size="l"', false, { size: 'l' as const }],
+      ['no size or compact', false, {}],
+      ['the deprecated compact alone', true, { compact: true }],
+      ['compact={false}', false, { compact: false }],
+    ])('%s resolves the dropdown to compact=%s', (_label, expected, props) => {
+      expect(captureDropdownCompact(props)).toBe(expected);
+    });
+
+    it('lets an explicit size win over the deprecated compact', () => {
+      // `compact` only ever acted as a fallback for geometry, so it must not force a compact
+      // dropdown once the caller has opted into a larger explicit size.
+      expect(captureDropdownCompact({ compact: true, size: 'l' })).toBe(false);
     });
   });
 });

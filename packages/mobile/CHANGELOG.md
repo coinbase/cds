@@ -8,6 +8,80 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.10.2 (7/31/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: move Pressalbe props from MediaCardProps to MediaCardBaseProps to allow them to be accessed in ComponentConfig settings which only manages -BaseProps". [[#819](https://github.com/coinbase/cds/pull/819)]
+
+## 9.10.1 (7/30/2026 PST)
+
+#### 🐞 Fixes
+
+- Size LinearGradient svg to measured pixels under Fabric. [[#810](https://github.com/coinbase/cds/pull/810)]
+
+## 9.10.0 (7/30/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add new prop, size to input & control components, deprecating compact. [[#809](https://github.com/coinbase/cds/pull/809)]
+
+## 9.9.0 (7/27/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support disabling icon scaling. [[#811](https://github.com/coinbase/cds/pull/811)]
+
+## 9.8.0 (7/23/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add createIcon factory to decouple Icon from a single icon set. [[#786](https://github.com/coinbase/cds/pull/786)]
+
+## 9.7.2 (7/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust select placeholder fallback. [[#805](https://github.com/coinbase/cds/pull/805)]
+
+## 9.7.1 (7/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Prevent Overlay/Modal scrim collapsing to 0x0 under Fabric. [[#804](https://github.com/coinbase/cds/pull/804)]
+
+## 9.7.0 (7/22/2026 PST)
+
+#### 🚀 Updates
+
+- Add hideSeparator prop to numpad. [[#799](https://github.com/coinbase/cds/pull/799)]
+
+## 9.6.11 (7/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Reduce top padding of mobile Tray content when handle bar is positioned inside. [[#802](https://github.com/coinbase/cds/pull/802)]
+
+## 9.6.10 ((7/22/2026, 08:37 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.9 (7/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust messaging card imports. [[#800](https://github.com/coinbase/cds/pull/800)]
+
+## 9.6.8 ((7/22/2026, 06:23 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.7 (7/20/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: TextInput inside labelVariant padding. [[#797](https://github.com/coinbase/cds/pull/797)]
+
 ## 9.6.6 (7/14/2026 PST)
 
 #### 🐞 Fixes

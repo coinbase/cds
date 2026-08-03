@@ -20,16 +20,6 @@ export const Default = () => (
   </div>
 );
 
-Default.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'target-size': { enabled: false },
-      },
-    },
-  },
-};
-
 export const VariantBody = () => (
   <Link font="body" href="https://www.google.com/">
     Body
@@ -63,16 +53,6 @@ export const Underline = () => (
     </Link>
   </div>
 );
-
-Underline.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'target-size': { enabled: false },
-      },
-    },
-  },
-};
 
 export const InAParagraph = () => (
   <div>
@@ -165,7 +145,4 @@ export const RenderContainerColor = () => (
 export default {
   title: 'Components/Link',
   component: Link,
-  parameters: {
-    a11y: { config: { rules: [{ id: 'touch-target', enabled: false }] } },
-  },
 };

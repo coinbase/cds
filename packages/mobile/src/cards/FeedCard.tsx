@@ -64,6 +64,26 @@ export const FeedCard = memo(function FeedCard({
   elevation = 0,
   ...cardProps
 }: FeedCardProps) {
+  const ctaNode = useMemo(() => {
+    if (!cta) return null;
+
+    // `compact` and `size` are lifted out of the spread so a consumer-supplied `cta` cannot clobber
+    // the footer's dense default. Precedence matches the pre-`size` behaviour: an explicit `size`
+    // wins, otherwise `compact` decides and defaults to dense. Collapses to `size={size ?? 's'}`
+    // in v10 once `compact` is dropped from Button.
+    const { compact, size, ...ctaProps } = cta;
+
+    return (
+      <Button
+        transparent
+        flush="end"
+        size={size ?? ((compact ?? true) ? 's' : undefined)}
+        variant="secondary"
+        {...ctaProps}
+      />
+    );
+  }, [cta]);
+
   const footer = useMemo(() => {
     const hasFooterActions = Boolean(like ?? comment ?? share ?? cta);
     const hasFooter = hasFooterActions || Boolean(cta);
@@ -93,12 +113,12 @@ export const FeedCard = memo(function FeedCard({
               )}
             </HStack>
           )}
-          {cta && <Button compact transparent flush="end" variant="secondary" {...cta} />}
+          {ctaNode}
         </CardFooter>
       );
     }
     return null;
-  }, [comment, cta, like, share, testID]);
+  }, [comment, cta, ctaNode, like, share, testID]);
 
   return (
     <Card borderRadius={borderRadius} elevation={elevation} gap={2} testID={testID} {...cardProps}>

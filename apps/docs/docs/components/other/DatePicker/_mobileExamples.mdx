@@ -193,9 +193,9 @@ function Example() {
 
 DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/) and [Calendar](/components/other/Calendar/).
 
-### Compact
+### Sizes
 
-Use the `compact` prop for a smaller input size.
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
 
 ```jsx
 function Example() {
@@ -203,25 +203,15 @@ function Example() {
   const [error, setError] = useState(null);
 
   return (
-    <VStack gap={3}>
-      <DatePicker
-        date={date}
-        error={error}
-        onChangeDate={setDate}
-        onErrorDate={setError}
-        label="Default size"
-        invalidDateError="Please enter a valid date"
-      />
-      <DatePicker
-        compact
-        date={date}
-        error={error}
-        onChangeDate={setDate}
-        onErrorDate={setError}
-        label="Compact size"
-        invalidDateError="Please enter a valid date"
-      />
-    </VStack>
+    <DatePicker
+      size="s"
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Start date"
+      invalidDateError="Please enter a valid date"
+    />
   );
 }
 ```
@@ -354,12 +344,12 @@ function Example() {
         invalidDateError="Please enter a valid date"
       />
       <DatePicker
-        compact
+        size="s"
         date={date}
         error={error}
         onChangeDate={setDate}
         onErrorDate={setError}
-        label="Compact inside label"
+        label="Small inside label"
         labelVariant="inside"
         invalidDateError="Please enter a valid date"
       />

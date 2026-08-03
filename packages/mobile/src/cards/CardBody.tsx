@@ -64,8 +64,15 @@ export type CardBodyBaseProps = Pick<
 
 export type CardBodyProps = CardBodyBaseProps & BoxProps;
 
-type CardBodyActionProps = ButtonProps & {
+// Cards are not sizable, so `size` stays off this wrapper's API and density remains a card feature
+// under `compact`, translated onto Button's size scale below.
+type CardBodyActionProps = Omit<ButtonProps, 'compact' | 'size'> & {
   onPress?: PressableProps['onPress'];
+  /**
+   * Renders a denser action button.
+   * @default true
+   */
+  compact?: boolean;
 };
 
 const CardBodyAction = memo(function CardBodyAction({
@@ -80,9 +87,10 @@ const CardBodyAction = memo(function CardBodyAction({
   return (
     <Button
       noScaleOnPress
-      compact={compact}
       flush={flush}
       numberOfLines={numberOfLines}
+      // `undefined` rather than a hardcoded `l` so Button keeps owning its own default size.
+      size={compact ? 's' : undefined}
       transparent={transparent}
       variant={variant}
       {...props}

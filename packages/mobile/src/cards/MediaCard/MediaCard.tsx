@@ -1,20 +1,20 @@
-import { memo, useCallback, useMemo } from 'react';
-import type { PressableStateCallbackType, StyleProp, View, ViewStyle } from 'react-native';
+import { memo } from 'react';
+import type { StyleProp, View, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
-import { CardRoot, type CardRootProps } from '../CardRoot';
+import { CardRoot, type CardRootBaseProps } from '../CardRoot';
 
 import { MediaCardLayout, type MediaCardLayoutProps } from './MediaCardLayout';
 
-export type MediaCardBaseProps = MediaCardLayoutProps;
+export type MediaCardBaseProps = MediaCardLayoutProps & Omit<CardRootBaseProps, 'children'>;
 
-export type MediaCardProps = MediaCardBaseProps &
-  Omit<CardRootProps, 'children'> & {
-    styles?: {
-      /** Root element */
-      root?: StyleProp<ViewStyle>;
-    };
+export type MediaCardProps = MediaCardBaseProps & {
+  style?: StyleProp<ViewStyle>;
+  styles?: {
+    /** Root element */
+    root?: StyleProp<ViewStyle>;
   };
+};
 
 const mediaCardContainerProps = {
   borderRadius: 500 as ThemeVars.BorderRadius,

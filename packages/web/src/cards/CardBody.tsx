@@ -119,7 +119,6 @@ export const CardBody = memo(function CardBody({
     if (actionLabel && onActionPress) {
       return (
         <Button
-          compact
           noScaleOnPress
           transparent
           accessibilityLabel={accessibilityLabel ?? actionLabel}
@@ -127,6 +126,7 @@ export const CardBody = memo(function CardBody({
           flush="start"
           numberOfLines={3}
           onClick={onActionPress}
+          size="s"
           testID={`${testID}-action`}
           variant="primary"
         >

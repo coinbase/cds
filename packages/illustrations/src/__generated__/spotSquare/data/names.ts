@@ -221,6 +221,7 @@ const names: SpotSquareName[] = [
   'pieChartWithArrowBlue',
   'pixBankDeposits',
   'pixDeposits',
+  'playButton',
   'portfolioPerformance',
   'poweredByEthereum',
   'predictionsMarkets',

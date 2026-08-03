@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-mobile",
-  "version": "9.6.6",
+  "version": "9.10.2",
   "description": "Coinbase Design System - Mobile",
   "repository": {
     "type": "git",
@@ -28,6 +28,10 @@
     "./alpha/combobox": {
       "types": "./dts/alpha/combobox/index.d.ts",
       "default": "./esm/alpha/combobox/index.js"
+    },
+    "./alpha/data-card": {
+      "types": "./dts/alpha/data-card/index.d.ts",
+      "default": "./esm/alpha/data-card/index.js"
     },
     "./alpha/select": {
       "types": "./dts/alpha/select/index.d.ts",
@@ -60,6 +64,14 @@
     "./cards/ContentCard": {
       "types": "./dts/cards/ContentCard/index.d.ts",
       "default": "./esm/cards/ContentCard/index.js"
+    },
+    "./cards/MediaCard": {
+      "types": "./dts/cards/MediaCard/index.d.ts",
+      "default": "./esm/cards/MediaCard/index.js"
+    },
+    "./cards/MessagingCard": {
+      "types": "./dts/cards/MessagingCard/index.d.ts",
+      "default": "./esm/cards/MessagingCard/index.js"
     },
     "./carousel": {
       "types": "./dts/carousel/index.d.ts",

@@ -1,3 +1,5 @@
+/* global afterAll, describe, it */
+
 import { RuleTester } from '@typescript-eslint/rule-tester';
 
 import rule from './index.mjs';
@@ -620,6 +622,343 @@ describe("'safely-spread-props' rule", () => {
             data: {
               componentName: 'List',
               invalidProps: 'title, showHeader',
+            },
+          },
+        ],
+      },
+    ],
+  });
+
+  ruleTester.run('safely-spread-props - polymorphic components', rule, {
+    valid: [
+      {
+        code: `
+        type ExtendableProps<BaseProps, OverrideProps> = OverrideProps & Omit<BaseProps, keyof OverrideProps>;
+
+        type PolymorphicProps<AsComponent extends React.ElementType, Props> = ExtendableProps<
+          React.ComponentPropsWithoutRef<AsComponent>,
+          Props & { as?: AsComponent }
+        >;
+
+        type StackBaseProps = {
+          gap?: number;
+        };
+
+        type StackProps<AsComponent extends React.ElementType = 'div'> = PolymorphicProps<
+          AsComponent,
+          StackBaseProps
+        >;
+
+        const VStack = <AsComponent extends React.ElementType = 'div'>(
+          props: StackProps<AsComponent>,
+        ) => <div>{props.children}</div>;
+
+        type HeadingProps = {
+          className?: string;
+          gap?: number;
+        };
+
+        function Heading({ ...stackProps }: HeadingProps) {
+          return <VStack as="h3" {...stackProps} />;
+        }
+      `,
+        filename: 'valid-polymorphic-class-name.tsx',
+      },
+      {
+        code: `
+        type PolymorphicProps<AsComponent extends React.ElementType> =
+          React.ComponentPropsWithoutRef<AsComponent> & { as?: AsComponent };
+
+        const VStack = <AsComponent extends React.ElementType = 'div'>(
+          props: PolymorphicProps<AsComponent>,
+        ) => <div>{props.children}</div>;
+
+        type LinkProps = {
+          href: string;
+        };
+
+        function Link({ ...linkProps }: LinkProps) {
+          return <VStack as={'a'} {...linkProps} />;
+        }
+      `,
+        filename: 'valid-polymorphic-expression-literal.tsx',
+      },
+      {
+        code: `
+        type PolymorphicProps<AsComponent extends React.ElementType> =
+          React.ComponentPropsWithoutRef<AsComponent> & { as?: AsComponent };
+
+        const VStack = <AsComponent extends React.ElementType = 'div'>(
+          props: PolymorphicProps<AsComponent>,
+        ) => <div>{props.children}</div>;
+
+        type LinkProps = {
+          href: string;
+        };
+
+        function Link({ ...linkProps }: LinkProps) {
+          const tag: React.ElementType = 'a';
+          return <VStack as={tag} {...linkProps} />;
+        }
+      `,
+        filename: 'valid-polymorphic-dynamic-element.tsx',
+      },
+    ],
+    invalid: [
+      {
+        code: `
+        type ExtendableProps<BaseProps, OverrideProps> = OverrideProps & Omit<BaseProps, keyof OverrideProps>;
+
+        type PolymorphicProps<AsComponent extends React.ElementType, Props> = ExtendableProps<
+          React.ComponentPropsWithoutRef<AsComponent>,
+          Props & { as?: AsComponent }
+        >;
+
+        type StackBaseProps = {
+          gap?: number;
+        };
+
+        type StackProps<AsComponent extends React.ElementType = 'div'> = PolymorphicProps<
+          AsComponent,
+          StackBaseProps
+        >;
+
+        const VStack = <AsComponent extends React.ElementType = 'div'>(
+          props: StackProps<AsComponent>,
+        ) => <div>{props.children}</div>;
+
+        type HeadingProps = {
+          className?: string;
+          gap?: number;
+          trackingId: string;
+        };
+
+        function Heading({ ...stackProps }: HeadingProps) {
+          return <VStack as="h3" {...stackProps} />;
+        }
+      `,
+        filename: 'invalid-polymorphic-extra-prop.tsx',
+        errors: [
+          {
+            messageId: 'invalidSpreadPropsWithDetails',
+            data: {
+              componentName: 'VStack',
+              invalidProps: 'trackingId',
+            },
+          },
+        ],
+      },
+    ],
+  });
+
+  ruleTester.run('safely-spread-props - higher-order components', rule, {
+    valid: [
+      {
+        code: `
+        type ButtonProps = {
+          label: string;
+          onPress?: () => void;
+        };
+
+        function Button(props: ButtonProps) {
+          return <button onClick={props.onPress}>{props.label}</button>;
+        }
+
+        declare function withStyle<Props>(
+          component: (props: Props) => React.ReactNode,
+        ): (props: { style?: React.CSSProperties }) => React.ReactNode;
+
+        const styleHoc = withStyle;
+        const ButtonAlias = Button;
+        const StyledButton = styleHoc(ButtonAlias);
+        const StyledButtonAlias = StyledButton;
+
+        type StyledButtonProps = ButtonProps & {
+          style?: React.CSSProperties;
+        };
+
+        function Example({ ...props }: StyledButtonProps) {
+          return <StyledButtonAlias {...props} />;
+        }
+      `,
+        filename: 'valid-arbitrary-hoc-alias.tsx',
+      },
+      {
+        code: `
+        type ButtonProps = {
+          label: string;
+        };
+
+        function Button(props: ButtonProps) {
+          return <button>{props.label}</button>;
+        }
+
+        declare function withStyle<Props>(
+          component: (props: Props) => React.ReactNode,
+        ): (props: { style?: React.CSSProperties }) => React.ReactNode;
+
+        declare function withMotion<Props>(
+          component: (props: Props) => React.ReactNode,
+        ): (props: { motion?: boolean }) => React.ReactNode;
+
+        const EnhancedButton = withStyle(withMotion(Button));
+
+        type EnhancedButtonProps = ButtonProps & {
+          style?: React.CSSProperties;
+          motion?: boolean;
+        };
+
+        function Example({ ...props }: EnhancedButtonProps) {
+          return <EnhancedButton {...props} />;
+        }
+      `,
+        filename: 'valid-nested-hocs.tsx',
+      },
+      {
+        code: `
+        type ButtonProps = {
+          label: string;
+        };
+
+        function Button(props: ButtonProps) {
+          return <button>{props.label}</button>;
+        }
+
+        declare function withStyle<Props>(
+          component: (props: Props) => React.ReactNode,
+        ): (props: { style?: React.CSSProperties }) => React.ReactNode;
+
+        declare function animated<Props>(
+          component: (props: Props) => React.ReactNode,
+        ): (props: { style?: React.CSSProperties }) => React.ReactNode;
+
+        const AnimatedButton = animated(Button);
+
+        type AnimatedButtonProps = ButtonProps & {
+          style?: React.CSSProperties;
+        };
+
+        function Example({ ...props }: AnimatedButtonProps) {
+          return <AnimatedButton {...props} />;
+        }
+      `,
+        filename: 'valid-react-spring-style-hoc.tsx',
+      },
+    ],
+    invalid: [
+      {
+        code: `
+        type ButtonProps = {
+          label: string;
+        };
+
+        function Button(props: ButtonProps) {
+          return <button>{props.label}</button>;
+        }
+
+        declare function withStyle<Props>(
+          component: (props: Props) => React.ReactNode,
+        ): (props: { style?: React.CSSProperties }) => React.ReactNode;
+
+        declare function withMotion<Props>(
+          component: (props: Props) => React.ReactNode,
+        ): (props: { motion?: boolean }) => React.ReactNode;
+
+        const EnhancedButton = withStyle(withMotion(Button));
+
+        type EnhancedButtonProps = ButtonProps & {
+          style?: React.CSSProperties;
+          motion?: boolean;
+          trackingId: string;
+        };
+
+        function Example({ ...props }: EnhancedButtonProps) {
+          return <EnhancedButton {...props} />;
+        }
+      `,
+        filename: 'invalid-nested-hocs-extra-prop.tsx',
+        errors: [
+          {
+            messageId: 'invalidSpreadPropsWithDetails',
+            data: {
+              componentName: 'EnhancedButton',
+              invalidProps: 'trackingId',
+            },
+          },
+        ],
+      },
+      {
+        code: `
+        type ButtonProps = {
+          buttonOnly: string;
+        };
+
+        type PublicProps = {
+          publicOnly: string;
+        };
+
+        function Button(props: ButtonProps) {
+          return <button>{props.buttonOnly}</button>;
+        }
+
+        declare function createComponent(
+          component: (props: ButtonProps) => React.ReactNode,
+        ): (props: PublicProps) => React.ReactNode;
+
+        const PublicComponent = createComponent(Button);
+
+        type ExampleProps = PublicProps & ButtonProps;
+
+        function Example({ ...props }: ExampleProps) {
+          return <PublicComponent {...props} />;
+        }
+      `,
+        filename: 'invalid-non-forwarding-component-factory.tsx',
+        errors: [
+          {
+            messageId: 'invalidSpreadPropsWithDetails',
+            data: {
+              componentName: 'PublicComponent',
+              invalidProps: 'buttonOnly',
+            },
+          },
+        ],
+      },
+      {
+        code: `
+        type ButtonProps = {
+          buttonOnly: string;
+        };
+
+        type PublicProps = {
+          publicOnly: string;
+        };
+
+        function Button(props: ButtonProps) {
+          return <button>{props.buttonOnly}</button>;
+        }
+
+        declare function withStyle<Props>(
+          component: (props: Props) => React.ReactNode,
+        ): (props: { style?: React.CSSProperties }) => React.ReactNode;
+
+        declare function createComponent(
+          component: (props: ButtonProps) => React.ReactNode,
+        ): (props: PublicProps) => React.ReactNode;
+
+        function Example({ ...props }: PublicProps & ButtonProps) {
+          const withStyle = createComponent;
+          const LocalComponent = withStyle(Button);
+          return <LocalComponent {...props} />;
+        }
+      `,
+        filename: 'invalid-shadowed-hoc-binding.tsx',
+        errors: [
+          {
+            messageId: 'invalidSpreadPropsWithDetails',
+            data: {
+              componentName: 'LocalComponent',
+              invalidProps: 'buttonOnly',
             },
           },
         ],

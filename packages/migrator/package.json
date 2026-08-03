@@ -1,6 +1,6 @@
 {
   "name": "@coinbase/cds-migrator",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Coinbase Design System - Code Migration Tools",
   "repository": {
     "type": "git",

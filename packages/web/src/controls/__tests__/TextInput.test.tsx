@@ -6,6 +6,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/test';
+import { InputIcon } from '../InputIcon';
 import { TextInput } from '../TextInput';
 
 describe('TextInput', () => {
@@ -617,5 +618,139 @@ describe('TextInput', () => {
 
     expect(inputArea).toContainElement(label);
     expect(inputArea).toContainElement(endContent);
+  });
+});
+
+describe('TextInput size', () => {
+  it('defaults to size "l" geometry', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput />
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByRole('textbox')).toHaveAttribute('data-size', 'l');
+  });
+
+  it('emits data-size="m" when size is "m"', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput size="m" />
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByRole('textbox')).toHaveAttribute('data-size', 'm');
+  });
+
+  it('emits data-size="s" when size is "s"', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput size="s" />
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByRole('textbox')).toHaveAttribute('data-size', 's');
+  });
+
+  it('maps compact (alone) to size "s" geometry and forces the label into the start slot', () => {
+    const startTestID = 'start-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput compact label="Label" testIDMap={{ start: startTestID }} />
+      </DefaultThemeProvider>,
+    );
+
+    const input = screen.getByRole('textbox');
+    expect(input).toHaveAttribute('data-size', 's');
+    expect(input).toHaveAttribute('data-compact', 'true');
+    expect(screen.getByTestId(startTestID)).toHaveTextContent('Label');
+  });
+
+  it('lets size win over compact for geometry and does not force the label inline', () => {
+    const startTestID = 'start-test';
+    const labelTestID = 'label-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          compact
+          label="Label"
+          size="m"
+          testIDMap={{ label: labelTestID, start: startTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const input = screen.getByRole('textbox');
+    expect(input).toHaveAttribute('data-size', 'm');
+    expect(input).toHaveAttribute('data-compact', 'true');
+    expect(screen.queryByTestId(startTestID)).toBeNull();
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Label');
+  });
+
+  it('emits data-compact whenever compact is truthy, even when size wins', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput compact size="s" />
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByRole('textbox')).toHaveAttribute('data-compact', 'true');
+  });
+
+  it('decouples label placement from size: size="s" keeps the label outside by default', () => {
+    const labelTestID = 'label-test';
+    const startTestID = 'start-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput label="Label" size="s" testIDMap={{ label: labelTestID, start: startTestID }} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Label');
+    expect(screen.queryByTestId(startTestID)).toBeNull();
+  });
+});
+
+describe('TextInput inline label spacing', () => {
+  it('marks an inline label so it gets a wider gap to the input text than a start node', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput compact label="Label" />
+      </DefaultThemeProvider>,
+    );
+
+    const input = screen.getByRole('textbox');
+    expect(input).toHaveAttribute('data-inlinelabel', 'true');
+    expect(input).toHaveAttribute('data-start', 'false');
+  });
+
+  it('does not mark an inline label when there is no label to place inline', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput compact />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('textbox')).toHaveAttribute('data-inlinelabel', 'false');
+  });
+
+  it('lets a start node take precedence over an inline label, since it neighbors the input', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput compact label="Label" start={<InputIcon name="search" />} />
+      </DefaultThemeProvider>,
+    );
+
+    const input = screen.getByRole('textbox');
+    expect(input).toHaveAttribute('data-inlinelabel', 'true');
+    expect(input).toHaveAttribute('data-start', 'true');
+  });
+
+  it('does not mark a stacked inside label as inline', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput label="Label" labelVariant="inside" size="l" />
+      </DefaultThemeProvider>,
+    );
+
+    const input = screen.getByRole('textbox');
+    expect(input).toHaveAttribute('data-inlinelabel', 'false');
+    expect(input).toHaveAttribute('data-labelvariant', 'inside');
   });
 });

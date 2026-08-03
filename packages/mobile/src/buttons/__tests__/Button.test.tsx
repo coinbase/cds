@@ -173,6 +173,152 @@ describe('Button', () => {
     expect(screen.getByTestId('custom-react-node')).not.toBeNull();
   });
 
+  describe('size', () => {
+    const getGeometry = () => {
+      const containerNode = screen
+        .UNSAFE_getAllByProps({})
+        .find(
+          (node) =>
+            node.props &&
+            node.props.borderRadius !== undefined &&
+            node.props.feedback !== undefined,
+        );
+      const paddingNode = screen
+        .UNSAFE_getAllByProps({})
+        .find(
+          (node) =>
+            node.props && node.props.paddingX !== undefined && node.props.paddingY !== undefined,
+        );
+      const textNode = screen
+        .UNSAFE_getAllByProps({ testID: 'text-headline' })
+        .find((node) => 'font' in node.props);
+      return {
+        borderRadius: containerNode?.props.borderRadius,
+        feedback: containerNode?.props.feedback,
+        paddingX: paddingNode?.props.paddingX,
+        paddingY: paddingNode?.props.paddingY,
+        font: textNode?.props.font,
+      };
+    };
+
+    it('defaults to size "l" geometry', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button>Child</Button>
+        </DefaultThemeProvider>,
+      );
+      expect(getGeometry()).toMatchObject({
+        borderRadius: 900,
+        paddingX: 4,
+        paddingY: 2,
+        font: 'headline',
+        feedback: 'normal',
+      });
+    });
+
+    it('resolves each t-shirt size to the expected geometry', () => {
+      const cases = [
+        {
+          size: 'xs',
+          expected: {
+            borderRadius: 700,
+            paddingX: 2,
+            paddingY: 0.75,
+            font: 'label1',
+            feedback: 'light',
+          },
+        },
+        {
+          size: 's',
+          expected: {
+            borderRadius: 700,
+            paddingX: 2,
+            paddingY: 1,
+            font: 'headline',
+            feedback: 'light',
+          },
+        },
+        {
+          size: 'm',
+          expected: {
+            borderRadius: 900,
+            paddingX: 3,
+            paddingY: 1.5,
+            font: 'headline',
+            feedback: 'normal',
+          },
+        },
+        {
+          size: 'l',
+          expected: {
+            borderRadius: 900,
+            paddingX: 4,
+            paddingY: 2,
+            font: 'headline',
+            feedback: 'normal',
+          },
+        },
+      ] as const;
+
+      cases.forEach(({ size, expected }) => {
+        const { unmount } = render(
+          <DefaultThemeProvider>
+            <Button size={size}>Child</Button>
+          </DefaultThemeProvider>,
+        );
+        expect(getGeometry()).toMatchObject(expected);
+        unmount();
+      });
+    });
+
+    it('renders `compact` alone as the "s" geometry', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button compact>Child</Button>
+        </DefaultThemeProvider>,
+      );
+      expect(getGeometry()).toMatchObject({
+        borderRadius: 700,
+        paddingX: 2,
+        paddingY: 1,
+        font: 'headline',
+        feedback: 'light',
+      });
+    });
+
+    it('lets `size` win over `compact` for geometry', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button compact size="m">
+            Child
+          </Button>
+        </DefaultThemeProvider>,
+      );
+      expect(getGeometry()).toMatchObject({
+        borderRadius: 900,
+        paddingX: 3,
+        paddingY: 1.5,
+        feedback: 'normal',
+      });
+    });
+
+    it('lets explicit style props override the size-derived defaults', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button borderRadius={300} feedback="normal" paddingX={6} paddingY={5} size="xs">
+            Child
+          </Button>
+        </DefaultThemeProvider>,
+      );
+      expect(getGeometry()).toMatchObject({
+        borderRadius: 300,
+        paddingX: 6,
+        paddingY: 5,
+        feedback: 'normal',
+      });
+    });
+  });
+
   it('passes font props to internal text', () => {
     render(
       <DefaultThemeProvider>

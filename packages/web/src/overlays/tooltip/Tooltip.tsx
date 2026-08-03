@@ -1,9 +1,5 @@
 import React, { cloneElement, memo, useCallback, useMemo, useRef } from 'react';
-import {
-  tooltipMaxWidth,
-  tooltipPaddingX,
-  tooltipPaddingY,
-} from '@coinbase/cds-common/tokens/tooltip';
+import { tooltipPaddingX, tooltipPaddingY } from '@coinbase/cds-common/tokens/tooltip';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Popover } from '../popover/Popover';
@@ -42,7 +38,7 @@ export const Tooltip = memo((_props: TooltipProps) => {
     closeDelay,
     background = 'bg',
     borderRadius = 200,
-    maxWidth = tooltipMaxWidth,
+    maxWidth,
     paddingX = tooltipPaddingX,
     paddingY = tooltipPaddingY,
     color = 'fg',

@@ -6,10 +6,8 @@ import figma from 'figma';
 const instance = figma.selectedInstance;
 
 // --- property extractions ---
-const compact = instance.getEnum('compact', {
-  true: true,
-  false: false,
-});
+// size maps directly to the t-shirt size prop; 'l' is the default
+const size = instance.getEnum('size', { l: 'l', m: 'm', s: 's' });
 const disabled = instance.getEnum('disabled', {
   true: true,
   false: false,
@@ -22,7 +20,7 @@ const placeholder =
 // eslint-disable-next-line no-restricted-exports
 export default {
   example: figma.code`<SearchInput
-  ${compact ? 'compact' : ''}
+  ${size !== 'l' ? figma.code`size="${size}"` : ''}
   ${disabled ? 'disabled' : ''}
   ${placeholder ? figma.code`placeholder="${placeholder}"` : ''}
   onChangeText={(text) => {}}

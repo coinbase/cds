@@ -13,6 +13,15 @@ import type { PressableDefaultElement, PressableProps } from '../../system/Press
 export type SelectType = 'single' | 'multi';
 
 /**
+ * T-shirt size scale for the Select control. The Figma Select component set exposes
+ * three sizes (`s | m | l`); there is intentionally no `xs`.
+ */
+export type SelectSize = 's' | 'm' | 'l';
+
+/** Size the Select control resolves to when neither `size` nor the deprecated `compact` is set. */
+export const defaultSelectSize: SelectSize = 'l';
+
+/**
  * Configuration for a single option in the Select component
  */
 export type SelectOption<SelectOptionValue extends string = string> = {
@@ -356,6 +365,11 @@ export type SelectDropdownProps<
       /** Option group element */
       optionGroup?: string;
     };
+    // Unlike the control, the dropdown deliberately keeps a binary density toggle instead of
+    // adopting the t-shirt `size` scale for now: option rows only have two densities, so a third
+    // step would be meaningless. `Select` owns the translation, deriving this from its own
+    // resolved size (`size === 's'`), so consumers set `size` on `Select` and never set this
+    // directly. Revisit if option rows ever need per-size spacing.
     /** Whether to use compact styling for the dropdown */
     compact?: boolean;
     /** Custom component to render individual options */
@@ -450,8 +464,17 @@ export type SelectControlProps<
     blendStyles?: InteractableBlendStyles;
     /** ARIA haspopup attribute value */
     ariaHaspopup?: AriaHasPopupType;
-    /** Whether to use compact styling for the control */
+    /**
+     * Whether to use compact styling for the control.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     compact?: boolean;
+    /**
+     * Set the size of the select input.
+     * @default l
+     */
+    size?: SelectSize;
     /** Inline styles for the control element */
     style?: React.CSSProperties;
     /** Custom styles for individual elements of the control */
@@ -544,8 +567,17 @@ export type SelectBaseProps<
     setOpen?: (open: boolean | ((open: boolean) => boolean)) => void;
     /** Whether clicking outside the dropdown should close it */
     disableClickOutsideClose?: boolean;
-    /** Whether to use compact styling for the select */
+    /**
+     * Whether to use compact styling for the select.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     compact?: boolean;
+    /**
+     * Set the size of the select input.
+     * @default l
+     */
+    size?: SelectSize;
     /** Initial open state when component mounts (uncontrolled mode) */
     defaultOpen?: boolean;
     /** Maximum number of selected options to show before truncating */

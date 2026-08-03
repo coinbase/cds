@@ -7,8 +7,6 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Avatar, type AvatarBaseProps } from '../media/Avatar';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 
-import type { ButtonBaseProps } from './Button';
-
 export const avatarButtonDefaultElement = 'button';
 
 type DeprecatedAvatarButtonBorderProps = {
@@ -104,11 +102,19 @@ export type AvatarButtonDefaultElement = typeof avatarButtonDefaultElement;
 export type AvatarButtonBaseProps = Polymorphic.ExtendableProps<
   Omit<PressableBaseProps, 'children'>,
   DeprecatedAvatarButtonBorderProps &
-    Pick<ButtonBaseProps, 'compact'> &
     Pick<
       AvatarBaseProps,
       'alt' | 'src' | 'colorScheme' | 'shape' | 'borderColor' | 'name' | 'selected'
-    >
+    > & {
+      // Declared here rather than picked from `ButtonBaseProps` so it does not inherit Button's
+      // `compact` → `size="s"` deprecation: `AvatarButton` has no `size` prop and maps `compact`
+      // onto the Avatar scale instead, so it keeps a binary density toggle.
+      /**
+       * Renders the smaller `xl` avatar instead of the default `xxxl`.
+       * @default false
+       */
+      compact?: boolean;
+    }
 >;
 
 export type AvatarButtonProps<AsComponent extends React.ElementType> = Polymorphic.Props<

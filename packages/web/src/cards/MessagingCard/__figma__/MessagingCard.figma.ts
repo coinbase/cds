@@ -1,5 +1,5 @@
 // url=https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=72941-20711
-// source=packages/web/src/cards/MessagingCard/index.tsx
+// source=packages/web/src/cards/MessagingCard/MessagingCard.tsx
 // component=MessagingCard
 import figma from 'figma';
 
@@ -65,7 +65,7 @@ export default {
   ${actionCode ? figma.code`action={${actionCode}}` : ''}
   ${showDismiss ? 'onDismissButtonClick={() => {}}' : ''}
 />`,
-  imports: ['import { MessagingCard } from "@coinbase/cds-web/cards"'],
+  imports: ['import { MessagingCard } from "@coinbase/cds-web/cards/MessagingCard"'],
   id: 'messaging-card',
   metadata: { nestable: false },
 };

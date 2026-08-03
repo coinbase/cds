@@ -3,11 +3,15 @@ import type { StyleProp, ViewStyle } from 'react-native';
 import type { IconButtonVariant } from '@coinbase/cds-common/types/IconButtonBaseProps';
 import type { IconName } from '@coinbase/cds-common/types/IconName';
 
+import type { IconButtonSize } from '../buttons/IconButton';
 import { IconButton } from '../buttons/IconButton';
 import { useTheme } from '../hooks/useTheme';
 import { HStack } from '../layout/HStack';
 
 import type { CarouselNavigationComponentProps } from './Carousel';
+
+/** Size the navigation buttons render at when neither `iconButtonSize` nor `compact` is set. */
+const defaultIconButtonSize: IconButtonSize = 's';
 
 export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & {
   /**
@@ -48,7 +52,14 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
    */
   variant?: IconButtonVariant;
   /**
+   * Size of the navigation icon buttons.
+   * @default 's'
+   */
+  iconButtonSize?: IconButtonSize;
+  /**
    * Whether the icon button is compact.
+   * @deprecated Use `iconButtonSize="s"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   compact?: boolean;
   /**
@@ -87,6 +98,7 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
   startAutoplayAccessibilityLabel = 'Play Carousel',
   stopAutoplayAccessibilityLabel = 'Pause Carousel',
   variant = 'secondary',
+  iconButtonSize,
   compact,
   previousIcon = 'caretLeft',
   nextIcon = 'caretRight',
@@ -104,6 +116,12 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
     [style, styles?.root, theme.space],
   );
 
+  // `compact` was forwarded straight to `IconButton`, which defaults its own `compact` to `true` —
+  // so these buttons have always rendered dense unless a caller explicitly passed `compact={false}`,
+  // which then fell back to IconButton's `l`. `iconButtonSize` wins when set.
+  const resolvedIconButtonSize =
+    iconButtonSize ?? ((compact ?? true) ? defaultIconButtonSize : 'l');
+
   return (
     <HStack gap={1} style={rootStyles}>
       {autoplay && (
@@ -111,9 +129,9 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
           accessibilityLabel={
             isAutoplayStopped ? startAutoplayAccessibilityLabel : stopAutoplayAccessibilityLabel
           }
-          compact={compact}
           name={isAutoplayStopped ? startIcon : stopIcon}
           onPress={onToggleAutoplay}
+          size={resolvedIconButtonSize}
           style={styles?.autoplayButton}
           testID={testIDMap?.autoplayButton ?? 'carousel-autoplay-button'}
           variant={variant}
@@ -121,20 +139,20 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
       )}
       <IconButton
         accessibilityLabel={previousPageAccessibilityLabel}
-        compact={compact}
         disabled={disableGoPrevious}
         name={previousIcon}
         onPress={onGoPrevious}
+        size={resolvedIconButtonSize}
         style={styles?.previousButton}
         testID={testIDMap?.previousButton ?? 'carousel-previous-button'}
         variant={variant}
       />
       <IconButton
         accessibilityLabel={nextPageAccessibilityLabel}
-        compact={compact}
         disabled={disableGoNext}
         name={nextIcon}
         onPress={onGoNext}
+        size={resolvedIconButtonSize}
         style={styles?.nextButton}
         testID={testIDMap?.nextButton ?? 'carousel-next-button'}
         variant={variant}

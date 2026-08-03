@@ -333,6 +333,30 @@ src/transforms/
     └── format-currency.ts
 ```
 
+### Self-contained folders
+
+A transform can also be a folder with an `index.ts` entry, which keeps its tests and fixtures
+beside it. Both layouts resolve from the same short path, so `-t compact-to-size` finds either
+`compact-to-size.ts` or `compact-to-size/index.ts`:
+
+```
+src/transforms/
+└── compact-to-size/
+    ├── __testfixtures__/
+    │   ├── e2e-web-transfer-form.input.tsx
+    │   └── e2e-web-transfer-form.output.tsx
+    ├── __tests__/
+    │   └── compact-to-size.test.ts
+    └── index.ts
+```
+
+Pass `'index'` as the transform name in `runTest`, since fixtures resolve relative to the
+`__tests__` directory's parent:
+
+```ts
+runTest(__dirname, 'index', {}, 'e2e-web-transfer-form', tsxTestOptions);
+```
+
 ### In manifest.json
 
 ```json

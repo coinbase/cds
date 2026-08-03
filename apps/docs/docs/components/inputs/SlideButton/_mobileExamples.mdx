@@ -64,9 +64,9 @@ function Example() {
 }
 ```
 
-## Compact
+## Sizes
 
-Use the `compact` prop to reduce the height, border-radius and padding of the button:
+`size` accepts `s`, `m`, and `l`. Defaults to `l`. The size controls the button's height, border-radius, inner padding, and handle icon size.
 
 ```jsx
 function Example() {
@@ -78,7 +78,7 @@ function Example() {
       onChange={setChecked}
       uncheckedLabel="Swipe to confirm"
       checkedLabel="Confirming..."
-      compact
+      size="s"
     />
   );
 }

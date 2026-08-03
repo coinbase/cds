@@ -3,11 +3,15 @@ import type { IconButtonVariant } from '@coinbase/cds-common/types/IconButtonBas
 import type { IconName } from '@coinbase/cds-common/types/IconName';
 import { css } from '@linaria/core';
 
+import type { IconButtonSize } from '../buttons/IconButton';
 import { IconButton } from '../buttons/IconButton';
 import { cx } from '../cx';
 import { HStack } from '../layout/HStack';
 
 import type { CarouselNavigationComponentProps } from './Carousel';
+
+/** Size the navigation buttons render at when neither `iconButtonSize` nor `compact` is set. */
+const defaultIconButtonSize: IconButtonSize = 's';
 
 const navigationCss = css`
   padding: var(--space-0_5) 0;
@@ -62,7 +66,14 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
    */
   variant?: IconButtonVariant;
   /**
+   * Size of the navigation icon buttons.
+   * @default 's'
+   */
+  iconButtonSize?: IconButtonSize;
+  /**
    * Whether the icon button is compact.
+   * @deprecated Use `iconButtonSize="s"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   compact?: boolean;
   /**
@@ -130,6 +141,7 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
   startIcon = 'play',
   stopIcon = 'pause',
   variant = 'secondary',
+  iconButtonSize,
   compact,
   className,
   classNames,
@@ -138,6 +150,12 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
   testIDMap,
   hideUnlessFocused,
 }: DefaultCarouselNavigationProps) {
+  // `compact` was forwarded straight to `IconButton`, which defaults its own `compact` to `true` —
+  // so these buttons have always rendered dense unless a caller explicitly passed `compact={false}`,
+  // which then fell back to IconButton's `l`. `iconButtonSize` wins when set.
+  const resolvedIconButtonSize =
+    iconButtonSize ?? ((compact ?? true) ? defaultIconButtonSize : 'l');
+
   return (
     <HStack
       className={cx(navigationCss, className, classNames?.root)}
@@ -151,9 +169,9 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
             isAutoplayStopped ? startAutoplayAccessibilityLabel : stopAutoplayAccessibilityLabel
           }
           className={classNames?.autoplayButton}
-          compact={compact}
           name={isAutoplayStopped ? startIcon : stopIcon}
           onClick={onToggleAutoplay}
+          size={resolvedIconButtonSize}
           style={styles?.autoplayButton}
           testID={testIDMap?.autoplayButton ?? 'carousel-autoplay-button'}
           variant={variant}
@@ -162,10 +180,10 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
       <IconButton
         accessibilityLabel={previousPageAccessibilityLabel}
         className={classNames?.previousButton}
-        compact={compact}
         disabled={disableGoPrevious}
         name={previousIcon}
         onClick={onGoPrevious}
+        size={resolvedIconButtonSize}
         style={styles?.previousButton}
         testID={testIDMap?.previousButton ?? 'carousel-previous-button'}
         variant={variant}
@@ -173,10 +191,10 @@ export const DefaultCarouselNavigation = memo(function DefaultCarouselNavigation
       <IconButton
         accessibilityLabel={nextPageAccessibilityLabel}
         className={classNames?.nextButton}
-        compact={compact}
         disabled={disableGoNext}
         name={nextIcon}
         onClick={onGoNext}
+        size={resolvedIconButtonSize}
         style={styles?.nextButton}
         testID={testIDMap?.nextButton ?? 'carousel-next-button'}
         variant={variant}

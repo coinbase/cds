@@ -6,7 +6,7 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
 import type { BoxProps } from '../../../layout';
 import { RemoteImage, type RemoteImageProps } from '../../../media/RemoteImage';
-import { type TabbedChipProps, TabbedChips } from '../TabbedChips';
+import { type TabbedChipProps, TabbedChips, type TabbedChipsProps } from '../TabbedChips';
 
 const defaultTabs: TabValue[] = sampleTabs.slice(0, 5);
 
@@ -20,12 +20,14 @@ const enumTabs: TabValue<TabId>[] = [
 
 const Demo = ({
   tabs = defaultTabs,
-  compact = false,
+  compact,
+  size,
   width,
   autoScrollOffset,
 }: {
   tabs?: TabValue[];
   compact?: boolean;
+  size?: TabbedChipsProps['size'];
   width?: BoxProps['width'];
   autoScrollOffset?: number;
 }) => {
@@ -36,6 +38,7 @@ const Demo = ({
       autoScrollOffset={autoScrollOffset}
       compact={compact}
       onChange={setValue}
+      size={size}
       tabs={tabs}
       width={width}
     />
@@ -54,7 +57,7 @@ const assetIconProps: RemoteImageProps = {
   width: 24,
 };
 
-const compactAssetIconProps: RemoteImageProps = {
+const smallAssetIconProps: RemoteImageProps = {
   height: 16,
   shape: 'circle',
   source: assets.eth.imageUrl,
@@ -66,9 +69,9 @@ const tabsWithStart: TabbedChipProps[] = defaultTabs.map((tab) => ({
   start: <RemoteImage {...assetIconProps} />,
 }));
 
-const compactTabsWithStart: TabbedChipProps[] = defaultTabs.map((tab) => ({
+const smallTabsWithStart: TabbedChipProps[] = defaultTabs.map((tab) => ({
   ...tab,
-  start: <RemoteImage {...compactAssetIconProps} />,
+  start: <RemoteImage {...smallAssetIconProps} />,
 }));
 
 const activeBackgroundTabs: TabbedChipProps[] = defaultTabs.map((tab) => ({
@@ -99,11 +102,16 @@ const TabbedChipsScreen = () => {
       <Example title="With enum values">
         <EnumDemo />
       </Example>
-      <Example title="With start">
-        <Demo tabs={tabsWithStart} />
+      <Example title="Sizes">
+        <Demo size="s" />
+        <Demo size="xs" />
       </Example>
-      <Example title="Compact with start">
-        <Demo compact tabs={compactTabsWithStart} />
+      <Example title="Deprecated compact (renders as size xs)">
+        <Demo compact />
+      </Example>
+      <Example title="Sizes with start">
+        <Demo tabs={tabsWithStart} />
+        <Demo size="xs" tabs={smallTabsWithStart} />
       </Example>
       <Example title="With auto scroll offset">
         <Demo autoScrollOffset={100} tabs={sampleTabs} />

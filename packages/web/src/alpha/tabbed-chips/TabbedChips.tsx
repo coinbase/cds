@@ -6,7 +6,7 @@ import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/Shared
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
-import type { ChipProps } from '../../chips/ChipProps';
+import type { ChipProps, ChipSize } from '../../chips/ChipProps';
 import { MediaChip, type MediaChipBaseProps } from '../../chips/MediaChip';
 import { cx } from '../../cx';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
@@ -110,8 +110,15 @@ export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
   /**
    * Turn on to use a compact Chip component for each tab.
    * @default false
+   * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   compact?: boolean;
+  /**
+   * Set the size of each tab chip.
+   * @default s
+   */
+  size?: ChipSize;
   /**
    * X position offset when auto-scrolling to active tab (to avoid active tab being covered by the paddle on the left side, default: 50px)
    * @default 50
@@ -180,11 +187,14 @@ const TabbedChipsComponent = memo(
       TabsActiveIndicatorComponent = DefaultTabsActiveIndicatorComponent,
       disabled,
       compact,
+      size,
       styles,
       classNames,
       autoScrollOffset = 50,
       ...accessibilityProps
     } = mergedProps;
+    // Size is driven by `size`; deprecated `compact` falls back to its legacy `xs` size.
+    const resolvedSize: ChipSize = size ?? (compact ? 'xs' : 's');
     const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
     const { scrollRef, isScrollContentOffscreenLeft, isScrollContentOffscreenRight, handleScroll } =
       useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset });
@@ -199,11 +209,11 @@ const TabbedChipsComponent = memo(
       scrollRef.current.scrollTo({ left: maxScroll, behavior: 'smooth' });
     }, [scrollRef]);
 
-    const TabComponentWithCompact = useCallback(
+    const TabComponentWithSize = useCallback(
       (props: TabValue<TabId>) => {
-        return <TabComponent compact={compact} {...props} />;
+        return <TabComponent size={resolvedSize} {...props} />;
       },
-      [TabComponent, compact],
+      [TabComponent, resolvedSize],
     );
 
     return (
@@ -222,6 +232,7 @@ const TabbedChipsComponent = memo(
           onClick={handleScrollLeft}
           paddleStyle={styles?.paddle}
           show={isScrollContentOffscreenLeft}
+          size={resolvedSize}
           variant="secondary"
         />
         <HStack
@@ -234,7 +245,7 @@ const TabbedChipsComponent = memo(
         >
           <Tabs
             ref={ref}
-            TabComponent={TabComponentWithCompact}
+            TabComponent={TabComponentWithSize}
             TabsActiveIndicatorComponent={DefaultTabsActiveIndicatorComponent}
             activeTab={activeTab || null}
             background={background}
@@ -255,6 +266,7 @@ const TabbedChipsComponent = memo(
           onClick={handleScrollRight}
           paddleStyle={styles?.paddle}
           show={isScrollContentOffscreenRight}
+          size={resolvedSize}
           variant="secondary"
         />
       </HStack>

@@ -19,12 +19,12 @@ const CoachmarkExamples = () => {
   return (
     <VStack gap={3}>
       <Coachmark
-        action={<Button>Next</Button>}
+        action={<Button variant="secondary">Next</Button>}
         content="Add up to 3 lines of body copy. Deliver your message with clarity and impact"
         title="Basic"
       />
       <Coachmark
-        action={<Button>Next</Button>}
+        action={<Button variant="secondary">Next</Button>}
         checkbox={
           <Checkbox checked={checked} onChange={toggleChecked}>
             Don&apos;t show again
@@ -34,14 +34,14 @@ const CoachmarkExamples = () => {
         title="With checkbox"
       />
       <Coachmark
-        action={<Button>Next</Button>}
+        action={<Button variant="secondary">Next</Button>}
         closeButtonAccessibilityLabel="Close"
         content="Add up to 3 lines of body copy. Deliver your message with clarity and impact"
         onClose={noop}
         title="Dismissible"
       />
       <Coachmark
-        action={<Button>Next</Button>}
+        action={<Button variant="secondary">Next</Button>}
         closeButtonAccessibilityLabel="Close"
         content={
           <VStack gap={2}>
@@ -67,7 +67,7 @@ const CoachmarkExamples = () => {
         title="Rich Content"
       />
       <Coachmark
-        action={<Button>Next</Button>}
+        action={<Button variant="secondary">Next</Button>}
         content="This SpotRectangle is in a Box with bgPrimary background."
         media={
           <Box alignItems="center" background="bgPrimary" justifyContent="center" padding={4}>
@@ -77,7 +77,7 @@ const CoachmarkExamples = () => {
         title="With a SpotRectangle"
       />
       <Coachmark
-        action={<Button>Done</Button>}
+        action={<Button variant="secondary">Done</Button>}
         content="Add up to 3 lines of body copy. Deliver your message with clarity and impact"
         title="Custom width"
         width={250}

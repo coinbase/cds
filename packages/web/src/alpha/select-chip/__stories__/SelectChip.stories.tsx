@@ -5,6 +5,7 @@ import { useMultiSelect } from '@coinbase/cds-common/select/useMultiSelect';
 import { VStack } from '../../../layout/VStack';
 import { RemoteImage } from '../../../media/RemoteImage';
 import { RemoteImageGroup } from '../../../media/RemoteImageGroup';
+import { Text } from '../../../typography/Text';
 import type { SelectOption, SelectOptionGroup, SelectType } from '../../select/Select';
 import { SelectChip } from '../SelectChip';
 
@@ -58,6 +59,54 @@ export const DefaultMulti = () => {
   );
 };
 
+export const Sizes = () => {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <VStack alignItems="flex-start" gap={2}>
+      <Text as="h4" color="fgMuted" display="block" font="label1">
+        {'size="s" (default)'}
+      </Text>
+      <SelectChip
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Choose an option"
+        size="s"
+        value={value}
+      />
+      <Text as="h4" color="fgMuted" display="block" font="label1">
+        {'size="xs"'}
+      </Text>
+      <SelectChip
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Choose an option"
+        size="xs"
+        value={value}
+      />
+      <Text as="h4" color="fgMuted" display="block" font="label1">
+        {'compact (deprecated, renders as size="xs")'}
+      </Text>
+      <SelectChip
+        compact
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Choose an option"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
+/**
+ * The `compact` prop is deprecated; it renders as `size="xs"`. Prefer `size="xs"`.
+ */
 export const Compact = () => {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },

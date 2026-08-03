@@ -277,29 +277,46 @@ function BorderlessExample() {
 }
 ```
 
-### Compact
+### Sizes
 
-Use smaller sizing with `compact`.
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
 
 ```tsx live
-function CompactExample() {
+function SizesExample() {
   const fruitOptions = [
     { value: 'apple', label: 'Apple' },
     { value: 'banana', label: 'Banana' },
     { value: 'cherry', label: 'Cherry' },
   ];
-  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  const [value, setValue] = useState(null);
 
   return (
-    <Combobox
-      compact
-      label="Compact"
-      onChange={onChange}
-      options={fruitOptions}
-      placeholder="Compact combobox..."
-      type="multi"
-      value={value}
-    />
+    <VStack gap={2}>
+      <Combobox
+        label="Small (s)"
+        onChange={setValue}
+        options={fruitOptions}
+        placeholder="Search..."
+        size="s"
+        value={value}
+      />
+      <Combobox
+        label="Medium (m)"
+        onChange={setValue}
+        options={fruitOptions}
+        placeholder="Search..."
+        size="m"
+        value={value}
+      />
+      <Combobox
+        label="Large (l) — default"
+        onChange={setValue}
+        options={fruitOptions}
+        placeholder="Search..."
+        size="l"
+        value={value}
+      />
+    </VStack>
   );
 }
 ```

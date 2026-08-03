@@ -555,6 +555,9 @@ const svgEsmMap = {
   invest: {
     themeable: () => import('../svgJs/esm/themeable/invest-4.js').then((m) => m.default as string),
   },
+  keyAdv: {
+    themeable: () => import('../svgJs/esm/themeable/keyAdv-0.js').then((m) => m.default as string),
+  },
   layeredNetworks: {
     themeable: () =>
       import('../svgJs/esm/themeable/layeredNetworks-4.js').then((m) => m.default as string),

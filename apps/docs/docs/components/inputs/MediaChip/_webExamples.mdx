@@ -57,29 +57,29 @@ MediaChip supports all six content combinations automatically.
 
 ## Styling
 
-### Compact
+### Sizes
 
-The compact variant reduces spacing for denser layouts.
+`size` accepts `xs` and `s`. Defaults to `s`.
 
-:::tip Recommended component sizes for compact chips
+:::tip Recommended media dimensions per size
 
-- Start: **16×16** circular media
-- End: **xs** size icons
+- `s` (default): **24×24** circular media, **xs** size icons
+- `xs`: **16×16** circular media, **xs** size icons
   :::
 
 ```tsx live
 <HStack flexWrap="wrap" gap={2}>
-  <MediaChip compact>Label only</MediaChip>
   <MediaChip
-    compact
-    start={<RemoteImage height={16} shape="circle" source={assets.eth.imageUrl} width={16} />}
-  />
+    size="s"
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    s
+  </MediaChip>
   <MediaChip
-    compact
-    end={<Icon active color="fg" name="caretDown" size="xs" />}
+    size="xs"
     start={<RemoteImage height={16} shape="circle" source={assets.eth.imageUrl} width={16} />}
   >
-    Compact
+    xs
   </MediaChip>
 </HStack>
 ```

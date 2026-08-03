@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import type { Animated } from 'react-native';
+import { type Animated, useWindowDimensions } from 'react-native';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
@@ -26,12 +26,14 @@ export const Overlay = memo((_props: OverlayProps) => {
   const mergedProps = useComponentConfig('Overlay', _props);
   const { opacity, style, ...props } = mergedProps;
   const theme = useTheme();
+  const { width, height } = useWindowDimensions();
   return (
     <OverlayContentContext.Provider value={overlayContentContextValue}>
       <VStack
         animated
         renderToHardwareTextureAndroid
         background="bgOverlay"
+        height={height}
         opacity={opacity}
         pin="all"
         style={[
@@ -40,6 +42,7 @@ export const Overlay = memo((_props: OverlayProps) => {
             : undefined,
           style,
         ]}
+        width={width}
         {...props}
       />
     </OverlayContentContext.Provider>

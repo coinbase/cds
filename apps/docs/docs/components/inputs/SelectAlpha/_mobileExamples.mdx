@@ -347,38 +347,37 @@ function DisabledGroupExample() {
 }
 ```
 
-## Compact Mode
+## Sizes
 
-The Select component can be rendered in a compact size for denser mobile UIs.
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
 
 ```jsx
-function CompactExample() {
+function SizesExample() {
   const [value, setValue] = useState('1');
 
   const options = [
-    { value: '1', label: 'Small Option 1' },
-    { value: '2', label: 'Small Option 2' },
-    { value: '3', label: 'Small Option 3' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
   ];
 
   return (
     <Select
-      compact
-      label="Compact Select"
-      value={value}
+      label="Fruit"
       onChange={setValue}
       options={options}
       placeholder="Select an option"
-      helperText="This is a compact select component"
+      size="s"
+      value={value}
     />
   );
 }
 ```
 
-You can also use multi-selection mode while in a compact size.
+Multi-selection mode works at every size. When `size="s"`, the dropdown uses compact row density to match the smaller control.
 
 ```jsx
-function MultiSelectExample() {
+function SizesMultiSelectExample() {
   const { value, onChange } = useMultiSelect({
     initialValue: ['1', '3'],
   });
@@ -393,7 +392,7 @@ function MultiSelectExample() {
 
   return (
     <Select
-      compact
+      size="s"
       type="multi"
       label="Choose multiple options"
       value={value}
@@ -872,7 +871,7 @@ function MixedOptionsExample() {
 
 ## Variant Combinations
 
-Combine compact mode with different variants.
+Combine `size="s"` with different variants.
 
 ```jsx
 function VariantCombinationsExample() {
@@ -888,23 +887,23 @@ function VariantCombinationsExample() {
   return (
     <VStack gap={4}>
       <Select
-        compact
+        size="s"
         variant="positive"
-        label="Compact + Positive"
+        label="Small (s) + Positive"
         value={value1}
         onChange={setValue1}
         options={options}
-        helperText="Success state in compact mode"
+        helperText="Success state in small size"
       />
 
       <Select
-        compact
+        size="s"
         variant="negative"
-        label="Compact + Negative"
+        label="Small (s) + Negative"
         value={value2}
         onChange={setValue2}
         options={options}
-        helperText="Error state in compact mode"
+        helperText="Error state in small size"
       />
     </VStack>
   );

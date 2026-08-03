@@ -69,7 +69,7 @@ export type UpsellCardProps = UpsellCardBaseProps;
  *   title="Title"
  *   description="Description"
  *   media={<RemoteImage ... />}
- *   actions={<Button compact variant="secondary">Get Started</Button>}
+ *   actions={<Button size="s" variant="secondary">Get Started</Button>}
  *   onDismiss={handleDismiss}
  *   mediaPlacement="end"
  * />
@@ -135,10 +135,10 @@ export const UpsellCard = memo(
                   action
                 ) : (
                   <Button
-                    compact
                     flush="start"
                     numberOfLines={1}
                     onPress={onActionPress}
+                    size="s"
                     variant="secondary"
                   >
                     {action as string}

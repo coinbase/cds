@@ -20,3 +20,90 @@
   </HStack>
 </VStack>
 ```
+
+### Custom icon sets
+
+Most apps only need the default `Icon`. If you have your own icon font, `createIcon` builds a matching, fully-typed `Icon` for it that reuses the same sizing, color, and accessibility behavior — only the glyphs, font, and `name` type change. Support for building your own icon set is expected to become more self-service over time.
+
+```jsx
+import { createIcon } from '@coinbase/cds-web/icons';
+// Your icon font's glyph map and icon-name type
+import { glyphMap } from '@my-org/icons/glyphMap';
+import type { MyIconName } from '@my-org/icons';
+
+export const MyIcon = createIcon<MyIconName>({
+  glyphMap,
+  fontFamily: 'MyIcons',
+});
+```
+
+```jsx
+<MyIcon name="rocket" size="l" active />
+```
+
+The `glyphMap` must be keyed by `` `${name}-${size}-${active | inactive}` `` (where `size` is `12`, `16`, or `24`), with each value the single font glyph character — the same shape as `@coinbase/cds-icons`. Load your font's stylesheet once at your app entry so the `fontFamily` you pass is registered:
+
+```jsx
+import '@my-org/icons/fonts/web/icon-font.css';
+```
+
+If your icon set uses a different key format or size model, pass a `getGlyph` resolver to `createIcon` to control exactly how a glyph is looked up from the map.
+
+On web the font family is applied via the `--cds-icon-font-family` CSS variable (its default is `CoinbaseIcons`). Beyond passing `fontFamily` to `createIcon`, you can override the font per instance through `classNames`/`styles`, or scope it on an ancestor by setting that variable.
+
+#### Live demo
+
+The example below binds `createIcon` to Google's Material Icons font. The glyph map is built inline from Material's codepoints, but in a real app you'd import a generated map from your icon package. Notice `MaterialIcon` reuses the exact same sizing, color, and accessibility behavior as the default CDS `Icon` — only the font and glyphs differ. Edit the code to try other icons or sizes.
+
+```jsx live noInline
+// Material Icons codepoints (private-use area). In a real app this comes from
+// your icon package's generated glyph map.
+const codepoints = {
+  home: 0xe88a,
+  settings: 0xe8b8,
+  search: 0xe8b6,
+  favorite: 0xe87d,
+  delete: 0xe872,
+};
+
+// Build a CDS-shaped glyph map: `${name}-${size}-${state}` -> glyph character
+const glyphMap = Object.fromEntries(
+  Object.keys(codepoints).flatMap((name) =>
+    [12, 16, 24].flatMap((size) =>
+      ['active', 'inactive'].map((state) => [
+        `${name}-${size}-${state}`,
+        String.fromCodePoint(codepoints[name]),
+      ]),
+    ),
+  ),
+);
+
+// A second, fully-typed Icon backed by a different font
+const MaterialIcon = createIcon({ glyphMap, fontFamily: 'Material Icons' });
+
+function Demo() {
+  return (
+    <VStack gap={4}>
+      {/* Loads the Material Icons web font for this demo */}
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+      <HStack alignItems="center" gap={3}>
+        {['xs', 's', 'm', 'l'].map((size) => (
+          <MaterialIcon key={size} color="fgPrimary" name="home" size={size} />
+        ))}
+      </HStack>
+      <HStack alignItems="flex-start" flexWrap="wrap" gap={4}>
+        {Object.keys(codepoints).map((name) => (
+          <VStack key={name} alignItems="center" gap={1}>
+            <MaterialIcon color="fgPrimary" name={name} size="l" />
+            <Text color="fgMuted" font="legal">
+              {name}
+            </Text>
+          </VStack>
+        ))}
+      </HStack>
+    </VStack>
+  );
+}
+
+render(<Demo />);
+```

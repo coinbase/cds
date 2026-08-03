@@ -112,14 +112,6 @@ export const NoLabel = () => {
   return <Checkbox checked={checked} onChange={() => setChecked((s) => !s)} />;
 };
 
-// This story does not render a label on purpose
-NoLabel.parameters = {
-  a11y: {
-    config: { rules: [{ id: 'label', enabled: false }] },
-    test: 'off',
-  },
-};
-
 function States() {
   return (
     <VStack gap={2}>
@@ -139,14 +131,6 @@ export const ReadOnly = () => (
     </Checkbox>
   </VStack>
 );
-ReadOnly.parameters = {
-  /**
-   * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
-   * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-   */
-  a11y: { config: { rules: [{ id: 'color-contrast', enabled: false }] } },
-};
-
 function MultiLineLabel() {
   return (
     <Box width="250px">

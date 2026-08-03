@@ -18,8 +18,9 @@ const ChipExamples = ({
   ...props
 }: { label?: string; flexDirection?: 'row' | 'column' } & Omit<ChipBaseProps, 'children'>) => {
   const ref = useRef<View>(null);
-  const mediaSize = props.compact ? 16 : 24;
-  const textFont = props.compact ? 'label1' : 'headline';
+  const isCompactSize = props.compact || props.size === 'xs';
+  const mediaSize = isCompactSize ? 16 : 24;
+  const textFont = isCompactSize ? 'label1' : 'headline';
   const assetIconProps: RemoteImageProps = {
     height: mediaSize,
     shape: 'circle',
@@ -87,7 +88,10 @@ const ChipScreen = () => (
     <Example title="Inverted">
       <ChipExamples inverted />
     </Example>
-    <Example title="Compact">
+    <Example title="Size xs">
+      <ChipExamples size="xs" />
+    </Example>
+    <Example title="Compact (deprecated)">
       <ChipExamples compact />
     </Example>
     <Example title="Long text">

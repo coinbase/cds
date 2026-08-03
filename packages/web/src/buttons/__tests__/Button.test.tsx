@@ -237,6 +237,85 @@ describe('Button', () => {
     expect(readyButton).toHaveAttribute('data-variant', 'positive');
   });
 
+  describe('size', () => {
+    const getFontToken = (label: string) =>
+      screen.getByText(label).parentElement?.getAttribute('style') ?? '';
+
+    it('defaults to size "l" geometry (radius 900, paddingX 4, paddingY 2, headline)', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button>Child</Button>
+        </DefaultThemeProvider>,
+      );
+      const cls = screen.getByRole('button').className;
+      expect(cls).toMatch(/(^|\s)_900-/);
+      expect(cls).toMatch(/(^|\s)_4-/);
+      expect(cls).toMatch(/(^|\s)_2-/);
+      expect(getFontToken('Child')).toContain('--textTransform-headline');
+    });
+
+    it('resolves each t-shirt size to its expected radius and font', () => {
+      const cases = [
+        { size: 'xs', radius: /_700-/, font: 'label1' },
+        { size: 's', radius: /_700-/, font: 'headline' },
+        { size: 'm', radius: /_900-/, font: 'headline' },
+        { size: 'l', radius: /_900-/, font: 'headline' },
+      ] as const;
+
+      cases.forEach(({ size, radius, font }) => {
+        const { unmount } = render(
+          <DefaultThemeProvider>
+            <Button size={size}>{size}</Button>
+          </DefaultThemeProvider>,
+        );
+        expect(screen.getByRole('button').className).toMatch(radius);
+        expect(getFontToken(size)).toContain(`--textTransform-${font}`);
+        unmount();
+      });
+    });
+
+    it('renders `compact` alone as the "s" geometry (radius 700, paddingX 2, paddingY 1)', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button compact>Child</Button>
+        </DefaultThemeProvider>,
+      );
+      const cls = screen.getByRole('button').className;
+      expect(cls).toMatch(/(^|\s)_700-/);
+      expect(cls).toMatch(/(^|\s)_2-/);
+      expect(cls).toMatch(/(^|\s)_1-/);
+    });
+
+    it('lets `size` win over `compact` for geometry while still emitting data-compact', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button compact size="m">
+            Child
+          </Button>
+        </DefaultThemeProvider>,
+      );
+      const button = screen.getByRole('button');
+      // "m" geometry (radius 900) rather than compact's "s" (radius 700)
+      expect(button.className).toMatch(/(^|\s)_900-/);
+      expect(button).toHaveAttribute('data-compact', 'true');
+    });
+
+    it('lets explicit style props override the size-derived defaults', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button borderRadius={100} font="body" paddingX={6} paddingY={5} size="xs">
+            Child
+          </Button>
+        </DefaultThemeProvider>,
+      );
+      const cls = screen.getByRole('button').className;
+      expect(cls).toMatch(/(^|\s)_100-/);
+      expect(cls).toMatch(/(^|\s)_6-/);
+      expect(cls).toMatch(/(^|\s)_5-/);
+      expect(getFontToken('Child')).toContain('--textTransform-body');
+    });
+  });
+
   it('applies height and width props as CSS custom properties', () => {
     render(
       <DefaultThemeProvider>

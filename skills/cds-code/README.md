@@ -10,28 +10,32 @@ npx skills add https://github.com/coinbase/cds --skill cds-docs
 
 ## Performance
 
-Evaluated against 8 real-world coding and review tasks (iteration 3, 2026-06-26):
+Evaluated against 10 real-world tasks across two benchmark cohorts: 8 coding/review output-quality tasks and 2 out-of-scope near-misses. The cohorts use different baselines, so their results are reported separately.
+
+### Coding and review output quality (iteration 4, 2026-07-22)
 
 | Metric     | With skill | Without skill | Delta  |
 | ---------- | ---------- | ------------- | ------ |
-| Pass rate  | **100%**   | 73.7%         | +26.3% |
-| Avg time   | 112.5s     | 72.4s         | +40.1s |
-| Avg tokens | 39,907     | 38,176        | +1,731 |
+| Pass rate  | **100%**   | 75.0%         | +25.0% |
+| Avg time   | 204.4s     | 109.7s        | +94.8s |
+| Avg tokens | n/a        | n/a           | n/a    |
 
-### Per-eval breakdown
+Token counts were unavailable from the Cursor eval runner for this iteration.
+
+#### Per-eval breakdown
 
 | Task                                              | With skill | Without skill |
 | ------------------------------------------------- | ---------- | ------------- |
-| Profile card (Avatar, ListCell, tokens)           | 100%       | 78%           |
-| Create team modal (Modal, Select alpha)           | 100%       | 100%          |
+| Profile card (Avatar, ListCell, tokens)           | 100%       | 89%           |
+| Create team modal (Modal, Select alpha)           | 100%       | 86%           |
 | Banner + progress visualizations                  | 100%       | 100%          |
-| Sidebar nav (icon names, active state)            | 100%       | 80%           |
-| Empty state + illustration sizing                 | 100%       | 60%           |
+| Sidebar nav (icon names, active state)            | 100%       | 100%          |
+| Empty state + illustration sizing                 | 100%       | 40%           |
 | React Native wallet screen (CDS mobile)           | 100%       | 83%           |
 | Deprecated component trap (TextHeadline/TextBody) | 100%       | 17%           |
-| CDS code review (structured lint output)          | 100%       | 71%           |
+| CDS code review (structured lint output)          | 100%       | 86%           |
 
-The biggest gains come from domain-specific knowledge the base model lacks: CDS mobile primitives, deprecated API awareness, illustration component selection, and structured audit-format output.
+The biggest gains come from domain-specific knowledge the base model lacks: deprecated API awareness (TextHeadline/TextBody trap), illustration component selection and token hygiene, and structured ESLint-style audit output.
 
 ## Running evaluations
 

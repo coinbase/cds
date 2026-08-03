@@ -78,6 +78,48 @@ const HideEndIcon = () => {
   );
 };
 
+export const Sizes = () => {
+  const [text, setText] = useState('');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder='size="s"'
+        size="s"
+        value={text}
+      />
+      <SearchInput
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder='size="m"'
+        size="m"
+        value={text}
+      />
+      <SearchInput
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder='size="l" (default)'
+        size="l"
+        value={text}
+      />
+      <SearchInput
+        compact
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder='compact (deprecated, renders as size "s")'
+        value={text}
+      />
+    </VStack>
+  );
+};
+
+/** `compact` is deprecated in favor of `size="s"`; kept here to verify legacy behavior. */
 const Compact = () => {
   const [text, setText] = useState('');
 

@@ -20,38 +20,37 @@ const buttonStories: Omit<ButtonProps, 'children'>[] = [
   { variant: 'negative', transparent: true },
   { variant: 'inverse', transparent: true },
   { block: true },
-  { compact: true },
-  { compact: true, block: true },
+  { size: 's', block: true },
   { transparent: true },
   { disabled: true },
   { loading: true },
-  { loading: true, compact: true },
+  { loading: true, size: 's' },
   { loading: true, transparent: true },
-  { loading: true, transparent: true, compact: true },
+  { loading: true, transparent: true, size: 's' },
   { loading: true, variant: 'secondary' },
-  { loading: true, variant: 'secondary', compact: true },
+  { loading: true, variant: 'secondary', size: 's' },
   { loading: true, variant: 'positive' },
-  { loading: true, variant: 'positive', compact: true },
+  { loading: true, variant: 'positive', size: 's' },
   { loading: true, variant: 'negative' },
-  { loading: true, variant: 'negative', compact: true },
+  { loading: true, variant: 'negative', size: 's' },
   { startIcon: 'backArrow' },
   { endIcon: 'backArrow' },
   { startIcon: 'backArrow', endIcon: 'forwardArrow' },
   { startIcon: 'backArrow', endIcon: 'forwardArrow', block: true },
-  { transparent: true, flush: 'start', compact: true, endIcon: 'forwardArrow' },
-  { transparent: true, flush: 'end', compact: true, endIcon: 'forwardArrow' },
+  { transparent: true, flush: 'start', size: 's', endIcon: 'forwardArrow' },
+  { transparent: true, flush: 'end', size: 's', endIcon: 'forwardArrow' },
   { flush: 'start', endIcon: 'forwardArrow' },
   { flush: 'end', endIcon: 'forwardArrow' },
-  { startIcon: 'backArrow', endIcon: 'forwardArrow', compact: true },
-  { startIcon: 'backArrow', compact: true },
-  { endIcon: 'forwardArrow', compact: true },
+  { startIcon: 'backArrow', endIcon: 'forwardArrow', size: 's' },
+  { startIcon: 'backArrow', size: 's' },
+  { endIcon: 'forwardArrow', size: 's' },
 ];
 
 const ButtonScreen = () => {
   return (
     <ExampleScreen>
       <Example inline title="Complex example">
-        <Button compact endIcon="caretDown" variant="secondary">
+        <Button endIcon="caretDown" size="s" variant="secondary">
           <HStack alignItems="center" justifyContent="center" paddingTop={0}>
             <RemoteImage height={16} resizeMode="cover" shape="circle" width={16} />
             <Text color="fgMuted" font="label2" paddingStart={1} testID="DexInputNetwork">
@@ -121,13 +120,27 @@ const ButtonScreen = () => {
           </Button>
         </HStack>
         <HStack gap={2}>
-          <Button compact height={24} paddingY={0} progressCircleSize={16}>
+          <Button height={24} paddingY={0} progressCircleSize={16} size="s">
             I am a button
           </Button>
-          <Button compact loading height={24} paddingY={0} progressCircleSize={16}>
+          <Button loading height={24} paddingY={0} progressCircleSize={16} size="s">
             I am a button
           </Button>
         </HStack>
+      </Example>
+      <Example title="Sizes">
+        <VStack alignItems="flex-start" gap={2}>
+          <Button size="xs">Extra small (xs)</Button>
+          <Button size="s">Small (s)</Button>
+          <Button size="m">Medium (m)</Button>
+          <Button size="l">Large (l)</Button>
+        </VStack>
+      </Example>
+      <Example title="Deprecated compact (use size='s')">
+        <VStack alignItems="flex-start" gap={2}>
+          <Button compact>Compact (deprecated)</Button>
+          <Button size="s">Equivalent size=&quot;s&quot;</Button>
+        </VStack>
       </Example>
     </ExampleScreen>
   );

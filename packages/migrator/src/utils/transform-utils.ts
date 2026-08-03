@@ -69,7 +69,25 @@ export function addTodoComment(
     if (index !== -1) {
       const insertions = [makeJsxComment(`${TODO_PREFIX}:${transformName}]: ${message}`)];
       if (context) insertions.push(makeJsxComment(context));
-      children.splice(index, 0, ...insertions);
+
+      // Reuse the target's own leading whitespace so each inserted comment lands on its own
+      // line at the element's indentation instead of being jammed against the element.
+      const leadingWhitespace = children[index - 1];
+      const indent =
+        leadingWhitespace?.type === 'JSXText' && leadingWhitespace.value.includes('\n')
+          ? leadingWhitespace.value
+          : undefined;
+      if (indent) {
+        const separators = insertions.map(() => j.jsxText(indent));
+        // One separator after each comment, so the element keeps its original indentation.
+        children.splice(
+          index,
+          0,
+          ...insertions.flatMap((insertion, i) => [insertion, separators[i]]),
+        );
+      } else {
+        children.splice(index, 0, ...insertions);
+      }
     }
     return;
   }
@@ -86,7 +104,10 @@ export function addTodoComment(
  * Check if a node already has a migration TODO comment, in either form:
  * - a leading `// TODO(cds-migration)…` line comment on the node itself, or
  * - a `{/* TODO(cds-migration)… *\/}` JSXExpressionContainer sibling that
- *   immediately precedes the node inside a JSX parent.
+ *   precedes the node inside a JSX parent.
+ *
+ * In formatted JSX the sibling directly before an element is the whitespace `JSXText`
+ * carrying its indentation, so whitespace-only text nodes are skipped when looking back.
  */
 export function hasMigrationTodo(path: any): boolean {
   // Non-JSX: check leading comments on the node
@@ -95,14 +116,19 @@ export function hasMigrationTodo(path: any): boolean {
 
   // JSX: check for a preceding {/* TODO … */} sibling
   const parentNode = path.parent?.value;
-  if (parentNode?.type === 'JSXElement') {
+  if (parentNode?.type === 'JSXElement' || parentNode?.type === 'JSXFragment') {
     const children: any[] = parentNode.children ?? [];
-    const index = children.indexOf(path.value);
-    if (index > 0) {
-      const prev = children[index - 1];
+    let index = children.indexOf(path.value) - 1;
+
+    while (index >= 0) {
+      const prev = children[index];
+      if (prev?.type === 'JSXText' && prev.value.trim() === '') {
+        index -= 1;
+        continue;
+      }
       const innerComments: any[] =
         (prev?.type === 'JSXExpressionContainer' && prev.expression?.innerComments) || [];
-      if (innerComments.some((c: any) => c.value?.includes(TODO_PREFIX))) return true;
+      return innerComments.some((c: any) => c.value?.includes(TODO_PREFIX));
     }
   }
 

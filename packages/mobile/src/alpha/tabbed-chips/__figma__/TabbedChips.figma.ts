@@ -1,4 +1,4 @@
-// url=https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=10188-4476
+// url=https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=84234-2736
 // source=packages/mobile/src/alpha/tabbed-chips/TabbedChips.tsx
 // component=TabbedChips
 import figma from 'figma';

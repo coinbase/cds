@@ -123,7 +123,7 @@ export const Tray = memo(function Tray({
           flexShrink={1}
           minHeight={0}
           overflow="hidden"
-          paddingTop={title ? 0 : 2}
+          paddingTop={title || isInsideHandleBar ? 0 : 2}
           style={contentStyle}
         >
           {(title || headerContent) && (
@@ -132,7 +132,7 @@ export const Tray = memo(function Tray({
                 <Box
                   justifyContent="center"
                   onLayout={onTitleLayout}
-                  paddingBottom={isInsideHandleBar ? 0.75 : isTitleString ? 2 : 0}
+                  paddingBottom={isInsideHandleBar || isTitleString ? 0.75 : 0}
                   paddingTop={isInsideHandleBar ? 0 : isTitleString ? 3 : 0}
                   paddingX={isInsideHandleBar || isTitleString ? 3 : 0}
                 >

@@ -4,14 +4,17 @@
  * Checks for the presence of an `accessibilityLabel` on designated Mobile CDS components.
  * The rule does not flag components:
  * - they contain inner text or
- * - have props spread.
+ * - have props spread or
+ * - set accessible={false}.
  */
 
 import type { TSESTree } from '@typescript-eslint/utils';
 import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
 
 import { extractA11yAttributesState } from '../utils/extractA11yAttributesState';
+import { getAttribute } from '../utils/getAttribute';
 import { getSimpleNameFromJSX } from '../utils/getSimpleNameFromJSX';
+import { isTruthyJSXBooleanAttribute } from '../utils/isTruthyJSXBooleanAttribute';
 
 const ruleCreator = ESLintUtils.RuleCreator(
   (name) =>
@@ -128,6 +131,11 @@ export const hasValidA11yDescriptorsExtended = ruleCreator({
         }
       },
       JSXElement(node) {
+        const accessibleAttribute = getAttribute(node.openingElement.attributes, 'accessible');
+        if (accessibleAttribute && !isTruthyJSXBooleanAttribute(accessibleAttribute)) {
+          return;
+        }
+
         const {
           hasLabel,
           hasAccessibilityLabel,
@@ -149,7 +157,6 @@ export const hasValidA11yDescriptorsExtended = ruleCreator({
           hasMissingClearIconAccessibilityLabel,
         } = extractA11yAttributesState(node, node.openingElement);
 
-        // TODO need test cases for TextInput
         let isTextInputWithNegativeVariant = true;
         if (getSimpleNameFromJSX(node.openingElement) === 'TextInput') {
           const attributes = node.openingElement.attributes as TSESTree.JSXAttribute[];

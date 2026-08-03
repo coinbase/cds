@@ -118,6 +118,37 @@
         "Flags raw View and Text imports from react-native in CheckoutItem.tsx",
         "Output ends with an Audit Summary section showing file-level issue counts"
       ]
+    },
+    {
+      "id": 9,
+      "prompt": "Refactor src/features/profile/ProfileCard.tsx to move its Relay data fetching and display-name fallback logic into a useProfileCardData hook. Preserve the rendered JSX, CDS components, style props, spacing, and visual behavior exactly as they are; this is a logic-only cleanup.",
+      "expected_output": "The agent should recognize this as out-of-scope for the cds-code coding/review workflows, extract the Relay query and display-name fallback into a useProfileCardData hook, and leave the component's rendered presentation and CDS usage unchanged.",
+      "files": [
+        "evals/fixtures/eval-9/ProfileCard.tsx"
+      ],
+      "expectations": [
+        "Does not run the cds-code discovery or CDS documentation workflow for this logic-only request",
+        "Extracts Relay data fetching and display-name fallback logic into a useProfileCardData hook",
+        "Keeps the ProfileCard rendered JSX structurally unchanged",
+        "Keeps the existing CDS components, imports, tokens, and style prop values unchanged",
+        "Does not introduce presentation changes or unrelated CDS refactoring"
+      ]
+    },
+    {
+      "id": 10,
+      "prompt": "Wire the Security row in src/features/settings/SettingsScreen.tsx to call the existing navigate prop with '/security' when pressed. Preserve the rendered structure, labels, CDS components, accessories, spacing, and visual behavior; this is navigation wiring only.",
+      "expected_output": "The agent should recognize this as out-of-scope for the cds-code coding/review workflows, add a memoized Security-row navigation handler, and attach it without changing the rendered presentation or CDS usage.",
+      "files": [
+        "evals/fixtures/eval-10/SettingsScreen.tsx"
+      ],
+      "expectations": [
+        "Does not run the cds-code discovery or CDS documentation workflow for this navigation-only request",
+        "Calls the existing navigate prop with '/security' when the Security row is pressed",
+        "Uses a memoized event handler for the Security row",
+        "Keeps all three rows, their labels, and arrow accessories unchanged",
+        "Keeps the existing CDS components, imports, layout, and presentation unchanged",
+        "Does not introduce unrelated visual or CDS refactoring"
+      ]
     }
   ]
 }

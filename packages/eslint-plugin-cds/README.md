@@ -128,6 +128,7 @@ To test on consumer repos locally, you will need to build your `eslint-plugin-cd
 | --------------------------------------------------------------------------------- | ------------- | -------- | ------------------ |
 | [`controlHasAssociatedLabelExtended`](#-controlhasassociatedlabelextended-web)    | Accessibility | Web      | `web`              |
 | [`hasValidA11yDescriptorsExtended`](#-hasvalida11ydescriptorsextended-mobile)     | Accessibility | Mobile   | `mobile`           |
+| [`listCellJsxRequiresNodeProps`](#-listcelljsxrequiresnodeprops-web--mobile)      | Usage         | Both     | `web`, `mobile`    |
 | [`webChartScrubbingAccessibility`](#-webchartscrubbingaccessibility-web)          | Accessibility | Web      | `web`              |
 | [`mobileChartScrubbingAccessibility`](#-mobilechartscrubbingaccessibility-mobile) | Accessibility | Mobile   | `mobile`           |
 | [`webTooltipInteractiveContent`](#-webtooltipinteractivecontent-web)              | Accessibility | Web      | `web`              |
@@ -186,3 +187,15 @@ The `mobileChartScrubbingAccessibility` rule enforces chart accessibility descri
 **Rule Description**:
 
 The `webTooltipInteractiveContent` rule requires `hasInteractiveContent` when tooltip `content` includes interactive elements (for example buttons or links), matching CDS tooltip accessibility guidance.
+
+## Usage Rules
+
+### 🔍 listCellJsxRequiresNodeProps (Web & Mobile)
+
+**Rule Description**:
+
+The `listCellJsxRequiresNodeProps` rule requires ListCell `*Node` props when text slots receive arbitrary JSX.
+
+ListCell text slots (`title`, `description`, `subtitle`, `detail`, `subdetail`) wrap values in CDS `Text` and apply truncation/styling. Arbitrary JSX should use the matching node prop (`titleNode`, `descriptionNode`, `subtitleNode`, `detailNode`, `subdetailNode`) instead.
+
+A direct `Text` element in a text slot is allowed. The rule provides an autofix when the corresponding `*Node` prop is not already present.

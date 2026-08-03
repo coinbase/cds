@@ -429,6 +429,7 @@ const names: PictogramName[] = [
   'notificationHubPortfolio',
   'notificationHubSocial',
   'notifications',
+  'options',
   'orders',
   'outage',
   'partialCoins',
