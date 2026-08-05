@@ -292,13 +292,8 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
   );
 });
 
-// Fixes a problem found in Accordion children element.
-// When `overflow: auto` is set the thickened border when focused is not accounted for
-// hence you see a cutoff.
-// Padding must accommodate the focus border extension (default 2px for focusedBorderWidth: 200)
 const staticStyles = StyleSheet.create({
   inputAreaContainerStyle: {
-    padding: 2,
     flexGrow: 2,
   },
 });

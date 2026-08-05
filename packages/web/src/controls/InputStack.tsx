@@ -46,12 +46,7 @@ const baseCss = css`
   }
 `;
 
-// Fixes a problem found in Accordion children element.
-// When `overflow: auto` is set the thickened border when focused is not accounted for
-// hence you see a cutoff.
-// Fix was to add this so there is always 2px outer layer space
 const inputAreaContainerCss = css`
-  padding: 1px;
   width: 100%;
 `;
 
