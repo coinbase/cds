@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.10.3 (8/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: remove unnecessary padding on inputstack. [[#823](https://github.com/coinbase/cds/pull/823)]
+
 ## 9.10.2 ((7/31/2026, 08:22 AM PST))
 
 This is an artificial version bump with no new change.
