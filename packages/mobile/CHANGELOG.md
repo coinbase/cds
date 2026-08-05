@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.11.0 (8/5/2026 PST)
+
+#### 🚀 Updates
+
+- Use react-native-ease for the Fallback shimmer to run the animation on the UI thread. [[#822](https://github.com/coinbase/cds/pull/822)]
+
 ## 9.10.2 (7/31/2026 PST)
 
 #### 🐞 Fixes
