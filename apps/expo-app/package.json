@@ -25,6 +25,7 @@
     "react": "19.1.2",
     "react-native": "0.81.5",
     "react-native-date-picker": "5.0.12",
+    "react-native-ease": "0.8.0",
     "react-native-gesture-handler": "2.28.0",
     "react-native-inappbrowser-reborn": "3.7.0",
     "react-native-navigation-bar-color": "2.0.2",
