@@ -135,4 +135,32 @@ describe('Tabs', () => {
       expect(element?.textContent).toContain('Buy');
     });
   });
+
+  describe('font prop', () => {
+    // The label `Text` derives an inline `--text-textTransform` custom property from
+    // its `font`, so it is a reliable signal for which typography token was applied.
+    const labelFontToken = (name: string) =>
+      screen.getByRole('heading', { name, level: 2 }).getAttribute('style');
+
+    it('defaults tab label typography to headline', () => {
+      render(<ControlledTabs />);
+      expect(labelFontToken('Buy')).toContain('var(--textTransform-headline)');
+    });
+
+    it('applies the font prop to tab labels', () => {
+      render(<ControlledTabs font="label2" />);
+      expect(labelFontToken('Buy')).toContain('var(--textTransform-label2)');
+      expect(labelFontToken('Sell')).toContain('var(--textTransform-label2)');
+    });
+
+    it('forwards related typography props (fontFamily) to tab labels', () => {
+      render(<ControlledTabs fontFamily="label2" />);
+      expect(labelFontToken('Buy')).toContain('var(--textTransform-label2)');
+    });
+
+    it('forwards textTransform to tab labels', () => {
+      render(<ControlledTabs textTransform="uppercase" />);
+      expect(labelFontToken('Buy')).toContain('uppercase');
+    });
+  });
 });

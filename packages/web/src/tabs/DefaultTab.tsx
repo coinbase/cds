@@ -63,6 +63,13 @@ const DefaultTabComponent = memo(
         className,
         color = 'fg',
         activeColor = 'fgPrimary',
+        font = 'headline',
+        fontFamily,
+        fontSize,
+        fontWeight,
+        lineHeight,
+        textAlign,
+        textTransform,
         ...props
       }: DefaultTabProps<TabId>,
       ref: React.ForwardedRef<HTMLButtonElement>,
@@ -99,8 +106,14 @@ const DefaultTabComponent = memo(
               as="h2"
               color={isActive ? activeColor : color}
               display="block"
-              font="headline"
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              lineHeight={lineHeight}
               paddingY={2}
+              textAlign={textAlign}
+              textTransform={textTransform}
             >
               {label}
             </Text>

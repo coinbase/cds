@@ -51,6 +51,13 @@ const DefaultTabComponent = memo(
     testID,
     color = 'fg',
     activeColor = 'fgPrimary',
+    font = 'headline',
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    align,
+    textTransform,
     ...props
   }: DefaultTabProps<TabId> & {
     ref?: React.Ref<View>;
@@ -88,7 +95,17 @@ const DefaultTabComponent = memo(
         {...props}
       >
         <HStack alignItems="center" gap={0.5}>
-          <Text color={isActive ? activeColor : color} font="headline" paddingY={2}>
+          <Text
+            align={align}
+            color={isActive ? activeColor : color}
+            font={font}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+            fontWeight={fontWeight}
+            lineHeight={lineHeight}
+            paddingY={2}
+            textTransform={textTransform}
+          >
             {label}
           </Text>
           {!!count && <DotCount count={count} max={max} />}
