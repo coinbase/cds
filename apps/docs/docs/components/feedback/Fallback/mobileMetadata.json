@@ -13,6 +13,10 @@
     {
       "name": "react-native-svg",
       "version": "15.12.1"
+    },
+    {
+      "name": "react-native-ease",
+      "version": "0.8.0"
     }
   ]
 }

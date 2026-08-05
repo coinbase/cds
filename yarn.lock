@@ -2163,6 +2163,7 @@ __metadata:
     lottie-react-native: "npm:7.3.1"
     react: "npm:19.1.2"
     react-native: "npm:0.81.5"
+    react-native-ease: "npm:0.8.0"
     react-native-gesture-handler: "npm:2.28.0"
     react-native-inappbrowser-reborn: "npm:3.7.0"
     react-native-navigation-bar-color: "npm:2.0.2"
@@ -2178,6 +2179,7 @@ __metadata:
     lottie-react-native: 7.3.1
     react: ~19.1.2
     react-native: ~0.81.5
+    react-native-ease: 0.8.0
     react-native-gesture-handler: 2.28.0
     react-native-inappbrowser-reborn: ^3.7.0
     react-native-navigation-bar-color: ^2.0.2
@@ -16630,6 +16632,7 @@ __metadata:
     react: "npm:19.1.2"
     react-native: "npm:0.81.5"
     react-native-date-picker: "npm:5.0.12"
+    react-native-ease: "npm:0.8.0"
     react-native-gesture-handler: "npm:2.28.0"
     react-native-inappbrowser-reborn: "npm:3.7.0"
     react-native-navigation-bar-color: "npm:2.0.2"
@@ -26432,6 +26435,23 @@ __metadata:
     react: ">= 17.0.1"
     react-native: ">= 0.64.3"
   checksum: 10c0/d5f49d34cbf631f0240dde2e1ff8fcc3fd8cb982104fe510093b415ae359efe1b49f6b9d850b47cc09f7603da724ed28c8fe8f70f9553ba4334b5cf7f0dec34d
+  languageName: node
+  linkType: hard
+
+"react-native-ease@npm:0.8.0":
+  version: 0.8.0
+  resolution: "react-native-ease@npm:0.8.0"
+  peerDependencies:
+    nativewind: ">=4"
+    react: "*"
+    react-native: "*"
+    uniwind: ">=1"
+  peerDependenciesMeta:
+    nativewind:
+      optional: true
+    uniwind:
+      optional: true
+  checksum: 10c0/4e19dd7526bdc99f7d88f0682401b6ad63cece2f8705705cb38d7a94119372afa9c231432be4635d870abb550ff22eeb48d91bef3437c2001cf6625fc4d0ebc8
   languageName: node
   linkType: hard
 

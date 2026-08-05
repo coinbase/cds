@@ -1,7 +1,7 @@
-// Simplified version of https://github.com/tomzaku/react-native-shimmer-placeholder/blob/master/lib/ShimmerPlaceholder.js
-import React, { memo, useEffect, useMemo, useRef } from 'react';
-import { Animated, StyleSheet, Text, View } from 'react-native';
+import React, { memo, useMemo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import type { DimensionValue, ViewStyle } from 'react-native';
+import { EaseView } from 'react-native-ease';
 import type { UseFallbackShapeOptions } from '@coinbase/cds-common/hooks/useFallbackShape';
 import { useFallbackShape } from '@coinbase/cds-common/hooks/useFallbackShape';
 import type { Shape } from '@coinbase/cds-common/types/Shape';
@@ -32,6 +32,9 @@ export type FallbackBaseProps = {
 
 export type FallbackProps = Omit<BoxProps, 'borderRadius' | 'height' | 'width'> & FallbackBaseProps;
 
+const shimmerDuration = 1300;
+const fallbackShimmerRange = 400;
+
 export const Fallback = memo((_props: FallbackProps) => {
   const mergedProps = useComponentConfig('Fallback', _props);
   const {
@@ -59,31 +62,6 @@ export const Fallback = memo((_props: FallbackProps) => {
 
   const { activeColorScheme } = useTheme();
   const shimmerColor = fallbackShimmer[activeColorScheme];
-  const shimmerPosition = useRef(new Animated.Value(-1));
-
-  useEffect(() => {
-    const shimmerAnimation = Animated.loop(
-      Animated.timing(shimmerPosition.current, {
-        toValue: 1,
-        duration: 1300,
-        useNativeDriver: true,
-        // Disable interaction otherwise all `InteractionManager` listeners
-        // will hang indefinitely since Fallbacks will be rendered offscreen.
-        isInteraction: false,
-      }),
-      {
-        iterations: 10,
-      },
-    );
-
-    const animateShimmer = () => {
-      shimmerAnimation.start();
-    };
-
-    animateShimmer();
-
-    return () => shimmerAnimation.stop();
-  }, []);
 
   const containerStyle: ViewStyle = useMemo(
     () => ({
@@ -96,29 +74,22 @@ export const Fallback = memo((_props: FallbackProps) => {
     [width, height, shimmerColor, borderRadius],
   );
 
-  const outputRange = useMemo(
-    () => (typeof width === 'number' ? [-width, width] : [-400, 400]),
-    [width],
-  );
+  const shimmerOffset = typeof width === 'number' ? width : fallbackShimmerRange;
 
   return (
     <Box position="relative" width={width} {...props}>
       {accessibilityLabel && <Text style={styles.visuallyHidden}>{accessibilityLabel}</Text>}
       <View aria-hidden style={containerStyle}>
-        <Animated.View
-          style={[
-            styles.child,
-            {
-              transform: [
-                {
-                  translateX: shimmerPosition.current.interpolate({
-                    inputRange: [-1, 1],
-                    outputRange,
-                  }),
-                },
-              ],
-            },
-          ]}
+        <EaseView
+          animate={{ translateX: shimmerOffset }}
+          initialAnimate={{ translateX: -shimmerOffset }}
+          style={styles.child}
+          transition={{
+            type: 'timing',
+            duration: shimmerDuration,
+            easing: 'linear',
+            loop: 'repeat',
+          }}
         >
           <LinearGradient
             colors={shimmerColor}
@@ -127,7 +98,7 @@ export const Fallback = memo((_props: FallbackProps) => {
             stops={gradLocations}
             style={styles.child}
           />
-        </Animated.View>
+        </EaseView>
       </View>
     </Box>
   );
