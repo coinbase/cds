@@ -231,7 +231,7 @@ const config: Config = {
       ],
     },
     prism: {
-      // If you update these you also need to update the prismThemes in apps/docs/src/theme/Playground/index.tsx and apps/docs/src/theme/CodeBlock/Content/String.tsx and apps/docs/src/components/page/ShareablePlayground/index.tsx
+      // If you update these you also need to update the prismThemes in apps/docs/src/theme/Playground/index.tsx and apps/docs/src/theme/CodeBlock/Content/String.tsx and apps/docs/src/components/page/CodePlayground/index.tsx
       theme: prismThemes.github,
       darkTheme: prismThemes.nightOwl,
     },

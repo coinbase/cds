@@ -1,6 +1,5 @@
 import React, { type JSX, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { LiveEditor, LiveError, LivePreview, LiveProvider } from 'react-live';
-import { Collapsible } from '@coinbase/cds-web/collapsible/Collapsible';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Box } from '@coinbase/cds-web/layout';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
@@ -12,8 +11,6 @@ import { Text } from '@coinbase/cds-web/typography/Text';
 import BrowserOnly from '@docusaurus/BrowserOnly';
 import ErrorBoundary from '@docusaurus/ErrorBoundary';
 import { ErrorBoundaryErrorMessageFallback } from '@docusaurus/theme-common';
-import debounce from 'lodash/debounce';
-import { compressToEncodedURIComponent, decompressFromEncodedURIComponent } from 'lz-string';
 import * as estreePlugin from 'prettier/plugins/estree.js';
 import * as typescriptPlugin from 'prettier/plugins/typescript.js';
 import { format } from 'prettier/standalone';
@@ -44,13 +41,6 @@ const previewComponent = () => (
   </>
 );
 
-const getSharedCode = () => {
-  if (typeof window === 'undefined') return;
-  const urlParams = new URLSearchParams(window.location.search);
-  const sharedCode = urlParams.get('code');
-  if (sharedCode) return decompressFromEncodedURIComponent(sharedCode);
-};
-
 const defaultCodeExample = `// Create your own example components and hooks, then call render() to render them
 
 const Example = () => {
@@ -79,10 +69,9 @@ const prettierOptions = {
 
 type PlaygroundControlsProps = {
   onClickCopy: () => void;
-  onClickShare: () => void;
 };
 
-const PlaygroundControls = memo(({ onClickCopy, onClickShare }: PlaygroundControlsProps) => {
+const PlaygroundControls = memo(({ onClickCopy }: PlaygroundControlsProps) => {
   return (
     <HStack alignItems="center" gap={2} paddingTop={0.5}>
       <Pressable noScaleOnPress accessibilityLabel="Copy code" onClick={onClickCopy}>
@@ -93,57 +82,34 @@ const PlaygroundControls = memo(({ onClickCopy, onClickShare }: PlaygroundContro
           </Text>
         </HStack>
       </Pressable>
-      <Pressable noScaleOnPress accessibilityLabel="Share code" onClick={onClickShare}>
-        <HStack alignItems="center">
-          <Icon name="share" paddingEnd={0.5} size="xs" />
-          <Text color="fgPrimary" font="label1">
-            Share code
-          </Text>
-        </HStack>
-      </Pressable>
     </HStack>
   );
 });
 
 type LiveProviderProps = React.ComponentProps<typeof LiveProvider>;
 
-type ShareablePlaygroundProps = Omit<LiveProviderProps, 'children' | 'code' | 'transformCode'> & {
-  /** The default initial code to display in the playground if no code was provided via the URL. */
+type CodePlaygroundProps = Omit<LiveProviderProps, 'children' | 'code' | 'transformCode'> & {
+  /** The default initial code to display in the playground. */
   defaultInitialCode: string;
 };
 
-export const ShareablePlayground = memo(function Playground({
+export const CodePlayground = memo(function Playground({
   defaultInitialCode: defaultInitialCodeProp = defaultCodeExample,
   ...props
-}: ShareablePlaygroundProps): JSX.Element {
+}: CodePlaygroundProps): JSX.Element {
   const defaultInitialCode = useMemo(
     () => defaultInitialCodeProp.replace(/\n$/, ''),
     [defaultInitialCodeProp],
   );
-  const [code, setCode] = useState(() => getSharedCode() ?? defaultInitialCode);
+  const [code, setCode] = useState(defaultInitialCode);
   const codeRef = useRef(code);
   const toast = useToast();
   const { colorScheme, theme, prismTheme } = usePlaygroundTheme();
 
-  const handleUrlUpdate = useMemo(
-    () =>
-      debounce((code: string) => {
-        const compressedCode = compressToEncodedURIComponent(code);
-        const url = new URL(window.location.href);
-        url.searchParams.set('code', compressedCode);
-        window.history.replaceState({}, '', url.toString());
-      }, 500),
-    [],
-  );
-
-  const handleCodeChange = useCallback(
-    (code: string) => {
-      codeRef.current = code;
-      handleUrlUpdate(code);
-      setCode(code);
-    },
-    [handleUrlUpdate],
-  );
+  const handleCodeChange = useCallback((code: string) => {
+    codeRef.current = code;
+    setCode(code);
+  }, []);
 
   const handleCopyToClipboard = useCallback(() => {
     navigator.clipboard
@@ -151,21 +117,6 @@ export const ShareablePlayground = memo(function Playground({
       .then(() => toast.show('Copied to clipboard'))
       .catch(() => toast.show('Failed to copy to clipboard'));
   }, [toast]);
-
-  const handleShareCode = useCallback(() => {
-    try {
-      const compressedCode = compressToEncodedURIComponent(codeRef.current);
-      const url = new URL(window.location.href);
-      // If the code has changed from the default value we include it in the URL
-      if (codeRef.current !== defaultInitialCode) url.searchParams.set('code', compressedCode);
-
-      navigator.clipboard
-        .writeText(url.toString())
-        .then(() => toast.show('Share link copied to clipboard'));
-    } catch (error) {
-      toast.show('Failed to copy share link');
-    }
-  }, [defaultInitialCode, toast]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -199,7 +150,7 @@ export const ShareablePlayground = memo(function Playground({
               <LiveEditor className={styles.playgroundEditor} onChange={handleCodeChange} />
             </VStack>
           </VStack>
-          <PlaygroundControls onClickCopy={handleCopyToClipboard} onClickShare={handleShareCode} />
+          <PlaygroundControls onClickCopy={handleCopyToClipboard} />
         </LiveProvider>
       </ThemeProvider>
     </VStack>
