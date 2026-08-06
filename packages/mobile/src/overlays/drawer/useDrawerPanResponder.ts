@@ -17,6 +17,12 @@ import {
 import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
 import { modulate } from '@coinbase/cds-common/utils/modulate';
 
+/**
+ * Dominant-axis travel required before the drawer steals the touch from children.
+ * Keeps horizontal child gestures (e.g. chart scrubbing) from being captured by dismiss.
+ */
+const DRAWER_GESTURE_CAPTURE_DISTANCE = 10;
+
 type UseDrawerPanResponderParams = {
   drawerAnimation: Animated.Value;
   animateSnapBack: Animated.CompositeAnimation;
@@ -58,10 +64,11 @@ export const useDrawerPanResponder = ({
   /** calculates whether gesture was great enough to warrant a response */
   const shouldHandleGesture = useCallback(
     ({ dx, dy }: PanResponderGestureState) => {
-      if (pin === 'bottom') {
-        return dy > MIN_PAN_DISTANCE || dy < -MIN_PAN_DISTANCE;
+      if (pin === 'bottom' || pin === 'top') {
+        // Vertical dismiss must dominate so horizontal child gestures (chart scrubbing) can win.
+        return Math.abs(dy) > DRAWER_GESTURE_CAPTURE_DISTANCE && Math.abs(dy) > Math.abs(dx);
       }
-      return dx > MIN_PAN_DISTANCE || dx < -MIN_PAN_DISTANCE;
+      return Math.abs(dx) > DRAWER_GESTURE_CAPTURE_DISTANCE && Math.abs(dx) > Math.abs(dy);
     },
     [pin],
   );
