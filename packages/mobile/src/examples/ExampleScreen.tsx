@@ -86,13 +86,15 @@ export const ExampleScreen = ({
         borderedTop
         background="bg"
         borderColor="bgLineHeavy"
-        paddingX={gutter}
         testID="mobile-playground-screen"
         {...boxProps}
       >
         <ScrollView
           ref={ref}
-          contentContainerStyle={{ flexGrow: 1 }}
+          contentContainerStyle={{
+            flexGrow: 1,
+            paddingHorizontal: theme.space[gutter],
+          }}
           keyboardShouldPersistTaps="always"
           persistentScrollbar={false}
           showsVerticalScrollIndicator={false}
