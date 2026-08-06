@@ -34,7 +34,7 @@ export type AccordionTitleBaseProps = {
    */
   subtitle?: string;
   /**
-   * Legal text of the accordion item
+   * Tertiary text of the accordion item. Uses the CDS `legal` font.
    */
   legal?: string;
 };
@@ -92,7 +92,14 @@ export const AccordionTitle = memo(({ title, subtitle, legal }: AccordionTitlePr
         {title}
       </Text>
       {!!subtitle && (
-        <Text as="div" className={subtitleCss} display="block" font="label2" overflow="wrap">
+        <Text
+          as="div"
+          className={subtitleCss}
+          color={legal ? undefined : 'fgMuted'}
+          display="block"
+          font="label2"
+          overflow="wrap"
+        >
           {subtitle}
         </Text>
       )}

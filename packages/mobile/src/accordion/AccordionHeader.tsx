@@ -32,7 +32,7 @@ export type AccordionTitleBaseProps = {
    */
   subtitle?: string;
   /**
-   * Legal text of the accordion item
+   * Tertiary text of the accordion item. Uses the CDS `legal` font.
    */
   legal?: string;
 };
@@ -65,7 +65,11 @@ export const AccordionTitle = memo(({ title, subtitle, legal }: AccordionTitlePr
   <Box flexGrow={1} flexShrink={1} justifyContent="flex-start">
     <VStack>
       <Text font="headline">{title}</Text>
-      {!!subtitle && <Text font="label2">{subtitle}</Text>}
+      {!!subtitle && (
+        <Text color={legal ? undefined : 'fgMuted'} font="label2">
+          {subtitle}
+        </Text>
+      )}
       {!!legal && (
         <Text color="fgMuted" font="legal">
           {legal}

@@ -79,22 +79,22 @@ const NoSubtitle = () => {
   );
 };
 
-const LegalWithoutSubtitle = () => {
+const SubtitleWithoutLegal = () => {
   return (
     <Accordion defaultActiveKey="1" onChange={handlePress}>
       <AccordionItem
         itemKey="1"
-        legal="Additional terms apply"
         media={<CellMedia active name="wallet" type="icon" />}
+        subtitle="subtitle1"
         title="Accordion #1"
       >
         <TextInput compact label="Amount" placeholder="8293323.23" suffix="USD" />
       </AccordionItem>
       <AccordionItem
         itemKey="2"
-        legal="Subject to eligibility"
         media={<CellMedia active name="wallet" type="icon" />}
         onPress={handlePress}
+        subtitle="subtitle2"
         title="Accordion #2"
       >
         <Text font="body">Accordion Content</Text>
@@ -153,8 +153,8 @@ const AccordionScreen = () => {
       <AccordionExample inline title="No subtitle">
         <NoSubtitle />
       </AccordionExample>
-      <AccordionExample inline title="Legal without subtitle">
-        <LegalWithoutSubtitle />
+      <AccordionExample inline title="Subtitle without legal">
+        <SubtitleWithoutLegal />
       </AccordionExample>
       <AccordionExample inline title="Title only">
         <TitleOnly />
