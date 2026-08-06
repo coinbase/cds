@@ -31,6 +31,10 @@ export type AccordionTitleBaseProps = {
    * Subtitle of the accordion item
    */
   subtitle?: string;
+  /**
+   * Legal text of the accordion item
+   */
+  legal?: string;
 };
 
 export type AccordionIconBaseProps = Pick<CollapsibleBaseProps, 'collapsed'>;
@@ -57,13 +61,14 @@ export const AccordionMedia = memo(({ media }: AccordionMediaProps) => <Box>{med
 
 export type AccordionTitleProps = AccordionTitleBaseProps;
 
-export const AccordionTitle = memo(({ title, subtitle }: AccordionTitleProps) => (
+export const AccordionTitle = memo(({ title, subtitle, legal }: AccordionTitleProps) => (
   <Box flexGrow={1} flexShrink={1} justifyContent="flex-start">
     <VStack>
       <Text font="headline">{title}</Text>
-      {!!subtitle && (
-        <Text color="fgMuted" font="body">
-          {subtitle}
+      {!!subtitle && <Text font="label2">{subtitle}</Text>}
+      {!!legal && (
+        <Text color="fgMuted" font="legal">
+          {legal}
         </Text>
       )}
     </VStack>
@@ -92,6 +97,7 @@ export const AccordionHeader = memo(
     itemKey,
     title,
     subtitle,
+    legal,
     onPress,
     media,
     collapsed,
@@ -101,7 +107,7 @@ export const AccordionHeader = memo(
   }) => {
     const { setActiveKey, activeKey } = useAccordionContext();
     const spacing = useCellSpacing();
-    const accessibilityLabel = subtitle ? `${title}, ${subtitle}` : title;
+    const accessibilityLabel = [title, subtitle, legal].filter(Boolean).join(', ');
 
     const handlePress = useCallback(() => {
       onPress?.(itemKey);
@@ -122,7 +128,7 @@ export const AccordionHeader = memo(
       >
         <HStack alignItems="center" gap={2} minHeight={listHeight} width="100%" {...spacing.outer}>
           {!!media && <AccordionMedia media={media} />}
-          <AccordionTitle subtitle={subtitle} title={title} />
+          <AccordionTitle legal={legal} subtitle={subtitle} title={title} />
           <AccordionIcon collapsed={collapsed} />
         </HStack>
       </Pressable>

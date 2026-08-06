@@ -33,6 +33,10 @@ export type AccordionTitleBaseProps = {
    * Subtitle of the accordion item
    */
   subtitle?: string;
+  /**
+   * Legal text of the accordion item
+   */
+  legal?: string;
 };
 
 export type AccordionIconBaseProps = Pick<CollapsibleBaseProps, 'collapsed'>;
@@ -81,22 +85,27 @@ export const AccordionMedia = memo(({ media }: AccordionMediaProps) => (
 
 type AccordionTitleProps = AccordionTitleBaseProps;
 
-export const AccordionTitle = memo(({ title, subtitle }: AccordionTitleProps) => (
+export const AccordionTitle = memo(({ title, subtitle, legal }: AccordionTitleProps) => (
   <Box className={titleCss} flexGrow={1} flexShrink={1} justifyContent="flex-start">
     <VStack>
       <Text as="div" display="block" font="headline" overflow="wrap">
         {title}
       </Text>
       {!!subtitle && (
+        <Text as="div" className={subtitleCss} display="block" font="label2" overflow="wrap">
+          {subtitle}
+        </Text>
+      )}
+      {!!legal && (
         <Text
           as="div"
           className={subtitleCss}
           color="fgMuted"
           display="block"
-          font="body"
+          font="legal"
           overflow="wrap"
         >
-          {subtitle}
+          {legal}
         </Text>
       )}
     </VStack>
@@ -122,7 +131,16 @@ type AccordionHeaderProps = AccordionHeaderBaseProps;
 export const AccordionHeader = memo(
   forwardRef(
     (
-      { itemKey, title, subtitle, onClick, media, collapsed = false, testID }: AccordionHeaderProps,
+      {
+        itemKey,
+        title,
+        subtitle,
+        legal,
+        onClick,
+        media,
+        collapsed = false,
+        testID,
+      }: AccordionHeaderProps,
       forwardedRef: React.ForwardedRef<HTMLButtonElement>,
     ) => {
       const { setActiveKey, activeKey } = useAccordionContext();
@@ -155,7 +173,7 @@ export const AccordionHeader = memo(
               {...spacing.outer}
             >
               {!!media && <AccordionMedia media={media} />}
-              <AccordionTitle subtitle={subtitle} title={title} />
+              <AccordionTitle legal={legal} subtitle={subtitle} title={title} />
               <AccordionIcon collapsed={collapsed} />
             </HStack>
           </Pressable>
