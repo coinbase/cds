@@ -4,6 +4,10 @@ const isTestEnv = process.env.NODE_ENV === 'test';
 
 module.exports = {
   presets: isTestEnv
-    ? [['@babel/preset-env', { modules: 'commonjs' }], '@babel/preset-typescript']
+    ? [
+        ['@babel/preset-env', { modules: 'commonjs' }],
+        ['@babel/preset-react', { runtime: 'automatic' }],
+        '@babel/preset-typescript',
+      ]
     : [docusaurusPreset],
 };
