@@ -1,6 +1,6 @@
 # cds-accessibility
 
-Teaches your AI agent to use **Coinbase Design System (CDS)** components in an **accessible** way: **documented** props (for example `accessibilityLabel` and `accessibilityState` on React Native, and `aria-*` / `as` / `role` patterns on web **as the CDS web API supports**), and **choosing CDS components** whose official docs cover the right assistive-technology behavior. Grounding is [**cds-docs**](https://skills.cbhq.net/skill/frontend/cds-public/cds-docs) (prefer **CDS MCP** `list-cds-routes` / `get-cds-doc` when available; if MCP is unavailable or fails, use **`curl`** to `https://cds.coinbase.com/llms/...` per cds-docs) and [cds.cbhq.net](https://cds.cbhq.net/)—not a generic ARIA or WCAG tutorial that ignores CDS.
+Teaches your AI agent to use **Coinbase Design System (CDS)** components in an **accessible** way: **documented** props (for example `accessibilityLabel` and `accessibilityState` on React Native, and `aria-*` / `as` / `role` patterns on web **as the CDS web API supports**), and **choosing CDS components** whose official docs cover the right assistive-technology behavior. Grounding is [**cds-docs**](https://skills.cbhq.net/skill/frontend/cds-public/cds-docs) (prefer **CDS MCP** `list-cds-routes` / `get-cds-doc` when available; if MCP is unavailable or fails, use **`curl`** to `https://cds.coinbase.com/llms/...` per cds-docs) and [cds.coinbase.com](https://cds.coinbase.com/)—not a generic ARIA or WCAG tutorial that ignores CDS.
 
 ## What it does
 
@@ -10,17 +10,17 @@ Teaches your AI agent to use **Coinbase Design System (CDS)** components in an *
 - **Component choice** – Prefer CDS **composites** (modals, forms, lists, etc.) when their **docs** describe the **focus, keyboard, and semantics** you need, instead of re-building from layout primitives.
 - **Focus management (scoped)** – When the change uses **focus-managed** CDS components (e.g. **Modal**, **Tray**, **Tooltip**, or others whose **official** doc defines focus), follow **Part 1, Step 5** in `SKILL.md` and the official examples—not generic focus-trap guidance for all UI.
 - **Definition of done** – Work is **complete** when it satisfies **Success criteria** in `SKILL.md` (doc-correct CDS a11y **props**, **confident** component choice from the **current** **CDS** **.txt** per **cds-docs**, and all relevant **docs** read and applied—including cross-links).
-- **Text (typography) and headings** – Match **`as`** (web) and **`accessibilityRole`** (React Native) to content intent and the [Text (typography)](https://cds.cbhq.net/components/typography/Text/) doc; use **Text** **web** and **mobile** routes per **cds-docs**.
+- **Text (typography) and headings** – Match **`as`** (web) and **`accessibilityRole`** (React Native) to content intent and the [Text (typography)](https://cds.coinbase.com/components/typography/Text/) doc; use **Text** **web** and **mobile** routes per **cds-docs**.
 - **Relationship to `cds-code`** – **`cds-code`** covers building CDS UI (layout, theming, imports, visualization, **visual** verification). **This skill** covers **CDS accessibility consumption** and **a11y-driven** component choice. Use both for typical feature work; use [cds-docs](https://skills.cbhq.net/skill/frontend/cds-public/cds-docs) for how you fetch **CDS** **.txt** for both.
 
 ## Dependencies
 
-| Dependency         | Required    | Purpose                                                                                                                                                                                                                                                      |
-| ------------------ | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| **cds-docs**       | Yes         | [cds-docs](https://skills.cbhq.net/skill/frontend/cds-public/cds-docs): how to load official CDS **.txt** (index first, then pages)—**MCP** (`list-cds-routes`, `get-cds-doc`) when available, else **`curl -fsSL`** to `https://cds.coinbase.com/llms/...`. |
-| **CDS MCP server** | Optional    | **Preferred** first step in cds-docs when the environment has CDS MCP; not required if you use the **curl** path from cds-docs.                                                                                                                              |
-| **cds.cbhq.net**   | Recommended | Browsing and shared links; same content family as the **`llms`** / MCP **.txt** sources.                                                                                                                                                                     |
-| **cds-code skill** | Recommended | Session setup, package discovery, and CDS-first UI build flow when you are not doing a read-only a11y review.                                                                                                                                                |
+| Dependency           | Required    | Purpose                                                                                                                                                                                                                                                      |
+| -------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **cds-docs**         | Yes         | [cds-docs](https://skills.cbhq.net/skill/frontend/cds-public/cds-docs): how to load official CDS **.txt** (index first, then pages)—**MCP** (`list-cds-routes`, `get-cds-doc`) when available, else **`curl -fsSL`** to `https://cds.coinbase.com/llms/...`. |
+| **CDS MCP server**   | Optional    | **Preferred** first step in cds-docs when the environment has CDS MCP; not required if you use the **curl** path from cds-docs.                                                                                                                              |
+| **cds.coinbase.com** | Recommended | Browsing and shared links; same content family as the **`llms`** / MCP **.txt** sources.                                                                                                                                                                     |
+| **cds-code skill**   | Recommended | Session setup, package discovery, and CDS-first UI build flow when you are not doing a read-only a11y review.                                                                                                                                                |
 
 ### Documentation access (cds-docs, not MCP-only)
 
@@ -53,4 +53,4 @@ Install via your organization’s skill registry. To add **cds-docs** in the sam
 
 - [**cds-docs**](https://skills.cbhq.net/skill/frontend/cds-public/cds-docs) – how to load CDS **.txt** (MCP and curl).
 - **`cds-code`** in the same registry – CDS-first **building** and **visual** verification.
-- [https://cds.cbhq.net/](https://cds.cbhq.net/) – official CDS documentation.
+- [https://cds.coinbase.com/](https://cds.coinbase.com/) – official CDS documentation.
