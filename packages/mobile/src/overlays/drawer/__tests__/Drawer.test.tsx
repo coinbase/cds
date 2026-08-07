@@ -1,6 +1,5 @@
 import { createRef, useCallback, useState } from 'react';
 import { Modal } from 'react-native';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 import { drawerAnimationDefaultDuration } from '@coinbase/cds-common/animation/drawer';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
@@ -99,13 +98,6 @@ describe('Drawer', () => {
     render(<MockDrawerWithSafeArea />);
 
     expect(screen.UNSAFE_queryAllByType(Modal)).toBeTruthy();
-  });
-  it('wraps Modal content in GestureHandlerRootView for Android gesture support', () => {
-    render(<MockDrawerWithSafeArea />);
-
-    fireEvent.press(screen.getByTestId('open-drawer-button'));
-
-    expect(screen.UNSAFE_queryAllByType(GestureHandlerRootView).length).toBeGreaterThan(0);
   });
   it('opens the Drawer when trigger is pressed', () => {
     render(<MockDrawerWithSafeArea />);

@@ -121,14 +121,12 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     [onScrubberPositionChange],
   );
 
-  // Create the long press pan gesture
   const longPressGesture = useMemo(() => {
     const pan = Gesture.Pan()
       .activateAfterLongPress(110)
       .shouldCancelWhenOutside(!allowOverflowGestures);
 
-    // Fail when the user clearly moves on the cross-axis before scrub activates, so a
-    // parent Tray/Drawer pan-to-dismiss gesture can win.
+    // Fail on cross-axis movement so parent pan-to-dismiss can win.
     if (categoryAxisIsX) {
       pan.failOffsetY([-15, 15]);
     } else {
@@ -187,14 +185,12 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>
   );
 
-  // Wrap with gesture handler only if scrubbing is enabled
   if (enableScrubbing) {
     return (
       <GestureDetector gesture={longPressGesture}>
+        {/* Claim RN responder so parent PanResponders (e.g. Tray) don't steal the touch. */}
         <View
           collapsable={false}
-          // Claim the RN responder in the chart so parent PanResponders (Tray/Drawer
-          // outside-handle) do not take the touch on Android before long-press scrub activates.
           onMoveShouldSetResponder={() => true}
           onStartShouldSetResponder={() => true}
         >

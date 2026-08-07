@@ -48,8 +48,7 @@ import { useDrawerPanResponder } from './useDrawerPanResponder';
 import { useDrawerSpacing } from './useDrawerSpacing';
 
 const drawerStyles = StyleSheet.create({
-  // RN Modal content sits outside the app GestureHandlerRootView on Android,
-  // so gestures (e.g. chart scrubbing) need their own root inside the Modal.
+  // Android Modal is outside the app gesture root; RNGH needs one here.
   gestureRoot: {
     flex: 1,
   },
