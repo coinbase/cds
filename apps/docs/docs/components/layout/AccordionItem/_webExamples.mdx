@@ -17,9 +17,15 @@ Each `AccordionItem` requires a unique `itemKey` to identify it within the paren
 
 ## Header Content
 
-### Title and Subtitle
+### Title, Subtitle, and Tertiary Title
 
-Use the `title` prop for the main header text and `subtitle` for secondary information.
+Use `title` for the main header text, `subtitle` for secondary information, and `tertiaryTitle` for optional tertiary text under the subtitle. `subtitle` and `tertiaryTitle` are independent—either can appear alone.
+
+Each level of heading utilizes a different CDS font:
+
+- `title` — `headline`
+- `subtitle` — `label2`
+- `tertiaryTitle` — `legal`
 
 ```jsx live
 <Accordion>
@@ -27,6 +33,7 @@ Use the `title` prop for the main header text and `subtitle` for secondary infor
     itemKey="1"
     title="Account Settings"
     subtitle="Manage your profile, security, and preferences"
+    tertiaryTitle="Subject to Coinbase User Agreement"
   >
     <VStack gap={2}>
       <Text as="p" font="body" color="fgMuted">

@@ -33,6 +33,10 @@ export type AccordionTitleBaseProps = {
    * Subtitle of the accordion item
    */
   subtitle?: string;
+  /**
+   * Tertiary text of the accordion item. Uses the CDS `legal` font.
+   */
+  tertiaryTitle?: string;
 };
 
 export type AccordionIconBaseProps = Pick<CollapsibleBaseProps, 'collapsed'>;
@@ -81,7 +85,7 @@ export const AccordionMedia = memo(({ media }: AccordionMediaProps) => (
 
 type AccordionTitleProps = AccordionTitleBaseProps;
 
-export const AccordionTitle = memo(({ title, subtitle }: AccordionTitleProps) => (
+export const AccordionTitle = memo(({ title, subtitle, tertiaryTitle }: AccordionTitleProps) => (
   <Box className={titleCss} flexGrow={1} flexShrink={1} justifyContent="flex-start">
     <VStack>
       <Text as="div" display="block" font="headline" overflow="wrap">
@@ -91,12 +95,24 @@ export const AccordionTitle = memo(({ title, subtitle }: AccordionTitleProps) =>
         <Text
           as="div"
           className={subtitleCss}
-          color="fgMuted"
+          color={tertiaryTitle ? undefined : 'fgMuted'}
           display="block"
-          font="body"
+          font="label2"
           overflow="wrap"
         >
           {subtitle}
+        </Text>
+      )}
+      {!!tertiaryTitle && (
+        <Text
+          as="div"
+          className={subtitleCss}
+          color="fgMuted"
+          display="block"
+          font="legal"
+          overflow="wrap"
+        >
+          {tertiaryTitle}
         </Text>
       )}
     </VStack>
@@ -122,7 +138,16 @@ type AccordionHeaderProps = AccordionHeaderBaseProps;
 export const AccordionHeader = memo(
   forwardRef(
     (
-      { itemKey, title, subtitle, onClick, media, collapsed = false, testID }: AccordionHeaderProps,
+      {
+        itemKey,
+        title,
+        subtitle,
+        tertiaryTitle,
+        onClick,
+        media,
+        collapsed = false,
+        testID,
+      }: AccordionHeaderProps,
       forwardedRef: React.ForwardedRef<HTMLButtonElement>,
     ) => {
       const { setActiveKey, activeKey } = useAccordionContext();
@@ -155,7 +180,7 @@ export const AccordionHeader = memo(
               {...spacing.outer}
             >
               {!!media && <AccordionMedia media={media} />}
-              <AccordionTitle subtitle={subtitle} title={title} />
+              <AccordionTitle subtitle={subtitle} tertiaryTitle={tertiaryTitle} title={title} />
               <AccordionIcon collapsed={collapsed} />
             </HStack>
           </Pressable>

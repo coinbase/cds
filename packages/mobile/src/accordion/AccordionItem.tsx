@@ -27,6 +27,7 @@ export const AccordionItem = memo(
     itemKey,
     title,
     subtitle,
+    tertiaryTitle,
     children,
     onPress,
     media,
@@ -47,6 +48,7 @@ export const AccordionItem = memo(
           media={media}
           onPress={onPress}
           subtitle={subtitle}
+          tertiaryTitle={tertiaryTitle}
           testID={testID && `${testID}-header`}
           title={title}
         />

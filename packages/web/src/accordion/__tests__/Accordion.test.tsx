@@ -38,6 +38,7 @@ const MockAccordion = ({
     >
       <AccordionItem
         itemKey="1"
+        tertiaryTitle="tertiaryTitle1"
         media={<CellMedia active name="wallet" testID="mock-accordion-item1-media" type="icon" />}
         onClick={onClick1}
         subtitle="subtitle1"
@@ -50,6 +51,7 @@ const MockAccordion = ({
       </AccordionItem>
       <AccordionItem
         itemKey="2"
+        tertiaryTitle="tertiaryTitle2"
         media={<CellMedia active name="wallet" testID="mock-accordion-item2-media" type="icon" />}
         onClick={onClick2}
         subtitle="subtitle2"
@@ -157,8 +159,10 @@ describe('Accordion', () => {
 
       expect(screen.getByText('Accordion #1')).toBeVisible();
       expect(screen.getByText('subtitle1')).toBeVisible();
+      expect(screen.getByText('tertiaryTitle1')).toBeVisible();
       expect(screen.getByText('Accordion #2')).toBeVisible();
       expect(screen.getByText('subtitle2')).toBeVisible();
+      expect(screen.getByText('tertiaryTitle2')).toBeVisible();
     });
 
     it('renders media', () => {
