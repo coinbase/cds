@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.10.4 (8/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Enable chart scrubbing inside Tray/Drawer on Android (GestureHandlerRootView in Modal; chart claims touch responder so outside-handle pan-to-dismiss does not block long-press scrub). [[#827](https://github.com/coinbase/cds/pull/827)]
+
 ## 9.10.3 (8/5/2026 PST)
 
 #### 🐞 Fixes

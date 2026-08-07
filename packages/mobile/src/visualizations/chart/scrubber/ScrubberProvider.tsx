@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Platform } from 'react-native';
+import { Platform, View } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 
@@ -121,51 +121,57 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     [onScrubberPositionChange],
   );
 
-  // Create the long press pan gesture
-  const longPressGesture = useMemo(
-    () =>
-      Gesture.Pan()
-        .activateAfterLongPress(110)
-        .shouldCancelWhenOutside(!allowOverflowGestures)
-        .onStart(function onStart(event) {
-          runOnJS(handleStartEndHaptics)();
+  const longPressGesture = useMemo(() => {
+    const pan = Gesture.Pan()
+      .activateAfterLongPress(110)
+      .shouldCancelWhenOutside(!allowOverflowGestures);
 
-          // Android does not trigger onUpdate when the gesture starts. This achieves consistent behavior across both iOS and Android
-          if (Platform.OS === 'android') {
-            const pointerPosition = categoryAxisIsX ? event.x : event.y;
-            const newScrubberPosition = getDataIndexFromPosition(pointerPosition);
-            if (newScrubberPosition !== scrubberPosition.value) {
-              scrubberPosition.value = newScrubberPosition;
-            }
-          }
-        })
-        .onUpdate(function onUpdate(event) {
+    // Fail on cross-axis movement so parent pan-to-dismiss can win.
+    if (categoryAxisIsX) {
+      pan.failOffsetY([-15, 15]);
+    } else {
+      pan.failOffsetX([-15, 15]);
+    }
+
+    return pan
+      .onStart(function onStart(event) {
+        runOnJS(handleStartEndHaptics)();
+
+        // Android does not trigger onUpdate when the gesture starts. This achieves consistent behavior across both iOS and Android
+        if (Platform.OS === 'android') {
           const pointerPosition = categoryAxisIsX ? event.x : event.y;
           const newScrubberPosition = getDataIndexFromPosition(pointerPosition);
           if (newScrubberPosition !== scrubberPosition.value) {
             scrubberPosition.value = newScrubberPosition;
           }
-        })
-        .onEnd(function onEnd() {
-          if (enableScrubbing) {
-            runOnJS(handleStartEndHaptics)();
-            scrubberPosition.value = undefined;
-          }
-        })
-        .onTouchesCancelled(function onTouchesCancelled() {
-          if (enableScrubbing) {
-            scrubberPosition.value = undefined;
-          }
-        }),
-    [
-      allowOverflowGestures,
-      handleStartEndHaptics,
-      getDataIndexFromPosition,
-      categoryAxisIsX,
-      scrubberPosition,
-      enableScrubbing,
-    ],
-  );
+        }
+      })
+      .onUpdate(function onUpdate(event) {
+        const pointerPosition = categoryAxisIsX ? event.x : event.y;
+        const newScrubberPosition = getDataIndexFromPosition(pointerPosition);
+        if (newScrubberPosition !== scrubberPosition.value) {
+          scrubberPosition.value = newScrubberPosition;
+        }
+      })
+      .onEnd(function onEnd() {
+        if (enableScrubbing) {
+          runOnJS(handleStartEndHaptics)();
+          scrubberPosition.value = undefined;
+        }
+      })
+      .onTouchesCancelled(function onTouchesCancelled() {
+        if (enableScrubbing) {
+          scrubberPosition.value = undefined;
+        }
+      });
+  }, [
+    allowOverflowGestures,
+    handleStartEndHaptics,
+    getDataIndexFromPosition,
+    categoryAxisIsX,
+    scrubberPosition,
+    enableScrubbing,
+  ]);
 
   const contextValue: ScrubberContextValue = useMemo(
     () => ({
@@ -179,9 +185,19 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>
   );
 
-  // Wrap with gesture handler only if scrubbing is enabled
   if (enableScrubbing) {
-    return <GestureDetector gesture={longPressGesture}>{content}</GestureDetector>;
+    return (
+      <GestureDetector gesture={longPressGesture}>
+        {/* Claim RN responder so parent PanResponders (e.g. Tray) don't steal the touch. */}
+        <View
+          collapsable={false}
+          onMoveShouldSetResponder={() => true}
+          onStartShouldSetResponder={() => true}
+        >
+          {content}
+        </View>
+      </GestureDetector>
+    );
   }
 
   return content;
