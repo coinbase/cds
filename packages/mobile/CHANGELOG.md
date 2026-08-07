@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.11.0 (8/7/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support text in component config. [[#831](https://github.com/coinbase/cds/pull/831)]
+- Feat: add support for font scaling in TextFallback. [[#831](https://github.com/coinbase/cds/pull/831)]
+
 ## 9.10.4 (8/6/2026 PST)
 
 #### 🐞 Fixes
