@@ -305,7 +305,7 @@ export const coinbaseTheme = {
     fgInverse: `rgb(${lightSpectrum.gray0})`,
     fgPrimary: `rgb(${lightSpectrum.blue60})`,
     fgWarning: `rgb(${lightSpectrum.orange60})`,
-    fgPositive: `rgb(${lightSpectrum.green60})`,
+    fgPositive: `rgb(${lightSpectrum.green70})`,
     fgNegative: `rgb(${lightSpectrum.red60})`,
     // Background
     bg: `rgb(${lightSpectrum.gray0})`,

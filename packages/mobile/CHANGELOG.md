@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.12.1 (8/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Bump light fgPositive from green60 to green70 for WCAG AA contrast on grey backgrounds (CDS-801).
+
 ## 9.12.0 (8/7/2026 PST)
 
 #### 🚀 Updates
