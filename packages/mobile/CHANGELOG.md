@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.11.0 (8/7/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add a tertiary-level header to AccordionItem. [[#830](https://github.com/coinbase/cds/pull/830)]
+
 ## 9.10.4 (8/6/2026 PST)
 
 #### 🐞 Fixes
