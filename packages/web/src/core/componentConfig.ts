@@ -83,6 +83,8 @@ import type { TabsBaseProps } from '../tabs/Tabs';
 import type { TagBaseProps } from '../tag/Tag';
 import type { TourBaseProps } from '../tour/Tour';
 import type { LinkBaseProps } from '../typography/Link';
+import type { TextBaseProps } from '../typography/Text';
+import type { TextFallbackBaseProps } from '../typography/TextFallback';
 import type { ProgressBaseProps } from '../visualizations/ProgressBar';
 import type { ProgressBarWithFixedLabelsBaseProps } from '../visualizations/ProgressBarWithFixedLabels';
 import type { ProgressBarWithFloatLabelBaseProps } from '../visualizations/ProgressBarWithFloatLabel';
@@ -183,6 +185,8 @@ export type ComponentConfig = {
   TableRow?: ConfigResolver<TableRowBaseProps>;
   Tabs?: ConfigResolver<TabsBaseProps>;
   Tag?: ConfigResolver<TagBaseProps>;
+  Text?: ConfigResolver<TextBaseProps>;
+  TextFallback?: ConfigResolver<TextFallbackBaseProps>;
   TextInput?: ConfigResolver<TextInputBaseProps>;
   Tile?: ConfigResolver<TileBaseProps>;
   TileButton?: ConfigResolver<TileButtonBaseProps>;
