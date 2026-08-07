@@ -9679,15 +9679,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/lz-string@npm:^1.5.0":
-  version: 1.5.0
-  resolution: "@types/lz-string@npm:1.5.0"
-  dependencies:
-    lz-string: "npm:*"
-  checksum: 10c0/201878368ba68fc270ada4710488054e0841427c888968dcc093134693645259be3a972801649b5b1e818ee2f24886ba08a651b5cb36c778b857f1a18ef14d7f
-  languageName: node
-  linkType: hard
-
 "@types/mdast@npm:^3.0.0":
   version: 3.0.10
   resolution: "@types/mdast@npm:3.0.10"
@@ -14922,7 +14913,6 @@ __metadata:
     "@react-three/fiber": "npm:^8.18.0"
     "@stackblitz/sdk": "npm:^1.11.0"
     "@types/culori": "npm:^4"
-    "@types/lz-string": "npm:^1.5.0"
     "@types/react": "npm:19.1.2"
     "@types/react-dom": "npm:19.1.2"
     "@types/three": "npm:0.177.0"
@@ -14933,7 +14923,6 @@ __metadata:
     html-webpack-plugin: "npm:^5.6.3"
     kbar: "npm:^0.1.0-beta.45"
     lodash: "npm:^4.17.21"
-    lz-string: "npm:^1.5.0"
     mini-css-extract-plugin: "npm:^2.9.3"
     prettier: "npm:^3.6.2"
     prism-react-renderer: "npm:^2.4.1"
@@ -21553,7 +21542,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lz-string@npm:*, lz-string@npm:^1.4.4, lz-string@npm:^1.5.0":
+"lz-string@npm:^1.4.4, lz-string@npm:^1.5.0":
   version: 1.5.0
   resolution: "lz-string@npm:1.5.0"
   bin:
