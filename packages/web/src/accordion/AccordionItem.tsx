@@ -26,7 +26,7 @@ export const AccordionItem = memo(
     itemKey,
     title,
     subtitle,
-    legal,
+    tertiaryTitle,
     children,
     onClick,
     media,
@@ -45,10 +45,10 @@ export const AccordionItem = memo(
           ref={headerRef}
           collapsed={collapsed}
           itemKey={itemKey}
-          legal={legal}
           media={media}
           onClick={onClick}
           subtitle={subtitle}
+          tertiaryTitle={tertiaryTitle}
           testID={testID && `${testID}-header`}
           title={title}
         />

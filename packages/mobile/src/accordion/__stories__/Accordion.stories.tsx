@@ -23,7 +23,7 @@ const BasicAccordion = () => {
     <Accordion defaultActiveKey="2" onChange={handlePress}>
       <AccordionItem
         itemKey="1"
-        legal="legal1"
+        tertiaryTitle="tertiaryTitle1"
         media={<CellMedia active name="wallet" type="icon" />}
         subtitle="subtitle1"
         title="Accordion #1"
@@ -32,7 +32,7 @@ const BasicAccordion = () => {
       </AccordionItem>
       <AccordionItem
         itemKey="2"
-        legal="legal2"
+        tertiaryTitle="tertiaryTitle2"
         media={<CellMedia active name="wallet" type="icon" />}
         onPress={handlePress}
         subtitle="subtitle2"
@@ -79,7 +79,7 @@ const NoSubtitle = () => {
   );
 };
 
-const SubtitleWithoutLegal = () => {
+const SubtitleWithoutTertiaryTitle = () => {
   return (
     <Accordion defaultActiveKey="1" onChange={handlePress}>
       <AccordionItem
@@ -153,8 +153,8 @@ const AccordionScreen = () => {
       <AccordionExample inline title="No subtitle">
         <NoSubtitle />
       </AccordionExample>
-      <AccordionExample inline title="Subtitle without legal">
-        <SubtitleWithoutLegal />
+      <AccordionExample inline title="Subtitle without tertiary title">
+        <SubtitleWithoutTertiaryTitle />
       </AccordionExample>
       <AccordionExample inline title="Title only">
         <TitleOnly />

@@ -36,7 +36,7 @@ export type AccordionTitleBaseProps = {
   /**
    * Tertiary text of the accordion item. Uses the CDS `legal` font.
    */
-  legal?: string;
+  tertiaryTitle?: string;
 };
 
 export type AccordionIconBaseProps = Pick<CollapsibleBaseProps, 'collapsed'>;
@@ -85,7 +85,7 @@ export const AccordionMedia = memo(({ media }: AccordionMediaProps) => (
 
 type AccordionTitleProps = AccordionTitleBaseProps;
 
-export const AccordionTitle = memo(({ title, subtitle, legal }: AccordionTitleProps) => (
+export const AccordionTitle = memo(({ title, subtitle, tertiaryTitle }: AccordionTitleProps) => (
   <Box className={titleCss} flexGrow={1} flexShrink={1} justifyContent="flex-start">
     <VStack>
       <Text as="div" display="block" font="headline" overflow="wrap">
@@ -95,7 +95,7 @@ export const AccordionTitle = memo(({ title, subtitle, legal }: AccordionTitlePr
         <Text
           as="div"
           className={subtitleCss}
-          color={legal ? undefined : 'fgMuted'}
+          color={tertiaryTitle ? undefined : 'fgMuted'}
           display="block"
           font="label2"
           overflow="wrap"
@@ -103,7 +103,7 @@ export const AccordionTitle = memo(({ title, subtitle, legal }: AccordionTitlePr
           {subtitle}
         </Text>
       )}
-      {!!legal && (
+      {!!tertiaryTitle && (
         <Text
           as="div"
           className={subtitleCss}
@@ -112,7 +112,7 @@ export const AccordionTitle = memo(({ title, subtitle, legal }: AccordionTitlePr
           font="legal"
           overflow="wrap"
         >
-          {legal}
+          {tertiaryTitle}
         </Text>
       )}
     </VStack>
@@ -142,7 +142,7 @@ export const AccordionHeader = memo(
         itemKey,
         title,
         subtitle,
-        legal,
+        tertiaryTitle,
         onClick,
         media,
         collapsed = false,
@@ -180,7 +180,7 @@ export const AccordionHeader = memo(
               {...spacing.outer}
             >
               {!!media && <AccordionMedia media={media} />}
-              <AccordionTitle legal={legal} subtitle={subtitle} title={title} />
+              <AccordionTitle subtitle={subtitle} tertiaryTitle={tertiaryTitle} title={title} />
               <AccordionIcon collapsed={collapsed} />
             </HStack>
           </Pressable>
