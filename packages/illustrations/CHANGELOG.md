@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.47.0 (8/7/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-08-07. [[#833](https://github.com/coinbase/cds/pull/833)]
+
 ##### ⭐️ Added (2)
 
 ###### HeroSquare (2)
