@@ -289,6 +289,9 @@ const svgEsmMap = {
   cbdoge: {
     themeable: () => import('../svgJs/esm/themeable/cbdoge-0.js').then((m) => m.default as string),
   },
+  cbhype: {
+    themeable: () => import('../svgJs/esm/themeable/cbhype-0.js').then((m) => m.default as string),
+  },
   cbltc: {
     themeable: () => import('../svgJs/esm/themeable/cbltc-0.js').then((m) => m.default as string),
   },
@@ -297,6 +300,9 @@ const svgEsmMap = {
   },
   cbxrp: {
     themeable: () => import('../svgJs/esm/themeable/cbxrp-0.js').then((m) => m.default as string),
+  },
+  cbzec: {
+    themeable: () => import('../svgJs/esm/themeable/cbzec-0.js').then((m) => m.default as string),
   },
   chickenFishSystemError: {
     themeable: () =>

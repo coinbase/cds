@@ -8,6 +8,13 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (2)
+
+###### HeroSquare (2)
+
+- cbhype
+- cbzec
+
 ## 4.46.0 (7/31/2026 PST)
 
 #### 🚀 Updates
