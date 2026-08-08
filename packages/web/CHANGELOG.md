@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.12.1 (8/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: disable mount animation for DefaultTabsActiveIndicator. [[#834](https://github.com/coinbase/cds/pull/834)]
+
 ## 9.12.0 (8/7/2026 PST)
 
 #### 🚀 Updates
