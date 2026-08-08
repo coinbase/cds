@@ -329,10 +329,7 @@ export const XAxis = memo<XAxisProps>(
         )}
         {chartTextData &&
           (fadeTickLabels ? (
-            <AxisTickLabelOverflowMask
-              axis="x"
-              testID={`${testID}-tick-label-overflow`}
-            >
+            <AxisTickLabelOverflowMask axis="x" testID={`${testID}-tick-label-overflow`}>
               <ChartTextGroup
                 prioritizeEndLabels
                 LabelComponent={TickLabelComponent}

@@ -1,4 +1,4 @@
-## Basic Example
+## Basics
 
 The YAxis component provides a vertical axis for charts with automatic tick generation and labeling.
 
@@ -113,7 +113,7 @@ You can pass in either an object (AxisBounds) with `min` and `max` properties (b
 
 ## Axis Props
 
-Properties related to the visual appearance of the YAxis are set on the component itself. This includes `position`, `showGrid`, `showLine`, `showTickMarks`, `size`, `tickInterval`, `ticks`, `tickLabelFormatter`, and `tickMarkSize`.
+Properties related to the visual appearance of the YAxis are set on the component itself. This includes `position`, `showGrid`, `showLine`, `showTickMarks`, `size`, `tickInterval`, `ticks`, `tickLabelFormatter`, `tickLabelOverflow`, and `tickMarkSize`.
 
 ### Position
 
@@ -441,6 +441,30 @@ You can customize the tick labels using the `tickLabelFormatter` prop.
   <YAxis showGrid tickLabelFormatter={(value) => `$${value}`} />
   <Line seriesId="prices" showArea />
   <Scrubber />
+</CartesianChart>
+```
+
+### Tick Label Overflow
+
+Use `tickLabelOverflow` to control how tick labels behave at the chart edges.
+
+```jsx
+<CartesianChart
+  height={250}
+  inset={0}
+  series={[
+    {
+      id: 'values',
+      data: [10, 22, 29, 45, 98, 45, 22],
+    },
+  ]}
+  xAxis={{
+    data: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'],
+  }}
+  yAxis={{ domain: { min: 0 } }}
+>
+  <YAxis showLine showTickMarks tickLabelOverflow="fade" width={64} />
+  <Line seriesId="values" />
 </CartesianChart>
 ```
 

@@ -313,10 +313,7 @@ export const YAxis = memo<YAxisProps>(
         )}
         {chartTextData &&
           (fadeTickLabels ? (
-            <AxisTickLabelOverflowMask
-              axis="y"
-              testID={`${testID}-tick-label-overflow`}
-            >
+            <AxisTickLabelOverflowMask axis="y" testID={`${testID}-tick-label-overflow`}>
               <ChartTextGroup
                 prioritizeEndLabels
                 LabelComponent={TickLabelComponent}
