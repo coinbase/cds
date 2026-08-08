@@ -8,7 +8,7 @@ import { CartesianChart } from '../../CartesianChart';
 import { LineChart, SolidLine, type SolidLineProps } from '../../line';
 import { Line } from '../../line/Line';
 import { Scrubber } from '../../scrubber/Scrubber';
-import { XAxis, YAxis } from '..';
+import { type AxisTickLabelOverflow, XAxis, YAxis } from '..';
 
 export default {
   component: XAxis,
@@ -31,52 +31,52 @@ const Example: React.FC<
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
-const Simple = () => {
-  const data = [
-    {
-      name: 'Page A',
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: 'Page B',
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: 'Page C',
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: 'Page D',
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: 'Page E',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: 'Page F',
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: 'Page G',
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+const data = [
+  {
+    name: 'Page A',
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
+  },
+  {
+    name: 'Page B',
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: 'Page C',
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    name: 'Page D',
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: 'Page E',
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: 'Page F',
+    uv: 2390,
+    pv: 3800,
+    amt: 2500,
+  },
+  {
+    name: 'Page G',
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+];
 
+const Simple = () => {
   const pageViews = data.map((d) => d.pv);
   const pageNames = data.map((d) => d.name);
   const pageUniqueVisitors = data.map((d) => d.uv);
@@ -499,6 +499,115 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
   );
 };
 
+const tickLabelOverflowModes: AxisTickLabelOverflow[] = ['reposition', 'fade', 'visible'];
+const ordinalLabels = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
+const overflowSeriesData = [10, 22, 29, 45, 98, 45, 22];
+
+const TickLabelOverflowYAxes = () => (
+  <CartesianChart
+    height={320}
+    series={[
+      {
+        id: 'line1',
+        data: overflowSeriesData,
+        color: 'var(--color-accentBoldBlue)',
+      },
+    ]}
+    xAxis={{
+      scaleType: 'band',
+      data: ordinalLabels,
+    }}
+    yAxis={{ domain: { min: 0 } }}
+    inset={0}
+  >
+    {tickLabelOverflowModes.map((tickLabelOverflow) => (
+      <YAxis
+        key={`left-${tickLabelOverflow}`}
+        showLine
+        showTickMarks
+        label={tickLabelOverflow}
+        position="left"
+        tickLabelOverflow={tickLabelOverflow}
+        width={64}
+      />
+    ))}
+    {tickLabelOverflowModes.map((tickLabelOverflow) => (
+      <YAxis
+        key={`right-${tickLabelOverflow}`}
+        showLine
+        showTickMarks
+        label={tickLabelOverflow}
+        position="right"
+        tickLabelOverflow={tickLabelOverflow}
+        width={64}
+      />
+    ))}
+    <Line seriesId="line1" />
+  </CartesianChart>
+);
+
+const TickLabelOverflowXAxes = () => (
+  <CartesianChart
+    height={420}
+    series={[
+      {
+        id: 'line1',
+        data: overflowSeriesData,
+        color: 'var(--color-accentBoldBlue)',
+      },
+    ]}
+    xAxis={{
+      data: ordinalLabels,
+    }}
+    yAxis={{ domain: { min: 0 } }}
+    inset={0}
+  >
+    {tickLabelOverflowModes.map((tickLabelOverflow) => (
+      <XAxis
+        key={`bottom-${tickLabelOverflow}`}
+        showLine
+        showTickMarks
+        label={tickLabelOverflow}
+        position="bottom"
+        tickLabelOverflow={tickLabelOverflow}
+      />
+    ))}
+    {tickLabelOverflowModes.map((tickLabelOverflow) => (
+      <XAxis
+        key={`top-${tickLabelOverflow}`}
+        showLine
+        showTickMarks
+        label={tickLabelOverflow}
+        position="top"
+        tickLabelOverflow={tickLabelOverflow}
+      />
+    ))}
+    <Line seriesId="line1" />
+  </CartesianChart>
+);
+
+const TickLabelOverflowAllSides = () => (
+  <CartesianChart
+    height={400}
+    series={[
+      {
+        id: 'line1',
+        data: overflowSeriesData,
+        color: 'var(--color-accentBoldBlue)',
+      },
+    ]}
+    xAxis={{
+      data: ordinalLabels,
+    }}
+    yAxis={{ domain: { min: 0, max: 100 } }}
+    inset={0}
+  >
+    <XAxis showLine showTickMarks label="Fade" position="bottom" tickLabelOverflow="fade" />
+    <YAxis showLine showTickMarks label="Visible" position="left" tickLabelOverflow="visible" />
+    <Line curve="natural" seriesId="line1" />
+  </CartesianChart>
+);
+
 export const All = () => {
   return (
     <React.StrictMode>
@@ -547,6 +656,15 @@ export const All = () => {
         </Example>
         <Example title="Custom Tick Mark Sizes">
           <CustomTickMarkSizes />
+        </Example>
+        <Example title="Y Axis Label Repositioning">
+          <TickLabelOverflowYAxes />
+        </Example>
+        <Example title="X Axis Label Repositioning">
+          <TickLabelOverflowXAxes />
+        </Example>
+        <Example title="Ineffective Repositioning due to other axes">
+          <TickLabelOverflowAllSides />
         </Example>
       </VStack>
     </React.StrictMode>

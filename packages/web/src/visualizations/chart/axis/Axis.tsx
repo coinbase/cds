@@ -44,6 +44,7 @@ export type AxisTickLabelComponentProps = Pick<
   | 'inset'
   | 'background'
   | 'borderRadius'
+  | 'repositionAxes'
   | 'disableRepositioning'
   | 'bounds'
   | 'styles'
@@ -55,6 +56,8 @@ export type AxisTickLabelComponentProps = Pick<
 >;
 
 export type AxisTickLabelComponent = React.FC<AxisTickLabelComponentProps>;
+
+export type AxisTickLabelOverflow = 'reposition' | 'fade' | 'visible';
 
 export type AxisBaseProps = SharedProps & {
   /**
@@ -155,6 +158,15 @@ export type AxisBaseProps = SharedProps & {
    * Prevents the step from being larger than this value.
    */
   tickMaxStep?: number;
+  /**
+   * How tick labels behave at the chart edges.
+   * - `reposition` — nudge labels to stay in bounds on both axes.
+   * - `fade` — add a fade effect to the labels at the edges (vertical for y-axis, horizontal for x-axis),
+   *   reposition on opposite axis (horizontal for y-axis, vertical for x-axis).
+   * - `visible` — leave labels at their natural positions with no fading.
+   * @default 'reposition'
+   */
+  tickLabelOverflow?: AxisTickLabelOverflow;
 };
 
 export type AxisProps = AxisBaseProps & {

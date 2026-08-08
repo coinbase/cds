@@ -13,6 +13,7 @@ import { getPointOnScale } from '../utils/point';
 import { type CategoricalScale, isCategoricalScale } from '../utils/scale';
 
 import { type AxisBaseProps, type AxisProps } from './Axis';
+import { AxisTickLabelOverflowMask } from './AxisTickLabelOverflowMask';
 import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
 
 const AXIS_HEIGHT = 32;
@@ -64,6 +65,7 @@ export const XAxis = memo<XAxisProps>(
     height = label ? AXIS_HEIGHT + LABEL_SIZE : AXIS_HEIGHT,
     bandGridLinePlacement = 'edges',
     bandTickMarkPlacement = 'middle',
+    tickLabelOverflow = 'reposition',
     ...props
   }) => {
     const theme = useTheme();
@@ -78,6 +80,7 @@ export const XAxis = memo<XAxisProps>(
       unregisterAxis,
       getAxisBounds,
     } = useCartesianChartContext();
+    const fadeTickLabels = tickLabelOverflow === 'fade';
 
     const xScale = getXScale(axisId);
     const xAxis = getXAxis(axisId);
@@ -232,6 +235,8 @@ export const XAxis = memo<XAxisProps>(
             color: theme.color.fgMuted,
             verticalAlignment: 'middle',
             horizontalAlignment: 'center',
+            repositionAxes:
+              tickLabelOverflow === 'visible' ? 'none' : fadeTickLabels ? 'y' : 'both',
           },
         };
       });
@@ -244,6 +249,8 @@ export const XAxis = memo<XAxisProps>(
       tickMarkSize,
       position,
       formatTick,
+      fadeTickLabels,
+      tickLabelOverflow,
     ]);
 
     if (!xScale || !axisBounds) return;
@@ -278,14 +285,6 @@ export const XAxis = memo<XAxisProps>(
             ))}
           </Group>
         )}
-        {chartTextData && (
-          <ChartTextGroup
-            prioritizeEndLabels
-            LabelComponent={TickLabelComponent}
-            labels={chartTextData}
-            minGap={minTickLabelGap}
-          />
-        )}
         {axisBounds && showTickMarks && (
           <Group>
             {tickMarkPositions.map(({ x, key }) => (
@@ -316,8 +315,32 @@ export const XAxis = memo<XAxisProps>(
             strokeWidth={1}
           />
         )}
+        {chartTextData &&
+          (fadeTickLabels ? (
+            <AxisTickLabelOverflowMask axis="x">
+              <ChartTextGroup
+                prioritizeEndLabels
+                LabelComponent={TickLabelComponent}
+                labels={chartTextData}
+                minGap={minTickLabelGap}
+              />
+            </AxisTickLabelOverflowMask>
+          ) : (
+            <ChartTextGroup
+              prioritizeEndLabels
+              LabelComponent={TickLabelComponent}
+              labels={chartTextData}
+              minGap={minTickLabelGap}
+            />
+          ))}
         {label && (
-          <ChartText horizontalAlignment="center" verticalAlignment="middle" x={labelX} y={labelY}>
+          <ChartText
+            horizontalAlignment="center"
+            repositionAxes="none"
+            verticalAlignment="middle"
+            x={labelX}
+            y={labelY}
+          >
             {label}
           </ChartText>
         )}

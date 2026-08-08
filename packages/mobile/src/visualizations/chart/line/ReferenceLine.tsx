@@ -28,6 +28,7 @@ export type ReferenceLineLabelComponentProps = Pick<
   | 'background'
   | 'borderRadius'
   | 'disableRepositioning'
+  | 'repositionAxes'
   | 'horizontalAlignment'
   | 'verticalAlignment'
   | 'font'
