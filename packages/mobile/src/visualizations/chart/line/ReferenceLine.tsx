@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import { useDerivedValue } from 'react-native-reanimated';
-import type { AnimatedProp } from '@shopify/react-native-skia';
+import { type AnimatedProp, Skia } from '@shopify/react-native-skia';
 
 import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
@@ -198,15 +198,18 @@ export const ReferenceLine = memo<ReferenceLineProps>(
         : undefined;
     }, [dataY, yScale]);
 
-    const horizontalLine = useDerivedValue(() => {
-      if (yPixel.value === undefined) return;
-      return `M${drawingArea.x},${yPixel.value} L${drawingArea.x + drawingArea.width},${yPixel.value}`;
-    }, [drawingArea, yPixel]);
-
-    const verticalLine = useDerivedValue(() => {
-      if (xPixel.value === undefined) return;
-      return `M${xPixel.value},${drawingArea.y} L${xPixel.value},${drawingArea.y + drawingArea.height}`;
-    }, [drawingArea, xPixel]);
+    // Build SkPath with moveTo/lineTo — SVG strings + MakeFromSVGString every scrub frame is too expensive.
+    const line = useDerivedValue(() => {
+      const path = Skia.Path.Make();
+      if (yPixel.value !== undefined) {
+        path.moveTo(drawingArea.x, yPixel.value);
+        path.lineTo(drawingArea.x + drawingArea.width, yPixel.value);
+      } else if (xPixel.value !== undefined) {
+        path.moveTo(xPixel.value, drawingArea.y);
+        path.lineTo(xPixel.value, drawingArea.y + drawingArea.height);
+      }
+      return path;
+    }, [drawingArea, xPixel, yPixel]);
 
     const labelXPixel = useDerivedValue(() => xPixel.value ?? 0, [xPixel]);
     const labelYPixel = useDerivedValue(() => yPixel.value ?? 0, [yPixel]);
@@ -232,7 +235,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
         <>
           <LineComponent
             animate={false}
-            d={horizontalLine}
+            d={line}
             stroke={effectiveLineStroke}
             strokeOpacity={opacity}
           />
@@ -271,7 +274,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
         <>
           <LineComponent
             animate={false}
-            d={verticalLine}
+            d={line}
             stroke={effectiveLineStroke}
             strokeOpacity={opacity}
           />

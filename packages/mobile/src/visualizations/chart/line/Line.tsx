@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react';
-import { type AnimatedProp, Group } from '@shopify/react-native-skia';
+import { type AnimatedProp, Group, type SkPath } from '@shopify/react-native-skia';
 
 import { useTheme } from '../../../hooks/useTheme';
 import { Area, type AreaComponent } from '../area/Area';
@@ -114,9 +114,9 @@ export type LineComponentProps = Pick<
 > &
   Pick<PathProps, 'clipPath' | 'strokeCap'> & {
     /**
-     * Path of the line
+     * Path of the line. Accepts an SVG path string or a SkPath (including animated values of either).
      */
-    d: AnimatedProp<string | undefined>;
+    d: AnimatedProp<string | SkPath | undefined>;
     /**
      * ID of the x-axis to use.
      * If not provided, defaults to the default x-axis.

@@ -7,6 +7,7 @@ import {
   Path as SkiaPath,
   type PathProps as SkiaPathProps,
   Skia,
+  type SkPath,
   usePathInterpolation,
 } from '@shopify/react-native-skia';
 
@@ -20,6 +21,9 @@ import {
   usePathTransition,
 } from './utils/transition';
 import { useCartesianChartContext } from './ChartProvider';
+
+const pathInterpolationInput = [0, 1];
+const emptyClipPaths = [Skia.Path.Make(), Skia.Path.Make()];
 
 /**
  * Duration in milliseconds for path enter transition.
@@ -119,10 +123,10 @@ export type PathProps = PathBaseProps &
      */
     transition?: Transition;
     /**
-     * The SVG path data string.
-     * @note d only supports transitions for string values, not animated values.
+     * The path data. Accepts an SVG path string or a SkPath (including animated values of either).
+     * @note Path transitions only apply to string values, not animated or SkPath values.
      */
-    d?: AnimatedProp<string | undefined>;
+    d?: AnimatedProp<string | SkPath | undefined>;
     /**
      * Offset added to the clip rect boundaries.
      */
@@ -158,10 +162,8 @@ const AnimatedPath = memo<
     transitions,
     ...pathProps
   }) => {
-    const isDAnimated = typeof d !== 'string';
-
     const animatedPath = usePathTransition({
-      currentPath: isDAnimated ? '' : d,
+      currentPath: typeof d === 'string' ? d : '',
       initialPath,
       transitions,
     });
@@ -170,10 +172,14 @@ const AnimatedPath = memo<
     const isStroked = stroke !== undefined && stroke !== 'none';
 
     const activePath = useDerivedValue(() => {
-      if (isDAnimated) {
-        return d.value ?? Skia.Path.Make();
+      if (typeof d === 'string') {
+        return animatedPath.value;
       }
-      return animatedPath.value;
+      const dValue = unwrapAnimatedValue(d);
+      if (!dValue) return Skia.Path.Make();
+      return typeof dValue === 'string'
+        ? (Skia.Path.MakeFromSVGString(dValue) ?? Skia.Path.Make())
+        : dValue;
     });
 
     return (
@@ -257,6 +263,14 @@ export const Path = memo<PathProps>((props) => {
   const animateEnterOpacity = Boolean(enterOpacityTransition);
   const enterOpacity = useSharedValue(animateEnterOpacity ? 0 : 1);
 
+  const pathTransitions = useMemo(
+    () => ({
+      enter: enterTransition,
+      update: updateTransition,
+    }),
+    [enterTransition, updateTransition],
+  );
+
   useEffect(() => {
     if (!animateEnterOpacity) {
       enterOpacity.value = 1;
@@ -319,15 +333,21 @@ export const Path = memo<PathProps>((props) => {
     return { initialClipPath: initial, targetClipPath: target };
   }, [rect, clipOffset, totalOffset, context.layout]);
 
-  // Use usePathInterpolation for animated clip path
+  // Stable array identity — new [path, path] each render rebinds usePathInterpolation's reaction.
+  const clipInterpolationOutput = useMemo(() => {
+    if (animateClip && initialClipPath && targetClipPath) {
+      return [initialClipPath, targetClipPath];
+    }
+    if (targetClipPath) {
+      return [targetClipPath, targetClipPath];
+    }
+    return emptyClipPaths;
+  }, [animateClip, initialClipPath, targetClipPath]);
+
   const animatedClipPath = usePathInterpolation(
     clipProgress,
-    [0, 1],
-    animateClip && initialClipPath && targetClipPath
-      ? [initialClipPath, targetClipPath]
-      : targetClipPath
-        ? [targetClipPath, targetClipPath]
-        : [Skia.Path.Make(), Skia.Path.Make()],
+    pathInterpolationInput,
+    clipInterpolationOutput,
   );
 
   // Resolve the final clip path:
@@ -349,10 +369,11 @@ export const Path = memo<PathProps>((props) => {
     return undefined;
   }, [clipPathProp, animateClip, targetClipPath]);
 
-  // Convert SVG path string to SkPath for static rendering
+  // Prefer SkPath values as-is — MakeFromSVGString on every scrub frame is too expensive.
   const staticPath = useDerivedValue(() => {
     const dValue = unwrapAnimatedValue(d);
     if (!dValue) return Skia.Path.Make();
+    if (typeof dValue !== 'string') return dValue;
     return Skia.Path.MakeFromSVGString(dValue) ?? Skia.Path.Make();
   }, [d]);
 
@@ -392,10 +413,7 @@ export const Path = memo<PathProps>((props) => {
       strokeJoin={strokeJoin}
       strokeOpacity={strokeOpacity}
       strokeWidth={strokeWidth}
-      transitions={{
-        enter: enterTransition,
-        update: updateTransition,
-      }}
+      transitions={pathTransitions}
     >
       {children}
     </AnimatedPath>

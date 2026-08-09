@@ -11,6 +11,8 @@ import type { BarSeries } from './BarStack';
 import type { BarStackGroupProps } from './BarStackGroup';
 import { BarStackGroup } from './BarStackGroup';
 
+const pathInterpolationInput = [0, 1];
+
 export type BarPlotBaseProps = Pick<
   BarStackGroupProps,
   | 'barPadding'
@@ -106,10 +108,15 @@ export const BarPlot = memo<BarPlotProps>(
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [drawingArea, animate, clipUpdateTransition]);
 
+    const clipInterpolationOutput = useMemo(
+      () => [clipPaths.from, clipPaths.to],
+      [clipPaths.from, clipPaths.to],
+    );
+
     const animatedClipPath = usePathInterpolation(
       clipProgress,
-      [0, 1],
-      [clipPaths.from, clipPaths.to],
+      pathInterpolationInput,
+      clipInterpolationOutput,
     );
 
     if (!drawingArea) return;

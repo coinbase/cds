@@ -7,6 +7,8 @@ import { Path, type PathProps } from '../Path';
 
 import type { LineComponentProps } from './Line';
 
+const defaultDashIntervals = [0, 4];
+
 export type DottedLineProps = Pick<
   PathProps,
   'initialPath' | 'children' | 'strokeCap' | 'strokeJoin' | 'clipRect' | 'clipPath' | 'clipOffset'
@@ -28,7 +30,7 @@ export const DottedLine = memo<DottedLineProps>(
   ({
     fill = 'none',
     stroke,
-    dashIntervals = [0, 4],
+    dashIntervals = defaultDashIntervals,
     strokeCap = 'round',
     strokeJoin = 'round',
     strokeOpacity = 1,

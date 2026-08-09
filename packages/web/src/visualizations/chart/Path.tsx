@@ -167,6 +167,15 @@ export const Path = memo<PathProps>(
       return transitions?.enterOpacity;
     }, [animate, transitions?.enterOpacity]);
 
+    const pathTransitions = useMemo(
+      () => ({
+        enter: enterTransition,
+        enterOpacity: enterOpacityTransition,
+        update: updateTransition,
+      }),
+      [enterTransition, enterOpacityTransition, updateTransition],
+    );
+
     const animateClip = animate && enterTransition !== null;
 
     // The clip offset provides extra padding to prevent path from being cut off
@@ -221,16 +230,7 @@ export const Path = memo<PathProps>(
             </clipPath>
           </defs>
         )}
-        <AnimatedPath
-          clipPath={clipPath}
-          d={d}
-          transitions={{
-            enter: enterTransition,
-            enterOpacity: enterOpacityTransition,
-            update: updateTransition,
-          }}
-          {...pathProps}
-        />
+        <AnimatedPath clipPath={clipPath} d={d} transitions={pathTransitions} {...pathProps} />
       </>
     );
   },
