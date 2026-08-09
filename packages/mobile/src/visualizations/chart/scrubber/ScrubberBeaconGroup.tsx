@@ -20,7 +20,7 @@ type BeaconWithDataProps = Pick<
   dataIndexValue: SharedValue<number>;
   isIdle: SharedValue<boolean>;
   BeaconComponent: ScrubberBeaconComponent;
-  beaconRef: (ref: ScrubberBeaconRef | null) => void;
+  registerBeaconRef: (seriesId: string, ref: ScrubberBeaconRef) => void;
 };
 
 // Helper component to calculate beacon data for a specific series
@@ -34,7 +34,7 @@ const BeaconWithData = memo<BeaconWithDataProps>(
     idlePulse,
     animate,
     transitions,
-    beaconRef,
+    registerBeaconRef,
     stroke,
   }) => {
     const { layout, getSeries, getSeriesData, getXScale, getYScale } = useCartesianChartContext();
@@ -43,6 +43,15 @@ const BeaconWithData = memo<BeaconWithDataProps>(
     const series = useMemo(() => getSeries(seriesId), [getSeries, seriesId]);
     const sourceData = useMemo(() => getSeriesData(seriesId), [getSeriesData, seriesId]);
     const gradient = series?.gradient;
+
+    const setBeaconRef = useCallback(
+      (beaconRef: ScrubberBeaconRef | null) => {
+        if (beaconRef) {
+          registerBeaconRef(seriesId, beaconRef);
+        }
+      },
+      [registerBeaconRef, seriesId],
+    );
 
     const dataY = useDerivedValue(() => {
       if (
@@ -119,7 +128,7 @@ const BeaconWithData = memo<BeaconWithDataProps>(
 
     return (
       <BeaconComponent
-        ref={beaconRef}
+        ref={setBeaconRef}
         animate={animate}
         color={color}
         dataX={categoryAxisIsX ? dataIndexValue : dataY}
@@ -224,27 +233,16 @@ export const ScrubberBeaconGroup = memo(
       return scrubberPosition.value === undefined;
     }, [scrubberPosition]);
 
-    const createBeaconRef = useCallback(
-      (seriesId: string) => {
-        return (beaconRef: ScrubberBeaconRef | null) => {
-          if (beaconRef) {
-            ScrubberBeaconRefs.registerRef(seriesId, beaconRef);
-          }
-        };
-      },
-      [ScrubberBeaconRefs],
-    );
-
     return filteredSeries.map((s) => (
       <BeaconWithData
         key={s.id}
         BeaconComponent={BeaconComponent}
         animate={animate}
-        beaconRef={createBeaconRef(s.id)}
         dataIndex={dataIndex}
         dataIndexValue={dataIndexValue}
         idlePulse={idlePulse}
         isIdle={isIdle}
+        registerBeaconRef={ScrubberBeaconRefs.registerRef}
         seriesId={s.id}
         stroke={stroke}
         transitions={transitions}
