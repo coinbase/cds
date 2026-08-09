@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Platform, View } from 'react-native';
+import { Platform } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useAnimatedReaction, useSharedValue } from 'react-native-reanimated';
 
@@ -185,19 +185,9 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>
   );
 
+  // Wrap with gesture handler only if scrubbing is enabled
   if (enableScrubbing) {
-    return (
-      <GestureDetector gesture={longPressGesture}>
-        {/* Claim RN responder so parent PanResponders (e.g. Tray) don't steal the touch. */}
-        <View
-          collapsable={false}
-          onMoveShouldSetResponder={() => true}
-          onStartShouldSetResponder={() => true}
-        >
-          {content}
-        </View>
-      </GestureDetector>
-    );
+    return <GestureDetector gesture={longPressGesture}>{content}</GestureDetector>;
   }
 
   return content;

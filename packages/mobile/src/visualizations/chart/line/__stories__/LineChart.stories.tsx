@@ -1856,14 +1856,16 @@ function DataCardWithLineChart() {
         thumbnail={exampleThumbnail}
         title="Line Chart Card"
       >
-        <LineChart
-          showArea
-          accessibilityLabel="Ethereum price chart"
-          areaType="dotted"
-          height={120}
-          inset={0}
-          series={lineChartSeries}
-        />
+        <Box height={120}>
+          <LineChart
+            showArea
+            accessibilityLabel="Ethereum price chart"
+            areaType="dotted"
+            flexGrow={1}
+            inset={0}
+            series={lineChartSeries}
+          />
+        </Box>
       </DataCard>
       <DataCard
         layout="vertical"
