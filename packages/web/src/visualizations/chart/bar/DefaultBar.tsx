@@ -102,6 +102,15 @@ export const DefaultBar = memo<DefaultBarProps>(
       [transitions?.update, transition, animate, normalizedStagger],
     );
 
+    const pathTransitions = useMemo(
+      () => ({
+        enter: enterTransitionWithStagger,
+        enterOpacity: enterOpacityTransitionWithStagger,
+        update: updateTransition,
+      }),
+      [enterTransitionWithStagger, enterOpacityTransitionWithStagger, updateTransition],
+    );
+
     const initialPath = useMemo(() => {
       if (!animate) return;
       const isHorizontalLayout = layout === 'horizontal';
@@ -144,11 +153,7 @@ export const DefaultBar = memo<DefaultBarProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         initialPath={initialPath}
-        transitions={{
-          enter: enterTransitionWithStagger,
-          enterOpacity: enterOpacityTransitionWithStagger,
-          update: updateTransition,
-        }}
+        transitions={pathTransitions}
         {...props}
       />
     );
