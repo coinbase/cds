@@ -1858,6 +1858,7 @@ function DataCardWithLineChart() {
       >
         <Box height={120}>
           <LineChart
+            enableScrubbing
             showArea
             accessibilityLabel="Ethereum price chart"
             areaType="dotted"
