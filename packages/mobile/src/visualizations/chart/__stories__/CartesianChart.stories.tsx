@@ -1,8 +1,8 @@
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Image, StyleSheet } from 'react-native';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { Circle, Group, Skia } from '@shopify/react-native-skia';
+import { Circle, Group, Line as SkiaLine, RoundedRect } from '@shopify/react-native-skia';
 
 import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
 import { useTheme } from '../../../hooks/useTheme';
@@ -10,7 +10,9 @@ import { Box, HStack, VStack } from '../../../layout';
 import { Text } from '../../../typography';
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
-import { BarPlot } from '../bar/BarPlot';
+import type { BarComponentProps } from '../bar/Bar';
+import { BarPlot, type BarPlotProps } from '../bar/BarPlot';
+import type { BarStackComponentProps } from '../bar/BarStack';
 import { useCartesianChartContext } from '../ChartProvider';
 import { Line } from '../line/Line';
 import { Point } from '../point/Point';
@@ -220,6 +222,13 @@ const EarningsHistory = () => {
 };
 
 const btcData = btcCandles.slice(0, 180).reverse();
+
+const btcOpenClose = btcData.map(
+  (candle) => [parseFloat(candle.open), parseFloat(candle.close)] as [number, number],
+);
+const btcHighLow = btcData.map(
+  (candle) => [parseFloat(candle.low), parseFloat(candle.high)] as [number, number],
+);
 
 const btcPrices = btcData.map((candle) => parseFloat(candle.close));
 const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
@@ -547,4 +556,297 @@ const ChartStories = () => {
   );
 };
 
-export default ChartStories;
+// export default ChartStories;
+
+const CandlestickBarStack = memo(({ children }: BarStackComponentProps) => <>{children}</>);
+
+type CandlestickPlotProps = Omit<
+  BarPlotProps,
+  'seriesIds' | 'BarComponent' | 'BarStackComponent'
+> & {
+  highLowSeriesId: string;
+  openCloseSeriesId: string;
+  yAxisId?: string;
+  wickStrokeWidth?: number;
+};
+
+const createCandlestickBarComponent = (
+  openCloseSeriesId: string,
+  yAxisId?: string,
+  wickStrokeWidth = 1,
+) =>
+  memo<BarComponentProps>(function CandlestickBar({ x, y, width, height, dataX }) {
+    const theme = useTheme();
+    const { getYScale, getSeriesData } = useCartesianChartContext();
+    const yScale = getYScale(yAxisId);
+    const openCloseData = getSeriesData(openCloseSeriesId);
+    const categoryIndex = dataX as number;
+    const openClose = openCloseData?.[categoryIndex];
+
+    if (!openClose) return null;
+
+    const [open, close] = openClose;
+    const bullish = open < close;
+    const color = bullish ? `rgb(${theme.spectrum.green40})` : `rgb(${theme.spectrum.red40})`;
+    const openY = yScale?.(open) ?? 0;
+    const closeY = yScale?.(close) ?? 0;
+    const bodyHeight = Math.abs(openY - closeY);
+    const bodyY = openY < closeY ? openY : closeY;
+    const wickX = x + width / 2;
+
+    return (
+      <>
+        <SkiaLine
+          color={color}
+          p1={{ x: wickX, y }}
+          p2={{ x: wickX, y: y + height }}
+          strokeWidth={wickStrokeWidth}
+        />
+        <RoundedRect color={color} height={bodyHeight} width={width} x={x} y={bodyY} r={2} />
+      </>
+    );
+  });
+
+const CandlestickPlot = memo(
+  ({
+    highLowSeriesId,
+    openCloseSeriesId,
+    yAxisId,
+    wickStrokeWidth = 1,
+    ...barPlotProps
+  }: CandlestickPlotProps) => {
+    const CandlestickBarComponent = useMemo(
+      () => createCandlestickBarComponent(openCloseSeriesId, yAxisId, wickStrokeWidth),
+      [openCloseSeriesId, yAxisId, wickStrokeWidth],
+    );
+
+    return (
+      <BarPlot
+        BarComponent={CandlestickBarComponent}
+        BarStackComponent={CandlestickBarStack}
+        seriesIds={[highLowSeriesId]}
+        {...barPlotProps}
+      />
+    );
+  },
+);
+
+const liveCandleCount = 10;
+const liveTickIntervalMinMs = 250;
+const liveTickIntervalMaxMs = 1_000;
+const liveLoopDurationMs = 60_000;
+const liveCandleDurationMs = 6_000;
+const liveTicksPerCandle = 12;
+const liveBasePrice = 50_000;
+const liveTickStepMin = 75;
+const liveTickStepMax = 450;
+
+type LiveCandle = {
+  open: number;
+  close: number;
+  high: number;
+  low: number;
+};
+
+type LiveCandleData = {
+  openClose: [number, number][];
+  highLow: [number, number][];
+};
+
+const seededRandom = (seed: number) => {
+  const value = Math.sin(seed * 12.9898 + 78.233) * 43_758.5453;
+  return value - Math.floor(value);
+};
+
+const createLiveCandle = (open: number): LiveCandle => ({
+  open,
+  close: open,
+  high: open,
+  low: open,
+});
+
+const getLiveTickIntervalMs = (tickIndex: number) => {
+  const random = seededRandom(tickIndex * 7 + 13);
+  return liveTickIntervalMinMs + random * (liveTickIntervalMaxMs - liveTickIntervalMinMs);
+};
+
+const getNextClose = (currentClose: number, tickIndex: number) => {
+  const directionRandom = seededRandom(tickIndex * 11 + 3);
+  const stepRandom = seededRandom(tickIndex * 11 + 9);
+  const direction = directionRandom < 0.5 ? 1 : -1;
+  const step = liveTickStepMin + stepRandom * (liveTickStepMax - liveTickStepMin);
+
+  return currentClose + direction * step;
+};
+
+const tickLiveCandle = (candle: LiveCandle, tickIndex: number): LiveCandle => {
+  const close = getNextClose(candle.close, tickIndex);
+
+  return {
+    open: candle.open,
+    close,
+    high: Math.max(candle.high, close),
+    low: Math.min(candle.low, close),
+  };
+};
+
+const toLiveCandleData = (candles: LiveCandle[]): LiveCandleData => ({
+  openClose: candles.map((candle) => [candle.open, candle.close]),
+  highLow: candles.map((candle) => [candle.low, candle.high]),
+});
+
+const shiftLiveCandles = (candles: LiveCandle[]): LiveCandle[] => {
+  const lastClose = candles[candles.length - 1]?.close ?? liveBasePrice;
+  const trimmed = candles.length >= liveCandleCount ? candles.slice(1) : candles;
+
+  return [...trimmed, createLiveCandle(lastClose)];
+};
+
+const buildLiveCandle = (open: number, startTickIndex: number) => {
+  let candle = createLiveCandle(open);
+  let tickIndex = startTickIndex;
+
+  for (let tick = 0; tick < liveTicksPerCandle; tick++) {
+    candle = tickLiveCandle(candle, tickIndex);
+    tickIndex += 1;
+  }
+
+  return { candle, nextTickIndex: tickIndex };
+};
+
+const createInitialLiveCandles = () => {
+  const candles: LiveCandle[] = [];
+  let price = liveBasePrice;
+  let tickIndex = 0;
+
+  for (let index = 0; index < liveCandleCount; index++) {
+    const result = buildLiveCandle(price, tickIndex);
+    candles.push(result.candle);
+    price = result.candle.close;
+    tickIndex = result.nextTickIndex;
+  }
+
+  return { candles, tickIndex };
+};
+
+const initialLiveState = createInitialLiveCandles();
+
+const RefreshedChart = memo(() => {
+  const theme = useTheme();
+  const [candles, setCandles] = useState(() => initialLiveState.candles);
+  const tickIndexRef = useRef(initialLiveState.tickIndex);
+  const loopStartRef = useRef(Date.now());
+  const lastShiftRef = useRef(Date.now());
+
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const scheduleTick = () => {
+      const tickIndex = tickIndexRef.current;
+      const intervalMs = getLiveTickIntervalMs(tickIndex);
+
+      timeoutId = setTimeout(() => {
+        const now = Date.now();
+
+        if (now - loopStartRef.current >= liveLoopDurationMs) {
+          const reset = createInitialLiveCandles();
+          loopStartRef.current = now;
+          lastShiftRef.current = now;
+          tickIndexRef.current = reset.tickIndex;
+          setCandles(reset.candles);
+          scheduleTick();
+          return;
+        }
+
+        if (now - lastShiftRef.current >= liveCandleDurationMs) {
+          lastShiftRef.current = now;
+          setCandles((current) => shiftLiveCandles(current));
+        }
+
+        setCandles((current) => {
+          if (current.length === 0) return current;
+
+          const next = [...current];
+          const formingIndex = next.length - 1;
+          next[formingIndex] = tickLiveCandle(next[formingIndex], tickIndex);
+          return next;
+        });
+
+        tickIndexRef.current += 1;
+        scheduleTick();
+      }, intervalMs);
+    };
+
+    scheduleTick();
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  const candleData = useMemo(() => toLiveCandleData(candles), [candles]);
+
+  const formatPriceInThousands = useCallback((price: number) => {
+    return `$${(price / 1000).toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    })}k`;
+  }, []);
+
+  const series = useMemo(
+    () => [
+      {
+        id: 'open/close',
+        data: candleData.openClose,
+        color: theme.color.fgPrimary,
+        yAxisId: 'price',
+      },
+      {
+        id: 'high/low',
+        data: candleData.highLow,
+        color: theme.color.fgMuted,
+        yAxisId: 'price',
+      },
+    ],
+    [candleData, theme.color.fgMuted, theme.color.fgPrimary],
+  );
+
+  const xAxis = useMemo(
+    () => ({
+      scaleType: 'band' as const,
+      range: ({ min, max }: { min: number; max: number }) => ({ min, max: max - 8 }),
+    }),
+    [],
+  );
+
+  const yAxis = useMemo(
+    () => ({
+      id: 'price',
+      domain: ({ min, max }: { min: number; max: number }) => ({ min: min * 0.9, max }),
+    }),
+    [],
+  );
+
+  return (
+    <ExampleScreen>
+      <Example title="Live Candlesticks">
+        <Box marginX={-3}>
+          <CartesianChart
+            height={defaultChartHeight}
+            series={series}
+            xAxis={xAxis}
+            yAxis={yAxis}
+            animate={false}
+          >
+            <YAxis showGrid axisId="price" tickLabelFormatter={formatPriceInThousands} width={40} />
+            <CandlestickPlot
+              highLowSeriesId="high/low"
+              openCloseSeriesId="open/close"
+              yAxisId="price"
+            />
+          </CartesianChart>
+        </Box>
+      </Example>
+    </ExampleScreen>
+  );
+});
+
+export default RefreshedChart;
