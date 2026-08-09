@@ -1,7 +1,8 @@
-import React, { memo, useCallback, useId, useMemo, useState } from 'react';
+import React, { memo, useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { m as motion, type Transition } from 'framer-motion';
 
 import { Radio } from '../../../controls/Radio';
 import { Box, type BoxBaseProps, Divider, HStack, VStack } from '../../../layout';
@@ -11,11 +12,14 @@ import { Pressable } from '../../../system';
 import { Text } from '../../../typography';
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
+import type { AxisTickLabelComponentProps } from '../axis/Axis';
 import { useCartesianChartContext } from '../ChartProvider';
-import { ReferenceLine, SolidLine, type SolidLineProps } from '../line';
+import { ReferenceLine, SolidLine, type LineComponentProps, type SolidLineProps } from '../line';
 import { Line } from '../line/Line';
 import { LineChart } from '../line/LineChart';
 import { isCategoricalScale } from '../utils';
+import { defaultBarEnterOpacityTransition } from '../utils/bar';
+import { defaultTransition } from '../utils/transition';
 import { BarPlot, CartesianChart, type ChartTextChildren, PeriodSelector, Scrubber } from '../';
 
 export default {
@@ -581,6 +585,567 @@ function TradingTrends() {
   );
 }
 
+const liveChartHeight = 400;
+const liveCandleCount = 30;
+const liveTickIntervalMinMs = 250;
+const liveTickIntervalMaxMs = 1_000;
+const liveLoopDurationMs = 60_000;
+const liveCandleDurationMs = 6_000;
+const liveTicksPerCandle = 12;
+const liveBasePrice = 50_000;
+const liveTickStepMin = 75;
+const liveTickStepMax = 450;
+const livePriceTickStep = 2_000;
+const livePriceTickMin = 40_000;
+const livePriceTickMax = 60_000;
+const livePriceTicks = Array.from(
+  { length: (livePriceTickMax - livePriceTickMin) / livePriceTickStep + 1 },
+  (_, index) => livePriceTickMin + index * livePriceTickStep,
+);
+
+const parseHorizontalLinePath = (path?: string) => {
+  if (!path) return null;
+
+  const commaMatch = path.match(/M\s*([\d.-]+)\s*,\s*([\d.-]+)\s+L\s*([\d.-]+)\s*,\s*([\d.-]+)/);
+  if (commaMatch) {
+    return { x1: Number(commaMatch[1]), y: Number(commaMatch[2]), x2: Number(commaMatch[3]) };
+  }
+
+  const spaceMatch = path.match(/M\s*([\d.-]+)\s+([\d.-]+)\s+L\s*([\d.-]+)\s+([\d.-]+)/);
+  if (spaceMatch) {
+    return { x1: Number(spaceMatch[1]), y: Number(spaceMatch[2]), x2: Number(spaceMatch[3]) };
+  }
+
+  return null;
+};
+
+type LiveCandle = {
+  id: number;
+  open: number;
+  close: number;
+  high: number;
+  low: number;
+};
+
+type ExitingCandle = {
+  candle: LiveCandle;
+  slotIndex: number;
+};
+
+type LiveCandleData = {
+  openClose: [number, number][];
+  highLow: [number, number][];
+};
+
+let liveCandleId = 0;
+
+const nextLiveCandleId = () => {
+  liveCandleId += 1;
+  return liveCandleId;
+};
+
+const seededRandom = (seed: number) => {
+  const value = Math.sin(seed * 12.9898 + 78.233) * 43_758.5453;
+  return value - Math.floor(value);
+};
+
+const createLiveCandle = (open: number): LiveCandle => ({
+  id: nextLiveCandleId(),
+  open,
+  close: open,
+  high: open,
+  low: open,
+});
+
+const candlePriceTransition: Transition = {
+  type: 'spring',
+  stiffness: 1_400,
+  damping: 90,
+  mass: 4,
+};
+const candleShiftTransition: Transition = {
+  type: 'spring',
+  stiffness: 1_200,
+  damping: 85,
+  mass: 4,
+};
+const candleExitTransition: Transition = { type: 'tween', duration: 0.25 };
+const candleEnterTransition = defaultTransition;
+const candleEnterOpacityTransition = defaultBarEnterOpacityTransition;
+const candleEnterDurationMs = 200;
+const candleExitDurationMs = 250;
+const minCandleBodyHeight = 1;
+
+const LiveAxisGridLine = memo(({ d, stroke, strokeWidth = 1 }: LineComponentProps) => {
+  const coords = useMemo(() => parseHorizontalLinePath(d), [d]);
+
+  if (!coords) return null;
+
+  return (
+    <motion.line
+      animate={{ y1: coords.y, y2: coords.y }}
+      initial={false}
+      stroke={stroke ?? 'var(--color-bgLine)'}
+      strokeWidth={strokeWidth}
+      transition={candlePriceTransition}
+      x1={coords.x1}
+      x2={coords.x2}
+      y1={coords.y}
+      y2={coords.y}
+    />
+  );
+});
+
+const LiveAxisTickLabel = memo(
+  ({
+    x,
+    y,
+    children,
+    horizontalAlignment = 'left',
+    verticalAlignment = 'middle',
+    color = 'var(--color-fgMuted)',
+    style,
+  }: AxisTickLabelComponentProps) => {
+    const textAnchor =
+      horizontalAlignment === 'right' ? 'end' : horizontalAlignment === 'left' ? 'start' : 'middle';
+    const dominantBaseline =
+      verticalAlignment === 'middle' ? 'middle' : verticalAlignment === 'top' ? 'hanging' : 'auto';
+
+    return (
+      <motion.text
+        animate={{ x, y }}
+        dominantBaseline={dominantBaseline}
+        fill={color}
+        initial={false}
+        style={{
+          fontFamily: 'var(--fontFamily-label2)',
+          ...style,
+        }}
+        textAnchor={textAnchor}
+        transition={candlePriceTransition}
+      >
+        {children}
+      </motion.text>
+    );
+  },
+);
+
+type AnimatedCandleProps = {
+  candle: LiveCandle;
+  slotIndex: number;
+  isExiting?: boolean;
+  isEntering?: boolean;
+  onExitComplete?: () => void;
+};
+
+const AnimatedCandle = memo(
+  ({
+    candle,
+    slotIndex,
+    isExiting = false,
+    isEntering = false,
+    onExitComplete,
+  }: AnimatedCandleProps) => {
+    const { drawingArea, getXScale, getYScale } = useCartesianChartContext();
+    const xScale = getXScale();
+    const yScale = getYScale();
+
+    const slotX = useMemo(() => {
+      if (!xScale || !isCategoricalScale(xScale)) return 0;
+      return xScale(slotIndex) ?? 0;
+    }, [slotIndex, xScale]);
+
+    const barWidth = useMemo(() => {
+      if (!xScale || !isCategoricalScale(xScale)) return 0;
+      return xScale.bandwidth();
+    }, [xScale]);
+
+    const geometry = useMemo(() => {
+      const wickCenterX = slotX + barWidth / 2;
+      const highY = yScale?.(candle.high) ?? 0;
+      const lowY = yScale?.(candle.low) ?? 0;
+      const openY = yScale?.(candle.open) ?? 0;
+      const closeY = yScale?.(candle.close) ?? 0;
+      const bodyY = Math.min(openY, closeY);
+      const bodyHeight = Math.max(Math.abs(openY - closeY), minCandleBodyHeight);
+      const bullish = candle.open < candle.close;
+      const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+
+      return { wickCenterX, highY, lowY, bodyY, bodyHeight, color };
+    }, [barWidth, candle, slotX, yScale]);
+
+    const isReady = Boolean(xScale && yScale && drawingArea && barWidth > 0);
+    const exitWickX = geometry.wickCenterX - barWidth * 2;
+    const enterWickX = geometry.wickCenterX + barWidth;
+    const targetWickX = isExiting ? exitWickX : geometry.wickCenterX;
+    const xTransition = isEntering
+      ? candleEnterTransition
+      : isExiting
+        ? candleExitTransition
+        : candleShiftTransition;
+    const yTransition = isEntering ? candleEnterTransition : candlePriceTransition;
+
+    useEffect(() => {
+      if (!isExiting) return;
+
+      const timeoutId = setTimeout(() => {
+        onExitComplete?.();
+      }, candleExitDurationMs);
+
+      return () => clearTimeout(timeoutId);
+    }, [isExiting, onExitComplete]);
+
+    if (!isReady) return null;
+
+    return (
+      <motion.g
+        animate={{
+          opacity: isExiting ? 0 : 1,
+          x: targetWickX,
+        }}
+        initial={
+          isEntering
+            ? {
+                opacity: 0,
+                x: enterWickX,
+              }
+            : false
+        }
+        transition={{
+          opacity: isEntering
+            ? candleEnterOpacityTransition
+            : isExiting
+              ? candleExitTransition
+              : undefined,
+          x: xTransition,
+        }}
+      >
+        <motion.line
+          animate={{ y1: geometry.highY, y2: geometry.lowY }}
+          initial={isEntering ? { y1: geometry.highY, y2: geometry.lowY } : false}
+          stroke={geometry.color}
+          strokeWidth={1}
+          transition={{ y1: yTransition, y2: yTransition }}
+          x1={0}
+          x2={0}
+          y1={geometry.highY}
+          y2={geometry.lowY}
+        />
+        <motion.rect
+          animate={{
+            height: geometry.bodyHeight,
+            width: barWidth,
+            x: -barWidth / 2,
+            y: geometry.bodyY,
+          }}
+          fill={geometry.color}
+          initial={
+            isEntering
+              ? {
+                  height: minCandleBodyHeight,
+                  width: barWidth,
+                  x: -barWidth / 2,
+                  y: geometry.bodyY,
+                }
+              : false
+          }
+          rx={2}
+          transition={{ height: yTransition, x: yTransition, y: yTransition, width: yTransition }}
+        />
+      </motion.g>
+    );
+  },
+);
+
+type AnimatedCandlestickPlotProps = {
+  candles: LiveCandle[];
+  enteringCandleId: number | null;
+  exitingCandles: ExitingCandle[];
+  onExitComplete: (candleId: number) => void;
+};
+
+const AnimatedCandlestickPlot = memo(
+  ({ candles, enteringCandleId, exitingCandles, onExitComplete }: AnimatedCandlestickPlotProps) => {
+    const { drawingArea, getXScale, getYScale } = useCartesianChartContext();
+    const xScale = getXScale();
+    const yScale = getYScale();
+
+    if (!drawingArea || !xScale || !yScale) return null;
+
+    return (
+      <g>
+        {exitingCandles.map(({ candle, slotIndex }) => (
+          <AnimatedCandle
+            key={`exit-${candle.id}`}
+            candle={candle}
+            isExiting
+            slotIndex={slotIndex}
+            onExitComplete={() => onExitComplete(candle.id)}
+          />
+        ))}
+        {candles.map((candle, index) => (
+          <AnimatedCandle
+            key={candle.id}
+            candle={candle}
+            isEntering={candle.id === enteringCandleId}
+            slotIndex={index}
+          />
+        ))}
+      </g>
+    );
+  },
+);
+
+const getLiveTickIntervalMs = (tickIndex: number) => {
+  const random = seededRandom(tickIndex * 7 + 13);
+  return liveTickIntervalMinMs + random * (liveTickIntervalMaxMs - liveTickIntervalMinMs);
+};
+
+const getNextClose = (currentClose: number, tickIndex: number) => {
+  const directionRandom = seededRandom(tickIndex * 11 + 3);
+  const stepRandom = seededRandom(tickIndex * 11 + 9);
+  const direction = directionRandom < 0.5 ? 1 : -1;
+  const step = liveTickStepMin + stepRandom * (liveTickStepMax - liveTickStepMin);
+
+  return currentClose + direction * step;
+};
+
+const tickLiveCandle = (candle: LiveCandle, tickIndex: number): LiveCandle => {
+  const close = getNextClose(candle.close, tickIndex);
+
+  return {
+    ...candle,
+    close,
+    high: Math.max(candle.high, close),
+    low: Math.min(candle.low, close),
+  };
+};
+
+const toLiveCandleData = (candles: LiveCandle[]): LiveCandleData => ({
+  openClose: candles.map((candle) => [candle.open, candle.close]),
+  highLow: candles.map((candle) => [candle.low, candle.high]),
+});
+
+const shiftLiveCandles = (candles: LiveCandle[]) => {
+  const exited = candles[0];
+  const lastClose = candles[candles.length - 1]?.close ?? liveBasePrice;
+  const nextCandles = [...candles.slice(1), createLiveCandle(lastClose)];
+
+  return {
+    candles: nextCandles,
+    exited,
+    entered: nextCandles[nextCandles.length - 1],
+  };
+};
+
+const buildLiveCandle = (open: number, startTickIndex: number) => {
+  let candle = createLiveCandle(open);
+  let tickIndex = startTickIndex;
+
+  for (let tick = 0; tick < liveTicksPerCandle; tick++) {
+    candle = tickLiveCandle(candle, tickIndex);
+    tickIndex += 1;
+  }
+
+  return { candle, nextTickIndex: tickIndex };
+};
+
+const createInitialLiveCandles = () => {
+  const candles: LiveCandle[] = [];
+  let price = liveBasePrice;
+  let tickIndex = 0;
+
+  for (let index = 0; index < liveCandleCount; index++) {
+    const result = buildLiveCandle(price, tickIndex);
+    candles.push(result.candle);
+    price = result.candle.close;
+    tickIndex = result.nextTickIndex;
+  }
+
+  return { candles, tickIndex };
+};
+
+const initialLiveState = createInitialLiveCandles();
+
+const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+const LiveCandlesticksChart = memo(() => {
+  const [candles, setCandles] = useState(() => initialLiveState.candles);
+  const [exitingCandles, setExitingCandles] = useState<ExitingCandle[]>([]);
+  const [enteringCandleId, setEnteringCandleId] = useState<number | null>(null);
+  const tickIndexRef = useRef(initialLiveState.tickIndex);
+  const loopStartRef = useRef(Date.now());
+  const lastShiftRef = useRef(Date.now());
+
+  const handleExitComplete = useCallback((candleId: number) => {
+    setExitingCandles((current) => current.filter(({ candle }) => candle.id !== candleId));
+  }, []);
+
+  useEffect(() => {
+    let timeoutId: ReturnType<typeof setTimeout>;
+
+    const scheduleTick = () => {
+      const tickIndex = tickIndexRef.current;
+      const intervalMs = getLiveTickIntervalMs(tickIndex);
+
+      timeoutId = setTimeout(() => {
+        const now = Date.now();
+
+        if (now - loopStartRef.current >= liveLoopDurationMs) {
+          const reset = createInitialLiveCandles();
+          loopStartRef.current = now;
+          lastShiftRef.current = now;
+          tickIndexRef.current = reset.tickIndex;
+          setExitingCandles([]);
+          setEnteringCandleId(null);
+          setCandles(reset.candles);
+          scheduleTick();
+          return;
+        }
+
+        if (now - lastShiftRef.current >= liveCandleDurationMs) {
+          lastShiftRef.current = now;
+
+          setCandles((current) => {
+            const shifted = shiftLiveCandles(current);
+            setExitingCandles((exiting) => [...exiting, { candle: shifted.exited, slotIndex: 0 }]);
+            setEnteringCandleId(shifted.entered.id);
+            setTimeout(() => {
+              setEnteringCandleId((activeId) =>
+                activeId === shifted.entered.id ? null : activeId,
+              );
+            }, candleEnterDurationMs);
+
+            const next = [...shifted.candles];
+            const formingIndex = next.length - 1;
+            next[formingIndex] = tickLiveCandle(next[formingIndex], tickIndex);
+            return next;
+          });
+        } else {
+          setCandles((current) => {
+            if (current.length === 0) return current;
+
+            const next = [...current];
+            const formingIndex = next.length - 1;
+            next[formingIndex] = tickLiveCandle(next[formingIndex], tickIndex);
+            return next;
+          });
+        }
+
+        tickIndexRef.current += 1;
+        scheduleTick();
+      }, intervalMs);
+    };
+
+    scheduleTick();
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  const candleData = useMemo(() => toLiveCandleData(candles), [candles]);
+
+  const yDomainExtent = useMemo(() => {
+    const domainCandles = [...exitingCandles.map(({ candle }) => candle), ...candles];
+    if (domainCandles.length === 0) return null;
+
+    let min = Number.POSITIVE_INFINITY;
+    let max = Number.NEGATIVE_INFINITY;
+
+    for (const candle of domainCandles) {
+      min = Math.min(min, candle.low);
+      max = Math.max(max, candle.high);
+    }
+
+    return { min, max };
+  }, [candles, exitingCandles]);
+
+  const formatPriceInThousands = useCallback((price: number) => {
+    return `$${(price / 1000).toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    })}k`;
+  }, []);
+
+  const series = useMemo(
+    () => [
+      {
+        id: 'open/close',
+        data: candleData.openClose,
+        color: 'var(--color-fgPrimary)',
+      },
+      {
+        id: 'high/low',
+        data: candleData.highLow,
+        color: 'var(--color-fgMuted)',
+      },
+    ],
+    [candleData],
+  );
+
+  const xAxis = useMemo(
+    () => ({
+      scaleType: 'band' as const,
+      range: ({ min, max }: { min: number; max: number }) => ({ min, max: max - 8 }),
+    }),
+    [],
+  );
+
+  const yAxis = useMemo(
+    () => ({
+      domain: ({ min, max }: { min: number; max: number }) => {
+        if (!yDomainExtent) {
+          return { min: min * 0.9, max };
+        }
+
+        const dataMin = Math.min(min, yDomainExtent.min);
+        const dataMax = Math.max(max, yDomainExtent.max);
+        const snappedMin = Math.floor(dataMin / livePriceTickStep) * livePriceTickStep;
+        const snappedMax = Math.ceil(dataMax / livePriceTickStep) * livePriceTickStep;
+
+        return {
+          min: Math.max(snappedMin, livePriceTickMin),
+          max: Math.min(snappedMax, livePriceTickMax),
+        };
+      },
+    }),
+    [yDomainExtent],
+  );
+
+  return (
+    <CartesianChart
+      animate={false}
+      height={liveChartHeight}
+      series={series}
+      xAxis={xAxis}
+      yAxis={yAxis}
+    >
+      <YAxis
+        showGrid
+        GridLineComponent={LiveAxisGridLine}
+        TickLabelComponent={LiveAxisTickLabel}
+        minTickLabelGap={0}
+        tickLabelFormatter={formatPriceInThousands}
+        ticks={livePriceTicks}
+        width={80}
+      />
+      <AnimatedCandlestickPlot
+        candles={candles}
+        enteringCandleId={enteringCandleId}
+        exitingCandles={exitingCandles}
+        onExitComplete={handleExitComplete}
+      />
+    </CartesianChart>
+  );
+});
+
+export const LiveCandlesticks = () => {
+  return (
+    <React.StrictMode>
+      <LiveCandlesticksChart />
+    </React.StrictMode>
+  );
+};
+
 const Example: React.FC<
   React.PropsWithChildren<{ title: string; description?: string | React.ReactNode }>
 > = ({ children, title, description }) => {
@@ -611,6 +1176,9 @@ export const Miscellaneous = () => {
         </Example>
         <Example title="Trading Trends">
           <TradingTrends />
+        </Example>
+        <Example title="Live Candlesticks">
+          <LiveCandlesticksChart />
         </Example>
       </VStack>
     </React.StrictMode>

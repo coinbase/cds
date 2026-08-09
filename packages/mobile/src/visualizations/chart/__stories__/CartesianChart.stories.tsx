@@ -1,8 +1,9 @@
-import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, memo } from 'react';
 import { Image, StyleSheet } from 'react-native';
+import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { Circle, Group, Line as SkiaLine, RoundedRect } from '@shopify/react-native-skia';
+import { Circle, Group, Line as SkiaLine, RoundedRect, vec } from '@shopify/react-native-skia';
 
 import { Example, ExampleScreen } from '../../../examples/ExampleScreen';
 import { useTheme } from '../../../hooks/useTheme';
@@ -10,15 +11,17 @@ import { Box, HStack, VStack } from '../../../layout';
 import { Text } from '../../../typography';
 import { Area } from '../area/Area';
 import { XAxis, YAxis } from '../axis';
-import type { BarComponentProps } from '../bar/Bar';
-import { BarPlot, type BarPlotProps } from '../bar/BarPlot';
-import type { BarStackComponentProps } from '../bar/BarStack';
+import type { AxisTickLabelComponentProps } from '../axis/Axis';
+import { BarPlot } from '../bar/BarPlot';
 import { useCartesianChartContext } from '../ChartProvider';
-import { Line } from '../line/Line';
+import { Line, type LineComponentProps } from '../line/Line';
 import { Point } from '../point/Point';
 import { Scrubber } from '../scrubber/Scrubber';
 import { ChartText } from '../text';
 import { type GradientDefinition, isCategoricalScale } from '../utils';
+import { unwrapAnimatedValue } from '../utils/chart';
+import { defaultBarEnterOpacityTransition } from '../utils/bar';
+import { buildTransition, defaultTransition, type Transition } from '../utils/transition';
 import { CartesianChart, DottedArea, ReferenceLine, SolidLine, type SolidLineProps } from '../';
 
 const defaultChartHeight = 250;
@@ -558,79 +561,6 @@ const ChartStories = () => {
 
 // export default ChartStories;
 
-const CandlestickBarStack = memo(({ children }: BarStackComponentProps) => <>{children}</>);
-
-type CandlestickPlotProps = Omit<
-  BarPlotProps,
-  'seriesIds' | 'BarComponent' | 'BarStackComponent'
-> & {
-  highLowSeriesId: string;
-  openCloseSeriesId: string;
-  yAxisId?: string;
-  wickStrokeWidth?: number;
-};
-
-const createCandlestickBarComponent = (
-  openCloseSeriesId: string,
-  yAxisId?: string,
-  wickStrokeWidth = 1,
-) =>
-  memo<BarComponentProps>(function CandlestickBar({ x, y, width, height, dataX }) {
-    const theme = useTheme();
-    const { getYScale, getSeriesData } = useCartesianChartContext();
-    const yScale = getYScale(yAxisId);
-    const openCloseData = getSeriesData(openCloseSeriesId);
-    const categoryIndex = dataX as number;
-    const openClose = openCloseData?.[categoryIndex];
-
-    if (!openClose) return null;
-
-    const [open, close] = openClose;
-    const bullish = open < close;
-    const color = bullish ? `rgb(${theme.spectrum.green40})` : `rgb(${theme.spectrum.red40})`;
-    const openY = yScale?.(open) ?? 0;
-    const closeY = yScale?.(close) ?? 0;
-    const bodyHeight = Math.abs(openY - closeY);
-    const bodyY = openY < closeY ? openY : closeY;
-    const wickX = x + width / 2;
-
-    return (
-      <>
-        <SkiaLine
-          color={color}
-          p1={{ x: wickX, y }}
-          p2={{ x: wickX, y: y + height }}
-          strokeWidth={wickStrokeWidth}
-        />
-        <RoundedRect color={color} height={bodyHeight} width={width} x={x} y={bodyY} r={2} />
-      </>
-    );
-  });
-
-const CandlestickPlot = memo(
-  ({
-    highLowSeriesId,
-    openCloseSeriesId,
-    yAxisId,
-    wickStrokeWidth = 1,
-    ...barPlotProps
-  }: CandlestickPlotProps) => {
-    const CandlestickBarComponent = useMemo(
-      () => createCandlestickBarComponent(openCloseSeriesId, yAxisId, wickStrokeWidth),
-      [openCloseSeriesId, yAxisId, wickStrokeWidth],
-    );
-
-    return (
-      <BarPlot
-        BarComponent={CandlestickBarComponent}
-        BarStackComponent={CandlestickBarStack}
-        seriesIds={[highLowSeriesId]}
-        {...barPlotProps}
-      />
-    );
-  },
-);
-
 const liveCandleCount = 10;
 const liveTickIntervalMinMs = 250;
 const liveTickIntervalMaxMs = 1_000;
@@ -640,17 +570,53 @@ const liveTicksPerCandle = 12;
 const liveBasePrice = 50_000;
 const liveTickStepMin = 75;
 const liveTickStepMax = 450;
+const livePriceTickStep = 2_000;
+const livePriceTickMin = 40_000;
+const livePriceTickMax = 60_000;
+const livePriceTicks = Array.from(
+  { length: (livePriceTickMax - livePriceTickMin) / livePriceTickStep + 1 },
+  (_, index) => livePriceTickMin + index * livePriceTickStep,
+);
+
+const parseHorizontalLinePath = (path?: string) => {
+  if (!path) return null;
+
+  const commaMatch = path.match(/M\s*([\d.-]+)\s*,\s*([\d.-]+)\s+L\s*([\d.-]+)\s*,\s*([\d.-]+)/);
+  if (commaMatch) {
+    return { x1: Number(commaMatch[1]), y: Number(commaMatch[2]), x2: Number(commaMatch[3]) };
+  }
+
+  const spaceMatch = path.match(/M\s*([\d.-]+)\s+([\d.-]+)\s+L\s*([\d.-]+)\s+([\d.-]+)/);
+  if (spaceMatch) {
+    return { x1: Number(spaceMatch[1]), y: Number(spaceMatch[2]), x2: Number(spaceMatch[3]) };
+  }
+
+  return null;
+};
 
 type LiveCandle = {
+  id: number;
   open: number;
   close: number;
   high: number;
   low: number;
 };
 
+type ExitingCandle = {
+  candle: LiveCandle;
+  slotIndex: number;
+};
+
 type LiveCandleData = {
   openClose: [number, number][];
   highLow: [number, number][];
+};
+
+let liveCandleId = 0;
+
+const nextLiveCandleId = () => {
+  liveCandleId += 1;
+  return liveCandleId;
 };
 
 const seededRandom = (seed: number) => {
@@ -659,11 +625,260 @@ const seededRandom = (seed: number) => {
 };
 
 const createLiveCandle = (open: number): LiveCandle => ({
+  id: nextLiveCandleId(),
   open,
   close: open,
   high: open,
   low: open,
 });
+
+const candlePriceTransition: Transition = { type: 'spring', stiffness: 1_400, damping: 90 };
+const candleShiftTransition: Transition = { type: 'spring', stiffness: 1_200, damping: 85 };
+const candleExitTransition: Transition = { type: 'timing', duration: 250 };
+const candleEnterTransition = defaultTransition;
+const candleEnterOpacityTransition = defaultBarEnterOpacityTransition;
+const candleEnterDurationMs = candleEnterOpacityTransition.duration ?? 200;
+const candleExitDurationMs = 250;
+const minCandleBodyHeight = 1;
+
+const LiveAxisGridLine = memo(({ d, stroke }: LineComponentProps) => {
+  const path = typeof d === 'string' ? d : undefined;
+  const coords = useMemo(() => parseHorizontalLinePath(path), [path]);
+  const animatedY = useSharedValue(coords?.y ?? 0);
+
+  useEffect(() => {
+    if (!coords) return;
+    animatedY.value = buildTransition(coords.y, candlePriceTransition);
+  }, [animatedY, coords]);
+
+  const lineStart = useDerivedValue(() => vec(coords?.x1 ?? 0, animatedY.value));
+  const lineEnd = useDerivedValue(() => vec(coords?.x2 ?? 0, animatedY.value));
+
+  if (!coords) return null;
+
+  return <SkiaLine color={stroke} p1={lineStart} p2={lineEnd} strokeWidth={1} />;
+});
+
+const LiveAxisTickLabel = memo(({ x, y, children, ...props }: AxisTickLabelComponentProps) => {
+  const targetY = unwrapAnimatedValue(y);
+  const animatedY = useSharedValue(targetY);
+
+  useEffect(() => {
+    animatedY.value = buildTransition(targetY, candlePriceTransition);
+  }, [animatedY, targetY]);
+
+  return (
+    <ChartText disableRepositioning x={x} y={animatedY} {...props}>
+      {children}
+    </ChartText>
+  );
+});
+
+type AnimatedCandleProps = {
+  candle: LiveCandle;
+  slotIndex: number;
+  yAxisId?: string;
+  wickStrokeWidth?: number;
+  isExiting?: boolean;
+  isEntering?: boolean;
+  onExitComplete?: () => void;
+};
+
+const AnimatedCandle = memo(
+  ({
+    candle,
+    slotIndex,
+    yAxisId,
+    wickStrokeWidth = 1,
+    isExiting = false,
+    isEntering = false,
+    onExitComplete,
+  }: AnimatedCandleProps) => {
+    const theme = useTheme();
+    const { drawingArea, getXScale, getYScale } = useCartesianChartContext();
+    const xScale = getXScale();
+    const yScale = getYScale(yAxisId);
+
+    const slotX = useMemo(() => {
+      if (!xScale || !isCategoricalScale(xScale)) return 0;
+      return xScale(slotIndex) ?? 0;
+    }, [slotIndex, xScale]);
+
+    const barWidth = useMemo(() => {
+      if (!xScale || !isCategoricalScale(xScale)) return 0;
+      return xScale.bandwidth();
+    }, [xScale]);
+
+    const geometry = useMemo(() => {
+      const wickCenterX = slotX + barWidth / 2;
+      const highY = yScale?.(candle.high) ?? 0;
+      const lowY = yScale?.(candle.low) ?? 0;
+      const openY = yScale?.(candle.open) ?? 0;
+      const closeY = yScale?.(candle.close) ?? 0;
+      const bodyY = Math.min(openY, closeY);
+      const bodyHeight = Math.max(Math.abs(openY - closeY), minCandleBodyHeight);
+      const bullish = candle.open < candle.close;
+      const color = bullish ? `rgb(${theme.spectrum.green40})` : `rgb(${theme.spectrum.red40})`;
+
+      return { wickCenterX, highY, lowY, bodyY, bodyHeight, color, bodyX: slotX };
+    }, [barWidth, candle, slotX, theme.spectrum.green40, theme.spectrum.red40, yScale]);
+
+    const isReady = Boolean(xScale && yScale && drawingArea && barWidth > 0);
+
+    const animatedWickX = useSharedValue(
+      isEntering ? geometry.wickCenterX + barWidth : geometry.wickCenterX,
+    );
+    const animatedHighY = useSharedValue(geometry.highY);
+    const animatedLowY = useSharedValue(geometry.lowY);
+    const animatedBodyY = useSharedValue(geometry.bodyY);
+    const animatedBodyHeight = useSharedValue(
+      isEntering ? minCandleBodyHeight : geometry.bodyHeight,
+    );
+    const animatedOpacity = useSharedValue(isEntering ? 0 : 1);
+
+    useEffect(() => {
+      if (!isReady || isEntering) return;
+
+      const shiftTransition = isExiting ? candleExitTransition : candleShiftTransition;
+      const targetWickX = isExiting ? geometry.wickCenterX - barWidth * 2 : geometry.wickCenterX;
+
+      animatedWickX.value = buildTransition(targetWickX, shiftTransition);
+      animatedHighY.value = buildTransition(geometry.highY, candlePriceTransition);
+      animatedLowY.value = buildTransition(geometry.lowY, candlePriceTransition);
+      animatedBodyY.value = buildTransition(geometry.bodyY, candlePriceTransition);
+      animatedBodyHeight.value = buildTransition(geometry.bodyHeight, candlePriceTransition);
+    }, [
+      animatedBodyHeight,
+      animatedBodyY,
+      animatedHighY,
+      animatedLowY,
+      animatedWickX,
+      barWidth,
+      geometry.bodyHeight,
+      geometry.bodyY,
+      geometry.highY,
+      geometry.lowY,
+      geometry.wickCenterX,
+      isEntering,
+      isExiting,
+      isReady,
+    ]);
+
+    useEffect(() => {
+      if (!isReady || !isEntering) return;
+
+      animatedOpacity.value = buildTransition(1, candleEnterOpacityTransition);
+      animatedWickX.value = buildTransition(geometry.wickCenterX, candleEnterTransition);
+      animatedHighY.value = buildTransition(geometry.highY, candleEnterTransition);
+      animatedLowY.value = buildTransition(geometry.lowY, candleEnterTransition);
+      animatedBodyY.value = buildTransition(geometry.bodyY, candleEnterTransition);
+      animatedBodyHeight.value = buildTransition(geometry.bodyHeight, candleEnterTransition);
+    }, [
+      animatedBodyHeight,
+      animatedBodyY,
+      animatedHighY,
+      animatedLowY,
+      animatedOpacity,
+      animatedWickX,
+      geometry.bodyHeight,
+      geometry.bodyY,
+      geometry.highY,
+      geometry.lowY,
+      geometry.wickCenterX,
+      isEntering,
+      isReady,
+    ]);
+
+    useEffect(() => {
+      if (!isExiting) return;
+
+      animatedOpacity.value = buildTransition(0, candleExitTransition);
+
+      const timeoutId = setTimeout(() => {
+        onExitComplete?.();
+      }, candleExitDurationMs);
+
+      return () => clearTimeout(timeoutId);
+    }, [animatedOpacity, isExiting, onExitComplete]);
+
+    const wickStart = useDerivedValue(() => vec(animatedWickX.value, animatedHighY.value));
+    const wickEnd = useDerivedValue(() => vec(animatedWickX.value, animatedLowY.value));
+    const animatedBodyX = useDerivedValue(() => animatedWickX.value - barWidth / 2);
+
+    if (!isReady) return null;
+
+    return (
+      <Group opacity={animatedOpacity}>
+        <SkiaLine
+          color={geometry.color}
+          p1={wickStart}
+          p2={wickEnd}
+          strokeWidth={wickStrokeWidth}
+        />
+        <RoundedRect
+          color={geometry.color}
+          height={animatedBodyHeight}
+          r={2}
+          width={barWidth}
+          x={animatedBodyX}
+          y={animatedBodyY}
+        />
+      </Group>
+    );
+  },
+);
+
+type AnimatedCandlestickPlotProps = {
+  candles: LiveCandle[];
+  enteringCandleId: number | null;
+  exitingCandles: ExitingCandle[];
+  onExitComplete: (candleId: number) => void;
+  yAxisId?: string;
+  wickStrokeWidth?: number;
+};
+
+const AnimatedCandlestickPlot = memo(
+  ({
+    candles,
+    enteringCandleId,
+    exitingCandles,
+    onExitComplete,
+    yAxisId,
+    wickStrokeWidth = 1,
+  }: AnimatedCandlestickPlotProps) => {
+    const { drawingArea, getXScale, getYScale } = useCartesianChartContext();
+    const xScale = getXScale();
+    const yScale = getYScale(yAxisId);
+
+    if (!drawingArea || !xScale || !yScale) return null;
+
+    return (
+      <Group>
+        {exitingCandles.map(({ candle, slotIndex }) => (
+          <AnimatedCandle
+            key={`exit-${candle.id}`}
+            candle={candle}
+            isExiting
+            slotIndex={slotIndex}
+            wickStrokeWidth={wickStrokeWidth}
+            yAxisId={yAxisId}
+            onExitComplete={() => onExitComplete(candle.id)}
+          />
+        ))}
+        {candles.map((candle, index) => (
+          <AnimatedCandle
+            key={candle.id}
+            candle={candle}
+            isEntering={candle.id === enteringCandleId}
+            slotIndex={index}
+            wickStrokeWidth={wickStrokeWidth}
+            yAxisId={yAxisId}
+          />
+        ))}
+      </Group>
+    );
+  },
+);
 
 const getLiveTickIntervalMs = (tickIndex: number) => {
   const random = seededRandom(tickIndex * 7 + 13);
@@ -683,7 +898,7 @@ const tickLiveCandle = (candle: LiveCandle, tickIndex: number): LiveCandle => {
   const close = getNextClose(candle.close, tickIndex);
 
   return {
-    open: candle.open,
+    ...candle,
     close,
     high: Math.max(candle.high, close),
     low: Math.min(candle.low, close),
@@ -695,11 +910,16 @@ const toLiveCandleData = (candles: LiveCandle[]): LiveCandleData => ({
   highLow: candles.map((candle) => [candle.low, candle.high]),
 });
 
-const shiftLiveCandles = (candles: LiveCandle[]): LiveCandle[] => {
+const shiftLiveCandles = (candles: LiveCandle[]) => {
+  const exited = candles[0];
   const lastClose = candles[candles.length - 1]?.close ?? liveBasePrice;
-  const trimmed = candles.length >= liveCandleCount ? candles.slice(1) : candles;
+  const nextCandles = [...candles.slice(1), createLiveCandle(lastClose)];
 
-  return [...trimmed, createLiveCandle(lastClose)];
+  return {
+    candles: nextCandles,
+    exited,
+    entered: nextCandles[nextCandles.length - 1],
+  };
 };
 
 const buildLiveCandle = (open: number, startTickIndex: number) => {
@@ -734,9 +954,15 @@ const initialLiveState = createInitialLiveCandles();
 const RefreshedChart = memo(() => {
   const theme = useTheme();
   const [candles, setCandles] = useState(() => initialLiveState.candles);
+  const [exitingCandles, setExitingCandles] = useState<ExitingCandle[]>([]);
+  const [enteringCandleId, setEnteringCandleId] = useState<number | null>(null);
   const tickIndexRef = useRef(initialLiveState.tickIndex);
   const loopStartRef = useRef(Date.now());
   const lastShiftRef = useRef(Date.now());
+
+  const handleExitComplete = useCallback((candleId: number) => {
+    setExitingCandles((current) => current.filter(({ candle }) => candle.id !== candleId));
+  }, []);
 
   useEffect(() => {
     let timeoutId: ReturnType<typeof setTimeout>;
@@ -753,6 +979,8 @@ const RefreshedChart = memo(() => {
           loopStartRef.current = now;
           lastShiftRef.current = now;
           tickIndexRef.current = reset.tickIndex;
+          setExitingCandles([]);
+          setEnteringCandleId(null);
           setCandles(reset.candles);
           scheduleTick();
           return;
@@ -760,17 +988,32 @@ const RefreshedChart = memo(() => {
 
         if (now - lastShiftRef.current >= liveCandleDurationMs) {
           lastShiftRef.current = now;
-          setCandles((current) => shiftLiveCandles(current));
+
+          setCandles((current) => {
+            const shifted = shiftLiveCandles(current);
+            setExitingCandles((exiting) => [...exiting, { candle: shifted.exited, slotIndex: 0 }]);
+            setEnteringCandleId(shifted.entered.id);
+            setTimeout(() => {
+              setEnteringCandleId((activeId) =>
+                activeId === shifted.entered.id ? null : activeId,
+              );
+            }, candleEnterDurationMs);
+
+            const next = [...shifted.candles];
+            const formingIndex = next.length - 1;
+            next[formingIndex] = tickLiveCandle(next[formingIndex], tickIndex);
+            return next;
+          });
+        } else {
+          setCandles((current) => {
+            if (current.length === 0) return current;
+
+            const next = [...current];
+            const formingIndex = next.length - 1;
+            next[formingIndex] = tickLiveCandle(next[formingIndex], tickIndex);
+            return next;
+          });
         }
-
-        setCandles((current) => {
-          if (current.length === 0) return current;
-
-          const next = [...current];
-          const formingIndex = next.length - 1;
-          next[formingIndex] = tickLiveCandle(next[formingIndex], tickIndex);
-          return next;
-        });
 
         tickIndexRef.current += 1;
         scheduleTick();
@@ -783,6 +1026,21 @@ const RefreshedChart = memo(() => {
   }, []);
 
   const candleData = useMemo(() => toLiveCandleData(candles), [candles]);
+
+  const yDomainExtent = useMemo(() => {
+    const domainCandles = [...exitingCandles.map(({ candle }) => candle), ...candles];
+    if (domainCandles.length === 0) return null;
+
+    let min = Number.POSITIVE_INFINITY;
+    let max = Number.NEGATIVE_INFINITY;
+
+    for (const candle of domainCandles) {
+      min = Math.min(min, candle.low);
+      max = Math.max(max, candle.high);
+    }
+
+    return { min, max };
+  }, [candles, exitingCandles]);
 
   const formatPriceInThousands = useCallback((price: number) => {
     return `$${(price / 1000).toLocaleString('en-US', {
@@ -797,13 +1055,11 @@ const RefreshedChart = memo(() => {
         id: 'open/close',
         data: candleData.openClose,
         color: theme.color.fgPrimary,
-        yAxisId: 'price',
       },
       {
         id: 'high/low',
         data: candleData.highLow,
         color: theme.color.fgMuted,
-        yAxisId: 'price',
       },
     ],
     [candleData, theme.color.fgMuted, theme.color.fgPrimary],
@@ -819,10 +1075,23 @@ const RefreshedChart = memo(() => {
 
   const yAxis = useMemo(
     () => ({
-      id: 'price',
-      domain: ({ min, max }: { min: number; max: number }) => ({ min: min * 0.9, max }),
+      domain: ({ min, max }: { min: number; max: number }) => {
+        if (!yDomainExtent) {
+          return { min, max };
+        }
+
+        const dataMin = Math.min(min, yDomainExtent.min);
+        const dataMax = Math.max(max, yDomainExtent.max);
+        const snappedMin = Math.floor(dataMin / livePriceTickStep) * livePriceTickStep;
+        const snappedMax = Math.ceil(dataMax / livePriceTickStep) * livePriceTickStep;
+
+        return {
+          min: Math.max(snappedMin, livePriceTickMin),
+          max: Math.min(snappedMax, livePriceTickMax),
+        };
+      },
     }),
-    [],
+    [yDomainExtent],
   );
 
   return (
@@ -836,11 +1105,20 @@ const RefreshedChart = memo(() => {
             yAxis={yAxis}
             animate={false}
           >
-            <YAxis showGrid axisId="price" tickLabelFormatter={formatPriceInThousands} width={40} />
-            <CandlestickPlot
-              highLowSeriesId="high/low"
-              openCloseSeriesId="open/close"
-              yAxisId="price"
+            <YAxis
+              showGrid
+              GridLineComponent={LiveAxisGridLine}
+              TickLabelComponent={LiveAxisTickLabel}
+              minTickLabelGap={0}
+              tickLabelFormatter={formatPriceInThousands}
+              ticks={livePriceTicks}
+              width={40}
+            />
+            <AnimatedCandlestickPlot
+              candles={candles}
+              enteringCandleId={enteringCandleId}
+              exitingCandles={exitingCandles}
+              onExitComplete={handleExitComplete}
             />
           </CartesianChart>
         </Box>
