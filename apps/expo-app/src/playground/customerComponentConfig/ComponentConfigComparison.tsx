@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useState } from 'react';
+import React, { memo, useCallback } from 'react';
 import type { ComponentConfig } from '@coinbase/cds-mobile/core/componentConfig';
 import { Switch } from '@coinbase/cds-mobile/controls/Switch';
 import { HStack } from '@coinbase/cds-mobile/layout/HStack';
@@ -10,6 +10,10 @@ const emptyConfig: ComponentConfig = {};
 
 export type ComponentConfigComparisonProps = {
   componentName: string;
+  /** Whether the customer-configured mode is currently shown. Controlled by the parent so a "toggle all" control can drive every comparison at once. */
+  checked: boolean;
+  /** Called with the next checked value when the mode toggle changes. */
+  onChange: (checked: boolean) => void;
   /**
    * Renders the component under test. Invoked for whichever mode is active
    * (default CDS or customer-configured) so each mode gets its own tree.
@@ -23,25 +27,35 @@ export type ComponentConfigComparisonProps = {
  * Default mode isolates itself with an empty config scope.
  */
 export const ComponentConfigComparison = memo(
-  ({ componentName, children }: ComponentConfigComparisonProps) => {
-    const [showConfigured, setShowConfigured] = useState(false);
-
-    const handleToggle = useCallback((_: string | undefined, checked?: boolean) => {
-      setShowConfigured(Boolean(checked));
-    }, []);
+  ({ componentName, checked, onChange, children }: ComponentConfigComparisonProps) => {
+    const handleToggle = useCallback(
+      (_: string | undefined, nextChecked?: boolean) => {
+        onChange(Boolean(nextChecked));
+      },
+      [onChange],
+    );
 
     return (
       <VStack gap={2}>
         <HStack alignItems="center" justifyContent="space-between">
-          <Text font="headline">{componentName}</Text>
+          <Text color="accentBoldBlue" font="caption">
+            {componentName}
+          </Text>
           {/* Keep the mode toggle on stock CDS so customer Switch config can't restyle it. */}
           <ComponentConfigProvider value={emptyConfig}>
-            <Switch checked={showConfigured} onChange={handleToggle}>
-              {showConfigured ? 'Configured' : 'Default'}
+            <Switch
+              accessibilityLabel={
+                checked ? 'Showing configured component' : 'Showing default component'
+              }
+              checked={checked}
+              color={checked ? 'fgPrimary' : undefined}
+              onChange={handleToggle}
+            >
+              Configured
             </Switch>
           </ComponentConfigProvider>
         </HStack>
-        {showConfigured ? (
+        {checked ? (
           children()
         ) : (
           <ComponentConfigProvider value={emptyConfig}>{children()}</ComponentConfigProvider>

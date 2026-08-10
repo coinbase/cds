@@ -3,10 +3,12 @@ import { renderA11y } from '@coinbase/cds-web-utils/jest';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 
 import { CellMedia } from '../../cells/CellMedia';
+import type { ComponentConfig } from '../../core/componentConfig';
+import { ComponentConfigProvider } from '../../system';
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/test';
-import { Accordion } from '../Accordion';
-import { AccordionItem } from '../AccordionItem';
+import { Accordion, accordionClassNames } from '../Accordion';
+import { AccordionItem, accordionItemClassNames } from '../AccordionItem';
 import { getAccordionHeaderId, getAccordionPanelId } from '../utils';
 
 type OnClick = (key: string | null) => void;
@@ -226,6 +228,168 @@ describe('Accordion', () => {
 
       expect(screen.getByTestId('mock-accordion')).toHaveStyle('padding: 20px');
       expect(screen.getByTestId('mock-accordion-item1')).toHaveStyle('padding: 30px');
+    });
+
+    it('applies static class names to Accordion and AccordionItem elements', () => {
+      render(<MockAccordionWithTheme />);
+
+      const root = screen.getByTestId('mock-accordion');
+      expect(root).toHaveClass(accordionClassNames.root);
+
+      const item = screen.getByTestId('mock-accordion-item1');
+      expect(item).toHaveClass(accordionItemClassNames.root);
+      expect(item.querySelector(`.${accordionItemClassNames.header}`)).toBeInTheDocument();
+      expect(item.querySelector(`.${accordionItemClassNames.panel}`)).toBeInTheDocument();
+    });
+
+    it('applies styles prop to AccordionItem elements', () => {
+      render(
+        <DefaultThemeProvider>
+          <Accordion testID="mock-accordion">
+            <AccordionItem
+              itemKey="1"
+              styles={{ root: { borderWidth: 2 }, header: { opacity: 0.5 } }}
+              testID="mock-accordion-item1"
+              title="Accordion #1"
+            >
+              <Text as="p" display="block" font="body">
+                Accordion Content1
+              </Text>
+            </AccordionItem>
+          </Accordion>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('mock-accordion-item1')).toHaveStyle('border-width: 2px');
+      expect(screen.getByTestId('mock-accordion-item1-header')).toHaveStyle('opacity: 0.5');
+    });
+
+    it('renders a divider between header and panel when showHeaderBorder is true', () => {
+      render(
+        <DefaultThemeProvider>
+          <Accordion testID="mock-accordion">
+            <AccordionItem
+              itemKey="1"
+              showHeaderBorder
+              testID="mock-accordion-item1"
+              title="Accordion #1"
+            >
+              <Text as="p" display="block" font="body">
+                Accordion Content1
+              </Text>
+            </AccordionItem>
+          </Accordion>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('mock-accordion-item1-divider')).toBeInTheDocument();
+    });
+
+    it('forwards background, caretSize, and spacing props to the header', () => {
+      render(
+        <DefaultThemeProvider>
+          <Accordion testID="mock-accordion">
+            <AccordionItem
+              background="bgAlternate"
+              caretSize="l"
+              itemKey="1"
+              paddingX={3}
+              paddingY={1}
+              testID="mock-accordion-item1"
+              title="Accordion #1"
+            >
+              <Text as="p" display="block" font="body">
+                Accordion Content1
+              </Text>
+            </AccordionItem>
+          </Accordion>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('mock-accordion-item1-header')).toBeInTheDocument();
+      expect(screen.getByText('Accordion #1')).toBeInTheDocument();
+    });
+
+    it('applies borderRadius to Accordion and AccordionItem roots', () => {
+      render(
+        <DefaultThemeProvider>
+          <Accordion borderRadius={200} testID="mock-accordion">
+            <AccordionItem
+              borderRadius={400}
+              itemKey="1"
+              testID="mock-accordion-item1"
+              title="Item"
+            >
+              <Text as="p" display="block" font="body">
+                Content
+              </Text>
+            </AccordionItem>
+          </Accordion>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('mock-accordion').className).toContain('200');
+      expect(screen.getByTestId('mock-accordion').className).toMatch(/hidden/i);
+      expect(screen.getByTestId('mock-accordion-item1').className).toContain('400');
+      expect(screen.getByTestId('mock-accordion-item1').className).toMatch(/hidden/i);
+    });
+
+    it('renders a separator between items by default, and can be disabled via showItemSeparators', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <MockAccordion />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('separator')).toBeInTheDocument();
+
+      rerender(
+        <DefaultThemeProvider>
+          <Accordion showItemSeparators={false} testID="mock-accordion">
+            <AccordionItem itemKey="1" testID="mock-accordion-item1" title="Item 1">
+              <Text as="p" display="block" font="body">
+                Content1
+              </Text>
+            </AccordionItem>
+            <AccordionItem itemKey="2" testID="mock-accordion-item2" title="Item 2">
+              <Text as="p" display="block" font="body">
+                Content2
+              </Text>
+            </AccordionItem>
+          </Accordion>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.queryByRole('separator')).not.toBeInTheDocument();
+    });
+
+    it('applies AccordionItem defaults from ComponentConfigProvider', () => {
+      const config: ComponentConfig = {
+        AccordionItem: {
+          showHeaderBorder: true,
+          caretSize: 'l',
+          borderRadius: 400,
+          paddingX: 3,
+          paddingY: 1,
+        },
+      };
+
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider value={config}>
+            <Accordion testID="mock-accordion">
+              <AccordionItem itemKey="1" testID="mock-accordion-item1" title="Item">
+                <Text as="p" display="block" font="body">
+                  Content
+                </Text>
+              </AccordionItem>
+            </Accordion>
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('mock-accordion-item1').className).toContain('400');
+      expect(screen.getByTestId('mock-accordion-item1-divider')).toBeInTheDocument();
     });
   });
 

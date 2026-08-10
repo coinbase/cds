@@ -13,6 +13,10 @@ import type { ExamplesListScreenProps } from './types';
 
 const innerSpacingConfig: CellSpacing = { paddingX: 1 };
 const pinnedRouteKeys = ['CustomerComponentConfig'];
+// Friendly display labels for pinned route keys that don't read well as raw PascalCase.
+const pinnedRouteLabels: Record<string, string> = {
+  CustomerComponentConfig: 'Retail Theme / Config',
+};
 
 export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
   const { filter, isOpen, resetSearch, closeSearch } = useContext(SearchContext);
@@ -50,7 +54,7 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
         accessory="arrow"
         innerSpacing={innerSpacingConfig}
         onPress={() => navigate(item)}
-        title={item}
+        title={pinnedRouteLabels[item] ?? item}
       />
     ),
     [navigate],

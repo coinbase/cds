@@ -149,6 +149,31 @@ function Example() {
 }
 ```
 
+### Equal Width
+
+Set `equalWidth` to make each tab stretch to an equal share of the available width. This also defaults `width` to `100%` so the component fills its parent — pass an explicit `width` to override this. This is the correct way to achieve a distributed tab layout — avoid using `justifyContent` for this, as it breaks the active indicator's position calculation.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      equalWidth
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
 ### Colors
 
 You can set `color` and `activeColor` to change the color of the labels.

@@ -1,4 +1,5 @@
 import type { AccordionBaseProps } from '../accordion/Accordion';
+import type { AccordionItemBaseProps } from '../accordion/AccordionItem';
 import type { ComboboxBaseProps } from '../alpha/combobox/Combobox';
 import type { SelectBaseProps } from '../alpha/select/types';
 import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
@@ -103,6 +104,7 @@ export type ConfigResolver<P> = Partial<P> | ((props: P) => Partial<P>);
  */
 export type ComponentConfig = {
   Accordion?: ConfigResolver<AccordionBaseProps>;
+  AccordionItem?: ConfigResolver<AccordionItemBaseProps>;
   Alert?: ConfigResolver<AlertBaseProps>;
   TabbedChips?: ConfigResolver<TabbedChipsBaseProps>;
   Avatar?: ConfigResolver<AvatarBaseProps>;

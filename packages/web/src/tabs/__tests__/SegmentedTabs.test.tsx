@@ -244,6 +244,56 @@ describe('SegmentedTabs', () => {
     expect(screen.queryByTestId(`${TEST_ID}-active-indicator`)).not.toBeInTheDocument();
   });
 
+  it('renders with equalWidth without error', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} equalWidth />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(TEST_ID)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_ID).className).toContain('stretch');
+  });
+
+  it('equalWidth alignSelf can be overridden', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} alignSelf="flex-start" equalWidth />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(TEST_ID)).toBeInTheDocument();
+    expect(screen.getByTestId(TEST_ID).className).toContain('flex-start');
+  });
+
+  it('equalWidth defaults width to 100%', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} equalWidth />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(TEST_ID).getAttribute('style')).toContain('--width: 100%');
+  });
+
+  it('equalWidth width can be overridden', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} equalWidth width={300} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(TEST_ID).getAttribute('style')).toContain('--width: 300px');
+  });
+
   it('positions indicator correctly with horizontal padding', () => {
     const mockPaddedData: ReturnType<typeof useRefMap> = {
       refs: { current: {} },

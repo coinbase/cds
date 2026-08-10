@@ -247,7 +247,7 @@ const PlaygroundContent = memo(
         <Stack.Screen
           component={CustomerComponentConfigScreen}
           name="DebugCustomerComponentConfig"
-          options={{ title: 'Customer Component Config' }}
+          options={{ title: 'Retail Theme / Config' }}
         />
         {exampleScreens}
       </Stack.Navigator>
