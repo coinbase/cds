@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.12.2 (8/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support flex grow charts. [[#836](https://github.com/coinbase/cds/pull/836)]
+
 ## 9.12.1 (8/8/2026 PST)
 
 #### 🐞 Fixes
