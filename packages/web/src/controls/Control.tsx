@@ -236,9 +236,13 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
           <Box alignItems="center" height="var(--lineHeight-body)" role="presentation">
             {iconElement}
           </Box>
-          <Text color={color} disabled={disabled || readOnly} font="body" id={labelId}>
-            {label}
-          </Text>
+          {typeof label === 'string' ? (
+            <Text color={color} disabled={disabled || readOnly} font="body" id={labelId}>
+              {label}
+            </Text>
+          ) : (
+            <Box id={labelId}>{label}</Box>
+          )}
         </Box>
       </label>
     );

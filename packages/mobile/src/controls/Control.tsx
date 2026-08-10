@@ -263,15 +263,19 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
       return (
         <>
           <View style={iconWrapperStyles}>{iconElement}</View>
-          <Text
-            animated
-            disabled={disabled || readOnly}
-            font="body"
-            style={getLabelStyle({ pressed })}
-            testID={`${testID}Label`}
-          >
-            {label}
-          </Text>
+          {typeof label === 'string' ? (
+            <Text
+              animated
+              disabled={disabled || readOnly}
+              font="body"
+              style={getLabelStyle({ pressed })}
+              testID={`${testID}Label`}
+            >
+              {label}
+            </Text>
+          ) : (
+            label
+          )}
         </>
       );
     },
