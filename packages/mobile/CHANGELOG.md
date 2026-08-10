@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.12.3 (8/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: reuse initial path on mobile charts. [[#837](https://github.com/coinbase/cds/pull/837)]
+
 ## 9.12.2 (8/10/2026 PST)
 
 #### 🐞 Fixes
