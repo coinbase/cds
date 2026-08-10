@@ -1,4 +1,4 @@
-import { memo, useEffect } from 'react';
+import { memo, useEffect, useRef } from 'react';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
 import { Box } from '../layout/Box';
@@ -20,10 +20,17 @@ export const DefaultTabsActiveIndicator = memo(
   }: TabsActiveIndicatorProps) => {
     const { width, x } = activeTabRect;
     const rect = useSharedValue({ width, x });
+    const isFirstRenderWithWidth = useRef(true);
 
     useEffect(() => {
       if (!width) return;
-      rect.value = withSpring({ x, width }, tabsSpringConfig);
+
+      if (isFirstRenderWithWidth.current) {
+        rect.value = { x, width };
+        isFirstRenderWithWidth.current = false;
+      } else {
+        rect.value = withSpring({ x, width }, tabsSpringConfig);
+      }
     }, [rect, width, x]);
 
     const animatedBoxStyle = useAnimatedStyle(

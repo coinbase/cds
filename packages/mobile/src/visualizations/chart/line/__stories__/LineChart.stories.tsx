@@ -1082,84 +1082,86 @@ function AssetPriceWithDottedArea() {
     );
 
     return (
-      <VStack gap={2}>
-        <SectionHeader
-          balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
-          end={
-            <VStack justifyContent="center">
-              <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
-            </VStack>
-          }
-          title={<Text font="title1">Bitcoin</Text>}
-        />
-        <LineChart
-          enableScrubbing
-          showArea
-          accessibilityLabel={chartAccessibilityLabel}
-          areaType="dotted"
-          getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
-          height={200}
-          inset={{ top: 52 }}
-          series={[
-            {
-              id: 'btc',
-              data: sparklineTimePeriodDataValues,
-              color: assets.btc.color,
-            },
-          ]}
-        >
-          <Scrubber
-            idlePulse
-            labelElevated
-            label={(d: number) => {
-              const date = formatDate(sparklineTimePeriodDataTimestamps[d]);
-              const price = formatPrice(sparklineTimePeriodDataValues[d]);
-
-              const regularStyle: SkTextStyle = {
-                fontFamilies: ['Inter'],
-                fontSize: 14,
-                fontStyle: {
-                  weight: FontWeight.Normal,
-                },
-                color: Skia.Color(theme.color.fgMuted),
-              };
-
-              const boldStyle: SkTextStyle = {
-                fontFamilies: ['Inter'],
-                ...regularStyle,
-                fontStyle: {
-                  weight: FontWeight.Bold,
-                },
-              };
-
-              // 3. Use the ParagraphBuilder
-              const builder = Skia.ParagraphBuilder.Make(
-                {
-                  textAlign: TextAlign.Left,
-                },
-                fontMgr,
-              );
-
-              builder.pushStyle(boldStyle);
-              builder.addText(price);
-
-              builder.pushStyle(regularStyle);
-              builder.addText(` ${date}`);
-
-              const para = builder.build();
-              para.layout(512);
-              return para;
-            }}
+      <Box height={420}>
+        <VStack flexGrow={1} gap={2} height="100%">
+          <SectionHeader
+            balance={formatPrice(currentPrice)}
+            end={
+              <VStack justifyContent="center">
+                <RemoteImage shape="circle" size="xl" source={assets.btc.imageUrl} />
+              </VStack>
+            }
+            title="Bitcoin"
           />
-        </LineChart>
-        <PeriodSelector
-          TabComponent={BTCTab}
-          TabsActiveIndicatorComponent={BTCActiveIndicator}
-          activeTab={timePeriod}
-          onChange={onPeriodChange}
-          tabs={tabs}
-        />
-      </VStack>
+          <LineChart
+            enableScrubbing
+            showArea
+            accessibilityLabel={chartAccessibilityLabel}
+            areaType="dotted"
+            getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+            inset={{ top: 52 }}
+            series={[
+              {
+                id: 'btc',
+                data: sparklineTimePeriodDataValues,
+                color: assets.btc.color,
+              },
+            ]}
+            style={{ flex: 1 }}
+          >
+            <Scrubber
+              idlePulse
+              labelElevated
+              label={(d: number) => {
+                const date = formatDate(sparklineTimePeriodDataTimestamps[d]);
+                const price = formatPrice(sparklineTimePeriodDataValues[d]);
+
+                const regularStyle: SkTextStyle = {
+                  fontFamilies: ['Inter'],
+                  fontSize: 14,
+                  fontStyle: {
+                    weight: FontWeight.Normal,
+                  },
+                  color: Skia.Color(theme.color.fgMuted),
+                };
+
+                const boldStyle: SkTextStyle = {
+                  fontFamilies: ['Inter'],
+                  ...regularStyle,
+                  fontStyle: {
+                    weight: FontWeight.Bold,
+                  },
+                };
+
+                // 3. Use the ParagraphBuilder
+                const builder = Skia.ParagraphBuilder.Make(
+                  {
+                    textAlign: TextAlign.Left,
+                  },
+                  fontMgr,
+                );
+
+                builder.pushStyle(boldStyle);
+                builder.addText(price);
+
+                builder.pushStyle(regularStyle);
+                builder.addText(` ${date}`);
+
+                const para = builder.build();
+                para.layout(512);
+                return para;
+              }}
+            />
+          </LineChart>
+          <PeriodSelector
+            TabComponent={BTCTab}
+            TabsActiveIndicatorComponent={BTCActiveIndicator}
+            activeTab={timePeriod}
+            onChange={onPeriodChange}
+            tabs={tabs}
+          />
+        </VStack>
+      </Box>
     );
   });
 
@@ -1856,14 +1858,16 @@ function DataCardWithLineChart() {
         thumbnail={exampleThumbnail}
         title="Line Chart Card"
       >
-        <LineChart
-          showArea
-          accessibilityLabel="Ethereum price chart"
-          areaType="dotted"
-          height={120}
-          inset={0}
-          series={lineChartSeries}
-        />
+        <Box height={120} overflow="hidden">
+          <LineChart
+            showArea
+            accessibilityLabel="Ethereum price chart"
+            areaType="dotted"
+            flexGrow={1}
+            inset={0}
+            series={lineChartSeries}
+          />
+        </Box>
       </DataCard>
       <DataCard
         layout="vertical"

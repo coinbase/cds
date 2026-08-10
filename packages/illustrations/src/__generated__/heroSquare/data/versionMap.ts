@@ -453,6 +453,8 @@ const versionMap: Record<HeroSquareName, number> = {
   usdl: 0,
   usdr: 0,
   arrowsUpDown: 0,
+  cbzec: 0,
+  cbhype: 0,
 };
 
 export default versionMap;

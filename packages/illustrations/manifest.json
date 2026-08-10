@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-07-31T20:27:00.190Z",
+  "lastUpdated": "2026-08-07T20:06:50.065Z",
   "colors": {
     "light": [
       {
@@ -33776,6 +33776,48 @@
         "svgEsmThemed": "./pictogram/svgJs/esm/themeable/options-0.js",
         "pngLight": "./pictogram/png/light/options-0.png",
         "pngDark": "./pictogram/png/dark/options-0.png"
+      },
+      "version": 0
+    },
+    "31217:178": {
+      "type": "heroSquare",
+      "name": "cbhype",
+      "hash": "/WB9SjtdLs8D9S8Bc2/2iI1441aOSlaPUO9XkS917T0=",
+      "width": 240,
+      "height": 240,
+      "description": "coin, conversion, convert, yellow, blue, ada, cbada",
+      "createdAt": "2026-08-07T14:51:25.694Z",
+      "lastUpdated": "2026-08-07T14:51:25.694Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/cbhype-0.svg",
+        "svgDark": "./heroSquare/svg/dark/cbhype-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/cjs/light/cbhype-0.js",
+        "svgJsDark": "./heroSquare/svgJs/cjs/dark/cbhype-0.js",
+        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/cbhype-0.js",
+        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/cbhype-0.js",
+        "pngLight": "./heroSquare/png/light/cbhype-0.png",
+        "pngDark": "./heroSquare/png/dark/cbhype-0.png"
+      },
+      "version": 0
+    },
+    "31217:179": {
+      "type": "heroSquare",
+      "name": "cbzec",
+      "hash": "5n230wc+bQHJKKNlAuCeeGNZuE3N/ud2UWNGbZuz+Hs=",
+      "width": 240,
+      "height": 240,
+      "description": "coin, conversion, convert, yellow, blue, ada, cbada",
+      "createdAt": "2026-08-07T14:51:25.688Z",
+      "lastUpdated": "2026-08-07T14:51:25.688Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/cbzec-0.svg",
+        "svgDark": "./heroSquare/svg/dark/cbzec-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/cjs/light/cbzec-0.js",
+        "svgJsDark": "./heroSquare/svgJs/cjs/dark/cbzec-0.js",
+        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/cbzec-0.js",
+        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/cbzec-0.js",
+        "pngLight": "./heroSquare/png/light/cbzec-0.png",
+        "pngDark": "./heroSquare/png/dark/cbzec-0.png"
       },
       "version": 0
     }
