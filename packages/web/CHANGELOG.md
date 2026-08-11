@@ -8,6 +8,18 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.15.0 (8/11/2026 PST)
+
+#### 🚀 Updates
+
+[[#839](https://github.com/coinbase/cds/pull/839)]
+
+- Add new prop: variant to Switch component.
+- Add new prop: showItemSeparators to Accordion component.
+- Add new prop: showHeaderBorder to AccordionItem component.
+- Add AccordionItem to ComponentConfig system.
+- Add new prop: equalWidth to SegmentedTabs component.
+
 ## 9.14.0 (8/11/2026 PST)
 
 #### 🚀 Updates
