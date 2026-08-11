@@ -2000,6 +2000,25 @@ function ExampleNavigator() {
         ),
       },
       {
+        title: 'Lightweight (Static)',
+        component: (
+          <LineChart
+            animate={false}
+            height={200}
+            series={[
+              {
+                id: 'prices',
+                data: [-20, 12, -8, 34, -15, 28, -4, 40, -25, 18, -10, 30, -18, 22],
+              },
+            ]}
+            yAxis={{ domain: { min: -40, max: 45 } }}
+          >
+            {/* Curve weaves through the reference line (negative + positive values). */}
+            <ReferenceLine LineComponent={DottedLine} dataY={0} strokeWidth={2} />
+          </LineChart>
+        ),
+      },
+      {
         title: 'Horizontal Layout',
         component: <HorizontalLayoutLineChart />,
       },

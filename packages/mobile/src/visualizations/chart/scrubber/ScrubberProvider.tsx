@@ -22,13 +22,9 @@ export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableSc
   onScrubberPositionChange?: (index: number | undefined) => void;
 };
 
-/**
- * A component which encapsulates the ScrubberContext.
- * It depends on a ChartContext in order to provide accurate touch tracking.
- */
-export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
+// Sets up the pan gesture + animated reaction. Only mounted when scrubbing is enabled.
+const EnabledScrubberProvider: React.FC<ScrubberProviderProps> = ({
   children,
-  enableScrubbing,
   onScrubberPositionChange,
   allowOverflowGestures,
 }) => {
@@ -154,15 +150,11 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
         }
       })
       .onEnd(function onEnd() {
-        if (enableScrubbing) {
-          runOnJS(handleStartEndHaptics)();
-          scrubberPosition.value = undefined;
-        }
+        runOnJS(handleStartEndHaptics)();
+        scrubberPosition.value = undefined;
       })
       .onTouchesCancelled(function onTouchesCancelled() {
-        if (enableScrubbing) {
-          scrubberPosition.value = undefined;
-        }
+        scrubberPosition.value = undefined;
       });
   }, [
     allowOverflowGestures,
@@ -170,25 +162,40 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     getDataIndexFromPosition,
     categoryAxisIsX,
     scrubberPosition,
-    enableScrubbing,
   ]);
 
   const contextValue: ScrubberContextValue = useMemo(
-    () => ({
-      enableScrubbing: !!enableScrubbing,
-      scrubberPosition,
-    }),
-    [enableScrubbing, scrubberPosition],
+    () => ({ enableScrubbing: true, scrubberPosition }),
+    [scrubberPosition],
   );
 
-  const content = (
-    <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>
+  return (
+    <GestureDetector gesture={longPressGesture}>
+      <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>
+    </GestureDetector>
+  );
+};
+
+// Supplies the ScrubberContext without the gesture/animated reaction (the common, disabled case).
+const DisabledScrubberProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const scrubberPosition = useSharedValue<number | undefined>(undefined);
+
+  const contextValue = useMemo<ScrubberContextValue>(
+    () => ({ enableScrubbing: false, scrubberPosition }),
+    [scrubberPosition],
   );
 
-  // Wrap with gesture handler only if scrubbing is enabled
-  if (enableScrubbing) {
-    return <GestureDetector gesture={longPressGesture}>{content}</GestureDetector>;
+  return <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>;
+};
+
+/**
+ * A component which encapsulates the ScrubberContext.
+ * It depends on a ChartContext in order to provide accurate touch tracking.
+ */
+export const ScrubberProvider: React.FC<ScrubberProviderProps> = (props) => {
+  if (props.enableScrubbing) {
+    return <EnabledScrubberProvider {...props} />;
   }
 
-  return content;
+  return <DisabledScrubberProvider>{props.children}</DisabledScrubberProvider>;
 };
