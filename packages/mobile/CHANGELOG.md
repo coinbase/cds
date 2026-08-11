@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.14.0 (8/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support different tick label overflow- #835. [[#835](https://github.com/coinbase/cds/pull/835)]
+
 ## 9.13.0 (8/11/2026 PST)
 
 #### 🚀 Updates
