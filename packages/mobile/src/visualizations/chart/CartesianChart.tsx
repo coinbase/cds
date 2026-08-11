@@ -118,10 +118,8 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      */
     layout?: CartesianChartLayout;
     /**
-     * Whether to animate the chart. When `false`, lines render via a lightweight static path — a
-     * cheap rectangular clip instead of the anti-aliased path clip that pushes rendering onto
-     * Skia's CPU path renderer — which is well-suited to non-interactive, decorative charts such
-     * as row sparklines in scrolling lists.
+     * Whether to animate the chart. When `false`, lines render via a lightweight static path
+     * (a cheap rectangular clip) suited to non-interactive charts like row sparklines.
      * @default true
      */
     animate?: boolean;

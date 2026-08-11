@@ -208,10 +208,7 @@ const AnimatedPath = memo<
   },
 );
 
-/**
- * Animated chart path: holds the reanimated shared values, clip-reveal interpolation, and the
- * anti-aliased path clip. Used when the chart animates (the default).
- */
+// Animated path: reanimated clip-reveal + shared values. Used when the chart animates (default).
 const AnimatedChartPath = memo<PathProps>((props) => {
   const {
     animate: animateProp,
@@ -389,11 +386,7 @@ const AnimatedChartPath = memo<PathProps>((props) => {
   );
 });
 
-/**
- * Static chart path: no reanimated hooks and a cheap rectangular clip (routed to
- * `canvas.clipRect`) instead of the anti-aliased path clip. Used when the chart does not animate
- * (e.g. `animate={false}`), keeping per-instance cost low when many charts recycle in a list.
- */
+// Non-animated path: skips the clip-reveal animation and uses a cheap rectangular clip.
 const StaticChartPath = memo<
   Omit<PathProps, 'animate' | 'initialPath' | 'transition' | 'transitions'>
 >(
@@ -415,14 +408,14 @@ const StaticChartPath = memo<
     const context = useCartesianChartContext();
     const rect = clipRect ?? context.drawingArea;
 
-    const path = useMemo(() => {
+    // Derived (not memoized) so an animated `d` — e.g. a reference line — still tracks scrubbing.
+    const path = useDerivedValue(() => {
       const dValue = unwrapAnimatedValue(d);
       if (!dValue) return Skia.Path.Make();
       return Skia.Path.MakeFromSVGString(dValue) ?? Skia.Path.Make();
     }, [d]);
 
-    // A rectangular clip routes to canvas.clipRect (a cheap GPU scissor) rather than the
-    // anti-aliased path clip, while still constraining curve overshoot to the drawing area.
+    // Rect clip routes to canvas.clipRect (a cheap GPU scissor), not the anti-aliased path clip.
     const clip = useMemo(() => {
       if (clipPathProp !== undefined) return clipPathProp;
       if (!rect) return null;
