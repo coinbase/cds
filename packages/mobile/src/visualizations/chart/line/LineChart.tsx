@@ -100,8 +100,9 @@ export type LineChartProps = LineChartBaseProps &
  * A line chart built on `CartesianChart`.
  *
  * For non-interactive, decorative usage (e.g. row sparklines in scrolling lists), pass
- * `interactive={false}` to render a lightweight static line — no scrubbing, no entrance
- * animation, and a cheap rectangular clip instead of the anti-aliased path clip.
+ * `animate={false}` to render a lightweight static line — a cheap rectangular clip instead of the
+ * anti-aliased path clip, and no entrance animation. Scrubbing is off unless enabled via
+ * `enableScrubbing`.
  */
 export const LineChart = memo(
   ({

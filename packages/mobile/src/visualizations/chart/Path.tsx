@@ -210,7 +210,7 @@ const AnimatedPath = memo<
 
 /**
  * Animated chart path: holds the reanimated shared values, clip-reveal interpolation, and the
- * anti-aliased path clip. Used when the chart animates (the interactive default).
+ * anti-aliased path clip. Used when the chart animates (the default).
  */
 const AnimatedChartPath = memo<PathProps>((props) => {
   const {
@@ -392,9 +392,11 @@ const AnimatedChartPath = memo<PathProps>((props) => {
 /**
  * Static chart path: no reanimated hooks and a cheap rectangular clip (routed to
  * `canvas.clipRect`) instead of the anti-aliased path clip. Used when the chart does not animate
- * (e.g. `interactive={false}`), keeping per-instance cost low when many charts recycle in a list.
+ * (e.g. `animate={false}`), keeping per-instance cost low when many charts recycle in a list.
  */
-const StaticChartPath = memo<PathProps>(
+const StaticChartPath = memo<
+  Omit<PathProps, 'animate' | 'initialPath' | 'transition' | 'transitions'>
+>(
   ({
     clipRect,
     clipPath: clipPathProp,
@@ -408,11 +410,6 @@ const StaticChartPath = memo<PathProps>(
     strokeCap,
     strokeJoin,
     children,
-    // Static render ignores animation-only props.
-    animate: _animate,
-    initialPath: _initialPath,
-    transition: _transition,
-    transitions: _transitions,
     ...pathProps
   }) => {
     const context = useCartesianChartContext();
@@ -476,9 +473,24 @@ const StaticChartPath = memo<PathProps>(
  * Renders a chart path. Delegates to a lightweight static renderer when the chart is not
  * animating (no reanimated hooks, cheap rect clip) and to the animated renderer otherwise.
  */
-export const Path = memo<PathProps>((props) => {
-  const context = useCartesianChartContext();
-  const animate = props.animate ?? context.animate;
+export const Path = memo<PathProps>(
+  ({ animate: animateProp, initialPath, transition, transitions, ...staticProps }) => {
+    const context = useCartesianChartContext();
+    const animate = animateProp ?? context.animate;
 
-  return animate ? <AnimatedChartPath {...props} /> : <StaticChartPath {...props} />;
-});
+    if (animate) {
+      return (
+        <AnimatedChartPath
+          animate={animateProp}
+          initialPath={initialPath}
+          transition={transition}
+          transitions={transitions}
+          {...staticProps}
+        />
+      );
+    }
+
+    // Animation-only props are omitted from the static renderer.
+    return <StaticChartPath {...staticProps} />;
+  },
+);

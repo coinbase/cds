@@ -111,6 +111,11 @@ export type ReferenceLineBaseProps = {
    */
   stroke?: string;
   /**
+   * Width of the line.
+   * @default the line component's default (2)
+   */
+  strokeWidth?: number;
+  /**
    * Opacity applied to both the line and label.
    * @default 1
    */
@@ -169,6 +174,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
     labelVerticalAlignment,
     labelBoundsInset,
     stroke,
+    strokeWidth,
     opacity = 1,
   }) => {
     const theme = useTheme();
@@ -235,6 +241,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             d={horizontalLine}
             stroke={effectiveLineStroke}
             strokeOpacity={opacity}
+            strokeWidth={strokeWidth}
           />
           {label && (
             <LabelComponent
@@ -274,6 +281,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             d={verticalLine}
             stroke={effectiveLineStroke}
             strokeOpacity={opacity}
+            strokeWidth={strokeWidth}
           />
           {label && (
             <LabelComponent

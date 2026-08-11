@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.13.0 (8/11/2026 PST)
+
+#### 🚀 Updates
+
+- Add a lightweight static render path for non-animated LineChart/CartesianChart (animate={false} uses a cheap rectangular clip instead of the anti-aliased path clip); ScrubberProvider now skips the pan gesture and animated reaction when scrubbing is disabled; add a strokeWidth prop to ReferenceLine. [[#840](https://github.com/coinbase/cds/pull/840)]
+
 ## 9.12.3 (8/10/2026 PST)
 
 #### 🐞 Fixes

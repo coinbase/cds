@@ -34,6 +34,7 @@ jest.mock('@shopify/react-native-skia', () => {
 
 jest.mock('react-native-reanimated', () => ({
   ...jest.requireActual('react-native-reanimated/mock'),
+  isSharedValue: jest.fn(() => false),
   useSharedValue: jest.fn((v: unknown) => ({ value: v })),
 }));
 
@@ -48,66 +49,16 @@ jest.mock('../../ChartContextBridge', () => {
   };
 });
 
-// Surface whether the scrubber context is mounted — the interactive-only machinery.
-jest.mock('../../scrubber/ScrubberProvider', () => {
-  const React = require('react');
-  const { View } = require('react-native');
-  return {
-    ScrubberProvider: ({ children }: { children: React.ReactNode }) =>
-      React.createElement(View, { testID: 'scrubber-provider' }, children),
-  };
-});
-
-// Renders null in tests (screen reader off); mock it so it doesn't need the real ScrubberContext.
-jest.mock('../../scrubber/ScrubberAccessibilityView', () => ({
-  ScrubberAccessibilityView: () => null,
-}));
-
 const series = [{ id: 'a', data: [1, 2, 3, 2, 4], color: 'green' }];
 
-describe('LineChart interactive mode', () => {
-  it('mounts the scrubber provider by default (interactive)', () => {
+describe('LineChart', () => {
+  it('renders a static (animate=false) chart shell', () => {
     render(
       <DefaultThemeProvider>
-        <LineChart height={40} series={series} testID="line-chart" width={100} />
+        <LineChart animate={false} height={40} series={series} testID="line-chart" width={100} />
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByTestId('scrubber-provider')).toBeTruthy();
-  });
-
-  it('skips the scrubber provider when interactive={false}', () => {
-    render(
-      <DefaultThemeProvider>
-        <LineChart
-          height={40}
-          interactive={false}
-          series={series}
-          testID="line-chart"
-          width={100}
-        />
-      </DefaultThemeProvider>,
-    );
-
-    expect(screen.queryByTestId('scrubber-provider')).toBeNull();
-    // The chart shell still renders.
     expect(screen.getByTestId('skia-canvas')).toBeTruthy();
-  });
-
-  it('keeps scrubbing off under interactive={false} even if enableScrubbing is set', () => {
-    render(
-      <DefaultThemeProvider>
-        <LineChart
-          enableScrubbing
-          height={40}
-          interactive={false}
-          series={series}
-          testID="line-chart"
-          width={100}
-        />
-      </DefaultThemeProvider>,
-    );
-
-    expect(screen.queryByTestId('scrubber-provider')).toBeNull();
   });
 });

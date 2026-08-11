@@ -23,10 +23,11 @@ export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableSc
 };
 
 /**
- * A component which encapsulates the ScrubberContext.
- * It depends on a ChartContext in order to provide accurate touch tracking.
+ * The scrubbing-enabled provider: sets up the pan gesture, touch tracking, and the animated
+ * reaction that reports scrubber position. Only mounted when scrubbing is enabled so the
+ * reanimated + gesture allocations are skipped for static/non-interactive charts.
  */
-export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
+const EnabledScrubberProvider: React.FC<ScrubberProviderProps> = ({
   children,
   enableScrubbing,
   onScrubberPositionChange,
@@ -191,4 +192,31 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   }
 
   return content;
+};
+
+/**
+ * The scrubbing-disabled provider: supplies the ScrubberContext without the pan gesture or the
+ * animated reaction, so non-interactive charts (the common case) don't pay that per-instance cost.
+ */
+const DisabledScrubberProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const scrubberPosition = useSharedValue<number | undefined>(undefined);
+
+  const contextValue = useMemo<ScrubberContextValue>(
+    () => ({ enableScrubbing: false, scrubberPosition }),
+    [scrubberPosition],
+  );
+
+  return <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>;
+};
+
+/**
+ * A component which encapsulates the ScrubberContext.
+ * It depends on a ChartContext in order to provide accurate touch tracking.
+ */
+export const ScrubberProvider: React.FC<ScrubberProviderProps> = (props) => {
+  if (props.enableScrubbing) {
+    return <EnabledScrubberProvider {...props} />;
+  }
+
+  return <DisabledScrubberProvider>{props.children}</DisabledScrubberProvider>;
 };
