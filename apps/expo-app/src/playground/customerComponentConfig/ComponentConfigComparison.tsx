@@ -1,6 +1,6 @@
 import React, { memo, useCallback } from 'react';
-import type { ComponentConfig } from '@coinbase/cds-mobile/core/componentConfig';
 import { Switch } from '@coinbase/cds-mobile/controls/Switch';
+import type { ComponentConfig } from '@coinbase/cds-mobile/core/componentConfig';
 import { HStack } from '@coinbase/cds-mobile/layout/HStack';
 import { VStack } from '@coinbase/cds-mobile/layout/VStack';
 import { ComponentConfigProvider } from '@coinbase/cds-mobile/system/ComponentConfigProvider';

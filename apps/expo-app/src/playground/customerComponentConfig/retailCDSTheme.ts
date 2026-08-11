@@ -1,16 +1,6 @@
 import type { ThemeConfig } from '@coinbase/cds-mobile/core/theme';
 import { coinbaseTheme } from '@coinbase/cds-mobile/themes/coinbaseTheme';
 
-/**
- * Custom CDS theme for the Retail (non-advanced) surface.
- *
- * Ported from the design tokens introduced in
- * https://coinbase.ghe.com/consumer/react-native/pull/73059 (`retailCDSTheme.ts`), generated from
- * the CDS "Retail" Figma variable collection. Colors come from the Light/Dark collections; space,
- * sizing, radius, border width, and typography come from the Default collection. Each token group
- * spreads the `coinbaseTheme` equivalent first so any keys not defined in Figma (e.g. the
- * `borderRadius` pill step, `shadow`) are preserved.
- */
 export const retailCDSThemeId = 'coinbase-retail-theme';
 
 const lightSpectrum: ThemeConfig['lightSpectrum'] = {
