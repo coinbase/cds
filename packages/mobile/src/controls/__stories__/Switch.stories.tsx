@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
-import { VStack } from '../../layout';
+import { HStack, VStack } from '../../layout';
 import { ThemeProvider } from '../../system/ThemeProvider';
 import { defaultTheme } from '../../themes/defaultTheme';
 import { Switch } from '../Switch';
@@ -60,6 +60,22 @@ const SwitchScreen = () => {
             </VStack>
           );
         }}
+      </Example>
+      <Example inline title="Variants">
+        <HStack flexWrap="wrap" gap={2}>
+          <Switch checked variant="primary">
+            Primary
+          </Switch>
+          <Switch checked variant="positive">
+            Positive
+          </Switch>
+          <Switch checked variant="negative">
+            Negative
+          </Switch>
+          <Switch checked background="accentBoldPurple" variant="negative">
+            Background override
+          </Switch>
+        </HStack>
       </Example>
       <Example inline title="Custom Theme">
         {() => {
