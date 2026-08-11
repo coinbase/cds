@@ -97,7 +97,7 @@ export type ChartTextBaseProps = {
    * @deprecated Use `repositionAxes` instead
    *
    * This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
+   * @deprecationExpectedRemoval v11
    */
   disableRepositioning?: boolean;
   /**
