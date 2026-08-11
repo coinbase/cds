@@ -82,17 +82,14 @@ const SegmentedTabsComponent = memo(
         background = 'bgSecondary',
         borderRadius = 700,
         equalWidth,
-        alignSelf,
-        width,
+        alignSelf = equalWidth ? 'stretch' : undefined,
+        width = equalWidth ? '100%' : undefined,
         className,
         classNames,
         style,
         styles,
         ...props
       } = mergedProps;
-
-      const resolvedAlignSelf = alignSelf ?? (equalWidth ? 'stretch' : undefined);
-      const resolvedWidth = width ?? (equalWidth ? '100%' : undefined);
 
       const resolvedClassNames = useMemo(() => {
         if (!equalWidth) return classNames;
@@ -109,7 +106,7 @@ const SegmentedTabsComponent = memo(
           TabComponent={TabComponent}
           TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
           activeBackground={activeBackground}
-          alignSelf={resolvedAlignSelf}
+          alignSelf={alignSelf}
           background={background}
           borderRadius={borderRadius}
           className={cx(className, classNames?.root)}
@@ -125,7 +122,7 @@ const SegmentedTabsComponent = memo(
             tab: styles?.tab,
             activeIndicator: styles?.activeIndicator,
           }}
-          width={resolvedWidth}
+          width={width}
           {...props}
         />
       );
