@@ -2000,6 +2000,21 @@ function ExampleNavigator() {
         ),
       },
       {
+        title: 'Lightweight (Static)',
+        component: (
+          <LineChart
+            height={200}
+            interactive={false}
+            series={[
+              {
+                id: 'prices',
+                data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+              },
+            ]}
+          />
+        ),
+      },
+      {
         title: 'Horizontal Layout',
         component: <HorizontalLayoutLineChart />,
       },

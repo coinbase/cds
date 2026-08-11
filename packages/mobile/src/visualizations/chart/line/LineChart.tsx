@@ -96,6 +96,13 @@ export type LineChartProps = LineChartBaseProps &
     scrubberAccessibilityLabelStep?: number;
   };
 
+/**
+ * A line chart built on `CartesianChart`.
+ *
+ * For non-interactive, decorative usage (e.g. row sparklines in scrolling lists), pass
+ * `interactive={false}` to render a lightweight static line — no scrubbing, no entrance
+ * animation, and a cheap rectangular clip instead of the anti-aliased path clip.
+ */
 export const LineChart = memo(
   ({
     ref,

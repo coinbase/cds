@@ -123,6 +123,20 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      */
     animate?: boolean;
     /**
+     * Whether the chart is interactive.
+     *
+     * When `false`, renders a lightweight, static chart for non-interactive or decorative
+     * contexts (e.g. row sparklines in scrolling lists): scrubbing is disabled, the entrance
+     * animation is skipped, and lines use a cheap rectangular clip instead of the anti-aliased
+     * path clip that pushes rendering onto Skia's CPU path renderer.
+     *
+     * @note Forces `animate` off at the chart level (a per-`Line`/`Path` `animate` override still
+     * wins). Scrubbing requires `interactive`; nesting a `Scrubber` under `interactive={false}` is
+     * unsupported.
+     * @default true
+     */
+    interactive?: boolean;
+    /**
      * Configuration for x-axis(es). Can be a single config or array of configs.
      *
      * @note Multiple x-axis configs are only supported when `layout="horizontal"`.
@@ -207,6 +221,7 @@ export const CartesianChart = memo(
     children,
     layout = 'vertical',
     animate = true,
+    interactive = true,
     enableScrubbing,
     getScrubberAccessibilityLabel,
     scrubberAccessibilityLabelStep,
@@ -238,6 +253,11 @@ export const CartesianChart = memo(
     ref?: React.Ref<View>;
   }) => {
     const [containerLayout, onContainerLayout] = useChartLayout();
+
+    // Non-interactive charts skip scrubbing + entrance animation for a lightweight static render.
+    const isInteractive = interactive !== false;
+    const effectiveAnimate = isInteractive ? animate : false;
+    const effectiveEnableScrubbing = isInteractive ? enableScrubbing : false;
 
     const chartWidth = containerLayout.width;
     const chartHeight = containerLayout.height;
@@ -559,7 +579,7 @@ export const CartesianChart = memo(
         series: series ?? [],
         getSeries,
         getSeriesData: getStackedSeriesData,
-        animate,
+        animate: effectiveAnimate,
         width: chartWidth,
         height: chartHeight,
         fontFamilies,
@@ -581,7 +601,7 @@ export const CartesianChart = memo(
         series,
         getSeries,
         getStackedSeriesData,
-        animate,
+        effectiveAnimate,
         chartWidth,
         chartHeight,
         fontFamilies,
@@ -627,7 +647,7 @@ export const CartesianChart = memo(
         width,
         ...props,
         // Claim RN responder so parent PanResponders (e.g. Tray) don't steal the touch.
-        ...(enableScrubbing
+        ...(effectiveEnableScrubbing
           ? {
               onStartShouldSetResponder: claimTouchResponder,
               onMoveShouldSetResponder: claimTouchResponder,
@@ -635,7 +655,7 @@ export const CartesianChart = memo(
           : null),
       };
 
-      if (enableScrubbing) {
+      if (effectiveEnableScrubbing) {
         return {
           ...rootProps,
           onStartShouldSetResponder: claimTouchResponder,
@@ -644,56 +664,59 @@ export const CartesianChart = memo(
       }
 
       return rootProps;
-    }, [ref, height, rootStyles, width, props, enableScrubbing]);
+    }, [ref, height, rootStyles, width, props, effectiveEnableScrubbing]);
+
+    const chartCanvas = (
+      <ChartCanvas
+        accessibilityLabel={accessibilityLabel}
+        accessibilityLiveRegion={accessibilityLiveRegion}
+        accessible={accessible}
+        style={styles?.chart}
+      >
+        {children}
+      </ChartCanvas>
+    );
+
+    // Screen-reader scrubbing affordance is only meaningful for interactive charts.
+    const scrubberAccessibility = isInteractive ? (
+      <ScrubberAccessibilityView
+        accessibilityLabel={getScrubberAccessibilityLabel}
+        accessibilityStep={scrubberAccessibilityLabelStep}
+      />
+    ) : null;
+
+    const body = legend ? (
+      <Box
+        flexDirection={legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'}
+        {...rootBoxProps}
+      >
+        {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
+        <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
+          {chartCanvas}
+          {scrubberAccessibility}
+        </Box>
+        {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
+      </Box>
+    ) : (
+      <Box collapsable={collapsable} onLayout={onContainerLayout} {...rootBoxProps}>
+        {chartCanvas}
+        {scrubberAccessibility}
+      </Box>
+    );
 
     return (
       <CartesianChartProvider value={contextValue}>
-        <ScrubberProvider
-          allowOverflowGestures={allowOverflowGestures}
-          enableScrubbing={enableScrubbing}
-          onScrubberPositionChange={onScrubberPositionChange}
-        >
-          {legend ? (
-            <Box
-              flexDirection={
-                legendPosition === 'top' || legendPosition === 'bottom' ? 'column' : 'row'
-              }
-              {...rootBoxProps}
-            >
-              {(legendPosition === 'top' || legendPosition === 'left') && legendElement}
-              <Box collapsable={collapsable} onLayout={onContainerLayout} style={{ flex: 1 }}>
-                <ChartCanvas
-                  accessibilityLabel={accessibilityLabel}
-                  accessibilityLiveRegion={accessibilityLiveRegion}
-                  accessible={accessible}
-                  style={styles?.chart}
-                >
-                  {children}
-                </ChartCanvas>
-                <ScrubberAccessibilityView
-                  accessibilityLabel={getScrubberAccessibilityLabel}
-                  accessibilityStep={scrubberAccessibilityLabelStep}
-                />
-              </Box>
-              {(legendPosition === 'bottom' || legendPosition === 'right') && legendElement}
-            </Box>
-          ) : (
-            <Box collapsable={collapsable} onLayout={onContainerLayout} {...rootBoxProps}>
-              <ChartCanvas
-                accessibilityLabel={accessibilityLabel}
-                accessibilityLiveRegion={accessibilityLiveRegion}
-                accessible={accessible}
-                style={styles?.chart}
-              >
-                {children}
-              </ChartCanvas>
-              <ScrubberAccessibilityView
-                accessibilityLabel={getScrubberAccessibilityLabel}
-                accessibilityStep={scrubberAccessibilityLabelStep}
-              />
-            </Box>
-          )}
-        </ScrubberProvider>
+        {isInteractive ? (
+          <ScrubberProvider
+            allowOverflowGestures={allowOverflowGestures}
+            enableScrubbing={effectiveEnableScrubbing}
+            onScrubberPositionChange={onScrubberPositionChange}
+          >
+            {body}
+          </ScrubberProvider>
+        ) : (
+          body
+        )}
       </CartesianChartProvider>
     );
   },
