@@ -78,9 +78,9 @@ Do **not** set `@deprecationExpectedRemoval` to the next major (`M+1`). Removal 
 Examples (read `version` from `packages/web`, `packages/mobile`, or `packages/common` — they share semver):
 
 | Current package version | Current major `M` | Earliest `@deprecationExpectedRemoval` |
-| --- | --- | --- |
-| `9.14.0` | `9` | **`v11`** (must survive all of v10) |
-| `10.0.0` | `10` | **`v12`** (must survive all of v11) |
+| ----------------------- | ----------------- | -------------------------------------- |
+| `9.14.0`                | `9`               | **`v11`** (must survive all of v10)    |
+| `10.0.0`                | `10`              | **`v12`** (must survive all of v11)    |
 
 Never suggest or apply `v(M+1)` as the removal target for a newly introduced deprecation.
 
