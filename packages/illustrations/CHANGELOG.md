@@ -8,6 +8,20 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+##### ⭐️ Added (3)
+
+###### Pictogram (3)
+
+- chfTrade
+- eurTrade
+- usdTrade
+
+##### ⭐️ Updated (1)
+
+###### Pictogram (1)
+
+- cb1BankTransfers
+
 ## 4.47.0 (8/7/2026 PST)
 
 #### 🚀 Updates

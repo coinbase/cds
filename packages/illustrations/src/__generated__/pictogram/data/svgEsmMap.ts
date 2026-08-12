@@ -863,7 +863,7 @@ const svgEsmMap = {
   },
   cb1BankTransfers: {
     themeable: () =>
-      import('../svgJs/esm/themeable/cb1BankTransfers-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/cb1BankTransfers-3.js').then((m) => m.default as string),
   },
   chart: {
     themeable: () => import('../svgJs/esm/themeable/chart-2.js').then((m) => m.default as string),
@@ -874,6 +874,10 @@ const svgEsmMap = {
   checkmark: {
     themeable: () =>
       import('../svgJs/esm/themeable/checkmark-3.js').then((m) => m.default as string),
+  },
+  chfTrade: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/chfTrade-0.js').then((m) => m.default as string),
   },
   clock: {
     themeable: () => import('../svgJs/esm/themeable/clock-3.js').then((m) => m.default as string),
@@ -1196,6 +1200,10 @@ const svgEsmMap = {
   ethToken: {
     themeable: () =>
       import('../svgJs/esm/themeable/ethToken-1.js').then((m) => m.default as string),
+  },
+  eurTrade: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/eurTrade-0.js').then((m) => m.default as string),
   },
   exchangeNavigation: {
     themeable: () =>
@@ -2062,6 +2070,10 @@ const svgEsmMap = {
   usdcToken: {
     themeable: () =>
       import('../svgJs/esm/themeable/usdcToken-1.js').then((m) => m.default as string),
+  },
+  usdTrade: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/usdTrade-0.js').then((m) => m.default as string),
   },
   venturesNavigation: {
     themeable: () =>

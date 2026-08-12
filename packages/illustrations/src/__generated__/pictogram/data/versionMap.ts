@@ -320,7 +320,7 @@ const versionMap: Record<PictogramName, number> = {
   usdcLogo: 1,
   usdcRewards: 1,
   coinbaseOneEarn: 1,
-  cb1BankTransfers: 2,
+  cb1BankTransfers: 3,
   accreditedInvestor: 1,
   premiumInvestor: 2,
   usdcLoan: 2,
@@ -549,6 +549,9 @@ const versionMap: Record<PictogramName, number> = {
   inrTrade: 0,
   newTradeError: 0,
   options: 0,
+  usdTrade: 0,
+  eurTrade: 0,
+  chfTrade: 0,
 };
 
 export default versionMap;
