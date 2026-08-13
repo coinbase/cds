@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.22.1 (8/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Support font props on Tabs. [[#825](https://github.com/coinbase/cds/pull/825)]
+
 ## 9.22.0 (8/25/2026 PST)
 
 #### 🚀 Updates
