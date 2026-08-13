@@ -1,7 +1,12 @@
 /**
+ * SelectChip selection: a single option, a multi-select list, or empty.
+ */
+type SelectChipValue = string | readonly string[] | null | undefined;
+
+/**
  * Whether a SelectChip value represents a current selection.
  */
-export function getSelectChipHasValue(value: unknown): boolean {
+export function getSelectChipHasValue(value: SelectChipValue): boolean {
   return value != null && !(Array.isArray(value) && value.length === 0);
 }
 
@@ -12,7 +17,7 @@ export function getSelectChipHasValue(value: unknown): boolean {
  */
 export function getSelectChipActive(
   active: boolean | undefined,
-  value: unknown,
+  value: SelectChipValue,
   invertColorScheme?: boolean,
   inverted?: boolean,
 ): boolean {

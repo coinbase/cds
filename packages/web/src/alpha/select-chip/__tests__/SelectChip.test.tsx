@@ -230,6 +230,30 @@ describe('SelectChip', () => {
       expectNonInvertedChip(chip);
     });
 
+    it('applies color to the default caret', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} color="fgPrimary" value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('icon-base-glyph')).toHaveStyle({
+        color: 'var(--color-fgPrimary)',
+      });
+    });
+
+    it('applies activeColor to the default caret when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} activeColor="fgPositive" value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('icon-base-glyph')).toHaveStyle({
+        color: 'var(--color-fgPositive)',
+      });
+    });
+
     it('applies active branch styling from ComponentConfigProvider when a value is selected', () => {
       render(
         <DefaultThemeProvider>

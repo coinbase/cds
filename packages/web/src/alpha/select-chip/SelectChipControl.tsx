@@ -179,12 +179,16 @@ const SelectChipControlComponent = memo(
         hiddenSelectedOptionsLabel,
       ]);
 
+      const resolvedColor = active && activeColor !== undefined ? activeColor : color;
+
       const endNode = useMemo(() => {
-        // `color="fg"` resolves against the inverted theme when `active` applies inversion.
+        // Match Chip's label color. `fg` still inverts with the chip when active uses theme inversion.
         return (
-          customEndNode ?? <AnimatedCaret active color="fg" rotate={open ? 0 : 180} size="xs" />
+          customEndNode ?? (
+            <AnimatedCaret active color={resolvedColor ?? 'fg'} rotate={open ? 0 : 180} size="xs" />
+          )
         );
-      }, [customEndNode, open]);
+      }, [customEndNode, open, resolvedColor]);
 
       return (
         <MediaChip
