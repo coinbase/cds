@@ -80,7 +80,8 @@ export const Chip = memo(function Chip({
   const shouldInvert = Boolean(invertColorScheme ?? inverted) || activeUsesThemeInversion;
   const WrapperComponent = shouldInvert ? InvertedThemeProvider : Fragment;
 
-  const resolvedBackground = active && activeBackground !== undefined ? activeBackground : background;
+  const resolvedBackground =
+    active && activeBackground !== undefined ? activeBackground : background;
   const resolvedColor = active && activeColor !== undefined ? activeColor : color;
 
   const containerStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
