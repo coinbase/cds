@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.16.0 (8/13/2026 PST)
+
+#### 🚀 Updates
+
+- Deprecate invertColorScheme in favor of new, canoncical active prop for the Chip family of props. [[#843](https://github.com/coinbase/cds/pull/843)]
+
 ## 9.15.0 (8/11/2026 PST)
 
 #### 🚀 Updates

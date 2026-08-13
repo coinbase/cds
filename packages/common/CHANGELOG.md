@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.16.0 (8/13/2026 PST)
+
+#### 🚀 Updates
+
+- Add utility for SelectChip to share across packages. [[#843](https://github.com/coinbase/cds/pull/843)]
+
 ## 9.15.0 ((8/11/2026, 12:23 PM PST))
 
 This is an artificial version bump with no new change.
