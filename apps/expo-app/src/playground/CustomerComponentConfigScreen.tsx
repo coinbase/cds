@@ -7,6 +7,8 @@ import { Select } from '@coinbase/cds-mobile/alpha/select/Select';
 import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip/SelectChip';
 import { TabbedChips } from '@coinbase/cds-mobile/alpha/tabbed-chips/TabbedChips';
 import { InputChip } from '@coinbase/cds-mobile/chips/InputChip';
+import { CheckboxCell } from '@coinbase/cds-mobile/controls/CheckboxCell';
+import { RadioCell } from '@coinbase/cds-mobile/controls/RadioCell';
 import { Switch } from '@coinbase/cds-mobile/controls/Switch';
 import { TextInput } from '@coinbase/cds-mobile/controls/TextInput';
 import { DateInput } from '@coinbase/cds-mobile/dates/DateInput';
@@ -106,6 +108,56 @@ const SelectChipExample = memo(() => {
   );
 });
 
+const CheckboxCellExample = memo(() => {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <VStack gap={2}>
+      <CheckboxCell
+        checked={checked}
+        description="Helpful description"
+        onChange={(_, nextChecked) => setChecked(!!nextChecked)}
+        title="Checkbox cell"
+        value="checkbox-cell"
+      />
+      <CheckboxCell
+        checked
+        disabled
+        onChange={() => {}}
+        title="Selected and disabled"
+        value="checkbox-cell-disabled"
+      />
+    </VStack>
+  );
+});
+
+const RadioCellExample = memo(() => {
+  const [value, setValue] = useState('option-1');
+
+  return (
+    <VStack gap={2}>
+      <RadioCell
+        checked={value === 'option-1'}
+        description="First choice"
+        onChange={(next) => {
+          if (next) setValue(next);
+        }}
+        title="Option 1"
+        value="option-1"
+      />
+      <RadioCell
+        checked={value === 'option-2'}
+        description="Second choice"
+        onChange={(next) => {
+          if (next) setValue(next);
+        }}
+        title="Option 2"
+        value="option-2"
+      />
+    </VStack>
+  );
+});
+
 const comparisonKeys = [
   'Accordion',
   'Inputs',
@@ -114,6 +166,8 @@ const comparisonKeys = [
   'Tabs',
   'SegmentedTabs',
   'TabbedChips',
+  'CheckboxCell',
+  'RadioCell',
 ] as const;
 type ComparisonKey = (typeof comparisonKeys)[number];
 
@@ -125,6 +179,8 @@ const initialConfiguredState: Record<ComparisonKey, boolean> = {
   Tabs: false,
   SegmentedTabs: false,
   TabbedChips: false,
+  CheckboxCell: false,
+  RadioCell: false,
 };
 
 const resolveSwitchChecked = (currentChecked: boolean, nextChecked?: boolean) =>
@@ -292,6 +348,20 @@ export const CustomerComponentConfigScreen = memo(() => {
                 onChange={(checked) => handleConfiguredChange('TabbedChips', checked)}
               >
                 {() => <TabbedChipsExample />}
+              </ComponentConfigComparison>
+              <ComponentConfigComparison
+                checked={configuredState.CheckboxCell}
+                componentName="CheckboxCell"
+                onChange={(checked) => handleConfiguredChange('CheckboxCell', checked)}
+              >
+                {() => <CheckboxCellExample />}
+              </ComponentConfigComparison>
+              <ComponentConfigComparison
+                checked={configuredState.RadioCell}
+                componentName="RadioCell"
+                onChange={(checked) => handleConfiguredChange('RadioCell', checked)}
+              >
+                {() => <RadioCellExample />}
               </ComponentConfigComparison>
             </VStack>
           </ThemeProvider>

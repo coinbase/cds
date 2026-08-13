@@ -1,6 +1,8 @@
 import type { SelectChipBaseProps } from '@coinbase/cds-mobile/alpha/select-chip/SelectChip';
 import type { TabbedChipsBaseProps } from '@coinbase/cds-mobile/alpha/tabbed-chips/TabbedChips';
 import type { InputChipBaseProps } from '@coinbase/cds-mobile/chips/ChipProps';
+import type { CheckboxCellBaseProps } from '@coinbase/cds-mobile/controls/CheckboxCell';
+import type { RadioCellBaseProps } from '@coinbase/cds-mobile/controls/RadioCell';
 import type { ComponentConfig, ConfigResolver } from '@coinbase/cds-mobile/core/componentConfig';
 
 import { CustomTabComponent } from './customTabComponent';
@@ -69,6 +71,12 @@ export const customerComponentConfig: ComponentConfig = {
     TabComponent: CustomTabComponent,
   } satisfies ConfigResolver<TabbedChipsBaseProps>,
   DateInput: {
+    borderRadius: 400,
+  },
+  CheckboxCell: {
+    borderRadius: 400,
+  },
+  RadioCell: {
     borderRadius: 400,
   },
 };
