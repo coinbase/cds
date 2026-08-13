@@ -4,6 +4,9 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { Accordion } from '@coinbase/cds-mobile/accordion/Accordion';
 import { AccordionItem } from '@coinbase/cds-mobile/accordion/AccordionItem';
 import { Select } from '@coinbase/cds-mobile/alpha/select/Select';
+import { SelectChip } from '@coinbase/cds-mobile/alpha/select-chip/SelectChip';
+import { TabbedChips } from '@coinbase/cds-mobile/alpha/tabbed-chips/TabbedChips';
+import { InputChip } from '@coinbase/cds-mobile/chips/InputChip';
 import { Switch } from '@coinbase/cds-mobile/controls/Switch';
 import { TextInput } from '@coinbase/cds-mobile/controls/TextInput';
 import { DateInput } from '@coinbase/cds-mobile/dates/DateInput';
@@ -18,10 +21,13 @@ import { SegmentedTabs } from '@coinbase/cds-mobile/tabs/SegmentedTabs';
 import { Tabs } from '@coinbase/cds-mobile/tabs/Tabs';
 import { Text } from '@coinbase/cds-mobile/typography/Text';
 
+import type { ComponentConfig } from '@coinbase/cds-mobile/core/componentConfig';
+
 import { ComponentConfigComparison } from './customerComponentConfig/ComponentConfigComparison';
 import { customerComponentConfig } from './customerComponentConfig/customerComponentConfig';
 import { retailCDSTheme } from './customerComponentConfig/retailCDSTheme';
 
+const emptyConfig: ComponentConfig = {};
 const scrollContentContainerStyle = { flexGrow: 1 };
 
 const tabsExampleData: TabValue[] = [
@@ -54,15 +60,75 @@ const SegmentedTabsExample = memo(() => {
   );
 });
 
-const comparisonKeys = ['Accordion', 'Inputs', 'Tabs', 'SegmentedTabs'] as const;
+const tabbedChipsExampleData: TabValue[] = [
+  { id: 'overview', label: 'Overview' },
+  { id: 'activity', label: 'Activity' },
+  { id: 'settings', label: 'Settings' },
+];
+
+/** Self-contained Alpha TabbedChips example; TabComponent comes from customer component config. */
+const TabbedChipsExample = memo(() => {
+  const [activeTab, setActiveTab] = useState<TabValue | null>(tabbedChipsExampleData[0]);
+  return (
+    <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabbedChipsExampleData} />
+  );
+});
+
+const chipExampleLabel = 'Basic Chip';
+
+const InputChipExample = memo(() => (
+  <HStack flexWrap="wrap" gap={2}>
+    <InputChip active={false} onPress={() => {}}>
+      {chipExampleLabel}
+    </InputChip>
+    <InputChip onPress={() => {}}>{chipExampleLabel}</InputChip>
+  </HStack>
+));
+
+const selectChipOptions = [
+  { value: '1', label: 'Option 1' },
+  { value: '2', label: 'Option 2' },
+  { value: '3', label: 'Option 3' },
+];
+
+const SelectChipExample = memo(() => {
+  const [value, setValue] = useState<string | null>(null);
+
+  return (
+    <SelectChip
+      accessibilityLabel="Select an option"
+      label="Select an option"
+      onChange={setValue}
+      options={selectChipOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+});
+
+const comparisonKeys = [
+  'Accordion',
+  'Inputs',
+  'InputChip',
+  'SelectChip',
+  'Tabs',
+  'SegmentedTabs',
+  'TabbedChips',
+] as const;
 type ComparisonKey = (typeof comparisonKeys)[number];
 
 const initialConfiguredState: Record<ComparisonKey, boolean> = {
   Accordion: false,
   Inputs: false,
+  InputChip: false,
+  SelectChip: false,
   Tabs: false,
   SegmentedTabs: false,
+  TabbedChips: false,
 };
+
+const resolveSwitchChecked = (currentChecked: boolean, nextChecked?: boolean) =>
+  typeof nextChecked === 'boolean' ? nextChecked : !currentChecked;
 
 /**
  * Playground screen for iterating on a customer's CDS component config.
@@ -73,41 +139,30 @@ export const CustomerComponentConfigScreen = memo(() => {
   const [useRetailTheme, setUseRetailTheme] = useState(false);
   const [configuredState, setConfiguredState] = useState(initialConfiguredState);
 
-  const handleToggleRetailTheme = useCallback((_: string | undefined, checked?: boolean) => {
-    setUseRetailTheme(Boolean(checked));
+  const handleToggleRetailTheme = useCallback((_: string | undefined, nextChecked?: boolean) => {
+    setUseRetailTheme((prev) => resolveSwitchChecked(prev, nextChecked));
   }, []);
 
-  const setConfigured = useCallback((key: ComparisonKey, checked: boolean) => {
+  const handleConfiguredChange = useCallback((key: ComparisonKey, checked: boolean) => {
     setConfiguredState((prev) => ({ ...prev, [key]: checked }));
   }, []);
-  const handleAccordionChange = useCallback(
-    (checked: boolean) => setConfigured('Accordion', checked),
-    [setConfigured],
-  );
-  const handleInputsChange = useCallback(
-    (checked: boolean) => setConfigured('Inputs', checked),
-    [setConfigured],
-  );
-  const handleTabsChange = useCallback(
-    (checked: boolean) => setConfigured('Tabs', checked),
-    [setConfigured],
-  );
-  const handleSegmentedTabsChange = useCallback(
-    (checked: boolean) => setConfigured('SegmentedTabs', checked),
-    [setConfigured],
-  );
 
-  const allConfigured = comparisonKeys.every((key) => configuredState[key]);
+  const someConfigured = comparisonKeys.some((key) => configuredState[key]);
 
-  const handleToggleAllConfigured = useCallback((_: string | undefined, checked?: boolean) => {
-    const nextChecked = Boolean(checked);
-    setConfiguredState(
-      comparisonKeys.reduce(
-        (next, key) => ({ ...next, [key]: nextChecked }),
-        {} as Record<ComparisonKey, boolean>,
-      ),
-    );
-  }, []);
+  const handleToggleAllConfigured = useCallback(
+    (_: string | undefined, switchChecked?: boolean) => {
+      setConfiguredState((prev) => {
+        const someOn = comparisonKeys.some((key) => prev[key]);
+        // Any configured -> turn all off; none configured -> turn all on.
+        const nextAllConfigured = typeof switchChecked === 'boolean' ? switchChecked : !someOn;
+        return comparisonKeys.reduce(
+          (next, key) => ({ ...next, [key]: nextAllConfigured }),
+          {} as Record<ComparisonKey, boolean>,
+        );
+      });
+    },
+    [],
+  );
 
   return (
     <ComponentConfigProvider value={customerComponentConfig}>
@@ -137,18 +192,20 @@ export const CustomerComponentConfigScreen = memo(() => {
                 </Switch>
               </HStack>
               <HStack alignItems="center" justifyContent="flex-end">
-                <Switch
-                  accessibilityLabel={
-                    allConfigured
-                      ? 'Showing configured mode for all components'
-                      : 'Showing default mode for all components'
-                  }
-                  checked={allConfigured}
-                  color={allConfigured ? 'fgPrimary' : undefined}
-                  onChange={handleToggleAllConfigured}
-                >
-                  Toggle all
-                </Switch>
+                <ComponentConfigProvider value={emptyConfig}>
+                  <Switch
+                    accessibilityLabel={
+                      someConfigured
+                        ? 'Showing configured mode for all components'
+                        : 'Showing default mode for all components'
+                    }
+                    checked={someConfigured}
+                    color={someConfigured ? 'fgPrimary' : undefined}
+                    onChange={handleToggleAllConfigured}
+                  >
+                    Toggle all
+                  </Switch>
+                </ComponentConfigProvider>
               </HStack>
               <Divider />
             </VStack>
@@ -156,7 +213,7 @@ export const CustomerComponentConfigScreen = memo(() => {
               <ComponentConfigComparison
                 checked={configuredState.Accordion}
                 componentName="Accordion"
-                onChange={handleAccordionChange}
+                onChange={(checked) => handleConfiguredChange('Accordion', checked)}
               >
                 {() => (
                   <Accordion>
@@ -172,7 +229,7 @@ export const CustomerComponentConfigScreen = memo(() => {
               <ComponentConfigComparison
                 checked={configuredState.Inputs}
                 componentName="Inputs"
-                onChange={handleInputsChange}
+                onChange={(checked) => handleConfiguredChange('Inputs', checked)}
               >
                 {() => (
                   <VStack>
@@ -202,18 +259,39 @@ export const CustomerComponentConfigScreen = memo(() => {
                 )}
               </ComponentConfigComparison>
               <ComponentConfigComparison
+                checked={configuredState.InputChip}
+                componentName="InputChip"
+                onChange={(checked) => handleConfiguredChange('InputChip', checked)}
+              >
+                {() => <InputChipExample />}
+              </ComponentConfigComparison>
+              <ComponentConfigComparison
+                checked={configuredState.SelectChip}
+                componentName="SelectChip"
+                onChange={(checked) => handleConfiguredChange('SelectChip', checked)}
+              >
+                {() => <SelectChipExample />}
+              </ComponentConfigComparison>
+              <ComponentConfigComparison
                 checked={configuredState.Tabs}
                 componentName="Tabs"
-                onChange={handleTabsChange}
+                onChange={(checked) => handleConfiguredChange('Tabs', checked)}
               >
                 {() => <TabsExample />}
               </ComponentConfigComparison>
               <ComponentConfigComparison
                 checked={configuredState.SegmentedTabs}
                 componentName="SegmentedTabs"
-                onChange={handleSegmentedTabsChange}
+                onChange={(checked) => handleConfiguredChange('SegmentedTabs', checked)}
               >
                 {() => <SegmentedTabsExample />}
+              </ComponentConfigComparison>
+              <ComponentConfigComparison
+                checked={configuredState.TabbedChips}
+                componentName="TabbedChips"
+                onChange={(checked) => handleConfiguredChange('TabbedChips', checked)}
+              >
+                {() => <TabbedChipsExample />}
               </ComponentConfigComparison>
             </VStack>
           </ThemeProvider>

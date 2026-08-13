@@ -370,7 +370,7 @@ export const retailCDSTheme: ThemeConfig = {
     bgPositiveWash: `rgb(${darkSpectrum.green0})`,
     bgWarning: `rgb(${darkSpectrum.orange60})`,
     bgWarningWash: `rgb(${darkSpectrum.orange0})`,
-    bgLine: 'rgba(138,145,158,0.1)',
+    bgLine: 'rgba(138,145,158,0.2)',
     bgLineHeavy: 'rgba(138,145,158,0.66)',
     bgLineInverse: `rgb(${darkSpectrum.gray0})`,
     bgLinePrimary: `rgb(${darkSpectrum.blue70})`,

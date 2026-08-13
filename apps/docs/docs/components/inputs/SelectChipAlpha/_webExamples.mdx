@@ -4,6 +4,12 @@ SelectChip is a chip-styled control built on top of the [Alpha Select](/componen
 Avoid using options with duplicate values. Each option's `value` should be unique within the options array to ensure proper selection behavior.
 :::
 
+## Active state
+
+SelectChip uses the same `active` semantics as [Chip](/components/inputs/Chip/): when `active` is true, the control inverts the color scheme for everything inside the chip borders.
+
+By default, SelectChip sets `active` to `true` whenever one or more values are selected and `false` when the control is empty. You do not need to wire `active` to `value` manually. Pass `active` explicitly to force the emphasized state even when nothing is selected, or set `active={false}` to keep the chip visually inactive despite a selection.
+
 ## Basics
 
 ### Basic usage
@@ -273,32 +279,6 @@ function ExampleSizes() {
         />
       </VStack>
     </HStack>
-  );
-}
-```
-
-### Inverted
-
-```jsx live
-function ExampleInverted() {
-  const exampleOptions = [
-    { value: null, label: 'Clear selection' },
-    { value: '1', label: 'Option 1' },
-    { value: '2', label: 'Option 2' },
-    { value: '3', label: 'Option 3' },
-    { value: '4', label: 'Option 4' },
-  ];
-  const [value, setValue] = useState(null);
-  const hasValue = value !== null;
-  return (
-    <SelectChip
-      accessibilityLabel="Select a value"
-      invertColorScheme={!hasValue}
-      onChange={setValue}
-      options={exampleOptions}
-      placeholder="Choose an option"
-      value={value}
-    />
   );
 }
 ```

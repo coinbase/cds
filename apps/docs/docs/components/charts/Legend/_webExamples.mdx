@@ -710,7 +710,7 @@ function InteractiveLegend() {
         compact
         aria-label={`${isEmphasized ? 'Remove emphasis from' : 'Emphasize'} ${label} series`}
         aria-pressed={isEmphasized}
-        inverted={isEmphasized}
+        active={isEmphasized}
         onClick={() => handleToggle(seriesId)}
         style={{
           backgroundColor: `rgb(var(${baseColor}10))`,

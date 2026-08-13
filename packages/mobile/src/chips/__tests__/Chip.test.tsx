@@ -4,6 +4,7 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { Icon } from '../../icons';
 import { RemoteImage } from '../../media';
+import { defaultTheme } from '../../themes/defaultTheme';
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Chip } from '../Chip';
@@ -74,5 +75,85 @@ describe('Chip', () => {
 
     expect(screen.getByTestId(chipTestID)).toHaveStyle({ borderWidth: 2 });
     expect(screen.getByTestId(`${chipTestID}-content`)).toHaveStyle({ paddingVertical: 10 });
+  });
+
+  it('renders inactive colors by default', () => {
+    render(<TestChip />);
+
+    expect(screen.getByTestId(chipTestID)).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgSecondary,
+    });
+    expect(screen.getByText('USD')).toHaveStyle({
+      color: defaultTheme.lightColor.fg,
+    });
+  });
+
+  it('renders opposite-scheme bgSecondary and fg when invertColorScheme is true', () => {
+    render(<TestChip invertColorScheme />);
+
+    expect(screen.getByTestId(chipTestID)).toHaveStyle({
+      backgroundColor: defaultTheme.darkColor.bgSecondary,
+    });
+    expect(screen.getByText('USD')).toHaveStyle({
+      color: defaultTheme.darkColor.fg,
+    });
+  });
+
+  it('renders opposite-scheme bgSecondary and fg when inverted is true', () => {
+    render(<TestChip inverted />);
+
+    expect(screen.getByTestId(chipTestID)).toHaveStyle({
+      backgroundColor: defaultTheme.darkColor.bgSecondary,
+    });
+    expect(screen.getByText('USD')).toHaveStyle({
+      color: defaultTheme.darkColor.fg,
+    });
+  });
+
+  it('does not invert when invertColorScheme is false even if inverted is true', () => {
+    render(<TestChip inverted invertColorScheme={false} />);
+
+    expect(screen.getByTestId(chipTestID)).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgSecondary,
+    });
+    expect(screen.getByText('USD')).toHaveStyle({
+      color: defaultTheme.lightColor.fg,
+    });
+  });
+
+  it('renders opposite-scheme bgSecondary and fg when active is true', () => {
+    render(<TestChip active />);
+
+    expect(screen.getByTestId(chipTestID)).toHaveStyle({
+      backgroundColor: defaultTheme.darkColor.bgSecondary,
+    });
+    expect(screen.getByText('USD')).toHaveStyle({
+      color: defaultTheme.darkColor.fg,
+    });
+  });
+
+  it('applies activeBackground and activeColor without inverting when active', () => {
+    render(
+      <DefaultThemeProvider>
+        <Chip active activeBackground="bgPositive" activeColor="fgPositive" testID={chipTestID}>
+          USD
+        </Chip>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(chipTestID)).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgPositive,
+    });
+    expect(screen.getByText('USD')).toHaveStyle({
+      color: defaultTheme.lightColor.fgPositive,
+    });
+  });
+
+  it('prefers style overrides when active', () => {
+    render(<TestChip active style={{ backgroundColor: 'rgb(1, 2, 3)' }} />);
+
+    expect(screen.getByTestId(chipTestID)).toHaveStyle({
+      backgroundColor: 'rgb(1, 2, 3)',
+    });
   });
 });

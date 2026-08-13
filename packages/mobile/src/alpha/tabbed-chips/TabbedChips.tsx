@@ -17,10 +17,8 @@ import { Tabs, type TabsBaseProps, type TabsProps } from '../../tabs/Tabs';
 const DefaultTabComponent = <TabId extends string = string>({
   label = '',
   id,
-  activeBackground,
-  activeColor,
-  color,
-  ...tabProps
+  Component: _Component,
+  ...chipRenderProps
 }: TabbedChipProps<TabId>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
@@ -28,11 +26,9 @@ const DefaultTabComponent = <TabId extends string = string>({
   return (
     <MediaChip
       accessibilityState={{ selected: isActive }}
-      background={isActive && activeBackground ? activeBackground : undefined}
-      color={isActive && activeColor ? activeColor : color}
-      invertColorScheme={isActive && !activeBackground}
+      active={isActive}
       onPress={handlePress}
-      {...tabProps}
+      {...chipRenderProps}
     >
       {label}
     </MediaChip>
@@ -51,11 +47,14 @@ export type TabbedChipProps<TabId extends string = string> = Omit<
     Component?: React.FC<Omit<ChipProps, 'children'> & TabValue<TabId>>;
     /**
      * Custom background color applied to the chip when it is the active tab.
-     * When set, takes precedence over the default `invertColorScheme` behavior.
+     * Skips color-scheme inversion and paints this token directly. Any `start`,
+     * `end`, or custom tab content must set explicit colors to match.
      */
     activeBackground?: MediaChipBaseProps['background'];
     /**
      * Custom foreground color applied to the chip label when it is the active tab.
+     * Skips color-scheme inversion when set. Any `start`, `end`, or custom tab
+     * content must set explicit colors to match.
      */
     activeColor?: MediaChipBaseProps['color'];
   };

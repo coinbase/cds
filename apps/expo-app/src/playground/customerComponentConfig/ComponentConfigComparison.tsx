@@ -21,6 +21,10 @@ export type ComponentConfigComparisonProps = {
   children: () => React.ReactNode;
 };
 
+/** Resolve the next checked value from Control's onChange, falling back to toggling local state. */
+const resolveSwitchChecked = (currentChecked: boolean, nextChecked?: boolean) =>
+  typeof nextChecked === 'boolean' ? nextChecked : !currentChecked;
+
 /**
  * Toggle orchestration for customer component config work.
  * Place inside a screen-level {@link ComponentConfigProvider} with the customer config;
@@ -30,9 +34,9 @@ export const ComponentConfigComparison = memo(
   ({ componentName, checked, onChange, children }: ComponentConfigComparisonProps) => {
     const handleToggle = useCallback(
       (_: string | undefined, nextChecked?: boolean) => {
-        onChange(Boolean(nextChecked));
+        onChange(resolveSwitchChecked(checked, nextChecked));
       },
-      [onChange],
+      [checked, onChange],
     );
 
     return (

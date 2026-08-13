@@ -50,17 +50,37 @@ function Example() {
 
 ## Styling
 
-### Color
+### Active Color
 
-Use `invertColorScheme` to invert foreground and background for emphasis.
+Use `active` for high-contrast emphasis. When `active` is true, the Chip inverts the color scheme for everything inside its borders — `background`, `color`, icons, and other token-based colors are all resolved against the opposite light/dark palette. Set `background` and `color` to control the inactive appearance; those same tokens flip automatically when active.
 
 ```tsx
 function Example() {
   return (
     <HStack gap={2} flexWrap="wrap">
       <Chip>Default</Chip>
-      <Chip invertColorScheme>Inverted</Chip>
+      <Chip active>Active</Chip>
+      <Chip active background="bgPrimary" color="fgInverse">
+        Custom tokens
+      </Chip>
     </HStack>
+  );
+}
+```
+
+To break from the inverted convention, set `activeBackground` and/or `activeColor` while `active` is true. The Chip paints those tokens directly instead of inverting. **Any `start`, `end`, or `children` ReactNodes need explicit `color` props** — they are not updated automatically.
+
+```tsx
+function Example() {
+  return (
+    <Chip
+      active
+      activeBackground="bgPositive"
+      activeColor="fgInverse"
+      end={<Icon color="fgInverse" name="caretDown" size="s" />}
+    >
+      Positive active
+    </Chip>
   );
 }
 ```

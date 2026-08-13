@@ -26,6 +26,9 @@ const showStart = instance.getEnum('show start', { true: true, false: false });
 // show label: whether the label text is visible (false = icon-only chip)
 const showLabel = instance.getEnum('show label', { true: true, false: false });
 
+// active: Figma active variant maps directly to the active prop
+const active = instance.getEnum('active', { true: true, false: false });
+
 // The start element uses different instance swaps depending on the size
 const startCompact = instance.getInstanceSwap('↳ startCompact');
 const startRegular = instance.getInstanceSwap('↳ start');
@@ -39,6 +42,7 @@ if (showStart && startHandle && startHandle.type === 'INSTANCE') {
 export default {
   example: figma.code`<InputChip
   ${size !== 's' ? figma.code`size="${size}"` : ''}
+  ${!active ? 'active={false}' : ''}
   ${disabled ? 'disabled' : ''}
   ${startCode ? figma.code`start={${startCode}}` : ''}
 >${showLabel ? label : ''}</InputChip>`,

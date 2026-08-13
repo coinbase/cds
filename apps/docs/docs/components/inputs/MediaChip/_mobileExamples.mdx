@@ -76,15 +76,15 @@ MediaChip supports all six content combinations automatically.
 </MediaChip>
 ```
 
-### Invert color scheme
+### Active
 
-Use `invertColorScheme` to emphasize the chip with inverted colors.
+Use `active` to emphasize the chip with high-contrast colors.
 
 ```tsx
 <HStack gap={2} flexWrap="wrap">
-  <MediaChip invertColorScheme>Selected</MediaChip>
+  <MediaChip active>Selected</MediaChip>
   <MediaChip
-    invertColorScheme
+    active
     end={<Icon active color="fg" name="check" size="xs" />}
     start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
   >

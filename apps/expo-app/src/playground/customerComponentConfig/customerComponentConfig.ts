@@ -1,4 +1,35 @@
-import type { ComponentConfig } from '@coinbase/cds-mobile/core/componentConfig';
+import type { SelectChipBaseProps } from '@coinbase/cds-mobile/alpha/select-chip/SelectChip';
+import type { TabbedChipsBaseProps } from '@coinbase/cds-mobile/alpha/tabbed-chips/TabbedChips';
+import type { InputChipBaseProps } from '@coinbase/cds-mobile/chips/ChipProps';
+import type { ComponentConfig, ConfigResolver } from '@coinbase/cds-mobile/core/componentConfig';
+
+import { CustomTabComponent } from './customTabComponent';
+
+const inputChipStyleConfigResolver: ConfigResolver<InputChipBaseProps> = (props) =>
+  props.active
+    ? {
+        activeBackground: 'bgSecondary',
+        borderWidth: 100,
+        borderColor: 'bgSecondary',
+      }
+    : {
+        background: 'bg',
+        borderWidth: 100,
+        borderColor: 'bgLine',
+      };
+
+const selectChipStyleConfigResolver: ConfigResolver<SelectChipBaseProps> = (props) =>
+  props.active
+    ? {
+        activeBackground: 'bgSecondary',
+        borderWidth: 100,
+        borderColor: 'bgSecondary',
+      }
+    : {
+        background: 'bg',
+        borderWidth: 100,
+        borderColor: 'bgLine',
+      };
 
 /**
  * Customer component config under test.
@@ -15,6 +46,7 @@ export const customerComponentConfig: ComponentConfig = {
     paddingY: 1,
     borderRadius: 400,
   },
+  InputChip: inputChipStyleConfigResolver,
   TextInput: {
     borderRadius: 400,
   },
@@ -32,6 +64,10 @@ export const customerComponentConfig: ComponentConfig = {
   Select: {
     borderRadius: 400,
   },
+  SelectChip: selectChipStyleConfigResolver,
+  TabbedChips: {
+    TabComponent: CustomTabComponent,
+  } satisfies ConfigResolver<TabbedChipsBaseProps>,
   DateInput: {
     borderRadius: 400,
   },

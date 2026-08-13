@@ -27,6 +27,9 @@ const disabled = instance.getEnum('state', {
 // show start: whether the startNode slot is populated
 const showStart = instance.getEnum('show start', { true: true, false: false });
 
+// active: Figma active variant maps directly to the active prop
+const active = instance.getEnum('active', { true: true, false: false });
+
 // The start element uses different instance swaps for the xs vs s size
 const startCompact = instance.getInstanceSwap('↳ startCompact');
 const startRegular = instance.getInstanceSwap('↳ start');
@@ -40,6 +43,7 @@ if (showStart && startHandle && startHandle.type === 'INSTANCE') {
 export default {
   example: figma.code`<SelectChip
   ${size !== 's' ? figma.code`size="${size}"` : ''}
+  ${active ? 'active' : ''}
   ${disabled ? 'disabled' : ''}
   ${startCode ? figma.code`startNode={${startCode}}` : ''}
   onChange={() => {}}

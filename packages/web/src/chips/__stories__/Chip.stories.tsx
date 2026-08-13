@@ -19,7 +19,7 @@ const ChipExamples = ({
   ...props
 }: { label?: string; direction?: 'row' | 'column' } & Pick<
   ChipBaseProps,
-  'inverted' | 'compact' | 'size'
+  'active' | 'compact' | 'size'
 >) => {
   const divRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -104,9 +104,9 @@ export const Default = () => (
     </Text>
     <ChipExamples />
     <Text as="h3" display="block" font="headline" paddingTop={3}>
-      Inverted
+      Active
     </Text>
-    <ChipExamples inverted />
+    <ChipExamples active />
     <Text as="h3" display="block" font="headline">
       Compact
     </Text>
