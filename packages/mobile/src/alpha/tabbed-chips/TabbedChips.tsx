@@ -18,7 +18,10 @@ const DefaultTabComponent = <TabId extends string = string>({
   label = '',
   id,
   Component: _Component,
-  ...chipRenderProps
+  activeBackground,
+  activeColor,
+  color,
+  ...tabProps
 }: TabbedChipProps<TabId>) => {
   const { activeTab, updateActiveTab } = useTabsContext();
   const isActive = useMemo(() => activeTab?.id === id, [activeTab, id]);
@@ -26,9 +29,11 @@ const DefaultTabComponent = <TabId extends string = string>({
   return (
     <MediaChip
       accessibilityState={{ selected: isActive }}
-      active={isActive}
+      active={isActive && !activeBackground}
+      background={isActive && activeBackground ? activeBackground : undefined}
+      color={isActive && activeColor ? activeColor : color}
       onPress={handlePress}
-      {...chipRenderProps}
+      {...tabProps}
     >
       {label}
     </MediaChip>

@@ -94,26 +94,37 @@ describe('TabbedChips(Alpha) - web', () => {
   });
 
   describe('activeBackground', () => {
-    it('renders without error when tabs have activeBackground set', () => {
+    it('paints activeBackground on the selected tab without inverting', () => {
       render(<ActiveBackgroundDemo />);
-      expect(screen.getByTestId(testID)).toBeDefined();
+      const first = screen.getByTestId(
+        activeBackgroundTabs[0].testID ?? activeBackgroundTabs[0].id,
+      );
+      const second = screen.getByTestId(
+        activeBackgroundTabs[1].testID ?? activeBackgroundTabs[1].id,
+      );
+
+      expect(first).toHaveAttribute('aria-selected', 'true');
+      expect(first).toHaveStyle({ backgroundColor: 'var(--color-bgPositive)' });
+      expect(first.parentElement?.className).not.toMatch(/\bdark\b/);
+      expect(second).toHaveAttribute('aria-selected', 'false');
+      expect(second).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
     });
 
-    it('active tab with activeBackground still carries aria-selected', async () => {
+    it('moves activeBackground to the newly selected tab', async () => {
       render(<ActiveBackgroundDemo />);
-      const firstTestId = activeBackgroundTabs[0].testID ?? activeBackgroundTabs[0].id;
-      const secondTestId = activeBackgroundTabs[1].testID ?? activeBackgroundTabs[1].id;
-
-      expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'true');
-
-      fireEvent.click(screen.getByTestId(secondTestId));
-
-      await waitFor(() =>
-        expect(screen.getByTestId(secondTestId)).toHaveAttribute('aria-selected', 'true'),
+      const first = screen.getByTestId(
+        activeBackgroundTabs[0].testID ?? activeBackgroundTabs[0].id,
       );
-      await waitFor(() =>
-        expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'false'),
+      const second = screen.getByTestId(
+        activeBackgroundTabs[1].testID ?? activeBackgroundTabs[1].id,
       );
+
+      fireEvent.click(second);
+
+      await waitFor(() => expect(second).toHaveAttribute('aria-selected', 'true'));
+      expect(second).toHaveStyle({ backgroundColor: 'var(--color-bgPositive)' });
+      expect(first).toHaveAttribute('aria-selected', 'false');
+      expect(first).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
     });
   });
 
@@ -159,26 +170,22 @@ describe('TabbedChips(Alpha) - web', () => {
   });
 
   describe('activeColor', () => {
-    it('renders without error when tabs have activeColor set', () => {
+    it('applies activeColor to the selected tab label', () => {
       render(<ActiveColorDemo />);
-      expect(screen.getByTestId(testID)).toBeDefined();
+
+      expect(screen.getByText('Tab one')).toHaveStyle({ color: 'var(--color-fgPositive)' });
+      expect(screen.getByText('Tab two')).toHaveStyle({ color: 'var(--color-fg)' });
     });
 
-    it('active tab with activeColor still carries aria-selected', async () => {
+    it('moves activeColor to the newly selected tab', async () => {
       render(<ActiveColorDemo />);
-      const firstTestId = activeColorTabs[0].testID ?? activeColorTabs[0].id;
-      const secondTestId = activeColorTabs[1].testID ?? activeColorTabs[1].id;
 
-      expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'true');
-
-      fireEvent.click(screen.getByTestId(secondTestId));
+      fireEvent.click(screen.getByTestId(activeColorTabs[1].testID ?? activeColorTabs[1].id));
 
       await waitFor(() =>
-        expect(screen.getByTestId(secondTestId)).toHaveAttribute('aria-selected', 'true'),
+        expect(screen.getByText('Tab two')).toHaveStyle({ color: 'var(--color-fgPositive)' }),
       );
-      await waitFor(() =>
-        expect(screen.getByTestId(firstTestId)).toHaveAttribute('aria-selected', 'false'),
-      );
+      expect(screen.getByText('Tab one')).toHaveStyle({ color: 'var(--color-fg)' });
     });
   });
 });

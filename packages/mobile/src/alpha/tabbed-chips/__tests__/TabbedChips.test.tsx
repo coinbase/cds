@@ -4,7 +4,8 @@ import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
 import type { ChipSize } from '../../../chips/ChipProps';
-import { DefaultThemeProvider } from '../../../utils/testHelpers';
+import { defaultTheme } from '../../../themes/defaultTheme';
+import { DefaultThemeProvider, treeHasStyleProp } from '../../../utils/testHelpers';
 import { type TabbedChipProps, TabbedChips, type TabbedChipsProps } from '../TabbedChips';
 
 const testID = 'tabbed-chips';
@@ -19,10 +20,14 @@ const Demo = () => {
   );
 };
 
-const activeBackgroundTabs: TabbedChipProps[] = tabs.map((tab) => ({
-  ...tab,
-  activeBackground: 'bgPositive' as TabbedChipProps['activeBackground'],
-}));
+const activeBackgroundTabs: TabbedChipProps[] = [
+  { ...tabs[0], activeBackground: 'bgPositive' as TabbedChipProps['activeBackground'] },
+  { ...tabs[1], activeBackground: 'bgNegative' as TabbedChipProps['activeBackground'] },
+  ...tabs.slice(2).map((tab) => ({
+    ...tab,
+    activeBackground: 'bgPositive' as TabbedChipProps['activeBackground'],
+  })),
+];
 
 const activeColorTabs: TabbedChipProps[] = tabs.map((tab) => ({
   ...tab,
@@ -78,22 +83,45 @@ describe('TabbedChips(Alpha)', () => {
   });
 
   describe('activeBackground', () => {
-    it('renders without error when tabs have activeBackground set', () => {
-      render(<ActiveBackgroundDemo />);
-      expect(screen.getByTestId(testID)).toBeDefined();
+    it('paints activeBackground on the selected tab without inverting', () => {
+      const { toJSON } = render(<ActiveBackgroundDemo />);
+
+      expect(
+        screen.getByTestId(activeBackgroundTabs[0].testID ?? activeBackgroundTabs[0].id),
+      ).toBeSelected();
+      expect(
+        treeHasStyleProp(
+          toJSON(),
+          (style) => style.backgroundColor === defaultTheme.lightColor.bgPositive,
+        ),
+      ).toBe(true);
+      expect(
+        treeHasStyleProp(
+          toJSON(),
+          (style) => style.backgroundColor === defaultTheme.lightColor.bgNegative,
+        ),
+      ).toBe(false);
     });
 
-    it('active tab with activeBackground remains selected', async () => {
-      render(<ActiveBackgroundDemo />);
-      const firstTestId = activeBackgroundTabs[0].testID ?? activeBackgroundTabs[0].id;
+    it('moves activeBackground to the newly selected tab', async () => {
+      const { toJSON } = render(<ActiveBackgroundDemo />);
       const secondTestId = activeBackgroundTabs[1].testID ?? activeBackgroundTabs[1].id;
-
-      expect(screen.getByTestId(firstTestId)).toBeSelected();
 
       fireEvent.press(screen.getByTestId(secondTestId));
 
       await waitFor(() => expect(screen.getByTestId(secondTestId)).toBeSelected());
-      await waitFor(() => expect(screen.getByTestId(firstTestId)).not.toBeSelected());
+      expect(
+        treeHasStyleProp(
+          toJSON(),
+          (style) => style.backgroundColor === defaultTheme.lightColor.bgNegative,
+        ),
+      ).toBe(true);
+      expect(
+        treeHasStyleProp(
+          toJSON(),
+          (style) => style.backgroundColor === defaultTheme.lightColor.bgPositive,
+        ),
+      ).toBe(false);
     });
   });
 
@@ -139,22 +167,30 @@ describe('TabbedChips(Alpha)', () => {
   });
 
   describe('activeColor', () => {
-    it('renders without error when tabs have activeColor set', () => {
+    it('applies activeColor to the selected tab label', () => {
       render(<ActiveColorDemo />);
-      expect(screen.getByTestId(testID)).toBeDefined();
+
+      expect(screen.getByText('Tab one')).toHaveStyle({
+        color: defaultTheme.darkColor.fgPositive,
+      });
+      expect(screen.getByText('Tab two')).toHaveStyle({
+        color: defaultTheme.lightColor.fg,
+      });
     });
 
-    it('active tab with activeColor remains selected', async () => {
+    it('moves activeColor to the newly selected tab', async () => {
       render(<ActiveColorDemo />);
-      const firstTestId = activeColorTabs[0].testID ?? activeColorTabs[0].id;
-      const secondTestId = activeColorTabs[1].testID ?? activeColorTabs[1].id;
 
-      expect(screen.getByTestId(firstTestId)).toBeSelected();
+      fireEvent.press(screen.getByTestId(activeColorTabs[1].testID ?? activeColorTabs[1].id));
 
-      fireEvent.press(screen.getByTestId(secondTestId));
-
-      await waitFor(() => expect(screen.getByTestId(secondTestId)).toBeSelected());
-      await waitFor(() => expect(screen.getByTestId(firstTestId)).not.toBeSelected());
+      await waitFor(() =>
+        expect(screen.getByText('Tab two')).toHaveStyle({
+          color: defaultTheme.darkColor.fgPositive,
+        }),
+      );
+      expect(screen.getByText('Tab one')).toHaveStyle({
+        color: defaultTheme.lightColor.fg,
+      });
     });
   });
 });
