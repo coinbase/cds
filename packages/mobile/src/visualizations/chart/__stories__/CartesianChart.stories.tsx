@@ -230,11 +230,7 @@ const currentPrice = btcPrices[displayIndex];
 const currentDate = btcDates[displayIndex];
 
 const PriceWithVolumeChart = memo(
-  ({
-    onHighlightChange,
-  }: {
-    onHighlightChange: (items: HighlightedItem[]) => void;
-  }) => {
+  ({ onHighlightChange }: { onHighlightChange: (items: HighlightedItem[]) => void }) => {
     const theme = useTheme();
 
     const formatPriceInThousands = useCallback((price: number) => {

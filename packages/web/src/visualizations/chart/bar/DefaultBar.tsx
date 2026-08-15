@@ -11,6 +11,7 @@ import {
 } from '../utils/bar';
 import { type BarTransition, getNormalizedStagger } from '../utils/bar';
 import { useHighlightContext } from '../utils/context';
+import type { HighlightedItem } from '../utils/highlight';
 import { getBarPath } from '../utils/path';
 import { defaultTransition, getTransition } from '../utils/transition';
 
@@ -99,9 +100,20 @@ export const DefaultBar = memo<DefaultBarProps>(
     const handlePointerEnter = useCallback(
       (event: React.PointerEvent<SVGPathElement>) => {
         if (!highlightEnabled || !highlightBySeries) return;
-        highlightContext.updatePointerHighlight(event.pointerId, { seriesId });
+        const item: HighlightedItem = { seriesId };
+        if (highlightByDataIndex && typeof dataIndex === 'number') {
+          item.dataIndex = dataIndex;
+        }
+        highlightContext.updatePointerHighlight(event.pointerId, item);
       },
-      [highlightContext, highlightEnabled, highlightBySeries, seriesId],
+      [
+        highlightContext,
+        highlightEnabled,
+        highlightBySeries,
+        highlightByDataIndex,
+        seriesId,
+        dataIndex,
+      ],
     );
 
     const handlePointerLeave = useCallback(

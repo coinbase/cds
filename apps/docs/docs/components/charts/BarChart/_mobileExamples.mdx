@@ -899,9 +899,7 @@ function AccessibleBarChart() {
           return `${categories[i]}: ${values[i]}`;
         })
         .filter((line): line is string => line !== null);
-      return (
-        parts.join('; ') || `Bar chart, ${values.length} months. Swipe to navigate.`
-      );
+      return parts.join('; ') || `Bar chart, ${values.length} months. Swipe to navigate.`;
     },
     [categories, values],
   );

@@ -1469,10 +1469,7 @@ function ForecastAssetPrice() {
 
   const CustomScrubber = memo(() => {
     const { highlight } = useHighlightContext();
-    const scrubberPosition = useMemo(
-      () => highlight[0]?.dataIndex ?? undefined,
-      [highlight],
-    );
+    const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
     const isScrubbing = scrubberPosition !== undefined;
     // We need a fade in animation for the Scrubber
     return (

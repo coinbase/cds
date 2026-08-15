@@ -312,10 +312,7 @@ const FADE_ZONE = 128;
 
 const StartPriceLabel = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>((props) => {
   const { highlight } = useHighlightContext();
-  const scrubberPosition = useMemo(
-    () => highlight[0]?.dataIndex ?? undefined,
-    [highlight],
-  );
+  const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
   const { getXScale, drawingArea } = useCartesianChartContext();
   const isScrubbing = scrubberPosition !== undefined;
 

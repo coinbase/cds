@@ -376,10 +376,7 @@ const DynamicData = () => {
     shape,
   }: LegendEntryProps) {
     const { highlight } = useHighlightContext();
-    const scrubberPosition = useMemo(
-      () => highlight[0]?.dataIndex ?? undefined,
-      [highlight],
-    );
+    const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
     const { series, dataLength } = useCartesianChartContext();
 
     const dataIndex = scrubberPosition ?? dataLength - 1;

@@ -253,6 +253,54 @@ export const HighlightProvider = memo(
     const handleKeyDown = useCallback(
       (event: KeyboardEvent) => {
         if (!enabled) return;
+
+        // Series-only: cycle series ids in the order they were listed on the chart.
+        if (scope.series && !scope.dataIndex) {
+          const seriesIds = series.map((item) => item.id);
+          if (seriesIds.length === 0) return;
+
+          const currentSeriesId = highlight[0]?.seriesId;
+          const currentSeriesIndex =
+            typeof currentSeriesId === 'string' ? seriesIds.indexOf(currentSeriesId) : -1;
+          const lastSeriesIndex = seriesIds.length - 1;
+
+          let newSeriesIndex: number | undefined;
+
+          switch (event.key) {
+            case 'ArrowLeft':
+            case 'ArrowUp':
+              event.preventDefault();
+              newSeriesIndex = currentSeriesIndex === -1 ? 0 : Math.max(0, currentSeriesIndex - 1);
+              break;
+            case 'ArrowRight':
+            case 'ArrowDown':
+              event.preventDefault();
+              newSeriesIndex =
+                currentSeriesIndex === -1 ? 0 : Math.min(lastSeriesIndex, currentSeriesIndex + 1);
+              break;
+            case 'Home':
+              event.preventDefault();
+              newSeriesIndex = 0;
+              break;
+            case 'End':
+              event.preventDefault();
+              newSeriesIndex = lastSeriesIndex;
+              break;
+            case 'Escape':
+              event.preventDefault();
+              setHighlight([]);
+              return;
+            default:
+              return;
+          }
+
+          const nextSeriesId = seriesIds[newSeriesIndex];
+          if (nextSeriesId !== currentSeriesId) {
+            setHighlight([{ seriesId: nextSeriesId }]);
+          }
+          return;
+        }
+
         if (!scope.dataIndex) return;
 
         const categoryAxisIsX = layout !== 'horizontal';
@@ -284,11 +332,93 @@ export const HighlightProvider = memo(
 
         const currentItem = highlight[0];
         const currentDataIndex = currentItem?.dataIndex;
-        const currentIndex = typeof currentDataIndex === 'number' ? currentDataIndex : minIndex;
+        const hasDataIndex = typeof currentDataIndex === 'number';
+        const currentIndex = hasDataIndex ? currentDataIndex : minIndex;
         const dataRange = maxIndex - minIndex;
 
         const multiSkip = event.shiftKey;
         const stepSize = multiSkip ? Math.min(10, Math.max(1, Math.floor(dataRange * 0.1))) : 1;
+
+        // Both scopes: Left/Right walk cells in series order within each data index,
+        // then wrap to the next index. Up/Down move one data index, keeping series.
+        if (scope.series) {
+          const seriesIds = series.map((item) => item.id);
+          if (seriesIds.length === 0) return;
+
+          const lastSeriesIndex = seriesIds.length - 1;
+          const currentSeriesIndex =
+            typeof currentItem?.seriesId === 'string'
+              ? seriesIds.indexOf(currentItem.seriesId)
+              : -1;
+          const hasSeriesId = currentSeriesIndex !== -1;
+
+          let newIndex = currentIndex;
+          let newSeriesIndex = hasSeriesId ? currentSeriesIndex : 0;
+
+          switch (event.key) {
+            case 'ArrowRight': {
+              event.preventDefault();
+              newSeriesIndex += 1;
+              if (newSeriesIndex > lastSeriesIndex) {
+                newSeriesIndex = 0;
+                newIndex += 1;
+              }
+              if (newIndex > maxIndex) {
+                newIndex = maxIndex;
+                newSeriesIndex = lastSeriesIndex;
+              }
+              break;
+            }
+            case 'ArrowLeft': {
+              event.preventDefault();
+              newSeriesIndex -= 1;
+              if (newSeriesIndex < 0) {
+                newSeriesIndex = lastSeriesIndex;
+                newIndex -= 1;
+              }
+              if (newIndex < minIndex) {
+                newIndex = minIndex;
+                newSeriesIndex = 0;
+              }
+              break;
+            }
+            case 'ArrowDown':
+              event.preventDefault();
+              newIndex = Math.min(maxIndex, currentIndex + 1);
+              break;
+            case 'ArrowUp':
+              event.preventDefault();
+              newIndex = Math.max(minIndex, currentIndex - 1);
+              break;
+            case 'Home':
+              event.preventDefault();
+              newIndex = minIndex;
+              newSeriesIndex = 0;
+              break;
+            case 'End':
+              event.preventDefault();
+              newIndex = maxIndex;
+              newSeriesIndex = lastSeriesIndex;
+              break;
+            case 'Escape':
+              event.preventDefault();
+              setHighlight([]);
+              return;
+            default:
+              return;
+          }
+
+          if (!hasDataIndex || !hasSeriesId) {
+            setHighlight([{ dataIndex: minIndex, seriesId: seriesIds[0] }]);
+            return;
+          }
+
+          const nextSeriesId = seriesIds[newSeriesIndex];
+          if (newIndex !== currentItem?.dataIndex || nextSeriesId !== currentItem?.seriesId) {
+            setHighlight([{ dataIndex: newIndex, seriesId: nextSeriesId }]);
+          }
+          return;
+        }
 
         let newIndex: number | undefined;
 
@@ -318,16 +448,19 @@ export const HighlightProvider = memo(
         }
 
         if (newIndex !== currentItem?.dataIndex) {
-          const newItem: HighlightedItem = {
-            dataIndex: newIndex,
-            seriesId: currentItem?.seriesId,
-          };
-          setHighlight([newItem]);
+          setHighlight([
+            {
+              dataIndex: newIndex,
+              seriesId: currentItem?.seriesId,
+            },
+          ]);
         }
       },
       [
         enabled,
         scope.dataIndex,
+        scope.series,
+        series,
         layout,
         getXScale,
         getYScale,
