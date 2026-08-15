@@ -10,12 +10,7 @@ import { Box, HStack, VStack } from '../../../../layout';
 import { Text } from '../../../../typography';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { LineChart, SolidLine } from '../../line';
-import {
-  getLineData,
-  type ScrubberLabelPosition,
-  unwrapAnimatedValue,
-  useHighlightContext,
-} from '../../utils';
+import { getLineData, unwrapAnimatedValue, useHighlightContext } from '../../utils';
 import {
   DefaultScrubberBeacon,
   DefaultScrubberBeaconLabel,
@@ -50,7 +45,7 @@ const BasicScrubber = () => {
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
-      height={150}
+      height={250}
       series={[
         {
           id: 'prices',
