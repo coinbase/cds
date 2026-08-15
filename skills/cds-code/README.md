@@ -1,56 +1,52 @@
 # cds-code
 
-Produces high quality Coinbase Design System (CDS) UI code for React and React Native.
+Helps your agent write idiomatic Coinbase Design System (CDS) code for React or React Native projects. Also supports CDS code review — ask your agent to audit a feature or set of files for CDS adherence.
 
-## What it does
+We recommend also installing the `cds-docs` Skill or the CDS MCP server for even better performance!
 
-This skill teaches your AI agent to write CDS-first UI code that is accurate, composable, and aligned with the official docs. It covers:
-
-- **Component selection** -- picks the right CDS component before falling back to native elements or custom markup.
-- **Layout** -- uses CDS primitives (`Box`, `HStack`, `VStack`, `Grid`) over raw `div`/`View`.
-- **Styling** -- prefers StyleProps, semantic tokens, and CSS variables over hardcoded values; avoids unnecessary `style` overrides.
-- **Theming** -- uses `ThemeProvider`, `useTheme`, and theme-derived spacing, radius, and colors correctly.
-- **Visualization** -- reaches for CDS visualization packages before custom charts.
-- **Import verification** -- discovers installed CDS packages at session start and verifies every import path against the package's actual exports, preventing made-up import paths.
-- **Visual verification** -- verifies the rendered UI against the design intent using browser tooling or by requesting a screenshot from the user.
-
-## Dependencies
-
-| Dependency         | Required | Purpose                                                                                                           |
-| ------------------ | -------- | ----------------------------------------------------------------------------------------------------------------- |
-| **CDS MCP server** | Yes      | Provides `list-cds-routes` and `get-cds-doc` tools for looking up component docs, props, and examples at runtime. |
-
-### Installing the CDS MCP server
-
-```sh
-npx --package=@coinbase/cds-mcp-server cds-mcp-setup
+```bash
+npx skills add https://github.com/coinbase/cds --skill cds-docs
 ```
 
-After running the setup command, enable the MCP server in your editor. See the [CDS AI Overview](https://cds.coinbase.com/getting-started/ai-overview#first-time-setup) for full setup instructions.
+## Performance
 
-## Included scripts
+Evaluated against 10 real-world tasks across two benchmark cohorts: 8 coding/review output-quality tasks and 2 out-of-scope near-misses. The cohorts use different baselines, so their results are reported separately.
 
-### `scripts/discover-cds-packages.sh`
+### Coding and review output quality (iteration 4, 2026-07-22)
 
-Scans `node_modules` for installed CDS packages and prints each package's name, version, and valid export subpaths. The agent runs this automatically at the start of each session to ground itself in the project's actual CDS installation.
+| Metric     | With skill | Without skill | Delta  |
+| ---------- | ---------- | ------------- | ------ |
+| Pass rate  | **100%**   | 75.0%         | +25.0% |
+| Avg time   | 204.4s     | 109.7s        | +94.8s |
+| Avg tokens | n/a        | n/a           | n/a    |
 
-```sh
-bash scripts/discover-cds-packages.sh [node_modules_path]
+Token counts were unavailable from the Cursor eval runner for this iteration.
+
+#### Per-eval breakdown
+
+| Task                                              | With skill | Without skill |
+| ------------------------------------------------- | ---------- | ------------- |
+| Profile card (Avatar, ListCell, tokens)           | 100%       | 89%           |
+| Create team modal (Modal, Select alpha)           | 100%       | 86%           |
+| Banner + progress visualizations                  | 100%       | 100%          |
+| Sidebar nav (icon names, active state)            | 100%       | 100%          |
+| Empty state + illustration sizing                 | 100%       | 40%           |
+| React Native wallet screen (CDS mobile)           | 100%       | 83%           |
+| Deprecated component trap (TextHeadline/TextBody) | 100%       | 17%           |
+| CDS code review (structured lint output)          | 100%       | 86%           |
+
+The biggest gains come from domain-specific knowledge the base model lacks: deprecated API awareness (TextHeadline/TextBody trap), illustration component selection and token hygiene, and structured ESLint-style audit output.
+
+## Running evaluations
+
+Use the `skill-creator` skill to run the evals.
+
+First install the skill-creator skill if it is not already:
+
+```bash
+npx skills add https://github.com/anthropics/skills --skill skill-creator
 ```
 
-This is important because CDS packages may be published under different scopes depending on the consuming project. The script detects whichever scope is installed and reports the correct package names and exports.
+Run evals by prompting your agent:
 
-## Installing this skill
-
-Install via your organization's skill registry.
-
-## When to use
-
-- You're building or editing React or React Native UI with CDS components.
-- You're working with layouts, theming, styling, or design tokens.
-- You're working with charts, sparklines, or data visualization components.
-- You're refactoring existing UI to adopt CDS components.
-
-## When NOT to use
-
-- Your task has no UI or frontend component work.
+> Use the skill-creator skill to run the evals for the cds-code skill

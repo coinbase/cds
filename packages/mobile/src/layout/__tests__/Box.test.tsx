@@ -140,7 +140,7 @@ describe('Box', () => {
 
   it('renders width styles', async () => {
     render(
-      <Box maxWidth={789} minWidth="66%" testID="parent" width="321px">
+      <Box maxWidth={789} minWidth="66%" testID="parent" width={321}>
         <Text>Child</Text>
       </Box>,
     );
@@ -150,7 +150,7 @@ describe('Box', () => {
     expect(screen.getByTestId('parent')).toBeAccessible();
 
     expect(screen.getByTestId('parent')).toHaveStyle({
-      width: '321px',
+      width: 321,
       maxWidth: 789,
       minWidth: '66%',
     });
@@ -158,7 +158,7 @@ describe('Box', () => {
 
   it('renders height styles', async () => {
     render(
-      <Box height="321px" maxHeight={789} minHeight="66%" testID="parent">
+      <Box height={321} maxHeight={789} minHeight="66%" testID="parent">
         <Text>Child</Text>
       </Box>,
     );
@@ -168,7 +168,7 @@ describe('Box', () => {
     expect(screen.getByTestId('parent')).toBeAccessible();
 
     expect(screen.getByTestId('parent')).toHaveStyle({
-      height: '321px',
+      height: 321,
       maxHeight: 789,
       minHeight: '66%',
     });
@@ -177,12 +177,12 @@ describe('Box', () => {
   it('renders position styles', async () => {
     render(
       <Box
-        bottom="8rem"
+        bottom={8}
         left="1000%"
         position="absolute"
-        right="30px"
+        right={30}
         testID="parent"
-        top="25%"
+        top={25}
         zIndex={zIndex.alert}
       >
         <Text>Child</Text>
@@ -194,11 +194,11 @@ describe('Box', () => {
     expect(screen.getByTestId('parent')).toBeAccessible();
 
     expect(screen.getByTestId('parent')).toHaveStyle({
-      bottom: '8rem',
+      bottom: 8,
       left: '1000%',
       position: 'absolute',
-      right: '30px',
-      top: '25%',
+      right: 30,
+      top: 25,
       zIndex: 7,
     });
   });

@@ -1,7 +1,8 @@
 import { memo, useMemo } from 'react';
 import { containsStep, isStepVisited } from '@coinbase/cds-common/stepper/utils';
 
-import { HStack, VStack } from '../layout';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 
 import { DefaultStepperProgressHorizontal } from './DefaultStepperProgressHorizontal';
 import { DefaultStepperSubstepContainerHorizontal } from './DefaultStepperSubstepContainerHorizontal';
@@ -24,7 +25,7 @@ export const DefaultStepperStepHorizontal: StepperStepComponent = memo(
     styles,
     activeStepLabelElement,
     setActiveStepLabelElement,
-    progressSpringConfig,
+    progressTimingConfig,
     animate,
     disableAnimateOnMount,
     StepperStepComponent = DefaultStepperStepHorizontal,
@@ -75,7 +76,7 @@ export const DefaultStepperStepHorizontal: StepperStepComponent = memo(
               isDescendentActive={isDescendentActive}
               parentStep={parentStep}
               progress={progress}
-              progressSpringConfig={progressSpringConfig}
+              progressTimingConfig={progressTimingConfig}
               step={step}
               style={styles?.progress}
               visited={visited}
@@ -111,7 +112,7 @@ export const DefaultStepperStepHorizontal: StepperStepComponent = memo(
             style={styles?.substepContainer}
             visited={visited}
           >
-            {step.subSteps.map((subStep, index) => {
+            {step.subSteps.map((subStep) => {
               const RenderedStepComponent = subStep.Component ?? StepperStepComponent;
               const isDescendentActive = activeStepId
                 ? containsStep({
@@ -140,7 +141,7 @@ export const DefaultStepperStepHorizontal: StepperStepComponent = memo(
                     isDescendentActive={isDescendentActive}
                     parentStep={step}
                     progress={progress}
-                    progressSpringConfig={progressSpringConfig}
+                    progressTimingConfig={progressTimingConfig}
                     setActiveStepLabelElement={setActiveStepLabelElement}
                     step={subStep}
                     styles={styles}

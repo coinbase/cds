@@ -1,11 +1,5 @@
 import type { AnyObject, StringKey } from './types';
 
-/**
- * @deprecated Do not use. This will be removed in a future major release.
- * @deprecationExpectedRemoval v2
- */
-export const emptyObject = {};
-
 export function entries<T extends Record<string, unknown>>(item: T) {
   return Object.entries(item) as [keyof T, T[keyof T]][];
 }
@@ -61,5 +55,5 @@ export function merge<
   BaseObj extends AnyObject | Readonly<AnyObject>,
   ConditionalObj extends AnyObject | Readonly<AnyObject>,
 >(baseObj: BaseObj, objToMerge: ConditionalObj | undefined | false) {
-  return { ...baseObj, ...(objToMerge ?? emptyObject) };
+  return { ...baseObj, ...(objToMerge ?? {}) };
 }

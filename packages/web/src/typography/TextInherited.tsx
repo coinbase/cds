@@ -8,8 +8,16 @@ export const textInheritDefaultElement = 'span';
 
 export type TextInheritDefaultElement = typeof textInheritDefaultElement;
 
+/**
+ * @deprecated Use `Text` with `font="inherit"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TextInheritBaseProps = TextBaseProps;
 
+/**
+ * @deprecated Use `Text` with `font="inherit"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TextInheritProps<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   TextInheritBaseProps
@@ -20,6 +28,10 @@ type TextInheritComponent = (<AsComponent extends React.ElementType = TextInheri
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/**
+ * @deprecated Use `Text` with `font="inherit"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const TextInherited: TextInheritComponent = forwardRef<
   React.ReactElement<TextInheritBaseProps>,
   TextInheritBaseProps

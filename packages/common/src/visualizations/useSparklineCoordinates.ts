@@ -3,7 +3,7 @@ import { bisector, extent } from 'd3-array';
 import * as d3Scale from 'd3-scale';
 import { area, line } from 'd3-shape';
 
-import type { ChartData, ChartDataPoint } from '../types';
+import type { ChartData, ChartDataPoint } from '../types/Chart';
 
 import { getSparklineRange } from './getSparklineRange';
 

@@ -3,7 +3,28 @@
 ```jsx live
 <VStack gap={1}>
   <Fallback width={150} height={45} />
-  <Fallback width={65} height={45} percentage />
+  <Fallback width={150} height={45} />
+</VStack>
+```
+
+### Percentage width
+
+Set `percentage` to treat `width` as a percent of the parent instead of pixels. `width={70}` with `percentage` renders at 70% of the container width.
+
+```jsx live
+<Box width={200}>
+  <Fallback width={70} height={45} percentage />
+</Box>
+```
+
+### Text
+
+For text loading states, use [TextFallback](/components/typography/Text/) instead of setting `height` manually. It sizes to a typography `font` token's line height and accepts the same props as `Fallback` except `height`.
+
+```jsx live
+<VStack gap={1}>
+  <TextFallback font="headline" percentage width={70} />
+  <TextFallback font="body" percentage width={45} />
 </VStack>
 ```
 

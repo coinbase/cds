@@ -215,4 +215,65 @@ describe('Search', () => {
 
     expect(onClearSpy).toHaveBeenCalled();
   });
+
+  /** T-shirt sizing */
+  it('defaults to size l on the searchbox', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('searchbox')).toHaveAttribute('data-size', 'l');
+  });
+
+  it('does not set a fixed height on the input by default (height derived from padding)', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('input-interactable-area').style.height).toBe('');
+  });
+
+  it('forwards size to the underlying input via data-size', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput onChangeText={onChangeTextSpy} size="m" testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('searchbox')).toHaveAttribute('data-size', 'm');
+  });
+
+  it('resolves compact to its size equivalent (s) while keeping data-compact', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput compact onChangeText={onChangeTextSpy} testID={TEST_ID} value="value" />
+      </DefaultThemeProvider>,
+    );
+
+    const searchbox = screen.getByRole('searchbox');
+    expect(searchbox).toHaveAttribute('data-size', 's');
+    expect(searchbox).toHaveAttribute('data-compact', 'true');
+  });
+
+  it('lets size win over compact while still reflecting data-compact', () => {
+    render(
+      <DefaultThemeProvider>
+        <SearchInput
+          compact
+          onChangeText={onChangeTextSpy}
+          size="m"
+          testID={TEST_ID}
+          value="value"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const searchbox = screen.getByRole('searchbox');
+    expect(searchbox).toHaveAttribute('data-size', 'm');
+    expect(searchbox).toHaveAttribute('data-compact', 'true');
+  });
 });

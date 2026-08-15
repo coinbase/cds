@@ -5,7 +5,7 @@ import {
 } from '@coinbase/cds-common/animation/overlay';
 import { m as motion } from 'framer-motion';
 
-import type { BoxBaseProps } from '../../layout';
+import type { BoxBaseProps } from '../../layout/Box';
 import { VStack, type VStackDefaultElement, type VStackProps } from '../../layout/VStack';
 import { useMotionProps } from '../../motion/useMotionProps';
 
@@ -30,7 +30,7 @@ export const OverlayContent = forwardRef<HTMLDivElement, OverlayProps>(
     });
 
     const content = (
-      <VStack background="bgOverlay" onClick={onClick} pin="all" {...props} ref={forwardedRef} />
+      <VStack ref={forwardedRef} background="bgOverlay" onClick={onClick} pin="all" {...props} />
     );
 
     return animated ? (

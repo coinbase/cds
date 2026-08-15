@@ -1,12 +1,10 @@
 import React, { Children, isValidElement, useMemo } from 'react';
 import { shapeBorderRadius } from '@coinbase/cds-common/tokens/borderRadius';
-import type {
-  AvatarSize,
-  NegativeSpace,
-  Shape,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
+import type { Shape } from '@coinbase/cds-common/types/Shape';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { NegativeSpace } from '@coinbase/cds-common/types/SpacingProps';
 import { css, type LinariaClassName } from '@linaria/core';
 
 import { cx } from '../cx';
@@ -110,7 +108,9 @@ export const RemoteImageGroup = (_props: RemoteImageGroupProps) => {
           return null;
         }
 
-        const childShape: RemoteImageProps['shape'] = child.props.shape;
+        const childShape: RemoteImageProps['shape'] = (
+          child as React.ReactElement<RemoteImageProps>
+        ).props.shape;
 
         // dynamically apply uniform sizing and shape to all RemoteImage children elements
         const clonedChild = React.cloneElement(child as React.ReactElement<RemoteImageProps>, {

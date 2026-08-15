@@ -1,16 +1,28 @@
 import type React from 'react';
 import type { AccessibilityRole, StyleProp, TouchableOpacity, View, ViewStyle } from 'react-native';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import type { CellBaseProps } from '../../cells/Cell';
+import type { CellAccessoryProps } from '../../cells/CellAccessory';
 import type { InputStackBaseProps } from '../../controls/InputStack';
 import type { TextInputBaseProps } from '../../controls/TextInput';
-import type { BoxProps } from '../../layout';
-import type { DrawerRefBaseProps, TrayProps } from '../../overlays';
+import type { BoxProps } from '../../layout/Box';
+import type { DrawerRefBaseProps } from '../../overlays/drawer/Drawer';
+import type { TrayProps } from '../../overlays/tray/Tray';
 import type { InteractableBlendStyles } from '../../system/Interactable';
 import type { PressableProps } from '../../system/Pressable';
 
 export type SelectType = 'single' | 'multi';
+
+/**
+ * T-shirt size scale for the Select control. The Figma Select component set exposes
+ * three sizes (`s | m | l`); there is intentionally no `xs`.
+ */
+export type SelectSize = 's' | 'm' | 'l';
+
+/** Size the Select control resolves to when neither `size` nor the deprecated `compact` is set. */
+export const defaultSelectSize: SelectSize = 'l';
 
 /**
  * Configuration for a single option in the Select component
@@ -130,7 +142,7 @@ export type SelectOptionGroupProps<
   /** Accessibility role for options */
   accessibilityRole?: AccessibilityRole;
   /** Accessory element to display with options */
-  accessory?: React.ReactElement;
+  accessory?: React.ReactElement<CellAccessoryProps>;
   /** Media element to display with options */
   media?: React.ReactElement;
   /** End element to display with options */
@@ -236,16 +248,10 @@ export type SelectControlProps<
   Omit<BoxProps, 'borderWidth' | 'onChange' | 'font'> &
   Pick<
     InputStackBaseProps,
-    | 'disabled'
-    | 'startNode'
-    | 'variant'
-    | 'labelVariant'
-    | 'testID'
-    | 'endNode'
-    | 'borderWidth'
-    | 'focusedBorderWidth'
+    'disabled' | 'startNode' | 'variant' | 'labelVariant' | 'testID' | 'endNode' | 'borderRadius'
   > &
   Pick<TextInputBaseProps, 'font'> &
+  Pick<SharedInputProps, 'labelColor' | 'labelFont' | 'readOnly'> &
   SelectState<Type, SelectOptionValue> & {
     /**
      * Alignment of the value node.
@@ -258,6 +264,21 @@ export type SelectControlProps<
      * @default true
      */
     bordered?: boolean;
+    /**
+     * Width of the border.
+     * @default 100 when bordered is true, 0 otherwise
+     */
+    borderWidth?: InputStackBaseProps['borderWidth'];
+    /**
+     * Additional border width when focused.
+     * @default 200 when bordered is false, otherwise equals borderWidth
+     */
+    focusedBorderWidth?: InputStackBaseProps['focusedBorderWidth'];
+    /**
+     * Background of the input.
+     * @default 'bgSecondary' when readOnly and not disabled, 'bg' otherwise
+     */
+    inputBackground?: InputStackBaseProps['inputBackground'];
     /** Array of options to display in the select dropdown. Can be individual options or groups with `label` and `options` */
     options: SelectOptionList<Type, SelectOptionValue>;
     /** Label displayed above the control */
@@ -282,8 +303,17 @@ export type SelectControlProps<
     removeSelectedOptionAccessibilityLabel?: string;
     /** Blend styles for control interactivity */
     blendStyles?: InteractableBlendStyles;
-    /** Whether to use compact styling for the control */
+    /**
+     * Whether to use compact styling for the control.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     compact?: boolean;
+    /**
+     * Set the size of the select input.
+     * @default l
+     */
+    size?: SelectSize;
     /** Style object for the control */
     style?: StyleProp<ViewStyle>;
     /** Custom styles for individual elements of the control */
@@ -308,7 +338,7 @@ export type SelectControlComponent<
   SelectOptionValue extends string = string,
 > = React.FC<
   SelectControlProps<Type, SelectOptionValue> & {
-    ref?: React.Ref<TouchableOpacity>;
+    ref?: React.Ref<React.ComponentRef<typeof TouchableOpacity>>;
   }
 >;
 
@@ -372,6 +402,11 @@ export type SelectDropdownProps<
       /** Empty contents text element */
       emptyContentsText?: StyleProp<ViewStyle>;
     };
+    // Unlike the control, the dropdown deliberately keeps a binary density toggle instead of
+    // adopting the t-shirt `size` scale for now: option rows only have two densities, so a third
+    // step would be meaningless. `Select` owns the translation, deriving this from its own
+    // resolved size (`size === 's'`), so consumers set `size` on `Select` and never set this
+    // directly. Revisit if option rows ever need per-size spacing.
     /** Whether to use compact styling for the dropdown */
     compact?: boolean;
     /** Custom component to render individual options */
@@ -418,6 +453,13 @@ export type SelectBaseProps<
     | 'align'
     | 'font'
     | 'bordered'
+    | 'borderWidth'
+    | 'focusedBorderWidth'
+    | 'inputBackground'
+    | 'labelColor'
+    | 'labelFont'
+    | 'readOnly'
+    | 'borderRadius'
   > &
   Pick<SelectOptionProps<Type, SelectOptionValue>, 'accessory' | 'media' | 'end'> &
   Pick<
@@ -438,8 +480,17 @@ export type SelectBaseProps<
     setOpen?: (open: boolean | ((open: boolean) => boolean)) => void;
     /** Whether clicking outside the dropdown should close it */
     disableClickOutsideClose?: boolean;
-    /** Whether to use compact styling for the select */
+    /**
+     * Whether to use compact styling for the select.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     compact?: boolean;
+    /**
+     * Set the size of the select input.
+     * @default l
+     */
+    size?: SelectSize;
     /** Initial open state when component mounts (uncontrolled mode) */
     defaultOpen?: boolean;
     /** Maximum number of selected options to show before truncating */
@@ -517,8 +568,8 @@ export type SelectProps<
 export type SelectRef = View &
   Pick<SelectProps, 'open' | 'setOpen'> & {
     refs: {
-      reference: React.RefObject<View>;
-      floating: React.RefObject<View> | null;
+      reference: React.RefObject<View | null>;
+      floating: React.RefObject<View | null> | null;
     };
   };
 

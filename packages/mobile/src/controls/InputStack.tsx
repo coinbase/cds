@@ -2,6 +2,7 @@ import React, { memo, useMemo } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import type { StyleProp, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { inputStackGap } from '@coinbase/cds-common/tokens/input';
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
 import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
@@ -9,7 +10,7 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { useTheme } from '../hooks/useTheme';
-import type { BoxBaseProps, BoxProps } from '../layout';
+import type { BoxBaseProps, BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { ColorSurge } from '../motion/ColorSurge';
@@ -88,7 +89,16 @@ export type InputStackBaseProps = SharedProps & {
 };
 
 export type InputStackProps = Omit<BoxProps, 'width' | 'height' | 'borderRadius'> &
-  InputStackBaseProps;
+  InputStackBaseProps & {
+    styles?: {
+      /** Root container element */
+      root?: StyleProp<ViewStyle>;
+      /** Input horizontal container element */
+      inputContainer?: StyleProp<ViewStyle>;
+      /** Input area element */
+      input?: StyleProp<ViewStyle>;
+    };
+  };
 
 const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
   primary: 'fgPrimary',
@@ -123,6 +133,8 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
     inputBackground = 'bg',
     borderWidth = 100,
     focusedBorderWidth = borderWidth,
+    styles,
+    style,
     ...props
   } = mergedProps;
   const theme = useTheme();
@@ -225,10 +237,23 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
     inputAreaSize.height,
   ]);
 
+  const rootStyles = useMemo(() => [style, styles?.root], [style, styles?.root]);
+
+  const inputContainerStyles = useMemo(
+    () => [staticStyles.inputAreaContainerStyle, styles?.inputContainer],
+    [styles?.inputContainer],
+  );
+
+  const combinedInputAreaStyles = useMemo(
+    () => [inputAreaStyles, styles?.input],
+    [inputAreaStyles, styles?.input],
+  );
+
   return (
     <VStack
-      gap={0.5}
+      gap={inputStackGap}
       opacity={disabled ? accessibleOpacityDisabled : 1}
+      style={rootStyles}
       testID={testID}
       width={width}
       {...props}
@@ -236,11 +261,11 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
       {!!labelNode && labelVariant === 'outside' && <>{labelNode}</>}
       <HStack>
         {!!prependNode && <>{prependNode}</>}
-        <View style={styles.inputAreaContainerStyle}>
+        <View style={inputContainerStyles}>
           {focused && <Animated.View style={borderFocusedStyles} />}
           <Animated.View
             onLayout={onInputAreaLayout}
-            style={inputAreaStyles}
+            style={combinedInputAreaStyles}
             testID={testID && `${testID}-input-area`}
           >
             {focused && enableColorSurge && (
@@ -248,7 +273,9 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
             )}
             {!!startNode && <>{startNode}</>}
             {!!labelNode && labelVariant === 'inside' ? (
-              <VStack flexGrow={1} minHeight={60} paddingY={1}>
+              // A stacked inside label tightens its top/bottom spacing so the label + input still
+              // fit the same natural field height an outside label produces.
+              <VStack flexGrow={1} paddingY={0.75}>
                 {labelNode}
                 {inputNode}
               </VStack>
@@ -265,13 +292,8 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
   );
 });
 
-// Fixes a problem found in Accordion children element.
-// When `overflow: auto` is set the thickened border when focused is not accounted for
-// hence you see a cutoff.
-// Padding must accommodate the focus border extension (default 2px for focusedBorderWidth: 200)
-const styles = StyleSheet.create({
+const staticStyles = StyleSheet.create({
   inputAreaContainerStyle: {
-    padding: 2,
-    flexGrow: 1,
+    flexGrow: 2,
   },
 });

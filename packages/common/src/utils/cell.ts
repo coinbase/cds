@@ -1,4 +1,4 @@
-import type { CellPriority } from '../types';
+import type { CellPriority } from '../types/CellBaseProps';
 
 export const hasCellPriority = (
   priorityToMatch: CellPriority,

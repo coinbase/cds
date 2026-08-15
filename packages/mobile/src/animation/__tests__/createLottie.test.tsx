@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import type { Animated } from 'react-native';
 import { nux } from '@coinbase/cds-lottie-files/nux';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 import uniqBy from 'lodash/uniqBy';
 
 import { createLottie } from '../createLottie';

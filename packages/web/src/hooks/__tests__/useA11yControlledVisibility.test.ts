@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { useA11yControlledVisibility } from '../useA11yControlledVisibility';
 

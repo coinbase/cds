@@ -2,10 +2,12 @@ import React, { cloneElement, memo } from 'react';
 import type { ImageURISource } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { imageSize, mediaSize, pictogramScaleMultiplier } from '@coinbase/cds-common/tokens/cell';
-import type { IconName, SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { Icon } from '../icons/Icon';
-import type { PictogramProps } from '../illustrations';
+import type { PictogramProps } from '../illustrations/Pictogram';
 import { Box } from '../layout/Box';
 import { getSource, RemoteImage } from '../media/RemoteImage';
 

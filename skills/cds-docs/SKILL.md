@@ -8,10 +8,9 @@ description: |
   only the pages you need to reason and implement correctly. Prefer the CDS MCP server
   (`list-cds-routes`, `get-cds-doc`); if MCP is unavailable, use curl against
   https://cds.coinbase.com/llms/....
-allowed-tools: Bash(curl *)
 license: Apache-2.0
 metadata:
-  version: '1.0.0'
+  version: '2.0.0'
 ---
 
 # CDS Documentation Skill
@@ -35,15 +34,15 @@ the docs. Do not pick one arbitrarily just to avoid asking.
 
 ## 1. Choose platform
 
-Decide whether the work targets **web** (React, `@cbhq/cds-web`) or **mobile** (React Native,
-`@cbhq/cds-mobile`). If unclear, infer from the repo (e.g. `package.json` dependencies, `apps/*`
+Decide whether the work targets **web** (React, `@coinbase/cds-web`) or **mobile** (React Native,
+`@coinbase/cds-mobile`). If unclear, infer from the repo (e.g. `package.json` dependencies, `apps/*`
 layout) or ask a single clarifying question.
 
 Pass `web` or `mobile` to `list-cds-routes` and when building curl URLs.
 
 ## 2. Tool order (try in sequence)
 
-1. **CDS MCP server** (packaged `mcp-docs` in `@cbhq/cds-mcp-server` / `packages/mcp-server`):
+1. **CDS MCP server** (packaged `mcp-docs` in `@coinbase/cds-mcp-server` / `packages/mcp-server`):
    - `list-cds-routes` with `platform`: `"web"` | `"mobile"`.
    - `get-cds-doc` with `route`: path **including the platform**, ending in **`.txt`** (e.g.
      `web/getting-started/installation.txt`). Paths must come from the index.

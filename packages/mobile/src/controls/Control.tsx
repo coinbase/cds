@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import { I18nManager, Keyboard, Pressable, View } from 'react-native';
 import type {
   AccessibilityActionEvent,
@@ -7,17 +7,18 @@ import type {
   PressableStateCallbackType,
   ViewStyle,
 } from 'react-native';
-import type { ElevationLevels, SharedProps } from '@coinbase/cds-common';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
   accessibleOpacityDisabled,
   opacityPressed,
 } from '@coinbase/cds-common/tokens/interactable';
+import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import type { InteractableBaseProps } from '../system';
+import type { InteractableBaseProps } from '../system/Interactable';
 import type { TextProps } from '../typography/Text';
 import { Text } from '../typography/Text';
 import { Haptics } from '../utils/haptics';
@@ -98,10 +99,12 @@ export type ControlProps<ControlValue extends string> = Omit<
   shouldUseSwitchTransition?: boolean;
 };
 
-const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends string>(
-  _props: ControlProps<ControlValue>,
-  ref: React.ForwardedRef<View>,
-) {
+const ControlWithRef = function ControlWithRef<ControlValue extends string>({
+  ref,
+  ..._props
+}: ControlProps<ControlValue> & {
+  ref?: React.Ref<View>;
+}) {
   const mergedProps = useComponentConfig('Control', _props);
   const {
     testID,
@@ -311,11 +314,8 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
       {controlIcon}
     </Pressable>
   );
-  // Make forwardRef result function stay generic function type
-}) as <ControlValue extends string>(
-  props: ControlProps<ControlValue> & { ref?: React.Ref<View> },
-) => React.ReactElement;
+};
 
-// Make memoized function stay generic function type
+// Preserve generic call signature through React.memo
 export const Control = memo(ControlWithRef) as typeof ControlWithRef &
   React.MemoExoticComponent<typeof ControlWithRef>;

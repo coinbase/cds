@@ -1,6 +1,6 @@
 import React, { type HTMLAttributes, memo, type MouseEventHandler, useMemo } from 'react';
 import { cardSizes } from '@coinbase/cds-common/tokens/card';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import type { BoxBaseProps, BoxDefaultElement, BoxProps } from '../layout/Box';
 import { VStack } from '../layout/VStack';
@@ -17,6 +17,10 @@ export type CardBaseProps = Pick<SharedAccessibilityProps, 'id'> &
     onClick?: MouseEventHandler;
   };
 
+/**
+ * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type CardProps = CardBaseProps &
   Omit<BoxProps<BoxDefaultElement>, 'onClick' | 'onKeyDown' | 'onKeyUp' | 'background'>;
 
@@ -69,7 +73,6 @@ export const Card = memo<CardProps>(function Card({
     ),
     [background, borderRadius, children, elevation, height, linkable, pin, props, testID, width],
   );
-
   if (isAnchor) {
     return (
       <Pressable

@@ -5,6 +5,7 @@ export * from './TextCaption';
 export * from './TextDisplay1';
 export * from './TextDisplay2';
 export * from './TextDisplay3';
+export * from './TextFallback';
 export * from './TextHeadline';
 export * from './TextInherited';
 export * from './TextLabel1';

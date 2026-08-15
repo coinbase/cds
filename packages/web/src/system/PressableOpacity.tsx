@@ -47,7 +47,7 @@ export const PressableOpacity: PressableOpacityComponent = forwardRef<
   ) => {
     const Component = (as ?? pressableOpacityDefaultElement) satisfies React.ElementType;
     return (
-      <Pressable ref={ref} as={Component} {...props} background="transparent">
+      <Pressable ref={ref} as={Component} background="transparent" {...props}>
         {children}
       </Pressable>
     );

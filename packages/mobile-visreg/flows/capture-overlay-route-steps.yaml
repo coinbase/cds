@@ -1,17 +1,34 @@
 appId: ${APP_ID}
 ---
-# Sub-flow for overlay routes (alerts, modals, trays, drawers, etc.)
-# Required env vars: ROUTE_NAME, PLATFORM_SUFFIX, SCHEME (inherited from capture-all.yaml env)
+# Sub-flow for overlay routes (alerts, modals, trays, drawers, etc.).
+# Same search-based navigation as capture-route-steps.yaml, with an extra
+# Open/Cancel step to capture the overlay before going back.
+# Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
 
-- openLink: ${SCHEME}:///Debug${ROUTE_NAME}
+- tapOn:
+    id: search-button
+- waitForAnimationToEnd
+- inputText: ${ROUTE_NAME}
+- assertVisible:
+    id: exact-match-button-cell-pressable
+- tapOn:
+    id: exact-match-button-cell-pressable
 - assertVisible:
     id: mobile-playground-screen
 - waitForAnimationToEnd
-# Open overlay, capture, then close before next route
 - tapOn: 'Open'
 - waitForAnimationToEnd
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
+# Different overlay components use different dismiss button text.
+# AlertBasic/ModalBasic use "Cancel"; TrayBasic uses "Close". Try both.
 - tapOn:
     text: 'Cancel'
     optional: true
+- tapOn:
+    text: 'Close'
+    optional: true
 - waitForAnimationToEnd
+- tapOn:
+    id: nav-back-button
+# No waitForAnimationToEnd here — the next sub-flow starts with
+# tapOn: search-button, which already has implicit element-wait.

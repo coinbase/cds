@@ -3,7 +3,7 @@ import { Text, View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
-import { DefaultThemeProvider } from '../../utils/testHelpers';
+import { DefaultThemeProvider, treeHasStyleProp } from '../../utils/testHelpers';
 import { Switch } from '../Switch';
 
 describe('Switch.test', () => {
@@ -28,11 +28,11 @@ describe('Switch.test', () => {
     );
 
     expect(screen.getByText('checked is false')).toBeTruthy();
-    expect(screen.getByRole('switch')).toHaveAccessibilityState({ checked: false });
+    expect(screen.getByRole('switch')).not.toBeChecked();
 
     fireEvent.press(screen.getByRole('switch'));
     expect(screen.getByText('checked is true')).toBeTruthy();
-    expect(screen.getByRole('switch')).toHaveAccessibilityState({ checked: true });
+    expect(screen.getByRole('switch')).toBeChecked();
   });
 
   it('passes accessibility', () => {
@@ -129,6 +129,30 @@ describe('Switch.test', () => {
     expect(screen.getByTestId('test-test-id')).toBeTruthy();
   });
 
+  it('keeps a stable root wrapper regardless of label presence', () => {
+    const { toJSON, rerender } = render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()} />
+      </DefaultThemeProvider>,
+    );
+
+    const treeWithoutLabel = toJSON();
+    expect(treeWithoutLabel).toBeTruthy();
+    expect(Array.isArray(treeWithoutLabel)).toBe(false);
+    expect(treeWithoutLabel).toHaveProperty('type', 'View');
+
+    rerender(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()}>with label</Switch>
+      </DefaultThemeProvider>,
+    );
+
+    const treeWithLabel = toJSON();
+    expect(treeWithLabel).toBeTruthy();
+    expect(Array.isArray(treeWithLabel)).toBe(false);
+    expect(treeWithLabel).toHaveProperty('type', 'View');
+  });
+
   it('has default palette', () => {
     render(
       <DefaultThemeProvider>
@@ -176,5 +200,95 @@ describe('Switch.test', () => {
     expect(screen.getByTestId('test-test-id')).toHaveStyle({
       backgroundColor: defaultTheme.lightColor.bgTertiary,
     });
+  });
+
+  it('applies bgPositive background when variant is positive and checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch checked onChange={jest.fn()} testID="test-test-id" variant="positive" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-test-id')).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgPositive,
+    });
+  });
+
+  it('applies bgNegative background when variant is negative and checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch checked onChange={jest.fn()} testID="test-test-id" variant="negative" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-test-id')).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgNegative,
+    });
+  });
+
+  it('does not apply variant background when unchecked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()} testID="test-test-id" variant="negative" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-test-id')).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgTertiary,
+    });
+  });
+
+  it('background prop takes priority over variant when checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch
+          background="bgWarning"
+          checked
+          onChange={jest.fn()}
+          testID="test-test-id"
+          variant="positive"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-test-id')).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgWarning,
+    });
+  });
+
+  it('applies styles.root', () => {
+    const { toJSON } = render(
+      <DefaultThemeProvider>
+        <Switch
+          onChange={jest.fn()}
+          styles={{
+            root: { borderTopWidth: 1 },
+          }}
+        >
+          label
+        </Switch>
+      </DefaultThemeProvider>,
+    );
+
+    const tree = toJSON();
+    expect(treeHasStyleProp(tree, (s) => s.borderTopWidth === 1)).toBe(true);
+  });
+
+  it('applies styles.control and preserves style prop behavior', () => {
+    const { toJSON } = render(
+      <DefaultThemeProvider>
+        <Switch
+          onChange={jest.fn()}
+          style={{ borderRightWidth: 5 }}
+          styles={{
+            control: { borderLeftWidth: 4 },
+          }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    const tree = toJSON();
+    expect(treeHasStyleProp(tree, (s) => s.borderLeftWidth === 4)).toBe(true);
+    expect(treeHasStyleProp(tree, (s) => s.borderRightWidth === 5)).toBe(true);
   });
 });

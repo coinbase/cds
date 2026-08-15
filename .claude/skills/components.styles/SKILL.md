@@ -15,8 +15,6 @@ Find the component source file:
 ```bash
 packages/web/src/[source-category]/[ComponentName].tsx              # for web
 packages/mobile/src/[source-category]/[ComponentName].tsx           # for mobile
-packages/web-visualization/src/[source-category]/[ComponentName].tsx    # for web visualization
-packages/mobile-visualization/src/[source-category]/[ComponentName].tsx # for mobile visualization
 ```
 
 ## Step 2: Evaluate Component Structure
@@ -70,12 +68,15 @@ Review the component's JSX to identify elements that should be targetable via st
 | `logo`                | Logo element                                          |
 | `mainContent`         | Primary content area                                  |
 | `media`               | Media element (image, avatar, icon)                   |
+| `modal`               | Visible modal card element                            |
 | `navigation`          | Navigation controls (e.g., prev/next buttons)         |
+| `overlay`             | Full-viewport overlay/backdrop element                |
 | `pagination`          | Pagination indicators                                 |
 | `pressable`           | Pressable/interactive wrapper                         |
 | `progress`            | Progress indicator element                            |
 | `progressBar`         | ProgressBar sub-component within a composed component |
 | `root`                | Root/outermost container element                      |
+| `safeArea`            | Safe area region wrapping content                     |
 | `start`               | Start slot content (e.g., back button)                |
 | `step`                | Individual step element (in steppers)                 |
 | `substepContainer`    | Container for nested sub-steps                        |

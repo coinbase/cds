@@ -13,12 +13,11 @@
   "dependencies": {
     "@coinbase/cds-icons": "^5",
     "@coinbase/cds-illustrations": "^4",
-    "@coinbase/cds-web": "^8",
-    "@coinbase/cds-web-visualization": "^3",
+    "@coinbase/cds-web": "^9",
     "framer-motion": "^10",
     "next": "15.4.8",
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "19.1.2",
+    "react-dom": "19.1.2"
   },
   "devDependencies": {
     "@types/node": "^22",

@@ -1,7 +1,14 @@
 import React, { memo, useMemo } from 'react';
-import { type StyleProp, StyleSheet, type ViewProps, type ViewStyle } from 'react-native';
+import {
+  type DimensionValue,
+  type StyleProp,
+  StyleSheet,
+  type ViewProps,
+  type ViewStyle,
+} from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { CellPriority, SharedProps } from '@coinbase/cds-common/types';
+import type { CellPriority } from '@coinbase/cds-common/types/CellBaseProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { hasCellPriority } from '@coinbase/cds-common/utils/cell';
 
 import { useCellSpacing } from '../hooks/useCellSpacing';
@@ -33,9 +40,11 @@ export type CellSpacing = Pick<
   | 'marginStart'
 >;
 
-export type CellBaseProps = SharedProps &
+export type CellBaseProps = BoxBaseProps &
+  SharedProps &
   LinkableProps &
   Pick<PressableProps, 'blendStyles'> & {
+    /** Accessory element rendered at the end of the cell (e.g., chevron). */
     accessory?: React.ReactElement<CellAccessoryProps>;
     /** Custom accessory node rendered at the end of the cell. Takes precedence over `accessory`. */
     accessoryNode?: React.ReactNode;
@@ -60,7 +69,7 @@ export type CellBaseProps = SharedProps &
      * @deprecated Use `styles.end` instead. This will be removed in a future major release.
      * @deprecationExpectedRemoval v9
      */
-    detailWidth?: number | string;
+    detailWidth?: DimensionValue;
     /** Is the cell disabled? Will apply opacity and disable interaction. */
     disabled?: boolean;
     /** Which piece of content has the highest priority in regards to text truncation, growing, and shrinking. */
@@ -108,7 +117,24 @@ export const Cell = memo(function Cell(_props: CellProps) {
     accessory,
     accessoryNode,
     alignItems = 'center',
+    bordered,
+    borderedBottom,
+    borderedEnd,
+    borderedHorizontal,
+    borderedStart,
+    borderedTop,
+    borderedVertical,
+    borderBottomLeftRadius,
+    borderBottomRightRadius,
+    borderBottomWidth,
+    borderColor,
+    borderEndWidth,
     borderRadius = 200,
+    borderStartWidth,
+    borderTopLeftRadius,
+    borderTopRightRadius,
+    borderTopWidth,
+    borderWidth,
     children,
     styles,
     end,
@@ -147,9 +173,55 @@ export const Cell = memo(function Cell(_props: CellProps) {
 
   const { marginX: innerSpacingMarginX, ...innerSpacingWithoutMarginX } = innerSpacing;
 
+  // Border props must be applied to the internal Pressable wrapper for correct visual rendering.
+  // The outer Box was only meant to create padding outside the Pressable area; this behavior
+  // will be removed in https://linear.app/coinbase/issue/CDS-1512/remove-legacy-normal-spacing-variant-from-listcell.
+  const borderProps = useMemo(
+    () => ({
+      bordered,
+      borderedBottom,
+      borderedEnd,
+      borderedHorizontal,
+      borderedStart,
+      borderedTop,
+      borderedVertical,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderBottomWidth,
+      borderColor,
+      borderEndWidth,
+      borderRadius,
+      borderStartWidth,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderTopWidth,
+      borderWidth,
+    }),
+    [
+      bordered,
+      borderedBottom,
+      borderedEnd,
+      borderedHorizontal,
+      borderedStart,
+      borderedTop,
+      borderedVertical,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderBottomWidth,
+      borderColor,
+      borderEndWidth,
+      borderRadius,
+      borderStartWidth,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderTopWidth,
+      borderWidth,
+    ],
+  );
+
   const content = useMemo(() => {
     const contentContainerProps = {
-      borderRadius,
+      ...borderProps,
       testID,
       renderToHardwareTextureAndroid: disabled,
       ...(selected ? { background } : {}),
@@ -237,7 +309,7 @@ export const Cell = memo(function Cell(_props: CellProps) {
       </VStack>
     );
   }, [
-    borderRadius,
+    borderProps,
     testID,
     disabled,
     selected,
@@ -285,7 +357,7 @@ export const Cell = memo(function Cell(_props: CellProps) {
           accessibilityState={{ disabled, ...accessibilityState }}
           background="bg"
           blendStyles={blendStyles}
-          borderRadius={borderRadius}
+          {...borderProps}
           contentStyle={pressStyles}
           disabled={disabled}
           onPress={onPress}
@@ -309,7 +381,7 @@ export const Cell = memo(function Cell(_props: CellProps) {
     styles?.pressable,
     accessibilityState,
     blendStyles,
-    borderRadius,
+    borderProps,
     testID,
   ]);
 

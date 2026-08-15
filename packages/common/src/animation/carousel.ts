@@ -1,4 +1,4 @@
-import type { MotionBaseSpec } from '../types';
+import type { MotionBaseSpec } from '../types/Motion';
 
 export const carouselVisibleOpacity = 1;
 export const carouselDismissOpacity = 0;

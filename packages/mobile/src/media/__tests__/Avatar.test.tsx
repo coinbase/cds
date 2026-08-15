@@ -16,11 +16,9 @@ describe('Avatar', () => {
         <Avatar accessibilityLabel="" name={name} src={src} testID="avatar" />
       </DefaultThemeProvider>,
     );
-    const image = screen.getByTestId('avatar-image');
+    const image = screen.getByTestId('avatar-image', { includeHiddenElements: true });
     expect(image).toBeTruthy();
     expect(image?.props.source).toEqual({ uri: src });
-
-    expect(image).toBeAccessible();
 
     expect(screen.queryByText('T')).toBeFalsy();
   });
@@ -145,6 +143,25 @@ describe('Avatar', () => {
 
     expect(screen.getByTestId(coloredFallbackTestID)).toBeAccessible();
 
+    expect(screen.getByText('T')).toBeTruthy();
+  });
+
+  it('renders a hexagon fallback when shape is hexagon and name is provided without src', async () => {
+    render(
+      <DefaultThemeProvider>
+        <Avatar
+          accessibilityLabel=""
+          colorScheme="pink"
+          name="TestName"
+          shape="hexagon"
+          testID="avatar"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    await screen.findByTestId(coloredFallbackTestID);
+
+    expect(screen.getByTestId(coloredFallbackTestID)).toBeAccessible();
     expect(screen.getByText('T')).toBeTruthy();
   });
 

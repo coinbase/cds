@@ -2,13 +2,11 @@ import React, { Children, isValidElement, useMemo } from 'react';
 import { StyleSheet, Text } from 'react-native';
 import type { ViewStyle } from 'react-native';
 import { shapeBorderRadius } from '@coinbase/cds-common/tokens/borderRadius';
-import type {
-  AvatarSize,
-  NegativeSpace,
-  Shape,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
+import type { Shape } from '@coinbase/cds-common/types/Shape';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { NegativeSpace } from '@coinbase/cds-common/types/SpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
@@ -90,15 +88,22 @@ export const RemoteImageGroup = (_props: RemoteImageGroupProps) => {
         if (!isValidElement(child)) {
           return null;
         }
-        const childShape: RemoteImageProps['shape'] = child.props.shape;
+
+        const childShape: RemoteImageProps['shape'] = (
+          child as React.ReactElement<RemoteImageProps>
+        ).props.shape;
 
         // dynamically apply uniform sizing and shape to all RemoteImage children elements
-        const clonedChild = React.cloneElement<RemoteImageProps>(child as React.ReactElement, {
-          testID: `${testID ? `${testID}-` : ''}image-${index}`,
-          width: sizeAsNumber,
-          height: sizeAsNumber,
-          ...(childShape ? undefined : { shape }),
-        });
+        const clonedChild = React.cloneElement<RemoteImageProps>(
+          // the type of child (after isValidElement check) is not inferred so it must be typecast here
+          child as React.ReactElement<RemoteImageProps>,
+          {
+            testID: `${testID ? `${testID}-` : ''}image-${index}`,
+            width: sizeAsNumber,
+            height: sizeAsNumber,
+            ...(childShape ? undefined : { shape }),
+          },
+        );
 
         // zIndex is progressively lower so that each child is stacked below the previous one
         const zIndex = -index;

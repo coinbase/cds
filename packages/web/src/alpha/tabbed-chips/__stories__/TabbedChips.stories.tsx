@@ -50,12 +50,14 @@ const compactTabsWithStart: TabbedChipProps[] = defaultTabs.map((tab) => ({
 const Demo = ({
   tabs = defaultTabs,
   compact = false,
+  size,
   styles,
   autoScrollOffset,
 }: {
   tabs?: TabbedChipProps[];
   styles?: TabbedChipsProps['styles'];
   compact?: boolean;
+  size?: TabbedChipsProps['size'];
   autoScrollOffset?: number;
 }) => {
   const [activeTab, setActiveTab] = useState<TabValue | null>(tabs[0]);
@@ -65,6 +67,7 @@ const Demo = ({
       autoScrollOffset={autoScrollOffset}
       compact={compact}
       onChange={setActiveTab}
+      size={size}
       styles={styles}
       tabs={tabs}
     />
@@ -75,6 +78,16 @@ const EnumDemo = () => {
   const [activeTab, setActiveTab] = useState<TabValue<TabId> | null>(enumTabs[0]);
   return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={enumTabs} />;
 };
+
+const activeBackgroundTabs: TabbedChipProps[] = defaultTabs.map((tab) => ({
+  ...tab,
+  activeBackground: 'bgPositive' as TabbedChipProps['activeBackground'],
+}));
+
+const activeColorTabs: TabbedChipProps[] = defaultTabs.map((tab) => ({
+  ...tab,
+  activeColor: 'fgPositive' as TabbedChipProps['activeColor'],
+}));
 
 export const Default = () => {
   return (
@@ -109,25 +122,36 @@ export const Default = () => {
       </Text>
       <Demo compact tabs={compactTabsWithStart} />
       <Text as="p" display="block" font="headline">
+        Sizes
+      </Text>
+      <Text as="p" color="fgMuted" display="block" font="label1">
+        {'size="s" (default)'}
+      </Text>
+      <Demo size="s" />
+      <Text as="p" color="fgMuted" display="block" font="label1">
+        {'size="xs"'}
+      </Text>
+      <Demo size="xs" />
+      <Text as="p" color="fgMuted" display="block" font="label1">
+        {'compact (deprecated, renders as size="xs")'}
+      </Text>
+      <Demo compact />
+      <Text as="p" display="block" font="headline">
         With auto scroll offset
       </Text>
       <Demo autoScrollOffset={100} tabs={sampleTabs} />
+      <Text as="p" display="block" font="headline">
+        With activeBackground
+      </Text>
+      <Demo tabs={activeBackgroundTabs} />
+      <Text as="p" display="block" font="headline">
+        With activeColor
+      </Text>
+      <Demo tabs={activeColorTabs} />
     </VStack>
   );
 };
 
-const a11ySkipConfig = {
-  config: {
-    rules: [
-      { id: 'aria-valid-attr-value', enabled: false },
-      { id: 'duplicate-id-active', enabled: false },
-      { id: 'duplicate-id', enabled: false },
-      { id: 'duplicate-id-aria', enabled: false },
-    ],
-  },
-};
-
 Default.parameters = {
   percy: { enableJavaScript: true },
-  a11y: a11ySkipConfig,
 };

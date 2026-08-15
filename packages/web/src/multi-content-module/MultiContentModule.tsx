@@ -2,11 +2,12 @@ import React, { forwardRef, isValidElement, memo, useMemo } from 'react';
 import { defaultMaxWidth } from '@coinbase/cds-common/tokens/multiContentModule';
 import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
 
-import { Button } from '../buttons';
+import { Button } from '../buttons/Button';
 import type { Polymorphic } from '../core/polymorphism';
-import { Pictogram } from '../illustrations';
-import type { VStackBaseProps } from '../layout';
-import { Box, VStack } from '../layout';
+import { Pictogram } from '../illustrations/Pictogram';
+import { Box } from '../layout/Box';
+import type { VStackBaseProps } from '../layout/VStack';
+import { VStack } from '../layout/VStack';
 import { Text } from '../typography/Text';
 
 export const multiContentModuleDefaultElement = 'div';

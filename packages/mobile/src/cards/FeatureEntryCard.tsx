@@ -3,13 +3,8 @@ import React, { memo } from 'react';
 import { Card, type CardBaseProps } from './Card';
 import { CardBody, type CardBodyBaseProps } from './CardBody';
 
-export type FeatureEntryCardBaseProps = CardBaseProps & CardBodyBaseProps;
-
-/**
- * @deprecated Use MessagingCard instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v6
- */
-export type FeatureEntryCardProps = FeatureEntryCardBaseProps;
+type FeatureEntryCardBaseProps = CardBaseProps & CardBodyBaseProps;
+type FeatureEntryCardProps = FeatureEntryCardBaseProps;
 
 /**
  * @deprecated Use MessagingCard instead. This will be removed in a future major release.

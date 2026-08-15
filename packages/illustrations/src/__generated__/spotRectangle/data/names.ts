@@ -142,6 +142,7 @@ const names: SpotRectangleName[] = [
   'instoStaking',
   'insuranceProtection',
   'invest',
+  'keyAdv',
   'layeredNetworks',
   'leadingProtocol',
   'leadingProtocolMorpho',

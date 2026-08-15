@@ -1,18 +1,25 @@
-import { memo, useMemo } from 'react';
-import { animated, useSpring } from '@react-spring/web';
+import { memo } from 'react';
+import { curves, durations } from '@coinbase/cds-common/motion/tokens';
+import { m as motion } from 'framer-motion';
 
 import { HStack } from '../layout/HStack';
 import { Text } from '../typography/Text';
 
 import type { StepperHeaderComponent } from './Stepper';
 
-const AnimatedHStack = animated(HStack);
+const MotionHStack = motion(HStack);
 
 const displayStyle = {
   phone: 'flex',
   tablet: 'none',
   desktop: 'none',
 } as const;
+
+const headerTransition = {
+  type: 'tween' as const,
+  duration: durations.slow2 / 1000,
+  ease: curves.global,
+};
 
 export const DefaultStepperHeaderHorizontal: StepperHeaderComponent = memo(
   function DefaultStepperHeaderHorizontal({
@@ -22,6 +29,7 @@ export const DefaultStepperHeaderHorizontal: StepperHeaderComponent = memo(
     className,
     style,
     display = displayStyle,
+    disableAnimateOnMount,
     width = '100%',
     paddingBottom = 1.5,
     font = 'caption',
@@ -32,26 +40,22 @@ export const DefaultStepperHeaderHorizontal: StepperHeaderComponent = memo(
     textTransform,
     ...props
   }) {
-    const spring = useSpring({
-      from: { opacity: 0 },
-      to: { opacity: 1 },
-      reset: true,
-    });
-
-    const styles = useMemo(() => ({ ...style, ...spring }), [style, spring]);
     const flatStepIndex = activeStep ? flatStepIds.indexOf(activeStep.id) : -1;
     const emptyText = <>&nbsp;</>;
 
     return (
-      <AnimatedHStack
+      <MotionHStack
         aria-hidden
+        animate={{ opacity: 1 }}
         className={className}
         display={display}
         font={font}
         fontFamily={fontFamily}
+        initial={{ opacity: disableAnimateOnMount ? 1 : 0 }}
         paddingBottom={paddingBottom}
         position="relative"
-        style={styles}
+        style={style}
+        transition={headerTransition}
         width={width}
         {...props}
       >
@@ -82,7 +86,7 @@ export const DefaultStepperHeaderHorizontal: StepperHeaderComponent = memo(
             </HStack>
           )}
         </Text>
-      </AnimatedHStack>
+      </MotionHStack>
     );
   },
 );

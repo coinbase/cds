@@ -1,16 +1,13 @@
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
-import { Modal as RNModal } from 'react-native';
-import type {
-  ButtonVariant,
-  IllustrationPictogramNames,
-  PositionStyles,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import { memo, useCallback, useEffect, useImperativeHandle, useMemo } from 'react';
+import { Modal as RNModal, type ViewStyle } from 'react-native';
+import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
+import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { Button } from '../buttons';
+import { Button } from '../buttons/Button';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Pictogram } from '../illustrations';
-import { Box } from '../layout';
+import { Pictogram } from '../illustrations/Pictogram';
+import { Box } from '../layout/Box';
 import { Text } from '../typography/Text';
 
 import type { ModalBaseProps, ModalRefBaseProps } from './modal/Modal';
@@ -18,7 +15,6 @@ import { Overlay } from './overlay/Overlay';
 import { useAlertAnimation } from './useAlertAnimation';
 
 export type AlertBaseProps = SharedProps &
-  Pick<PositionStyles, 'zIndex'> &
   Pick<ModalBaseProps, 'onRequestClose' | 'visible' | 'onDidClose'> & {
     /**
      * Alert title
@@ -58,12 +54,18 @@ export type AlertBaseProps = SharedProps &
      * @default horizontal
      */
     actionLayout?: 'horizontal' | 'vertical';
+    zIndex?: ViewStyle['zIndex'];
   };
 
 export type AlertProps = AlertBaseProps;
 
 export const Alert = memo(
-  forwardRef<ModalRefBaseProps, AlertProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: AlertProps & {
+    ref?: React.Ref<ModalRefBaseProps>;
+  }) => {
     const mergedProps = useComponentConfig('Alert', _props);
     const {
       title,
@@ -190,7 +192,7 @@ export const Alert = memo(
             </Box>
             <Box
               flexDirection={actionFlexDirection}
-              gap={2}
+              gap={1}
               paddingX={3}
               paddingY={2}
               testID={testID && `${testID}-actions`}
@@ -202,5 +204,5 @@ export const Alert = memo(
         </Box>
       </RNModal>
     );
-  }),
+  },
 );

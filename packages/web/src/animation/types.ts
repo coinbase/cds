@@ -1,7 +1,7 @@
 import type { LottieSource } from '@coinbase/cds-common/types/LottieSource';
 import type { AnimationEventName, AnimationItem, SVGRendererConfig } from 'lottie-web';
 
-import type { BoxBaseProps, BoxDefaultElement, BoxProps } from '../layout';
+import type { BoxBaseProps, BoxDefaultElement, BoxProps } from '../layout/Box';
 
 export type LottieEventHandlersMap = {
   [key in LottieListener['name']]?: LottieListener['handler'];

@@ -8,7 +8,7 @@ import type {
   CardMediaImageSizeObject,
   CardMediaPlacement,
   CardMediaProps,
-} from '@coinbase/cds-common/types';
+} from '@coinbase/cds-common/types/CardMediaProps';
 
 import { Pictogram } from '../illustrations/Pictogram';
 import { SpotSquare } from '../illustrations/SpotSquare';
@@ -32,25 +32,11 @@ const imageProps: Record<CardMediaPlacement, CardMediaImageSizeObject> = {
  */
 export const CardMedia = memo(function CardMedia({ placement = 'end', ...props }: CardMediaProps) {
   if (props.type === 'spotSquare') {
-    return (
-      <SpotSquare
-        {...props}
-        dimension={defaultMediaDimension}
-        name={props.name}
-        testID={props.testID}
-      />
-    );
+    return <SpotSquare dimension={defaultMediaDimension} {...props} />;
   }
 
   if (props.type === 'pictogram') {
-    return (
-      <Pictogram
-        {...props}
-        dimension={defaultPictogramMediaDimension}
-        name={props.name}
-        testID={props.testID}
-      />
-    );
+    return <Pictogram dimension={defaultPictogramMediaDimension} {...props} />;
   }
 
   if (props.type === 'image') {

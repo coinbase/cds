@@ -1,6 +1,6 @@
 import React, { forwardRef, memo, useRef } from 'react';
-import type { ThemeVars } from '@coinbase/cds-common';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { getProgressCircleParams } from '@coinbase/cds-common/visualizations/getProgressCircleParams';
 import { getProgressSize } from '@coinbase/cds-common/visualizations/getProgressSize';
 import { css } from '@linaria/core';
@@ -31,7 +31,7 @@ export type ProgressCircleBaseProps = ProgressBaseProps & {
    */
   hideContent?: boolean;
   /**
-   * @deprecated Use hideContent instead. This will be removed in a future major release.
+   * @deprecated Use `hideContent` instead. This will be removed in a future major release.
    * @deprecationExpectedRemoval v8
    * Toggle used to hide the text rendered inside the circle.
    */

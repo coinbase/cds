@@ -2,11 +2,9 @@ import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import { helperTextHeight, inputStackGap } from '@coinbase/cds-common/tokens/input';
-import type {
-  SharedAccessibilityProps,
-  SharedInputProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { SharedInputProps } from '@coinbase/cds-common/types/InputBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { Dropdown } from '../dropdown/Dropdown';
 import type { DropdownProps } from '../dropdown/DropdownProps';

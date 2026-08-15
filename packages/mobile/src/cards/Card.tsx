@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import type { DimensionValue } from 'react-native';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common';
 import { cardSizes } from '@coinbase/cds-common/tokens/card';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 
 import { useTheme } from '../hooks/useTheme';
 import type { BoxBaseProps, BoxProps } from '../layout/Box';
@@ -24,6 +24,10 @@ export type CardBaseProps = Pick<
     pressableProps?: Omit<PressableProps, 'onPress'>;
   };
 
+/**
+ * @deprecated Use `ContentCard`, `MediaCard`, `MessagingCard`, or `DataCard` based on your use case. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type CardProps = CardBaseProps & BoxProps;
 
 const getBorderRadiusPinStyle = (borderRadius: number) => ({

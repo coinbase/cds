@@ -1,15 +1,20 @@
+import { tooltipMaxWidth } from '@coinbase/cds-common/tokens/tooltip';
 import type { BaseTooltipPlacement } from '@coinbase/cds-common/types';
 import { renderA11y } from '@coinbase/cds-web-utils/jest';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { Button } from '../../../buttons/Button';
+import { ComponentConfigProvider } from '../../../system';
 import { DefaultThemeProvider } from '../../../utils/test';
 import { PortalProvider } from '../../PortalProvider';
 import { Tooltip } from '../Tooltip';
 import type { TooltipProps } from '../TooltipProps';
 
 const tooltipTestID = 'tooltip-test';
+const richContentTestID = 'rich-content';
+const richContentWidth = 320;
+const richContentHeight = 480;
 
 const StoryExample = ({
   placement = 'top',
@@ -89,6 +94,60 @@ describe('Tooltip', () => {
     expect(await screen.findByTestId(tooltipTestID)).toBeInTheDocument();
   });
 
+  it('keeps the default max width for string content', async () => {
+    render(<StoryExample />);
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    expect(tooltip).toHaveStyle({
+      '--maxWidth': `${tooltipMaxWidth}px`,
+      '--width': 'max-content',
+    });
+  });
+
+  it('does not apply the default text max width to React node content', async () => {
+    render(
+      <StoryExample
+        tooltipProps={{
+          content: <div style={{ minWidth: 320 }}>Rich content</div>,
+        }}
+      />,
+    );
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    expect(tooltip).toHaveStyle({ '--width': 'max-content' });
+    expect(tooltip.style.getPropertyValue('--maxWidth')).toBe('');
+  });
+
+  it('sizes to fit arbitrarily tall and wide React node content', async () => {
+    render(
+      <StoryExample
+        tooltipProps={{
+          content: (
+            <div
+              data-testid={richContentTestID}
+              style={{ height: richContentHeight, width: richContentWidth }}
+            >
+              Rich content
+            </div>
+          ),
+        }}
+      />,
+    );
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    const richContent = screen.getByTestId(richContentTestID);
+    expect(getComputedStyle(richContent).width).toBe(`${richContentWidth}px`);
+    expect(getComputedStyle(richContent).height).toBe(`${richContentHeight}px`);
+    expect(tooltip).toHaveStyle({ '--width': 'max-content' });
+    expect(tooltip.style.getPropertyValue('--maxWidth')).toBe('');
+  });
+
   it('delays showing tooltip content based on openDelay', async () => {
     jest.useFakeTimers();
     render(<StoryExample tooltipProps={{ openDelay: 300 }} />);
@@ -133,6 +192,69 @@ describe('Tooltip', () => {
     await waitFor(() => expect(screen.queryByTestId(tooltipTestID)).not.toBeInTheDocument());
 
     jest.useRealTimers();
+  });
+
+  it('applies Tooltip defaults from ComponentConfigProvider', async () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider
+          value={{
+            Tooltip: {
+              background: 'bgSecondary',
+              font: 'body',
+            },
+          }}
+        >
+          <PortalProvider>
+            <Tooltip content="Configured tooltip" testID={tooltipTestID}>
+              <Button>Button</Button>
+            </Tooltip>
+          </PortalProvider>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    expect(tooltip).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    expect(screen.getByText('Configured tooltip')).toHaveStyle({
+      '--text-textTransform': 'var(--textTransform-body)',
+    });
+  });
+
+  it('keeps local Tooltip props higher precedence than provider defaults', async () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider
+          value={{
+            Tooltip: {
+              background: 'bgSecondary',
+              font: 'body',
+            },
+          }}
+        >
+          <PortalProvider>
+            <Tooltip
+              background="bgPrimary"
+              content="Configured tooltip"
+              font="label2"
+              testID={tooltipTestID}
+            >
+              <Button>Button</Button>
+            </Tooltip>
+          </PortalProvider>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    const tooltip = await screen.findByTestId(tooltipTestID);
+    expect(tooltip).toHaveStyle({ backgroundColor: 'var(--color-bgPrimary)' });
+    expect(screen.getByText('Configured tooltip')).toHaveStyle({
+      '--text-textTransform': 'var(--textTransform-label2)',
+    });
   });
 
   it('focuses after a delay when using autoFocusDelay', async () => {

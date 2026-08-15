@@ -4,12 +4,16 @@ const d3 = ['d3', 'd3-.+', 'internmap'];
 
 const esModules = ['@coinbase', ...d3];
 
-const isCI = process.env.CI === 'true' || process.env.BUILDKITE === 'true';
+const isCI = process.env.CI === 'true';
 
 /** @type {import('jest').Config} */
 const config = {
   preset: '../../jest.preset.js',
   displayName: 'cds-web',
+  moduleNameMapper: {
+    // Mock svgEsmMap modules — each entry's themeable() returns a Promise resolving to mock SVG.
+    svgEsmMap: '<rootDir>/jest/svgEsmMapMock.js',
+  },
   setupFiles: ['<rootDir>/jest/setup.js'],
   coveragePathIgnorePatterns: [
     '<rootDir>/src/styles',

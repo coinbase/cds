@@ -4,6 +4,8 @@ Carousels are a great way to showcase a list of items in a compact and engaging 
 By default, Carousels have navigation and pagination enabled.
 You can also add a title to the Carousel by setting `title` prop.
 
+`paginationVariant` is deprecated. Carousel now defaults to dot pagination. Existing uses of `paginationVariant="pill"` still work during the deprecation window, but new usage should prefer the default pagination or a custom `PaginationComponent`.
+
 You simply wrap each child in a `CarouselItem` component, and can optionally set the `width` prop to control the width of the item.
 
 You can also set the `styles` prop to control the styles of the carousel, such as the gap between items.
@@ -31,7 +33,6 @@ function MyCarousel() {
   return (
     <Carousel
       loop
-      paginationVariant="dot"
       title="Explore Assets"
       styles={{
         root: { paddingHorizontal: theme.space[2] },
@@ -90,7 +91,6 @@ function DynamicSizingCarousel() {
 
   return (
     <Carousel
-      paginationVariant="dot"
       title="Learn more"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -115,7 +115,7 @@ function DynamicSizingCarousel() {
       <CarouselItem id="eths-apr" width={twoItemsWidth}>
         <UpsellCard
           action="Start earning"
-          dangerouslySetBackground="rgb(var(--purple70))"
+          style={{ backgroundColor: 'rgb(var(--purple70))' }}
           description={
             <Text font="label2" numberOfLines={3} color="fgInverse">
               Earn staking rewards on ETH by holding it on Coinbase
@@ -171,7 +171,6 @@ function ResponsiveSizingCarousel() {
 
   return (
     <Carousel
-      paginationVariant="dot"
       title="Learn more"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -246,7 +245,6 @@ function VariedSizingCarousel() {
 
   return (
     <Carousel
-      paginationVariant="dot"
       title="Varied Sizing"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -326,7 +324,6 @@ function DragCarousel() {
   return (
     <Carousel
       title="Explore Assets"
-      paginationVariant="dot"
       drag="free"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -363,7 +360,6 @@ function SquareItemsCarousel() {
   return (
     <Carousel
       title="Explore Assets"
-      paginationVariant="dot"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
         carousel: { gap: horizontalGap },
@@ -408,7 +404,6 @@ function OverflowCarousel() {
   return (
     <Carousel
       title="Explore Assets"
-      paginationVariant="dot"
       snapMode="item"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -433,7 +428,7 @@ function OverflowCarousel() {
 
 Use `autoplay` to allow for automatic page advancement. The default interval is 3 seconds but can be changed with `autoplayInterval`.
 
-It is recommended to use pagination with autoplay so users know how many pages there are, and you should also set `paginationVariant="dot"` to best indicate the active page and progress.
+It is recommended to use pagination with autoplay so users know how many pages there are.
 
 ```jsx
 function AutoplayCarousel() {
@@ -445,7 +440,6 @@ function AutoplayCarousel() {
     <Carousel
       autoplay
       loop
-      paginationVariant="dot"
       title="Trending Assets"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -477,7 +471,6 @@ function CustomIntervalCarousel() {
       autoplay
       autoplayInterval={5000}
       loop
-      paginationVariant="dot"
       title="5 Second Interval"
       styles={{
         root: { paddingHorizontal: horizontalPadding },
@@ -512,7 +505,6 @@ function LoopingCarousel() {
     <Carousel
       autoplay
       loop
-      paginationVariant="dot"
       snapMode="item"
       title="Infinite Scroll"
       styles={{
@@ -543,7 +535,7 @@ You need to use `accessibilityLabel` or `accessibilityLabelledBy` props to provi
 Similar to web, you are provided the `isVisible` render prop, however it is not necessary to use since mobile users do not have a keyboard.
 
 ```jsx
-<Carousel paginationVariant="dot">
+<Carousel>
   <CarouselItem id="btc" accessibilityLabel="Bitcoin">
     <SquareAssetCard imageUrl={assets.btc.imageUrl} name={assets.btc.symbol} />
   </CarouselItem>
@@ -611,14 +603,14 @@ function CustomComponentsCarousel() {
             disabled={!canGoPrevious}
             name="caretLeft"
             onPress={onPrevious}
-            variant="foregroundMuted"
+            variant="secondary"
           />
           <IconButton
             accessibilityLabel="Next"
             disabled={!canGoNext}
             name="caretRight"
             onPress={onNext}
-            variant="foregroundMuted"
+            variant="secondary"
           />
         </HStack>
         <HStack alignItems="center" gap={1}>
@@ -673,7 +665,7 @@ function CustomComponentsCarousel() {
         <CarouselItem id="eths-apr" width={itemWidth}>
           <UpsellCard
             action="Start earning"
-            dangerouslySetBackground="rgb(var(--purple70))"
+            style={{ backgroundColor: 'rgb(var(--purple70))' }}
             description={
               <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                 Earn staking rewards on ETH by holding it on Coinbase
@@ -697,7 +689,7 @@ function CustomComponentsCarousel() {
         <CarouselItem id="join-the-community" width={itemWidth}>
           <UpsellCard
             action="Start chatting"
-            dangerouslySetBackground="rgb(var(--teal70))"
+            style={{ backgroundColor: 'rgb(var(--teal70))' }}
             description={
               <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                 Chat with other devs in our Discord community
@@ -721,7 +713,7 @@ function CustomComponentsCarousel() {
         <CarouselItem id="coinbase-one-offer" width={itemWidth}>
           <UpsellCard
             action="Get 60 days free"
-            dangerouslySetBackground="rgb(var(--blue80))"
+            style={{ backgroundColor: 'rgb(var(--blue80))' }}
             description={
               <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                 Use code NOV60 when you  sign up for Coinbase One
@@ -745,7 +737,7 @@ function CustomComponentsCarousel() {
         <CarouselItem id="coinbase-card" width={itemWidth}>
           <UpsellCard
             action="Get started"
-            dangerouslySetBackground="rgb(var(--gray100))"
+            style={{ backgroundColor: 'rgb(var(--gray100))' }}
             description={
               <Text as="p" font="label2" numberOfLines={3} color="fgInverse">
                 Spend USDC to get rewards with our Visa® debit card
@@ -779,7 +771,6 @@ You can use the `styles` props to customize different parts of the carousel.
 function CustomStylesCarousel() {
   return (
     <Carousel
-      paginationVariant="dot"
       styles={{
         root: { paddingInline: horizontalPadding },
         carousel: { gap: horizontalGap },
@@ -1080,7 +1071,6 @@ function DynamicContentCarousel() {
       </HStack>
       <Carousel
         title="Explore Assets"
-        paginationVariant="dot"
         styles={{
           root: { paddingHorizontal: horizontalPadding },
           carousel: { gap: horizontalGap, height: 156 },

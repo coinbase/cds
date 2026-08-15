@@ -241,13 +241,6 @@ export const Disabled = () => {
 };
 Disabled.parameters = {
   percy: { enableJavaScript: true },
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
 };
 
 export const Colors = () => {
@@ -332,13 +325,6 @@ export const CustomStringLabel = () => {
 };
 CustomStringLabel.parameters = {
   percy: { enableJavaScript: true },
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
 };
 
 export const AnimationCallbacks = () => {

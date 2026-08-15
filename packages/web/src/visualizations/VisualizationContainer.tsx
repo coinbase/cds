@@ -1,5 +1,4 @@
 import React, { memo } from 'react';
-import type { DimensionValue } from '@coinbase/cds-common/types';
 import { useVisualizationDimensions } from '@coinbase/cds-common/visualizations/useVisualizationDimensions';
 
 import { useDimensions } from '../hooks/useDimensions';
@@ -12,9 +11,9 @@ export type VisualizationContainerDimension = {
 };
 
 export type VisualizationContainerBaseProps = {
-  width: DimensionValue;
-  height: DimensionValue;
-  minHeight?: DimensionValue; // can be used when a width calculation is only necessary
+  width: React.CSSProperties['width'];
+  height: React.CSSProperties['height'];
+  minHeight?: React.CSSProperties['minHeight']; // can be used when a width calculation is only necessary
   children: (dimensions: VisualizationContainerDimension) => React.ReactNode;
 };
 
@@ -26,7 +25,7 @@ Some visualizations need a static width to render. This container can be dynamic
 export const VisualizationContainer: React.FC<VisualizationContainerProps> = memo(
   ({ width, height, children }) => {
     const { observe, width: boxWidth, height: boxHeight } = useDimensions();
-    const dimensions = useVisualizationDimensions({
+    const dimensions = useVisualizationDimensions<React.CSSProperties['width']>({
       userDefinedWidth: width,
       userDefinedHeight: height,
       calculatedWidth: boxWidth,

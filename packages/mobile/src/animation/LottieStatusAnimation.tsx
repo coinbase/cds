@@ -1,9 +1,10 @@
 import { memo, useMemo } from 'react';
+import type { DimensionValue } from 'react-native';
 import { lottieStatusToAccessibilityLabel } from '@coinbase/cds-common/lottie/statusToAccessibilityLabel';
 import { useStatusAnimationPoller } from '@coinbase/cds-common/lottie/useStatusAnimationPoller';
-import type { DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+// eslint-disable-next-line internal/no-cds-barrel-imports -- tradeStatus is the deepest available export in cds-lottie-files
 import { tradeStatus } from '@coinbase/cds-lottie-files/tradeStatus';
 import type { LottieStatus } from 'packages/common/dts/types/LottieStatus';
 
@@ -47,12 +48,12 @@ export const LottieStatusAnimation = memo(
 
     return (
       <Lottie
-        {...otherProps}
         accessible
         accessibilityLabel={label}
         accessibilityLiveRegion="polite"
         onAnimationFinish={handlePolling}
         testID={testID}
+        {...otherProps}
       />
     );
   },

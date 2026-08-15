@@ -17,19 +17,6 @@ export default {
   title: 'Components/Navigation/NavigationBar',
 };
 
-const a11ySkipConfig = {
-  options: {
-    /**
-     * The TabNavigation docs explain the proper way to setup the tabpanel.
-     * Disabled because CDS TabNavigation doesn't have associated panels.
-     * @link https://cds.coinbase.com/components/tab-navigation#accessibility
-     * */
-    rules: {
-      'aria-valid-attr-value': { enabled: false },
-    },
-  },
-};
-
 // Helper function for demo interactions
 const handlePress = (name: string) => console.log(`Pressed ${name}`);
 
@@ -94,10 +81,6 @@ export const NavigationBarFullExampleDefault = () => {
       </NavigationBar>
     </VStack>
   );
-};
-
-NavigationBarFullExampleDefault.parameters = {
-  a11y: a11ySkipConfig,
 };
 
 export const NavigationBarMobileExample = () => {
@@ -318,10 +301,6 @@ export const NavigationBarWithTabs = () => {
   );
 };
 
-NavigationBarWithTabs.parameters = {
-  a11y: a11ySkipConfig,
-};
-
 export const NavigationBarWithCustomBackground = () => {
   return (
     <VStack alignItems="flex-start" gap={4}>
@@ -463,10 +442,6 @@ export const NavigationBarWithCustomGap = () => {
   );
 };
 
-NavigationBarWithCustomGap.parameters = {
-  a11y: a11ySkipConfig,
-};
-
 export const NavigationBarWithCustomStyles = () => {
   return (
     <VStack alignItems="flex-start" gap={4}>
@@ -488,6 +463,44 @@ export const NavigationBarWithCustomStyles = () => {
       >
         <NavigationTitle>Centered Title</NavigationTitle>
       </NavigationBar>
+    </VStack>
+  );
+};
+
+export const NavigationBarStartToggle = () => {
+  const [showStart, setShowStart] = useState(false);
+
+  const handleToggle = useCallback(() => {
+    setShowStart((prev) => !prev);
+  }, []);
+
+  return (
+    <VStack alignItems="flex-start" gap={4}>
+      <Text as="h1" display="block" font="title1">
+        Start slot toggle
+      </Text>
+      <Text as="p" display="block" font="body">
+        Toggle the back button to see it animate in and out. When absent, no leading gap is reserved
+        before the page title.
+      </Text>
+      <NavigationBar
+        end={
+          <HStack alignItems="center" gap={1}>
+            <IconButton accessibilityLabel="Notifications" name="bell" />
+            <Avatar size="xl" />
+          </HStack>
+        }
+        start={
+          showStart ? (
+            <IconButton compact accessibilityLabel="Back" name="backArrow" variant="secondary" />
+          ) : undefined
+        }
+      >
+        <NavigationTitle>Page Title</NavigationTitle>
+      </NavigationBar>
+      <Button onClick={handleToggle} variant="secondary">
+        {showStart ? 'Hide' : 'Show'} back button
+      </Button>
     </VStack>
   );
 };

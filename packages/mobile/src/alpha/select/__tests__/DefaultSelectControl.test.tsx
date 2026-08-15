@@ -1,7 +1,8 @@
 import React from 'react';
-import { View } from 'react-native';
-import { fireEvent, render, screen } from '@testing-library/react-native';
+import { StyleSheet, View } from 'react-native';
+import { fireEvent, render, screen, within } from '@testing-library/react-native';
 
+import { defaultTheme } from '../../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../../utils/testHelpers';
 import { DefaultSelectControl } from '../DefaultSelectControl';
 import type { SelectControlProps, SelectOption } from '../Select';
@@ -109,6 +110,57 @@ describe('DefaultSelectControl', () => {
       expect(screen.getByText('Select an option')).toBeTruthy();
     });
 
+    it('renders placeholder with fgMuted when value is null', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      const placeholder = screen.getByText('Select an option');
+      expect(StyleSheet.flatten(placeholder.props.style).color).toBe(
+        defaultTheme.lightColor.fgMuted,
+      );
+    });
+
+    it('renders placeholder with fgMuted when value is empty string', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value={''} />
+        </DefaultThemeProvider>,
+      );
+
+      const placeholder = screen.getByText('Select an option');
+      expect(placeholder).toBeTruthy();
+      expect(StyleSheet.flatten(placeholder.props.style).color).toBe(
+        defaultTheme.lightColor.fgMuted,
+      );
+    });
+
+    it('renders placeholder with fgMuted when value is not in options', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="unknown" />
+        </DefaultThemeProvider>,
+      );
+
+      const placeholder = screen.getByText('Select an option');
+      expect(StyleSheet.flatten(placeholder.props.style).color).toBe(
+        defaultTheme.lightColor.fgMuted,
+      );
+    });
+
+    it('renders selected option with fg when value matches an option', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      const selectedValue = screen.getByText('Option 1');
+      expect(StyleSheet.flatten(selectedValue.props.style).color).toBe(defaultTheme.lightColor.fg);
+    });
+
     it('calls setOpen when pressed', () => {
       const setOpen = jest.fn();
       render(
@@ -199,7 +251,7 @@ describe('DefaultSelectControl', () => {
       );
 
       const button = screen.getByRole('button');
-      expect(button).toHaveAccessibilityState({ disabled: true });
+      expect(button).toBeDisabled();
     });
 
     it('renders with helper text', () => {
@@ -467,6 +519,205 @@ describe('DefaultSelectControl', () => {
       // First occurrence should be used for display
       expect(screen.getByText('First Option')).toBeTruthy();
       expect(screen.queryByText('Second Option')).toBeNull();
+    });
+  });
+
+  describe('Size', () => {
+    const getInputAreaStyle = () =>
+      StyleSheet.flatten(screen.getByTestId('select-control-input-area').props.style);
+
+    it('defaults to size "l" (16px vertical padding)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[2]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[2]);
+    });
+
+    it('applies per-size vertical padding for "s", "m" and "l"', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+      let style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1]);
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="m" testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+      style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1.5]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1.5]);
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="l" testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+      style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[2]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[2]);
+    });
+
+    it('does not change horizontal padding across sizes', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingLeft).toBe(defaultTheme.space[2]);
+      expect(style.paddingRight).toBe(defaultTheme.space[2]);
+    });
+
+    it('renders the label inline and uses 8px padding for the deprecated compact prop', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1]);
+      // Compact forces the inline label inside the control.
+      const inputArea = screen.getByTestId('select-control-input-area');
+      expect(within(inputArea).getByText('Test Select Control')).toBeTruthy();
+    });
+
+    it('lets size win over compact (label above, 12px padding)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact size="m" testID="select-control" />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1.5]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1.5]);
+      // Size wins, so the label is not forced inline.
+      const inputArea = screen.getByTestId('select-control-input-area');
+      expect(within(inputArea).queryByText('Test Select Control')).toBeNull();
+      expect(screen.getByText('Test Select Control')).toBeTruthy();
+    });
+
+    it('stacks an inside label vertically at size "l" and tightens padding to keep the field height', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...defaultProps}
+            labelVariant="inside"
+            size="l"
+            testID="select-control"
+          />
+        </DefaultThemeProvider>,
+      );
+
+      // Stacked label + value fit the same field an outside label produces (6px top/bottom).
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[0.75]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[0.75]);
+    });
+
+    it('keeps an inside label horizontal (per-size padding) at sizes "s" and "m"', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...defaultProps}
+            labelVariant="inside"
+            size="s"
+            testID="select-control"
+          />
+        </DefaultThemeProvider>,
+      );
+      let style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1]);
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...defaultProps}
+            labelVariant="inside"
+            size="m"
+            testID="select-control"
+          />
+        </DefaultThemeProvider>,
+      );
+      style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1.5]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1.5]);
+    });
+
+    it('tightens vertical padding for a multi-select with selected values', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...(multiSelectProps as any)}
+            testID="select-control"
+            value={['option1']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      // Selected value chips add their own height, so a size "l" multi-select drops from 16px to 12px.
+      let style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[1.5]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[1.5]);
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...(multiSelectProps as any)}
+            size="s"
+            testID="select-control"
+            value={['option1']}
+          />
+        </DefaultThemeProvider>,
+      );
+      style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[0.5]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[0.5]);
+    });
+
+    it('tightens padding hardest for a size "l" multi-select with a stacked inside label', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...(multiSelectProps as any)}
+            labelVariant="inside"
+            size="l"
+            testID="select-control"
+            value={['option1']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      // Stacked label + xs chips fit the field (2px top/bottom).
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[0.25]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[0.25]);
+    });
+
+    it('keeps the full size padding for an empty multi-select', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...(multiSelectProps as any)} testID="select-control" value={[]} />
+        </DefaultThemeProvider>,
+      );
+
+      const style = getInputAreaStyle();
+      expect(style.paddingTop).toBe(defaultTheme.space[2]);
+      expect(style.paddingBottom).toBe(defaultTheme.space[2]);
     });
   });
 });

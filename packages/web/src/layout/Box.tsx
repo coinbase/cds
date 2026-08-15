@@ -37,7 +37,10 @@ export type BoxBaseProps = StyleProps &
     borderedHorizontal?: boolean;
     /** Add a border to the top and bottom sides of the box. */
     borderedVertical?: boolean;
-    /** @danger This is a migration escape hatch. It is not intended to be used normally. */
+    /**
+     * @deprecated Use `style` or `className` to set custom background colors. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     dangerouslySetBackground?: string;
   };
 

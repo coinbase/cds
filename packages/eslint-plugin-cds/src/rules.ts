@@ -2,6 +2,7 @@ import type { TSESLint } from '@typescript-eslint/utils';
 
 import { controlHasAssociatedLabelExtended } from './rules/control-has-associated-label-extended';
 import { hasValidA11yDescriptorsExtended } from './rules/has-valid-accessibility-descriptors-extended';
+import { listCellJsxRequiresNodeProps } from './rules/list-cell-jsx-requires-node-props';
 import { mobileChartScrubbingAccessibility } from './rules/mobile-chart-scrubbing-accessibility';
 import { noV7Imports } from './rules/no-v7-imports';
 import { webChartScrubbingAccessibility } from './rules/web-chart-scrubbing-accessibility';
@@ -10,6 +11,7 @@ import { webTooltipInteractiveContent } from './rules/web-tooltip-interactive-co
 export const rules = {
   'control-has-associated-label-extended': controlHasAssociatedLabelExtended,
   'has-valid-accessibility-descriptors-extended': hasValidA11yDescriptorsExtended,
+  'list-cell-jsx-requires-node-props': listCellJsxRequiresNodeProps,
   'mobile-chart-scrubbing-accessibility': mobileChartScrubbingAccessibility,
   'no-v7-imports': noV7Imports,
   'web-chart-scrubbing-accessibility': webChartScrubbingAccessibility,

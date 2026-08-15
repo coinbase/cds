@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Animated,
   I18nManager,
@@ -9,13 +9,16 @@ import {
 } from 'react-native';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { SharedAccessibilityProps, SharedProps, Weight } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { Weight } from '@coinbase/cds-common/types/Weight';
 import { getProgressSize } from '@coinbase/cds-common/visualizations/getProgressSize';
 
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import { Box, HStack } from '../layout';
+import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
 import type { HintMotionBaseProps } from '../motion/types';
 
 export type ProgressBaseProps = SharedProps &
@@ -58,7 +61,12 @@ export type ProgressBarProps = ProgressBaseProps & {
 };
 
 export const ProgressBar = memo(
-  forwardRef((_props: ProgressBarProps, forwardedRef: React.ForwardedRef<View>) => {
+  ({
+    ref: forwardedRef,
+    ..._props
+  }: ProgressBarProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('ProgressBar', _props);
     const {
       weight = 'normal',
@@ -157,11 +165,14 @@ export const ProgressBar = memo(
           flexShrink={0}
           height="100%"
           justifyContent="center"
-          style={progressStyle}
+          style={[
+            { backgroundColor: !disabled ? theme.color[color] : theme.color.bgLineHeavy },
+            progressStyle,
+          ]}
           testID="cds-progress-bar"
           width="100%"
         />
       </HStack>
     );
-  }),
+  },
 );

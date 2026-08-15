@@ -1,34 +1,55 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
+import React, { memo, useCallback, useMemo, useRef } from 'react';
 import {
+  type BlurEvent,
   type NativeSyntheticEvent,
   type StyleProp,
   type TextInput as NativeTextInput,
   type TextInputChangeEventData,
   type TextInputEndEditingEventData,
-  type TextInputFocusEventData,
   type ViewStyle,
 } from 'react-native';
 import { IntlDateFormat } from '@coinbase/cds-common/dates/IntlDateFormat';
 import { type DateInputOptions, useDateInput } from '@coinbase/cds-common/dates/useDateInput';
 import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
 
-import { TextInput, type TextInputBaseProps, type TextInputProps } from '../controls/TextInput';
+import {
+  TextInput,
+  type TextInputBaseProps,
+  type TextInputProps,
+  type TextInputSize,
+} from '../controls/TextInput';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
 
 export type DateInputBaseProps = Omit<DateInputOptions, 'intlDateFormat'> &
-  Omit<TextInputBaseProps, 'inputNode' | 'value' | 'defaultValue'> & {
+  Omit<TextInputBaseProps, 'inputNode' | 'value' | 'defaultValue' | 'compact'> & {
     /** Date format separator character, e.g. the / in "MM/DD/YYYY". Defaults to forward slash (/). */
     separator?: string;
+    /**
+     * Controls the vertical density (size) of the input field.
+     * @default 'l'
+     */
+    size?: TextInputSize;
+    /**
+     * Enables a smaller, compact input.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
+    compact?: boolean;
   };
 
 export type DateInputProps = DateInputBaseProps &
-  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style'> & {
+  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style' | 'compact'> & {
     style?: StyleProp<ViewStyle>;
   };
 
 export const DateInput = memo(
-  forwardRef<NativeTextInput, DateInputProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: DateInputProps & {
+    ref?: React.Ref<NativeTextInput>;
+  }) => {
     const mergedProps = useComponentConfig('DateInput', _props);
     const {
       date,
@@ -89,7 +110,7 @@ export const DateInput = memo(
      */
 
     const handleBlur = useCallback(
-      (event: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (event: BlurEvent) => {
         onBlur?.(event);
         if (!required || !hasTyped.current) return;
         const error = validateDateInput(inputValue);
@@ -121,9 +142,8 @@ export const DateInput = memo(
       <VStack minWidth={164} style={style} width="100%">
         <TextInput
           ref={ref}
-          {...props}
           end={end}
-          helperText={helperText || error?.message || intlDateFormat.dateStringFormat}
+          helperText={helperText ?? error?.message ?? intlDateFormat.dateStringFormat}
           keyboardType="number-pad"
           onBlur={handleBlur}
           onChange={handleChange}
@@ -134,8 +154,9 @@ export const DateInput = memo(
           testIDMap={testIDMap}
           value={inputValue}
           variant={variant || (error ? 'negative' : undefined)}
+          {...props}
         />
       </VStack>
     );
-  }),
+  },
 );

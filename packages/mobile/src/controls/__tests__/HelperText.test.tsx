@@ -14,17 +14,23 @@ describe('HelperText.test', () => {
     expect(screen.getByText('Test text')).toBeTruthy();
   });
 
-  it('renders custom color', () => {
+  it('renders custom color and icon styles via style slots', () => {
     render(
       <DefaultThemeProvider>
-        <HelperText color="fgNegative" dangerouslySetColor="yellow" errorIconTestID="error-icon">
+        <HelperText
+          color="fgNegative"
+          errorIconTestID="error-icon"
+          style={{ color: 'yellow' }}
+          styles={{ root: { marginTop: 8 }, icon: { color: 'yellow' } }}
+        >
           Test text
         </HelperText>
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByText('Test text')).toHaveStyle({ color: 'yellow' });
-    expect(screen.getByRole('image')).toHaveStyle({ color: 'yellow' });
+    expect(screen.getByText(/Test text/)).toHaveStyle({ color: 'yellow' });
+    expect(screen.getByText(/Test text/)).toHaveStyle({ marginTop: 8 });
+    expect(screen.getByTestId('error-icon')).toHaveStyle({ color: 'yellow' });
   });
 
   it('renders custom spacing', () => {

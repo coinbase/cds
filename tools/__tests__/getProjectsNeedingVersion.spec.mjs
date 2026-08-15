@@ -1,8 +1,11 @@
+import { spawnSync } from 'node:child_process';
+
 import { projectsNeedingVersion } from '../ci/getProjectsNeedingVersion';
 import { getCurrentCIBranch } from '../ci/getCurrentCIBranch';
 import { getChangedFiles } from '../ci/getChangedFiles';
 import { getAffectedPackages } from '../ci/getAffectedPackages';
 
+jest.mock('node:child_process', () => ({ spawnSync: jest.fn() }));
 jest.mock('../ci/getCurrentCIBranch', () => ({ getCurrentCIBranch: jest.fn() }));
 jest.mock('../ci/getChangedFiles', () => ({ getChangedFiles: jest.fn() }));
 jest.mock('../ci/getAffectedPackages', () => ({ getAffectedPackages: jest.fn() }));
@@ -22,6 +25,7 @@ describe('projectsNeedingVersion', () => {
     getCurrentCIBranch.mockReturnValue('feature-branch');
     getChangedFiles.mockResolvedValue([]);
     getAffectedPackages.mockResolvedValue({});
+    spawnSync.mockReturnValue({ status: 0, stdout: '' });
   });
 
   afterEach(() => jest.clearAllMocks());
@@ -58,6 +62,41 @@ describe('projectsNeedingVersion', () => {
     getChangedFiles.mockResolvedValue(['packages/web/src/Button.tsx', 'packages/web/CHANGELOG.md']);
     getAffectedPackages.mockResolvedValue({ web: { data: { root: 'packages/web' } } });
     const result = await projectsNeedingVersion(logInfo);
+    expect(result).toEqual([]);
+  });
+
+  it('returns the project when CHANGELOG.md changed from base but local source changes are pending', async () => {
+    getChangedFiles.mockResolvedValue([
+      'packages/mobile/package.json',
+      'packages/mobile/CHANGELOG.md',
+      'packages/mobile/src/Button.tsx',
+    ]);
+    spawnSync.mockReturnValue({ status: 0, stdout: 'packages/mobile/src/Button.tsx\n' });
+    getAffectedPackages
+      .mockResolvedValueOnce({ mobile: { data: { root: 'packages/mobile' } } })
+      .mockResolvedValueOnce({ mobile: { data: { root: 'packages/mobile' } } });
+
+    const result = await projectsNeedingVersion(logInfo);
+
+    expect(result).toEqual(['mobile']);
+  });
+
+  it('excludes a project when its local changelog is pending with the source change', async () => {
+    getChangedFiles.mockResolvedValue([
+      'packages/mobile/package.json',
+      'packages/mobile/CHANGELOG.md',
+      'packages/mobile/src/Button.tsx',
+    ]);
+    spawnSync.mockReturnValue({
+      status: 0,
+      stdout: 'packages/mobile/src/Button.tsx\npackages/mobile/CHANGELOG.md\n',
+    });
+    getAffectedPackages
+      .mockResolvedValueOnce({ mobile: { data: { root: 'packages/mobile' } } })
+      .mockResolvedValueOnce({ mobile: { data: { root: 'packages/mobile' } } });
+
+    const result = await projectsNeedingVersion(logInfo);
+
     expect(result).toEqual([]);
   });
 

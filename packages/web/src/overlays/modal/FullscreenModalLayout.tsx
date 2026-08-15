@@ -101,10 +101,17 @@ export const FullscreenModalLayout = memo(
           visible={visible}
           zIndex={zIndex}
         >
-          <motion.div {...overlayMotionProps}>
+          {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
+          <motion.div {...(overlayMotionProps as React.ComponentProps<typeof motion.div>)}>
             <Overlay />
           </motion.div>
-          <motion.div {...dialogMotionProps} className={pinCss}>
+          {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
+          <motion.div
+            {...({
+              ...dialogMotionProps,
+              className: pinCss,
+            } as React.ComponentProps<typeof motion.div>)}
+          >
             <FocusTrap
               disableFocusTrap={disableFocusTrap}
               focusTabIndexElements={focusTabIndexElements}

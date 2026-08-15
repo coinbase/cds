@@ -4,7 +4,9 @@ import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, HStack, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import type { ResponsiveProp } from '../styles/styleProps';
 import { Pressable, type PressableProps } from '../system/Pressable';
 import { Text } from '../typography/Text';

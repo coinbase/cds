@@ -1,8 +1,8 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { ReactElement, RefObject } from 'react';
-import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import { FOCUSABLE_ELEMENTS } from '@coinbase/cds-common/tokens/overlays';
 import { debounce } from '@coinbase/cds-common/utils/debounce';
+import { mergeReactElementRef } from '@coinbase/cds-common/utils/mergeRefs';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { getBrowserGlobals } from '../utils/browser';
@@ -139,7 +139,7 @@ export const FocusTrap = memo((_props: FocusTrapProps) => {
 
   // trap focus for accessibility
   const handleKeyboardNavigation = useCallback(
-    (event: KeyboardEvent, element: RefObject<HTMLElement>['current']) => {
+    (event: KeyboardEvent, element: RefObject<HTMLElement | null>['current']) => {
       if (event.defaultPrevented) return;
       const document = getBrowserGlobals()?.document;
       const activeElement = document?.activeElement as HTMLElement;
@@ -381,11 +381,11 @@ export const FocusTrap = memo((_props: FocusTrapProps) => {
   // only works for single child
   const onlyChild = React.Children.only(children);
 
-  const mergedRef = useMergeRefs(childrenRef, children?.ref);
-
   if (!onlyChild) {
     return <>{children}</>;
   }
 
-  return React.cloneElement(children, { ref: mergedRef });
+  return React.cloneElement(children as React.ReactElement<React.RefAttributes<HTMLElement>>, {
+    ref: mergeReactElementRef<HTMLElement>(children, childrenRef),
+  });
 });

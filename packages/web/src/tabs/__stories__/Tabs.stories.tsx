@@ -22,14 +22,6 @@ import { MockTabPanel } from './MockTabPanel';
 
 export default {
   title: 'Components/Tabs/Tabs',
-  parameters: {
-    a11y: {
-      context: {
-        include: ['body'],
-        exclude: ['.no-a11y-checks'],
-      },
-    },
-  },
 };
 
 type TradingAction = 'buy' | 'sell' | 'convert';
@@ -171,25 +163,6 @@ export const All = () => (
   </VStack>
 );
 
-const tabsTabListOnlyA11y = {
-  a11y: {
-    context: {
-      include: ['body'],
-      exclude: ['.no-a11y-checks'],
-    },
-    options: {
-      rules: {
-        'aria-valid-attr-value': { enabled: false },
-        'duplicate-id': { enabled: false },
-        'duplicate-id-active': { enabled: false },
-      },
-    },
-  },
-};
-
-Default.parameters = tabsTabListOnlyA11y;
-All.parameters = tabsTabListOnlyA11y;
-
 const panelTabs = sampleTabs.slice(0, 3);
 
 export const WithTabPanels = () => {
@@ -203,7 +176,6 @@ export const WithTabPanels = () => {
       </Text>
       <Tabs
         TabComponent={DefaultTab}
-        TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
         accessibilityLabel="Content sections"
         activeBackground="bg"
         activeTab={activeTab}

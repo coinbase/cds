@@ -38,7 +38,7 @@ describe('TabIndicator', () => {
 
   it('renders with ref', () => {
     const TEST_ID = 'tabIndicator';
-    const ref = { current: undefined } as unknown as React.RefObject<HTMLDivElement>;
+    const ref = { current: undefined } as unknown as React.RefObject<HTMLDivElement | null>;
     render(<TabIndicator ref={ref} testID={TEST_ID} width={100} x={0} />);
     expect(ref.current).toBeInstanceOf(HTMLElement);
   });

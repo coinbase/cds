@@ -1,3 +1,5 @@
+import type { ThemeVars } from '../core/theme';
+
 export type InputVariant =
   | 'positive'
   | 'negative'
@@ -10,10 +12,16 @@ export type SharedInputProps = {
   /**
    * Enables compact variation
    * @default false
+   * @deprecated This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
    */
   compact?: boolean;
   /** Short messageArea indicating purpose of input */
   label?: string;
+  /** Typography token for the field label. */
+  labelFont?: ThemeVars.Font;
+  /** Color token for the field label. */
+  labelColor?: ThemeVars.Color;
   /** Placeholder text displayed inside of the input. Will be replaced if there is a value. */
   placeholder?: string;
   /**
@@ -22,4 +30,8 @@ export type SharedInputProps = {
    * showing positive/negative messages
    */
   helperText?: string | React.ReactNode;
+  /**
+   * When true, the value cannot be edited but the control may remain focusable (unlike `disabled`).
+   */
+  readOnly?: boolean;
 };

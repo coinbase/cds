@@ -17,16 +17,14 @@ const createClassName = (hash: string, title: string) => {
 
 const isAnalyze = process.env.ANALYZE === 'true';
 const isAnalyzeModeJson = process.env.ANALYZE_MODE_JSON === 'true';
-const isPercyBuild = process.env.STORYBOOK_PERCY === 'true';
 const bundleStatsFilename = path.resolve(
   MONOREPO_ROOT,
   process.env.ANALYZE_REPORT_PATH || 'bundle-stats.json',
 );
 const addons = [
   // '@chromatic-com/storybook',
-  '@storybook/addon-storysource',
   '@storybook-community/storybook-dark-mode',
-  ...(!isPercyBuild ? ['@storybook/addon-a11y', '@storybook/addon-vitest'] : []),
+  '@storybook/addon-docs',
 ];
 
 if (isAnalyze) {
@@ -46,10 +44,7 @@ const config: StorybookConfig = {
     options: {},
   },
   addons,
-  stories: [
-    '../../../packages/web/**/*.stories.@(tsx|mdx)',
-    '../../../packages/web-visualization/**/*.stories.@(tsx|mdx)',
-  ],
+  stories: ['../../../packages/web/**/*.stories.@(tsx|mdx)'],
   staticDirs: [
     {
       from: path.resolve(MONOREPO_ROOT, 'packages/icons/src'),
@@ -91,10 +86,6 @@ const config: StorybookConfig = {
           '@coinbase/cds-lottie-files': path.resolve(MONOREPO_ROOT, 'packages/lottie-files/src'),
           '@coinbase/cds-utils': path.resolve(MONOREPO_ROOT, 'packages/utils/src'),
           '@coinbase/cds-web': path.resolve(MONOREPO_ROOT, 'packages/web/src'),
-          '@coinbase/cds-web-visualization': path.resolve(
-            MONOREPO_ROOT,
-            'packages/web-visualization/src',
-          ),
         },
       },
     });

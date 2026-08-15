@@ -88,8 +88,8 @@ describe('FullscreenModal', () => {
     const modal = screen.getByRole('dialog');
 
     expect(modal).toHaveAttribute('aria-modal', 'true');
-    expect(modal).toHaveAttribute('aria-labelledby', expect.stringMatching(/:r[0-9].*/));
-    expect(screen.getByText(TITLE)).toHaveAttribute('id', expect.stringMatching(/:r[0-9].*/));
+    expect(modal).toHaveAttribute('aria-labelledby', expect.stringMatching(/«r[0-9]+»/));
+    expect(screen.getByText(TITLE)).toHaveAttribute('id', expect.stringMatching(/«r[0-9]+»/));
   });
 
   it('overrides default a11y attrs when accessibilityLabelledBy is provided', () => {

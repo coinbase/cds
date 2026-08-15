@@ -64,7 +64,7 @@ if (!fs.existsSync(comparisonBundleStatsPath))
     `No comparison bundle stats ${MASTER_STATS_FILENAME} found at path "${comparisonBundleStatsPath}"`,
   );
 
-// Delete all stats files on exit to prevent accidental misuse of buildkite cache plugin
+// Delete all stats files on exit to prevent accidental cache reuse
 const cleanup = () => {
   // if (fs.existsSync(masterBundleStatsPath)) fs.rmSync(masterBundleStatsPath, { recursive: true });
   // if (fs.existsSync(comparisonBundleStatsPath))
@@ -698,16 +698,8 @@ const recursivelyPrintSizeInfo = ({
   return result;
 };
 
-// https://buildkite.com/docs/pipelines/managing-log-output
-// We want to collapse the CI logs in Buildkite, but we can't use +++ before diffing
-// or it will mess with the diff. So we use ~~~ first, then replace with +++ later.
-const BUILDKITE_COLLAPSE_PLACEHOLDER = '~~~';
-const BUILDKITE_COLLAPSE_PREFIX = '---';
-const BUILDKITE_EXPAND_PLACEHOLDER = '!!!';
-const BUILDKITE_EXPAND_PREFIX = '+++';
-
 const getPackageTitle = (packageName: string) =>
-  process.env.CI === 'true' ? `${BUILDKITE_COLLAPSE_PLACEHOLDER} 📌 ${packageName}` : '';
+  process.env.CI === 'true' ? `\n📌 ${packageName}` : '';
 
 const getNodeModulesStatsMessage = (nodeModulesStatsGroups: BundleStats[]) => {
   const nodeModuleSimpleMessages: { [key: string]: string } = {};
@@ -730,9 +722,7 @@ const getNodeModulesStatsMessage = (nodeModulesStatsGroups: BundleStats[]) => {
   const totalSize = nodeModulesStatsGroups.reduce((acc, group) => acc + group.gzipSize, 0);
   const sizeString = `${'Total size '.padEnd(60, '.')} ${readableFileSize(totalSize)}`;
 
-  let message = `${
-    process.env.CI === 'true' ? `${BUILDKITE_COLLAPSE_PLACEHOLDER} ` : '\n'
-  }🐳 Node module size results:\n\n${sizeString}\n`;
+  let message = `\n🐳 Node module size results:\n\n${sizeString}\n`;
 
   for (const simpleMessage of Object.values(nodeModuleSimpleMessages))
     message += `\n${simpleMessage}`;
@@ -742,7 +732,7 @@ const getNodeModulesStatsMessage = (nodeModulesStatsGroups: BundleStats[]) => {
   for (const detailedMessage of Object.values(nodeModuleDetailedMessages))
     message += `\n${detailedMessage}`;
 
-  return message.replaceAll(BUILDKITE_COLLAPSE_PLACEHOLDER, BUILDKITE_COLLAPSE_PREFIX);
+  return message;
 };
 
 const getPackageStatsMessage = (packageStatsGroups: BundleStats[]) => {
@@ -764,18 +754,14 @@ const getPackageStatsMessage = (packageStatsGroups: BundleStats[]) => {
       });
   }
 
-  let message = `${
-    process.env.CI === 'true' ? `${BUILDKITE_EXPAND_PLACEHOLDER} ` : '\n'
-  }🐙 Bundle size results:\n`;
+  let message = '\n🐙 Bundle size results:\n';
 
   for (const simpleMessage of Object.values(packageSimpleMessages)) message += `\n${simpleMessage}`;
 
   for (const [packageName, detailedMessage] of Object.entries(packageDetailedMessages))
     message += `\n\n${getPackageTitle(packageName)}${detailedMessage}`;
 
-  return message
-    .replaceAll(BUILDKITE_COLLAPSE_PLACEHOLDER, BUILDKITE_COLLAPSE_PREFIX)
-    .replaceAll(BUILDKITE_EXPAND_PLACEHOLDER, BUILDKITE_EXPAND_PREFIX);
+  return message;
 };
 
 const green = (message: string) => `\x1b[32m${message}\x1b[0m`;

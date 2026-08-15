@@ -69,7 +69,9 @@ describe('RemoteImageGroup', () => {
     render(<MockRemoteImageGroup />);
 
     remoteImageIndices.forEach((index) => {
-      const remoteImage = screen.getByTestId(`${TEST_ID}-image-${index}`);
+      const remoteImage = screen.getByTestId(`${TEST_ID}-image-${index}`, {
+        includeHiddenElements: true,
+      });
 
       expect(remoteImage).toHaveStyle({
         width: 24,
@@ -84,7 +86,9 @@ describe('RemoteImageGroup', () => {
     await screen.findByTestId(TEST_ID);
 
     remoteImageIndices.forEach((index) => {
-      const remoteImage = screen.getByTestId(`${TEST_ID}-image-${index}`);
+      const remoteImage = screen.getByTestId(`${TEST_ID}-image-${index}`, {
+        includeHiddenElements: true,
+      });
 
       expect(remoteImage).toHaveStyle({
         borderRadius: defaultTheme.borderRadius[1000],
@@ -104,7 +108,9 @@ describe('RemoteImageGroup', () => {
     render(<MockRemoteImageGroup size={30} />);
 
     remoteImageIndices.forEach((index) => {
-      const remoteImage = screen.getByTestId(`${TEST_ID}-image-${index}`);
+      const remoteImage = screen.getByTestId(`${TEST_ID}-image-${index}`, {
+        includeHiddenElements: true,
+      });
 
       expect(remoteImage).toHaveStyle({
         width: 30,
@@ -117,7 +123,9 @@ describe('RemoteImageGroup', () => {
     render(<MockRemoteImageGroup size="l" />);
 
     remoteImageIndices.forEach((index) => {
-      const remoteImage = screen.getByTestId(`${TEST_ID}-image-${index}`);
+      const remoteImage = screen.getByTestId(`${TEST_ID}-image-${index}`, {
+        includeHiddenElements: true,
+      });
 
       expect(remoteImage).toHaveStyle({
         width: 32,

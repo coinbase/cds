@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { Platform, StatusBar } from 'react-native';
-import type { PinningDirection } from '@coinbase/cds-common/types';
+import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
 
 import { useHasNotch } from '../../hooks/useHasNotch';
 
@@ -9,6 +9,10 @@ type DrawerStatusBarProps = {
   visible: boolean;
 };
 
+/**
+ * @deprecated If you need to hide the status bar and you're not using Drawer already, use the StatusBar component from react-native directly. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const DrawerStatusBar = memo(function DrawerStatusBar({
   pin,
   visible,

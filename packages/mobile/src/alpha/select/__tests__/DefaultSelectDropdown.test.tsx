@@ -38,16 +38,23 @@ jest.mock('../../../overlays/tray/Tray', () => {
   const React = require('react');
   const { View } = require('react-native');
   return {
-    Tray: React.forwardRef(
-      ({ children, title, onDismiss, onCloseComplete, ...props }: any, ref: any) => {
-        return (
-          <View ref={ref} testID="tray-container" {...props}>
-            {title && <View testID="tray-title">{title}</View>}
-            <View testID="tray-content">{children}</View>
-          </View>
-        );
-      },
-    ),
+    Tray: ({
+      ref,
+      children,
+      title,
+      onDismiss,
+      onCloseComplete,
+      ...props
+    }: any & {
+      ref?: React.Ref<unknown>;
+    }) => {
+      return (
+        <View ref={ref} testID="tray-container" {...props}>
+          {title && <View testID="tray-title">{title}</View>}
+          <View testID="tray-content">{children}</View>
+        </View>
+      );
+    },
   };
 });
 

@@ -1,12 +1,9 @@
 import React, { memo } from 'react';
-import type {
-  DotOverlap,
-  DotSize,
-  IconName,
-  PinPlacement,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { DotOverlap, DotSize } from '@coinbase/cds-common/types/DotBaseProps';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { PinPlacement } from '@coinbase/cds-common/types/Placement';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
@@ -106,8 +103,8 @@ export const DotSymbol = memo((_props: DotSymbolProps) => {
       aria-label={accessibilityLabel}
       className={cx(baseCss, className)}
       data-testid={testID}
-      {...props}
       style={style}
+      {...props}
     >
       {children}
       {/* eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions */}

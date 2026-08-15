@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { IconButton } from '@coinbase/cds-web/buttons';
 import { useNavbarMobileSidebar } from '@docusaurus/theme-common/internal';
 import { translate } from '@docusaurus/Translate';

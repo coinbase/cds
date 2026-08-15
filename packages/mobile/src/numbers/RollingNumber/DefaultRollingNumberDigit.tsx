@@ -1,4 +1,4 @@
-import { forwardRef, memo, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useMemo, useRef, useState } from 'react';
 import { StyleSheet, type View } from 'react-native';
 import Animated, {
   type EntryAnimationsValues,
@@ -96,119 +96,112 @@ const baseStylesheet = StyleSheet.create({
  * custom animation worklets. Web uses imperative opacity crossfades on DOM sections.
  */
 export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
-  forwardRef<View, RollingNumberDigitProps>(
-    (
-      {
-        value,
-        digitHeight,
-        initialValue = value,
-        textProps,
-        style,
-        styles,
-        transitionConfig,
-        digitTransitionVariant = 'every',
-        direction,
-        RollingNumberMaskComponent = DefaultRollingNumberMask,
-        ...props
-      },
-      ref,
-    ) => {
-      const [singleVariantCurrentValue, setCurrentValue] = useState(initialValue);
+  ({
+    ref,
+    value,
+    digitHeight,
+    initialValue = value,
+    textProps,
+    style,
+    styles,
+    transitionConfig,
+    digitTransitionVariant = 'every',
+    direction,
+    RollingNumberMaskComponent = DefaultRollingNumberMask,
+    ...props
+  }: RollingNumberDigitProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const [singleVariantCurrentValue, setCurrentValue] = useState(initialValue);
 
-      const position = useSharedValue(initialValue * digitHeight * -1);
-      const prevValue = useRef(initialValue);
+    const position = useSharedValue(initialValue * digitHeight * -1);
+    const prevValue = useRef(initialValue);
 
-      const isSingleVariant = useMemo(
-        () => digitTransitionVariant === 'single',
-        [digitTransitionVariant],
-      );
+    const isSingleVariant = useMemo(
+      () => digitTransitionVariant === 'single',
+      [digitTransitionVariant],
+    );
 
-      const isGoingUp = useMemo(() => direction === 'up', [direction]);
+    const isGoingUp = useMemo(() => direction === 'up', [direction]);
 
-      // Single variant needs to re-render to give time for exit animation direction to be updated
-      useEffect(() => {
-        if (value !== singleVariantCurrentValue) {
-          setCurrentValue(value);
-        }
-      }, [value, singleVariantCurrentValue]);
+    // Single variant needs to re-render to give time for exit animation direction to be updated
+    useEffect(() => {
+      if (value !== singleVariantCurrentValue) {
+        setCurrentValue(value);
+      }
+    }, [value, singleVariantCurrentValue]);
 
-      // Every variant needs to update the position of the digit immediately
-      useEffect(() => {
-        if (prevValue.current === value) return;
+    // Every variant needs to update the position of the digit immediately
+    useEffect(() => {
+      if (prevValue.current === value) return;
 
-        const newPosition = value * digitHeight * -1;
-        const yConfig = transitionConfig?.y ?? defaultTransitionConfig.y;
+      const newPosition = value * digitHeight * -1;
+      const yConfig = transitionConfig?.y ?? defaultTransitionConfig.y;
 
-        if (yConfig?.type === 'timing') {
-          position.value = withTiming(newPosition, yConfig);
-        } else {
-          position.value = withSpring(newPosition, yConfig);
-        }
-        prevValue.current = value;
-      }, [digitHeight, position, transitionConfig?.y, value]);
+      if (yConfig?.type === 'timing') {
+        position.value = withTiming(newPosition, yConfig);
+      } else {
+        position.value = withSpring(newPosition, yConfig);
+      }
+      prevValue.current = value;
+    }, [digitHeight, position, transitionConfig?.y, value]);
 
-      const animatedStyle = useAnimatedStyle(() => ({
-        transform: [{ translateY: position.value }],
-      }));
+    const animatedStyle = useAnimatedStyle(() => ({
+      transform: [{ translateY: position.value }],
+    }));
 
-      const containerStyle = useMemo(
-        () => [
-          baseStylesheet.digitContainer,
-          !isSingleVariant && animatedStyle,
-          style,
-          styles?.root,
-        ],
-        [animatedStyle, isSingleVariant, style, styles?.root],
-      );
+    const containerStyle = useMemo(
+      () => [baseStylesheet.digitContainer, !isSingleVariant && animatedStyle, style, styles?.root],
+      [animatedStyle, isSingleVariant, style, styles?.root],
+    );
 
-      const singleVariantEnterTransition = useMemo(
-        () => createTransitionAnimation(true, isGoingUp, transitionConfig),
-        [isGoingUp, transitionConfig],
-      );
+    const singleVariantEnterTransition = useMemo(
+      () => createTransitionAnimation(true, isGoingUp, transitionConfig),
+      [isGoingUp, transitionConfig],
+    );
 
-      const singleVariantExitTransition = useMemo(
-        () => createTransitionAnimation(false, isGoingUp, transitionConfig),
-        [isGoingUp, transitionConfig],
-      );
+    const singleVariantExitTransition = useMemo(
+      () => createTransitionAnimation(false, isGoingUp, transitionConfig),
+      [isGoingUp, transitionConfig],
+    );
 
-      // LayoutAnimationConfig disables mount/unmount animations on the digit container itself
-      // (e.g. when digits are added/removed going from $1,000 to $10,000 or vice versa).
-      // AnimatedText entering/exiting props handle value change animations separately.
-      return (
-        <RollingNumberMaskComponent ref={ref} {...props}>
-          <LayoutAnimationConfig skipEntering skipExiting>
-            <Animated.View style={containerStyle}>
-              {isSingleVariant ? (
+    // LayoutAnimationConfig disables mount/unmount animations on the digit container itself
+    // (e.g. when digits are added/removed going from $1,000 to $10,000 or vice versa).
+    // AnimatedText entering/exiting props handle value change animations separately.
+    return (
+      <RollingNumberMaskComponent ref={ref} {...props}>
+        <LayoutAnimationConfig skipEntering skipExiting>
+          <Animated.View style={containerStyle}>
+            {isSingleVariant ? (
+              <AnimatedText
+                key={singleVariantCurrentValue}
+                entering={singleVariantEnterTransition}
+                exiting={singleVariantExitTransition}
+                style={[styles?.text]}
+                {...textProps}
+              >
+                {singleVariantCurrentValue}
+              </AnimatedText>
+            ) : (
+              digits.map((digit) => (
                 <AnimatedText
-                  key={singleVariantCurrentValue}
-                  entering={singleVariantEnterTransition}
-                  exiting={singleVariantExitTransition}
-                  style={[styles?.text]}
+                  key={digit}
+                  style={[
+                    {
+                      position: digit === 0 ? 'relative' : 'absolute',
+                      top: digit * digitHeight,
+                    },
+                    styles?.text,
+                  ]}
                   {...textProps}
                 >
-                  {singleVariantCurrentValue}
+                  {digit}
                 </AnimatedText>
-              ) : (
-                digits.map((digit) => (
-                  <AnimatedText
-                    key={digit}
-                    style={[
-                      {
-                        position: digit === 0 ? 'relative' : 'absolute',
-                        top: digit * digitHeight,
-                      },
-                      styles?.text,
-                    ]}
-                    {...textProps}
-                  >
-                    {digit}
-                  </AnimatedText>
-                ))
-              )}
-            </Animated.View>
-          </LayoutAnimationConfig>
-        </RollingNumberMaskComponent>
-      );
-    },
-  ),
+              ))
+            )}
+          </Animated.View>
+        </LayoutAnimationConfig>
+      </RollingNumberMaskComponent>
+    );
+  },
 );

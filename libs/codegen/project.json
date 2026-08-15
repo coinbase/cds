@@ -28,13 +28,19 @@
       }
     },
     "update-packages-generic-bump": {
-      "command": "tsx ./src/release/updatePkgsForGenericBump.ts",
+      "command": "node {projectRoot}/src/release/updatePkgsForGenericBump.mjs",
       "options": {
-        "cwd": "libs/codegen"
+        "cwd": "{workspaceRoot}"
       }
     },
     "mobile-routes": {
       "command": "tsx ./src/playground/prepareRoutes.ts",
+      "options": {
+        "cwd": "libs/codegen"
+      }
+    },
+    "icon-svg-map": {
+      "command": "tsx ./src/icons/generateIconSvgMap.ts",
       "options": {
         "cwd": "libs/codegen"
       }

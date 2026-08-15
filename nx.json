@@ -17,7 +17,6 @@
       "sharedGlobals"
     ],
     "sharedGlobals": [
-      "{workspaceRoot}/.buildkite/*.yml",
       "{workspaceRoot}/eslint.config.mjs",
       "{workspaceRoot}/.github/**/*.yml",
       "{workspaceRoot}/.*ignore",

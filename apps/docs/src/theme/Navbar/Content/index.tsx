@@ -1,4 +1,4 @@
-import { useMemo, useRef } from 'react';
+import { type JSX, useMemo, useRef } from 'react';
 import { useDimensions } from '@coinbase/cds-web/hooks/useDimensions';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
 import { Tooltip } from '@coinbase/cds-web/overlays/tooltip/Tooltip';
@@ -20,13 +20,7 @@ function useNavbarItems() {
 
 export default function NavbarContent(): JSX.Element {
   const windowSize = useWindowSizeWithBreakpointOverride();
-  const {
-    cdsCommonVersion,
-    cdsIconsVersion,
-    cdsIllustrationsVersion,
-    cdsMobileVisualizationVersion,
-    cdsWebVisualizationVersion,
-  } = useCDSVersions();
+  const { cdsCommonVersion, cdsIconsVersion, cdsIllustrationsVersion } = useCDSVersions();
 
   const items = useNavbarItems();
   const linkItems = useMemo(
@@ -61,8 +55,6 @@ export default function NavbarContent(): JSX.Element {
       <Text>@coinbase/cds-web@{cdsCommonVersion}</Text>
       <Text>@coinbase/cds-icons@{cdsIconsVersion}</Text>
       <Text>@coinbase/cds-illustrations@{cdsIllustrationsVersion}</Text>
-      <Text>@coinbase/cds-mobile-visualization@{cdsMobileVisualizationVersion}</Text>
-      <Text>@coinbase/cds-web-visualization@{cdsWebVisualizationVersion}</Text>
     </Text>
   );
 

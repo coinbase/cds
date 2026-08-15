@@ -12,30 +12,43 @@ import {
 } from '@coinbase/cds-common/tabs/useTabs';
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
 import { defaultRect, type Rect } from '@coinbase/cds-common/types/Rect';
+import { css } from '@linaria/core';
 import { m as motion, type MotionProps, type Transition } from 'framer-motion';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
+import type { ResponsiveProp } from '../styles/styleProps';
 
 import { DefaultTab } from './DefaultTab';
 import { DefaultTabsActiveIndicator } from './DefaultTabsActiveIndicator';
 
 const MotionBox = motion<BoxProps<BoxDefaultElement>>(Box);
 
+// The container is a column flex box so the rendered tab stretches to its width,
+// mirroring React Native's default `View` behavior for cross-platform parity.
+const tabContainerCss = css`
+  display: flex;
+  flex-direction: column;
+`;
+
 type TabContainerProps = {
   id: string;
   registerRef: (tabId: string, ref: HTMLElement) => void;
+  className?: string;
+  style?: React.CSSProperties;
   children?: React.ReactNode;
 };
 
-const TabContainer = ({ id, registerRef, ...props }: TabContainerProps) => {
+const TabContainer = ({ id, registerRef, className, ...props }: TabContainerProps) => {
   const refCallback = useCallback(
-    (ref: HTMLElement | null) => ref && registerRef(id, ref),
+    (ref: HTMLElement | null) => {
+      if (ref) registerRef(id, ref);
+    },
     [id, registerRef],
   );
-  return <div ref={refCallback} {...props} />;
+  return <div ref={refCallback} className={cx(tabContainerCss, className)} {...props} />;
 };
 
 export const tabsTransitionConfig = {
@@ -65,6 +78,10 @@ export type TabComponentProps<
   className?: string;
   style?: React.CSSProperties;
   'data-rendered-tab'?: boolean;
+  /** Inactive label color (from `Tabs` when set). */
+  color?: ResponsiveProp<ThemeVars.Color>;
+  /** Active label color (from `Tabs` when set). */
+  activeColor?: ResponsiveProp<ThemeVars.Color>;
 };
 
 export type TabComponent<
@@ -77,8 +94,9 @@ export type TabsActiveIndicatorComponent = React.FC<TabsActiveIndicatorProps>;
 export type TabsBaseProps<
   TabId extends string = string,
   TTab extends TabValue<TabId> = TabValue<TabId>,
-> = Omit<BoxBaseProps, 'onChange'> &
-  Omit<TabsOptions<TabId, TTab>, 'tabs'> & {
+> = Omit<BoxBaseProps, 'color' | 'onChange'> &
+  Omit<TabsOptions<TabId, TTab>, 'tabs'> &
+  Pick<TabComponentProps<TabId, TTab>, 'color' | 'activeColor'> & {
     /** The array of tabs data. Each tab may optionally define a custom Component to render. */
     tabs: (TTab & { Component?: TabComponent<TabId, TTab> })[];
     /** The default Component to render each tab. */
@@ -95,11 +113,13 @@ export type TabsProps<
   TabId extends string = string,
   TTab extends TabValue<TabId> = TabValue<TabId>,
 > = TabsBaseProps<TabId, TTab> &
-  Omit<HStackProps<HStackDefaultElement>, 'onChange' | 'ref'> & {
+  Omit<HStackProps<HStackDefaultElement>, 'color' | 'onChange' | 'ref'> & {
     /** Custom styles for individual elements of the Tabs component */
     styles?: {
       /** Root element */
       root?: React.CSSProperties;
+      /** Container element wrapping each tab */
+      tabContainer?: React.CSSProperties;
       /** Tab element */
       tab?: React.CSSProperties;
       /** Active indicator element */
@@ -109,6 +129,8 @@ export type TabsProps<
     classNames?: {
       /** Root element */
       root?: string;
+      /** Container element wrapping each tab */
+      tabContainer?: string;
       /** Tab element */
       tab?: string;
       /** Active indicator element */
@@ -132,7 +154,9 @@ const TabsComponent = memo(
         TabComponent = DefaultTab,
         TabsActiveIndicatorComponent = DefaultTabsActiveIndicator,
         activeBackground,
+        activeColor,
         activeTab,
+        color,
         onActiveTabElementChange,
         disabled,
         onChange,
@@ -247,6 +271,7 @@ const TabsComponent = memo(
           borderTopLeftRadius={borderTopLeftRadius}
           borderTopRightRadius={borderTopRightRadius}
           className={cx(className, classNames?.root)}
+          color={color}
           onKeyDown={handleTabsContainerKeyDown}
           opacity={disabled ? accessibleOpacityDisabled : 1}
           position={position}
@@ -272,6 +297,8 @@ const TabsComponent = memo(
             {tabs.map((props) => {
               const RenderedTab = props.Component ?? TabComponent;
               const renderedTabProps = {
+                activeColor,
+                color,
                 ...props,
                 'data-rendered-tab': true,
                 className: classNames?.tab,
@@ -280,7 +307,13 @@ const TabsComponent = memo(
                 tabIndex: activeTab?.id === props.id || !activeTab ? 0 : -1,
               };
               return (
-                <TabContainer key={props.id} id={props.id} registerRef={registerRef}>
+                <TabContainer
+                  key={props.id}
+                  className={classNames?.tabContainer}
+                  id={props.id}
+                  registerRef={registerRef}
+                  style={styles?.tabContainer}
+                >
                   <RenderedTab {...renderedTabProps} />
                 </TabContainer>
               );

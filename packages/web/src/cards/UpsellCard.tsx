@@ -1,20 +1,21 @@
 import React, { isValidElement, memo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { upsellCardDefaultWidth, upsellCardMinHeight } from '@coinbase/cds-common/tokens/card';
-import type {
-  DimensionStyles,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { DimensionStyles } from '@coinbase/cds-common/types/DimensionStyles';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { Button, IconButton } from '../buttons';
-import { HStack, VStack } from '../layout';
-import { Pressable, type PressableDefaultElement, type PressableProps } from '../system';
+import { Button } from '../buttons/Button';
+import { IconButton } from '../buttons/IconButton';
+import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
+import { Pressable, type PressableDefaultElement, type PressableProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
 export type UpsellCardBaseProps = SharedProps &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  Pick<DimensionStyles, 'width'> & {
+  Pick<DimensionStyles, 'width'> &
+  Pick<HStackProps<HStackDefaultElement>, 'className' | 'style'> & {
     /** Callback fired when the action button is pressed */
     onActionPress?: PressableProps<PressableDefaultElement>['onClick'];
     /** Callback fired when the dismiss button is pressed */
@@ -37,7 +38,8 @@ export type UpsellCardBaseProps = SharedProps &
      */
     background?: ThemeVars.Color;
     /**
-     * @danger This is a migration escape hatch. It is not intended to be used normally.
+     * @deprecated Use `style`, `className`, or `background` to customize card background. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
      */
     dangerouslySetBackground?: string;
   };
@@ -66,7 +68,7 @@ export type UpsellCardProps = UpsellCardBaseProps;
  *   title="Title"
  *   description="Description"
  *   media={<RemoteImage ... />}
- *   actions={<Button compact variant="secondary">Get Started</Button>}
+ *   actions={<Button size="s" variant="secondary">Get Started</Button>}
  *   onDismiss={handleDismiss}
  *   mediaPlacement="end"
  * />
@@ -86,6 +88,8 @@ export const UpsellCard = memo(
     accessibilityLabel,
     width = upsellCardDefaultWidth,
     onClick,
+    className,
+    style,
   }: UpsellCardProps) => {
     const content = (
       <HStack
@@ -93,9 +97,10 @@ export const UpsellCard = memo(
         background={background}
         borderColor="transparent"
         borderRadius={500}
+        className={className}
         dangerouslySetBackground={dangerouslySetBackground}
         minHeight={upsellCardMinHeight}
-        style={{ border: 'none' }}
+        style={{ border: 'none', ...style }}
         testID={testID}
         width={width}
       >
@@ -138,10 +143,10 @@ export const UpsellCard = memo(
                   action
                 ) : (
                   <Button
-                    compact
                     flush="start"
                     numberOfLines={1}
                     onClick={onActionPress}
+                    size="s"
                     variant="secondary"
                   >
                     {action as string}

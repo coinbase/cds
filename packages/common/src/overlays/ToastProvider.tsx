@@ -1,12 +1,9 @@
 import React, { cloneElement, createContext, isValidElement, useMemo } from 'react';
 
 import type { ThemeVars } from '../core/theme';
-import type {
-  DimensionValue,
-  OverlayLifecycleProps,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '../types';
+import type { OverlayLifecycleProps } from '../types/OverlayLifecycleProps';
+import type { SharedAccessibilityProps } from '../types/SharedAccessibilityProps';
+import type { SharedProps } from '../types/SharedProps';
 
 import { useToastQueue } from './useToastQueue';
 
@@ -48,7 +45,7 @@ export type ToastBaseProps = SharedProps &
     /**
      * The vertical offset from the bottom of the screen
      */
-    bottomOffset?: DimensionValue;
+    bottomOffset?: string | number;
     /**
      * Controls color surge of the Toast background
      * @default primary

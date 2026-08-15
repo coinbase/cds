@@ -51,9 +51,13 @@ local.properties
 .nx
 .next
 cjs/
+!packages/illustrations/src/__generated__/**/svgJs/cjs/
+!packages/illustrations/src/__generated__/**/svgJs/cjs/**
 dts/
 lib/
 esm/
+!packages/illustrations/src/__generated__/**/svgJs/esm/
+!packages/illustrations/src/__generated__/**/svgJs/esm/**
 mjs/
 *.tsbuildinfo
 /.cache-loader
@@ -148,13 +152,18 @@ web-build/
 ios
 android
 
-# failed detox test screenshots
-apps/mobile-app/artifacts
-apps/mobile-app/prebuilds/android-*
-!apps/mobile-app/prebuilds/android-release-*.zip
-!apps/mobile-app/credentials/android-release-*.keystore
-# temporary build directory for native compilation
-apps/mobile-app/build/
+# expo-app generated artifacts
+apps/expo-app/artifacts
+apps/expo-app/build/
+# Ignore all prebuilds except the two committed device artifacts used by
+# BrowserStack visreg CI. Use glob form (not trailing slash) so negation works.
+apps/expo-app/prebuilds/*
+!apps/expo-app/prebuilds/ios-release-device
+apps/expo-app/prebuilds/ios-release-device/*
+!apps/expo-app/prebuilds/ios-release-device/expoapp.ipa
+!apps/expo-app/prebuilds/android-release
+apps/expo-app/prebuilds/android-release/*
+!apps/expo-app/prebuilds/android-release/expoapp.apk
 
 #reassure
 **/.reassure/*
@@ -177,6 +186,8 @@ barrel-files.md
 base-props.json
 component-peer-dependencies.md
 component-peer-dependencies.json
+**/__pycache__/
+skills/*-workspace/
 
 # temp directory created when running podium scripts. this gets deleted after the script is done, but for the sake of your sanity, let's not track it
 **/.podium/
@@ -188,5 +199,7 @@ tarballs/
 # LLM and MCP docs
 mcp-docs/
 
-# Claude Code artifacts
+# Claude Code
 .claude/research/
+.worktrees/
+.claude/worktrees/

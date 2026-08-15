@@ -136,6 +136,7 @@ export type SpotRectangleName =
   | 'instoStaking'
   | 'insuranceProtection'
   | 'invest'
+  | 'keyAdv'
   | 'layeredNetworks'
   | 'leadingProtocol'
   | 'leadingProtocolMorpho'

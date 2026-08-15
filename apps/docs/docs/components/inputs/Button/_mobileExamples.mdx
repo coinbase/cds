@@ -14,7 +14,8 @@ Use variants to communicate the importance and intent of an action.
 
 - **Primary** — High emphasis for main actions like "Save" or "Confirm". Limit to one per screen.
 - **Secondary** — Medium emphasis for multiple actions of equal weight.
-- **Tertiary** — High contrast with inverted background.
+- **Tertiary** — Low emphasis with a muted background.
+- **Inverse** — High contrast with inverted background.
 - **Negative** — Destructive actions that can't be undone. Use sparingly.
 
 ```jsx
@@ -27,6 +28,9 @@ Use variants to communicate the importance and intent of an action.
   </Button>
   <Button onPress={console.log} variant="tertiary">
     Tertiary
+  </Button>
+  <Button onPress={console.log} variant="inverse">
+    Inverse
   </Button>
   <Button onPress={console.log} variant="negative">
     Negative
@@ -45,6 +49,12 @@ Use transparent buttons for supplementary actions with lower prominence. The con
   </Button>
   <Button onPress={console.log} variant="secondary" transparent>
     Secondary
+  </Button>
+  <Button onPress={console.log} variant="tertiary" transparent>
+    Tertiary
+  </Button>
+  <Button onPress={console.log} variant="inverse" transparent>
+    Inverse
   </Button>
   <Button onPress={console.log} variant="negative" transparent>
     Negative
@@ -77,8 +87,8 @@ Loading works with all variants and transparent. The label is hidden and the pro
   <Button loading transparent variant="secondary">
     Transparent
   </Button>
-  <Button loading compact>
-    Compact
+  <Button loading size="s">
+    Small
   </Button>
 </HStack>
 ```
@@ -114,22 +124,17 @@ Use the `disabled` prop to prevent interaction and indicate the action is unavai
 </HStack>
 ```
 
-## Sizing
+## Sizes
 
-### Compact
-
-Use `compact` for smaller buttons with reduced padding. Useful in dense UIs or alongside other compact elements.
+`size` accepts `xs`, `s`, `m`, and `l`. Defaults to `l`.
 
 ```jsx
-<HStack gap={2} alignItems="center">
-  <Button onPress={console.log} compact>
-    Compact
-  </Button>
-  <Button onPress={console.log}>Default</Button>
-</HStack>
+<Button onPress={console.log} size="s">
+  Continue
+</Button>
 ```
 
-### Block
+## Block
 
 Use `block` to make the button expand to fill its container width.
 
@@ -171,10 +176,10 @@ Add an icon after the label to provide additional context or indicate direction.
 
 ```jsx
 <HStack gap={2}>
-  <Button onPress={console.log} endIcon="forwardArrow" variant="secondary" compact>
+  <Button onPress={console.log} endIcon="forwardArrow" size="s" variant="secondary">
     See more
   </Button>
-  <Button onPress={console.log} endIcon="externalLink" variant="secondary" compact>
+  <Button onPress={console.log} endIcon="externalLink" size="s" variant="secondary">
     Open link
   </Button>
 </HStack>
@@ -186,10 +191,10 @@ Add an icon before the label to reinforce the action.
 
 ```jsx
 <HStack gap={2}>
-  <Button onPress={console.log} startIcon="add" startIconActive variant="secondary" compact>
+  <Button onPress={console.log} size="s" startIcon="add" startIconActive variant="secondary">
     Add item
   </Button>
-  <Button onPress={console.log} startIcon="download" variant="secondary" compact>
+  <Button onPress={console.log} size="s" startIcon="download" variant="secondary">
     Download
   </Button>
 </HStack>

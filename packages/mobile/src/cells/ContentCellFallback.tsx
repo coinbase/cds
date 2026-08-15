@@ -1,11 +1,12 @@
 import React, { memo, useMemo } from 'react';
 import { StyleSheet, Text } from 'react-native';
-import type { FallbackRectWidthProps } from '@coinbase/cds-common/types';
+import type { FallbackRectWidthProps } from '@coinbase/cds-common/types/FallbackBaseProps';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 
 import { useTheme } from '../hooks/useTheme';
-import { Box, Fallback } from '../layout';
+import { Box } from '../layout/Box';
+import { Fallback } from '../layout/Fallback';
 
 import type { CellSpacing } from './Cell';
 import type { CellAccessoryType } from './CellAccessory';
@@ -39,6 +40,10 @@ export type ContentCellFallbackProps = FallbackRectWidthProps &
     title?: boolean;
   };
 
+/**
+ * @deprecated Please use the new ListCellFallback component instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const ContentCellFallback = memo(function ContentCellFallback({
   accessory,
   accessoryNode,

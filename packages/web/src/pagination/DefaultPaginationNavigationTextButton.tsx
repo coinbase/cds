@@ -3,10 +3,7 @@ import React, { forwardRef } from 'react';
 import type { ButtonProps } from '../buttons/Button';
 import { Button } from '../buttons/Button';
 
-export const DefaultPaginationNavigationTextButton = forwardRef<
-  HTMLButtonElement,
-  ButtonProps<typeof Button>
->(
+export const DefaultPaginationNavigationTextButton = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
       onClick,
@@ -15,7 +12,7 @@ export const DefaultPaginationNavigationTextButton = forwardRef<
       testID,
       children,
       variant = 'secondary',
-      compact = true,
+      size = 's',
       ...restProps
     },
     ref,
@@ -24,10 +21,10 @@ export const DefaultPaginationNavigationTextButton = forwardRef<
       <Button
         ref={ref}
         aria-label={accessibilityLabel}
-        compact={compact}
         data-testid={testID}
         disabled={disabled}
         onClick={onClick}
+        size={size}
         variant={variant}
         {...restProps}
       >

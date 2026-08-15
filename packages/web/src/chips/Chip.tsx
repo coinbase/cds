@@ -1,18 +1,35 @@
-import { forwardRef, Fragment, memo, type ReactNode, useMemo } from 'react';
+import { forwardRef, Fragment, memo, useMemo } from 'react';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import type { HStackProps } from '../layout';
-import { Box, HStack } from '../layout';
-import type { PressableProps } from '../system';
-import { InvertedThemeProvider, Pressable } from '../system';
+import { Box } from '../layout/Box';
+import type { HStackProps } from '../layout/HStack';
+import { HStack } from '../layout/HStack';
+import type { PressableProps } from '../system/Pressable';
+import { Pressable } from '../system/Pressable';
+import { InvertedThemeProvider } from '../system/ThemeProvider';
 import { Text } from '../typography/Text';
 
-import type { ChipProps } from './ChipProps';
-export type { ChipProps };
+import type { ChipProps, ChipSize } from './ChipProps';
+export type { ChipProps, ChipSize };
+
+const chipSizes = {
+  xs: { paddingX: 1.5, paddingY: 0.75, font: 'label1', borderRadius: 700 },
+  s: { paddingX: 2, paddingY: 1, font: 'headline', borderRadius: 700 },
+} as const satisfies Record<
+  ChipSize,
+  {
+    paddingX: NonNullable<HStackProps<'div'>['paddingX']>;
+    paddingY: NonNullable<HStackProps<'div'>['paddingY']>;
+    font: NonNullable<ChipProps['font']>;
+    borderRadius: NonNullable<ChipProps['borderRadius']>;
+  }
+>;
+
+const defaultChipSize: ChipSize = 's';
 
 const transitionCss = css`
   transition: background ${durations.fast3}ms cubic-bezier(${curves.global.join(',')});
@@ -29,17 +46,21 @@ export const Chip = memo(
     ref: React.ForwardedRef<HTMLButtonElement | HTMLDivElement>,
   ) {
     const mergedProps = useComponentConfig('Chip', _props);
+    // Geometry is driven by `size`; deprecated `compact` falls back to its legacy `xs` size.
+    const sizeConfig =
+      chipSizes[mergedProps.size ?? (mergedProps.compact ? 'xs' : defaultChipSize)];
     const {
       as,
       alignItems = 'center',
       width = 'fit-content',
       height = 'fit-content',
       compact,
+      size: _size,
       gap = 1,
       start,
       end,
-      paddingX = compact ? 1.5 : 2,
-      paddingY = compact ? 0.5 : 1,
+      paddingX = sizeConfig.paddingX,
+      paddingY = sizeConfig.paddingY,
       padding,
       paddingTop,
       paddingBottom,
@@ -48,26 +69,37 @@ export const Chip = memo(
       justifyContent,
       children,
       maxWidth = chipMaxWidth,
+      active = false,
+      activeBackground,
+      activeColor,
       invertColorScheme,
       inverted,
       numberOfLines = 1,
       testID,
       contentStyle,
-      borderRadius = 700,
+      borderRadius = sizeConfig.borderRadius,
       background = 'bgSecondary',
       style,
       className,
       styles,
       classNames,
-      font = compact ? 'label1' : 'headline',
+      font = sizeConfig.font,
       color = 'fg',
       onClick,
       ...props
     } = mergedProps;
-    const WrapperComponent = (invertColorScheme ?? inverted) ? InvertedThemeProvider : Fragment;
+
+    const hasActiveColorOverrides = activeBackground !== undefined || activeColor !== undefined;
+    const activeUsesThemeInversion = active && !hasActiveColorOverrides;
+    const shouldInvert = Boolean(invertColorScheme ?? inverted) || activeUsesThemeInversion;
+    const WrapperComponent = shouldInvert ? InvertedThemeProvider : Fragment;
+
+    const resolvedBackground =
+      active && activeBackground !== undefined ? activeBackground : background;
+    const resolvedColor = active && activeColor !== undefined ? activeColor : color;
 
     const containerProps = {
-      background,
+      background: resolvedBackground,
       borderRadius,
       className: cx(transitionCss, className, classNames?.root),
       style: { ...style, ...styles?.root },
@@ -96,11 +128,11 @@ export const Chip = memo(
         >
           {start}
           {typeof children === 'string' ? (
-            <Text color={color} flexShrink={1} font={font} numberOfLines={numberOfLines}>
+            <Text color={resolvedColor} flexShrink={1} font={font} numberOfLines={numberOfLines}>
               {children}
             </Text>
           ) : children ? (
-            <Box color={color} flexShrink={1}>
+            <Box color={resolvedColor} flexShrink={1}>
               {children}
             </Box>
           ) : null}
@@ -124,14 +156,14 @@ export const Chip = memo(
       styles?.content,
       start,
       children,
-      color,
+      resolvedColor,
       font,
       numberOfLines,
       end,
     ]);
 
     return (
-      <WrapperComponent {...(inverted ? { display: 'content' } : {})}>
+      <WrapperComponent {...(shouldInvert && inverted ? { display: 'content' } : {})}>
         {onClick ? (
           <Pressable
             ref={ref as React.ForwardedRef<HTMLButtonElement>}

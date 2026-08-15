@@ -1,10 +1,11 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { type BoxBaseProps, Group, type GroupBaseProps, type GroupProps } from '../layout';
+import { type BoxBaseProps } from '../layout/Box';
+import { Group, type GroupBaseProps, type GroupProps } from '../layout/Group';
 
 export type ControlGroupOption<ControlComponentProps> = Omit<
   ControlComponentProps,
@@ -34,10 +35,15 @@ export type ControlGroupProps<
 > = ControlGroupBaseProps<ControlValue, ControlComponentProps> &
   Omit<GroupProps, 'children' | 'onChange'>;
 
-const ControlGroupWithRef = forwardRef(function ControlGroup<
+const ControlGroupWithRef = function ControlGroup<
   ControlValue extends string,
   ControlComponentProps extends { value?: ControlValue },
->(_props: ControlGroupProps<ControlValue, ControlComponentProps>, ref: React.ForwardedRef<View>) {
+>({
+  ref,
+  ..._props
+}: ControlGroupProps<ControlValue, ControlComponentProps> & {
+  ref?: React.Ref<View>;
+}) {
   const mergedProps = useComponentConfig('ControlGroup', _props);
   const {
     ControlComponent,
@@ -86,12 +92,7 @@ const ControlGroupWithRef = forwardRef(function ControlGroup<
       })}
     </Group>
   );
-}) as unknown as <
-  ControlValue extends string,
-  ControlComponentProps extends { value?: ControlValue },
->(
-  props: ControlGroupProps<ControlValue, ControlComponentProps> & { ref?: React.Ref<View> },
-) => React.ReactElement;
+};
 
 export const ControlGroup = memo(ControlGroupWithRef) as typeof ControlGroupWithRef &
   React.MemoExoticComponent<typeof ControlGroupWithRef>;

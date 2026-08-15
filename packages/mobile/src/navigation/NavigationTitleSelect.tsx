@@ -1,13 +1,14 @@
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
+import { selectCellMobileSpacingConfig } from '@coinbase/cds-common/tokens/select';
 
-import { SelectProvider } from '../controls/SelectContext';
-import { SelectOption } from '../controls/SelectOption';
-import { useSelect } from '../controls/useSelect';
+import { Cell } from '../cells/Cell';
+import { CellAccessory } from '../cells/CellAccessory';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Icon } from '../icons';
+import { Icon } from '../icons/Icon';
 import { HStack } from '../layout/HStack';
-import { type DrawerRefBaseProps, Tray } from '../overlays';
-import { Pressable } from '../system';
+import { type DrawerRefBaseProps } from '../overlays/drawer/Drawer';
+import { Tray } from '../overlays/tray/Tray';
+import { Pressable } from '../system/Pressable';
 import { Text, type TextBaseProps, type TextProps } from '../typography/Text';
 
 export type NavigationTitleSelectBaseProps = Omit<TextBaseProps, 'onChange'> & {
@@ -40,15 +41,17 @@ export const NavigationTitleSelect = memo((_props: NavigationTitleSelectProps) =
     setVisible(true);
   }, []);
 
-  const handleOptionPress = useCallback(() => {
-    trayRef.current?.handleClose();
-  }, []);
+  const handleOptionPress = useCallback(
+    (id: string) => {
+      trayRef.current?.handleClose();
+      onChange(id);
+    },
+    [onChange],
+  );
 
   const label = useMemo(() => {
     return options.find((option) => option.id === value)?.label;
   }, [options, value]);
-
-  const selectContextValue = useSelect({ onChange, value });
 
   return (
     <>
@@ -66,11 +69,26 @@ export const NavigationTitleSelect = memo((_props: NavigationTitleSelectProps) =
       </Pressable>
       {visible && (
         <Tray ref={trayRef} onCloseComplete={handleCloseMenu}>
-          <SelectProvider value={selectContextValue}>
-            {options.map(({ id, label }) => (
-              <SelectOption key={id} onPress={handleOptionPress} title={label} value={id} />
-            ))}
-          </SelectProvider>
+          {options.map(({ id, label }) => {
+            const selected = id === value;
+            return (
+              <Cell
+                key={id}
+                accessibilityState={selected ? { selected: true } : undefined}
+                accessory={selected ? <CellAccessory type="selected" /> : undefined}
+                borderRadius={0}
+                onPress={() => handleOptionPress(id)}
+                selected={id === value}
+                {...selectCellMobileSpacingConfig}
+              >
+                {!!label && (
+                  <Text ellipsize="tail" font="headline" numberOfLines={1}>
+                    {label}
+                  </Text>
+                )}
+              </Cell>
+            );
+          })}
         </Tray>
       )}
     </>

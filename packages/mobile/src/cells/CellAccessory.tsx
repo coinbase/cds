@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { I18nManager } from 'react-native';
-import type { PaddingProps } from '@coinbase/cds-common/types';
+import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
@@ -40,7 +40,7 @@ export const CellAccessory = memo(function CellAccessory({ type, ...props }: Cel
   }
 
   return (
-    <Box {...props} testID="accessory">
+    <Box testID="accessory" {...props}>
       {icon}
     </Box>
   );

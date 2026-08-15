@@ -8,7 +8,285 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
-## Unreleased
+## 9.16.0 (8/13/2026 PST)
+
+#### 🚀 Updates
+
+- Add utility for SelectChip to share across packages. [[#843](https://github.com/coinbase/cds/pull/843)]
+
+## 9.15.0 ((8/11/2026, 12:23 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.14.0 ((8/11/2026, 11:48 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.13.0 ((8/11/2026, 09:52 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.3 ((8/10/2026, 09:17 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.2 ((8/10/2026, 07:45 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.1 ((8/8/2026, 07:26 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.0 ((8/7/2026, 09:30 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.11.0 ((8/7/2026, 07:46 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.10.4 ((8/6/2026, 12:30 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.10.3 ((8/5/2026, 07:07 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.10.2 ((7/31/2026, 08:22 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.10.1 ((7/30/2026, 10:07 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.10.0 (7/30/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add new prop, size to input & control components, deprecating compact. [[#809](https://github.com/coinbase/cds/pull/809)]
+
+## 9.9.0 ((7/27/2026, 12:00 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.8.0 ((7/23/2026, 11:18 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.7.2 ((7/23/2026, 10:17 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.7.1 ((7/22/2026, 01:58 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.7.0 ((7/22/2026, 12:14 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.11 ((7/22/2026, 10:11 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.10 ((7/22/2026, 08:37 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.9 ((7/22/2026, 07:52 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.8 ((7/22/2026, 06:23 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.7 ((7/20/2026, 09:01 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.6 (7/14/2026 PST)
+
+This is an artificial version bump with no new change.
+
+## 9.6.5 (7/13/2026 PST)
+
+This is an artificial version bump with no new change.
+
+## 9.6.4 ((7/13/2026, 07:14 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.3 ((7/9/2026, 10:48 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.2 ((7/8/2026, 07:16 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.1 ((7/7/2026, 12:21 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.0 ((7/6/2026, 07:37 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.5.0 ((6/25/2026, 07:24 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.4.3 ((6/23/2026, 10:18 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.4.2 ((6/23/2026, 07:32 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.4.1 ((6/15/2026, 01:02 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.4.0 (6/15/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add gray4 illustration color token. [[#746](https://github.com/coinbase/cds/pull/746)]
+
+## 9.3.1 (6/12/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: replace barrel file imports with targeted imports to specific modules. [[#757](https://github.com/coinbase/cds/pull/757)]
+
+## 9.3.0 ((6/11/2026, 12:51 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.2.2 ((6/10/2026, 01:01 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.2.1 ((6/9/2026, 07:53 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.2.0 ((5/28/2026, 10:22 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.1.3 ((5/28/2026, 09:35 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.1.2 ((5/28/2026, 06:59 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.1.1 ((5/27/2026, 10:46 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.1.0 ((5/26/2026, 01:55 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.0.2 ((5/22/2026, 09:54 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.0.1 ((5/22/2026, 09:25 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.0.0 (5/20/2026 PST)
+
+CDS 9 is here!!
+
+For more details and to help upgrading from CDS 8 using our automated migration tool, see our official [upgrade guide](https://cds.coinbase.com/guides/v9-upgrade-guide)!
+
+#### 💥 Breaking
+
+- Dropped various deprecated variables and utilities.
+- Read our upgrade guilde for more details!
+-
+
+## 8.75.2 ((5/19/2026, 01:13 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.75.1 ((5/19/2026, 07:30 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.75.0 ((5/15/2026, 01:46 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.3 ((5/14/2026, 05:35 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.2 ((5/14/2026, 10:50 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.1 ((5/14/2026, 07:28 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.0 ((5/13/2026, 01:19 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.73.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support more props on TextInputBaseProps. [[#679](https://github.com/coinbase/cds/pull/679)]
+
+## 8.72.0 ((5/12/2026, 02:00 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.71.0 ((5/12/2026, 11:37 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.70.0 ((5/8/2026, 02:16 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.69.1 ((5/6/2026, 10:08 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.69.0 ((5/5/2026, 02:27 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.68.0 ((5/1/2026, 02:11 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.67.0 ((5/1/2026, 09:17 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.66.2 (4/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: React 19 compatibility issue with useMergeRefs. [[#650](https://github.com/coinbase/cds/pull/650)]
+
+## 8.66.1 ((4/27/2026, 12:59 PM PST))
+
+This is an artificial version bump with no new change.
 
 #### 📘 Misc
 

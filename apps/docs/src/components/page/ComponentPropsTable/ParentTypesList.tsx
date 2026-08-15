@@ -22,7 +22,7 @@ function ParentTypesTable({
   sharedParentTypes,
   props,
   scrollContainerRef,
-}: ParentTypesItem & { scrollContainerRef: React.RefObject<HTMLDivElement> }) {
+}: ParentTypesItem & { scrollContainerRef: React.RefObject<HTMLDivElement | null> }) {
   const [searchValue, setSearchValue] = useState('');
   const filteredProps = useMemo(
     () =>

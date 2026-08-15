@@ -1,4 +1,4 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { View } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import {
@@ -7,23 +7,24 @@ import {
   tagFontMap,
   tagHorizontalSpacing,
 } from '@coinbase/cds-common/tokens/tags';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type {
-  IconName,
-  SharedAccessibilityProps,
-  SharedProps,
   TagColorScheme,
   TagEmphasis,
   TagIntent,
-} from '@coinbase/cds-common/types';
+} from '@coinbase/cds-common/types/TagBaseProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
-import { Box, type BoxProps } from '../layout';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
 import { Text } from '../typography/Text';
 
 export type TagBaseProps = SharedProps &
-  SharedAccessibilityProps & {
+  SharedAccessibilityProps &
+  Omit<BoxBaseProps, 'children' | 'color' | 'background'> & {
     /** Children to render within the Tag. */
     children: React.ReactNode;
     /**
@@ -65,7 +66,12 @@ export type TagProps = TagBaseProps &
   Omit<BoxProps, 'color' | 'background' | 'children' | 'maxWidth'>;
 
 export const Tag = memo(
-  forwardRef((_props: TagProps, forwardedRef: React.ForwardedRef<View>) => {
+  ({
+    ref: forwardedRef,
+    ..._props
+  }: TagProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('Tag', _props);
     const {
       children,
@@ -84,7 +90,13 @@ export const Tag = memo(
       flexDirection = 'row',
       gap = 0.5,
       justifyContent = 'center',
+      paddingX,
       paddingY = 0.25,
+      font,
+      fontFamily,
+      fontSize,
+      fontWeight,
+      lineHeight,
       testID = 'cds-tag',
       ...props
     } = mergedProps;
@@ -99,12 +111,12 @@ export const Tag = memo(
         alignItems={alignItems}
         background="bg"
         borderRadius={tagBorderRadiusMap[intent]}
-        dangerouslySetBackground={backgroundColor}
         flexDirection={flexDirection}
         gap={gap}
         justifyContent={justifyContent}
-        paddingX={tagHorizontalSpacing[intent]}
+        paddingX={paddingX ?? tagHorizontalSpacing[intent]}
         paddingY={paddingY}
+        style={{ backgroundColor }}
         testID={testID}
         {...props}
       >
@@ -115,9 +127,13 @@ export const Tag = memo(
         ) : null}
 
         <Text
-          dangerouslySetColor={color}
-          font={tagFontMap[intent]}
+          font={font ?? tagFontMap[intent]}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
+          lineHeight={lineHeight}
           numberOfLines={1}
+          style={{ color }}
           testID={`${testID}--text`}
         >
           {children}
@@ -130,5 +146,5 @@ export const Tag = memo(
         ) : null}
       </Box>
     );
-  }),
+  },
 );

@@ -14,6 +14,8 @@ description: |
 
 Your objective is to provide information to user about the extent to which deprecated members of CDS are used in customer repositories. This information should be as accurate as possible as it will be used to inform decisions on whether or not it is safe to drop certain exports in a release or hold them for the next major version.
 
+**Removal readiness policy:** a deprecated API must remain for **one full major version undisturbed** before removal. If it was deprecated during major `M`, it must survive all of `M+1`; the earliest removal major is `M+2` (see `@deprecationExpectedRemoval` and `.claude/skills/deprecate-cds-api/SKILL.md`).
+
 Follow the
 
 ## 1 - Determining Research Scope

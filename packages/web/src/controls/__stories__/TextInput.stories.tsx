@@ -2,6 +2,7 @@ import React, { useCallback, useMemo, useRef, useState } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
 import { css } from '@linaria/core';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Icon } from '../../icons/Icon';
 import { Box } from '../../layout/Box';
@@ -17,10 +18,13 @@ import { InputLabel } from '../InputLabel';
 import { NativeTextArea } from '../NativeTextArea';
 import { TextInput } from '../TextInput';
 
-export default {
+const meta: Meta = {
   title: 'Components/Inputs/TextInput',
   component: TextInput,
 };
+
+export default meta;
+type Story = StoryObj;
 
 const nativeInputCustomCss = css`
   &:focus {
@@ -219,7 +223,7 @@ export const Borderless = function Borderless() {
   );
 };
 
-export const Disabled = function Disabled() {
+const DisabledRender = () => {
   return (
     <>
       <TextInput disabled label="Disabled label" />
@@ -232,17 +236,8 @@ export const Disabled = function Disabled() {
   );
 };
 
-Disabled.bind({});
-Disabled.parameters = {
-  a11y: {
-    config: {
-      /**
-       * Color contrast ratio doesn't need to meet 4.5:1, as the element is disabled
-       * @link https://dequeuniversity.com/rules/axe/4.3/color-contrast
-       */
-      rules: [{ id: 'color-contrast', enabled: false }],
-    },
-  },
+export const Disabled: Story = {
+  render: () => <DisabledRender />,
 };
 
 export const NoLabel = function NoLabel() {
@@ -360,43 +355,156 @@ export const CustomLabel = function CustomLabel() {
   );
 };
 
-export const StartContent = function StartContent() {
-  return (
-    <TextInput label="Label" start={<InputIconButton accessibilityLabel="Add" name="add" />} />
-  );
-};
+/**
+ * START, END, AND SUFFIX CONTENT
+ *
+ * Each feature is rendered at both `size="l"` (the default) and `size="s"` to show how the
+ * surrounding content adapts.
+ */
 
-export const EndContent = function EndContent() {
+export const StartEndAndSuffixContent = function StartEndAndSuffixContent() {
   return (
-    <TextInput
-      end={
-        <HStack paddingEnd={1}>
-          <Link font="headline" href="">
-            Hello
-          </Link>
-        </HStack>
-      }
-      label="Label"
-    />
-  );
-};
-
-export const Suffix = function Suffix() {
-  return <TextInput label="Label" suffix="USD" />;
-};
-
-export const SuffixAndEndContent = function SuffixAndEndContent() {
-  return (
-    <TextInput
-      end={<InputIconButton active transparent accessibilityLabel="Add" name="add" />}
-      label="Label"
-      suffix="USD"
-    />
+    <VStack gap={4}>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Start content
+        </Text>
+        <TextInput
+          label="Large (l) - default"
+          start={<InputIconButton accessibilityLabel="Add" name="add" />}
+        />
+        <TextInput
+          label="Small (s)"
+          size="s"
+          start={<InputIconButton accessibilityLabel="Add" name="add" />}
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Start avatar
+        </Text>
+        <TextInput
+          label="Large (l) - default"
+          start={
+            <Box>
+              <Avatar
+                alt="address"
+                size="l"
+                src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+              />
+            </Box>
+          }
+        />
+        <TextInput
+          label="Small (s)"
+          size="s"
+          start={
+            <Box>
+              <Avatar
+                alt="address"
+                size="l"
+                src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+              />
+            </Box>
+          }
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          End content
+        </Text>
+        <TextInput
+          end={
+            <HStack paddingEnd={1}>
+              <Link font="headline" href="">
+                Hello
+              </Link>
+            </HStack>
+          }
+          label="Large (l) - default"
+        />
+        <TextInput
+          end={
+            <HStack paddingEnd={1}>
+              <Link font="headline" href="">
+                Hello
+              </Link>
+            </HStack>
+          }
+          label="Small (s)"
+          size="s"
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Suffix
+        </Text>
+        <TextInput label="Large (l) - default" suffix="USD" />
+        <TextInput label="Small (s)" size="s" suffix="USD" />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Suffix and end content
+        </Text>
+        <TextInput
+          end={<InputIconButton active transparent accessibilityLabel="Add" name="add" />}
+          label="Large (l) - default"
+          suffix="USD"
+        />
+        <TextInput
+          end={<InputIconButton active transparent accessibilityLabel="Add" name="add" />}
+          label="Small (s)"
+          size="s"
+          suffix="USD"
+        />
+      </VStack>
+    </VStack>
   );
 };
 
 /**
- * COMPACT TEXT INPUT VARIATIONS
+ * T-SHIRT SIZE VARIATIONS
+ */
+
+export const Sizes = function Sizes() {
+  return (
+    <VStack gap={4}>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Outside label (default)
+        </Text>
+        <TextInput label="Small (s)" placeholder="Small" size="s" />
+        <TextInput label="Medium (m)" placeholder="Medium" size="m" />
+        <TextInput label="Large (l) - default" placeholder="Large" size="l" />
+        <TextInput
+          compact
+          label='Compact (deprecated, renders as size "s")'
+          placeholder="Compact"
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Inside label
+        </Text>
+        <TextInput label="Small (s)" labelVariant="inside" placeholder="Small" size="s" />
+        <TextInput label="Medium (m)" labelVariant="inside" placeholder="Medium" size="m" />
+        <TextInput label="Large (l) - default" labelVariant="inside" placeholder="Large" size="l" />
+        <TextInput
+          compact
+          label="Compact (deprecated, label forced outside)"
+          labelVariant="inside"
+          placeholder="Compact"
+        />
+      </VStack>
+    </VStack>
+  );
+};
+
+/**
+ * DEPRECATED COMPACT VARIATIONS
+ *
+ * `compact` is superseded by `size="s"`. These are kept as regression demos of the legacy
+ * behavior, which also forces the label into the inline start slot.
  */
 
 export const CompactInput = function CompactInput() {
@@ -482,7 +590,7 @@ export const RenderInputDefault = () => {
   );
 };
 
-export const RenderInputDisabled = () => {
+const RenderInputDisabledRender = () => {
   const [inputText, setInputText] = useState('Test');
   const ref = useRef<HTMLInputElement>(null);
 
@@ -506,15 +614,8 @@ export const RenderInputDisabled = () => {
   );
 };
 
-RenderInputDisabled.bind({});
-RenderInputDisabled.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
+export const RenderInputDisabled: Story = {
+  render: () => <RenderInputDisabledRender />,
 };
 
 export const RenderInputCompact = () => {

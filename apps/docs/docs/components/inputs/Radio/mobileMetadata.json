@@ -28,7 +28,7 @@
   "dependencies": [
     {
       "name": "react-native-svg",
-      "version": "^14.1.0"
+      "version": "15.12.1"
     }
   ]
 }

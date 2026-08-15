@@ -1,7 +1,6 @@
 import { useCallback, useMemo } from 'react';
 import { PanResponder, useWindowDimensions } from 'react-native';
 import type { Animated, GestureResponderEvent, PanResponderGestureState } from 'react-native';
-import type { PinningDirection } from '@coinbase/cds-common';
 import {
   DISMISSAL_DRAG_THRESHOLD,
   DISMISSAL_VELOCITY_THRESHOLD,
@@ -15,7 +14,11 @@ import {
   normalizeDrawerPanDistanceMultiplier,
   verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView,
 } from '@coinbase/cds-common/tokens/drawer';
+import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
 import { modulate } from '@coinbase/cds-common/utils/modulate';
+
+/** Min dominant-axis travel before the drawer steals the gesture from children. */
+const DRAWER_GESTURE_CAPTURE_DISTANCE = 10;
 
 type UseDrawerPanResponderParams = {
   drawerAnimation: Animated.Value;
@@ -58,10 +61,12 @@ export const useDrawerPanResponder = ({
   /** calculates whether gesture was great enough to warrant a response */
   const shouldHandleGesture = useCallback(
     ({ dx, dy }: PanResponderGestureState) => {
-      if (pin === 'bottom') {
-        return dy > MIN_PAN_DISTANCE || dy < -MIN_PAN_DISTANCE;
+      // Only capture when dismiss-axis movement dominates, so cross-axis child
+      // gestures (e.g. horizontal chart scrubbing in a bottom tray) are not stolen.
+      if (pin === 'bottom' || pin === 'top') {
+        return Math.abs(dy) > DRAWER_GESTURE_CAPTURE_DISTANCE && Math.abs(dy) > Math.abs(dx);
       }
-      return dx > MIN_PAN_DISTANCE || dx < -MIN_PAN_DISTANCE;
+      return Math.abs(dx) > DRAWER_GESTURE_CAPTURE_DISTANCE && Math.abs(dx) > Math.abs(dy);
     },
     [pin],
   );
@@ -185,11 +190,21 @@ export const useDrawerPanResponder = ({
     [isTryingToDismiss, parseGestureState, isFlingToDismiss, isSwipeToDismiss],
   );
 
+  const initializeDragAnimation = useCallback(() => {
+    // On iOS, setOffset during pan move does not flush to native; capture the current
+    // position as offset via extractOffset() so setValue in onPanResponderMove updates the UI.
+    drawerAnimation.stopAnimation();
+    opacityAnimation.stopAnimation();
+    drawerAnimation.extractOffset();
+    opacityAnimation.extractOffset();
+  }, [drawerAnimation, opacityAnimation]);
+
   const panGestureHandlers = useMemo(() => {
     return PanResponder.create({
       onStartShouldSetPanResponder: () => true,
       onMoveShouldSetPanResponder: shouldCaptureGestures,
       onMoveShouldSetPanResponderCapture: shouldCaptureGestures,
+      onPanResponderGrant: initializeDragAnimation,
       onPanResponderMove: (_, gestureState) => {
         const { isDragging, distance, isOverDrag } = parseGestureState(gestureState);
         const isInvertedPin = pin === 'bottom' || pin === 'right';
@@ -203,7 +218,7 @@ export const useDrawerPanResponder = ({
               outputRange: [0, 0.1],
               clamp: true,
             });
-            drawerAnimation.setOffset(calculateDragOffset(normalizedDistance));
+            drawerAnimation.setValue(calculateDragOffset(normalizedDistance));
           } else {
             const normalizedDrawerTransition = modulate(distance, {
               inputRange: [
@@ -213,7 +228,7 @@ export const useDrawerPanResponder = ({
               outputRange: [0, normalizeDrawerPanDistanceMultiplier],
               clamp: false,
             });
-            drawerAnimation.setOffset(normalizedDrawerTransition);
+            drawerAnimation.setValue(normalizedDrawerTransition);
             const normalizedOpacityTransition = modulate(distance, {
               inputRange: [
                 0,
@@ -222,7 +237,7 @@ export const useDrawerPanResponder = ({
               outputRange: [0, 1],
               clamp: false,
             });
-            opacityAnimation.setOffset(normalizedOpacityTransition);
+            opacityAnimation.setValue(normalizedOpacityTransition);
           }
         }
       },
@@ -236,10 +251,18 @@ export const useDrawerPanResponder = ({
           animateSnapBack.start();
         }
       },
+      // On termination (e.g. a child gesture takes over the touch), reconcile
+      // the offsets applied on grant so the next close isn't mispositioned.
+      onPanResponderTerminate: () => {
+        drawerAnimation.flattenOffset();
+        opacityAnimation.flattenOffset();
+        animateSnapBack.start();
+      },
     });
   }, [
     drawerAnimation,
     animateSnapBack,
+    initializeDragAnimation,
     parseGestureState,
     shouldCaptureGestures,
     shouldDismiss,

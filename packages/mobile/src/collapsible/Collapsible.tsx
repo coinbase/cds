@@ -1,6 +1,6 @@
-import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import type { ScrollViewProps } from 'react-native';
+import type { ScrollViewProps, StyleProp, ViewStyle } from 'react-native';
 import Animated, {
   useAnimatedReaction,
   useAnimatedStyle,
@@ -13,7 +13,9 @@ import {
   animateOutOpacityConfig,
 } from '@coinbase/cds-common/animation/collapsible';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import type { CollapsibleDirection, PaddingProps, SharedProps } from '@coinbase/cds-common/types';
+import type { CollapsibleDirection } from '@coinbase/cds-common/types/CollapsibleBaseProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useContentSize } from '../hooks/useContentSize';
@@ -53,10 +55,18 @@ export type CollapsibleBaseProps = SharedProps &
     maxWidth?: number;
   };
 
-export type CollapsibleProps = CollapsibleBaseProps;
+export type CollapsibleProps = CollapsibleBaseProps & {
+  /** Custom style applied to the root animated container element */
+  style?: StyleProp<ViewStyle>;
+};
 
 export const Collapsible = memo(
-  forwardRef((_props: CollapsibleProps, forwardedRef: React.ForwardedRef<View>) => {
+  ({
+    ref: forwardedRef,
+    ..._props
+  }: CollapsibleProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('Collapsible', _props);
     const {
       children,
@@ -73,6 +83,7 @@ export const Collapsible = memo(
       paddingBottom,
       paddingStart,
       scrollViewProps,
+      style,
     } = mergedProps;
     const theme = useTheme();
     // TO DO: Remove this after refactoring useContentSize to default values to null on initial render
@@ -181,11 +192,16 @@ export const Collapsible = memo(
 
     const containerStyles = isUnmountedExpanded ? styles.container : animatedContainerStyles;
 
+    const mergedContainerStyles = useMemo(
+      () => (style ? [containerStyles, style] : containerStyles),
+      [containerStyles, style],
+    );
+
     return (
       <ReanimatedView
         ref={forwardedRef}
         aria-expanded={!collapsed}
-        style={containerStyles}
+        style={mergedContainerStyles}
         testID={testID}
       >
         <ScrollView
@@ -200,7 +216,7 @@ export const Collapsible = memo(
         </ScrollView>
       </ReanimatedView>
     );
-  }),
+  },
 );
 
 const styles = StyleSheet.create({

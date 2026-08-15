@@ -13,7 +13,7 @@ const reactNative = [
 
 const esModules = ['@coinbase', ...reactNative, ...d3];
 
-const isCI = process.env.CI === 'true' || process.env.BUILDKITE === 'true';
+const isCI = process.env.CI === 'true';
 
 /** @type {import('jest').Config} */
 const config = {
@@ -27,8 +27,10 @@ const config = {
   ],
   coverageReporters: ['json', 'text-summary', 'text', 'json-summary'],
   // https://docs.swmansion.com/react-native-gesture-handler/docs/guides/testing
+  // https://docs.swmansion.com/react-native-worklets/docs/guides/testing/
   setupFiles: [
     '<rootDir>/../../node_modules/react-native-gesture-handler/jestSetup.js',
+    '<rootDir>/jest/setupWorkletsMock.js',
     '<rootDir>/jest/jestThrowOnErrorAndWarning.js',
   ],
   setupFilesAfterEnv: ['<rootDir>/jest/setup.js'],

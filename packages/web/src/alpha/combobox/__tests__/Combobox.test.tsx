@@ -118,7 +118,12 @@ describe('Combobox', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByRole('textbox')).toHaveStyle({ padding: '0px' });
+      expect(screen.getByRole('textbox')).toHaveStyle({
+        paddingLeft: 0,
+        paddingRight: 0,
+        paddingTop: 0,
+        paddingBottom: 0,
+      });
     });
 
     it('filters options based on search text', async () => {
@@ -519,6 +524,31 @@ describe('Combobox', () => {
       );
 
       expect(screen.getByText('Custom Control')).toBeInTheDocument();
+    });
+  });
+
+  describe('Sizing', () => {
+    it('forwards size and the deprecated compact through to the select control', () => {
+      const SelectControlComponent = jest.fn((_props: { size?: string; compact?: boolean }) => (
+        <div>Control</div>
+      ));
+
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <Combobox {...defaultProps} SelectControlComponent={SelectControlComponent} size="s" />
+        </DefaultThemeProvider>,
+      );
+      expect(SelectControlComponent.mock.calls.some(([props]) => props.size === 's')).toBe(true);
+
+      SelectControlComponent.mockClear();
+      rerender(
+        <DefaultThemeProvider>
+          <Combobox {...defaultProps} compact SelectControlComponent={SelectControlComponent} />
+        </DefaultThemeProvider>,
+      );
+      expect(SelectControlComponent.mock.calls.some(([props]) => props.compact === true)).toBe(
+        true,
+      );
     });
   });
 });

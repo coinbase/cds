@@ -11,7 +11,7 @@
   "dependencies": [
     {
       "name": "lottie-react-native",
-      "version": "^6.7.0"
+      "version": "7.3.1"
     }
   ]
 }

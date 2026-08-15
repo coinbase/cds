@@ -80,7 +80,7 @@ describe('ContainedAssetCard', () => {
         <ContainedAssetCard
           description="Description"
           header={<DummyHeader />}
-          maxWidth="none"
+          maxWidth={500}
           minWidth={120}
           subtitle="Subtitle"
           testID="card"
@@ -89,6 +89,6 @@ describe('ContainedAssetCard', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByTestId('card')).toHaveStyle({ maxWidth: 'none', minWidth: 120 });
+    expect(screen.getByTestId('card')).toHaveStyle({ maxWidth: 500, minWidth: 120 });
   });
 });

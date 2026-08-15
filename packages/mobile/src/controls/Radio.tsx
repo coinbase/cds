@@ -1,11 +1,11 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import { Animated, type ColorValue, StyleSheet, type View } from 'react-native';
 import { Circle, Svg } from 'react-native-svg';
-import type { ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 import { Interactable } from '../system/Interactable';
 
 import { Control, type ControlBaseProps, type ControlIconProps } from './Control';
@@ -47,11 +47,11 @@ export type RadioProps<RadioValue extends string> = RadioBaseProps<RadioValue>;
 
 const DotSvg = ({
   color = 'black',
-  width = 20,
+  width,
   dotSize = (2 * width) / 3,
 }: {
   color?: ColorValue;
-  width?: number;
+  width: number;
   dotSize?: number;
 }) => {
   return (
@@ -109,10 +109,12 @@ const RadioIcon: React.FC<React.PropsWithChildren<ControlIconProps>> = ({
   );
 };
 
-const RadioWithRef = forwardRef(function Radio<RadioValue extends string>(
-  _props: RadioProps<RadioValue>,
-  ref: React.ForwardedRef<View>,
-) {
+const RadioWithRef = function Radio<RadioValue extends string>({
+  ref,
+  ..._props
+}: RadioProps<RadioValue> & {
+  ref?: React.Ref<View>;
+}) {
   const mergedProps = useComponentConfig('Radio', _props);
   const { children, accessibilityHint, accessibilityLabel, ...props } = mergedProps;
   const accessibilityLabelValue =
@@ -121,22 +123,19 @@ const RadioWithRef = forwardRef(function Radio<RadioValue extends string>(
       : accessibilityLabel;
   return (
     <Control<RadioValue>
-      {...props}
       ref={ref}
       accessibilityHint={accessibilityHint}
       accessibilityLabel={accessibilityLabelValue}
       accessibilityRole="radio"
       hitSlop={5}
       label={children}
+      {...props}
     >
       {RadioIcon}
     </Control>
   );
-  // Make forwardRef result function stay generic function type
-}) as <RadioValue extends string>(
-  props: RadioProps<RadioValue> & { ref?: React.Ref<View> },
-) => React.ReactElement;
+};
 
-// Make memoized function stay generic function type
+// Preserve generic call signature through React.memo
 export const Radio = memo(RadioWithRef) as typeof RadioWithRef &
   React.MemoExoticComponent<typeof RadioWithRef>;

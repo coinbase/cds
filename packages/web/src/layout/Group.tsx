@@ -32,11 +32,11 @@ export type GroupBaseProps<BoxProps> = Omit<BoxProps, 'gap'> & {
    */
   renderItem?: (info: {
     Wrapper: React.ComponentType<React.PropsWithChildren<BoxProps>>;
-    item: React.ReactChild;
+    item: React.ReactElement | number | string;
     index: number;
     isFirst: boolean;
     isLast: boolean;
-  }) => React.ReactChild;
+  }) => React.ReactElement | number | string;
 };
 
 export type RenderGroupItem = GroupBaseProps<BoxProps<BoxDefaultElement>>['renderItem'];
@@ -50,7 +50,7 @@ const fallbackRenderItem: RenderGroupItem = ({
   item,
   index,
 }: {
-  item: React.ReactChild;
+  item: React.ReactElement | number | string;
   index: number;
 }) => {
   return <ItemWrapper key={index}>{item}</ItemWrapper>;

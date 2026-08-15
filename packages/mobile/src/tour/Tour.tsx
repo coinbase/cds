@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useRef } from 'react';
-import { Modal, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
+import { Modal, Platform, type StyleProp, StyleSheet, View, type ViewStyle } from 'react-native';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
@@ -9,6 +8,7 @@ import { TourContext, type TourContextValue } from '@coinbase/cds-common/tour/To
 import type { TourOptions, TourStepValue } from '@coinbase/cds-common/tour/useTour';
 import { useTour } from '@coinbase/cds-common/tour/useTour';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import {
   type AutoPlacementOptions,
   type Coords,
@@ -26,6 +26,7 @@ import {
 import { animated, config as springConfig, useSpring } from '@react-spring/native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useDimensions } from '../hooks/useDimensions';
 import { useTheme } from '../hooks/useTheme';
 
 import { DefaultTourMask } from './DefaultTourMask';
@@ -46,9 +47,9 @@ export type TourStepArrowComponentProps = {
 };
 
 // ------------ SUBCOMPONENT TYPES ------------
-export type TourStepArrowComponent = React.ForwardRefExoticComponent<
-  TourStepArrowComponentProps & { ref?: React.Ref<any> }
->;
+export type TourStepArrowComponent = (
+  props: TourStepArrowComponentProps & { ref?: React.Ref<any> },
+) => React.ReactNode;
 
 export type TourMaskComponentProps = {
   /**
@@ -66,7 +67,7 @@ export type TourMaskComponentProps = {
   borderRadius?: string | number;
 };
 
-export type TourMaskComponent = React.FC<TourMaskComponentProps>;
+export type TourMaskComponent = (props: TourMaskComponentProps) => React.ReactNode;
 
 export type TourBaseProps<TourStepId extends string = string> = SharedProps &
   TourOptions<TourStepId> &
@@ -146,14 +147,19 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
     testID,
   } = mergedProps;
   const theme = useTheme();
+  const { statusBarHeight } = useDimensions();
   const defaultTourStepOffset = theme.space[3];
   const defaultTourStepShiftPadding = theme.space[4];
 
   const tourStepArrowRef = useRef<View>(null);
   const RenderedTourStep = activeTourStep?.Component;
-  // activeTourStep.ArrowComponent references old, deprecated type in cds-common
+  // activeTourStep.ArrowComponent is typed by cds-common, which still uses the legacy
+  // `React.ForwardRefExoticComponent<…>` shape (kept intact because cds-web has not yet
+  // migrated off `React.forwardRef`). Mobile has migrated to React 19's ref-as-prop callable
+  // shape; runtime is equivalent under React 19. The cast also bridges the platform-agnostic
+  // style prop in common (`Record<string, string | number>`) with mobile's `StyleProp<ViewStyle>`.
   const RenderedTourStepArrow =
-    (activeTourStep?.ArrowComponent as TourStepArrowComponent) ?? TourStepArrowComponent;
+    (activeTourStep?.ArrowComponent as unknown as TourStepArrowComponent) ?? TourStepArrowComponent;
 
   const [animation, animationApi] = useSpring(
     () => ({ from: { opacity: 0 }, config: springConfig.slow }),
@@ -200,7 +206,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
     [animationApi, onChange],
   );
 
-  const api = useTour<TourStepId>({ steps, activeTourStep, onChange: handleChange });
+  const api = useTour<TourStepId, View>({ steps, activeTourStep, onChange: handleChange });
   const { activeTourStepTarget, setActiveTourStepTarget } = api;
 
   // Component Lifecycle & Side Effects
@@ -220,9 +226,18 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
   const handleActiveTourStepTargetChange = useCallback(
     (target: View | null) => {
       target?.measureInWindow((x, y, width, height) => {
+        // On Android, measureInWindow returns coordinates relative to the app's visible area.
+        // The Modal's coordinate system starts from the screen top (y=0 at very top of display).
+        // In edge-to-edge mode (statusBarHeight > 0), the app extends behind the status bar,
+        // and measureInWindow returns y relative to below the status bar. We need to ADD
+        // statusBarHeight to convert to screen coordinates for the Modal.
+        // In non-edge-to-edge mode (statusBarHeight === 0), measureInWindow returns y from
+        // screen top, but the Modal still starts from screen top, so no adjustment is needed.
+        const adjustedY = Platform.OS === 'ios' ? y : y + statusBarHeight;
+
         refs.setReference({
           measure: (callback: (x: number, y: number, width: number, height: number) => void) => {
-            callback(x, y, width, height);
+            callback(x, adjustedY, width, height);
             void animationApi.start({ to: { opacity: 1 }, config: springConfig.slow });
           },
         });
@@ -230,7 +245,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
 
       setActiveTourStepTarget(target);
     },
-    [animationApi, refs, setActiveTourStepTarget],
+    [animationApi, refs, setActiveTourStepTarget, statusBarHeight],
   );
 
   return (
@@ -255,7 +270,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
             {!(activeTourStep.hideOverlay ?? hideOverlay) && !!activeTourStepTarget && (
               <animated.View style={maskStyles} testID="tour-mask">
                 <TourMaskComponent
-                  activeTourStepTarget={activeTourStepTarget as View}
+                  activeTourStepTarget={activeTourStepTarget}
                   borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
                   padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
                 />

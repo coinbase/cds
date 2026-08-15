@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo } from 'react';
 import { type View } from 'react-native';
 import { selectCellMobileSpacingConfig } from '@coinbase/cds-common/tokens/select';
 
@@ -11,26 +11,24 @@ import type { SelectOptionProps, SelectType } from './Select';
 const DefaultSelectOptionComponent = <
   Type extends SelectType,
   SelectOptionValue extends string = string,
->(
-  {
-    value,
-    label,
-    onPress,
-    disabled,
-    selected,
-    indeterminate,
-    compact,
-    description,
-    multiline,
-    style,
-    styles,
-    type,
-    accessibilityRole,
-    background = 'transparent',
-    ...props
-  }: SelectOptionProps<Type, SelectOptionValue>,
-  ref: React.Ref<View>,
-) => {
+>({
+  ref,
+  value,
+  label,
+  onPress,
+  disabled,
+  selected,
+  indeterminate,
+  compact,
+  description,
+  multiline,
+  style,
+  styles,
+  type,
+  accessibilityRole,
+  background = 'transparent',
+  ...props
+}: SelectOptionProps<Type, SelectOptionValue> & { ref?: React.Ref<View> }) => {
   const labelNode = useMemo(
     () =>
       typeof label === 'string' ? (
@@ -83,7 +81,6 @@ const DefaultSelectOptionComponent = <
       background={background}
       borderRadius={0}
       disabled={disabled}
-      minHeight={compact ? 40 : 56}
       onPress={handlePress}
       priority="end"
       selected={selected}
@@ -98,7 +95,7 @@ const DefaultSelectOptionComponent = <
   );
 };
 
-export const DefaultSelectOption = memo(forwardRef(DefaultSelectOptionComponent)) as <
+export const DefaultSelectOption = memo(DefaultSelectOptionComponent) as <
   Type extends SelectType = 'single',
   SelectOptionValue extends string = string,
 >(

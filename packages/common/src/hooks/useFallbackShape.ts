@@ -10,9 +10,9 @@ export type UseFallbackShapeOptions = {
   rectWidthVariant?: number;
 };
 
-export function useFallbackShape(
+export function useFallbackShape<T = string | number>(
   shape: Shape,
-  baseWidth: number | string,
+  baseWidth: T,
   options?: UseFallbackShapeOptions,
 ) {
   const width = useMemo(() => {

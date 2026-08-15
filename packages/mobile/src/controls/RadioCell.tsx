@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
+import React, { memo, useCallback, useMemo, useState } from 'react';
 import {
   Animated,
   type GestureResponderEvent,
@@ -14,7 +14,9 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
 import { useSelectionCellBorderStyle } from '../hooks/useSelectionCellBorderStyle';
 import { useTheme } from '../hooks/useTheme';
-import { Box, HStack, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import { Pressable, type PressableProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
@@ -46,10 +48,12 @@ export type RadioCellProps<RadioValue extends string> = RadioCellBaseProps<Radio
   };
 };
 
-const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string>(
-  _props: RadioCellProps<RadioValue>,
-  ref: React.ForwardedRef<View>,
-) {
+const RadioCellWithRef = function RadioCell<RadioValue extends string>({
+  ref,
+  ..._props
+}: RadioCellProps<RadioValue> & {
+  ref?: React.Ref<View>;
+}) {
   const mergedProps = useComponentConfig('RadioCell', _props);
   const {
     title,
@@ -248,9 +252,7 @@ const RadioCellWithRef = forwardRef(function RadioCell<RadioValue extends string
       {pressed && <Animated.View style={mergedFocusRingStyle} />}
     </Box>
   );
-}) as <RadioValue extends string>(
-  props: RadioCellProps<RadioValue> & { ref?: React.ForwardedRef<View> },
-) => React.ReactElement;
+};
 
 export const RadioCell = memo(RadioCellWithRef) as typeof RadioCellWithRef &
   React.MemoExoticComponent<typeof RadioCellWithRef>;

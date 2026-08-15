@@ -47,8 +47,6 @@ export const Examples = () => {
   );
 };
 
-Examples.parameters = { a11y: { disable: true } };
-
 export const Props = () => (
   <VStack gap={8}>
     <VStack>
@@ -108,8 +106,6 @@ export const Props = () => (
   </VStack>
 );
 
-Props.parameters = { a11y: { disable: true } };
-
 export const SlotStyling = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(today);
   return (
@@ -165,5 +161,3 @@ export const SlotStyling = () => {
     </>
   );
 };
-
-SlotStyling.parameters = { a11y: { disable: true } };

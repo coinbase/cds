@@ -1,17 +1,12 @@
 import React, { forwardRef, memo } from 'react';
-import { type DimensionValue, type SharedProps } from '@coinbase/cds-common';
+import { type SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { IconButton } from '../buttons/IconButton';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import {
-  Box,
-  type BoxBaseProps,
-  type BoxDefaultElement,
-  type BoxProps,
-  HStack,
-  VStack,
-} from '../layout';
-import { InvertedThemeProvider } from '../system';
+import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
+import { InvertedThemeProvider } from '../system/ThemeProvider';
 import { Text } from '../typography/Text';
 
 export type CoachmarkBaseProps = SharedProps &
@@ -43,7 +38,7 @@ export type CoachmarkBaseProps = SharedProps &
     /**
      * Desired width of the Coachmark with respect to max width of windowWidth - spacing2 * 2
      */
-    width?: DimensionValue;
+    width?: React.CSSProperties['width'];
     /**
      * a11y label of the close button
      */
@@ -71,7 +66,6 @@ export const Coachmark = memo(
     return (
       <InvertedThemeProvider>
         <VStack
-          {...props}
           ref={ref}
           borderRadius={400}
           maxWidth={400}
@@ -79,11 +73,13 @@ export const Coachmark = memo(
           position="relative"
           testID={testID}
           width={width}
+          {...props}
         >
           {media}
           {!!onClose && (
             <Box alignSelf="flex-start" padding={1} pin="right">
               <IconButton
+                transparent
                 accessibilityLabel={closeButtonAccessibilityLabel}
                 name="close"
                 onClick={onClose}

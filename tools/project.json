@@ -7,7 +7,7 @@
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
-        "jestConfig": "tools/jest.config.js"
+        "jestConfig": "tools/jest.config.mjs"
       }
     }
   }

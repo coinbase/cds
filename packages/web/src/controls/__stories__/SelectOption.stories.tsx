@@ -8,9 +8,6 @@ import { SelectOption } from '../SelectOption';
 export default {
   title: 'Components/Select/SelectOption',
   component: SelectOption,
-  parameters: {
-    a11y: { test: 'off' },
-  },
 };
 
 export const Stories = () => {

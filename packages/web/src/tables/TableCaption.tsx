@@ -1,6 +1,7 @@
 import React, { memo, useMemo } from 'react';
-import type { SharedProps, TextAlignProps } from '@coinbase/cds-common';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
 
 import { useCellSpacing } from '../hooks/useCellSpacing';
 import { useComponentConfig } from '../hooks/useComponentConfig';

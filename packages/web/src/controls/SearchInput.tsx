@@ -1,18 +1,30 @@
 import React, { forwardRef, memo, useCallback, useMemo, useRef } from 'react';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import type { IconName } from '@coinbase/cds-common/types';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import { InputIcon } from './InputIcon';
 import { InputIconButton } from './InputIconButton';
-import { TextInput, type TextInputBaseProps, type TextInputProps } from './TextInput';
+import {
+  TextInput,
+  type TextInputBaseProps,
+  type TextInputProps,
+  type TextInputSize,
+} from './TextInput';
 
+/**
+ * @deprecated Use local constants or the `size` prop instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const scales = {
   regular: 56,
   compact: 40,
-};
+} as const;
+
+/** T-shirt size for SearchInput. Aliases the TextInput size union. */
+export type SearchInputSize = TextInputSize;
 
 export type SearchInputBaseProps = Pick<
   TextInputBaseProps,
@@ -27,7 +39,10 @@ export type SearchInputBaseProps = Pick<
   | 'focusedBorderWidth'
   | 'helperTextErrorIconAccessibilityLabel'
   | 'font'
+  | 'labelFont'
+  | 'labelColor'
   | 'placeholder'
+  | 'size'
   | 'testID'
   | 'testIDMap'
   | 'width'
@@ -90,6 +105,7 @@ export const SearchInput = memo(
       testID,
       value,
       compact,
+      size,
       hideStartIcon = false,
       hideEndIcon,
       startIcon,
@@ -97,11 +113,14 @@ export const SearchInput = memo(
       startIconAccessibilityLabel = 'Back',
       clearIconAccessibilityLabel = 'Clear search query',
       borderRadius = 1000,
-      height = compact ? scales.compact : scales.regular,
       ...props
     } = mergedProps;
     const internalRef = useRef<HTMLInputElement>(null);
     const refs = useMergeRefs(ref, internalRef);
+
+    // Field geometry is handled by TextInput; this only drives SearchInput's own clear-button
+    // spacing. `size` wins over the deprecated `compact`, which maps to its legacy `s` size.
+    const resolvedSize: TextInputSize = size ?? (compact ? 's' : 'l');
 
     const handleOnChange = useCallback(
       (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -139,10 +158,14 @@ export const SearchInput = memo(
       <TextInput
         ref={refs}
         borderRadius={borderRadius}
+        compact={compact}
         end={
           end ??
           (!!value && !hideEndIcon && (
-            <Box marginEnd={compact ? -0.5 : 0} paddingEnd={compact ? 0 : 0.5}>
+            <Box
+              marginEnd={resolvedSize === 's' ? -0.5 : 0}
+              paddingEnd={resolvedSize === 's' ? 0 : 0.5}
+            >
               <InputIconButton
                 accessibilityLabel={clearIconAccessibilityLabel}
                 name="close"
@@ -152,10 +175,10 @@ export const SearchInput = memo(
             </Box>
           ))
         }
-        height={height}
         onChange={handleOnChange}
         onKeyUp={handleOnKeyUp}
         role="searchbox"
+        size={size}
         start={
           !hideStartIcon && (
             <InputIcon

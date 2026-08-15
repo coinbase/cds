@@ -34,8 +34,8 @@ const SpectrumScreen = () => {
                 const background = `rgb(${theme.spectrum[paletteValue]})`;
                 const foreground = getAccessibleColor({ background });
                 return (
-                  <VStack key={paletteValue} dangerouslySetBackground={background}>
-                    <Text align="center" dangerouslySetColor={foreground} font="caption">
+                  <VStack key={paletteValue} style={{ backgroundColor: background }}>
+                    <Text align="center" font="caption" style={{ color: foreground }}>
                       {paletteValue}
                     </Text>
                   </VStack>

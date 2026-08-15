@@ -17,9 +17,15 @@ Each `AccordionItem` requires a unique `itemKey` to identify it within the paren
 
 ## Header Content
 
-### Title and Subtitle
+### Title, Subtitle, and Tertiary Title
 
-Use the `title` prop for the main header text and `subtitle` for secondary information.
+Use `title` for the main header text, `subtitle` for secondary information, and `tertiaryTitle` for optional tertiary text under the subtitle. `subtitle` and `tertiaryTitle` are independent—either can appear alone.
+
+Each level of heading utilizes a different CDS font:
+
+- `title` — `headline`
+- `subtitle` — `label2`
+- `tertiaryTitle` — `legal`
 
 ```jsx
 <Accordion>
@@ -27,6 +33,7 @@ Use the `title` prop for the main header text and `subtitle` for secondary infor
     itemKey="1"
     title="Account Settings"
     subtitle="Manage your profile, security, and preferences"
+    tertiaryTitle="Subject to Coinbase User Agreement"
   >
     <VStack gap={2}>
       <Text font="body" color="fgMuted">
@@ -160,7 +167,7 @@ When using multiple AccordionItems, only one can be expanded at a time (controll
 AccordionItem automatically provides accessible behavior on mobile:
 
 - The header uses `accessibilityRole="togglebutton"` with `accessibilityState` to indicate expanded/collapsed state
-- The title and subtitle are combined into an `accessibilityLabel`
+- The title, subtitle, and tertiary title are combined into an `accessibilityLabel`
 - Supports VoiceOver and TalkBack screen readers
 
 For items with complex content, ensure any interactive elements inside the panel have appropriate accessibility labels.

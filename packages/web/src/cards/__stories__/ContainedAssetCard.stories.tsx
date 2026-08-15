@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 import { subheadIconSignMap } from '@coinbase/cds-common/tokens/sparkline';
 
@@ -7,14 +7,6 @@ import { HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import type { ContainedAssetCardProps } from '../ContainedAssetCard';
 import { ContainedAssetCard } from '../ContainedAssetCard';
-
-const a11ySkipConfig = {
-  options: {
-    rules: {
-      'color-contrast': { enabled: false },
-    },
-  },
-};
 
 const onClickConsole = console.log;
 
@@ -124,7 +116,6 @@ export const Custom = (): JSX.Element => {
 
 Custom.parameters = {
   percy: { enableJavaScript: true },
-  a11y: a11ySkipConfig,
 };
 
 export const Carousel = (): JSX.Element => (

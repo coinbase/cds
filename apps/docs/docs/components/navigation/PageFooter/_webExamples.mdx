@@ -71,3 +71,25 @@ function CustomLayoutFooter() {
   );
 }
 ```
+
+### With Legal Text
+
+```tsx live
+function LegalTextPageFooter() {
+  return (
+    <PageFooter
+      action={
+        <ButtonGroup>
+          <Button variant="secondary" onClick={() => console.log('Back')}>
+            Back
+          </Button>
+          <Button variant="primary" onClick={() => console.log('Next')}>
+            Next
+          </Button>
+        </ButtonGroup>
+      }
+      legalText="By continuing, you agree to our Terms of Service and Privacy Policy."
+    />
+  );
+}
+```

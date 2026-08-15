@@ -1,5 +1,5 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 
 import { DefaultThemeProvider, SAFE_AREA_METRICS } from '../../../utils/testHelpers';
 import { useDrawerSpacing } from '../useDrawerSpacing';

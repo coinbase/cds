@@ -1,4 +1,4 @@
-import { forwardRef, memo, useMemo, useState } from 'react';
+import { memo, useMemo, useState } from 'react';
 import {
   type LayoutChangeEvent,
   type StyleProp,
@@ -323,12 +323,17 @@ export type RollingNumberBaseProps = SharedProps &
      */
     locale?: Intl.LocalesArgument;
     /**
-     * Base text color token. When {@link colorPulseOnUpdate} is true, the color briefly pulses to a positive or negative mid color before returning to this base color.
+     * Base text color token. When {@link colorPulseOnUpdate} is true, the color briefly pulses to a
+     * positive or negative mid color before returning to this base color.
+     *
+     * Only CDS design token colors are accepted here. To apply a non-token color (e.g. a hex string),
+     * use `styles={{ text: { color: '#FF0000' } }}` instead.
      * @default 'fg'
      */
     color?: ThemeVars.Color;
     /**
-     * Enables color pulsing on positive or negative changes.
+     * Enables color pulsing on positive or negative changes. Overriding the default color using
+     * `styles.text` nullifies the effect.
      */
     colorPulseOnUpdate?: boolean;
     /**
@@ -380,31 +385,39 @@ export type RollingNumberProps = TextProps &
   RollingNumberBaseProps & {
     /** Custom styles for individual elements of the RollingNumber component */
     styles?: {
-      /** Outer container element */
+      /** Outer container element. */
       root?: StyleProp<ViewStyle>;
-      /** Animated visible content wrapper */
+      /** Wrapper around the visible number (prefix, value, and suffix). */
       visibleContent?: StyleProp<ViewStyle>;
-      /** Formatted numeric value wrapper */
+      /** Wrapper around the formatted numeric value (the four i18n sections). */
       formattedValueSection?: StyleProp<ViewStyle>;
-      /** Prefix section (from props) */
+      /** Container for the `prefix` prop content. */
       prefix?: StyleProp<ViewStyle>;
-      /** Suffix section (from props) */
+      /** Container for the `suffix` prop content. */
       suffix?: StyleProp<ViewStyle>;
-      /** Prefix from Intl.NumberFormat (e.g. "$" in "$1,000") */
+      /** Container for the Intl.NumberFormat-generated prefix (e.g. "$" in "$1,000"). */
       i18nPrefix?: StyleProp<ViewStyle>;
-      /** Suffix from Intl.NumberFormat (e.g. "K" in "100K") */
+      /** Container for the Intl.NumberFormat-generated suffix (e.g. "K" in "100K"). */
       i18nSuffix?: StyleProp<ViewStyle>;
-      /** Integer portion of formatted value */
+      /** Container for the integer portion of the value. */
       integer?: StyleProp<ViewStyle>;
-      /** Fractional portion of formatted value */
+      /** Container for the fractional portion of the value. */
       fraction?: StyleProp<ViewStyle>;
-      /** Text element for digits and symbols */
+      /**
+       * Style applied to every text element — digits, symbols, prefix text, and suffix text. Set
+       * `color` here to apply a custom (non-token) text color.
+       */
       text?: StyleProp<TextStyle>;
     };
   };
 
 export const RollingNumber = memo(
-  forwardRef<View, RollingNumberProps>((_props: RollingNumberProps, ref) => {
+  ({
+    ref,
+    ..._props
+  }: RollingNumberProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('RollingNumber', _props);
     const {
       value,
@@ -504,6 +517,16 @@ export const RollingNumber = memo(
       formatted,
     });
 
+    // Only apply the animated color style while pulsing. When idle it just re-emits the token base
+    // color (already applied via textProps.color), and — because a Reanimated animated style
+    // overrides static styles regardless of array order — it would clobber a custom styles.text
+    // color. Omitting it when not pulsing lets textProps.color (token) or styles.text (custom) drive
+    // the color statically.
+    const textColorStyles = useMemo(
+      () => (colorPulseOnUpdate ? [animatedColorStyle, styles?.text] : styles?.text),
+      [colorPulseOnUpdate, animatedColorStyle, styles?.text],
+    );
+
     const rootStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
 
     const invisibleMeasuredDigits = useMemo(
@@ -529,20 +552,13 @@ export const RollingNumber = memo(
         <RollingNumberAffixSectionComponent
           justifyContent="flex-end"
           style={styles?.prefix}
-          styles={{ text: [animatedColorStyle, styles?.text] }}
+          styles={{ text: textColorStyles }}
           textProps={textProps}
         >
           {prefix}
         </RollingNumberAffixSectionComponent>
       ),
-      [
-        RollingNumberAffixSectionComponent,
-        animatedColorStyle,
-        styles?.prefix,
-        textProps,
-        prefix,
-        styles?.text,
-      ],
+      [RollingNumberAffixSectionComponent, textColorStyles, styles?.prefix, textProps, prefix],
     );
 
     const suffixSection = useMemo(
@@ -551,20 +567,13 @@ export const RollingNumber = memo(
         <RollingNumberAffixSectionComponent
           justifyContent="flex-start"
           style={styles?.suffix}
-          styles={{ text: [animatedColorStyle, styles?.text] }}
+          styles={{ text: textColorStyles }}
           textProps={textProps}
         >
           {suffix}
         </RollingNumberAffixSectionComponent>
       ),
-      [
-        RollingNumberAffixSectionComponent,
-        animatedColorStyle,
-        styles?.suffix,
-        textProps,
-        suffix,
-        styles?.text,
-      ],
+      [RollingNumberAffixSectionComponent, textColorStyles, styles?.suffix, textProps, suffix],
     );
 
     const intlPartsValueSection = useMemo(() => {
@@ -584,7 +593,7 @@ export const RollingNumber = memo(
             intlNumberParts={pre}
             justifyContent="flex-end"
             style={styles?.i18nPrefix}
-            styles={{ text: [animatedColorStyle, styles?.text] }}
+            styles={{ text: textColorStyles }}
             textProps={textProps}
             transitionConfig={transitionConfig}
           />
@@ -598,7 +607,7 @@ export const RollingNumber = memo(
             intlNumberParts={integer}
             justifyContent="flex-end"
             style={styles?.integer}
-            styles={{ text: [animatedColorStyle, styles?.text] }}
+            styles={{ text: textColorStyles }}
             textProps={textProps}
             transitionConfig={transitionConfig}
           />
@@ -612,7 +621,7 @@ export const RollingNumber = memo(
             intlNumberParts={fraction}
             justifyContent="flex-start"
             style={styles?.fraction}
-            styles={{ text: [animatedColorStyle, styles?.text] }}
+            styles={{ text: textColorStyles }}
             textProps={textProps}
             transitionConfig={transitionConfig}
           />
@@ -627,7 +636,7 @@ export const RollingNumber = memo(
             intlNumberParts={post}
             justifyContent="flex-start"
             style={styles?.i18nSuffix}
-            styles={{ text: [animatedColorStyle, styles?.text] }}
+            styles={{ text: textColorStyles }}
             textProps={textProps}
             transitionConfig={transitionConfig}
           />
@@ -638,7 +647,7 @@ export const RollingNumber = memo(
       enableSubscriptNotation,
       styles?.formattedValueSection,
       styles?.i18nPrefix,
-      styles?.text,
+      textColorStyles,
       styles?.integer,
       styles?.fraction,
       styles?.i18nSuffix,
@@ -649,7 +658,6 @@ export const RollingNumber = memo(
       digitHeight,
       digitTransitionVariant,
       direction,
-      animatedColorStyle,
       textProps,
       transitionConfig,
     ]);
@@ -667,7 +675,7 @@ export const RollingNumber = memo(
           intlNumberParts={[]}
           justifyContent="flex-start"
           style={styles?.formattedValueSection}
-          styles={{ text: [animatedColorStyle, styles?.text] }}
+          styles={{ text: textColorStyles }}
           textProps={textProps}
           transitionConfig={transitionConfig}
         />
@@ -675,7 +683,7 @@ export const RollingNumber = memo(
       [
         RollingNumberMaskComponent,
         styles?.formattedValueSection,
-        styles?.text,
+        textColorStyles,
         RollingNumberValueSectionComponent,
         RollingNumberDigitComponent,
         RollingNumberSymbolComponent,
@@ -683,7 +691,6 @@ export const RollingNumber = memo(
         digitHeight,
         digitTransitionVariant,
         direction,
-        animatedColorStyle,
         textProps,
         transitionConfig,
       ],
@@ -736,5 +743,5 @@ export const RollingNumber = memo(
         </HStack>
       </HStack>
     );
-  }),
+  },
 );

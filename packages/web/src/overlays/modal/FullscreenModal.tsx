@@ -4,7 +4,7 @@ import { css } from '@linaria/core';
 import { cx } from '../../cx';
 import { useA11yLabels } from '../../hooks/useA11yLabels';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { VStack } from '../../layout';
+import { VStack } from '../../layout/VStack';
 import { breakpoints } from '../../styles/media';
 import { type FocusTrapBaseProps } from '../FocusTrap';
 

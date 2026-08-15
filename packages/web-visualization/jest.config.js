@@ -4,7 +4,7 @@ const d3 = ['d3', 'd3-.+', 'internmap'];
 
 const esModules = ['@coinbase', ...d3];
 
-const isCI = process.env.CI === 'true' || process.env.BUILDKITE === 'true';
+const isCI = process.env.CI === 'true';
 
 /** @type {import('jest').Config} */
 const config = {

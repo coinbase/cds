@@ -14,18 +14,17 @@
   "dependencies": {
     "@coinbase/cds-icons": "^5",
     "@coinbase/cds-illustrations": "^4",
-    "@coinbase/cds-web": "^8",
-    "@coinbase/cds-web-visualization": "^3",
+    "@coinbase/cds-web": "^9",
     "framer-motion": "^10",
-    "react": "^18",
-    "react-dom": "^18"
+    "react": "19.1.2",
+    "react-dom": "19.1.2"
   },
   "devDependencies": {
     "@types/node": "^22",
-    "@types/react": "^19.1.2",
-    "@types/react-dom": "^19.1.2",
-    "@vitejs/plugin-react": "^5.0.0",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "@vitejs/plugin-react": "^5.1.2",
     "typescript": "~5.9.2",
-    "vite": "^7.1.2"
+    "vite": "^7.3.1"
   }
 }

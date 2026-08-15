@@ -91,3 +91,24 @@ function SearchInputVariants() {
   );
 }
 ```
+
+### Sizes
+
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
+
+```tsx
+function SearchInputSizes() {
+  const [value, setValue] = useState('');
+
+  return (
+    <SearchInput
+      accessibilityLabel="Search"
+      onChangeText={setValue}
+      onClear={() => setValue('')}
+      placeholder="Search"
+      size="s"
+      value={value}
+    />
+  );
+}
+```

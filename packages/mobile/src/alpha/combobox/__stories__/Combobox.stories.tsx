@@ -519,6 +519,42 @@ const DisabledExample = () => {
   );
 };
 
+const SizesExample = () => {
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        label="Small (s)"
+        onChange={setValue}
+        options={singleSelectOptions}
+        placeholder="Search fruits..."
+        size="s"
+        type="single"
+        value={value}
+      />
+      <Combobox
+        label="Medium (m)"
+        onChange={setValue}
+        options={singleSelectOptions}
+        placeholder="Search fruits..."
+        size="m"
+        type="single"
+        value={value}
+      />
+      <Combobox
+        label="Large (l) - default"
+        onChange={setValue}
+        options={singleSelectOptions}
+        placeholder="Search fruits..."
+        size="l"
+        type="single"
+        value={value}
+      />
+    </VStack>
+  );
+};
+
 const CompactExample = () => {
   const { value, onChange } = useMultiSelect({ initialValue: [] });
 
@@ -1115,6 +1151,9 @@ const Default = () => {
       </Example>
       <Example title="Disabled state">
         <DisabledExample />
+      </Example>
+      <Example title="Sizes">
+        <SizesExample />
       </Example>
       <Example title="Compact size">
         <CompactExample />

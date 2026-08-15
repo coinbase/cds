@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { type JSX, useState } from 'react';
 import { Box, HStack } from '@coinbase/cds-web/layout';
 import { useDocsSidebar } from '@docusaurus/plugin-content-docs/client';
 import BackToTopButton from '@theme/BackToTopButton';

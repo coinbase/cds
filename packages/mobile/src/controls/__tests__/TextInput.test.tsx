@@ -1,10 +1,12 @@
-import { Animated, StyleSheet } from 'react-native';
+import { createRef } from 'react';
+import { Animated, StyleSheet, type TextInput as RNTextInput } from 'react-native';
 import { focusedInputBorderWidth } from '@coinbase/cds-common/tokens/input';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
+import { InputIcon } from '../InputIcon';
 import { TextInput } from '../TextInput';
 
 describe('TextInput', () => {
@@ -53,6 +55,23 @@ describe('TextInput', () => {
     expect(screen.getByTestId(testID)).toBeAccessible();
   });
 
+  it('forwards ref to the underlying RNTextInput', () => {
+    const testID = 'textinput-ref-test';
+    const ref = createRef<RNTextInput>();
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          ref={ref}
+          accessibilityHint="Text input field"
+          accessibilityLabel="Text input field"
+          testID={testID}
+        />
+      </DefaultThemeProvider>,
+    );
+    expect(ref.current).not.toBeNull();
+    expect(screen.getByTestId(testID)).toBeTruthy();
+  });
+
   it('renders a TextInput', () => {
     const testID = 'textinput-id';
     const value = 'Example value';
@@ -82,8 +101,10 @@ describe('TextInput', () => {
     expect(flattenedStyle).toEqual(
       expect.objectContaining({
         fontSize: defaultTheme.fontSize.label1,
-        minHeight: defaultTheme.lineHeight.label1,
         fontWeight: defaultTheme.fontWeight.label1,
+        // The field is floored to `padding + line-height token` (size "l": 16*2 + label1 20 = 52) so
+        // the natural (shorter) font metric doesn't leave it short of its size.
+        minHeight: defaultTheme.space[2] * 2 + defaultTheme.lineHeight.label1,
       }),
     );
   });
@@ -104,6 +125,26 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
     expect(screen.getByTestId(testID)).toHaveTextContent(labelText);
+  });
+
+  it('passes labelFont and labelColor to the outside label', () => {
+    const labelTestID = 'label-font-color-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityHint="Text input field"
+          accessibilityLabel="Text input field"
+          label="Fees"
+          labelColor="fgMuted"
+          labelFont="caption"
+          testIDMap={{ label: labelTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+    const flat = StyleSheet.flatten(screen.getByTestId(labelTestID).props.style);
+    expect(flat.color).toBe(defaultTheme.lightColor.fgMuted);
+    expect(flat.fontSize).toBe(defaultTheme.fontSize.caption);
+    expect(flat.fontWeight).toBe(defaultTheme.fontWeight.caption);
   });
 
   it('renders label in start node when compact', () => {
@@ -390,11 +431,11 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const startNode = screen.getByTestId(startTestID);
+    const startNode = screen.getByTestId(startTestID, { includeHiddenElements: true });
     expect(startNode).toBeTruthy();
     expect(startNode).toHaveTextContent('Compact Label');
 
-    expect(screen.getByText('Compact Label')).toBeTruthy();
+    expect(screen.getByText('Compact Label', { includeHiddenElements: true })).toBeTruthy();
   });
 
   it('renders labelNode without compact', () => {
@@ -452,8 +493,8 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const startNode = screen.getByTestId(startTestID);
-    const customLabel = screen.getByTestId(labelTestID);
+    const startNode = screen.getByTestId(startTestID, { includeHiddenElements: true });
+    const customLabel = screen.getByTestId(labelTestID, { includeHiddenElements: true });
     expect(startNode).toBeTruthy();
     expect(customLabel).toBeTruthy();
     expect(customLabel).toHaveTextContent('Custom Label Node');
@@ -515,8 +556,8 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const customLabel = screen.getByTestId(labelTestID);
-    const startContent = screen.getByTestId(startTestID);
+    const customLabel = screen.getByTestId(labelTestID, { includeHiddenElements: true });
+    const startContent = screen.getByTestId(startTestID, { includeHiddenElements: true });
     expect(customLabel).toBeTruthy();
     expect(startContent).toBeTruthy();
   });
@@ -539,12 +580,12 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const startNode = screen.getByTestId(startTestID);
-    const customLabel = screen.getByTestId(labelTestID);
+    const startNode = screen.getByTestId(startTestID, { includeHiddenElements: true });
+    const customLabel = screen.getByTestId(labelTestID, { includeHiddenElements: true });
     expect(startNode).toBeTruthy();
     expect(customLabel).toBeTruthy();
     expect(customLabel).toHaveTextContent('Custom Label Node');
-    expect(screen.queryByText('Regular Label')).toBeFalsy();
+    expect(screen.queryByText('Regular Label', { includeHiddenElements: true })).toBeFalsy();
   });
 
   it('positions label correctly with inside variant and start content', () => {
@@ -561,8 +602,8 @@ describe('TextInput', () => {
       </DefaultThemeProvider>,
     );
 
-    const label = screen.getByTestId('label-test');
-    const startContent = screen.getByTestId('start-content');
+    const label = screen.getByTestId('label-test', { includeHiddenElements: true });
+    const startContent = screen.getByTestId('start-content', { includeHiddenElements: true });
 
     expect(label).toBeTruthy();
     expect(startContent).toBeTruthy();
@@ -591,5 +632,172 @@ describe('TextInput', () => {
     expect(endContent).toBeTruthy();
     expect(label).toHaveTextContent('Inside Label with End');
     expect(endContent).toHaveTextContent('End');
+  });
+});
+
+describe('TextInput size', () => {
+  const inputTestID = 'size-input';
+
+  const getInputVerticalPadding = () => {
+    const style = StyleSheet.flatten(screen.getByTestId(inputTestID).props.style);
+    return { paddingTop: style?.paddingTop, paddingBottom: style?.paddingBottom };
+  };
+
+  it('defaults to size "l" vertical padding', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput accessibilityLabel="Field" testID={inputTestID} />
+      </DefaultThemeProvider>,
+    );
+    expect(getInputVerticalPadding()).toEqual({
+      paddingTop: defaultTheme.space[2],
+      paddingBottom: defaultTheme.space[2],
+    });
+  });
+
+  it('applies size "m" vertical padding', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput accessibilityLabel="Field" size="m" testID={inputTestID} />
+      </DefaultThemeProvider>,
+    );
+    expect(getInputVerticalPadding()).toEqual({
+      paddingTop: defaultTheme.space[1.5],
+      paddingBottom: defaultTheme.space[1.5],
+    });
+  });
+
+  it('applies size "s" vertical padding', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput accessibilityLabel="Field" size="s" testID={inputTestID} />
+      </DefaultThemeProvider>,
+    );
+    expect(getInputVerticalPadding()).toEqual({
+      paddingTop: defaultTheme.space[1],
+      paddingBottom: defaultTheme.space[1],
+    });
+  });
+
+  it('maps compact (alone) to size "s" padding and forces the label into the start slot', () => {
+    const startTestID = 'start-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          compact
+          accessibilityLabel="Field"
+          label="Label"
+          testID={inputTestID}
+          testIDMap={{ start: startTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputVerticalPadding()).toEqual({
+      paddingTop: defaultTheme.space[1],
+      paddingBottom: defaultTheme.space[1],
+    });
+    expect(screen.getByTestId(startTestID)).toHaveTextContent('Label');
+  });
+
+  it('lets size win over compact for padding and does not force the label inline', () => {
+    const startTestID = 'start-test';
+    const labelTestID = 'label-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          compact
+          accessibilityLabel="Field"
+          label="Label"
+          size="m"
+          testID={inputTestID}
+          testIDMap={{ label: labelTestID, start: startTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputVerticalPadding()).toEqual({
+      paddingTop: defaultTheme.space[1.5],
+      paddingBottom: defaultTheme.space[1.5],
+    });
+    expect(screen.queryByTestId(startTestID)).toBeNull();
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Label');
+  });
+
+  it('decouples label placement from size: size="s" keeps the label outside by default', () => {
+    const labelTestID = 'label-test';
+    const startTestID = 'start-test';
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityLabel="Field"
+          label="Label"
+          size="s"
+          testID={inputTestID}
+          testIDMap={{ label: labelTestID, start: startTestID }}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(labelTestID)).toHaveTextContent('Label');
+    expect(screen.queryByTestId(startTestID)).toBeNull();
+  });
+});
+
+describe('TextInput inline label spacing', () => {
+  const inputTestID = 'inline-label-input';
+
+  const getInputPaddingStart = () =>
+    StyleSheet.flatten(screen.getByTestId(inputTestID).props.style)?.paddingStart;
+
+  it('gives an inline label a wider gap to the input text than a start node', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput compact accessibilityLabel="Field" label="Label" testID={inputTestID} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputPaddingStart()).toBe(defaultTheme.space[1]);
+  });
+
+  it('keeps the full padding when there is no inline label or start node', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput compact accessibilityLabel="Field" testID={inputTestID} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputPaddingStart()).toBe(defaultTheme.space[2]);
+  });
+
+  it('lets a start node take precedence over an inline label, since it neighbors the input', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          compact
+          accessibilityLabel="Field"
+          label="Label"
+          start={<InputIcon name="search" />}
+          testID={inputTestID}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputPaddingStart()).toBe(defaultTheme.space[0.5]);
+  });
+
+  it('keeps the start node gap at every size, since horizontal padding is size-invariant', () => {
+    render(
+      <DefaultThemeProvider>
+        <TextInput
+          accessibilityLabel="Field"
+          size="l"
+          start={<InputIcon name="search" />}
+          testID={inputTestID}
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(getInputPaddingStart()).toBe(defaultTheme.space[0.5]);
   });
 });

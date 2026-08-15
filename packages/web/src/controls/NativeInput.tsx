@@ -1,4 +1,5 @@
 import React, { forwardRef, memo, useMemo } from 'react';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
@@ -6,7 +7,7 @@ import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useTheme } from '../hooks/useTheme';
-import { Box, type BoxBaseProps, type BoxProps } from '../layout';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
 
 const baseCss = css`
   min-width: 0;
@@ -80,6 +81,12 @@ const compactContainerPaddingCss = css`
 `;
 
 export type NativeInputBaseProps = BoxBaseProps & {
+  /**
+   * Decreases the padding within the input element
+   * @default false
+   * @deprecated Use `padding` props instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
   compact?: boolean;
   /** Custom container spacing if needed. This will add to the existing spacing */
   containerSpacing?: string;
@@ -88,6 +95,11 @@ export type NativeInputBaseProps = BoxBaseProps & {
    * @default start
    * */
   align?: TextAlignProps['align'];
+  /**
+   * Color of the caret (cursor).
+   * @default fgPrimary
+   */
+  caretColor?: ThemeVars.Color;
 };
 
 export type NativeInputProps = NativeInputBaseProps &
@@ -120,12 +132,16 @@ export const NativeInput = memo(
       accessibilityHint,
       compact,
       className,
+      caretColor = 'fgPrimary',
       style,
       ...props
     }: NativeInputProps,
     ref: React.ForwardedRef<HTMLInputElement>,
   ) {
     const { activeColorScheme } = useTheme();
+    // NativeInput has no `size` prop, so the deprecated `compact` still drives its own
+    // padding here. When rendered inside TextInput, `containerSpacing` (size-derived) is
+    // passed and overrides this fallback.
     const defaultContainerPadding = compact
       ? compactContainerPaddingCss
       : originalContainerPaddingCss;
@@ -134,9 +150,10 @@ export const NativeInput = memo(
       () => ({
         textAlign: align,
         colorScheme: activeColorScheme,
+        caretColor: `var(--color-${caretColor})`,
         ...style,
       }),
-      [align, activeColorScheme, style],
+      [align, activeColorScheme, caretColor, style],
     );
 
     return (

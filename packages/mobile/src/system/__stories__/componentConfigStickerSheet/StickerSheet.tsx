@@ -18,8 +18,10 @@ import { SearchExample } from './examples/Search';
 import { SegmentedTabsExample } from './examples/SegmentedTabs';
 import { SelectExample } from './examples/Select';
 import { SelectChipExample } from './examples/SelectChip';
+import { TabsExample } from './examples/Tabs';
 import { TagExample } from './examples/Tag';
 import { TextInputExample } from './examples/TextInput';
+import { TooltipExample } from './examples/Tooltip';
 import { Container } from './Container';
 
 export const StickerSheet = memo(() => {
@@ -32,6 +34,9 @@ export const StickerSheet = memo(() => {
           </Container>
           <Container title="Segmented Tabs">
             <SegmentedTabsExample />
+          </Container>
+          <Container title="Tabs">
+            <TabsExample />
           </Container>
           <Container title="Select Input (SelectOption)">
             <SelectExample />
@@ -80,6 +85,9 @@ export const StickerSheet = memo(() => {
           </Container>
           <Container title="Coachmark">
             <CoachmarkExample />
+          </Container>
+          <Container title="Tooltip">
+            <TooltipExample />
           </Container>
         </VStack>
       </HStack>

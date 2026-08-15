@@ -18,14 +18,28 @@ import {
   isSelectOptionGroup,
   type SelectControlProps,
   type SelectOption,
+  type SelectSize,
   type SelectType,
 } from './Select';
+import { defaultSelectSize } from './types';
 
-// The height is smaller for the inside label variant since the label takes
-// up space above the input.
-const LABEL_VARIANT_INSIDE_HEIGHT = 32;
-const COMPACT_HEIGHT = 40;
-const DEFAULT_HEIGHT = 56;
+const selectSizeVerticalSpaceVar: Record<SelectSize, string> = {
+  s: 'var(--space-1)',
+  m: 'var(--space-1_5)',
+  l: 'var(--space-2)',
+};
+
+// A multi-select's selected-value chips add their own height, so the vertical padding is
+// tightened per size to keep the overall field height aligned with the single-select scale.
+const multiSelectVerticalSpaceVar: Record<SelectSize, string> = {
+  s: 'var(--space-0_5)',
+  m: 'var(--space-1)',
+  l: 'var(--space-1_5)',
+};
+
+// Multi-select value chips always use the compact `xs` size (even at size `l`) so several chips —
+// and a stacked inside label — stay within the field's natural height.
+const multiSelectValueChipSize = 'xs';
 
 const noFocusOutlineCss = css`
   &:focus,
@@ -74,21 +88,27 @@ const DefaultSelectControlComponent = memo(
         open,
         placeholder,
         disabled,
+        readOnly,
         setOpen,
         variant,
         helperText,
         label,
-        labelVariant,
+        labelVariant: labelVariantProp,
         contentNode,
         startNode,
         endNode: customEndNode,
         compact,
+        size,
         blendStyles,
         align = 'start',
         font = 'body',
+        labelColor = 'fg',
+        labelFont = 'label1',
         bordered = true,
         borderWidth = bordered ? 100 : 0,
         focusedBorderWidth = bordered ? undefined : 200,
+        inputBackground = !disabled && readOnly ? 'bgSecondary' : 'bg',
+        borderRadius,
         maxSelectedOptionsToShow = 6,
         hiddenSelectedOptionsLabel = 'more',
         removeSelectedOptionAccessibilityLabel = 'Remove',
@@ -102,11 +122,35 @@ const DefaultSelectControlComponent = memo(
       }: SelectControlProps<Type, SelectOptionValue>,
       ref: React.Ref<HTMLElement>,
     ) => {
+      const isInteractionBlocked = disabled || readOnly;
+      const disableFocusedStyle = !bordered && focusedBorderWidth === 200;
+
+      const handleToggleOpen = useCallback(() => {
+        if (isInteractionBlocked) return;
+        setOpen((currentOpen) => !currentOpen);
+      }, [isInteractionBlocked, setOpen]);
+
       type ValueType = Type extends 'multi'
         ? SelectOptionValue | SelectOptionValue[] | null
         : SelectOptionValue | null;
       const isMultiSelect = type === 'multi';
-      const shouldShowCompactLabel = compact && label && !isMultiSelect;
+      // `size` wins over the deprecated `compact` for geometry.
+      const resolvedSize = size ?? (compact ? 's' : defaultSelectSize);
+      // The deprecated `compact` only forces label placement when the caller did NOT set an explicit
+      // `size`; once `size` is provided, placement follows the normal `labelVariant` rules.
+      const useLegacyCompact = Boolean(compact) && size === undefined;
+      const labelVariant = useLegacyCompact ? undefined : labelVariantProp;
+      const hasLabel = !!label;
+
+      // Label placement mirrors TextInput: `compact` (set alone) forces an inside label; otherwise
+      // placement follows `labelVariant`. An inside label sits horizontally in the start slot at every
+      // size EXCEPT `l`, where it stacks vertically above the value. Multi-select is the one exception:
+      // its value chips can't share a row with an inline label, so legacy compact multi-select keeps
+      // its label outside (only an explicit `inside` labelVariant places a multi-select's label inside).
+      const isCompactLabel = useLegacyCompact && !isMultiSelect;
+      const wantsInsideLabel = hasLabel && (isCompactLabel || labelVariant === 'inside');
+      const insideVerticalLabel = wantsInsideLabel && !isCompactLabel && resolvedSize === 'l';
+      const insideHorizontalLabel = wantsInsideLabel && !insideVerticalLabel;
       const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
       // Map of options to their values
       // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
@@ -154,11 +198,17 @@ const DefaultSelectControlComponent = memo(
         return map;
       }, [options]);
 
+      const matchedOption = useMemo(() => {
+        if (isMultiSelect || value === null || Array.isArray(value)) return undefined;
+        return optionsMap.get(value as SelectOptionValue);
+      }, [isMultiSelect, optionsMap, value]);
+
+      const isShowingPlaceholder = matchedOption === undefined;
+
       const singleValueContent = useMemo(() => {
-        const option = !isMultiSelect ? optionsMap.get(value as SelectOptionValue) : undefined;
-        const label = option?.label ?? option?.description ?? option?.value ?? placeholder;
-        return hasValue ? label : placeholder;
-      }, [hasValue, isMultiSelect, optionsMap, placeholder, value]);
+        if (!matchedOption) return placeholder;
+        return matchedOption.label ?? matchedOption.description ?? matchedOption.value;
+      }, [matchedOption, placeholder]);
 
       const computedControlAccessibilityLabel = useMemo(() => {
         // For multi-select, set the label to the content of each selected value and the hidden selected options label
@@ -240,33 +290,61 @@ const DefaultSelectControlComponent = memo(
         [helperText, variant, classNames?.controlHelperTextNode, styles?.controlHelperTextNode],
       );
 
-      const labelNode = useMemo(
-        () =>
-          labelVariant === 'inside' ? (
-            <Pressable noScaleOnPress onClick={() => setOpen((s) => !s)} tabIndex={-1}>
-              <InputLabel
-                className={classNames?.controlLabelNode}
-                color="fg"
-                paddingBottom={0}
-                paddingStart={2}
-                style={styles?.controlLabelNode}
-              >
-                {label}
-              </InputLabel>
-            </Pressable>
-          ) : typeof label === 'string' ? (
+      const labelNode = useMemo(() => {
+        if (insideVerticalLabel || insideHorizontalLabel) return null;
+
+        if (typeof label === 'string') {
+          return (
             <InputLabel
               className={classNames?.controlLabelNode}
-              color="fg"
+              color={labelColor}
+              font={labelFont}
+              paddingY={0.5}
               style={styles?.controlLabelNode}
             >
               {label}
             </InputLabel>
-          ) : (
-            label
-          ),
-        [labelVariant, classNames?.controlLabelNode, styles?.controlLabelNode, label, setOpen],
-      );
+          );
+        }
+
+        return label;
+      }, [
+        insideVerticalLabel,
+        insideHorizontalLabel,
+        classNames?.controlLabelNode,
+        styles?.controlLabelNode,
+        label,
+        labelColor,
+        labelFont,
+      ]);
+
+      const inlineLabelNode = useMemo(() => {
+        if (!insideVerticalLabel && !insideHorizontalLabel) return null;
+
+        if (typeof label === 'string') {
+          return (
+            <InputLabel
+              className={classNames?.controlLabelNode}
+              color={labelColor}
+              font={labelFont}
+              paddingY={0}
+              style={styles?.controlLabelNode}
+            >
+              {label}
+            </InputLabel>
+          );
+        }
+
+        return label;
+      }, [
+        insideVerticalLabel,
+        insideHorizontalLabel,
+        classNames?.controlLabelNode,
+        styles?.controlLabelNode,
+        label,
+        labelColor,
+        labelFont,
+      ]);
 
       const valueNode = useMemo(() => {
         if (hasValue && isMultiSelect) {
@@ -289,7 +367,6 @@ const DefaultSelectControlComponent = memo(
                 return (
                   <InputChip
                     key={option.value}
-                    compact
                     data-selected-value
                     accessibilityLabel={`${removeSelectedOptionAccessibilityLabel} ${accessibilityLabel}`}
                     borderWidth={0}
@@ -297,16 +374,24 @@ const DefaultSelectControlComponent = memo(
                     disabled={option.disabled}
                     invertColorScheme={false}
                     maxWidth={200}
-                    onClick={(event) => handleUnselectValue(event, index)}
+                    onClick={
+                      isInteractionBlocked
+                        ? undefined
+                        : (event) => handleUnselectValue(event, index)
+                    }
+                    size={multiSelectValueChipSize}
                   >
-                    <Text color="fg" flexShrink={1} font="label1" overflow="truncate">
-                      {option.label ?? option.description ?? option.value ?? ''}
-                    </Text>
+                    {option.label ?? option.description ?? option.value ?? ''}
                   </InputChip>
                 );
               })}
               {value.length - maxSelectedOptionsToShow > 0 && (
-                <InputChip compact borderWidth={0} end={null} invertColorScheme={false}>
+                <InputChip
+                  borderWidth={0}
+                  end={null}
+                  invertColorScheme={false}
+                  size={multiSelectValueChipSize}
+                >
                   {`+${value.length - maxSelectedOptionsToShow} ${hiddenSelectedOptionsLabel}`}
                 </InputChip>
               )}
@@ -317,7 +402,7 @@ const DefaultSelectControlComponent = memo(
         return typeof singleValueContent === 'string' ? (
           <Text
             as="p"
-            color={hasValue ? 'fg' : 'fgMuted'}
+            color={isShowingPlaceholder ? 'fgMuted' : 'fg'}
             display="block"
             font={font}
             overflow="truncate"
@@ -332,6 +417,7 @@ const DefaultSelectControlComponent = memo(
       }, [
         hasValue,
         isMultiSelect,
+        isShowingPlaceholder,
         singleValueContent,
         font,
         align,
@@ -341,6 +427,7 @@ const DefaultSelectControlComponent = memo(
         optionsMap,
         removeSelectedOptionAccessibilityLabel,
         handleUnselectValue,
+        isInteractionBlocked,
       ]);
 
       const inputNode = useMemo(
@@ -351,6 +438,7 @@ const DefaultSelectControlComponent = memo(
             accessibilityLabel={computedControlAccessibilityLabel}
             aria-expanded={open}
             aria-haspopup={ariaHaspopup}
+            aria-readonly={readOnly}
             as={role === 'combobox' ? 'div' : 'button'}
             background="transparent"
             blendStyles={interactableBlendStyles}
@@ -360,17 +448,9 @@ const DefaultSelectControlComponent = memo(
             flexGrow={1}
             flexShrink={1}
             focusable={false}
-            minHeight={
-              labelVariant === 'inside'
-                ? LABEL_VARIANT_INSIDE_HEIGHT
-                : compact
-                  ? COMPACT_HEIGHT
-                  : DEFAULT_HEIGHT
-            }
             minWidth={0}
-            onClick={() => setOpen((s) => !s)}
+            onClick={handleToggleOpen}
             onKeyDown={onKeyDown}
-            paddingStart={1}
             role={role}
             style={styles?.controlInputNode}
             tabIndex={tabIndex}
@@ -382,45 +462,67 @@ const DefaultSelectControlComponent = memo(
                 height="100%"
                 justifyContent="center"
                 minWidth={0}
-                paddingX={1}
+                paddingEnd={2}
                 style={styles?.controlStartNode}
               >
                 {startNode}
               </HStack>
             )}
-            {shouldShowCompactLabel ? (
-              <HStack alignItems="center" paddingX={1}>
-                {labelNode}
+            {insideHorizontalLabel ? (
+              <HStack alignItems="center" flexShrink={0} paddingEnd={1}>
+                {inlineLabelNode}
               </HStack>
             ) : null}
-            <HStack
-              alignItems="center"
-              flexGrow={1}
-              flexShrink={1}
-              height="100%"
-              justifyContent="space-between"
-              minWidth={0}
-              width="100%"
-            >
-              <VStack
-                ref={valueNodeContainerRef}
-                alignItems={align}
-                className={classNames?.controlValueNode}
+            {insideVerticalLabel ? (
+              <VStack flexGrow={1} minWidth={0} width="100%">
+                {inlineLabelNode}
+                <HStack alignItems="center" flexGrow={1} minWidth={0} width="100%">
+                  <VStack
+                    ref={valueNodeContainerRef}
+                    alignItems={align}
+                    className={classNames?.controlValueNode}
+                    flexGrow={1}
+                    flexShrink={1}
+                    flexWrap="wrap"
+                    gap={1}
+                    justifyContent="flex-start"
+                    minWidth={0}
+                    overflow="hidden"
+                    style={styles?.controlValueNode}
+                  >
+                    {valueNode}
+                    {contentNode}
+                  </VStack>
+                </HStack>
+              </VStack>
+            ) : (
+              <HStack
+                alignItems="center"
                 flexGrow={1}
                 flexShrink={1}
-                flexWrap="wrap"
-                gap={1}
-                justifyContent="flex-start"
+                height="100%"
+                justifyContent="space-between"
                 minWidth={0}
-                overflow="hidden"
-                paddingX={1}
-                paddingY={labelVariant === 'inside' && !isMultiSelect ? 0 : compact ? 1 : 1.5}
-                style={styles?.controlValueNode}
+                width="100%"
               >
-                {valueNode}
-                {contentNode}
-              </VStack>
-            </HStack>
+                <VStack
+                  ref={valueNodeContainerRef}
+                  alignItems={align}
+                  className={classNames?.controlValueNode}
+                  flexGrow={1}
+                  flexShrink={1}
+                  flexWrap="wrap"
+                  gap={1}
+                  justifyContent="flex-start"
+                  minWidth={0}
+                  overflow="hidden"
+                  style={styles?.controlValueNode}
+                >
+                  {valueNode}
+                  {contentNode}
+                </VStack>
+              </HStack>
+            )}
           </Pressable>
         ),
         [
@@ -433,72 +535,86 @@ const DefaultSelectControlComponent = memo(
           classNames?.controlStartNode,
           classNames?.controlValueNode,
           disabled,
-          labelVariant,
-          compact,
+          readOnly,
           styles?.controlInputNode,
           styles?.controlStartNode,
           styles?.controlValueNode,
           tabIndex,
           onKeyDown,
           startNode,
-          shouldShowCompactLabel,
-          labelNode,
+          insideHorizontalLabel,
+          insideVerticalLabel,
+          inlineLabelNode,
           align,
-          isMultiSelect,
           valueNode,
           contentNode,
-          setOpen,
+          handleToggleOpen,
         ],
       );
 
       const endNode = useMemo(
         () => (
-          <Pressable aria-hidden flexShrink={0} onClick={() => setOpen((s) => !s)} tabIndex={-1}>
+          <Pressable aria-hidden flexShrink={0} onClick={handleToggleOpen} tabIndex={-1}>
             <HStack
               alignItems="center"
               className={classNames?.controlEndNode}
               flexGrow={1}
               height="100%"
-              justifyContent={labelVariant === 'inside' ? 'flex-end' : undefined}
-              paddingX={2}
-              paddingY={compact ? 1 : 1.5}
+              justifyContent={insideVerticalLabel ? 'flex-end' : undefined}
+              paddingStart={2}
               style={styles?.controlEndNode}
             >
-              {customEndNode ? (
-                customEndNode
-              ) : (
-                <AnimatedCaret
-                  color={!open ? 'fg' : variant ? variantColor[variant] : 'fgPrimary'}
-                  rotate={open ? 0 : 180}
-                />
-              )}
+              {customEndNode ? customEndNode : <AnimatedCaret color="fg" rotate={open ? 0 : 180} />}
             </HStack>
           </Pressable>
         ),
         [
           classNames?.controlEndNode,
-          labelVariant,
-          compact,
+          insideVerticalLabel,
           styles?.controlEndNode,
           customEndNode,
           open,
-          variant,
-          setOpen,
+          handleToggleOpen,
         ],
       );
+
+      const inputStackStyles = useMemo(() => {
+        let verticalSpaceVar: string;
+        if (insideVerticalLabel) {
+          // A vertically-stacked inside label (size `l`) tightens the padding so the stacked label +
+          // value fit the same 58px field an outside label produces. A multi-select with chips
+          // (taller than a single text line) tightens further.
+          verticalSpaceVar = isMultiSelect && hasValue ? 'var(--space-0_25)' : 'var(--space-0_75)';
+        } else if (isMultiSelect && hasValue) {
+          verticalSpaceVar = multiSelectVerticalSpaceVar[resolvedSize];
+        } else {
+          verticalSpaceVar = selectSizeVerticalSpaceVar[resolvedSize];
+        }
+        return {
+          paddingTop: verticalSpaceVar,
+          paddingBottom: verticalSpaceVar,
+          paddingLeft: 'var(--space-2)',
+          paddingRight: 'var(--space-2)',
+        };
+      }, [insideVerticalLabel, resolvedSize, isMultiSelect, hasValue]);
 
       return (
         <InputStack
           ref={ref}
           blendStyles={interactableBlendStyles}
+          borderRadius={borderRadius}
           borderWidth={borderWidth}
+          disableFocusedStyle={disableFocusedStyle}
           disabled={disabled}
           endNode={endNode}
+          focused={open && !readOnly}
           focusedBorderWidth={focusedBorderWidth}
           helperTextNode={helperTextNode}
+          inputBackground={inputBackground}
           inputNode={inputNode}
-          labelNode={shouldShowCompactLabel ? null : labelNode}
-          labelVariant={labelVariant}
+          labelNode={labelNode}
+          labelVariant={insideVerticalLabel ? 'inside' : 'outside'}
+          styles={{ input: inputStackStyles }}
           variant={variant}
           {...props}
         />

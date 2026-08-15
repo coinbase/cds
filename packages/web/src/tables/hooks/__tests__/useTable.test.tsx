@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { Table } from '../../Table';
 import { TableBody } from '../../TableBody';
@@ -128,8 +128,11 @@ describe('useTableTag', () => {
   });
 
   it('Get cell spacing can skip as validation', () => {
-    const { result } = renderHook(() => useTableCellSpacing({ skipAsValidation: true }));
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
 
-    expect(result.error).toBeUndefined();
+    renderHook(() => useTableCellSpacing({ skipAsValidation: true }));
+
+    expect(consoleSpy).not.toHaveBeenCalled();
+    consoleSpy.mockRestore();
   });
 });

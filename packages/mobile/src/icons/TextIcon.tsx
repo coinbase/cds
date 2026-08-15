@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react';
 import { Animated, Text } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
-import type { IconName } from '@coinbase/cds-common';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
 import { glyphMap } from '@coinbase/cds-icons/glyphMap';
 import { isDevelopment } from '@coinbase/cds-utils';
 
@@ -53,7 +53,8 @@ export const TextIcon = memo(function TextIcon({
           color: iconColor,
         },
         style,
-      ] as TextStyle,
+        // TODO https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
+      ] as StyleProp<TextStyle>,
     [style, iconColor, iconSize],
   );
 

@@ -1,6 +1,7 @@
 import { cloneElement, useCallback, useEffect, useRef, useState } from 'react';
 
 import { useTimer } from '../hooks/useTimer';
+import { mergeReactElementRef } from '../utils/mergeRefs';
 
 import type { ToastNode, ToastRefHandle } from './ToastProvider';
 
@@ -28,7 +29,9 @@ export const useToastQueue = () => {
 
       setActiveToast({
         ...toast,
-        element: cloneElement(toast.element, { ref: activeToastRef }),
+        element: cloneElement(toast.element, {
+          ref: mergeReactElementRef(toast.element, activeToastRef),
+        }),
       });
 
       // remove toast after duration

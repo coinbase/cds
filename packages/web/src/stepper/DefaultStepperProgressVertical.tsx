@@ -1,11 +1,10 @@
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { defaultRect } from '@coinbase/cds-common/types/Rect';
-import { animated, to, useSpring } from '@react-spring/web';
+import { m as motion } from 'framer-motion';
 
-import { useHasMounted } from '../hooks/useHasMounted';
 import { Box } from '../layout/Box';
 
-import type { StepperProgressComponent } from './Stepper';
+import { defaultProgressTimingConfig, type StepperProgressComponent } from './Stepper';
 
 export const DefaultStepperProgressVertical: StepperProgressComponent = memo(
   function DefaultStepperProgressVertical({
@@ -21,7 +20,7 @@ export const DefaultStepperProgressVertical: StepperProgressComponent = memo(
     className,
     style,
     activeStepLabelElement,
-    progressSpringConfig,
+    progressTimingConfig = defaultProgressTimingConfig,
     animate = true,
     disableAnimateOnMount,
     background = 'bgLine',
@@ -35,62 +34,58 @@ export const DefaultStepperProgressVertical: StepperProgressComponent = memo(
     progress,
     ...props
   }) {
-    const hasMounted = useHasMounted();
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const [renderTick, setRenderTick] = useState(0);
+    const [fillHeight, setFillHeight] = useState(0);
+    const [hasReceivedFillHeight, setHasReceivedFillHeight] = useState(false);
 
     const isStepGroupActive = active || isDescendentActive;
 
     const isLastStep = flatStepIds[flatStepIds.length - 1] === step.id;
 
-    useEffect(() => {
-      if (!containerRef.current) return;
-      const observer = new window.ResizeObserver((entries) => {
-        setRenderTick((prev) => prev + 1);
-      });
-
-      observer.observe(containerRef.current);
-      return () => observer.disconnect();
-    }, []);
-
-    const getFillHeight = useCallback(() => {
+    const recalculateFillHeight = useCallback(() => {
+      const container = containerRef.current;
+      if (!container) return;
       const hasSubSteps = Boolean(step.subSteps?.length);
-      const containerRect = containerRef.current?.getBoundingClientRect() ?? defaultRect;
+      const containerRect = container.getBoundingClientRect();
 
-      // Complete progress fill
-      if (complete || (visited && !isStepGroupActive) || (!hasSubSteps && active))
-        return containerRect.height;
-      // Partial progress fill
-      if (hasSubSteps && isDescendentActive) {
+      let height: number;
+      if (complete || (visited && !isStepGroupActive) || (!hasSubSteps && active)) {
+        height = containerRect.height;
+      } else if (hasSubSteps && isDescendentActive) {
         const activeStepLabelRect = activeStepLabelElement?.getBoundingClientRect() ?? defaultRect;
         const lastSubstep = step.subSteps?.[step.subSteps.length - 1];
         const isLastSubstepActive = activeStepId === lastSubstep?.id;
         const activeStepLabelBottom = activeStepLabelRect.y + activeStepLabelRect.height;
         const halfLabelHeight = isLastSubstepActive ? 0 : 0.5 * activeStepLabelRect.height;
-        return activeStepLabelBottom - containerRect.y - halfLabelHeight;
+        height = activeStepLabelBottom - containerRect.y - halfLabelHeight;
+      } else {
+        height = 0;
       }
-      return 0;
-      // renderTick is used to force a new height calculation when it changes by the observer
-      // eslint-disable-next-line react-hooks/exhaustive-deps
+      setFillHeight(height);
+      if (height) setHasReceivedFillHeight(true);
     }, [
       step.subSteps,
       complete,
       visited,
       isStepGroupActive,
       active,
-      renderTick,
       isDescendentActive,
       activeStepLabelElement,
       activeStepId,
     ]);
 
-    const [{ fillHeight }] = useSpring(
-      () => ({
-        fillHeight: getFillHeight(),
-        config: progressSpringConfig,
-        immediate: !animate || (disableAnimateOnMount && !hasMounted),
-      }),
-      [getFillHeight, animate, disableAnimateOnMount, hasMounted],
+    useEffect(() => {
+      const container = containerRef.current;
+      if (!container) return;
+      const observer = new window.ResizeObserver(recalculateFillHeight);
+      observer.observe(container);
+      return () => observer.disconnect();
+    }, [recalculateFillHeight]);
+
+    const animatedHeight = progress * fillHeight;
+    const transition = useMemo(
+      () => (animate ? progressTimingConfig : { type: 'tween' as const, duration: 0 }),
+      [animate, progressTimingConfig],
     );
 
     if (depth > 0 || isLastStep) return null;
@@ -124,14 +119,27 @@ export const DefaultStepperProgressVertical: StepperProgressComponent = memo(
                     : defaultFill
           }
         >
-          <animated.div
-            style={{
-              position: 'absolute',
-              width: '100%',
-              backgroundColor: 'currentColor',
-              height: to([progress, fillHeight], (p, f) => `${p * f}px`),
-            }}
-          />
+          {disableAnimateOnMount && !hasReceivedFillHeight ? (
+            <div
+              style={{
+                position: 'absolute',
+                width: '100%',
+                height: animatedHeight,
+                backgroundColor: 'currentColor',
+              }}
+            />
+          ) : (
+            <motion.div
+              animate={{ height: animatedHeight }}
+              initial={{ height: disableAnimateOnMount ? animatedHeight : 0 }}
+              style={{
+                position: 'absolute',
+                width: '100%',
+                backgroundColor: 'currentColor',
+              }}
+              transition={transition}
+            />
+          )}
         </Box>
       </Box>
     );

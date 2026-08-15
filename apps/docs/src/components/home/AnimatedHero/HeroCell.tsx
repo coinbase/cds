@@ -66,10 +66,10 @@ export const HeroCell = ({
       <Box
         alignItems="center"
         borderRadius={{ base: 200, phone: 100 }}
-        dangerouslySetBackground={isColor ? character : undefined}
         height="100%"
         justifyContent="center"
         overflow="hidden"
+        style={isColor ? { backgroundColor: character } : undefined}
         width="100%"
       >
         <Text font={{ base: 'display2', tablet: 'display3', phone: 'title4' }}>

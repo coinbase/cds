@@ -11,7 +11,6 @@ import { Chip } from '@coinbase/cds-web/chips/Chip';
 import { InputChip } from '@coinbase/cds-web/chips/InputChip';
 import { MediaChip } from '@coinbase/cds-web/chips/MediaChip';
 import { Coachmark } from '@coinbase/cds-web/coachmark/Coachmark';
-import { DotCount } from '@coinbase/cds-web/dots/DotCount';
 import { Icon } from '@coinbase/cds-web/icons/Icon';
 import { Pictogram } from '@coinbase/cds-web/illustrations/Pictogram';
 import { HStack } from '@coinbase/cds-web/layout/HStack';
@@ -25,6 +24,7 @@ import { Text } from '@coinbase/cds-web/typography/Text';
 import { AlertExample } from './examples/AlertExample';
 import { ControlsExample } from './examples/Controls';
 import { DatePickerExample } from './examples/DatePicker';
+import { DotCountExample } from './examples/DotCount';
 import { DropdownExample } from './examples/DropdownExample';
 import { ModalExample } from './examples/ModalExample';
 import { PaginationExample } from './examples/Pagination';
@@ -36,8 +36,10 @@ import { SelectChipExample } from './examples/SelectChip';
 import { StepperHorizontalBasicExample } from './examples/StepperHorizontal';
 import { StepperVerticalCustomExample } from './examples/StepperVertical';
 import { TableExample } from './examples/TableExample';
+import { TabsExample } from './examples/Tabs';
 import { TextInputExample } from './examples/TextInput';
 import { ToastExample } from './examples/ToastExample';
+import { TooltipExample } from './examples/TooltipExample';
 import { Container } from './Container';
 import { bannerVariants, buttonVariants, tagColorSchemes } from './themeVars';
 
@@ -61,11 +63,14 @@ export const StickerSheet = memo(() => {
             <ControlsExample />
           </Container>
 
-          <HStack>
+          <VStack gap={2}>
             <Container title="Segmented Tabs">
               <SegmentedTabsExample />
             </Container>
-          </HStack>
+            <Container title="Tabs">
+              <TabsExample />
+            </Container>
+          </VStack>
 
           <HStack gap={2}>
             <Container width={160}>
@@ -151,11 +156,12 @@ export const StickerSheet = memo(() => {
             />
           </Container>
 
-          <Container title="Dropdown / Modal / Alert / Toast">
+          <Container title="Dropdown / Modal / Alert / Toast / Tooltip">
             <DropdownExample />
             <ModalExample />
             <AlertExample />
             <ToastExample />
+            <TooltipExample />
           </Container>
 
           <Container title="TableHeader / TableCell">
@@ -369,6 +375,7 @@ export const StickerSheet = memo(() => {
                 subtitle="XRP"
                 title="XRP"
               />
+              <ListCell title="Short" />
             </VStack>
           </Container>
 
@@ -392,15 +399,7 @@ export const StickerSheet = memo(() => {
           </Container>
           <VStack className="no-a11y-checks">
             <Container title="DotCount">
-              <DotCount count={3}>
-                <Icon name="bell" size="l" />
-              </DotCount>
-              <DotCount count={12}>
-                <Icon name="bell" size="l" />
-              </DotCount>
-              <DotCount count={100} max={99}>
-                <Icon name="bell" size="l" />
-              </DotCount>
+              <DotCountExample />
             </Container>
           </VStack>
         </VStack>

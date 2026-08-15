@@ -1,8 +1,11 @@
-import TestRenderer from 'react-test-renderer';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { useWebBrowserOpener } from '../../hooks/useWebBrowserOpener';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Link, type LinkProps } from '../Link';
+
+jest.mock('../../hooks/useWebBrowserOpener');
+const mockUseWebBrowserOpener = useWebBrowserOpener as jest.Mock;
 
 const TEST_ID = 'link';
 const URL = 'www.coinbase.com';
@@ -24,6 +27,10 @@ const variants = [
 ] as LinkProps['font'][];
 
 describe('Link', () => {
+  beforeEach(() => {
+    mockUseWebBrowserOpener.mockReturnValue(jest.fn());
+  });
+
   it('passes a11y', () => {
     render(
       <DefaultThemeProvider>
@@ -89,40 +96,58 @@ describe('Link', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('to prop works as expected', async () => {
-    const linkRenderer = TestRenderer.create(
+  it('opens URL when pressed', () => {
+    const mockOpenUrl = jest.fn();
+    mockUseWebBrowserOpener.mockReturnValue(mockOpenUrl);
+
+    render(
       <DefaultThemeProvider>
         <Link testID={TEST_ID} to={URL}>
           Child
         </Link>
       </DefaultThemeProvider>,
     );
-    const linkInstance = await linkRenderer.root.findByProps({ testID: TEST_ID });
-    expect(linkInstance.props.to).toEqual(URL);
+
+    fireEvent.press(screen.getByTestId(TEST_ID));
+
+    expect(mockOpenUrl).toHaveBeenCalledWith(URL, expect.any(Object));
   });
 
-  it('can set forceOpenOutsideApp to true', async () => {
-    const linkRenderer = TestRenderer.create(
+  it('passes forceOpenOutsideApp option to browser opener', () => {
+    const mockOpenUrl = jest.fn();
+    mockUseWebBrowserOpener.mockReturnValue(mockOpenUrl);
+
+    render(
       <DefaultThemeProvider>
         <Link forceOpenOutsideApp testID={TEST_ID} to={URL}>
           Child
         </Link>
       </DefaultThemeProvider>,
     );
-    const link = await linkRenderer.root.findByProps({ testID: TEST_ID });
-    expect(link.props.forceOpenOutsideApp).toBe(true);
+
+    fireEvent.press(screen.getByTestId(TEST_ID));
+
+    expect(mockOpenUrl).toHaveBeenCalledWith(
+      URL,
+      expect.objectContaining({ forceOpenOutsideApp: true }),
+    );
   });
 
-  it('can set readerMode to true', async () => {
-    const linkRenderer = TestRenderer.create(
+  it('passes readerMode option to browser opener', () => {
+    const mockOpenUrl = jest.fn();
+    mockUseWebBrowserOpener.mockReturnValue(mockOpenUrl);
+
+    render(
       <DefaultThemeProvider>
         <Link readerMode testID={TEST_ID} to={URL}>
           Child
         </Link>
       </DefaultThemeProvider>,
     );
-    const link = await linkRenderer.root.findByProps({ testID: TEST_ID });
-    expect(link.props.readerMode).toBe(true);
+
+    fireEvent.press(screen.getByTestId(TEST_ID));
+
+    expect(mockOpenUrl).toHaveBeenCalledWith(URL, expect.objectContaining({ readerMode: true }));
   });
 
   it('removes text style when inherited', () => {

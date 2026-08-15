@@ -1,4 +1,5 @@
 import React, { cloneElement, memo, useCallback, useMemo, useRef } from 'react';
+import { tooltipPaddingX, tooltipPaddingY } from '@coinbase/cds-common/tokens/tooltip';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Popover } from '../popover/Popover';
@@ -35,6 +36,18 @@ export const Tooltip = memo((_props: TooltipProps) => {
     autoFocusDelay = 20,
     openDelay,
     closeDelay,
+    background = 'bg',
+    borderRadius = 200,
+    maxWidth,
+    paddingX = tooltipPaddingX,
+    paddingY = tooltipPaddingY,
+    color = 'fg',
+    font = 'label2',
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    ...props
   } = mergedProps;
   const { isOpen, handleOnMouseEnter, handleOnMouseLeave, handleOnFocus, handleOnBlur, tooltipId } =
     useTooltipState(tooltipIdDefault, openDelay, closeDelay);
@@ -56,7 +69,9 @@ export const Tooltip = memo((_props: TooltipProps) => {
     // Use aria-describedby to associate the tooltip (role="tooltip") with the trigger.
     // This preserves the trigger's own accessible name (e.g. button text) while the tooltip
     // provides supplemental description, per the ARIA tooltip pattern.
-    return cloneElement(children, { 'aria-describedby': tooltipId });
+    return cloneElement(children as React.ReactElement<React.HTMLAttributes<HTMLElement>>, {
+      'aria-describedby': tooltipId,
+    });
   }, [children, tooltipId]);
 
   const contentPosition = useMemo(
@@ -86,13 +101,25 @@ export const Tooltip = memo((_props: TooltipProps) => {
       content={
         <TooltipContent
           ref={tooltipContentRef}
+          background={background}
+          borderRadius={borderRadius}
+          color={color}
           content={content}
           elevation={elevation}
+          font={font}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
           gap={gap}
+          lineHeight={lineHeight}
+          maxWidth={maxWidth}
+          paddingX={paddingX}
+          paddingY={paddingY}
           placement={placement}
           testID={testID}
           tooltipId={tooltipId}
           zIndex={zIndex}
+          {...props}
         />
       }
       contentPosition={contentPosition}

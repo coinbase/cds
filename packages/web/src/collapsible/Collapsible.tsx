@@ -1,10 +1,12 @@
 import React, { forwardRef, memo, useCallback, useMemo, useState } from 'react';
-import type { CollapsibleDirection, PaddingProps, SharedProps } from '@coinbase/cds-common/types';
+import type { CollapsibleDirection } from '@coinbase/cds-common/types/CollapsibleBaseProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 import { m as motion } from 'framer-motion';
 
+import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
-import { HStack } from '../layout/HStack';
 
 import { useCollapsibleMotionProps } from './useCollapsibleMotionProps';
 
@@ -42,7 +44,10 @@ export type CollapsibleBaseProps = SharedProps &
     maxWidth?: BoxProps<BoxDefaultElement>['maxWidth'];
   };
 
-export type CollapsibleProps = CollapsibleBaseProps;
+export type CollapsibleProps = CollapsibleBaseProps & {
+  className?: string;
+  style?: React.CSSProperties;
+};
 
 export const Collapsible = memo(
   forwardRef((_props: CollapsibleProps, forwardedRef: React.ForwardedRef<HTMLDivElement>) => {
@@ -58,6 +63,8 @@ export const Collapsible = memo(
       id,
       role = 'region',
       dangerouslyDisableOverflowHidden = false,
+      className,
+      style: styleProp,
       // Spacing
       padding,
       paddingBottom,
@@ -83,42 +90,39 @@ export const Collapsible = memo(
         : { maxHeight };
     }, [direction, maxWidth, maxHeight]);
 
-    // visibility is used to prevent child content from being focusable when collapsed
-    const [visibility, setVisibility] = useState<
-      Extract<React.CSSProperties['visibility'], 'visible' | 'hidden'>
-    >(collapsed ? 'hidden' : 'visible');
-    // update the visibility to "visible" when the content is expanding
-    if (!collapsed && visibility !== 'visible') {
-      setVisibility('visible');
+    // display: none is applied after the collapse animation completes so the element no longer
+    // participates in layout and its children are not focusable. It is restored immediately when
+    // expanding so the animation has content to reveal.
+    const [isDisplayNone, setIsDisplayNone] = useState(collapsed);
+    if (!collapsed && isDisplayNone) {
+      setIsDisplayNone(false);
     }
 
-    // when the animation completes, set the visibility to "hidden" if the content should be collapsed
-    // this is to prevent children of the Collapsible element from being focusable in this state
     const handleAnimationComplete = useCallback(() => {
       if (collapsed) {
-        setVisibility('hidden');
+        setIsDisplayNone(true);
       }
     }, [collapsed]);
 
-    // merge visible style with the computed framer-motion styles
     const style = useMemo(() => {
-      return {
-        ...motionStyle,
-        visibility,
-      };
-    }, [visibility, motionStyle]);
+      const nextStyle = isDisplayNone ? { ...motionStyle, display: 'none' } : motionStyle;
+      return styleProp ? { ...nextStyle, ...styleProp } : nextStyle;
+    }, [motionStyle, isDisplayNone, styleProp]);
 
     return (
+      // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
       <motion.div
-        {...motionProps}
-        ref={forwardedRef}
-        aria-labelledby={accessibilityLabelledBy}
-        className={COMPONENT_STATIC_CLASSNAME}
-        data-testid={testID}
-        id={id}
-        onAnimationComplete={handleAnimationComplete}
-        role={role}
-        style={style}
+        {...({
+          ...motionProps,
+          ref: forwardedRef,
+          'aria-labelledby': accessibilityLabelledBy,
+          className: cx(COMPONENT_STATIC_CLASSNAME, className),
+          'data-testid': testID,
+          id: id,
+          onAnimationComplete: handleAnimationComplete,
+          role: role,
+          style: style,
+        } as React.ComponentProps<typeof motion.div>)}
       >
         <Box display="block" paddingTop={paddingTop}>
           <Box

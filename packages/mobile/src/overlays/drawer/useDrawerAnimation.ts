@@ -1,6 +1,5 @@
 import { useMemo, useRef } from 'react';
 import { Animated, Easing, useWindowDimensions } from 'react-native';
-import type { MotionBaseSpec, PinningDirection } from '@coinbase/cds-common';
 import {
   animateDrawerInConfig,
   animateDrawerOutConfig,
@@ -13,6 +12,8 @@ import {
   horizontalDrawerPercentageOfView,
   verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView,
 } from '@coinbase/cds-common/tokens/drawer';
+import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
+import type { MotionBaseSpec } from '@coinbase/cds-common/types/Motion';
 
 import { convertMotionConfig } from '../../animation/convertMotionConfig';
 

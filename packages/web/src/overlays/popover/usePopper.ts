@@ -1,11 +1,17 @@
 import { useMemo, useState } from 'react';
+// eslint-disable-next-line no-restricted-imports -- Temporary v9 compatibility export; remove with `usePopper` in v10.
 import { usePopper as useExternalPopper } from 'react-popper';
+// eslint-disable-next-line no-restricted-imports -- Temporary v9 compatibility export; remove with `usePopper` in v10.
 import type { Options as PopperOptions } from '@popperjs/core';
 
 import { useTheme } from '../../hooks/useTheme';
 
 import type { PopoverContentPositionConfig } from './PopoverProps';
 
+/**
+ * @deprecated Use Floating UI directly. This hook is temporarily supported for compatibility. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const usePopper = ({
   placement,
   skid = 0,

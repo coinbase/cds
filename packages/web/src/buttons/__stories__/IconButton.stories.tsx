@@ -1,14 +1,30 @@
 import React from 'react';
 import { names } from '@coinbase/cds-icons/names';
+import { css } from '@linaria/core';
 
 import { HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
 import { IconButton, type IconButtonBaseProps } from '../IconButton';
 
+const rotatedIconCss = css`
+  transform: rotate(45deg);
+  transition: transform 200ms ease-in-out;
+`;
+
+const positiveProgressCircleCss = css`
+  color: var(--color-fgPositive);
+`;
+
 const iconName = 'arrowsHorizontal';
 const accessibilityLabel = 'Horizontal arrows';
 
 const variants = [
+  {
+    component: (props?: Partial<IconButtonBaseProps>) => (
+      <IconButton compact={false} name={iconName} variant="primary" {...props} />
+    ),
+    title: 'Non-compact',
+  },
   {
     component: (props?: Partial<IconButtonBaseProps>) => (
       <IconButton name={iconName} variant="primary" {...props} />
@@ -35,15 +51,15 @@ const variants = [
   },
   {
     component: (props?: Partial<IconButtonBaseProps>) => (
-      <IconButton name={iconName} variant="foregroundMuted" {...props} />
+      <IconButton flush="start" name={iconName} variant="primary" {...props} />
     ),
-    title: 'ForegroundMuted',
+    title: 'Primary flush start',
   },
   {
     component: (props?: Partial<IconButtonBaseProps>) => (
-      <IconButton transparent name={iconName} variant="foregroundMuted" {...props} />
+      <IconButton flush="end" name={iconName} variant="primary" {...props} />
     ),
-    title: 'ForegroundMuted transparent',
+    title: 'Primary flush end',
   },
 ];
 
@@ -70,6 +86,16 @@ export const Default = () => (
       </HStack>
     </VStack>
     <VStack gap={2}>
+      <Text font="title3">Sizes</Text>
+      <HStack alignItems="center" gap={4}>
+        <IconButton accessibilityLabel="Extra small" name={iconName} size="xs" />
+        <IconButton accessibilityLabel="Small" name={iconName} size="s" />
+        <IconButton accessibilityLabel="Medium" name={iconName} size="m" />
+        <IconButton accessibilityLabel="Large (default)" name={iconName} size="l" />
+        <IconButton compact accessibilityLabel="Compact (deprecated)" name={iconName} />
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
       <Text font="title3">Without Compact Styles</Text>
       <IconButton accessibilityLabel={accessibilityLabel} compact={false} name={iconName} />
     </VStack>
@@ -90,6 +116,46 @@ export const Default = () => (
         name={iconName}
         style={{ backgroundColor: 'red', transform: 'scale(0.5)' }}
       />
+    </VStack>
+    <VStack gap={2}>
+      <Text font="title3">Icon Glyph Styles</Text>
+      <HStack alignItems="center" gap={4}>
+        <IconButton
+          accessibilityLabel="Custom color via styles.icon"
+          name={iconName}
+          styles={{ icon: { color: 'dodgerblue' } }}
+        />
+        <Text font="body">Custom color via styles.icon</Text>
+      </HStack>
+      <HStack alignItems="center" gap={4}>
+        <IconButton
+          accessibilityLabel="Rotated icon via classNames.icon"
+          classNames={{ icon: rotatedIconCss }}
+          name={iconName}
+        />
+        <Text font="body">Rotated icon via classNames.icon</Text>
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
+      <Text font="title3">Progress Circle Styles</Text>
+      <HStack alignItems="center" gap={4}>
+        <IconButton
+          loading
+          accessibilityLabel="Reduced opacity progress circle via styles.progressCircle"
+          name={iconName}
+          styles={{ progressCircle: { opacity: 0.3 } }}
+        />
+        <Text font="body">Reduced opacity via styles.progressCircle</Text>
+      </HStack>
+      <HStack alignItems="center" gap={4}>
+        <IconButton
+          loading
+          accessibilityLabel="fgPositive progress circle via classNames.progressCircle"
+          classNames={{ progressCircle: positiveProgressCircleCss }}
+          name={iconName}
+        />
+        <Text font="body">fgPositive color via classNames.progressCircle</Text>
+      </HStack>
     </VStack>
     <VStack gap={2}>
       <Text font="title3">Variants</Text>
@@ -126,7 +192,6 @@ const IconButtonSheet = ({ startIndex, endIndex }: { startIndex: number; endInde
           <HStack alignItems="center" gap={2}>
             <IconButton accessibilityLabel={name} name={name} variant="primary" />
             <IconButton accessibilityLabel={name} name={name} variant="secondary" />
-            <IconButton accessibilityLabel={name} name={name} variant="foregroundMuted" />
           </HStack>
         </VStack>
       ))}

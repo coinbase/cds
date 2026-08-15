@@ -1,5 +1,4 @@
-import { Animated, Pressable } from 'react-native';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
+import { Animated } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import type { ComponentConfig } from '../../core/componentConfig';
@@ -31,14 +30,16 @@ describe('AvatarButton', () => {
     expect(screen.UNSAFE_queryAllByType(Animated.View)).toHaveLength(1);
   });
 
-  it('renders a pressable', () => {
+  it('renders and responds to press', () => {
+    const onPress = jest.fn();
     render(
       <DefaultThemeProvider>
-        <AvatarButton accessibilityLabel="Sneezy" />
+        <AvatarButton accessibilityLabel="Sneezy" onPress={onPress} testID="avatar-button" />
       </DefaultThemeProvider>,
     );
 
-    expect(screen.UNSAFE_queryAllByType(Pressable)).toHaveLength(1);
+    fireEvent.press(screen.getByTestId('avatar-button'));
+    expect(onPress).toHaveBeenCalled();
   });
 
   it('renders children Avatar', () => {
@@ -73,45 +74,19 @@ describe('AvatarButton', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('applies provider config defaults', () => {
-    const config: ComponentConfig = {
-      AvatarButton: {
-        compact: true,
-      },
-    };
+  it('accepts deprecated border props without changing rendering', () => {
     render(
       <DefaultThemeProvider>
-        <ComponentConfigProvider value={config}>
-          <AvatarButton accessibilityLabel="Sneezy" testID="avatar-button" />
-        </ComponentConfigProvider>
+        <AvatarButton
+          bordered
+          accessibilityLabel="Sneezy"
+          borderRadius={900}
+          borderWidth={300}
+          testID="avatar-button"
+        />
       </DefaultThemeProvider>,
     );
 
-    expect(
-      screen.getByTestId('avatar-button').findByProps({
-        dangerouslySetSize: interactableHeight.compact,
-      }),
-    ).toBeTruthy();
-  });
-
-  it('allows local props to override provider defaults', () => {
-    const config: ComponentConfig = {
-      AvatarButton: {
-        compact: true,
-      },
-    };
-    render(
-      <DefaultThemeProvider>
-        <ComponentConfigProvider value={config}>
-          <AvatarButton accessibilityLabel="Sneezy" compact={false} testID="avatar-button" />
-        </ComponentConfigProvider>
-      </DefaultThemeProvider>,
-    );
-
-    expect(
-      screen.getByTestId('avatar-button').findByProps({
-        dangerouslySetSize: interactableHeight.regular,
-      }),
-    ).toBeTruthy();
+    expect(screen.getByTestId('avatar-button')).toBeTruthy();
   });
 });

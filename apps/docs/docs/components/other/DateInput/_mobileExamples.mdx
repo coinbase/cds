@@ -194,9 +194,9 @@ function Example() {
 
 ## Styling
 
-### Compact
+### Sizes
 
-Use the `compact` prop for a smaller input size.
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
 
 ```jsx
 function Example() {
@@ -204,25 +204,15 @@ function Example() {
   const [error, setError] = useState(null);
 
   return (
-    <VStack gap={3}>
-      <DateInput
-        date={date}
-        error={error}
-        onChangeDate={setDate}
-        onErrorDate={setError}
-        label="Default size"
-        invalidDateError="Please enter a valid date"
-      />
-      <DateInput
-        compact
-        date={date}
-        error={error}
-        onChangeDate={setDate}
-        onErrorDate={setError}
-        label="Compact size"
-        invalidDateError="Please enter a valid date"
-      />
-    </VStack>
+    <DateInput
+      size="s"
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Start date"
+      invalidDateError="Please enter a valid date"
+    />
   );
 }
 ```

@@ -1,5 +1,4 @@
 import React, {
-  forwardRef,
   memo,
   useCallback,
   useEffect,
@@ -8,8 +7,17 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Animated, Keyboard, Modal, Platform, useWindowDimensions } from 'react-native';
+import {
+  Animated,
+  Keyboard,
+  Modal,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import type { ModalProps, PressableProps, StyleProp, ViewStyle } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   drawerAnimationDefaultDuration,
   MAX_OVER_DRAG,
@@ -22,13 +30,12 @@ import {
   horizontalDrawerPercentageOfView,
   verticalDrawerPercentageOfView as defaultVerticalDrawerPercentageOfView,
 } from '@coinbase/cds-common/tokens/drawer';
-import type {
-  PinningDirection,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
+import { useHasNotch } from '../../hooks/useHasNotch';
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
 import { HandleBar, type HandleBarProps } from '../handlebar/HandleBar';
@@ -40,7 +47,14 @@ import { useDrawerAnimation } from './useDrawerAnimation';
 import { useDrawerPanResponder } from './useDrawerPanResponder';
 import { useDrawerSpacing } from './useDrawerSpacing';
 
-export type DrawerRenderChildren = React.FC<{ handleClose: () => void }>;
+const drawerStyles = StyleSheet.create({
+  // Android Modal is outside the app gesture root; RNGH needs one here.
+  gestureRoot: {
+    flex: 1,
+  },
+});
+
+export type DrawerRenderChildren = (args: { handleClose: () => void }) => React.ReactNode;
 
 export type DrawerRefBaseProps = {
   /** ref callback that animates out the drawer */
@@ -137,7 +151,12 @@ const overlayContentContextValue: OverlayContentContextValue = {
 };
 
 export const Drawer = memo(
-  forwardRef<DrawerRefBaseProps, DrawerProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: DrawerProps & {
+    ref?: React.Ref<DrawerRefBaseProps>;
+  }) => {
     const mergedProps = useComponentConfig('Drawer', _props);
     const {
       children,
@@ -310,6 +329,12 @@ export const Drawer = memo(
       ],
     );
 
+    // this outdated logic needs to be removed
+    // rather than hiding on the presence of a "notch" (all modern phones based on how we determine), we should hide the status bar when any overlay is visible
+    // see: https://linear.app/coinbase/issue/CDS-1557/temporarily-hide-status-bar-in-all-overlay-components
+    const hasNotch = useHasNotch();
+    const hideStatusBar = hasNotch && ['left', 'right', 'top'].includes(pin);
+
     return (
       <Modal
         hardwareAccelerated
@@ -321,40 +346,46 @@ export const Drawer = memo(
         style={rootStyle}
         {...props}
       >
-        <OverlayContentContext.Provider value={overlayContentContextValue}>
-          <DrawerStatusBar visible pin={pin} />
-          <Overlay
-            onTouchStart={handleOverlayPress}
-            opacity={opacityAnimation}
-            style={styles?.overlay}
-            testID="drawer-overlay"
-          />
-          <Box
-            {...getContainerPanHandlers}
-            animated
-            // close modal when user performs the "escape" accessibility gesture
-            // https://reactnative.dev/docs/accessibility#onaccessibilityescape-ios
-            onAccessibilityEscape={handleClose}
-            pin={pin}
-            style={containerStyle}
-            width={isSideDrawer ? horizontalDrawerWidth : '100%'}
-          >
-            {showHandleBarOutside && handleBar}
+        <GestureHandlerRootView style={drawerStyles.gestureRoot}>
+          <OverlayContentContext.Provider value={overlayContentContextValue}>
+            {/* for some reason we are hiding on iOS only (see linked issue above) */}
+            {Platform.select({
+              ios: hideStatusBar ? <StatusBar animated hidden /> : null,
+              default: null,
+            })}
+            <Overlay
+              onTouchStart={handleOverlayPress}
+              opacity={opacityAnimation}
+              style={styles?.overlay}
+              testID="drawer-overlay"
+            />
             <Box
-              accessibilityLabel={accessibilityLabel}
-              accessibilityLabelledBy={accessibilityLabelledBy}
-              borderRadius={isSideDrawer ? 0 : 600}
-              bordered={theme.activeColorScheme === 'dark'}
-              elevation={2}
-              maxHeight={!isSideDrawer ? verticalDrawerMaxHeight : '100%'}
-              style={drawerStyle}
+              {...getContainerPanHandlers}
+              animated
+              // close modal when user performs the "escape" accessibility gesture
+              // https://reactnative.dev/docs/accessibility#onaccessibilityescape-ios
+              onAccessibilityEscape={handleClose}
+              pin={pin}
+              style={containerStyle}
+              width={isSideDrawer ? horizontalDrawerWidth : '100%'}
             >
-              {showHandleBarInside && handleBar}
-              {content}
+              {showHandleBarOutside && handleBar}
+              <Box
+                accessibilityLabel={accessibilityLabel}
+                accessibilityLabelledBy={accessibilityLabelledBy}
+                borderRadius={isSideDrawer ? 0 : 600}
+                bordered={theme.activeColorScheme === 'dark'}
+                elevation={2}
+                maxHeight={!isSideDrawer ? verticalDrawerMaxHeight : '100%'}
+                style={drawerStyle}
+              >
+                {showHandleBarInside && handleBar}
+                {content}
+              </Box>
             </Box>
-          </Box>
-        </OverlayContentContext.Provider>
+          </OverlayContentContext.Provider>
+        </GestureHandlerRootView>
       </Modal>
     );
-  }),
+  },
 );

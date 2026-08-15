@@ -1,4 +1,4 @@
-import { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import {
   type NativeSyntheticEvent,
   type StyleProp,
@@ -12,8 +12,10 @@ import type { DateInputValidationError } from '@coinbase/cds-common/dates/DateIn
 
 import { Button } from '../buttons/Button';
 import { InputIconButton } from '../controls/InputIconButton';
+import type { TextInputSize } from '../controls/TextInput';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Box, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { VStack } from '../layout/VStack';
 import { Tray } from '../overlays/tray/Tray';
 import { StickyFooter } from '../sticky-footer/StickyFooter';
 
@@ -65,6 +67,17 @@ export type DatePickerBaseProps = Pick<
    * @default 'Close calendar without selecting a date'
    */
   closeCalendarAccessibilityLabel?: string;
+  /**
+   * Controls the vertical density (size) of the DatePicker's input field.
+   * @default 'l'
+   */
+  size?: TextInputSize;
+  /**
+   * Enables a smaller, compact input.
+   * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  compact?: boolean;
 };
 
 export type DatePickerProps = DatePickerBaseProps &
@@ -78,6 +91,7 @@ export type DatePickerProps = DatePickerBaseProps &
     | 'maxDate'
     | 'disabledDateError'
     | 'style'
+    | 'compact'
   > & {
     /** Callback function fired when the DateInput text value changes. Prefer to use `onChangeDate` instead. Will always be called before `onChangeDate`. This prop should only be used for edge cases, such as custom error handling.  */
     onChange?: (event: NativeSyntheticEvent<TextInputChangeEventData>) => void;
@@ -109,7 +123,12 @@ export type DatePickerProps = DatePickerBaseProps &
   };
 
 export const DatePicker = memo(
-  forwardRef<View, DatePickerProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: DatePickerProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('DatePicker', _props);
     const {
       date,
@@ -139,6 +158,7 @@ export const DatePicker = memo(
       closeCalendarAccessibilityLabel = 'Close calendar without selecting a date',
       dateInputStyle,
       compact,
+      size,
       variant,
       confirmText = 'Confirm',
       confirmButtonAccessibilityHint,
@@ -232,7 +252,6 @@ export const DatePicker = memo(
       <Box ref={ref} width={width}>
         <DateInput
           ref={dateInputRef}
-          {...props}
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
           accessibilityLabelledBy={accessibilityLabelledBy}
@@ -253,17 +272,18 @@ export const DatePicker = memo(
           onErrorDate={onErrorDate}
           required={required}
           requiredError={requiredError}
+          size={size}
           style={[dateInputStyle, styles?.dateInput]}
           variant={variant}
+          {...props}
         />
         {showPicker && (
           <Tray
             accessibilityRole="none"
             footer={({ handleClose }) => (
-              <StickyFooter paddingTop={3} paddingX={3} role="none">
+              <StickyFooter role="none">
                 <Button
                   block
-                  compact
                   accessibilityHint={confirmButtonAccessibilityHint}
                   disabled={disabled || !calendarSelectedDate}
                   onPress={() => {
@@ -272,6 +292,7 @@ export const DatePicker = memo(
                       handleClose();
                     }
                   }}
+                  size="s"
                 >
                   {confirmText}
                 </Button>
@@ -311,7 +332,7 @@ export const DatePicker = memo(
         )}
       </Box>
     );
-  }),
+  },
 );
 
 DatePicker.displayName = 'DatePicker';

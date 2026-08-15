@@ -83,14 +83,3 @@ export const WithoutProvider = () => {
     </VStack>
   );
 };
-
-const disableA11yCheck = {
-  a11y: {
-    config: {
-      rules: [{ id: 'aria-dialog-name', enabled: false }],
-    },
-  },
-};
-
-InModal.parameters = disableA11yCheck;
-// InFullscreenModal.parameters = disableA11yCheck;

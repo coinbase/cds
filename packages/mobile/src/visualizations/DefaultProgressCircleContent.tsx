@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 
 import type { ProgressCircleContentProps } from './ProgressCircle';
 import { ProgressTextLabel } from './ProgressTextLabel';

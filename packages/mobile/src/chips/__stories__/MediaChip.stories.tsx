@@ -67,8 +67,8 @@ const MediaChipScreen = () => (
     <Example title="Default (Automatic Spacing)">
       <MediaChipExamples />
     </Example>
-    <Example title="Inverted">
-      <MediaChipExamples inverted />
+    <Example title="Active">
+      <MediaChipExamples active />
     </Example>
     <Example title="Compact">
       <MediaChipExamples compact />

@@ -88,8 +88,8 @@ import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
 import * as CDSTour from '@coinbase/cds-web/tour';
 import * as CDSTypography from '@coinbase/cds-web/typography';
 import * as CDSVisualizations from '@coinbase/cds-web/visualizations';
-import * as CDSChartComponents from '@coinbase/cds-web-visualization/chart';
-import * as CDSSparklineComponents from '@coinbase/cds-web-visualization/sparkline';
+import * as CDSChartComponents from '@coinbase/cds-web/visualizations/chart';
+import * as CDSSparklineComponents from '@coinbase/cds-web/visualizations/sparkline';
 import * as framerMotion from 'framer-motion';
 
 export type ImportMapEntry = {
@@ -122,8 +122,8 @@ const namespaceRegistrations: [Record<string, unknown>, string][] = [
   [CDSDates, '@coinbase/cds-web/dates'],
   [CDSNumbers, '@coinbase/cds-web/numbers'],
   [CDSVisualizations, '@coinbase/cds-web/visualizations'],
-  [CDSChartComponents, '@coinbase/cds-web-visualization/chart'],
-  [CDSSparklineComponents, '@coinbase/cds-web-visualization/sparkline'],
+  [CDSChartComponents, '@coinbase/cds-web/visualizations/chart'],
+  [CDSSparklineComponents, '@coinbase/cds-web/visualizations/sparkline'],
   [StepperComponents, '@coinbase/cds-web/stepper'],
   [ContentCardComponents, '@coinbase/cds-web/cards/ContentCard'],
   [CDSDataAssets, '@coinbase/cds-common/internal/data/assets'],

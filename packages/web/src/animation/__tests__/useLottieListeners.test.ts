@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import type { LottieAnimationRef, LottieListener } from '../types';
 import { useLottieListeners } from '../useLottieListeners';

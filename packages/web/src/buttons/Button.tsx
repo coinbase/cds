@@ -1,24 +1,23 @@
-import React, { forwardRef, memo } from 'react';
+import React, { forwardRef, memo, useMemo } from 'react';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import type {
-  ButtonVariant,
-  IconName,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useResolveResponsiveProp } from '../hooks/useResolveResponsiveProp';
+import { useTheme } from '../hooks/useTheme';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import { Text } from '../typography/Text';
-import { ProgressCircle } from '../visualizations';
+import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Button';
-
-const DEFAULT_MIN_WIDTH = 100;
 
 /** @deprecated Use progressCircleSize instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v10
@@ -26,6 +25,22 @@ const DEFAULT_MIN_WIDTH = 100;
 export const spinnerHeight = 2.5;
 
 const defaultProgressCircleSize = 24;
+
+export type ButtonSize = 'xs' | 's' | 'm' | 'l';
+
+const buttonSizes = {
+  xs: { paddingX: 2, paddingY: 0.75, borderRadius: 700, iconSize: 's', font: 'label1' },
+  s: { paddingX: 2, paddingY: 1, borderRadius: 700, iconSize: 's', font: 'headline' },
+  m: { paddingX: 3, paddingY: 1.5, borderRadius: 900, iconSize: 'm', font: 'headline' },
+  l: { paddingX: 4, paddingY: 2, borderRadius: 900, iconSize: 'm', font: 'headline' },
+} as const satisfies Record<
+  ButtonSize,
+  Pick<ButtonBaseProps, 'paddingX' | 'paddingY' | 'borderRadius' | 'font'> & {
+    iconSize: Extract<IconSize, 's' | 'm'>;
+  }
+>;
+
+const defaultButtonSize: ButtonSize = 'l';
 
 const baseCss = css`
   text-decoration: none;
@@ -93,21 +108,12 @@ const hiddenCss = css`
 `;
 
 const middleNodeCss = css`
+  display: flex;
   position: relative;
 `;
 
-const flushSpaceCss = css`
+const flushCss = css`
   min-width: unset;
-  margin-inline-start: var(--space-2);
-  margin-inline-end: var(--space-2);
-`;
-
-const flushStartCss = css`
-  margin-inline-start: calc(var(--space-2) * -1);
-`;
-
-const flushEndCss = css`
-  margin-inline-end: calc(var(--space-2) * -1);
 `;
 
 export const buttonDefaultElement = 'button';
@@ -135,8 +141,17 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
       transparent?: boolean;
       /** Change to block and expand to 100% of parent width. */
       block?: boolean;
-      /** Reduce the inner padding within the button itself. */
+      /**
+       * Reduce the inner padding within the button itself.
+       * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+       * @deprecationExpectedRemoval v10
+       */
       compact?: boolean;
+      /**
+       * Set the size of the button.
+       * @default l
+       */
+      size?: ButtonSize;
       /** Children to render within the button. */
       children: React.ReactNode;
       /** Set the start node */
@@ -191,6 +206,7 @@ export const Button: ButtonComponent = memo(
         transparent,
         block,
         compact,
+        size,
         children,
         start,
         startIcon,
@@ -201,28 +217,40 @@ export const Button: ButtonComponent = memo(
         flush,
         noScaleOnPress,
         numberOfLines,
-        font = 'headline',
+        font: fontProp,
         fontFamily,
         fontSize,
         fontWeight,
+        height = 'fit-content',
         lineHeight,
         background,
         color,
         className,
-        // TO DO: get rid of this height and interactableHeight (mobile and web both)
-        height = compact ? 40 : 56,
         borderColor,
-        borderWidth = 100,
-        borderRadius = compact ? 700 : 900,
+        borderWidth = 0, // remove Pressable's default transparent border
+        borderRadius: borderRadiusProp,
         accessibilityLabel,
         padding,
-        paddingX = padding ?? (compact ? 2 : 4),
+        paddingX: paddingXProp,
+        paddingY: paddingYProp,
         margin = 0,
-        minWidth = compact ? 'auto' : DEFAULT_MIN_WIDTH,
+        minWidth = 'auto',
+        style,
+        textAlign = 'center',
         ...props
       } = mergedProps;
+      const theme = useTheme();
       const Component = (as ?? buttonDefaultElement) satisfies React.ElementType;
-      const iconSize = compact ? 's' : 'm';
+
+      // `size` wins when both `size` and `compact` are set; compact-only maps to `s`.
+      const resolvedSize = size ?? (compact ? 's' : defaultButtonSize);
+      const sizeConfig = buttonSizes[resolvedSize];
+
+      const font = fontProp ?? sizeConfig.font;
+      const borderRadius = borderRadiusProp ?? sizeConfig.borderRadius;
+      const paddingX = paddingXProp ?? padding ?? sizeConfig.paddingX;
+      const paddingY = paddingYProp ?? padding ?? sizeConfig.paddingY;
+      const iconSize = sizeConfig.iconSize;
       const hasIcon = Boolean(startIcon ?? endIcon);
 
       const variantMap = transparent ? transparentVariants : variants;
@@ -231,6 +259,19 @@ export const Button: ButtonComponent = memo(
       const colorValue = color ?? variantStyle.color;
       const backgroundValue = background ?? variantStyle.background;
       const borderColorValue = borderColor ?? variantStyle.borderColor;
+
+      const resolvedPaddingX = useResolveResponsiveProp(paddingX);
+
+      const pressableStyle = useMemo(() => {
+        if (!flush || !resolvedPaddingX) return style;
+        const paddingPx = theme.space[resolvedPaddingX];
+        return {
+          ...style,
+          ...(flush === 'start'
+            ? { marginInlineStart: -paddingPx, marginInlineEnd: paddingPx }
+            : { marginInlineStart: paddingPx, marginInlineEnd: -paddingPx }),
+        };
+      }, [flush, resolvedPaddingX, theme.space, style]);
 
       return (
         <Pressable
@@ -247,9 +288,7 @@ export const Button: ButtonComponent = memo(
             numberOfLines && unsetNoWrapCss,
             hasIcon && iconCss,
             block && blockCss,
-            flush && flushSpaceCss,
-            flush === 'start' && flushStartCss,
-            flush === 'end' && flushEndCss,
+            flush && flushCss,
             className,
           )}
           color={colorValue}
@@ -265,6 +304,8 @@ export const Button: ButtonComponent = memo(
           noScaleOnPress={noScaleOnPress}
           padding={padding}
           paddingX={paddingX}
+          paddingY={paddingY}
+          style={pressableStyle}
           transparentWhileInactive={transparent}
           {...props}
         >
@@ -302,6 +343,7 @@ export const Button: ButtonComponent = memo(
               fontWeight={fontWeight}
               lineHeight={lineHeight}
               numberOfLines={numberOfLines}
+              textAlign={textAlign}
             >
               <span className={cx(loading && hiddenCss)}>{children}</span>
             </Text>

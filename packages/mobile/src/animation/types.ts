@@ -1,7 +1,7 @@
 import type { Animated, StyleProp, ViewStyle } from 'react-native';
-import type { LottieSource } from '@coinbase/cds-common/types';
+import type { LottieSource } from '@coinbase/cds-common/types/LottieSource';
 
-import type { BoxBaseProps, BoxProps } from '../layout';
+import type { BoxBaseProps, BoxProps } from '../layout/Box';
 
 export type LottieBaseProps<T extends LottieSource = LottieSource> = Omit<
   BoxBaseProps,

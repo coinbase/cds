@@ -29,7 +29,11 @@ export const IconCounterButtonExample = () => {
       <HStack gap={4}>
         <IconCounterButton active color="fgNegative" count={99} icon="heart" />
         <IconCounterButton color="fgPrimary" count={4200} icon="comment" />
-        <IconCounterButton count={69000000} dangerouslySetColor="orange" icon="arrowsHorizontal" />
+        <IconCounterButton
+          count={69000000}
+          icon="arrowsHorizontal"
+          styles={{ icon: { color: 'orange' } }}
+        />
       </HStack>
       <Divider />
       <Text as="h3" display="block" font="title3">

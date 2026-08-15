@@ -29,3 +29,33 @@ export const DefaultThemeProvider = ({
     </ThemeProvider>
   );
 };
+
+export function flattenStyle(style: unknown): Array<Record<string, unknown>> {
+  if (!style) return [];
+  if (Array.isArray(style)) return style.flatMap(flattenStyle);
+  if (typeof style === 'object') return [style as Record<string, unknown>];
+  return [];
+}
+
+export function treeHasStyleProp(
+  tree: unknown,
+  predicate: (style: Record<string, unknown>) => boolean,
+): boolean {
+  if (!tree) return false;
+
+  if (Array.isArray(tree)) {
+    return tree.some((node) => treeHasStyleProp(node, predicate));
+  }
+
+  if (typeof tree !== 'object') return false;
+
+  const node = tree as {
+    props?: { style?: unknown };
+    children?: unknown[];
+  };
+
+  const styles = flattenStyle(node.props?.style);
+  if (styles.some(predicate)) return true;
+
+  return (node.children ?? []).some((child) => treeHasStyleProp(child, predicate));
+}

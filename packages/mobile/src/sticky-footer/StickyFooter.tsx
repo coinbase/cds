@@ -1,48 +1,52 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import { View } from 'react-native';
 
-import { useSafeBottomPadding } from '../hooks/useSafeBottomPadding';
-import { Box, type BoxProps } from '../layout';
+import { Box, type BoxProps } from '../layout/Box';
 
 export type StickyFooterProps = BoxProps & {
   /**
+   * Compact variant of StickyFooter
+   */
+  compact?: boolean;
+  /**
    * Whether to apply a box shadow to the StickyFooter element.
-   * @deprecated Use elevation instead. This will be removed in a future major release.
+   * @deprecated Use `elevation` instead. This will be removed in a future major release.
    * @deprecationExpectedRemoval v8
    */
   elevated?: boolean;
 };
 
 export const StickyFooter = memo(
-  forwardRef(
-    (
-      {
-        elevated,
-        elevation = elevated ? 1 : 0,
-        children,
-        testID = 'sticky-footer',
-        role = 'toolbar',
-        accessibilityLabel = 'footer',
-        padding = 2,
-        flexShrink = 0,
-        ...props
-      }: StickyFooterProps,
-      forwardedRef: React.ForwardedRef<View>,
-    ) => {
-      return (
-        <Box
-          ref={forwardedRef}
-          accessibilityLabel={accessibilityLabel}
-          elevation={elevation}
-          flexShrink={flexShrink}
-          padding={padding}
-          role={role}
-          testID={testID}
-          {...props}
-        >
-          <View>{children}</View>
-        </Box>
-      );
-    },
-  ),
+  ({
+    ref: forwardedRef,
+    elevated,
+    elevation = elevated ? 1 : 0,
+    children,
+    testID = 'sticky-footer',
+    role = 'toolbar',
+    accessibilityLabel = 'footer',
+    compact,
+    paddingX = 3,
+    paddingTop = compact ? 2 : 3,
+    flexShrink = 0,
+    ...props
+  }: StickyFooterProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    return (
+      <Box
+        ref={forwardedRef}
+        accessibilityLabel={accessibilityLabel}
+        elevation={elevation}
+        flexShrink={flexShrink}
+        paddingTop={paddingTop}
+        paddingX={paddingX}
+        role={role}
+        testID={testID}
+        {...props}
+      >
+        <View>{children}</View>
+      </Box>
+    );
+  },
 );

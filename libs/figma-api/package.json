@@ -1,0 +1,44 @@
+{
+  "name": "@cds/figma-api",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Client for interacting with the Figma API",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "libs/figma-api"
+  },
+  "type": "commonjs",
+  "main": "./cjs/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./cjs/index.js"
+    },
+    "./helpers": {
+      "types": "./dts/helpers/index.d.ts",
+      "default": "./cjs/helpers/index.js"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./cjs/*.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "cjs",
+    "dts",
+    "CHANGELOG"
+  ],
+  "dependencies": {
+    "@figma/rest-api-spec": "^0.34.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1"
+  }
+}

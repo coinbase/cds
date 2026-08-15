@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react';
+import React, { cloneElement, memo } from 'react';
 import type { PressableProps } from 'react-native';
 import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
 
@@ -30,7 +30,9 @@ export const ModalFooter = memo((_props: ModalFooterProps) => {
     ...props
   } = mergedProps;
   const { hideDividers = false } = useModalContext();
-  const actions = [secondaryAction, primaryAction].filter(Boolean);
+  const actions = [secondaryAction, primaryAction].filter(
+    (action): action is NonNullable<typeof action> => Boolean(action),
+  );
   const isVertical = direction === 'vertical';
 
   // reverse actions order when stacked
@@ -41,11 +43,10 @@ export const ModalFooter = memo((_props: ModalFooterProps) => {
   return (
     <Box borderedTop={!hideDividers} paddingX={paddingX} paddingY={paddingY} {...props}>
       <ButtonGroup block={!isVertical} direction={direction}>
-        {actions.map((action, i) => (
+        {actions.map((action, i) =>
           // actions are stable so should be fine to use index as key
-
-          <Fragment key={i}>{action}</Fragment>
-        ))}
+          cloneElement(action, { key: i }),
+        )}
       </ButtonGroup>
     </Box>
   );

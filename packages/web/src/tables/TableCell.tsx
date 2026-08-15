@@ -6,6 +6,7 @@ import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
 import { Cell, type CellBaseProps } from '../cells/Cell';
+import type { CellAccessoryProps } from '../cells/CellAccessory';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
@@ -34,7 +35,7 @@ export type TableCellBaseProps = TableCellSharedProps & {
    * Element (icon, asset, image, etc) to display at the end of the cell
    * @default undefined
    */
-  end?: React.ReactElement;
+  end?: React.ReactElement<CellAccessoryProps>;
   /**
    * The color for all text components rendered inside the TableCell.
    * Use titleColor and subtitleColor if you need to be more specific

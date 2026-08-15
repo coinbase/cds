@@ -12,16 +12,6 @@ import { Select, type SelectOptionComponent } from '../Select';
 export default {
   title: 'Components/Alpha/Select/MultiSelect',
   component: Select,
-  parameters: {
-    // Due to the InputChips rendered inside the Select control, there's an a11y violation.
-    a11y: {
-      options: {
-        rules: {
-          'nested-interactive': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 const paddingCss = css`
@@ -92,6 +82,61 @@ export const Compact = () => {
       type="multi"
       value={value}
     />
+  );
+};
+
+export const Sizes = () => {
+  const exampleOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Apple' },
+    { value: '2', label: 'Banana' },
+    { value: '3', label: 'Cherry' },
+    { value: '4', label: 'Date' },
+    { value: '5', label: 'Elderberry' },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['1', '2'],
+  });
+
+  return (
+    <VStack gap={3}>
+      <Select
+        label="Small (s)"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="s"
+        type="multi"
+        value={value}
+      />
+      <Select
+        label="Medium (m)"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="m"
+        type="multi"
+        value={value}
+      />
+      <Select
+        label="Large (l) - default"
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        size="l"
+        type="multi"
+        value={value}
+      />
+      <Select
+        compact
+        label='Compact (deprecated, renders as size "s")'
+        onChange={onChange}
+        options={exampleOptions}
+        placeholder="Empty value"
+        type="multi"
+        value={value}
+      />
+    </VStack>
   );
 };
 
@@ -425,15 +470,6 @@ export const Disabled = () => {
   );
 };
 
-Disabled.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};
 export const DisabledOptions = () => {
   const exampleOptions = [
     { value: null, label: 'Remove selection' },

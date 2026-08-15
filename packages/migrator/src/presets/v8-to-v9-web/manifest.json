@@ -1,0 +1,42 @@
+{
+  "preset": "v8-to-v9-web",
+  "description": "Upgrade from CDS v8 to v9 (web)",
+  "transforms": [
+    {
+      "name": "button-variant-values",
+      "description": "Remap Button/IconButton variant values: tertiary -> inverse, foregroundMuted -> secondary",
+      "file": "v9/button-variant-values"
+    },
+    {
+      "name": "migrate-use-merge-refs-import",
+      "description": "Migrate useMergeRefs: @coinbase/cds-common/hooks/useMergeRefs → utils/mergeRefs, rename binding to mergeRefs, merge duplicate imports",
+      "file": "v9/migrate-use-merge-refs"
+    },
+    {
+      "name": "migrate-layout-types-web",
+      "description": "Migrate layout types from @coinbase/cds-common to @coinbase/cds-web",
+      "file": "v9/migrate-layout-types-web"
+    },
+    {
+      "name": "migrate-visualization-imports",
+      "description": "Migrate @coinbase/cds-web-visualization imports to @coinbase/cds-web/visualizations sub-paths",
+      "file": "v9/migrate-visualization-imports"
+    },
+    {
+      "name": "migrate-interactable-css-vars",
+      "description": "Rename interactable CSS custom properties: --interactable-* → --inter-* (JS/TS files only)",
+      "file": "v9/migrate-interactable-css-vars"
+    },
+    {
+      "name": "migrate-interactable-css-vars-css",
+      "description": "Rename interactable CSS custom properties: --interactable-* → --inter-* (CSS/SCSS/HTML files)",
+      "file": "v9/migrate-interactable-css-vars-css",
+      "type": "script"
+    },
+    {
+      "name": "theme-provider-isolated",
+      "description": "Add isolated prop to all ThemeProvider usages to preserve v8 behavior of injecting the full theme CSS variables",
+      "file": "v9/theme-provider-isolated"
+    }
+  ]
+}

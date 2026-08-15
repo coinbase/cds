@@ -21,7 +21,7 @@ export const AddCustomColor = () => {
           disableInheritFocusStyle
           accessibilityLabel="Add"
           name="add"
-          variant="foregroundMuted"
+          variant="secondary"
         />
       }
     />
@@ -38,7 +38,7 @@ export const AddCustomColorEnd = () => {
           transparent
           accessibilityLabel="Add"
           name="add"
-          variant="foregroundMuted"
+          variant="secondary"
         />
       }
       label="Label"
@@ -53,9 +53,7 @@ export const Basic = () => {
         <TextInput
           key={`${variant}-input-iconbutton`}
           label={variant}
-          start={
-            <InputIconButton active accessibilityLabel="Add" name="add" variant="foregroundMuted" />
-          }
+          start={<InputIconButton active accessibilityLabel="Add" name="add" variant="secondary" />}
           variant={variant}
         />
       ))}
@@ -82,7 +80,7 @@ export const DefaultsToPrimary = () => {
 export const InvalidPlacement = () => {
   return (
     <Box background="bgAlternate">
-      <InputIconButton active accessibilityLabel="Add" name="add" variant="foregroundMuted" />
+      <InputIconButton active accessibilityLabel="Add" name="add" variant="secondary" />
     </Box>
   );
 };

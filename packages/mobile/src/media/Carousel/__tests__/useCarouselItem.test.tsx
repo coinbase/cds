@@ -1,6 +1,5 @@
 import { useCallback } from 'react';
-import { renderHook } from '@testing-library/react-hooks';
-import { cleanup, fireEvent, render, screen } from '@testing-library/react-native';
+import { cleanup, fireEvent, render, renderHook, screen } from '@testing-library/react-native';
 
 import { Button } from '../../../buttons';
 import { Box } from '../../../layout';

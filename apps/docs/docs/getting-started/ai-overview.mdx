@@ -18,6 +18,39 @@ import { ContentHeader } from '@site/src/components/page/ContentHeader';
 <MDXSection>
 <MDXArticle>
 
+## Agent Skills
+
+Agent skills are portable instruction sets that teach AI coding agents how to work with specific tools, frameworks, and libraries. CDS provides official agent skills that can be installed into any project to give your AI agent deep knowledge of CDS components, patterns, and best practices.
+
+### `cds-code`
+
+The `cds-code` skill teaches AI agents to produce high-quality CDS code for React and React Native projects. When activated, the agent will:
+
+- **Detect your environment** — Automatically determine whether your project uses React (web) or React Native (mobile) and discover installed CDS packages and their valid import paths.
+- **Select the right components** — Use a built-in component selection guide to choose the appropriate CDS components for any UI task, from layout primitives like `Box` and `VStack` to complex components like `Modal`, `Table`, and `Select`.
+- **Follow CDS best practices** — Prefer CDS style props and design tokens over raw CSS values and use semantic design tokens where possible
+- **Discover icons and illustrations** — Search and select from the full set of CDS icons and illustrations available in your installed version.
+
+#### Installation
+
+Install the `cds-code` skill with the following command:
+
+```bash
+npx skills add https://github.com/coinbase/cds --skill cds-code
+```
+
+For even better results, also install the `cds-docs` skill to give your agent access to full CDS documentation:
+
+```bash
+npx skills add https://github.com/coinbase/cds --skill cds-docs
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
 ## MCP Server
 
 The CDS MCP Server provides direct CDS context to LLMs, allowing AI models to understand and work with CDS APIs and components.

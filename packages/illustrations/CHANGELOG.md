@@ -8,6 +8,280 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 4.48.0 (8/12/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-08-12. [[#842](https://github.com/coinbase/cds/pull/842)]
+
+##### ⭐️ Added (3)
+
+###### Pictogram (3)
+
+- chfTrade
+- eurTrade
+- usdTrade
+
+##### ⭐️ Updated (1)
+
+###### Pictogram (1)
+
+- cb1BankTransfers
+
+## 4.47.0 (8/7/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-08-07. [[#833](https://github.com/coinbase/cds/pull/833)]
+
+##### ⭐️ Added (2)
+
+###### HeroSquare (2)
+
+- cbhype
+- cbzec
+
+## 4.46.0 (7/31/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-07-31. [[#821](https://github.com/coinbase/cds/pull/821)]
+
+##### ⭐️ Added (1)
+
+###### Pictogram (1)
+
+- options
+
+## 4.45.0 (7/28/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-07-28. [[#814](https://github.com/coinbase/cds/pull/814)]
+
+##### ⭐️ Added (3)
+
+###### HeroSquare (1)
+
+- arrowsUpDown
+
+###### SpotRectangle (1)
+
+- keyAdv
+
+###### SpotSquare (1)
+
+- playButton
+
+## 4.44.0 (6/25/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-06-25. [[#773](https://github.com/coinbase/cds/pull/773)]
+
+##### ⭐️ Added (2)
+
+###### Pictogram (1)
+
+- newTradeError
+
+###### HeroSquare (1)
+
+- usdr
+
+## 4.43.0 (6/16/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-06-16. [[#760](https://github.com/coinbase/cds/pull/760)]
+
+##### ⭐️ Added (1)
+
+###### HeroSquare (1)
+
+- usdl
+
+## 4.42.0 (6/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-06-11. [[#755](https://github.com/coinbase/cds/pull/755)]
+
+##### ⭐️ Updated (19)
+
+###### Pictogram (10)
+
+- instoAccount
+- instoAdvancedTradingRebates
+- instoAuthenticatorProgress
+- instoEasyToUse
+- instoDecentralizedExchange
+- instoSecuredAssets
+- instoBorrowingLending
+- instoPasswordWalletLocked
+- instoEarnGraph
+- instoGem
+
+###### HeroSquare (4)
+
+- ship
+- graduationCap
+- filter
+- mcLoad
+
+###### SpotRectangle (1)
+
+- instoRefreshKey
+
+###### SpotSquare (4)
+
+- instoWaiting
+- instoEthStakingRewards
+- instoAuthenticatorProgress
+- instoProgressCircle
+
+## 4.41.0 (6/9/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-06-09.
+
+##### ⭐️ Added (10)
+
+###### Pictogram (3)
+
+- instoBrowserMultiPlatform
+- instoDecentralizedExchange
+- futures
+
+###### HeroSquare (5)
+
+- ship
+- filter
+- graduationCap
+- mcLoad
+- instoSecurityKey
+
+###### SpotIcon (1)
+
+- instoInstantAccess
+
+###### SpotSquare (1)
+
+- instoProgressCircle
+
+##### ⭐️ Updated (67)
+
+###### Pictogram (19)
+
+- browserMultiPlatform
+- instoDecentralizedWeb3
+- instoTrading
+- instoApyInterest
+- instoGlobalConnections
+- instoCrypto101
+- instoCoinFocus
+- instoEthRewards
+- instoWalletWarning
+- instoBorrowCoins
+- instoRiskStaking
+- instoNftLibrary
+- instoStakingGraph
+- instoFiat
+- instoEthStakingChart
+- instoDecentralizationEverything
+- instoEarnCoins
+- instoMonitoringPerformance
+- instoRestaking
+
+###### HeroSquare (29)
+
+- options
+- predictionsMarkets
+- borrowCoinsBtc
+- cryptoPortfolioUsdc
+- tradingPerpetualsUsdc
+- instoWeb3MobileSetupStart
+- multiplePortfolios
+- instoEthStakingUpsell
+- instoPhoneUnknown
+- instoWalletSecurity
+- instoEnableBiometrics
+- instoAddBankAccount
+- instoRequestSent
+- instoKeyGenerationComplete
+- instoAdd2Fa
+- instoStakingMissedReturns
+- instoGovernance
+- instoPrivateKey
+- instoEarnGlobe
+- instoPrimeStaking
+- instoEthStakingRewards
+- instoDocumentSuccess
+- instoSecurityKeyAuth
+- instoOnChain
+- instoKeyGenerationPending
+- instoOpenEmail
+- instoStaking
+- instoWallet
+- ensProfilePic
+
+###### SpotIcon (1)
+
+- instoStakingProduct
+
+###### SpotRectangle (12)
+
+- instoGetStartedInMinutes
+- instoEthStakingMovement
+- instoCurrency
+- instoMargin
+- instoPrimeStaking
+- instoStaking
+- insto
+- instoEmptyTrading
+- instoSetupComplete
+- instoCryptoAndMore
+- instoSemiCustodial
+- sendCryptoFaster
+
+###### SpotSquare (6)
+
+- defiEarnAnnouncement
+- holdCrypto
+- instoStaking
+- instoEthStaking
+- instoPixDeposits
+- instoPrimeStaking
+
+#### 📘 Misc
+
+- Dependency upgrades.
+
+## 4.40.1 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: add width/height="100%" to themed ESM SVG files. [[#683](https://github.com/coinbase/cds/pull/683)]
+
+## 4.40.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: refactor illustrations package. [[#675](https://github.com/coinbase/cds/pull/675)]
+
+## 4.39.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish illustrations 2026-05-12. [[#673](https://github.com/coinbase/cds/pull/673)]
+
+##### ⭐️ Added (1)
+
+###### HeroSquare (1)
+
+- genniusLaunch
+
 ## 4.38.0 (4/16/2026 PST)
 
 #### 🚀 Updates

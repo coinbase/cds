@@ -1,0 +1,56 @@
+import { memo } from 'react';
+import type { StyleProp, View, ViewStyle } from 'react-native';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+
+import { CardRoot, type CardRootBaseProps } from '../CardRoot';
+
+import { MediaCardLayout, type MediaCardLayoutProps } from './MediaCardLayout';
+
+export type MediaCardBaseProps = MediaCardLayoutProps & Omit<CardRootBaseProps, 'children'>;
+
+export type MediaCardProps = MediaCardBaseProps & {
+  style?: StyleProp<ViewStyle>;
+  styles?: {
+    /** Root element */
+    root?: StyleProp<ViewStyle>;
+  };
+};
+
+const mediaCardContainerProps = {
+  borderRadius: 500 as ThemeVars.BorderRadius,
+  background: 'bgAlternate' as ThemeVars.Color,
+  overflow: 'hidden' as const,
+};
+
+export const MediaCard = memo(
+  ({
+    ref,
+    title,
+    subtitle,
+    description,
+    thumbnail,
+    media,
+    mediaPlacement = 'end',
+    style,
+    styles: { root: rootStyle, ...layoutStyles } = {},
+    ...props
+  }: MediaCardProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    return (
+      <CardRoot ref={ref} {...mediaCardContainerProps} style={[style, rootStyle]} {...props}>
+        <MediaCardLayout
+          description={description}
+          media={media}
+          mediaPlacement={mediaPlacement}
+          styles={layoutStyles}
+          subtitle={subtitle}
+          thumbnail={thumbnail}
+          title={title}
+        />
+      </CardRoot>
+    );
+  },
+);
+
+MediaCard.displayName = 'MediaCard';

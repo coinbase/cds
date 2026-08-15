@@ -11,18 +11,19 @@ import {
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
-import type { Position } from '@coinbase/cds-common/types/Position';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import { cx } from '../../cx';
 import { useA11yLabels } from '../../hooks/useA11yLabels';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { Box } from '../../layout';
+import { Box } from '../../layout/Box';
 import { VStack } from '../../layout/VStack';
 import { useMotionProps } from '../../motion/useMotionProps';
 import { media } from '../../styles/media';
+import type { PositionStyles } from '../../styles/styleProps';
+import type { StylesAndClassNames } from '../../types';
 import { FocusTrap, type FocusTrapProps } from '../FocusTrap';
 
 import type { ModalWrapperProps } from './ModalWrapper';
@@ -70,6 +71,17 @@ const modalResponsiveCss = css`
 
 const MotionBox = motion(Box);
 
+/**
+ * Static class names for Modal component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const modalClassNames = {
+  /** Full-viewport overlay/backdrop element that positions the modal within the viewport */
+  overlay: 'cds-Modal',
+  /** Visible modal card element */
+  modal: 'cds-Modal-modal',
+} as const;
+
 const overlayContentContextValue: OverlayContentContextValue = {
   isModal: true,
 };
@@ -85,7 +97,7 @@ export type ModalBaseProps = SharedProps &
     'disableFocusTrap' | 'focusTabIndexElements' | 'disableArrowKeyNavigation'
   > & {
     /** Component to render as the Modal content */
-    children?: React.ReactNode | React.FC<ModalChildrenRenderProps>;
+    children?: React.ReactNode | ((props: ModalChildrenRenderProps) => React.ReactNode);
     /**
      * Callback fired after the component is closed.
      */
@@ -99,7 +111,7 @@ export type ModalBaseProps = SharedProps &
      * Set the position for the modal dialogue
      * @danger This is a migration escape hatch. It is not intended to be used normally.
      */
-    dangerouslySetPosition?: Position;
+    dangerouslySetPosition?: React.CSSProperties['position'];
     /**
      * If `true`, the focus trap will restore focus to the previously focused element when it unmounts.
      *
@@ -109,7 +121,7 @@ export type ModalBaseProps = SharedProps &
     restoreFocusOnUnmount?: boolean;
   };
 
-export type ModalProps = ModalBaseProps;
+export type ModalProps = ModalBaseProps & StylesAndClassNames<typeof modalClassNames>;
 
 export type ModalRefBaseProps = Pick<ModalBaseProps, 'onRequestClose'>;
 
@@ -128,13 +140,50 @@ export const Modal = memo(
       focusTabIndexElements = false,
       restoreFocusOnUnmount = true,
       disableArrowKeyNavigation,
-      width,
       dangerouslyDisableResponsiveness = false,
       dangerouslySetPosition,
       shouldCloseOnEscPress = true,
       hideCloseButton,
       hideDividers,
+      className,
+      classNames,
+      style,
+      styles,
+      // Dialog card sizing
+      width,
       maxWidth,
+      minWidth,
+      minHeight,
+      maxHeight,
+      // Dialog card appearance
+      background,
+      color,
+      borderRadius = 200,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderColor,
+      borderWidth,
+      borderTopWidth,
+      borderBottomWidth,
+      borderStartWidth,
+      borderEndWidth,
+      bordered,
+      borderedTop,
+      borderedBottom,
+      borderedStart,
+      borderedEnd,
+      borderedHorizontal,
+      borderedVertical,
+      elevation = 2,
+      padding,
+      paddingX,
+      paddingY,
+      paddingTop,
+      paddingBottom,
+      paddingStart,
+      paddingEnd,
       ...props
     } = mergedProps;
     const defaultWidth = dangerouslyDisableResponsiveness ? modalMaxWidth : defaultWidthStyle;
@@ -181,22 +230,32 @@ export const Modal = memo(
       [dangerouslySetPosition],
     );
 
+    const overlayStyle = useMemo<React.CSSProperties | undefined>(
+      () => (style || styles?.overlay ? { ...style, ...styles?.overlay } : undefined),
+      [style, styles?.overlay],
+    );
+
     return (
       <OverlayContentContext.Provider value={overlayContentContextValue}>
         <ModalWrapper
           accessibilityLabel={label}
           accessibilityLabelledBy={labelledBy}
+          className={cx(modalClassNames.overlay, className, classNames?.overlay)}
           dangerouslyDisableResponsiveness={dangerouslyDisableResponsiveness}
           disableOverlayPress={disableOverlayPress}
           disablePortal={disablePortal}
           onOverlayPress={handleClose}
+          style={overlayStyle}
           visible={visible}
           {...props}
         >
           <MotionBox
             {...motionProps}
             className={cx(baseCss, !dangerouslyDisableResponsiveness && modalResponsiveCss)}
+            maxHeight={maxHeight}
             maxWidth={maxWidth ?? defaultMaxWidth}
+            minHeight={minHeight}
+            minWidth={minWidth}
             style={dialogStyles}
             testID="modal-dialog-motion"
             width={width ?? defaultWidth}
@@ -209,10 +268,41 @@ export const Modal = memo(
               restoreFocusOnUnmount={restoreFocusOnUnmount}
             >
               <VStack
-                borderRadius={200}
-                className={cx(!dangerouslyDisableResponsiveness && modalDialogResponsiveCss)}
-                elevation={2}
+                background={background}
+                borderBottomLeftRadius={borderBottomLeftRadius}
+                borderBottomRightRadius={borderBottomRightRadius}
+                borderBottomWidth={borderBottomWidth}
+                borderColor={borderColor}
+                borderEndWidth={borderEndWidth}
+                borderRadius={borderRadius}
+                borderStartWidth={borderStartWidth}
+                borderTopLeftRadius={borderTopLeftRadius}
+                borderTopRightRadius={borderTopRightRadius}
+                borderTopWidth={borderTopWidth}
+                borderWidth={borderWidth}
+                bordered={bordered}
+                borderedBottom={borderedBottom}
+                borderedEnd={borderedEnd}
+                borderedHorizontal={borderedHorizontal}
+                borderedStart={borderedStart}
+                borderedTop={borderedTop}
+                borderedVertical={borderedVertical}
+                className={cx(
+                  !dangerouslyDisableResponsiveness && modalDialogResponsiveCss,
+                  modalClassNames.modal,
+                  classNames?.modal,
+                )}
+                color={color}
+                elevation={elevation}
                 overflow="hidden"
+                padding={padding}
+                paddingBottom={paddingBottom}
+                paddingEnd={paddingEnd}
+                paddingStart={paddingStart}
+                paddingTop={paddingTop}
+                paddingX={paddingX}
+                paddingY={paddingY}
+                style={styles?.modal}
                 width="100%"
               >
                 <ModalContext.Provider value={modalData}>

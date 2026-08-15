@@ -1,19 +1,22 @@
 import React from 'react';
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { Button } from '../../buttons/Button';
 import { Text } from '../../typography/Text';
 import { Table, TableBody, TableCell, TableRow } from '..';
 
-export default {
+const meta: Meta = {
   title: 'Components/Table/TableRow',
   component: TableRow,
-} as Meta;
+};
+
+export default meta;
+type Story = StoryObj;
 
 const handleClick = console.log;
 
-export const TableRowExample: Story = () => {
-  return (
+export const TableRowExample: Story = {
+  render: () => (
     <Table bordered variant="ruled">
       <TableBody>
         <TableRow>
@@ -49,5 +52,5 @@ export const TableRowExample: Story = () => {
         </TableRow>
       </TableBody>
     </Table>
-  );
+  ),
 };

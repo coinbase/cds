@@ -1,5 +1,5 @@
 import { useCallback, useMemo } from 'react';
-import { Platform } from 'react-native';
+import { Platform, StatusBar } from 'react-native';
 import { gutter } from '@coinbase/cds-common/tokens/sizing';
 
 import { IOS_BOTTOM_NAV_BAR_HEIGHT, useDimensions } from '../../hooks/useDimensions';
@@ -31,10 +31,20 @@ export const useTooltipPosition = ({
 
       const { pageOffsetY } = subjectLayout;
 
+      // On Android, we detect edge-to-edge mode by checking useSafeAreaInsets().top:
+      // - When > 0: App content extends behind the status bar (edge-to-edge enabled).
+      //   The tooltip and subject share the same coordinate origin, so no adjustment needed.
+      // - When === 0: App content is placed below the status bar (edge-to-edge disabled).
+      //   The subject's pageOffsetY is measured from screen top, but the tooltip is
+      //   rendered inside a Modal whose coordinate system starts below the status bar.
+      //   We subtract StatusBar.currentHeight to reconcile these two origins.
+      const isEdgeToEdge = statusBarHeight > 0;
       const actualPageYOffset =
         Platform.OS === 'ios' || yShiftByStatusBarHeight
           ? pageOffsetY
-          : pageOffsetY - (statusBarHeight ?? 0);
+          : isEdgeToEdge
+            ? pageOffsetY
+            : pageOffsetY - (StatusBar.currentHeight ?? 0);
 
       return calculatedPlacement === 'bottom'
         ? actualPageYOffset + (subjectLayout?.height ?? 0)

@@ -1,11 +1,12 @@
 import { memo, useCallback, useMemo, useRef, useState } from 'react';
 import { lottieStatusToAccessibilityLabel } from '@coinbase/cds-common/lottie/statusToAccessibilityLabel';
 import { useStatusAnimationPoller } from '@coinbase/cds-common/lottie/useStatusAnimationPoller';
-import type { DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
 import type { LottiePlayer } from '@coinbase/cds-common/types/LottiePlayer';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+// eslint-disable-next-line internal/no-cds-barrel-imports -- tradeStatus is the deepest available export in cds-lottie-files
 import type { TradeStatusLottie } from '@coinbase/cds-lottie-files/tradeStatus';
+// eslint-disable-next-line internal/no-cds-barrel-imports -- tradeStatus is the deepest available export in cds-lottie-files
 import { tradeStatus } from '@coinbase/cds-lottie-files/tradeStatus';
 import type { LottieStatus } from 'packages/common/dts/types/LottieStatus';
 
@@ -19,11 +20,11 @@ type LottieStatusAnimationBaseProps = {
 };
 
 type LottieStatusAnimationPropsWithWidth = {
-  width: DimensionValue;
+  width: React.CSSProperties['width'];
 } & LottieStatusAnimationBaseProps;
 
 type LottieStatusAnimationPropsWithHeight = {
-  height: DimensionValue;
+  height: React.CSSProperties['height'];
 } & LottieStatusAnimationBaseProps;
 
 export type LottieStatusAnimationProps = (
@@ -41,7 +42,7 @@ export const LottieStatusAnimation = memo(
     ...otherProps
   }: LottieStatusAnimationProps) => {
     const [, forceUpdate] = useState(0);
-    const lottie = useRef<LottiePlayerRef>();
+    const lottie = useRef<LottiePlayerRef>(undefined);
 
     const handlePolling = useStatusAnimationPoller({
       status,

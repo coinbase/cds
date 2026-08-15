@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { defaultMediaSize } from '@coinbase/cds-common/tokens/card';
-import type { SharedAccessibilityProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { PictogramName, SpotSquareName } from '@coinbase/cds-illustrations';
 
 import { Button } from '../buttons/Button';
@@ -119,7 +119,6 @@ export const CardBody = memo(function CardBody({
     if (actionLabel && onActionPress) {
       return (
         <Button
-          compact
           noScaleOnPress
           transparent
           accessibilityLabel={accessibilityLabel ?? actionLabel}
@@ -127,6 +126,7 @@ export const CardBody = memo(function CardBody({
           flush="start"
           numberOfLines={3}
           onClick={onActionPress}
+          size="s"
           testID={`${testID}-action`}
           variant="primary"
         >

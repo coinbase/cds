@@ -1,5 +1,5 @@
 import { AccessibilityInfo } from 'react-native';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react-native';
 
 import { useA11y } from '../useA11y';
 

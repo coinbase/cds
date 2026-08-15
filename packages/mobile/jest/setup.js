@@ -2,18 +2,28 @@
  * NOTE: If you add imports here that extend Jest, such as extending `expect` with new
  * functions like `.toBeAccessible()`, you must also update `packages/mobile/src/jest.d.ts`
  */
-import 'react-native-gesture-handler/jestSetup';
-import 'react-native-accessibility-engine';
-import '@testing-library/jest-native/extend-expect';
+import './accessibility';
 
-import { setUpTests } from 'react-native-reanimated/src/jestUtils';
+// https://docs.swmansion.com/react-native-reanimated/docs/guides/testing/
+const {
+  setUpTests,
+  configureReanimatedLogger,
+  ReanimatedLogLevel,
+} = require('react-native-reanimated');
 
-import { mockStatusBarHeight } from '../src/hooks/__tests__/constants';
+// Must mock NativeEventEmitter at the internal module path not in main RN mock below
+jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter', () => {
+  const MockNativeEventEmitter = class MockNativeEventEmitter {
+    addListener = jest.fn(() => ({ remove: jest.fn() }));
+    removeListener = jest.fn();
+    removeAllListeners = jest.fn();
+  };
+  // Export as both default and the class itself for different import styles
+  MockNativeEventEmitter.default = MockNativeEventEmitter;
+  return MockNativeEventEmitter;
+});
 
-jest.mock('react-native/Libraries/EventEmitter/NativeEventEmitter');
-
-// Silence the warning: Animated: `useNativeDriver` is not supported because the native animated module is missing
-jest.mock('react-native/Libraries/Animated/NativeAnimatedHelper');
+jest.mock('react-native/src/private/animated/NativeAnimatedHelper');
 
 jest.mock('react-native', () => {
   const RN = jest.requireActual('react-native');
@@ -26,10 +36,6 @@ jest.mock('react-native', () => {
   RN.PixelRatio.getFontScale = jest.fn(() => 1);
   RN.PixelRatio.getPixelSizeForLayoutSize = jest.fn((layoutSize) => Math.round(layoutSize * 1));
   RN.PixelRatio.startDetecting = jest.fn();
-
-  RN.NativeModules.StatusBarManager = {
-    getHeight: jest.fn((cb) => cb({ height: mockStatusBarHeight })),
-  };
 
   RN.Animated.loop = jest.fn(() => {
     return {
@@ -64,6 +70,18 @@ jest.mock('react-native', () => {
   RN.AccessibilityInfo.addEventListener = jest.fn();
 
   return RN;
+});
+
+/*
+  React Reanimated 4.x setup: 
+*/
+
+// Disable strict mode to prevent warnings about writing to shared values during render
+// This is needed because some components (e.g., TabsActiveIndicator) use patterns that
+// trigger warnings in reanimated 4.x strict mode but still work correctly
+configureReanimatedLogger({
+  level: ReanimatedLogLevel.warn,
+  strict: false,
 });
 
 setUpTests();

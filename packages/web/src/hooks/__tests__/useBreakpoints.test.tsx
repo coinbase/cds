@@ -1,4 +1,5 @@
-import { act, renderHook } from '@testing-library/react-hooks';
+import { act } from 'react';
+import { renderHook } from '@testing-library/react';
 
 import { media } from '../../styles/media';
 import { MediaQueryContext } from '../../system/MediaQueryProvider';
@@ -23,8 +24,9 @@ describe('useBreakpoints hook', () => {
   });
 
   it('throws an error if used outside of MediaQueryProvider', () => {
-    const { result } = renderHook(() => useBreakpoints());
-    expect(() => result.current).toThrow('useBreakpoints must be used within a MediaQueryProvider');
+    expect(() => renderHook(() => useBreakpoints())).toThrow(
+      'useBreakpoints must be used within a MediaQueryProvider',
+    );
   });
 
   it('returns initial matches based on getSnapshot', () => {

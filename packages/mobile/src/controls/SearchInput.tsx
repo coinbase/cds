@@ -1,19 +1,27 @@
-import React, { forwardRef, memo, useCallback, useMemo, useRef, useState } from 'react';
+import React, { memo, useCallback, useMemo, useRef, useState } from 'react';
 import type { ForwardedRef } from 'react';
 import type {
+  BlurEvent,
+  FocusEvent,
   GestureResponderEvent,
-  NativeSyntheticEvent,
   TextInput as RNTextInput,
-  TextInputFocusEventData,
 } from 'react-native';
 import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
-import type { IconName } from '@coinbase/cds-common/types';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
 
 import { InputIconButton } from './InputIconButton';
-import { TextInput, type TextInputBaseProps, type TextInputProps } from './TextInput';
+import {
+  TextInput,
+  type TextInputBaseProps,
+  type TextInputProps,
+  type TextInputSize,
+} from './TextInput';
+
+/** T-shirt size for SearchInput. Aliases the TextInput size union. */
+export type SearchInputSize = TextInputSize;
 
 export type SearchInputBaseProps = Pick<
   TextInputBaseProps,
@@ -28,7 +36,10 @@ export type SearchInputBaseProps = Pick<
   | 'focusedBorderWidth'
   | 'helperTextErrorIconAccessibilityLabel'
   | 'font'
+  | 'labelFont'
+  | 'labelColor'
   | 'placeholder'
+  | 'size'
   | 'testID'
   | 'testIDMap'
   | 'width'
@@ -89,7 +100,12 @@ export type SearchInputProps = SearchInputBaseProps &
   };
 
 export const SearchInput = memo(
-  forwardRef((_props: SearchInputProps, ref: ForwardedRef<RNTextInput>) => {
+  ({
+    ref,
+    ..._props
+  }: SearchInputProps & {
+    ref?: React.Ref<RNTextInput>;
+  }) => {
     const mergedProps = useComponentConfig('SearchInput', _props);
     const {
       value,
@@ -116,7 +132,7 @@ export const SearchInput = memo(
     const refs = useMergeRefs(ref, internalRef);
 
     const handleOnFocus = useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (e: FocusEvent) => {
         onFocus?.(e);
 
         if (!disableBackArrow && startIcon === undefined) {
@@ -127,7 +143,7 @@ export const SearchInput = memo(
     );
 
     const handleOnBlur = useCallback(
-      (e: NativeSyntheticEvent<TextInputFocusEventData>) => {
+      (e: BlurEvent) => {
         onBlur?.(e);
 
         if (startIcon === undefined) {
@@ -213,5 +229,5 @@ export const SearchInput = memo(
         {...props}
       />
     );
-  }),
+  },
 );

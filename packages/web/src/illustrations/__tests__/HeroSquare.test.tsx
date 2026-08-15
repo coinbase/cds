@@ -1,8 +1,9 @@
 import type { ColorScheme } from '@coinbase/cds-common/core/theme';
 import type { IllustrationVariant } from '@coinbase/cds-common/types/IllustrationNames';
 import heroSquareVersionMap from '@coinbase/cds-illustrations/__generated__/heroSquare/data/versionMap';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 
+import { defaultTheme } from '../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../utils/test';
 import type { HeroSquareName } from '../HeroSquare';
 import { HeroSquare } from '../HeroSquare';
@@ -100,5 +101,92 @@ describe('can set alt', () => {
     );
 
     expect(screen.getByTestId('HeroSquare-example')).toHaveAttribute('alt', testAlt);
+  });
+});
+
+describe('applyTheme', () => {
+  it('renders CDN img by default (no applyTheme)', () => {
+    render(
+      <DefaultThemeProvider>
+        <HeroSquare name="add2Fa" testID="illo" />
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId('illo').tagName).toBe('IMG');
+  });
+
+  it('returns fallback while loading, then inline SVG once loaded', async () => {
+    render(
+      <DefaultThemeProvider>
+        <HeroSquare applyTheme name="add2Fa" testID="illo" />
+      </DefaultThemeProvider>,
+    );
+    // Initially returns fallback (null by default — nothing rendered while loading)
+    expect(screen.queryByTestId('illo')).toBeNull();
+    // After the themed SVG loads, renders the inline SVG
+    await waitFor(() => expect(screen.getByTestId('illo').tagName).toBe('DIV'));
+    expect(screen.getByTestId('illo').innerHTML).toContain('<svg');
+  });
+
+  it('sets role="img" and aria-label when alt is provided', async () => {
+    render(
+      <DefaultThemeProvider>
+        <HeroSquare applyTheme alt="chart illustration" name="add2Fa" testID="illo" />
+      </DefaultThemeProvider>,
+    );
+    await waitFor(() => expect(screen.getByTestId('illo')).toHaveAttribute('role', 'img'));
+    expect(screen.getByTestId('illo')).toHaveAttribute('aria-label', 'chart illustration');
+  });
+
+  it('sets role="presentation" and no aria-label when alt is empty', async () => {
+    render(
+      <DefaultThemeProvider>
+        <HeroSquare applyTheme alt="" name="add2Fa" testID="illo" />
+      </DefaultThemeProvider>,
+    );
+    await waitFor(() => expect(screen.getByTestId('illo')).toHaveAttribute('role', 'presentation'));
+    expect(screen.getByTestId('illo')).not.toHaveAttribute('aria-label');
+  });
+
+  it('uses illustrationColor CSS vars from the active theme', async () => {
+    const customTheme = {
+      ...defaultTheme,
+      lightIllustrationColor: {
+        ...defaultTheme.lightIllustrationColor,
+        primary: 'rgb(255, 0, 0)',
+      },
+    };
+    const { container } = render(
+      <DefaultThemeProvider theme={customTheme}>
+        <HeroSquare applyTheme name="add2Fa" testID="illo" />
+      </DefaultThemeProvider>,
+    );
+    await waitFor(() => screen.getByTestId('illo').tagName === 'DIV');
+    expect(container.innerHTML).toContain('--illustration-primary: rgb(255, 0, 0)');
+  });
+
+  it('shows CDN img (not fallback) when no asset exists for the name', () => {
+    // version === undefined → name not in versionMap → truly no asset → use fallback
+    render(
+      <DefaultThemeProvider>
+        <HeroSquare
+          fallback={<span data-testid="custom-fallback" />}
+          name={'thisDoesNotExist' as any}
+          testID="illo"
+        />
+      </DefaultThemeProvider>,
+    );
+    expect(screen.queryByTestId('illo')).toBeNull();
+    expect(screen.getByTestId('custom-fallback')).toBeTruthy();
+  });
+
+  it('emits no --illustration-* CSS vars when the theme has no illustration color palette', () => {
+    // Simulate a consumer whose custom theme predates the illustration theming feature
+    const { lightIllustrationColor, darkIllustrationColor, ...themeWithoutPalettes } = defaultTheme;
+    const { container } = render(
+      <DefaultThemeProvider theme={themeWithoutPalettes as typeof defaultTheme}>
+        <HeroSquare applyTheme name="add2Fa" testID="illo" />
+      </DefaultThemeProvider>,
+    );
+    expect(container.innerHTML).not.toContain('--illustration-primary');
   });
 });

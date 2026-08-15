@@ -359,7 +359,7 @@ const App = () => (
 );
 ```
 
-Property values being set for an individual component instance will override the default values set on the provider.
+Property values being set for an individual component instance will override the default values set on the provider to become the new default value. Inline declarations still take precedence over the provider's default values.
 
 ```tsx
 <VStack gap={4}>
@@ -388,7 +388,7 @@ Property values being set for an individual component instance will override the
 
 ### Function-based defaults
 
-`ComponentConfigProvider` can also accept a function to compute defaults from incoming component props.
+`ComponentConfigProvider` can also accept a function of incoming component props to return values for unset properties.
 
 When using function-based defaults, keep both the resolver and provider `value` stable with `useCallback` and `useMemo` to reduce avoidable work during rerenders.
 

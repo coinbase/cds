@@ -42,8 +42,8 @@ const IconCounterButtonScreen = () => {
           <IconCounterButton
             accessibilityLabel="6.9 million shares, share"
             count={69000000}
-            dangerouslySetColor="orange"
             icon="arrowsHorizontal"
+            styles={{ icon: { color: 'orange' } }}
           />
         </HStack>
       </Example>

@@ -1,28 +1,31 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
-import type {
-  ComponentMeta,
-  ComponentStory,
-} from '@storybook/react/dist/ts3.9/client/preview/types-6-3';
+import type { Meta, StoryObj } from '@storybook/react';
 
+import { Banner } from '../../banner/Banner';
 import { Button } from '../../buttons/Button';
 import { IconButton } from '../../buttons/IconButton';
+import { ListCell } from '../../cells/ListCell';
 import { DotSymbol } from '../../dots/DotSymbol';
 import { Icon } from '../../icons/Icon';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { Text } from '../../typography/Text';
+import { TextBody } from '../../typography/TextBody';
+import { TextLabel2 } from '../../typography/TextLabel2';
 import { PortalProvider } from '../PortalProvider';
 import { Tooltip } from '../tooltip/Tooltip';
 import type { TooltipProps } from '../tooltip/TooltipProps';
 
-export default {
+const meta: Meta = {
   title: 'Components/Tooltip/Tooltip',
   component: Tooltip,
   parameters: {
     layout: 'padded',
   },
-} as ComponentMeta<typeof Tooltip>;
+};
+
+export default meta;
 
 type BasicTooltipProps = {
   content: TooltipProps['content'];
@@ -195,23 +198,23 @@ const BasicTooltip = ({ content, openDelay, closeDelay }: BasicTooltipProps) => 
   );
 };
 
-const Template: ComponentStory<typeof BasicTooltip> = (args: BasicTooltipProps) => (
-  <BasicTooltip {...args} />
-);
-
-export const Default = Template.bind({});
-
-Default.args = {
-  content: 'This is the tooltip Content',
-};
-
-export const TooltipLongContent = Template.bind({});
+type Story = StoryObj<BasicTooltipProps>;
 
 const longContent =
   'This is the tooltip Content. This is just really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really really Long.';
 
-TooltipLongContent.args = {
-  content: longContent,
+export const Default: Story = {
+  render: (args) => <BasicTooltip {...args} />,
+  args: {
+    content: 'This is the tooltip Content',
+  },
+};
+
+export const TooltipLongContent: Story = {
+  render: (args) => <BasicTooltip {...args} />,
+  args: {
+    content: longContent,
+  },
 };
 
 export const DelayedVisibility = ({
@@ -345,6 +348,55 @@ export const TooltipOnIconReactNode = () => (
       <Text as="span" color="fgMuted" font="body">
         Focus the icon to hear the tooltip announced.
       </Text>
+    </HStack>
+  </PortalProvider>
+);
+
+export const TooltipWithRichDynamicContent = () => (
+  <PortalProvider>
+    <HStack alignItems="center" gap={1}>
+      <TextBody as="span">&quot;Test&quot;</TextBody>
+      <Tooltip
+        background="bgAlternate"
+        content={
+          <VStack gap={1}>
+            <VStack gap={0.5}>
+              <TextLabel2 as="span">Vault name</TextLabel2>
+            </VStack>
+            <ListCell
+              detail={
+                <VStack alignItems="flex-end">
+                  <TextBody as="span">+ 1.11%</TextBody>
+                </VStack>
+              }
+              spacingVariant="compact"
+              title="List title"
+            />
+            <Banner
+              startIconActive
+              bordered={false}
+              showDismiss={false}
+              startIcon="info"
+              styleVariant="contextual"
+              variant="promotional"
+            >
+              Description
+            </Banner>
+          </VStack>
+        }
+        invertColorScheme={false}
+      >
+        <Icon
+          active
+          accessibilityLabel="Info"
+          color="fgMuted"
+          name="info"
+          role="button"
+          size="xs"
+          tabIndex={0}
+          testID="rich-dynamic-tooltip-trigger"
+        />
+      </Tooltip>
     </HStack>
   </PortalProvider>
 );

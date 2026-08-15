@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import type { LottieSource } from '@coinbase/cds-common';
+import type { LottieSource } from '@coinbase/cds-common/types/LottieSource';
 import type { AnyObject } from '@coinbase/cds-utils';
 import type { AnimationConfigWithData } from 'lottie-web';
 import lottie from 'lottie-web';
@@ -19,7 +19,7 @@ export const useLottieLoader = <Marker extends string, Source extends LottieSour
   const sourceHeight = source.h;
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const animationRef: LottieAnimationRef = useRef();
+  const animationRef: LottieAnimationRef = useRef(undefined);
   const [, setAnimationLoaded] = useState(false);
 
   const preserveAspectRatio = useMemo(() => {

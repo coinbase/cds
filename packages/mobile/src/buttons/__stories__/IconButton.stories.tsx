@@ -42,12 +42,6 @@ const variants = [
   },
   {
     component: (props?: Partial<IconButtonProps>) => (
-      <IconButton name={iconName} variant="foregroundMuted" {...props} />
-    ),
-    title: <Text font="body">ForegroundMuted</Text>,
-  },
-  {
-    component: (props?: Partial<IconButtonProps>) => (
       <IconButton
         name={iconName}
         style={{ padding: 10, borderRadius: 15, transform: 'scale(0.5)' }}
@@ -58,9 +52,15 @@ const variants = [
   },
   {
     component: (props?: Partial<IconButtonProps>) => (
-      <IconButton transparent name={iconName} variant="foregroundMuted" {...props} />
+      <IconButton flush="start" name={iconName} variant="primary" {...props} />
     ),
-    title: <Text font="body">ForegroundMuted transparent</Text>,
+    title: 'Primary flush start',
+  },
+  {
+    component: (props?: Partial<IconButtonProps>) => (
+      <IconButton flush="end" name={iconName} variant="primary" {...props} />
+    ),
+    title: 'Primary flush end',
   },
 ];
 
@@ -113,20 +113,66 @@ const IconButtonScreen = () => {
           );
         })}
       </Example>
+      <Example inline title="T-shirt sizes">
+        <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
+          <HStack alignItems="center" gap={2}>
+            <IconButton accessibilityLabel="Extra small" name={iconName} size="xs" />
+            <IconButton accessibilityLabel="Small" name={iconName} size="s" />
+            <IconButton accessibilityLabel="Medium" name={iconName} size="m" />
+            <IconButton accessibilityLabel="Large" name={iconName} size="l" />
+          </HStack>
+        </Box>
+      </Example>
+      <Example inline title='Deprecated compact (renders as size "s")'>
+        <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
+          <IconButton compact accessibilityLabel={accessibilityLabel} name={iconName} />
+          <Text font="body">compact</Text>
+        </Box>
+      </Example>
       <Example inline title="Icon sizes">
         <Box alignItems="center" flexDirection="row" justifyContent="space-between" width={350}>
           <HStack gap={2}>
             <IconButton accessibilityLabel="Extra small icon" iconSize="xs" name={iconName} />
             <IconButton accessibilityLabel="Small icon" iconSize="s" name={iconName} />
             <IconButton accessibilityLabel="Medium icon" iconSize="m" name={iconName} />
-            <IconButton
-              accessibilityLabel="Large icon"
-              compact={false}
-              iconSize="l"
-              name={iconName}
-            />
+            <IconButton accessibilityLabel="Large icon" iconSize="l" name={iconName} size="l" />
           </HStack>
         </Box>
+      </Example>
+
+      <Example inline title="Icon Glyph Styles">
+        <VStack gap={2}>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              accessibilityLabel="Custom color via styles.icon"
+              name={iconName}
+              styles={{ icon: { color: 'dodgerblue' } }}
+            />
+            <Text font="body">Custom color via styles.icon</Text>
+          </Box>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              accessibilityLabel="Rotated icon via styles.icon"
+              name={iconName}
+              styles={{ icon: { transform: [{ rotate: '45deg' }] } }}
+            />
+            <Text font="body">Rotated icon via styles.icon</Text>
+          </Box>
+        </VStack>
+      </Example>
+
+      <Example inline title="Progress Circle Styles">
+        <VStack gap={2}>
+          <Box alignItems="center" flexDirection="row" gap={2}>
+            <IconButton
+              loading
+              accessibilityLabel="Reduced opacity progress circle"
+              name={iconName}
+              styles={{ progressCircle: { opacity: 0.3 } }}
+            />
+            <Text font="body">Reduced opacity</Text>
+          </Box>
+        </VStack>
       </Example>
 
       <Example inline title="Loading">
@@ -176,19 +222,19 @@ const IconButtonScreen = () => {
               <IconButton
                 loading
                 accessibilityLabel="Loading"
-                compact={false}
                 iconSize="l"
                 name={iconName}
+                size="l"
               />
             </HStack>
           </Box>
           <Box>
             <Text font="label2" style={{ marginBottom: 8 }}>
-              Loading compact vs regular
+              Loading size s vs size l
             </Text>
             <HStack alignItems="center" gap={2}>
-              <IconButton compact loading accessibilityLabel="Loading" name={iconName} />
-              <IconButton loading accessibilityLabel="Loading" compact={false} name={iconName} />
+              <IconButton loading accessibilityLabel="Loading" name={iconName} size="s" />
+              <IconButton loading accessibilityLabel="Loading" name={iconName} size="l" />
             </HStack>
           </Box>
         </VStack>
@@ -199,11 +245,6 @@ const IconButtonScreen = () => {
             <HStack key={`icon-wrapper-${name}`} flexWrap="wrap" gap={2}>
               <IconButton accessibilityLabel={accessibilityLabel} name={name} variant="primary" />
               <IconButton accessibilityLabel={accessibilityLabel} name={name} variant="secondary" />
-              <IconButton
-                accessibilityLabel={accessibilityLabel}
-                name={name}
-                variant="foregroundMuted"
-              />
               <IconButton accessibilityLabel={accessibilityLabel} name={name} />
             </HStack>
           );
@@ -242,20 +283,20 @@ const IconButtonScreen = () => {
           width={32}
         />
         <IconButton
-          compact
           accessibilityLabel={accessibilityLabel}
           height={24}
           name={iconName}
           onPress={onPress}
+          size="s"
           width={24}
         />
         <IconButton
-          compact
           loading
           accessibilityLabel={accessibilityLabel}
           height={24}
           name={iconName}
           onPress={onPress}
+          size="s"
           width={24}
         />
       </Example>

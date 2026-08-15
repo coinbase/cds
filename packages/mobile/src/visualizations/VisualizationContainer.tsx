@@ -1,9 +1,9 @@
 import React, { memo } from 'react';
-import type { DimensionValue } from '@coinbase/cds-common/types';
+import type { DimensionValue } from 'react-native';
 import { useVisualizationDimensions } from '@coinbase/cds-common/visualizations/useVisualizationDimensions';
 
 import { useLayout } from '../hooks/useLayout';
-import { Box } from '../layout';
+import { Box } from '../layout/Box';
 
 export type VisualizationContainerDimension = {
   width: number;
@@ -27,7 +27,7 @@ export const VisualizationContainer: React.FC<VisualizationContainerProps> = mem
   ({ width, height, children }) => {
     const [{ width: layoutWidth, height: layoutHeight }, onLayout] = useLayout();
 
-    const dimensions = useVisualizationDimensions({
+    const dimensions = useVisualizationDimensions<DimensionValue>({
       userDefinedWidth: width,
       userDefinedHeight: height,
       calculatedWidth: layoutWidth,

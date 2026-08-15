@@ -1,8 +1,10 @@
 import React, { forwardRef, memo } from 'react';
-import type { SharedAccessibilityProps, SharedProps, ThemeVars } from '@coinbase/cds-common';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 
-import type { BoxBaseProps } from '../layout';
+import type { BoxBaseProps } from '../layout/Box';
 import type { GroupBaseProps } from '../layout/Group';
 import type { FilteredHTMLAttributes } from '../types';
 
@@ -12,25 +14,7 @@ import { useHandleRadioSelect } from './useHandleRadioSelect';
 
 export { Radio, type RadioProps, useHandleRadioSelect };
 
-/**
- * @deprecated RadioGroup is deprecated. Use ControlGroup with role="radiogroup" instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v6
- *
- * @example
- * // Instead of:
- * <RadioGroup options={{ value1: 'Label 1' }} value={value} onChange={onChange} name="radio" />
- *
- * // Use:
- * <ControlGroup
- *   role="radiogroup"
- *   ControlComponent={Radio}
- *   options={[{ value: 'value1', children: 'Label 1' }]}
- *   value={value}
- *   onChange={(e) => onChange(e.target.value)}
- *   name="radio"
- * />
- */
-export type RadioGroupBaseProps<RadioValue extends string> = FilteredHTMLAttributes<
+type RadioGroupBaseProps<RadioValue extends string> = FilteredHTMLAttributes<
   React.HTMLAttributes<HTMLDivElement>,
   'onChange' | 'color'
 > &
@@ -56,11 +40,7 @@ export type RadioGroupBaseProps<RadioValue extends string> = FilteredHTMLAttribu
     controlColor?: ThemeVars.Color;
   };
 
-/**
- * @deprecated RadioGroup is deprecated. Use ControlGroup with role="radiogroup" instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- */
-export type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
+type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
 
 const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends string>(
   {

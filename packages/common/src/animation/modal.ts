@@ -1,4 +1,4 @@
-import type { MotionBaseSpec } from '../types';
+import type { MotionBaseSpec } from '../types/Motion';
 
 export const modalHiddenOpacity = 0;
 export const modalHiddenScale = 0.98;

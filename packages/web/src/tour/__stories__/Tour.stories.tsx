@@ -261,15 +261,6 @@ export const TourDefaultActive = () => {
     </Tour>
   );
 };
-TourDefaultActive.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};
 export const TourHorizontalScroll = () => {
   const [activeTourStep, setActiveTourStep] = useState<TourStepValue | null>(null);
   return (

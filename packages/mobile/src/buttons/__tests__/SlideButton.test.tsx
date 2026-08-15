@@ -52,7 +52,7 @@ describe('SlideButton', () => {
 
   it('renders correctly', () => {
     render(<SlideButtonExample />);
-    expect(screen.getByText(uncheckedLabel)).toBeTruthy();
+    expect(screen.getByText(uncheckedLabel, { includeHiddenElements: true })).toBeTruthy();
   });
 
   it('is accessible', () => {
@@ -174,34 +174,48 @@ describe('SlideButton', () => {
     expect(onSlideComplete).toHaveBeenCalled();
   });
 
-  describe('compact variant', () => {
-    it('renders correctly with compact prop', () => {
-      render(<SlideButtonExample compact />);
-      expect(screen.getByText(uncheckedLabel)).toBeTruthy();
-    });
+  describe('size', () => {
+    const containerHeightMatcher = (height: number) =>
+      expect.arrayContaining([expect.objectContaining({ height })]);
 
-    it('applies compact height of 40px', () => {
-      render(<SlideButtonExample compact />);
-      const buttonContainer = screen.getByTestId(testID);
-      expect(buttonContainer.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            height: 40,
-          }),
-        ]),
-      );
-    });
-
-    it('applies regular height of 56px when not compact', () => {
+    it('defaults to size "l" (56px) when neither size nor compact is set', () => {
       render(<SlideButtonExample />);
-      const buttonContainer = screen.getByTestId(testID);
-      expect(buttonContainer.props.style).toEqual(
-        expect.arrayContaining([
-          expect.objectContaining({
-            height: 56,
-          }),
-        ]),
-      );
+      expect(screen.getByTestId(testID).props.style).toEqual(containerHeightMatcher(56));
+    });
+
+    it('applies height of 40px for size "s"', () => {
+      render(<SlideButtonExample size="s" />);
+      expect(screen.getByTestId(testID).props.style).toEqual(containerHeightMatcher(40));
+    });
+
+    it('applies height of 48px for size "m"', () => {
+      render(<SlideButtonExample size="m" />);
+      expect(screen.getByTestId(testID).props.style).toEqual(containerHeightMatcher(48));
+    });
+
+    it('applies height of 56px for size "l"', () => {
+      render(<SlideButtonExample size="l" />);
+      expect(screen.getByTestId(testID).props.style).toEqual(containerHeightMatcher(56));
+    });
+
+    it('renders the unchecked label for a non-default size', () => {
+      render(<SlideButtonExample size="s" />);
+      expect(screen.getByText(uncheckedLabel, { includeHiddenElements: true })).toBeTruthy();
+    });
+
+    it('resolves deprecated compact prop to size "s" (40px)', () => {
+      render(<SlideButtonExample compact />);
+      expect(screen.getByTestId(testID).props.style).toEqual(containerHeightMatcher(40));
+    });
+
+    it('prefers size over compact when both are provided', () => {
+      render(<SlideButtonExample compact size="m" />);
+      expect(screen.getByTestId(testID).props.style).toEqual(containerHeightMatcher(48));
+    });
+
+    it('lets an explicit height override the size-derived height', () => {
+      render(<SlideButtonExample height={72} size="s" />);
+      expect(screen.getByTestId(testID).props.style).toEqual(containerHeightMatcher(72));
     });
   });
 });

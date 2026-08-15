@@ -354,15 +354,6 @@ export const StyleOverrides = () => {
     </VStack>
   );
 };
-StyleOverrides.parameters = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};
 
 const fonts = [
   'display1',

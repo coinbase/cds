@@ -4,7 +4,7 @@ import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell'
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { VStack } from '../layout/VStack';
-import { Text, type TextProps } from '../typography/Text';
+import { Text } from '../typography/Text';
 
 import { Cell, type CellBaseProps, type CellProps, type CellSpacing } from './Cell';
 import { CellAccessory, type CellAccessoryType } from './CellAccessory';
@@ -179,16 +179,20 @@ export const ListCell = memo(function ListCell(_props: ListCellProps) {
     variant,
     onPress,
     spacingVariant = compact ? 'compact' : 'normal',
+    minHeight: minHeightProp,
     style,
     styles,
     ...props
   } = mergedProps;
+  // we need to maintain fixed min-heights for the different cell style variants until they are dropped in a breaking change
+  // see CDS-1620
   const minHeight =
-    spacingVariant === 'compact'
+    minHeightProp ??
+    (spacingVariant === 'compact'
       ? compactListHeight
       : spacingVariant === 'normal'
         ? listHeight
-        : undefined;
+        : undefined);
   const accessoryType = selected && !disableSelectionAccessory ? 'selected' : accessory;
   const hasDetails = Boolean(detail || subdetail || detailNode || subdetailNode);
 

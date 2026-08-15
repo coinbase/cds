@@ -1,21 +1,22 @@
 import React, { isValidElement, memo } from 'react';
-import type { PressableProps } from 'react-native';
+import type { DimensionValue, PressableProps } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { upsellCardDefaultWidth, upsellCardMinHeight } from '@coinbase/cds-common/tokens/card';
-import type {
-  DimensionStyles,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { DimensionStyles } from '@coinbase/cds-common/types/DimensionStyles';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { Button, IconButton } from '../buttons';
-import { HStack, VStack } from '../layout';
+import { Button } from '../buttons/Button';
+import { IconButton } from '../buttons/IconButton';
+import { HStack, type HStackProps } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
 export type UpsellCardBaseProps = SharedProps &
   Pick<SharedAccessibilityProps, 'accessibilityLabel'> &
-  Pick<DimensionStyles, 'width'> & {
+  Pick<DimensionStyles, 'width'> &
+  Pick<HStackProps, 'style'> & {
     /** Callback fired when the action button is pressed */
     onActionPress?: PressableProps['onPress'];
     /** Callback fired when the dismiss button is pressed */
@@ -38,7 +39,8 @@ export type UpsellCardBaseProps = SharedProps &
      */
     background?: ThemeVars.Color;
     /**
-     * @danger This is a migration escape hatch. It is not intended to be used normally.
+     * @deprecated Use `style` or `background` to customize card background. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
      */
     dangerouslySetBackground?: string;
   };
@@ -67,7 +69,7 @@ export type UpsellCardProps = UpsellCardBaseProps;
  *   title="Title"
  *   description="Description"
  *   media={<RemoteImage ... />}
- *   actions={<Button compact variant="secondary">Get Started</Button>}
+ *   actions={<Button size="s" variant="secondary">Get Started</Button>}
  *   onDismiss={handleDismiss}
  *   mediaPlacement="end"
  * />
@@ -87,6 +89,7 @@ export const UpsellCard = memo(
     accessibilityLabel,
     width = upsellCardDefaultWidth,
     onPress,
+    style,
   }: UpsellCardProps) => {
     const content = (
       <HStack
@@ -95,8 +98,9 @@ export const UpsellCard = memo(
         borderRadius={500}
         dangerouslySetBackground={dangerouslySetBackground}
         minHeight={upsellCardMinHeight}
+        style={style}
         testID={testID}
-        width={width}
+        width={width as DimensionValue}
       >
         <HStack
           alignContent="space-between"
@@ -131,10 +135,10 @@ export const UpsellCard = memo(
                   action
                 ) : (
                   <Button
-                    compact
                     flush="start"
                     numberOfLines={1}
                     onPress={onActionPress}
+                    size="s"
                     variant="secondary"
                   >
                     {action as string}

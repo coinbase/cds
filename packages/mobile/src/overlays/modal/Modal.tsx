@@ -1,35 +1,75 @@
-import React, {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useState,
-} from 'react';
-import { Modal as RNModal, Platform, SafeAreaView, StatusBar, StyleSheet } from 'react-native';
-import type { ModalProps as RNModalProps } from 'react-native';
+import React, { memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react';
+import {
+  Modal as RNModal,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
+import type { ModalProps as RNModalProps, StyleProp, ViewStyle } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import { ModalContext, type ModalContextValue } from '@coinbase/cds-common/overlays/ModalContext';
 import {
   OverlayContentContext,
   type OverlayContentContextValue,
 } from '@coinbase/cds-common/overlays/OverlayContentContext';
-import type { PositionStyles, SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { VStack } from '../../layout';
+import type { BoxProps } from '../../layout/Box';
+import { VStack } from '../../layout/VStack';
 
 import { useModalAnimation } from './useModalAnimation';
 
 type ModalChildrenRenderProps = { closeModal: () => void };
 
+/**
+ * Appearance style props forwarded to the visible dialog surface (rather than the
+ * underlying React Native Modal, which silently ignores them).
+ */
+type DialogStyleProps = Pick<
+  BoxProps,
+  | 'background'
+  | 'color'
+  | 'borderColor'
+  | 'borderWidth'
+  | 'borderRadius'
+  | 'borderTopLeftRadius'
+  | 'borderTopRightRadius'
+  | 'borderBottomLeftRadius'
+  | 'borderBottomRightRadius'
+  | 'borderTopWidth'
+  | 'borderBottomWidth'
+  | 'borderStartWidth'
+  | 'borderEndWidth'
+  | 'bordered'
+  | 'borderedTop'
+  | 'borderedBottom'
+  | 'borderedStart'
+  | 'borderedEnd'
+  | 'borderedHorizontal'
+  | 'borderedVertical'
+  | 'elevation'
+  | 'padding'
+  | 'paddingX'
+  | 'paddingY'
+  | 'paddingTop'
+  | 'paddingBottom'
+  | 'paddingStart'
+  | 'paddingEnd'
+  | 'minWidth'
+  | 'minHeight'
+  | 'maxWidth'
+  | 'maxHeight'
+>;
+
 export type ModalBaseProps = SharedProps &
   ModalContextValue &
-  Pick<PositionStyles, 'zIndex'> &
+  DialogStyleProps &
   Omit<RNModalProps, 'children' | 'visible' | 'onRequestClose' | 'animationType'> & {
     /** Component to render as the Modal content */
-    children?: React.ReactNode | React.FC<ModalChildrenRenderProps>;
+    children?: React.ReactNode | ((props: ModalChildrenRenderProps) => React.ReactNode);
     /**
      * Callback fired after the component is closed.
      */
@@ -38,6 +78,14 @@ export type ModalBaseProps = SharedProps &
      * @danger This is a migration escape hatch. It is not intended to be used normally.
      * */
     width?: number;
+    zIndex?: ViewStyle['zIndex'];
+    /** Custom styles for individual elements of the Modal */
+    styles?: {
+      /** Visible modal card element */
+      modal?: StyleProp<ViewStyle>;
+      /** Safe area region wrapping the modal children */
+      safeArea?: StyleProp<ViewStyle>;
+    };
   };
 
 export type ModalRefBaseProps = Pick<ModalBaseProps, 'onRequestClose'>;
@@ -49,7 +97,12 @@ const overlayContentContextValue: OverlayContentContextValue = {
 };
 
 export const Modal = memo(
-  forwardRef<ModalRefBaseProps, ModalProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: ModalProps & {
+    ref?: React.Ref<ModalRefBaseProps>;
+  }) => {
     const mergedProps = useComponentConfig('Modal', _props);
     const props = mergedProps;
     const {
@@ -59,11 +112,46 @@ export const Modal = memo(
       onDidClose,
       hideDividers,
       hideCloseButton,
+      styles: customStyles,
+      // Dialog surface appearance
+      background,
+      color,
+      borderColor,
+      borderWidth,
+      borderRadius,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderTopWidth,
+      borderBottomWidth,
+      borderStartWidth,
+      borderEndWidth,
+      bordered,
+      borderedTop,
+      borderedBottom,
+      borderedStart,
+      borderedEnd,
+      borderedHorizontal,
+      borderedVertical,
+      elevation = 2,
+      padding,
+      paddingX,
+      paddingY,
+      paddingTop,
+      paddingBottom,
+      paddingStart,
+      paddingEnd,
+      minWidth,
+      minHeight,
+      maxWidth,
+      maxHeight,
       ...restProps
     } = props;
     const [{ opacity, scale }, animateIn, animateOut] = useModalAnimation();
     const [internalVisible, setInternalVisible] = useState(visible);
     const prevVisible = usePreviousValue(visible);
+    const { width, height } = useWindowDimensions();
 
     const handleClose = useCallback(() => {
       animateOut.start(({ finished }) => {
@@ -120,11 +208,44 @@ export const Modal = memo(
         >
           <VStack
             animated
-            elevation={2}
+            background={background}
+            borderBottomLeftRadius={borderBottomLeftRadius}
+            borderBottomRightRadius={borderBottomRightRadius}
+            borderBottomWidth={borderBottomWidth}
+            borderColor={borderColor}
+            borderEndWidth={borderEndWidth}
+            borderRadius={borderRadius}
+            borderStartWidth={borderStartWidth}
+            borderTopLeftRadius={borderTopLeftRadius}
+            borderTopRightRadius={borderTopRightRadius}
+            borderTopWidth={borderTopWidth}
+            borderWidth={borderWidth}
+            bordered={bordered}
+            borderedBottom={borderedBottom}
+            borderedEnd={borderedEnd}
+            borderedHorizontal={borderedHorizontal}
+            borderedStart={borderedStart}
+            borderedTop={borderedTop}
+            borderedVertical={borderedVertical}
+            color={color}
+            elevation={elevation}
+            height={height}
+            maxHeight={maxHeight}
+            maxWidth={maxWidth}
+            minHeight={minHeight}
+            minWidth={minWidth}
+            padding={padding}
+            paddingBottom={paddingBottom}
+            paddingEnd={paddingEnd}
+            paddingStart={paddingStart}
+            paddingTop={paddingTop}
+            paddingX={paddingX}
+            paddingY={paddingY}
             pin="all"
-            style={{ transform: [{ scale }], opacity, borderWidth: 0 }}
+            style={[{ transform: [{ scale }], opacity }, customStyles?.modal]}
+            width={width}
           >
-            <SafeAreaView style={styles.safeAreaContainer}>
+            <SafeAreaView style={[styles.safeAreaContainer, customStyles?.safeArea]}>
               <ModalContext.Provider value={modalData}>
                 {typeof children === 'function' ? children(renderChildrenProps) : children}
               </ModalContext.Provider>
@@ -133,7 +254,7 @@ export const Modal = memo(
         </RNModal>
       </OverlayContentContext.Provider>
     );
-  }),
+  },
 );
 
 const styles = StyleSheet.create({

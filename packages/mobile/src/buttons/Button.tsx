@@ -1,19 +1,12 @@
-import React, { forwardRef, isValidElement, memo, useCallback, useMemo } from 'react';
-import {
-  ActivityIndicator,
-  type PressableStateCallbackType,
-  StyleSheet,
-  type View,
-} from 'react-native';
+import React, { isValidElement, memo, useCallback, useMemo } from 'react';
+import { type PressableStateCallbackType, StyleSheet, type View } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
-import { interactableHeight } from '@coinbase/cds-common/tokens/interactableHeight';
-import type {
-  ButtonVariant,
-  IconName,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
-import { getButtonSpacingProps } from '@coinbase/cds-common/utils/getButtonSpacingProps';
+import type { ButtonVariant } from '@coinbase/cds-common/types/ButtonBaseProps';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { NegativeSpace } from '@coinbase/cds-common/types/SpacingProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
@@ -25,10 +18,53 @@ import { ProgressCircle } from '../visualizations/ProgressCircle';
 
 const defaultProgressCircleSize = 24;
 
+export type ButtonSize = 'xs' | 's' | 'm' | 'l';
+
+const buttonSizes = {
+  xs: {
+    paddingX: 2,
+    paddingY: 0.75,
+    borderRadius: 700,
+    iconSize: 's',
+    font: 'label1',
+    feedback: 'light',
+  },
+  s: {
+    paddingX: 2,
+    paddingY: 1,
+    borderRadius: 700,
+    iconSize: 's',
+    font: 'headline',
+    feedback: 'light',
+  },
+  m: {
+    paddingX: 3,
+    paddingY: 1.5,
+    borderRadius: 900,
+    iconSize: 'm',
+    font: 'headline',
+    feedback: 'normal',
+  },
+  l: {
+    paddingX: 4,
+    paddingY: 2,
+    borderRadius: 900,
+    iconSize: 'm',
+    font: 'headline',
+    feedback: 'normal',
+  },
+} as const satisfies Record<
+  ButtonSize,
+  Pick<ButtonBaseProps, 'paddingX' | 'paddingY' | 'borderRadius' | 'font' | 'feedback'> & {
+    iconSize: Extract<IconSize, 's' | 'm'>;
+  }
+>;
+
+const defaultButtonSize: ButtonSize = 'l';
+
 export const styles = StyleSheet.create({
   inline: {
     width: 'auto',
-    minWidth: 64,
   },
   block: {
     width: '100%',
@@ -62,8 +98,17 @@ export type ButtonBaseProps = SharedProps &
     transparent?: boolean;
     /** Change to block and expand to 100% of parent width. */
     block?: boolean;
-    /** Reduce the inner padding within the button itself. */
+    /**
+     * Reduce the inner padding within the button itself.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v10
+     */
     compact?: boolean;
+    /**
+     * Set the size of the button.
+     * @default l
+     */
+    size?: ButtonSize;
     /** Children to render within the button. */
     children: React.ReactNode;
     /** Set the start node */
@@ -96,178 +141,185 @@ export type ButtonBaseProps = SharedProps &
 
 export type ButtonProps = ButtonBaseProps;
 
-export const Button = memo(
-  forwardRef(function Button(_props: ButtonProps, ref: React.ForwardedRef<View>) {
-    const mergedProps = useComponentConfig('Button', _props);
-    const {
-      variant = 'primary',
-      loading,
-      progressCircleSize = defaultProgressCircleSize,
-      transparent,
-      block,
-      compact,
-      children,
-      start,
-      startIcon,
-      startIconActive,
-      end,
-      endIcon,
-      endIconActive,
-      flush,
-      noScaleOnPress,
-      numberOfLines = 1,
-      font = 'headline',
-      fontFamily,
-      fontSize,
-      fontWeight,
-      lineHeight,
-      background,
-      color,
-      style,
-      wrapperStyles,
-      feedback = compact ? 'light' : 'normal',
-      borderColor,
-      borderWidth = 100,
-      borderRadius = compact ? 700 : 900,
-      height = interactableHeight[compact ? 'compact' : 'regular'],
-      accessibilityLabel,
-      accessibilityHint,
-      padding,
-      paddingStart,
-      paddingEnd,
-      paddingTop,
-      paddingBottom,
-      paddingX: paddingXProp,
-      paddingY: paddingYProp,
-      ...props
-    } = mergedProps;
-    const theme = useTheme();
-    const iconSize = compact ? 's' : 'm';
-    const hasIcon = Boolean(startIcon || endIcon);
+export const Button = memo(function Button({
+  ref,
+  ..._props
+}: ButtonProps & {
+  ref?: React.Ref<View>;
+}) {
+  const mergedProps = useComponentConfig('Button', _props);
+  const {
+    variant = 'primary',
+    loading,
+    progressCircleSize = defaultProgressCircleSize,
+    transparent,
+    block,
+    compact,
+    size,
+    children,
+    start,
+    startIcon,
+    startIconActive,
+    end,
+    endIcon,
+    endIconActive,
+    flush,
+    noScaleOnPress,
+    numberOfLines = 1,
+    font: fontProp,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    background,
+    color,
+    style,
+    wrapperStyles,
+    feedback: feedbackProp,
+    borderColor,
+    borderWidth = 0, // remove Pressable's default transparent border
+    borderRadius: borderRadiusProp,
+    accessibilityLabel,
+    accessibilityHint,
+    padding,
+    paddingStart,
+    paddingEnd,
+    paddingTop,
+    paddingBottom,
+    paddingX: paddingXProp,
+    paddingY: paddingYProp,
+    ...props
+  } = mergedProps;
+  const theme = useTheme();
 
-    const variantMap = transparent ? transparentVariants : variants;
+  // `size` wins when both `size` and `compact` are set; compact-only maps to `s`.
+  const resolvedSize = size ?? (compact ? 's' : defaultButtonSize);
+  const sizeConfig = buttonSizes[resolvedSize];
 
-    const variantStyle = variantMap[variant];
+  const font = fontProp ?? sizeConfig.font;
+  const feedback = feedbackProp ?? sizeConfig.feedback;
+  const borderRadius = borderRadiusProp ?? sizeConfig.borderRadius;
+  const paddingX = paddingXProp ?? sizeConfig.paddingX;
+  const paddingY = paddingYProp ?? sizeConfig.paddingY;
+  const iconSize = sizeConfig.iconSize;
+  const hasIcon = Boolean(startIcon || endIcon);
 
-    const colorValue = color ?? variantStyle.color;
-    const backgroundValue = background ?? variantStyle.background;
-    const borderColorValue = borderColor ?? variantStyle.borderColor;
+  const variantMap = transparent ? transparentVariants : variants;
 
-    const sizingStyle = block ? styles.block : styles.inline;
-    const justifyContent = flush ? 'flex-start' : hasIcon ? 'space-between' : 'center';
+  const variantStyle = variantMap[variant];
 
-    const { paddingX, paddingY, marginStart, marginEnd } = getButtonSpacingProps({
-      compact,
-      flush,
-    });
+  const colorValue = color ?? variantStyle.color;
+  const backgroundValue = background ?? variantStyle.background;
+  const borderColorValue = borderColor ?? variantStyle.borderColor;
 
-    const pressableStyle = useCallback(
-      (state: PressableStateCallbackType) => [
-        sizingStyle,
-        typeof style === 'function' ? style(state) : style,
-      ],
-      [sizingStyle, style],
-    );
+  const sizingStyle = block ? styles.block : styles.inline;
+  const justifyContent = flush ? 'flex-start' : hasIcon ? 'space-between' : 'center';
 
-    const childrenNode = useMemo(
-      () =>
-        isValidElement<{ children?: React.ReactNode }>(children) &&
-        Boolean(children.props.children) ? (
-          children
-        ) : (
-          <Text
-            align="center"
-            color={colorValue}
-            font={font}
-            fontFamily={fontFamily}
-            fontSize={fontSize}
-            fontWeight={fontWeight}
-            lineHeight={lineHeight}
-            numberOfLines={numberOfLines}
-            selectable={false}
-            style={styles.text}
-            testID="text-headline"
-          >
-            {children}
-          </Text>
-        ),
-      [children, colorValue, font, fontFamily, fontSize, fontWeight, lineHeight, numberOfLines],
-    );
+  const flushMargin = flush ? (-paddingX as NegativeSpace) : undefined;
 
-    return (
-      <Pressable
-        ref={ref}
-        accessibilityHint={loading ? 'Button is loading' : accessibilityHint}
-        accessibilityLabel={loading ? 'loading' : accessibilityLabel}
-        background={backgroundValue}
-        block={block}
-        borderColor={borderColorValue}
-        borderRadius={borderRadius}
-        borderWidth={borderWidth}
-        feedback={feedback}
-        height={height}
-        loading={loading}
-        marginEnd={marginEnd}
-        marginStart={marginStart}
-        noScaleOnPress={noScaleOnPress}
-        style={pressableStyle}
-        transparentWhileInactive={transparent}
-        wrapperStyles={wrapperStyles}
-        {...props}
-      >
-        <HStack
-          alignItems="center"
-          flexWrap="nowrap"
-          justifyContent={justifyContent}
-          minHeight={height}
-          padding={padding}
-          paddingBottom={paddingBottom}
-          paddingEnd={paddingEnd}
-          paddingStart={paddingStart}
-          paddingTop={paddingTop}
-          paddingX={paddingXProp ?? paddingX}
-          paddingY={paddingYProp ?? paddingY}
-          style={sizingStyle}
+  const pressableStyle = useCallback(
+    (state: PressableStateCallbackType) => [
+      sizingStyle,
+      typeof style === 'function' ? style(state) : style,
+    ],
+    [sizingStyle, style],
+  );
+
+  const childrenNode = useMemo(
+    () =>
+      isValidElement(children) && Boolean((children.props as Record<string, unknown>).children) ? (
+        children
+      ) : (
+        <Text
+          align="center"
+          color={colorValue}
+          font={font}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
+          lineHeight={lineHeight}
+          numberOfLines={numberOfLines}
+          selectable={false}
+          style={styles.text}
+          testID="text-headline"
         >
-          {loading ? (
-            <ProgressCircle
-              indeterminate
-              color={colorValue}
-              size={progressCircleSize}
-              weight="thin"
-            />
-          ) : (
-            <>
-              {start ??
-                (startIcon ? (
-                  <Icon
-                    active={startIconActive}
-                    color={colorValue}
-                    name={startIcon}
-                    paddingEnd={1}
-                    size={iconSize}
-                    style={styles.icon}
-                  />
-                ) : null)}
-              {childrenNode}
+          {children}
+        </Text>
+      ),
+    [children, colorValue, font, fontFamily, fontSize, fontWeight, lineHeight, numberOfLines],
+  );
 
-              {end ??
-                (endIcon ? (
-                  <Icon
-                    active={endIconActive}
-                    color={colorValue}
-                    name={endIcon}
-                    paddingStart={1}
-                    size={iconSize}
-                    style={styles.icon}
-                  />
-                ) : null)}
-            </>
-          )}
-        </HStack>
-      </Pressable>
-    );
-  }),
-);
+  return (
+    <Pressable
+      ref={ref}
+      accessibilityHint={loading ? 'Button is loading' : accessibilityHint}
+      accessibilityLabel={loading ? 'loading' : accessibilityLabel}
+      background={backgroundValue}
+      block={block}
+      borderColor={borderColorValue}
+      borderRadius={borderRadius}
+      borderWidth={borderWidth}
+      feedback={feedback}
+      loading={loading}
+      marginEnd={flush === 'end' ? flushMargin : undefined}
+      marginStart={flush === 'start' ? flushMargin : undefined}
+      noScaleOnPress={noScaleOnPress}
+      style={pressableStyle}
+      transparentWhileInactive={transparent}
+      wrapperStyles={wrapperStyles}
+      {...props}
+    >
+      <HStack
+        alignItems="center"
+        flexWrap="nowrap"
+        justifyContent={justifyContent}
+        padding={padding}
+        paddingBottom={paddingBottom}
+        paddingEnd={paddingEnd}
+        paddingStart={paddingStart}
+        paddingTop={paddingTop}
+        paddingX={paddingX}
+        paddingY={paddingY}
+        style={sizingStyle}
+      >
+        {loading ? (
+          <ProgressCircle
+            indeterminate
+            color={colorValue}
+            size={progressCircleSize}
+            weight="thin"
+          />
+        ) : (
+          <>
+            {start ??
+              (startIcon ? (
+                <Icon
+                  active={startIconActive}
+                  color={colorValue}
+                  name={startIcon}
+                  paddingEnd={1}
+                  size={iconSize}
+                  style={styles.icon}
+                />
+              ) : null)}
+            {childrenNode}
+
+            {end ??
+              (endIcon ? (
+                <Icon
+                  active={endIconActive}
+                  color={colorValue}
+                  name={endIcon}
+                  paddingStart={1}
+                  size={iconSize}
+                  style={styles.icon}
+                />
+              ) : null)}
+          </>
+        )}
+      </HStack>
+    </Pressable>
+  );
+});
 
 Button.displayName = 'Button';

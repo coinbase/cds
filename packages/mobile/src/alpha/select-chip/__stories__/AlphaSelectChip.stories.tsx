@@ -57,6 +57,29 @@ export const DefaultMulti = () => {
   );
 };
 
+export const SizeXs = () => {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState<string | null>('1');
+
+  return (
+    <SelectChip
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      size="xs"
+      value={value}
+    />
+  );
+};
+
+/**
+ * The `compact` prop is deprecated; it renders as `size="xs"`. Prefer `size="xs"`.
+ */
 export const Compact = () => {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
@@ -163,7 +186,7 @@ export const MultiSelectWithAssets = () => {
   );
 };
 
-export const InvertColorScheme = () => {
+export const Active = () => {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
     { value: '2', label: 'Option 2' },
@@ -173,7 +196,7 @@ export const InvertColorScheme = () => {
   return (
     <VStack background="bgAlternate" borderRadius={200} padding={2}>
       <SelectChip
-        invertColorScheme
+        active
         onChange={setValue}
         options={exampleOptions}
         placeholder="Choose an option"
@@ -467,7 +490,10 @@ const SelectChipScreen = () => {
       <Example title="Default Multi">
         <DefaultMulti />
       </Example>
-      <Example title="Compact">
+      <Example title={'size="xs"'}>
+        <SizeXs />
+      </Example>
+      <Example title="Deprecated compact (renders as size xs)">
         <Compact />
       </Example>
       <Example title="With Start End Nodes">
@@ -476,8 +502,8 @@ const SelectChipScreen = () => {
       <Example title="Multi-Select with Assets">
         <MultiSelectWithAssets />
       </Example>
-      <Example title="Invert Color Scheme">
-        <InvertColorScheme />
+      <Example title="Active">
+        <Active />
       </Example>
       <Example title="Empty Options">
         <EmptyOptions />

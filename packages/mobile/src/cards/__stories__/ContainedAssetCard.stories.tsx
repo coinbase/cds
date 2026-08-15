@@ -88,8 +88,8 @@ const ContainedAssetCardScreen = () => {
           description={
             <Text
               accessibilityLabel="Up 6.37%"
-              dangerouslySetColor={customUpwardTrendColor}
               font="label2"
+              style={{ color: customUpwardTrendColor }}
             >
               {subheadIconSignMap.upwardTrend}6.37%
             </Text>
@@ -136,7 +136,7 @@ const ContainedAssetCardScreen = () => {
         />
       </Example>
       <Example title="ContainedAssetCard with no max width">
-        <ContainedAssetCard {...exampleProps} maxWidth="none" />
+        <ContainedAssetCard {...exampleProps} maxWidth={null} />
       </Example>
     </ExampleScreen>
   );

@@ -150,13 +150,21 @@ export const dynamicPixelProps = {
   flexBasis: 1,
 } as const satisfies Partial<Record<keyof DynamicStyleProps, 1>>;
 
-export type ResponsiveProp<T> = T | { base?: T; phone?: T; tablet?: T; desktop?: T };
+export type ResponsiveValue<T> = { base?: T; phone?: T; tablet?: T; desktop?: T };
+
+export type ResponsiveProp<T> = T | ResponsiveValue<T>;
 
 export type ResponsiveProps<T> = {
   [key in keyof T]?: ResponsiveProp<T[key]>;
 };
 
 export type StyleProps = ResponsiveProps<StaticStyleProps> & ResponsiveProps<DynamicStyleProps>;
+
+/** Position-related style props using CSS types. Use this instead of common's PositionStyles for web. */
+export type PositionStyles = Pick<
+  StyleProps,
+  'position' | 'top' | 'bottom' | 'left' | 'right' | 'zIndex'
+>;
 
 export const getStyles = (styleProps: StyleProps, inlineStyle?: React.CSSProperties) => {
   const style: Record<string, unknown> = {};

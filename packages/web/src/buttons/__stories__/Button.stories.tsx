@@ -11,14 +11,15 @@ export default {
 };
 
 const buttonStories: Omit<ButtonBaseProps, 'children'>[] = [
-  { variant: 'foregroundMuted' },
   { variant: 'secondary' },
   { variant: 'tertiary' },
   { variant: 'positive' },
   { variant: 'negative' },
+  { variant: 'inverse' },
   { variant: 'secondary', transparent: true },
   { variant: 'positive', transparent: true },
   { variant: 'negative', transparent: true },
+  { variant: 'inverse', transparent: true },
   { block: true },
   { compact: true },
   { compact: true, block: true },
@@ -87,6 +88,16 @@ export const CustomEndIconButton = () => (
         Test
       </Button>
     </ButtonGroup>
+  </VStack>
+);
+
+export const Sizes = () => (
+  <VStack alignItems="flex-start" gap={2}>
+    <Button size="xs">Extra small (xs)</Button>
+    <Button size="s">Small (s)</Button>
+    <Button size="m">Medium (m)</Button>
+    <Button size="l">Large (l) - default</Button>
+    <Button compact>{'Compact (deprecated, renders as size="s")'}</Button>
   </VStack>
 );
 

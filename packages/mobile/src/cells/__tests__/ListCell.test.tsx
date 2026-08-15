@@ -3,40 +3,10 @@ import { noop } from '@coinbase/cds-utils';
 import { render, screen } from '@testing-library/react-native';
 
 import { Button } from '../../buttons';
-import { DefaultThemeProvider } from '../../utils/testHelpers';
+import { DefaultThemeProvider, treeHasStyleProp } from '../../utils/testHelpers';
 import { CellHelperText } from '../CellHelperText';
 import { CellMedia } from '../CellMedia';
 import { ListCell } from '../ListCell';
-
-function flattenStyle(style: unknown): Array<Record<string, unknown>> {
-  if (!style) return [];
-  if (Array.isArray(style)) return style.flatMap(flattenStyle);
-  if (typeof style === 'object') return [style as Record<string, unknown>];
-  return [];
-}
-
-function treeHasStyleProp(
-  tree: unknown,
-  predicate: (style: Record<string, unknown>) => boolean,
-): boolean {
-  if (!tree) return false;
-
-  if (Array.isArray(tree)) {
-    return tree.some((node) => treeHasStyleProp(node, predicate));
-  }
-
-  if (typeof tree !== 'object') return false;
-
-  const node = tree as {
-    props?: { style?: unknown };
-    children?: unknown[];
-  };
-
-  const styles = flattenStyle(node.props?.style);
-  if (styles.some(predicate)) return true;
-
-  return (node.children ?? []).some((child) => treeHasStyleProp(child, predicate));
-}
 
 describe('ListCell', () => {
   it('renders a Text component title', () => {
@@ -288,7 +258,7 @@ describe('ListCell', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.getByText('Helper Text')).toBeTruthy();
+    expect(screen.getByText(/Helper Text/, { includeHiddenElements: true })).toBeTruthy();
   });
 
   it('renders empty strings without crashing', () => {
@@ -298,7 +268,7 @@ describe('ListCell', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.container).not.toBeNull();
+    expect(screen.root).not.toBeNull();
   });
 
   it('can set an accessibilityLabel and accessibilityHint when a pressable', () => {

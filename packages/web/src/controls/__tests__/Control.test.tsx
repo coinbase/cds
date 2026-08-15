@@ -49,4 +49,56 @@ describe('Control', () => {
     expect(console.warn).toHaveBeenCalledTimes(1);
     process.env.NODE_ENV = 'test';
   });
+
+  it('keeps a stable root wrapper regardless of label presence', () => {
+    const { rerender } = render(
+      <DefaultThemeProvider>
+        <Control aria-label="control" type="checkbox">
+          <div>test children</div>
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('checkbox').closest('.cds-Control')).toBeTruthy();
+
+    rerender(
+      <DefaultThemeProvider>
+        <Control aria-label="control" label="test label" type="checkbox">
+          <div>test children</div>
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('checkbox').closest('.cds-Control')).toBeTruthy();
+  });
+
+  it('applies classNames/styles to root and slots', () => {
+    render(
+      <DefaultThemeProvider>
+        <Control
+          aria-label="control"
+          classNames={{
+            icon: 'test-control-icon',
+            input: 'test-control-input',
+            root: 'test-control-root',
+          }}
+          styles={{ root: { borderTopWidth: 3 } }}
+          type="checkbox"
+        >
+          <div>test children</div>
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('checkbox').closest('.test-control-root')).toBeTruthy();
+    expect(screen.getByRole('checkbox').closest('.cds-Control')).toBeTruthy();
+    expect(screen.getByRole('checkbox').className).toContain('test-control-input');
+    expect(screen.getByRole('checkbox').className).toContain('cds-Control-input');
+    expect(screen.getByText('test children').parentElement?.className).toContain(
+      'test-control-icon',
+    );
+    expect(screen.getByText('test children').parentElement?.className).toContain(
+      'cds-Control-icon',
+    );
+  });
 });

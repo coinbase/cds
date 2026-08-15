@@ -32,9 +32,6 @@
     "CHANGELOG"
   ],
   "dependencies": {
-    "@babel/types": "^7.20.7",
-    "@linaria/babel-preset": "^3.0.0-beta.22",
-    "@testing-library/react": "^16.0.1",
     "chalk": "^4.1.2",
     "jest-axe": "^10.0.0",
     "source-map": "^0.7.3",
@@ -44,7 +41,10 @@
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
-    "@babel/preset-typescript": "^7.27.1"
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@babel/types": "^7.20.7",
+    "@linaria/babel-preset": "^3.0.0-beta.22",
+    "@testing-library/react": "^16.3.2"
   }
 }

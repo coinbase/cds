@@ -32,24 +32,35 @@ const ignores = [
   '**/esm/**',
   '**/lib/**',
   '**/templates/**',
+  '**/__testfixtures__/**',
   '**/.next/**',
   // These files use assert { type: 'json' } syntax that breaks eslint and must be fully ignored
   '**/getAffectedRoutes.mjs',
   '**/getBuildInfo.mjs',
-  'apps/mobile-app/prebuilds',
   // within their NX project, these files are not included by the Typescript config
   // when linting with TS types (e.g. internal/safely-spread-props) this will raise an error
   'packages/web/optimize-css.ts',
   'packages/icons/scripts/*.ts',
   'packages/illustrations/scripts/*.ts',
-  'packages/ui-mobile-playground/scripts/*.ts',
   'libs/docusaurus-plugin-docgen/module-declarations.d.ts',
 ];
+
+// TODO (CDS-1412): Fix these react-hooks rule violations and re-enable them
+const disabledNewReactHooksRules = {
+  'react-hooks/immutability': 'off',
+  'react-hooks/purity': 'off',
+  'react-hooks/refs': 'off',
+  'react-hooks/set-state-in-effect': 'off',
+  'react-hooks/set-state-in-render': 'off',
+  'react-hooks/static-components': 'off',
+  'react-hooks/preserve-manual-memoization': 'off',
+};
 
 // These rules apply to all files
 const sharedRules = {
   'internal/no-object-rest-spread-in-worklet': 'error',
   'internal/deprecated-jsdoc-has-removal-version': 'error',
+  'internal/spread-props-last': 'warn',
   'import/default': 'off',
   'import/extensions': 'off',
   'import/named': 'off',
@@ -67,6 +78,16 @@ const sharedRules = {
           importNames: ['cx'],
           message:
             'Do not import `cx` from Linaria. Use the `cx` function from @coinbase/cds-web instead.',
+        },
+        {
+          name: 'react-popper',
+          message:
+            'Do not import `react-popper` directly. Use Floating UI instead; the legacy dependency is only allowed in `packages/web/src/overlays/popover/usePopper.ts` for backwards compatibility.',
+        },
+        {
+          name: '@popperjs/core',
+          message:
+            'Do not import `@popperjs/core` directly. Use Floating UI instead; the legacy dependency is only allowed in `packages/web/src/overlays/popover/usePopper.ts` for backwards compatibility.',
         },
       ],
       patterns: [
@@ -137,6 +158,96 @@ const sharedRules = {
   ],
   'react/prop-types': 'off',
   'react/react-in-jsx-scope': 'off',
+  ...disabledNewReactHooksRules,
+};
+
+// React 19 introduced new APIs that do not exist in React 18.
+// CDS must remain compatible with React 18 consumers, so we restrict these imports
+// in all publishable packages. The `no-restricted-imports` rule in this object
+// is a superset of the one in `sharedRules` to avoid flat-config override issues.
+const react19CompatibilityRules = {
+  'no-restricted-imports': [
+    'error',
+    {
+      paths: [
+        // Existing restrictions (duplicated because flat config replaces, not merges)
+        {
+          name: '@linaria/core',
+          importNames: ['cx'],
+          message:
+            'Do not import `cx` from Linaria. Use the `cx` function from @coinbase/cds-web instead.',
+        },
+        {
+          name: 'react-popper',
+          message:
+            'Do not import `react-popper` directly. Use Floating UI instead; the legacy dependency is only allowed in `packages/web/src/overlays/popover/usePopper.ts` for backwards compatibility.',
+        },
+        {
+          name: '@popperjs/core',
+          message:
+            'Do not import `@popperjs/core` directly. Use Floating UI instead; the legacy dependency is only allowed in `packages/web/src/overlays/popover/usePopper.ts` for backwards compatibility.',
+        },
+        // React 19-only runtime APIs
+        {
+          name: 'react',
+          importNames: ['cache', 'captureOwnerStack', 'use', 'useActionState', 'useOptimistic'],
+          message:
+            'This is a React 19-only API. CDS must remain compatible with React 18 consumers.',
+        },
+        // React 19-only types (would break .d.ts output for React 18 consumers)
+        {
+          name: 'react',
+          importNames: ['ActionDispatch', 'AnyActionArg', 'AwaitedReactNode', 'Usable'],
+          message:
+            'This is a React 19-only type. CDS must remain compatible with React 18 consumers.',
+        },
+        // React DOM 19-only runtime APIs
+        {
+          name: 'react-dom',
+          importNames: [
+            'preconnect',
+            'prefetchDNS',
+            'preinit',
+            'preinitModule',
+            'preload',
+            'preloadModule',
+            'requestFormReset',
+            'useFormState',
+            'useFormStatus',
+          ],
+          message:
+            'This is a React 19-only API. CDS must remain compatible with React 18 consumers.',
+        },
+        // React DOM 19-only types
+        {
+          name: 'react-dom',
+          importNames: [
+            'FormStatus',
+            'FormStatusNotPending',
+            'FormStatusPending',
+            'PreconnectOptions',
+            'PreinitAs',
+            'PreinitModuleAs',
+            'PreinitModuleOptions',
+            'PreinitOptions',
+            'PreloadAs',
+            'PreloadModuleAs',
+            'PreloadModuleOptions',
+            'PreloadOptions',
+          ],
+          message:
+            'This is a React 19-only type. CDS must remain compatible with React 18 consumers.',
+        },
+      ],
+      patterns: [
+        {
+          group: ['*/booleanStyles', '*/responsive/*'],
+          message:
+            'Do not import these styles directly, as it will cause non-deterministic CSS generation. Use the `getStyles` function from @coinbase/cds-web/styles/styleProps.ts or the component StyleProps API instead.',
+        },
+      ],
+    },
+  ],
 };
 
 // These rules only apply to TS/TSX files in packages/**, and do not apply to stories or tests
@@ -168,6 +279,7 @@ const typescriptRules = {
   '@typescript-eslint/prefer-namespace-keyword': 'off',
   '@coinbase/cds/control-has-associated-label-extended': 'warn',
   '@coinbase/cds/has-valid-accessibility-descriptors-extended': 'warn',
+  '@coinbase/cds/list-cell-jsx-requires-node-props': 'warn',
   '@coinbase/cds/web-tooltip-interactive-content': 'warn',
   '@coinbase/cds/web-chart-scrubbing-accessibility': 'warn',
   '@coinbase/cds/mobile-chart-scrubbing-accessibility': 'warn',
@@ -176,6 +288,7 @@ const typescriptRules = {
 
 // These rules only apply to test files
 const testRules = {
+  'internal/spread-props-last': 'off',
   'jest/no-mocks-import': 'off',
   'testing-library/await-async-events': 'off',
   'testing-library/await-async-queries': 'off',
@@ -209,7 +322,7 @@ const sharedExtends = [
   eslintJs.configs.recommended,
   eslintImport.flatConfigs.recommended,
   eslintReact.configs.flat.recommended,
-  eslintReactHooks.configs['recommended-latest'],
+  eslintReactHooks.configs.flat['recommended-latest'],
   eslintReactPerf.configs.flat.recommended,
   eslintJsxA11y.flatConfigs.recommended,
 ];
@@ -274,7 +387,6 @@ export default tseslint.config(
     files: ['packages/**/*.{ts,tsx}'],
     ignores: [
       'packages/illustrations/src/__generated__/**',
-      'packages/ui-mobile-playground/**',
       'packages/**/__stories__/**',
       'packages/**/__tests__/**',
       'packages/**/__mocks__/**',
@@ -309,6 +421,81 @@ export default tseslint.config(
       ...typescriptRules,
     },
   },
+  // Restrict React 19-only APIs in publishable packages to maintain React 18 compatibility
+  {
+    files: [
+      'packages/web/**/*.{ts,tsx}',
+      'packages/common/**/*.{ts,tsx}',
+      'packages/mobile/**/*.{ts,tsx}',
+    ],
+    rules: {
+      ...react19CompatibilityRules,
+    },
+  },
+  // Scope no-cds-barrel-imports to the published source of the three platform
+  // packages. Non-shipped files (stories, Figma Code Connect, tests, mocks,
+  // fixtures) are excluded since they aren't part of the package's build output
+  // and so don't affect downstream consumers' bundles.
+  {
+    files: [
+      'packages/web/src/**/*.{js,jsx,mjs,cjs,ts,tsx}',
+      'packages/mobile/src/**/*.{js,jsx,mjs,cjs,ts,tsx}',
+      'packages/common/src/**/*.{js,jsx,mjs,cjs,ts,tsx}',
+    ],
+    ignores: [
+      '**/__stories__/**',
+      '**/__tests__/**',
+      '**/__mocks__/**',
+      '**/__fixtures__/**',
+      '**/__figma__/**',
+      '**/*.stories.*',
+      '**/*.test.*',
+      '**/*.spec.*',
+      '**/*.figma.*',
+    ],
+    rules: {
+      'internal/no-cds-barrel-imports': 'warn',
+    },
+  },
+  // cds-web is the only package whose style props compile to overridable
+  // single-class Linaria rules, so a component's own `css` block can silently
+  // win the CSS source-order tiebreaker over a consumer-provided style prop
+  // (see CDS-2118). Scope the rule to published web source and exclude the
+  // style system itself, which legitimately implements these CSS properties.
+  //
+  // The rule is type-aware (it resolves the type of `{...spread}` props to find
+  // style props that reach an element without an explicit attribute), so this
+  // block enables `projectService` for the in-scope TS/TSX files.
+  {
+    files: ['packages/web/src/**/*.{ts,tsx}'],
+    ignores: [
+      'packages/web/src/styles/**',
+      '**/__stories__/**',
+      '**/__tests__/**',
+      '**/__mocks__/**',
+      '**/__fixtures__/**',
+      '**/__figma__/**',
+      '**/*.stories.*',
+      '**/*.test.*',
+      '**/*.spec.*',
+      '**/*.figma.*',
+    ],
+    languageOptions: {
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+    rules: {
+      'internal/no-style-prop-css-overrides': 'warn',
+    },
+  },
+  {
+    files: ['**/*.stories.{js,jsx,ts,tsx}', '**/__stories__/**'],
+    rules: {
+      'internal/spread-props-last': 'off',
+    },
+  },
   // Rules specific to mobile story files
   {
     files: ['packages/mobile/**/*.stories.tsx'],
@@ -318,13 +505,16 @@ export default tseslint.config(
   {
     files: ['**/*.figma.tsx'],
     extends: [internalPlugin.configs.figmaConnectRules],
+    rules: {
+      'internal/spread-props-last': 'off',
+    },
   },
   {
     files: ['**/*.mdx'],
     processor: internalPlugin.processors.mdx,
   },
   {
-    files: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/setup.js'],
+    files: ['**/*.test.{ts,tsx}', '**/__tests__/**', '**/jest/**/*.js'],
     settings: sharedSettings,
     languageOptions: {
       globals: {
@@ -346,6 +536,27 @@ export default tseslint.config(
       ...sharedRules,
       ...typescriptRules,
       ...testRules,
+    },
+  },
+  {
+    files: ['packages/migrator/**/*.test.{ts,tsx}'],
+    rules: {
+      'jest/expect-expect': 'off',
+    },
+  },
+  // Reassure perf benchmarks use `measurePerformance` as their assertion; they intentionally
+  // have no `expect()` calls, so jest/expect-expect does not apply.
+  {
+    files: ['**/*.perf-test.{ts,tsx}'],
+    rules: {
+      'jest/expect-expect': 'off',
+    },
+  },
+  {
+    files: ['packages/migrator/src/transforms/**/*.ts'],
+    ignores: ['packages/migrator/src/transforms/**/__tests__/**'],
+    rules: {
+      'no-restricted-exports': 'off',
     },
   },
 );

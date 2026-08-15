@@ -49,21 +49,26 @@ import '@coinbase/cds-web/defaultFontStyles';
 </MDXArticle>
 <MDXArticle>
 
-### 2. Render a ThemeProvider and MediaQueryProvider
+### 2. Render providers
 
-Render a ThemeProvider at the root of your application, and pass the `theme` and `activeColorScheme`.
+Render the following providers at the root of your application:
 
-Render a MediaQueryProvider for components that use the `useMediaQuery` hook.
+- **ThemeProvider** — applies the CDS theme and color scheme
+- **MediaQueryProvider** — prevents issues with `window.matchMedia()` in SSR environments ([read more &rarr;](/components/other/MediaQueryProvider#server-side-rendering))
+- **PortalProvider** — creates the DOM containers required by overlay components (Modal, Toast, Alert, Tooltip, Tray). ([read more &rarr;](/components/overlay/PortalProvider))
 
 ```tsx
 import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
+import { PortalProvider } from '@coinbase/cds-web/overlays/PortalProvider';
 import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
 import App from './App';
 
 const Index = () => (
   <MediaQueryProvider>
     <ThemeProvider theme={defaultTheme} activeColorScheme="light">
-      <App />
+      <PortalProvider>
+        <App />
+      </PortalProvider>
     </ThemeProvider>
   </MediaQueryProvider>
 );
@@ -104,6 +109,7 @@ import '@coinbase/cds-web/defaultFontStyles';
 import '@coinbase/cds-web/globalStyles';
 import { createRoot } from 'react-dom/client';
 import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
+import { PortalProvider } from '@coinbase/cds-web/overlays/PortalProvider';
 import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
 import App from './App';
 
@@ -112,7 +118,9 @@ const root = createRoot(document.getElementById('root'));
 root.render(
   <MediaQueryProvider>
     <ThemeProvider theme={defaultTheme} activeColorScheme="light">
-      <App />
+      <PortalProvider>
+        <App />
+      </PortalProvider>
     </ThemeProvider>
   </MediaQueryProvider>,
 );

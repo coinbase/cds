@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { useA11yLabels } from '../useA11yLabels';
 
@@ -9,7 +9,7 @@ describe('useA11yLabels', () => {
   it('generates default props when no options are passed', () => {
     const { result } = renderHook(() => useA11yLabels());
 
-    expect(result.current.labelledBySource).toMatch(/:r[0-9].*/);
+    expect(result.current.labelledBySource).toMatch(/«r[0-9]+»/);
     expect(result.current.labelledBy).toBe(result.current.labelledBySource);
     expect(result.current.label).toBeUndefined();
   });

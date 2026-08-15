@@ -1,10 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { getAvatarFallbackColor } from '@coinbase/cds-common/media/getAvatarFallbackColor';
 
 import { Example, ExampleScreen } from '../../examples/ExampleScreen';
 import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
+import { Text } from '../../typography/Text';
 import type { AvatarButtonProps } from '../AvatarButton';
 import { AvatarButton } from '../AvatarButton';
 

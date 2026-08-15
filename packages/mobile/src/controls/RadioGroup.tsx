@@ -1,10 +1,10 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import type { AccessibilityProps, View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { entries } from '@coinbase/cds-utils';
 import { isDevelopment } from '@coinbase/cds-utils/env';
 
-import { type BoxBaseProps } from '../layout';
+import { type BoxBaseProps } from '../layout/Box';
 import type { GroupBaseProps } from '../layout/Group';
 
 import { ControlGroup } from './ControlGroup';
@@ -12,24 +12,7 @@ import { Radio, type RadioBaseProps, type RadioProps } from './Radio';
 
 export { Radio, type RadioBaseProps, type RadioProps };
 
-/**
- * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- *
- * @example
- * // Instead of:
- * <RadioGroup options={{ value1: 'Label 1' }} value={value} onChange={onChange} />
- *
- * // Use:
- * <ControlGroup
- *   accessibilityRole="radiogroup"
- *   ControlComponent={Radio}
- *   options={[{ value: 'value1', children: 'Label 1' }]}
- *   value={value}
- *   onChange={(value) => onChange(value)}
- * />
- */
-export type RadioGroupBaseProps<RadioValue extends string> = Omit<
+type RadioGroupBaseProps<RadioValue extends string> = Omit<
   AccessibilityProps,
   'accessibilityLabelledBy'
 > &
@@ -54,27 +37,23 @@ export type RadioGroupBaseProps<RadioValue extends string> = Omit<
     radioAccessibilityLabel?: string;
   };
 
-/**
- * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- */
-export type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
+type RadioGroupProps<RadioValue extends string> = RadioGroupBaseProps<RadioValue>;
 
-const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends string>(
-  {
-    label,
-    value,
-    onChange,
-    options,
-    testID,
-    controlColor = 'bgPrimary',
-    accessibilityLabel,
-    accessibilityHint,
-    radioAccessibilityLabel,
-    ...props
-  }: RadioGroupProps<RadioValue>,
-  ref: React.ForwardedRef<View>,
-) {
+const RadioGroupWithRef = function RadioGroup<RadioValue extends string>({
+  ref,
+  label,
+  value,
+  onChange,
+  options,
+  testID,
+  controlColor = 'bgPrimary',
+  accessibilityLabel,
+  accessibilityHint,
+  radioAccessibilityLabel,
+  ...props
+}: RadioGroupProps<RadioValue> & {
+  ref?: React.Ref<View>;
+}) {
   if (isDevelopment()) {
     console.warn(
       'RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead.',
@@ -137,12 +116,9 @@ const RadioGroupWithRef = forwardRef(function RadioGroup<RadioValue extends stri
       {...props}
     />
   );
-  // Make forwardRef result function stay generic function type
-}) as <RadioValue extends string>(
-  props: RadioGroupProps<RadioValue> & { ref?: React.Ref<View> },
-) => React.ReactElement;
+};
 
-// Make memoized function stay generic function type
+// Preserve generic call signature through React.memo
 /**
  * @deprecated RadioGroup is deprecated. Use ControlGroup with accessibilityRole="radiogroup" instead. This will be removed in a future major release.
  * @deprecationExpectedRemoval v8

@@ -1,4 +1,5 @@
-import type { IconName, ThemeVars } from '..';
+import type { ThemeVars } from '../core/theme';
+import type { IconName } from '../types/IconName';
 
 import { gutter } from './sizing';
 
@@ -9,8 +10,16 @@ export const imageSize = 48;
 
 export const pictogramScaleMultiplier = 1;
 
+/**
+ * @deprecated This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ * */
 export const listHeight = 80;
 
+/**
+ * @deprecated This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ * */
 export const compactListHeight = 40;
 
 /** Spacing configs for Cells to be parsed in [web/mobile]/hooks/useCellSpacing */
@@ -29,6 +38,10 @@ export const defaultSpacingConfig = {
   },
 } as const;
 
+/**
+ * @deprecated Used by deprecated Select component. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const selectOptionHeight = 56;
 
 export const cellPriorities = ['start', 'middle', 'end'] as const;

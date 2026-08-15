@@ -8,6 +8,7 @@ export const darkIllustrationColorTheme = {
     gray: '#464B55',
     gray2: '#464B55',
     gray3: '#FFFFFF',
+    gray4: '#FFFFFF',
     positive: '#44C28D',
     negative: '#F0616D',
     accent1: '#ECD069',

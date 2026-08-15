@@ -9,7 +9,7 @@ import { Cell } from '../cells/Cell';
 import type { CellMediaType } from '../cells/CellMedia';
 import { MediaFallback } from '../cells/MediaFallback';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { Fallback } from '../layout';
+import { Fallback } from '../layout/Fallback';
 
 import { useTableCellSpacing, useTableCellTag, useTableContext } from './hooks/useTable';
 import type { TableCellBaseProps, TableCellProps } from './TableCell';

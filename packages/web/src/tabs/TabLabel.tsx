@@ -1,14 +1,14 @@
 import React, { memo, useCallback, useId, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
-import { Collapsible } from '../collapsible';
+import { Collapsible } from '../collapsible/Collapsible';
 import { DotCount } from '../dots/DotCount';
 import { useDimensions } from '../hooks/useDimensions';
 import { useIsoEffect } from '../hooks/useIsoEffect';
-import { HStack } from '../layout';
+import { HStack } from '../layout/HStack';
 import { Text, type TextProps } from '../typography/Text';
 
 import type { TabIndicatorProps } from './TabIndicator';
@@ -109,13 +109,13 @@ export const TabLabel = memo(
                 <Text as="h2" color={color} display="block" font={font} {...props} />
                 {/* This element is used to ensure the element width doesn't change when we change font-weight */}
                 <Text
+                  aria-hidden="true"
                   as="h2"
+                  className={hiddenCss}
                   color={color}
                   display="block"
                   font={font}
                   {...props}
-                  aria-hidden="true"
-                  className={hiddenCss}
                 />
               </>
             )}
@@ -127,12 +127,12 @@ export const TabLabel = memo(
           ) : (
             <Text
               as="h2"
+              className={variant === 'primary' ? primaryTabLabelCss : undefined}
               color={color}
               display="block"
               font={font}
               id={accessibilityLabelId}
               {...props}
-              className={variant === 'primary' ? primaryTabLabelCss : undefined}
             />
           ))}
         <Collapsible collapsed={!count} direction="horizontal" paddingStart={0.5} role="status">

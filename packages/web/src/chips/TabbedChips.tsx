@@ -1,12 +1,17 @@
 import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import { css } from '@linaria/core';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useHorizontalScrollToTarget } from '../hooks/useHorizontalScrollToTarget';
-import { type BoxBaseProps, HStack } from '../layout';
-import { Paddle, type TabNavigationBaseProps, Tabs } from '../tabs';
+import { type BoxBaseProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import type { ResponsiveProp } from '../styles/styleProps';
+import { Paddle } from '../tabs/Paddle';
+import { type TabNavigationBaseProps } from '../tabs/TabNavigation';
+import { Tabs } from '../tabs/Tabs';
 
 import { MediaChip } from './MediaChip';
 
@@ -81,6 +86,7 @@ const TabbedChipsComponent = memo(
       previousArrowAccessibilityLabel = 'Previous',
       nextArrowAccessibilityLabel = 'Next',
       width = '100%',
+      color,
       ...props
     } = mergedProps;
     const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
@@ -129,6 +135,7 @@ const TabbedChipsComponent = memo(
             TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
             activeTab={activeTab || null}
             background={background}
+            color={color as ResponsiveProp<ThemeVars.Color>}
             gap={gap}
             onActiveTabElementChange={setScrollTarget}
             onChange={handleChange}

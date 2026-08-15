@@ -1,8 +1,10 @@
 import React, { memo, useMemo } from 'react';
 import type { PressableProps } from 'react-native';
-import type { CardMediaPlacement, SharedProps } from '@coinbase/cds-common/types';
+import type { CardMediaPlacement } from '@coinbase/cds-common/types/CardMediaProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { Button, type ButtonBaseProps, IconButton, type IconButtonBaseProps } from '../buttons';
+import { Button, type ButtonBaseProps } from '../buttons/Button';
+import { IconButton, type IconButtonBaseProps } from '../buttons/IconButton';
 import { HStack } from '../layout/HStack';
 
 import { Card, type CardBaseProps } from './Card';
@@ -11,11 +13,7 @@ import { CardFooter } from './CardFooter';
 import { CardHeader } from './CardHeader';
 import { LikeButton, type LikeButtonBaseProps } from './LikeButton';
 
-/**
- * @deprecated Use the ContentCard component instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v9
- */
-export type FeedCardBaseProps = CardBaseProps &
+type FeedCardBaseProps = CardBaseProps &
   SharedProps &
   Pick<CardBodyBaseProps, 'image' | 'pictogram' | 'spotSquare'> & {
     /** Image url for Avatar */
@@ -40,11 +38,7 @@ export type FeedCardBaseProps = CardBaseProps &
     cta?: ButtonBaseProps;
   };
 
-/**
- * @deprecated Use the ContentCard component instead. This will be removed in a future major release.
- * @deprecationExpectedRemoval v8
- */
-export type FeedCardProps = FeedCardBaseProps;
+type FeedCardProps = FeedCardBaseProps;
 
 /**
  * @deprecated Use the ContentCard component instead. This will be removed in a future major release.
@@ -70,6 +64,26 @@ export const FeedCard = memo(function FeedCard({
   elevation = 0,
   ...cardProps
 }: FeedCardProps) {
+  const ctaNode = useMemo(() => {
+    if (!cta) return null;
+
+    // `compact` and `size` are lifted out of the spread so a consumer-supplied `cta` cannot clobber
+    // the footer's dense default. Precedence matches the pre-`size` behaviour: an explicit `size`
+    // wins, otherwise `compact` decides and defaults to dense. Collapses to `size={size ?? 's'}`
+    // in v10 once `compact` is dropped from Button.
+    const { compact, size, ...ctaProps } = cta;
+
+    return (
+      <Button
+        transparent
+        flush="end"
+        size={size ?? ((compact ?? true) ? 's' : undefined)}
+        variant="secondary"
+        {...ctaProps}
+      />
+    );
+  }, [cta]);
+
   const footer = useMemo(() => {
     const hasFooterActions = Boolean(like ?? comment ?? share ?? cta);
     const hasFooter = hasFooterActions || Boolean(cta);
@@ -99,12 +113,12 @@ export const FeedCard = memo(function FeedCard({
               )}
             </HStack>
           )}
-          {cta && <Button compact transparent flush="end" variant="secondary" {...cta} />}
+          {ctaNode}
         </CardFooter>
       );
     }
     return null;
-  }, [comment, cta, like, share, testID]);
+  }, [comment, cta, ctaNode, like, share, testID]);
 
   return (
     <Card borderRadius={borderRadius} elevation={elevation} gap={2} testID={testID} {...cardProps}>

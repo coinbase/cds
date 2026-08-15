@@ -1,4 +1,4 @@
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import { TourContext, type TourContextValue, useTourContext } from '../TourContext';
 
@@ -29,7 +29,6 @@ describe('useTourContext', () => {
   });
 
   it('throw an error if not wrapped inside the provider', () => {
-    const { result } = renderHook(() => useTourContext());
-    expect(result.error).toEqual(HOOK_ERROR);
+    expect(() => renderHook(() => useTourContext())).toThrow(HOOK_ERROR);
   });
 });

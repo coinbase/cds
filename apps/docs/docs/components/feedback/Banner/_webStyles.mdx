@@ -1,0 +1,35 @@
+import { Banner } from '@coinbase/cds-web/banner/Banner';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Link } from '@coinbase/cds-web/typography/Link';
+import { Text } from '@coinbase/cds-web/typography/Text';
+
+import webStylesData from ':docgen/web/banner/Banner/styles-data';
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <Banner
+      classNames={classNames}
+      showDismiss
+      label="Message last updated today at 3:33pm"
+      startIcon="warning"
+      startIconActive
+      styleVariant="global"
+      title="Some features are temporarily unavailable"
+      variant="warning"
+      primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+      secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+    >
+      <Text as="p" font="label2">
+        Your funds are safe. We&apos;re looking into it and expect our usual service to return soon.{' '}
+        <Link to="https://www.coinbase.com">Learn more</Link>
+      </Text>
+    </Banner>
+  )}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="Banner" styles={webStylesData} />

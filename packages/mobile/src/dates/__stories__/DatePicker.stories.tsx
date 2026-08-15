@@ -100,22 +100,22 @@ export const FullExample = () => {
           openCalendarAccessibilityLabel="Birthdate calendar"
         />
       </Example>
-      <Example title="DatePicker fit-content width">
+      <Example title="DatePicker width=null">
         <HStack flexWrap="wrap" gap={2}>
           <ExampleDatePicker
             label="Example Date"
             openCalendarAccessibilityLabel="Example calendar"
-            width="fit-content"
+            width={null}
           />
           <ExampleDatePicker
             label="Example Date 2"
             openCalendarAccessibilityLabel="Example calendar 2"
-            width="fit-content"
+            width={null}
           />
           <ExampleDatePicker
             label="Example Date 3"
             openCalendarAccessibilityLabel="Example calendar 3"
-            width="fit-content"
+            width={null}
           />
         </HStack>
       </Example>
@@ -140,6 +140,22 @@ export const FullExample = () => {
           label="Future date"
           minDate={tomorrow}
         />
+      </Example>
+    </ExampleScreen>
+  );
+};
+
+export const Sizes = () => {
+  return (
+    <ExampleScreen>
+      <Example title="DatePicker sizes">
+        <VStack gap={2}>
+          <ExampleDatePicker openCalendarAccessibilityLabel="Small calendar" size="s" />
+          <ExampleDatePicker openCalendarAccessibilityLabel="Medium calendar" size="m" />
+          <ExampleDatePicker openCalendarAccessibilityLabel="Large calendar" size="l" />
+          {/* compact is deprecated and maps to size="s" */}
+          <ExampleDatePicker compact openCalendarAccessibilityLabel="Compact calendar" />
+        </VStack>
       </Example>
     </ExampleScreen>
   );

@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import type { PropSidebarItem } from '@docusaurus/plugin-content-docs';
 import { useWindowSizeWithBreakpointOverride } from '@site/src/utils/useWindowSizeWithBreakpointOverride';
 import type { Props } from '@theme/DocSidebar';
 import DocSidebarDesktop from '@theme/DocSidebar/Desktop';
 import DocSidebarMobile from '@theme/DocSidebar/Mobile';
 
-export default function DocSidebar(props: Props): JSX.Element {
+export default function DocSidebar({ sidebar, ...props }: Props): JSX.Element {
   const windowSize = useWindowSizeWithBreakpointOverride();
 
   const filterItems = (items: PropSidebarItem[] = []): PropSidebarItem[] => {
@@ -13,7 +13,7 @@ export default function DocSidebar(props: Props): JSX.Element {
   };
 
   // Filter the sidebar items
-  const filteredSidebar = filterItems([...props.sidebar]);
+  const filteredSidebar = filterItems([...sidebar]);
 
   // Desktop sidebar visible on hydration: need SSR rendering
   const shouldRenderSidebarDesktop = windowSize === 'desktop' || windowSize === 'ssr';
@@ -23,8 +23,8 @@ export default function DocSidebar(props: Props): JSX.Element {
 
   return (
     <>
-      {shouldRenderSidebarDesktop && <DocSidebarDesktop {...props} sidebar={filteredSidebar} />}
-      {shouldRenderSidebarMobile && <DocSidebarMobile {...props} sidebar={filteredSidebar} />}
+      {shouldRenderSidebarDesktop && <DocSidebarDesktop sidebar={filteredSidebar} {...props} />}
+      {shouldRenderSidebarMobile && <DocSidebarMobile sidebar={filteredSidebar} {...props} />}
     </>
   );
 }

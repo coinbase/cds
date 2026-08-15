@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import type { ProgressContainerWithButtonsProps } from '@coinbase/cds-common/types/ProgressContainerWithButtonsProps';
 
-import { Button } from '../buttons';
-import { VStack } from '../layout';
+import { Button } from '../buttons/Button';
+import { VStack } from '../layout/VStack';
 
 export const ProgressContainerWithButtons = ({
   children,
@@ -34,11 +34,11 @@ export const ProgressContainerWithButtons = ({
   return (
     <VStack key={num} gap={2}>
       {children({ calculateProgress })}
-      <Button compact onPress={reRender}>
+      <Button onPress={reRender} size="s">
         Re-render
       </Button>
       {!hideIncrease && (
-        <Button compact onPress={increase}>
+        <Button onPress={increase} size="s">
           Increase 20%
         </Button>
       )}

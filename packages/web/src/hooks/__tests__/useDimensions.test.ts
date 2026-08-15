@@ -1,5 +1,5 @@
 import { act } from 'react';
-import { renderHook } from '@testing-library/react-hooks';
+import { renderHook } from '@testing-library/react';
 
 import type { Event as ResizeEvent, Options } from '../useDimensions';
 import { borderBoxWarn, observerErr, useDimensions } from '../useDimensions';

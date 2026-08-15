@@ -2,17 +2,17 @@ import React, { isValidElement, memo } from 'react';
 import type { PressableProps } from 'react-native';
 import { getCardBodySpacingProps } from '@coinbase/cds-common/cards/getCardBodySpacingProps';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type {
-  DimensionStyles,
-  DimensionValue,
-  IllustrationPictogramNames,
-  SharedAccessibilityProps,
-  SharedProps,
-} from '@coinbase/cds-common/types';
+import type { DimensionStyles, DimensionValue } from '@coinbase/cds-common/types/DimensionStyles';
+import type { IllustrationPictogramNames } from '@coinbase/cds-common/types/IllustrationNames';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { IconButton } from '../buttons';
+import { IconButton } from '../buttons/IconButton';
 import { Pictogram } from '../illustrations/Pictogram';
-import { Box, HStack, VStack } from '../layout';
+import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
+import type { StyleProps } from '../styles/styleProps';
 import { Pressable } from '../system/Pressable';
 import { Text } from '../typography/Text';
 
@@ -81,7 +81,7 @@ export type NudgeCardProps = NudgeCardBaseProps;
  *   title="Title"
  *   description="Description"
  *   media={<Pictogram dimension="48x48" name="addToWatchlist" />}
- *   actions={<Button compact variant="secondary">Learn more</Button>}
+ *   actions={<Button size="s" variant="secondary">Learn more</Button>}
  *   onDismiss={handleDismiss}
  *   mediaPlacement="end"
  * />
@@ -104,7 +104,11 @@ export const NudgeCard = memo(
     background = 'bgAlternate',
     onPress,
     maxWidth,
-    ...props
+    maxHeight,
+    minHeight,
+    minWidth,
+    height,
+    aspectRatio,
   }: NudgeCardProps) => {
     const hasMedia = pictogram || media;
     const paddingBottom = action ? 1 : 2;
@@ -135,11 +139,11 @@ export const NudgeCard = memo(
         background={background}
         borderColor="transparent"
         borderRadius={500}
-        maxWidth={maxWidth}
+        maxWidth={maxWidth as StyleProps['maxWidth']}
         paddingEnd={onDismissPress ? 3 : 0}
         position="relative"
         testID={testID}
-        width={width}
+        width={width as StyleProps['width']}
       >
         {onDismissPress ? (
           // zIndex is required otherwise CardBody sits on top of it
@@ -159,14 +163,24 @@ export const NudgeCard = memo(
         {/* ported over from CardBody */}
         <HStack
           alignItems="center"
+          aspectRatio={aspectRatio as StyleProps['aspectRatio']}
           flexGrow={1}
           gap={2}
+          height={height as StyleProps['height']}
           justifyContent={mediaPosition === 'right' ? 'space-between' : 'flex-start'}
+          maxHeight={maxHeight as StyleProps['maxHeight']}
+          minHeight={minHeight as StyleProps['minHeight']}
+          minWidth={minWidth as StyleProps['minWidth']}
           {...spacingProps}
-          {...props}
         >
           {hasMedia && mediaPosition === 'left' ? renderMedia : null}
-          <VStack alignItems="flex-start" flexGrow={1} flexShrink={1} gap={2} maxWidth={maxWidth}>
+          <VStack
+            alignItems="flex-start"
+            flexGrow={1}
+            flexShrink={1}
+            gap={2}
+            maxWidth={maxWidth as StyleProps['maxWidth']}
+          >
             <VStack gap={0.5} maxWidth="100%" paddingTop={hasMedia ? 0 : 2}>
               {typeof title === 'string' ? (
                 <Text

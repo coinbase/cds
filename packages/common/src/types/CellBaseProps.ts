@@ -1,5 +1,6 @@
 import type { cellPriorities } from '../tokens/cell';
-import type { MarginProps, PaddingProps } from '../types';
+
+import type { MarginProps, PaddingProps } from './SpacingProps';
 
 export type CellPriority = (typeof cellPriorities)[number];
 

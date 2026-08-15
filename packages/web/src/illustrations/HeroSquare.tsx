@@ -1,3 +1,4 @@
+import heroSquareSvgEsmMap from '@coinbase/cds-illustrations/__generated__/heroSquare/data/svgEsmMap';
 import heroSquareVersionMap from '@coinbase/cds-illustrations/__generated__/heroSquare/data/versionMap';
 
 import {
@@ -18,6 +19,10 @@ export type HeroSquareBaseProps = IllustrationBaseProps<'heroSquare'> &
 
 export type HeroSquareProps = HeroSquareBaseProps;
 
-export const HeroSquare = createIllustration('heroSquare', heroSquareVersionMap);
+export const HeroSquare = createIllustration(
+  'heroSquare',
+  heroSquareVersionMap,
+  heroSquareSvgEsmMap,
+);
 
 export type { HeroSquareName } from '@coinbase/cds-illustrations/__generated__/heroSquare/types/HeroSquareName';

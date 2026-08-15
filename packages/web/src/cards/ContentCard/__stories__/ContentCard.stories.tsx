@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type JSX } from 'react';
 import { assets, ethBackground } from '@coinbase/cds-common/internal/data/assets';
 
 import { Button, IconButton, IconCounterButton } from '../../../buttons';
@@ -488,8 +488,4 @@ export const ProductCarousel = () => {
 export default {
   title: 'Components/Cards/ContentCard',
   component: ContentCard,
-};
-
-ProductCarousel.parameters = {
-  a11y: { config: { rules: [{ id: 'scrollable-region-focusable', enabled: false }] } },
 };

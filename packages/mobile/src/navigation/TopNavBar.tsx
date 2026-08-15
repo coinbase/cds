@@ -5,7 +5,8 @@ import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 
 import { Collapsible } from '../collapsible/Collapsible';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { HStack, type HStackProps, VStack } from '../layout';
+import { HStack, type HStackProps } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
 
 export const TopNavBarContext = React.createContext<{ isWithinTopNavBar: boolean }>({
   isWithinTopNavBar: false,
@@ -166,7 +167,7 @@ export const TopNavBar = memo((_props: NavigationBarProps) => {
         paddingBottom={paddingBottom}
         paddingTop={paddingTop}
         paddingX={paddingX}
-        position="sticky"
+        position="absolute"
         right={0}
         top={0}
         width="100%"

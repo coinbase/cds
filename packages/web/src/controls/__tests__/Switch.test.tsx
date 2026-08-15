@@ -92,6 +92,59 @@ describe('Switch.test', () => {
     expect(screen.getByTestId('test-test-id')).toBeTruthy();
   });
 
+  it('keeps a stable root wrapper regardless of label presence', () => {
+    const { rerender } = render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('switch').closest('.cds-Switch')).toBeTruthy();
+
+    rerender(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()}>with label</Switch>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('switch').closest('.cds-Switch')).toBeTruthy();
+  });
+
+  it('applies classNames/styles to root and slots', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch
+          classNames={{
+            control: 'test-switch-control',
+            root: 'test-switch-root',
+            thumb: 'test-switch-thumb',
+            track: 'test-switch-track',
+          }}
+          onChange={jest.fn()}
+          style={{ borderRightWidth: 5 }}
+          styles={{ control: { borderLeftWidth: 4 }, root: { borderTopWidth: 2 } }}
+        >
+          label
+        </Switch>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('switch').closest('.test-switch-root')).toBeTruthy();
+    expect(screen.getByRole('switch').closest('.cds-Switch')).toBeTruthy();
+    expect(screen.getByTestId('switch-track').className).toContain('test-switch-track');
+    expect(screen.getByTestId('switch-track').className).toContain('cds-Switch-track');
+    expect(screen.getByTestId('switch-thumb').className).toContain('test-switch-thumb');
+    expect(screen.getByTestId('switch-thumb').className).toContain('cds-Switch-thumb');
+    expect(screen.getByRole('switch').closest('.test-switch-control')).toBeTruthy();
+    expect(screen.getByRole('switch').closest('.cds-Switch-control')).toBeTruthy();
+    expect(screen.getByRole('switch').closest('.cds-Control')).toHaveStyle({
+      borderLeftWidth: '4px',
+    });
+    expect(screen.getByRole('switch').closest('.cds-Control')).toHaveStyle({
+      borderRightWidth: '5px',
+    });
+  });
+
   it('has default color', () => {
     render(
       <DefaultThemeProvider>
@@ -138,5 +191,51 @@ describe('Switch.test', () => {
     const track = screen.getByTestId('switch-track');
 
     expect(track.className).toContain('bgTertiary');
+  });
+
+  it('applies bgPositive background when variant is positive and checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch checked onChange={jest.fn()} testID="test-switch" variant="positive" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('switch-track').className).toContain('bgPositive');
+  });
+
+  it('applies bgNegative background when variant is negative and checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch checked onChange={jest.fn()} testID="test-switch" variant="negative" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('switch-track').className).toContain('bgNegative');
+  });
+
+  it('does not apply variant background when unchecked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()} testID="test-switch" variant="negative" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('switch-track').className).toContain('bgTertiary');
+  });
+
+  it('background prop takes priority over variant when checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch
+          background="bgWarning"
+          checked
+          onChange={jest.fn()}
+          testID="test-switch"
+          variant="positive"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('switch-track').className).toContain('bgWarning');
   });
 });

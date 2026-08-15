@@ -1,10 +1,11 @@
-import React, { forwardRef, memo, useEffect, useMemo, useRef } from 'react';
+import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Animated, type StyleProp, StyleSheet, type View, type ViewStyle } from 'react-native';
 import type { CircleProps } from 'react-native-svg';
 import { Circle, G, Svg } from 'react-native-svg';
-import type { SharedProps, ThemeVars } from '@coinbase/cds-common';
 import { animateProgressBaseSpec } from '@coinbase/cds-common/animation/progress';
-import { getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import { getCenter, getCircumference, getRadius } from '@coinbase/cds-common/utils/circle';
 import { getProgressCircleParams } from '@coinbase/cds-common/visualizations/getProgressCircleParams';
 import { getProgressSize } from '@coinbase/cds-common/visualizations/getProgressSize';
 import { isTest } from '@coinbase/cds-utils';
@@ -12,7 +13,7 @@ import { isTest } from '@coinbase/cds-utils';
 import { convertMotionConfig } from '../animation/convertMotionConfig';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import { Box, type BoxProps } from '../layout';
+import { Box, type BoxProps } from '../layout/Box';
 
 import { DefaultProgressCircleContent } from './DefaultProgressCircleContent';
 import type { ProgressBaseProps } from './ProgressBar';
@@ -151,7 +152,12 @@ const ProgressCircleInner = memo(
 );
 
 export const ProgressCircle = memo(
-  forwardRef((_props: ProgressCircleProps, forwardedRef: React.ForwardedRef<View>) => {
+  ({
+    ref: forwardedRef,
+    ..._props
+  }: ProgressCircleProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('ProgressCircle', _props);
     const {
       indeterminate,
@@ -300,7 +306,7 @@ export const ProgressCircle = memo(
         }}
       </VisualizationContainer>
     );
-  }),
+  },
 );
 
 const styleSheet = StyleSheet.create({

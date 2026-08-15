@@ -1,6 +1,7 @@
 import React, { memo, useContext } from 'react';
-import type { InputVariant, SharedAccessibilityProps } from '@coinbase/cds-common';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import type { IconProps } from '../icons/Icon';
@@ -15,6 +16,12 @@ export type InputIconProps = {
    * @default false
    * */
   disableInheritFocusStyle?: boolean;
+  /**
+   * Decreases the padding around the icon.
+   * @default false
+   * @deprecated Use `size="s"` on the parent `TextInput` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
   compact?: boolean;
 } & Omit<IconProps, 'size'> &
   SharedProps &

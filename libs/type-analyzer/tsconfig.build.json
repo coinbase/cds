@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": false
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "**/__stories__/**",
+    "**/__tests__/**",
+    "**/__mocks__/**",
+    "**/__fixtures__/**",
+    "**/__testfixtures__/**",
+    "**/*.stories.*",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "references": []
+}

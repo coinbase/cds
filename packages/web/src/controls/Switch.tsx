@@ -4,14 +4,29 @@ import { switchTransitionConfig } from '@coinbase/cds-common/motion/switch';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
+import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 import { convertTransition } from '../motion/utils';
+import type { StylesAndClassNames } from '../types';
 
 import { Control, type ControlBaseProps } from './Control';
 
-const COMPONENT_STATIC_CLASSNAME = 'cds-Switch';
+/**
+ * Static class names for Switch component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const switchClassNames = {
+  /** Persistent outer wrapper across all variants. */
+  root: 'cds-Switch',
+  /** Underlying `Control` wrapper element. */
+  control: 'cds-Switch-control',
+  /** Track wrapper element. */
+  track: 'cds-Switch-track',
+  /** Thumb wrapper element. */
+  thumb: 'cds-Switch-thumb',
+} as const;
 
 const trackCss = css`
   width: var(--controlSize-switchWidth);
@@ -34,24 +49,55 @@ const thumbCss = css`
   border: 0.5px solid var(--color-bgLine);
 
   position: absolute;
-  top: 1px;
-  left: 1px;
+  /* Inset that keeps the thumb centered within the track regardless of the
+   * configured track/thumb sizes (CDS default themes resolve this to 1px). */
+  top: calc((var(--controlSize-switchHeight) - var(--controlSize-switchThumbSize)) / 2);
+  left: calc((var(--controlSize-switchHeight) - var(--controlSize-switchThumbSize)) / 2);
 `;
+
+/** Semantic color variants for Switch, matching the semantics used by other control components. */
+export type SwitchVariant = 'primary' | 'positive' | 'negative';
+
+/** Track background color applied when Switch is checked, keyed by `variant`. */
+const switchVariantBackground: Record<SwitchVariant, ThemeVars.Color> = {
+  primary: 'bgPrimary',
+  positive: 'bgPositive',
+  negative: 'bgNegative',
+};
 
 export type SwitchBaseProps = ControlBaseProps<string> & {
   /** Sets the checked/active color of the control.
    * @default bgPrimary
    */
   controlColor?: ThemeVars.Color;
+  /**
+   * Semantic color variant applied to the track when checked. The `background` prop always
+   * takes priority over the background set by the variant, as does any custom `style`/`styles.track`.
+   * @default primary
+   */
+  variant?: SwitchVariant;
 };
 
-export type SwitchProps = SwitchBaseProps;
+export type SwitchProps = SwitchBaseProps &
+  StylesAndClassNames<typeof switchClassNames> & {
+    /**
+     * Label content rendered next to the switch control.
+     *
+     * @example
+     * ```tsx
+     * <Switch onChange={handleChange}>Dark mode</Switch>
+     * ```
+     */
+    children?: React.ReactNode;
+  };
 
 const MotionBox = motion(Box);
 
 const thumbMotionVariants = {
   checked: {
-    x: `calc(var(--controlSize-switchWidth) - var(--controlSize-switchThumbSize) - 2px)`,
+    // Travel = trackWidth - 2*inset - thumbSize, which simplifies to
+    // trackWidth - trackHeight when the thumb is centered with equal insets.
+    x: `calc(var(--controlSize-switchWidth) - var(--controlSize-switchHeight))`,
   },
   unchecked: {
     x: 0,
@@ -67,11 +113,18 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(
       disabled,
       elevation,
       controlColor,
-      background = checked ? 'bgPrimary' : 'bgTertiary',
+      variant = 'primary',
+      // The variant only informs the track color while checked; the background prop is more
+      // specific and always wins when provided.
+      background = checked ? switchVariantBackground[variant] : 'bgTertiary',
       borderColor,
       borderRadius = 1000,
       borderWidth,
       value,
+      className,
+      style,
+      classNames,
+      styles,
       ...props
     } = mergedProps;
     const { activeColorScheme } = useTheme();
@@ -81,9 +134,11 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(
         ref={ref}
         borderRadius={1000}
         checked={checked}
+        className={cx(switchClassNames.control, classNames?.control)}
         disabled={disabled}
         label={children}
         role="switch"
+        style={{ ...style, ...styles?.control }}
         type="checkbox"
         value={value}
         {...props}
@@ -94,19 +149,21 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(
           borderColor={borderColor}
           borderRadius={borderRadius}
           borderWidth={borderWidth}
-          className={trackCss}
+          className={cx(trackCss, switchClassNames.track, classNames?.track)}
           data-filled={checked}
           justifyContent="flex-start"
+          style={styles?.track}
           testID="switch-track"
         >
           <MotionBox
             animate={checked ? 'checked' : 'unchecked'}
             background={controlColor ?? defaultControlColor}
             borderRadius={1000}
-            className={thumbCss}
+            className={cx(thumbCss, switchClassNames.thumb, classNames?.thumb)}
             data-testid="switch-thumb"
             elevation={elevation}
             initial={false}
+            style={styles?.thumb}
             testID="switch-thumb"
             transition={convertTransition(switchTransitionConfig)}
             variants={thumbMotionVariants}
@@ -115,18 +172,17 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(
       </Control>
     );
 
-    return children ? (
+    return (
       <Box
-        alignItems="center"
-        className={COMPONENT_STATIC_CLASSNAME}
-        minHeight="var(--controlSize-switchHeight)"
+        alignItems={children ? 'center' : undefined}
+        className={cx(switchClassNames.root, className, classNames?.root)}
+        minHeight={children ? 'var(--controlSize-switchHeight)' : undefined}
         role="presentation"
+        style={styles?.root}
         width="fit-content"
       >
         {switchNode}
       </Box>
-    ) : (
-      switchNode
     );
   },
 );

@@ -8,15 +8,6 @@ import { PortalProvider } from '../PortalProvider';
 export default {
   title: 'Components/Alert',
   component: Alert,
-  parameters: {
-    a11y: {
-      options: {
-        rules: {
-          'color-contrast': { enabled: false },
-        },
-      },
-    },
-  },
 };
 
 const onPressConsole = () => console.log('pressed');

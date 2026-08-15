@@ -28,23 +28,20 @@ describe('Test InputIconButton inheritFocusedVariant interaction', () => {
 });
 
 describe('InputIconButton', () => {
-  it(`Can override focused color provided by context.`, () => {
-    const variant = 'foregroundMuted';
-
+  it(`Uses context variant over its own variant when disableInheritFocusStyle is false`, () => {
     render(
       <DefaultThemeProvider>
         <TextInput
-          key={`${variant}-inputicon`}
           label="Label"
-          start={<InputIconButton active name="add" testID="input-icon" variant={variant} />}
+          start={<InputIconButton active name="add" testID="input-icon" variant="secondary" />}
           testID="text-input"
-          variant={variant as InputVariant}
+          variant="foregroundMuted"
         />
       </DefaultThemeProvider>,
     );
 
     fireEvent.click(screen.getByRole('textbox'));
 
-    expect(screen.getByTestId('icon-base-glyph')).toHaveStyle(`color: var(--${variant})`);
+    expect(screen.getByTestId('icon-base-glyph')).toHaveStyle(`color: var(--secondary)`);
   });
 });

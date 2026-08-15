@@ -98,4 +98,89 @@ describe('Chip', () => {
     expect(chip).toHaveStyle('border: 2px solid red');
     expect(chip.firstElementChild).toHaveStyle('padding: 10px');
   });
+
+  it('renders inactive colors by default', () => {
+    render(<ChipWithNodes />);
+
+    const chip = screen.getByTestId(testID);
+    expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    expect(screen.getByText('USD')).toHaveStyle({ color: 'var(--color-fg)' });
+    expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+  });
+
+  it('renders opposite-scheme bgSecondary and fg when invertColorScheme is true', () => {
+    render(<ChipWithNodes invertColorScheme />);
+
+    const chip = screen.getByTestId(testID);
+    const invertedWrapper = chip.parentElement;
+    expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    expect(screen.getByText('USD')).toHaveStyle({ color: 'var(--color-fg)' });
+    expect(invertedWrapper).toHaveClass('dark');
+    expect(invertedWrapper).toHaveStyle({
+      '--color-bgSecondary': defaultTheme.darkColor.bgSecondary,
+      '--color-fg': defaultTheme.darkColor.fg,
+    });
+  });
+
+  it('renders opposite-scheme bgSecondary and fg when inverted is true', () => {
+    render(<ChipWithNodes inverted />);
+
+    const chip = screen.getByTestId(testID);
+    const invertedWrapper = chip.parentElement;
+    expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    expect(screen.getByText('USD')).toHaveStyle({ color: 'var(--color-fg)' });
+    expect(invertedWrapper).toHaveClass('dark');
+    expect(invertedWrapper).toHaveStyle({
+      '--color-bgSecondary': defaultTheme.darkColor.bgSecondary,
+      '--color-fg': defaultTheme.darkColor.fg,
+      // Current legacy behavior uses the invalid CSS value "content" (not "contents").
+      display: 'content',
+    });
+  });
+
+  it('does not invert when invertColorScheme is false even if inverted is true', () => {
+    render(<ChipWithNodes inverted invertColorScheme={false} />);
+
+    const chip = screen.getByTestId(testID);
+    expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    expect(screen.getByText('USD')).toHaveStyle({ color: 'var(--color-fg)' });
+    expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+  });
+
+  it('renders opposite-scheme bgSecondary and fg when active is true', () => {
+    render(<ChipWithNodes active />);
+
+    const chip = screen.getByTestId(testID);
+    const activeWrapper = chip.parentElement;
+    expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    expect(screen.getByText('USD')).toHaveStyle({ color: 'var(--color-fg)' });
+    expect(activeWrapper).toHaveClass('dark');
+    expect(activeWrapper).toHaveStyle({
+      '--color-bgSecondary': defaultTheme.darkColor.bgSecondary,
+      '--color-fg': defaultTheme.darkColor.fg,
+    });
+  });
+
+  it('applies activeBackground and activeColor without inverting when active', () => {
+    render(
+      <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
+        <Chip active activeBackground="bgPositive" activeColor="fgPositive" testID={testID}>
+          USD
+        </Chip>
+      </ThemeProvider>,
+    );
+
+    const chip = screen.getByTestId(testID);
+    expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgPositive)' });
+    expect(screen.getByText('USD')).toHaveStyle({ color: 'var(--color-fgPositive)' });
+    expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+  });
+
+  it('prefers style overrides when active', () => {
+    render(
+      <ChipWithNodes active style={{ backgroundColor: 'rgb(1, 2, 3)' }} styles={{ root: {} }} />,
+    );
+
+    expect(screen.getByTestId(testID)).toHaveStyle({ backgroundColor: 'rgb(1, 2, 3)' });
+  });
 });

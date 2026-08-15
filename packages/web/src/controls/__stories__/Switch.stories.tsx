@@ -3,8 +3,10 @@ import { css } from '@linaria/core';
 
 import { useTheme } from '../../hooks/useTheme';
 import { Box } from '../../layout/Box';
+import { HStack } from '../../layout/HStack';
 import { VStack } from '../../layout/VStack';
 import { ThemeProvider } from '../../system/ThemeProvider';
+import { defaultTheme } from '../../themes/defaultTheme';
 import { Switch } from '../Switch';
 
 const darkModeWrapperCss = css`
@@ -57,6 +59,23 @@ export const CustomColors = () => {
     </VStack>
   );
 };
+export const Variants = () => (
+  <HStack gap={2}>
+    <Switch checked variant="primary">
+      Primary
+    </Switch>
+    <Switch checked variant="positive">
+      Positive
+    </Switch>
+    <Switch checked variant="negative">
+      Negative
+    </Switch>
+    <Switch checked background="accentBoldPurple" variant="negative">
+      Background override
+    </Switch>
+  </HStack>
+);
+
 export const DarkNormal = () => {
   const [checked, setChecked] = useState(false);
   return (
@@ -65,6 +84,32 @@ export const DarkNormal = () => {
         Normal
       </Switch>
     </DarkModeWrapper>
+  );
+};
+
+export const CustomTheme = () => {
+  const [checked, setChecked] = useState(false);
+
+  const customTheme = {
+    ...defaultTheme,
+    controlSize: {
+      ...defaultTheme.controlSize,
+      switchHeight: 24,
+      switchThumbSize: 20,
+      switchWidth: 44,
+    },
+  };
+
+  return (
+    <ThemeProvider activeColorScheme="light" theme={customTheme}>
+      <VStack gap={2}>
+        <Switch checked={checked} onChange={() => setChecked((prevChecked) => !prevChecked)}>
+          Interactive
+        </Switch>
+        <Switch checked={false}>Off</Switch>
+        <Switch checked>On</Switch>
+      </VStack>
+    </ThemeProvider>
   );
 };
 

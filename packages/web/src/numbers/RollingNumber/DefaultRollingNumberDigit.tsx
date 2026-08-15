@@ -7,7 +7,7 @@ import {
   useMemo,
   useRef,
 } from 'react';
-import { getWidthInEm } from '@coinbase/cds-common';
+import { getWidthInEm } from '@coinbase/cds-common/utils/getWidthInEm';
 import { css } from '@linaria/core';
 import { animate, m, type ValueAnimationOptions } from 'framer-motion';
 
@@ -145,7 +145,9 @@ export const DefaultRollingNumberDigit: RollingNumberDigitComponent = memo(
         (digit: number) => (
           <span
             key={digit}
-            ref={(r) => void (numberRefs.current[digit] = r)}
+            ref={(r) => {
+              void (numberRefs.current[digit] = r);
+            }}
             className={digitSpanCss}
           >
             {digit}

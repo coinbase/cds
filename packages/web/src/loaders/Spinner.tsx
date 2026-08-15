@@ -8,7 +8,8 @@ const COMPONENT_STATIC_CLASSNAME = 'cds-Spinner';
 
 export type SpinnerBaseProps = {
   /**
-   * The font size of the spinner in pixels - used to calculate the width, height, and borderWidth. Width and height are 10em while borderWidth is 1.1em.
+   * The font size of the spinner in pixels - used to calculate the width, height, and borderWidth.
+   * Width and height are 10em while borderWidth is 1.1em.
    */
   size: number;
 };

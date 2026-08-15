@@ -9,12 +9,13 @@ import {
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { durations } from '@coinbase/cds-common/motion/tokens';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
-import type { SharedAccessibilityProps, SharedProps } from '@coinbase/cds-common/types';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 import { m as motion } from 'framer-motion';
 
 import { NewAnimatePresence } from '../animation/NewAnimatePresence';
-import { IconButton } from '../buttons/IconButton';
+import { IconButton, type IconButtonSize } from '../buttons/IconButton';
 import { cx } from '../cx';
 import { Box } from '../layout/Box';
 import { useMotionProps } from '../motion/useMotionProps';
@@ -54,6 +55,11 @@ export type PaddleProps = {
    * Web only. Styling for the paddle icon button. Mobile does not have paddles.
    */
   paddleStyle?: React.CSSProperties;
+  /**
+   * Size of the paddle icon button, so the paddle can track the size of the
+   * content it scrolls. Defaults to the `IconButton` default size.
+   */
+  size?: IconButtonSize;
 } & SharedProps &
   SharedAccessibilityProps;
 
@@ -96,6 +102,7 @@ export const Paddle = ({
   testID = `cds-paddle--${direction}`,
   accessibilityLabel,
   paddleStyle,
+  size,
 }: PaddleProps) => {
   const buttonMotionProps = useMotionProps({
     enterConfigs: [
@@ -124,19 +131,29 @@ export const Paddle = ({
           color={background}
           data-testid={`${testID}--container`}
         >
-          <motion.span className={buttonCss} {...buttonMotionProps}>
+          {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
+          <motion.span
+            {...({
+              className: buttonCss,
+              ...buttonMotionProps,
+            } as React.ComponentProps<typeof motion.span>)}
+          >
             <IconButton
               accessibilityLabel={accessibilityLabel}
               name={direction === 'left' ? 'caretLeft' : 'caretRight'}
               onClick={onClick}
+              size={size}
               style={paddleStyle}
               testID={testID}
               variant="secondary"
             />
           </motion.span>
+          {/* TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility */}
           <motion.span
-            className={cx(gradientCss, direction === 'left' ? gradientLeftCss : gradientRightCss)}
-            {...gradientMotionProps}
+            {...({
+              className: cx(gradientCss, direction === 'left' ? gradientLeftCss : gradientRightCss),
+              ...gradientMotionProps,
+            } as React.ComponentProps<typeof motion.span>)}
           />
         </Box>
       )}

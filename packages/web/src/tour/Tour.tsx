@@ -10,8 +10,9 @@ import type {
   TourStepValue,
 } from '@coinbase/cds-common/tour/useTour';
 import { useTour } from '@coinbase/cds-common/tour/useTour';
-import type { Rect, SharedProps } from '@coinbase/cds-common/types';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import {
   arrow as arrowMiddleware,
   autoPlacement,
@@ -301,7 +302,7 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
     [animationApi, onChange],
   );
 
-  const api = useTour<TourStepId>({ steps, activeTourStep, onChange: handleChange });
+  const api = useTour<TourStepId, HTMLElement>({ steps, activeTourStep, onChange: handleChange });
   const { activeTourStepTarget, setActiveTourStepTarget } = api;
 
   // Component Lifecycle & Side Effects
@@ -378,14 +379,15 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
               style={styles?.root}
             >
               {!(activeTourStep.hideOverlay ?? hideOverlay) && activeTourStepTarget && (
+                // TODO: Remove type assertion after replacing @react-spring/web with framer-motion v11+ for React 19 compatibility
                 <animated.div
-                  className={cx(tourClassNames.mask, classNames?.mask)}
-                  style={tourMaskStyles}
+                  {...({
+                    className: cx(tourClassNames.mask, classNames?.mask),
+                    style: tourMaskStyles,
+                  } as React.ComponentProps<typeof animated.div>)}
                 >
                   <TourMaskComponent
-                    activeTourStepTargetRect={(
-                      activeTourStepTarget as HTMLElement
-                    ).getBoundingClientRect()}
+                    activeTourStepTargetRect={activeTourStepTarget.getBoundingClientRect()}
                     borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
                     padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
                   />
@@ -393,9 +395,12 @@ const TourComponent = <TourStepId extends string = string>(_props: TourProps<Tou
               )}
               <div ref={refs.setFloating} style={floatingStyles}>
                 <FocusTrap>
+                  {/* TODO: Remove type assertion after replacing @react-spring/web with framer-motion v11+ for React 19 compatibility */}
                   <animated.div
-                    className={cx(tourClassNames.stepContainer, classNames?.stepContainer)}
-                    style={stepContainerStyle}
+                    {...({
+                      className: cx(tourClassNames.stepContainer, classNames?.stepContainer),
+                      style: stepContainerStyle,
+                    } as React.ComponentProps<typeof animated.div>)}
                   >
                     <RenderedTourStepArrow
                       ref={tourStepArrowRef}

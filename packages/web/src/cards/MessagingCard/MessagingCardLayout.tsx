@@ -2,8 +2,9 @@ import { memo, useMemo } from 'react';
 
 import { Button } from '../../buttons/Button';
 import { IconButton } from '../../buttons/IconButton';
-import { Box, VStack } from '../../layout';
+import { Box } from '../../layout/Box';
 import { HStack } from '../../layout/HStack';
+import { VStack } from '../../layout/VStack';
 import { Pressable } from '../../system/Pressable';
 import { Tag } from '../../tag/Tag';
 import { Text } from '../../typography/Text';
@@ -138,9 +139,9 @@ export const MessagingCardLayout = memo(
         if (type === 'upsell') {
           return (
             <Button
-              compact
               accessibilityLabel={actionButtonAccessibilityLabel ?? action}
               onClick={handleActionClick}
+              size="s"
               variant="secondary"
             >
               {action}
@@ -194,10 +195,10 @@ export const MessagingCardLayout = memo(
             top={0}
           >
             <IconButton
-              compact
               accessibilityLabel={computedDismissButtonAccessibilityLabel}
               name="close"
               onClick={handleDismiss}
+              size="s"
               variant="secondary"
             />
           </HStack>

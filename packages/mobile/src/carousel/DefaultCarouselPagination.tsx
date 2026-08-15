@@ -50,6 +50,7 @@ const PaginationPill = memo(function PaginationPill({
       background={isActive ? 'bgPrimary' : 'bgLine'}
       borderColor="transparent"
       borderRadius={100}
+      borderWidth={0}
       height={INDICATOR_HEIGHT}
       onPress={onPress}
       style={style}
@@ -173,7 +174,7 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
   style,
   styles,
   paginationAccessibilityLabel = defaultPaginationAccessibilityLabel,
-  variant = 'pill',
+  variant = 'dot',
 }: DefaultCarouselPaginationProps) {
   const theme = useTheme();
   const isDot = variant === 'dot';
@@ -190,7 +191,12 @@ export const DefaultCarouselPagination = memo(function DefaultCarouselPagination
       : paginationAccessibilityLabel;
 
   return (
-    <HStack gap={0.5} justifyContent="center" style={rootStyles}>
+    <HStack
+      gap={0.5}
+      justifyContent="center"
+      style={rootStyles}
+      testID={`carousel-pagination-${variant}`}
+    >
       {totalPages > 0 ? (
         Array.from({ length: totalPages }, (_, index) =>
           isDot ? (

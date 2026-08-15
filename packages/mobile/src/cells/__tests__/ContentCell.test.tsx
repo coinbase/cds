@@ -231,7 +231,7 @@ describe('ContentCell', () => {
       </DefaultThemeProvider>,
     );
 
-    expect(screen.container).not.toBeNull();
+    expect(screen.root).not.toBeNull();
   });
 
   it('renders override nodes when provided', () => {
@@ -290,9 +290,9 @@ describe('ContentCell', () => {
       </DefaultThemeProvider>,
     );
 
-    const titleInstance = screen.getByText('Title').parent;
-    const subtitleInstance = screen.getByText('Subtitle').parent;
-    const descriptionInstance = screen.getByText('Description').parent;
+    const titleInstance = screen.getByText('Title').parent.parent;
+    const subtitleInstance = screen.getByText('Subtitle').parent.parent;
+    const descriptionInstance = screen.getByText('Description').parent.parent;
 
     expect(titleInstance?.props.numberOfLines).toBe(2);
     expect(subtitleInstance?.props.font).toBe('label1');
@@ -321,6 +321,6 @@ describe('ContentCell', () => {
     );
 
     const metaInstance = screen.getByText('Meta').parent;
-    expect(metaInstance?.props.style).toBe(metaStyle);
+    expect(metaInstance?.props.style).toContainEqual(metaStyle);
   });
 });

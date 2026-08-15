@@ -5,9 +5,6 @@ import { HelperText } from '../HelperText';
 export default {
   title: 'Components/Inputs/HelperText',
   component: HelperText,
-  parameters: {
-    a11y: { options: { rules: { 'color-contrast': { enabled: false } } } },
-  },
 };
 
 export const MessageAreaBasic = () => {
@@ -49,7 +46,10 @@ export const TextAlign = () => {
 export const CustomColor = () => {
   return (
     <div>
-      <HelperText color="fgNegative" dangerouslySetColor="purple">
+      <HelperText
+        color="fgNegative"
+        styles={{ root: { color: 'purple' }, icon: { color: 'purple' } }}
+      >
         Test message
       </HelperText>
     </div>

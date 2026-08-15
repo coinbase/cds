@@ -1,6 +1,6 @@
 import React from 'react';
 import { useToggler } from '@coinbase/cds-common/hooks/useToggler';
-import type { Meta, Story } from '@storybook/react';
+import type { Meta, StoryObj } from '@storybook/react';
 
 import { CellMedia, type CellMediaType } from '../../cells/CellMedia';
 import { Switch } from '../../controls/Switch';
@@ -11,14 +11,18 @@ import { Text } from '../../typography/Text';
 import { assetHubMock } from '../__mocks__';
 import { Table, TableBody, TableCell, TableCellFallback, TableHeader, TableRow } from '..';
 
-export default {
+const meta: Meta = {
   title: 'Components/Table/TableCellFallback',
   component: TableCellFallback,
-} as Meta;
+};
+
+export default meta;
+type Story = StoryObj;
 
 const LABELS = ['name', 'ticker', 'appStatus'];
 const mediaTypes: CellMediaType[] = ['asset', 'avatar', 'icon', 'image', 'pictogram'];
-export const TableCellFallbackExample: Story = () => {
+
+const TableCellFallbackExampleRender = () => {
   const [loading, { toggle }] = useToggler();
   const data = assetHubMock.slice(0, 20);
 
@@ -99,4 +103,8 @@ export const TableCellFallbackExample: Story = () => {
       </Table>
     </ThemeProvider>
   );
+};
+
+export const TableCellFallbackExample: Story = {
+  render: () => <TableCellFallbackExampleRender />,
 };

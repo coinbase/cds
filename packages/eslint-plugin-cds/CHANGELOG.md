@@ -8,6 +8,20 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 3.5.0 (7/24/2026 PST)
+
+#### 🚀 Updates
+
+- Add `list-cell-jsx-requires-node-props` rule requiring `*Node` props when ListCell text slots receive arbitrary JSX.
+
+#### 🐞 Fixes
+
+- Skip `has-valid-accessibility-descriptors-extended` checks when `accessible={false}`.
+
+#### 📘 Misc
+
+- Dependency upgrades.
+
 ## 3.4.0 (3/27/2026 PST)
 
 #### 🚀 Updates

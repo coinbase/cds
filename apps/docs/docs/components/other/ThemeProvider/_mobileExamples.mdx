@@ -52,6 +52,8 @@ ThemeProviders can be nested to create theme overrides for specific sections.
 </ThemeProvider>
 ```
 
+### Overriding theme values
+
 When nesting, you may want to override specific color values from the current theme. Overrides must be conditionally applied because we don't enforce that a theme has both light and dark colors defined.
 
 ```jsx
@@ -80,7 +82,7 @@ const customTheme = {
 } as const satisfies Theme;
 ```
 
-## Theme inheritence
+### Theme inheritance
 
 Nested ThemeProviders do not automatically inherit the theme from their parent provider. You can manually inherit the theme with the `useTheme` hook.
 

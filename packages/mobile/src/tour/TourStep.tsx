@@ -17,7 +17,11 @@ type TourStepProps = {
 export const TourStep = ({ id, children, ...props }: TourStepProps) => {
   const { activeTourStep, setActiveTourStepTarget } = useTourContext();
   const refCallback = useCallback(
-    (ref: View) => activeTourStep?.id === id && ref && setActiveTourStepTarget(ref),
+    (ref: View | null) => {
+      if (activeTourStep?.id === id && ref) {
+        setActiveTourStepTarget(ref);
+      }
+    },
     [activeTourStep, id, setActiveTourStepTarget],
   );
   return (

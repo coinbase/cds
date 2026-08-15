@@ -1,7 +1,8 @@
 import React, { memo, useMemo } from 'react';
-import type { AvatarSize } from '@coinbase/cds-common';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { AvatarFallbackColor, AvatarShape, SharedProps } from '@coinbase/cds-common/types';
+import type { AvatarFallbackColor, AvatarShape } from '@coinbase/cds-common/types/AvatarBaseProps';
+import type { AvatarSize } from '@coinbase/cds-common/types/AvatarSize';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css, type LinariaClassName } from '@linaria/core';
 
 import { cx } from '../cx';
@@ -176,7 +177,7 @@ export const Avatar = memo((_props: AvatarProps) => {
         <Text
           as="p"
           color="fgInverse"
-          display="block"
+          display="inline"
           font="title2"
           style={{ transform: `scale(${dangerouslySetSize * 0.02})` }}
           textAlign="center"
@@ -193,7 +194,7 @@ export const Avatar = memo((_props: AvatarProps) => {
       <Text
         as="p"
         color="fgInverse"
-        display="block"
+        display="inline"
         font={showLargerFont ? 'title2' : 'body'}
         textAlign="center"
         transform="uppercase"

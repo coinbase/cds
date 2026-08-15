@@ -12,7 +12,6 @@ import {
 import Fuse from 'fuse.js';
 
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import type { SelectOptionList } from '../select';
 import { DefaultSelectControl } from '../select/DefaultSelectControl';
 import type {
   SelectBaseProps,
@@ -24,6 +23,7 @@ import type {
   SelectType,
 } from '../select/Select';
 import { Select } from '../select/Select';
+import type { SelectOptionList } from '../select/types';
 
 import { DefaultComboboxControl } from './DefaultComboboxControl';
 

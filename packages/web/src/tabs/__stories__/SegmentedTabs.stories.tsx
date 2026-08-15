@@ -14,14 +14,6 @@ import { TabsActiveIndicator } from '../Tabs';
 export default {
   title: 'Components/Tabs/Segmented Tabs',
   component: SegmentedTabs,
-  parameters: {
-    a11y: {
-      context: {
-        include: ['body'],
-        exclude: ['.no-a11y-checks'],
-      },
-    },
-  },
 };
 
 const CustomActiveIndicator = ({
@@ -244,18 +236,28 @@ export const All = () => {
         title="Icon Labels"
         width="fit-content"
       />
+      <SegmentedTabsExample
+        activeBackground="bgPositiveWash"
+        activeColor="bgPositive"
+        color="fgMuted"
+        defaultActiveTab={basicSegments[0]}
+        tabs={basicSegments}
+        title="Label Colors"
+      />
+      <SegmentedTabsExample
+        activeBackground="bgPositiveWash"
+        activeColor="fg"
+        background="bgPositive"
+        color="fgInverse"
+        defaultActiveTab={basicSegments[0]}
+        padding={0.5}
+        styles={{
+          tabContainer: { flexGrow: 1, flexBasis: 0 },
+        }}
+        tabs={basicSegments}
+        title="Equal Width"
+        width="100%"
+      />
     </VStack>
   );
 };
-
-const disableA11yCheck = {
-  a11y: {
-    options: {
-      rules: {
-        'color-contrast': { enabled: false },
-      },
-    },
-  },
-};
-
-All.parameters = disableA11yCheck;

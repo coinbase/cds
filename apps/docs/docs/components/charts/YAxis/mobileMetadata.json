@@ -1,6 +1,6 @@
 {
-  "import": "import { YAxis } from '@coinbase/cds-mobile-visualization'",
-  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/chart/axis/YAxis.tsx",
+  "import": "import { YAxis } from '@coinbase/cds-mobile/visualizations/chart'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/visualizations/chart/axis/YAxis.tsx",
   "description": "A vertical axis component for CartesianChart. Displays tick marks, labels, gridlines, and supports custom formatting, positioning, and data domains.",
   "relatedComponents": [
     {
@@ -15,7 +15,7 @@
   "dependencies": [
     {
       "name": "@shopify/react-native-skia",
-      "version": "^1.12.4 || ^2.0.0"
+      "version": "2.2.12"
     }
   ]
 }

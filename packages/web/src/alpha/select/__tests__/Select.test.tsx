@@ -3,8 +3,9 @@ import { renderA11y } from '@coinbase/cds-web-utils/jest';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+import { ComponentConfigProvider } from '../../../system';
 import { DefaultThemeProvider } from '../../../utils/test';
-import { Select, type SelectProps } from '../Select';
+import { Select, type SelectDropdownComponent, type SelectProps } from '../Select';
 
 const mockOptions = [
   { value: 'option1', label: 'Option 1' },
@@ -670,6 +671,34 @@ describe('Select', () => {
       expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
     });
 
+    it('does not open dropdown when readOnly', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} readOnly />
+        </DefaultThemeProvider>,
+      );
+
+      await user.click(screen.getByRole('button'));
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('does not open dropdown when letter key is pressed while readOnly', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} readOnly />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('o');
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
     it('does not open dropdown when modifier key + letter is pressed', async () => {
       const user = userEvent.setup();
       render(
@@ -686,6 +715,94 @@ describe('Select', () => {
     });
   });
 
+  describe('readOnly', () => {
+    it('does not apply disabled opacity styling', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} readOnly />
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = screen.getByTestId('input-interactable-area');
+      const trigger = screen.getByRole('button');
+
+      expect(inputArea).not.toHaveAttribute('aria-disabled', 'true');
+      expect(trigger).toHaveAttribute('aria-readonly', 'true');
+    });
+  });
+
+  describe('ComponentConfig', () => {
+    it('applies read-only background from component config resolver', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              Select: ({ readOnly }) => ({
+                inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
+              }),
+            }}
+          >
+            <Select {...defaultProps} readOnly />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = screen.getByTestId('input-interactable-area');
+      expect(inputArea).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    });
+
+    it('applies Select defaults from ComponentConfigProvider', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              Select: {
+                bordered: false,
+                focusedBorderWidth: 100,
+                inputBackground: 'bgAlternate',
+                labelColor: 'fgMuted',
+                labelFont: 'label2',
+              },
+            }}
+          >
+            <Select {...defaultProps} />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = screen.getByTestId('input-interactable-area');
+      expect(inputArea.style.getPropertyValue('--border-color-unfocused')).toBe(
+        'var(--color-bgLineHeavy)',
+      );
+      expect(inputArea.style.getPropertyValue('--border-width-focused')).toBe(
+        'var(--borderWidth-100)',
+      );
+    });
+
+    it('local props override ComponentConfigProvider defaults', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              Select: {
+                inputBackground: 'bgAlternate',
+                labelColor: 'fgMuted',
+              },
+            }}
+          >
+            <Select {...defaultProps} inputBackground="bgPrimary" labelColor="fg" />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = screen.getByTestId('input-interactable-area');
+      expect(inputArea).toHaveStyle({ backgroundColor: 'var(--color-bgPrimary)' });
+      expect(screen.getByText(defaultProps.label as string)).toHaveStyle({
+        color: 'var(--color-fg)',
+      });
+    });
+  });
+
   describe('Ref Forwarding', () => {
     it('forwards ref correctly', () => {
       const ref = React.createRef<any>();
@@ -699,6 +816,45 @@ describe('Select', () => {
       expect(typeof ref.current.open).toBe('boolean');
       expect(typeof ref.current.setOpen).toBe('function');
       expect(ref.current.refs).toBeDefined();
+    });
+  });
+
+  describe('Dropdown density', () => {
+    /**
+     * The dropdown keeps a binary `compact` toggle instead of the t-shirt scale, so Select is
+     * responsible for translating its own resolved size into it.
+     */
+    const captureDropdownCompact = (props: Partial<SelectProps<'single' | 'multi'>>) => {
+      let captured: boolean | undefined;
+      const CapturingDropdown: SelectDropdownComponent<'single' | 'multi'> = ({ compact }) => {
+        captured = compact;
+        return null;
+      };
+
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} SelectDropdownComponent={CapturingDropdown} {...props} />
+        </DefaultThemeProvider>,
+      );
+
+      return captured;
+    };
+
+    it.each([
+      ['size="s"', true, { size: 's' as const }],
+      ['size="m"', false, { size: 'm' as const }],
+      ['size="l"', false, { size: 'l' as const }],
+      ['no size or compact', false, {}],
+      ['the deprecated compact alone', true, { compact: true }],
+      ['compact={false}', false, { compact: false }],
+    ])('%s resolves the dropdown to compact=%s', (_label, expected, props) => {
+      expect(captureDropdownCompact(props)).toBe(expected);
+    });
+
+    it('lets an explicit size win over the deprecated compact', () => {
+      // `compact` only ever acted as a fallback for geometry, so it must not force a compact
+      // dropdown once the caller has opted into a larger explicit size.
+      expect(captureDropdownCompact({ compact: true, size: 'l' })).toBe(false);
     });
   });
 });

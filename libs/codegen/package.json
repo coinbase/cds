@@ -33,20 +33,15 @@
   ],
   "dependencies": {
     "@coinbase/cds-utils": "workspace:^",
-    "@k-vyn/coloralgorithm": "^1.0.0",
     "chalk": "^4.1.2",
     "ejs": "^3.1.7",
-    "enquirer": "^2.3.6",
     "fast-glob": "^3.2.11",
-    "hygen": "patch:hygen@^6.2.0#./patches/hygen.patch",
-    "semver": "^7.5.4",
-    "yargs": "^17.5.1",
-    "yargs-parser": "^21.0.1"
+    "semver": "^7.5.4"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
-    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-react": "^7.28.5",
     "@babel/preset-typescript": "^7.27.1"
   }
 }

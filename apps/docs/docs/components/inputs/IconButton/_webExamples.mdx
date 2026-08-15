@@ -38,12 +38,6 @@ Use variants to denote intent and importance. The `active` prop fills the icon w
     variant="tertiary"
     onClick={console.log}
   />
-  <IconButton
-    name="checkmark"
-    accessibilityLabel="Approve transaction"
-    variant="foregroundMuted"
-    onClick={console.log}
-  />
 </HStack>
 ```
 
@@ -76,13 +70,6 @@ Use the `transparent` prop to remove the background until the user interacts wit
     transparent
     onClick={console.log}
   />
-  <IconButton
-    name="checkmark"
-    accessibilityLabel="Verify your identity"
-    variant="foregroundMuted"
-    transparent
-    onClick={console.log}
-  />
 </HStack>
 ```
 
@@ -94,7 +81,7 @@ Use the `loading` prop when an action is in progress. The button becomes non-int
 
 #### Loading by variant
 
-Loading works with all variants, transparent, and compact. Provide `accessibilityLabel` so screen readers announce the loading state (e.g. "Loading").
+Loading works with all variants, transparent, and sizes. Provide `accessibilityLabel` so screen readers announce the loading state (e.g. "Loading").
 
 ```jsx live
 <HStack gap={2} flexWrap="wrap" alignItems="center">
@@ -134,14 +121,8 @@ Loading works with all variants, transparent, and compact. Provide `accessibilit
     variant="secondary"
     onClick={console.log}
   />
-  <IconButton loading compact name="refresh" accessibilityLabel="Loading" onClick={console.log} />
-  <IconButton
-    loading
-    name="refresh"
-    accessibilityLabel="Loading"
-    compact={false}
-    onClick={console.log}
-  />
+  <IconButton loading name="refresh" accessibilityLabel="Loading" size="s" onClick={console.log} />
+  <IconButton loading name="refresh" accessibilityLabel="Loading" size="l" onClick={console.log} />
 </HStack>
 ```
 
@@ -201,38 +182,19 @@ Use the `disabled` prop to prevent interaction and show a disabled visual state.
     disabled
     onClick={console.log}
   />
-  <IconButton
-    name="checkmark"
-    accessibilityLabel="Approve transaction"
-    variant="foregroundMuted"
-    disabled
-    onClick={console.log}
-  />
 </HStack>
 ```
 
-## Sizing
+## Sizes
 
-IconButtons are compact by default. Use `compact={false}` for larger touch targets.
+`size` accepts `xs`, `s`, `m`, and `l`. It renders at `s` when unset, because IconButton still enables the deprecated `compact` prop by default; this becomes `l` once `compact` is removed.
 
 ```jsx live
-<HStack gap={2} flexWrap="wrap" alignItems="center">
-  <IconButton
-    active
-    name="gear"
-    accessibilityLabel="Settings - compact"
-    variant="primary"
-    compact
-    onClick={console.log}
-  />
-  <IconButton
-    active
-    name="gear"
-    accessibilityLabel="Settings - regular"
-    variant="primary"
-    compact={false}
-    onClick={console.log}
-  />
+<HStack alignItems="center" flexWrap="wrap" gap={2}>
+  <IconButton accessibilityLabel="Settings (xs)" name="gear" onClick={console.log} size="xs" />
+  <IconButton accessibilityLabel="Settings (s)" name="gear" onClick={console.log} size="s" />
+  <IconButton accessibilityLabel="Settings (m)" name="gear" onClick={console.log} size="m" />
+  <IconButton accessibilityLabel="Settings (l)" name="gear" onClick={console.log} size="l" />
 </HStack>
 ```
 
@@ -257,7 +219,7 @@ A toggleable icon button with an adjacent label. Uses `accessibilityLabelledBy` 
 ```jsx live
 function ClaimDropExample() {
   const [active, setActive] = useState(false);
-  const variant = useMemo(() => (active ? 'primary' : 'foregroundMuted'), [active]);
+  const variant = useMemo(() => (active ? 'primary' : 'secondary'), [active]);
   const label = useMemo(() => (active ? 'Reject drop' : 'Claim drop'), [active]);
 
   return (

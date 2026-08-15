@@ -315,7 +315,7 @@ const ContentCardScreen = () => {
               <RemoteImage accessibilityLabel="Uniswap" source={assets.uni.imageUrl} />
               <RemoteImage accessibilityLabel="Sushi" source={assets.sushi.imageUrl} />
             </RemoteImageGroup>
-            <Button compact variant="tertiary">
+            <Button compact variant="inverse">
               Share
             </Button>
           </ContentCardFooter>
@@ -346,7 +346,7 @@ const ContentCardScreen = () => {
               <RemoteImage accessibilityLabel="Uniswap" source={assets.uni.imageUrl} />
               <RemoteImage accessibilityLabel="Sushi" source={assets.sushi.imageUrl} />
             </RemoteImageGroup>
-            <Button compact variant="tertiary">
+            <Button compact variant="inverse">
               Share
             </Button>
           </ContentCardFooter>
@@ -364,7 +364,7 @@ const ContentCardScreen = () => {
               <RemoteImage accessibilityLabel="Uniswap" source={assets.uni.imageUrl} />
               <RemoteImage accessibilityLabel="Sushi" source={assets.sushi.imageUrl} />
             </RemoteImageGroup>
-            <Button compact variant="tertiary">
+            <Button compact variant="inverse">
               Share
             </Button>
           </ContentCardFooter>
@@ -434,7 +434,7 @@ const ContentCardScreen = () => {
                 <RemoteImage accessibilityLabel="Uniswap" source={assets.uni.imageUrl} />
                 <RemoteImage accessibilityLabel="Sushi" source={assets.sushi.imageUrl} />
               </RemoteImageGroup>
-              <Button compact onPress={() => {}} variant="secondary">
+              <Button compact onPress={() => {}} variant="inverse">
                 View Details
               </Button>
             </ContentCardFooter>
@@ -470,7 +470,7 @@ const ContentCardScreen = () => {
                 <RemoteImage accessibilityLabel="Uniswap" source={assets.uni.imageUrl} />
                 <RemoteImage accessibilityLabel="Sushi" source={assets.sushi.imageUrl} />
               </RemoteImageGroup>
-              <Button compact onPress={() => {}} variant="tertiary">
+              <Button compact onPress={() => {}} variant="inverse">
                 View Details
               </Button>
             </ContentCardFooter>
@@ -506,7 +506,7 @@ const ContentCardScreen = () => {
                 <RemoteImage accessibilityLabel="Uniswap" source={assets.uni.imageUrl} />
                 <RemoteImage accessibilityLabel="Sushi" source={assets.sushi.imageUrl} />
               </RemoteImageGroup>
-              <Button compact onPress={() => {}} variant="tertiary">
+              <Button compact onPress={() => {}} variant="inverse">
                 View Details
               </Button>
             </ContentCardFooter>
@@ -537,7 +537,7 @@ const ContentCardScreen = () => {
                 <RemoteImage accessibilityLabel="Uniswap" source={assets.uni.imageUrl} />
                 <RemoteImage accessibilityLabel="Sushi" source={assets.sushi.imageUrl} />
               </RemoteImageGroup>
-              <Button compact disabled variant="tertiary">
+              <Button compact disabled variant="inverse">
                 View Details
               </Button>
             </ContentCardFooter>

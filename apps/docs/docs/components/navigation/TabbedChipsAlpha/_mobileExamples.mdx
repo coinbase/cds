@@ -13,10 +13,12 @@ function ExampleDefault() {
 }
 ```
 
-### Compact
+### Sizes
+
+`size` accepts `xs` and `s`. Defaults to `s`.
 
 ```tsx
-function ExampleCompactNoStart() {
+function ExampleSizes() {
   const tabs = [
     { id: 'all', label: 'All' },
     { id: 'swap', label: 'Swap' },
@@ -24,7 +26,7 @@ function ExampleCompactNoStart() {
     { id: 'bridge', label: 'Bridge' },
   ];
   const [activeTab, setActiveTab] = useState(tabs[0]);
-  return <TabbedChips activeTab={activeTab} compact onChange={setActiveTab} tabs={tabs} />;
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} size="xs" tabs={tabs} />;
 }
 ```
 
@@ -105,25 +107,25 @@ function ExampleDisabled() {
 ### With start media
 
 :::tip Media sizing
-For start media, use circular images sized 24×24 for regular chips and 16×16 for compact chips.
+For start media, use circular images sized 24×24 for `s` chips and 16×16 for `xs` chips.
 :::
 
 ```tsx
 function ExampleWithStart() {
   const icon = { height: 24, width: 24, shape: 'circle', source: assets.eth.imageUrl };
-  const compactIcon = { height: 16, width: 16, shape: 'circle', source: assets.eth.imageUrl };
+  const xsIcon = { height: 16, width: 16, shape: 'circle', source: assets.eth.imageUrl };
   const tabs = [
     { id: 'all', label: 'All', start: <RemoteImage {...icon} /> },
     { id: 'swap', label: 'Swap', start: <RemoteImage {...icon} /> },
     { id: 'collect', label: 'Collect', start: <RemoteImage {...icon} /> },
     { id: 'bridge', label: 'Bridge', start: <RemoteImage {...icon} /> },
   ];
-  const compactTabs = tabs.map((tab) => ({ ...tab, start: <RemoteImage {...compactIcon} /> }));
+  const xsTabs = tabs.map((tab) => ({ ...tab, start: <RemoteImage {...xsIcon} /> }));
   const [activeTab, setActiveTab] = useState(tabs[0]);
   return (
     <VStack gap={2}>
       <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
-      <TabbedChips compact activeTab={activeTab} onChange={setActiveTab} tabs={compactTabs} />
+      <TabbedChips activeTab={activeTab} onChange={setActiveTab} size="xs" tabs={xsTabs} />
     </VStack>
   );
 }

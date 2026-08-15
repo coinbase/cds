@@ -1,3 +1,4 @@
+import type { JSX } from 'react';
 import { Box, HStack, VStack } from '@coinbase/cds-web/layout';
 import { Text } from '@coinbase/cds-web/typography';
 import type { FooterLinkItem } from '@docusaurus/theme-common';

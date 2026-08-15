@@ -262,6 +262,28 @@ function ColorAndTransition() {
 }
 ```
 
+## Custom, Non-Token Color
+
+To apply a non-token color (e.g. a hex string), set `color` via `styles.text`.
+
+```tsx
+function CustomColor() {
+  const price = 12345.67;
+  return (
+    <RollingNumber
+      font="title1"
+      format={{ style: 'currency', currency: 'USD' }}
+      styles={{ text: { color: '#6366f1' } }}
+      value={price}
+    />
+  );
+}
+```
+
+:::warning
+`colorPulseOnUpdate` will not work when a custom color is set.
+:::
+
 ## Digit Transition Variants
 
 RollingNumber supports two digit transition styles via the `digitTransitionVariant` prop:

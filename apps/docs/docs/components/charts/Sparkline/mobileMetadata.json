@@ -1,6 +1,6 @@
 {
-  "import": "import { Sparkline } from '@coinbase/cds-mobile-visualization'",
-  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile-visualization/src/sparkline/Sparkline.tsx",
+  "import": "import { Sparkline } from '@coinbase/cds-mobile/visualizations/sparkline'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/visualizations/sparkline/Sparkline.tsx",
   "description": "A small line chart component for displaying data trends.",
   "warning": "Sparkline components are deprecated. Please use LineChart instead.",
   "relatedComponents": [
@@ -16,7 +16,7 @@
   "dependencies": [
     {
       "name": "react-native-svg",
-      "version": "^14.1.0"
+      "version": "15.12.1"
     }
   ]
 }

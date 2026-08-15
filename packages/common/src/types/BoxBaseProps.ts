@@ -58,6 +58,10 @@ export type FlexStyles = {
 
 export type PinningDirection = 'top' | 'bottom' | 'left' | 'right' | 'all';
 
+/**
+ * @deprecated Use PositionStyles type in mobile/src/styles/styleProps.ts instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type PositionStyles = {
   /** Position the box to the bottom edge. */
   bottom?: DimensionValue;

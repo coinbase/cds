@@ -24,7 +24,12 @@ import { DefaultSelectDropdown } from './DefaultSelectDropdown';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
-import { type SelectDropdownProps, type SelectProps, type SelectType } from './types';
+import {
+  defaultSelectSize,
+  type SelectDropdownProps,
+  type SelectProps,
+  type SelectType,
+} from './types';
 
 // Re-export all types for backward compatibility
 export type {
@@ -44,6 +49,7 @@ export type {
   SelectOptionGroupProps,
   SelectOptionProps,
   SelectProps,
+  SelectSize,
   SelectType,
 } from './types';
 
@@ -82,10 +88,12 @@ const SelectBase = memo(
         open: openProp,
         setOpen: setOpenProp,
         disabled,
+        readOnly,
         disableClickOutsideClose,
         placeholder,
         helperText,
         compact,
+        size,
         label,
         labelVariant,
         accessibilityLabel = typeof label === 'string' ? label : 'Select dropdown',
@@ -108,6 +116,12 @@ const SelectBase = memo(
         align,
         font,
         bordered = true,
+        borderWidth,
+        focusedBorderWidth,
+        inputBackground,
+        labelColor,
+        labelFont,
+        borderRadius,
         SelectOptionComponent = DefaultSelectOption,
         SelectAllOptionComponent = DefaultSelectAllOption,
         SelectDropdownComponent = DefaultSelectDropdown,
@@ -121,6 +135,10 @@ const SelectBase = memo(
         testID,
       } = mergedProps;
       const hasMounted = useHasMounted();
+      // The dropdown keeps a binary density toggle instead of the t-shirt scale, so Select owns
+      // the translation: only the smallest control size renders a compact dropdown. The control
+      // still receives the raw `compact` because it needs it for legacy label placement.
+      const dropdownCompact = (size ?? (compact ? 's' : defaultSelectSize)) === 's';
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
       const setOpen = setOpenProp ?? setOpenInternal;
@@ -149,7 +167,7 @@ const SelectBase = memo(
 
       const handleControlKeyDown = useCallback(
         (event: React.KeyboardEvent) => {
-          if (disabled || open) return;
+          if (disabled || readOnly || open) return;
           if (event.ctrlKey || event.metaKey || event.altKey) return;
 
           const key = event.key;
@@ -158,7 +176,7 @@ const SelectBase = memo(
             setOpen(true);
           }
         },
-        [disabled, open, setOpen],
+        [disabled, readOnly, open, setOpen],
       );
 
       useEffect(() => {
@@ -296,7 +314,7 @@ const SelectBase = memo(
 
       return (
         <Box
-          ref={containerRef as React.RefObject<HTMLDivElement>}
+          ref={containerRef as React.RefObject<HTMLDivElement | null>}
           className={cx(classNames?.root, className)}
           data-testid={testID}
           style={rootStyles}
@@ -307,16 +325,22 @@ const SelectBase = memo(
             align={align}
             ariaHaspopup={accessibilityRoles?.dropdown}
             blendStyles={styles?.controlBlendStyles}
+            borderRadius={borderRadius}
+            borderWidth={borderWidth}
             bordered={bordered}
             className={classNames?.control}
             classNames={controlClassNames}
             compact={compact}
             disabled={disabled}
             endNode={endNode}
+            focusedBorderWidth={focusedBorderWidth}
             font={font}
             helperText={helperText}
             hiddenSelectedOptionsLabel={hiddenSelectedOptionsLabel}
+            inputBackground={inputBackground}
             label={label}
+            labelColor={labelColor}
+            labelFont={labelFont}
             labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
@@ -324,8 +348,10 @@ const SelectBase = memo(
             open={open}
             options={options}
             placeholder={placeholder}
+            readOnly={readOnly}
             removeSelectedOptionAccessibilityLabel={removeSelectedOptionAccessibilityLabel}
             setOpen={setOpen}
+            size={size}
             startNode={startNode}
             style={styles?.control}
             styles={controlStyles}
@@ -345,7 +371,7 @@ const SelectBase = memo(
               accessory={accessory}
               classNames={dropdownClassNames}
               clearAllLabel={clearAllLabel}
-              compact={compact}
+              compact={dropdownCompact}
               controlRef={refs.reference as React.MutableRefObject<HTMLElement>}
               disabled={disabled}
               emptyOptionsLabel={emptyOptionsLabel}
@@ -354,7 +380,7 @@ const SelectBase = memo(
               label={label}
               media={media}
               onChange={onChange}
-              open={hasMounted && open}
+              open={hasMounted && open && !readOnly}
               options={options}
               selectAllLabel={selectAllLabel}
               setOpen={setOpen}

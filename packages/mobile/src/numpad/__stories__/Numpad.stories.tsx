@@ -201,7 +201,7 @@ const NumpadExample2 = () => {
           </VStack>
         </ModalBody>
         <Box bottom={0} position="absolute" style={{ paddingBottom: safeBottomPadding }}>
-          <Numpad onLongPress={onLongPress} onPress={onPress} separator="" />
+          <Numpad hideSeparator onLongPress={onLongPress} onPress={onPress} />
         </Box>
       </Modal>
     </VStack>

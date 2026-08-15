@@ -1,13 +1,15 @@
-import React, { forwardRef, memo } from 'react';
+import React, { memo } from 'react';
 import { useWindowDimensions } from 'react-native';
-import type { View } from 'react-native';
-import { type DimensionValue, type SharedProps } from '@coinbase/cds-common';
+import type { DimensionValue, View } from 'react-native';
+import { type SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import { IconButton } from '../buttons';
+import { IconButton } from '../buttons/IconButton';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
-import { Box, type BoxBaseProps, type BoxProps, HStack, VStack } from '../layout';
-import { InvertedThemeProvider } from '../system';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack } from '../layout/VStack';
+import { InvertedThemeProvider } from '../system/ThemeProvider';
 import { Text } from '../typography/Text';
 
 export type CoachmarkBaseProps = SharedProps &
@@ -49,7 +51,12 @@ export type CoachmarkBaseProps = SharedProps &
 export type CoachmarkProps = CoachmarkBaseProps & BoxProps;
 
 export const Coachmark = memo(
-  forwardRef((_props: CoachmarkProps, ref: React.ForwardedRef<View>) => {
+  ({
+    ref,
+    ..._props
+  }: CoachmarkProps & {
+    ref?: React.Ref<View>;
+  }) => {
     const mergedProps = useComponentConfig('Coachmark', _props);
     const {
       title,
@@ -70,13 +77,13 @@ export const Coachmark = memo(
     return (
       <InvertedThemeProvider>
         <VStack
-          {...props}
           ref={ref}
           borderRadius={400}
           maxWidth={windowWidth - paddingX * 2}
           overflow="hidden"
           testID={testID}
           width={width}
+          {...props}
         >
           {media}
           <VStack background="bg" padding={2}>
@@ -110,5 +117,5 @@ export const Coachmark = memo(
         </VStack>
       </InvertedThemeProvider>
     );
-  }),
+  },
 );

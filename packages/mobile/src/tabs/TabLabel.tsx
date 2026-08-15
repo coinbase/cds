@@ -1,10 +1,10 @@
 import React, { memo, useEffect, useMemo, useRef } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
-import type { SharedProps } from '@coinbase/cds-common/types';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { DotCount } from '../dots/DotCount';
 import { useTheme } from '../hooks/useTheme';
-import { HStack } from '../layout';
+import { HStack } from '../layout/HStack';
 import type { TextProps } from '../typography/Text';
 import { Text } from '../typography/Text';
 
@@ -80,12 +80,12 @@ export const TabLabel = memo(
       <HStack alignItems="center">
         {shouldMeasureElement ? (
           <View>
-            <TextElement {...props} color={color} style={dynamicStyles} />
+            <TextElement color={color} style={dynamicStyles} {...props} />
             {/* This element is used to ensure the element width doesn't change when we change font-weight */}
-            <Text {...props} aria-hidden font="title3" style={styles.hiddenElement} />
+            <Text aria-hidden font="title3" style={styles.hiddenElement} {...props} />
           </View>
         ) : (
-          <TextElement {...props} color={color} style={dynamicStyles} />
+          <TextElement color={color} style={dynamicStyles} {...props} />
         )}
         <Animated.View style={dotStyles.container}>
           <Animated.View style={dotStyles.inner}>

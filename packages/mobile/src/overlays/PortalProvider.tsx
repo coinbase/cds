@@ -17,6 +17,11 @@ export type PortalProviderProps = ToastProviderProps & {
 
 type PortalHostProps = { nodes: PortalNode[] };
 
+/**
+ * Internal component that renders active overlay nodes. On Android, nests multiple
+ * overlays as children of each other since Android's native Modal cannot render
+ * sibling modals at the same level.
+ */
 export const PortalHost = memo(({ nodes }: PortalHostProps) => {
   if (!nodes.length) return null;
 
@@ -46,6 +51,16 @@ export const PortalHost = memo(({ nodes }: PortalHostProps) => {
   return <>{elements}</>;
 });
 
+/**
+ * Required root-level provider that enables CDS overlay components (Modal, Toast, Alert,
+ * Tooltip, Tray). Manages the registry of active overlays and provides the context for
+ * overlay state management and toast queuing.
+ *
+ * Unlike the PortalProvider in cds-web, cds-mobile does not use DOM portals. Overlay components render
+ * above other content using React Native's native Modal component.
+ *
+ * Must be rendered once near the root of your application, alongside ThemeProvider.
+ */
 export const PortalProvider: React.FC<React.PropsWithChildren<PortalProviderProps>> = ({
   children,
   toastBottomOffset = 0,
@@ -63,6 +78,11 @@ export const PortalProvider: React.FC<React.PropsWithChildren<PortalProviderProp
   );
 };
 
+/**
+ * Renders overlay nodes independently from PortalProvider.
+ * Use this when `renderPortals={false}` is set on PortalProvider to control
+ * where in the component tree the overlay nodes are rendered.
+ */
 export const PortalNodes = () => {
   const { nodes } = usePortal();
   return <PortalHost nodes={nodes} />;

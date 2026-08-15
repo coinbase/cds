@@ -22,7 +22,6 @@
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
         "{workspaceRoot}/packages/web/**/*.stories.*",
-        "{workspaceRoot}/packages/web-visualization/**/*.stories.*",
         "!{projectRoot}/scripts/**"
       ],
       "outputs": [
@@ -40,21 +39,11 @@
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
         "{workspaceRoot}/packages/web/**/*.stories.*",
-        "{workspaceRoot}/packages/web-visualization/**/*.stories.*",
         "!{projectRoot}/scripts/**"
       ],
       "outputs": [
         "{projectRoot}/dist"
       ],
-      "options": {
-        "cwd": "apps/storybook",
-        "env": {
-          "STORYBOOK_PERCY": "true"
-        }
-      }
-    },
-    "test-a11y": {
-      "command": "vitest --project=storybook",
       "options": {
         "cwd": "apps/storybook"
       }
@@ -70,8 +59,7 @@
       "inputs": [
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
-        "{workspaceRoot}/packages/web/**/*.stories.*",
-        "{workspaceRoot}/packages/web-visualization/**/*.stories.*"
+        "{workspaceRoot}/packages/web/**/*.stories.*"
       ],
       "outputs": [
         "{projectRoot}/dist"
@@ -87,8 +75,7 @@
       "inputs": [
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
-        "{workspaceRoot}/packages/web/**/*.stories.*",
-        "{workspaceRoot}/packages/web-visualization/**/*.stories.*"
+        "{workspaceRoot}/packages/web/**/*.stories.*"
       ],
       "outputs": [
         "{projectRoot}/dist",
@@ -130,8 +117,7 @@
       "inputs": [
         "{projectRoot}/**/__stories__/**",
         "{projectRoot}/**/*.stories.*",
-        "{workspaceRoot}/packages/web/**/*.stories.*",
-        "{workspaceRoot}/packages/web-visualization/**/*.stories.*"
+        "{workspaceRoot}/packages/web/**/*.stories.*"
       ],
       "outputs": [
         "{projectRoot}/dist"
@@ -141,18 +127,6 @@
         "env": {
           "STORYBOOK_SKIP_ANIMATION": "true"
         }
-      }
-    },
-    "a11y-web_TODO": {
-      "command": "tsx ./scripts/run-a11y-tests.ts",
-      "dependsOn": [
-        "build-for-tests"
-      ],
-      "inputs": [
-        "{projectRoot}/dist"
-      ],
-      "options": {
-        "cwd": "apps/storybook"
       }
     },
     "percy": {

@@ -1,13 +1,13 @@
-import { memo, useCallback, useMemo } from 'react';
-import { useHasMounted } from '@coinbase/cds-common/hooks/useHasMounted';
+import { memo, useCallback, useEffect, useMemo } from 'react';
+import type { LayoutChangeEvent } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated';
 import { flattenSteps } from '@coinbase/cds-common/stepper/utils';
-import { animated, to, useSpring } from '@react-spring/native';
 
 import { Box } from '../layout/Box';
 
 import type { StepperProgressComponent, StepperValue } from './Stepper';
 
-const AnimatedBox = animated(Box);
+const AnimatedBox = Animated.createAnimatedComponent(Box);
 
 export const DefaultStepperProgressVertical: StepperProgressComponent = memo(
   function DefaultStepperProgressVertical({
@@ -23,9 +23,7 @@ export const DefaultStepperProgressVertical: StepperProgressComponent = memo(
     isDescendentActive,
     style,
     activeStepLabelElement,
-    progressSpringConfig,
-    animate = true,
-    disableAnimateOnMount,
+    progressTimingConfig,
     background = 'bgLine',
     defaultFill = 'bgLinePrimarySubtle',
     activeFill = 'bgLinePrimarySubtle',
@@ -36,7 +34,6 @@ export const DefaultStepperProgressVertical: StepperProgressComponent = memo(
     width = 2,
     ...props
   }) {
-    const hasMounted = useHasMounted();
     const isLastStep = flatStepIds[flatStepIds.length - 1] === step.id;
 
     // Count the total number of sub-steps in the current step's tree
@@ -56,35 +53,45 @@ export const DefaultStepperProgressVertical: StepperProgressComponent = memo(
       [],
     );
 
+    // Fractional fill for steps with sub-steps. For all other cases, return 1
+    // and let the cascade's `progress` prop control whether the bar is filled.
     const progressHeight = useMemo(() => {
       const totalSubSteps = countAllSubSteps(step.subSteps ?? []);
 
-      if (complete) return 1;
-      if (active && totalSubSteps === 0) return 1;
-      if (active && !isDescendentActive) return 0;
-      if (isDescendentActive) {
+      if (active && totalSubSteps > 0 && !isDescendentActive) return 0;
+      if (isDescendentActive && totalSubSteps > 0) {
         const activePosition = findSubStepPosition(step.subSteps ?? [], activeStepId);
         return activePosition / totalSubSteps;
       }
-      if (visited) return 1;
 
-      return 0;
+      return 1;
     }, [
       countAllSubSteps,
       step.subSteps,
-      complete,
       active,
       isDescendentActive,
-      visited,
       findSubStepPosition,
       activeStepId,
     ]);
 
-    const fillHeightSpring = useSpring({
-      height: progressHeight,
-      immediate: !animate || (disableAnimateOnMount && !hasMounted),
-      config: progressSpringConfig,
-    });
+    const containerHeight = useSharedValue(0);
+    const targetHeight = progress * progressHeight;
+    const animatedHeight = useSharedValue(targetHeight);
+
+    const handleLayout = useCallback(
+      (event: LayoutChangeEvent) => {
+        containerHeight.value = event.nativeEvent.layout.height;
+      },
+      [containerHeight],
+    );
+
+    useEffect(() => {
+      animatedHeight.value = withTiming(targetHeight, progressTimingConfig);
+    }, [targetHeight, progressTimingConfig, animatedHeight]);
+
+    const animatedStyle = useAnimatedStyle(() => ({
+      height: animatedHeight.value * containerHeight.value,
+    }));
 
     if (depth > 0 || isLastStep) return null;
 
@@ -93,6 +100,7 @@ export const DefaultStepperProgressVertical: StepperProgressComponent = memo(
         background={background}
         flexGrow={1}
         minHeight={minHeight}
+        onLayout={handleLayout}
         position="relative"
         style={style}
         width={width}
@@ -110,8 +118,8 @@ export const DefaultStepperProgressVertical: StepperProgressComponent = memo(
                     ? visitedFill
                     : defaultFill
           }
-          height={to([progress, fillHeightSpring.height], (p, h) => `${p * h * 100}%`)}
           position="absolute"
+          style={animatedStyle}
           width="100%"
         />
       </Box>

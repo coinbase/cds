@@ -1,15 +1,16 @@
-import React, { forwardRef, memo, useCallback, useEffect, useImperativeHandle } from 'react';
+import React, { memo, useCallback, useEffect, useImperativeHandle } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type {
   ToastBaseProps as CommonToastBaseProps,
   ToastRefHandle,
 } from '@coinbase/cds-common/overlays/ToastProvider';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 
-import { Button } from '../buttons';
+import { Button } from '../buttons/Button';
 import { useA11y } from '../hooks/useA11y';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { useTheme } from '../hooks/useTheme';
-import { Box, type BoxProps, HStack } from '../layout';
+import { Box, type BoxProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
 import { ColorSurge } from '../motion/ColorSurge';
 import { Text } from '../typography/Text';
 
@@ -20,7 +21,12 @@ export type ToastBaseProps = CommonToastBaseProps;
 export type ToastProps = ToastBaseProps & BoxProps;
 
 export const Toast = memo(
-  forwardRef<ToastRefHandle, ToastProps>((_props, ref) => {
+  ({
+    ref,
+    ..._props
+  }: ToastProps & {
+    ref?: React.Ref<ToastRefHandle>;
+  }) => {
     const mergedProps = useComponentConfig('Toast', _props);
     const {
       text,
@@ -32,7 +38,7 @@ export const Toast = memo(
       accessibilityLabel,
       ...props
     } = mergedProps;
-    const theme = useTheme();
+    const { bottom: safeAreaBottom } = useSafeAreaInsets();
     const [{ opacity, bottom }, animateIn, animateOut] = useToastAnimation();
     const { announceForA11y } = useA11y();
     const defaultA11yLabel = text + (action ? action.label : '');
@@ -79,8 +85,9 @@ export const Toast = memo(
 
     return (
       <Box
+        accessibilityRole="alert"
         alignSelf="center"
-        bottom={bottomOffset ?? theme.space[2]}
+        bottom={(bottomOffset as number) ?? safeAreaBottom}
         maxWidth="100%"
         padding={2}
         position="absolute"
@@ -90,7 +97,6 @@ export const Toast = memo(
         }}
         zIndex={zIndex.portal}
         {...props}
-        accessibilityRole="alert"
       >
         <HStack
           animated
@@ -116,9 +122,9 @@ export const Toast = memo(
           </Box>
           {!!action && (
             <Button
-              compact
               transparent
               onPress={handleActionPress}
+              size="s"
               testID={action.testID ?? 'toast-action'}
             >
               {action.label}
@@ -127,5 +133,5 @@ export const Toast = memo(
         </HStack>
       </Box>
     );
-  }),
+  },
 );

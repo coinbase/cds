@@ -33,7 +33,23 @@ const InputChipScreen = () => {
           USD
         </InputChip>
       </Example>
-      <Example title="Compact">
+      <Example title="Size xs">
+        <InputChip onPress={NoopFn} size="xs">
+          USD
+        </InputChip>
+        <InputChip onPress={NoopFn} size="xs" start={<RemoteImage {...compactMediaProps} />}>
+          USD
+        </InputChip>
+        <InputChip
+          disabled
+          onPress={NoopFn}
+          size="xs"
+          start={<RemoteImage {...compactMediaProps} />}
+        >
+          USD
+        </InputChip>
+      </Example>
+      <Example title="Compact (deprecated)">
         <InputChip compact onPress={NoopFn}>
           USD
         </InputChip>

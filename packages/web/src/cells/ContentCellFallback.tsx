@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { compactListHeight, listHeight } from '@coinbase/cds-common/tokens/cell';
-import type { FallbackRectWidthProps } from '@coinbase/cds-common/types';
+import type { FallbackRectWidthProps } from '@coinbase/cds-common/types/FallbackBaseProps';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import { getRectWidthVariant } from '@coinbase/cds-common/utils/getRectWidthVariant';
 import { css } from '@linaria/core';
@@ -55,6 +55,10 @@ const fullWidthStyle = { width: '100%', display: 'block' } as const;
 
 const floatStyle = { float: 'right', width: '30%' } as const;
 
+/**
+ * @deprecated Use `ListCellFallback` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const ContentCellFallback = memo(function ContentCellFallback({
   accessory,
   accessoryNode,

@@ -12,6 +12,7 @@ import { css } from '@linaria/core';
 import type { Polymorphic } from '../core/polymorphism';
 import type { Theme } from '../core/theme';
 import { cx } from '../cx';
+import { useResolveResponsiveProp } from '../hooks/useResolveResponsiveProp';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps } from '../layout/Box';
 
@@ -163,8 +164,6 @@ export type InteractableBaseProps = Polymorphic.ExtendableProps<
     background?: ThemeVars.Color;
     /** Set element to block and expand to 100% width. */
     block?: boolean;
-    /** Border color of the element. */
-    borderColor?: ThemeVars.Color;
     /** Is the element currently disabled. */
     disabled?: boolean;
     /**
@@ -223,6 +222,7 @@ export const Interactable: InteractableComponent = forwardRef<
   ) => {
     const Component = (as ?? interactableDefaultElement) satisfies React.ElementType;
     const theme = useTheme();
+    const resolvedBorderColor = useResolveResponsiveProp(borderColor);
 
     const interactableStyle = useMemo(
       () => ({
@@ -230,11 +230,11 @@ export const Interactable: InteractableComponent = forwardRef<
           theme,
           background,
           blendStyles,
-          borderColor,
+          borderColor: resolvedBorderColor,
         }),
         ...style,
       }),
-      [style, background, theme, blendStyles, borderColor],
+      [style, background, theme, blendStyles, resolvedBorderColor],
     );
 
     return (

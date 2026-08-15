@@ -271,15 +271,46 @@ describe('Carousel', () => {
 
       render(<TestCarouselWithItems NavigationComponent={mockNavigation} itemCount={5} />);
 
-      expect(mockNavigation).toHaveBeenCalledWith(
+      expect(mockNavigation).toHaveBeenCalled();
+      expect(mockNavigation.mock.calls[0]?.[0]).toEqual(
         expect.objectContaining({
           onGoNext: expect.any(Function),
           onGoPrevious: expect.any(Function),
           disableGoNext: expect.any(Boolean),
           disableGoPrevious: expect.any(Boolean),
         }),
-        {},
       );
+    });
+
+    it('does not pass a pagination variant by default', async () => {
+      const mockPagination = jest.fn((props: { variant?: 'pill' | 'dot' }) => null);
+
+      render(<TestCarouselWithItems PaginationComponent={mockPagination} itemCount={5} />);
+
+      await waitFor(() => {
+        expect(
+          mockPagination.mock.calls.some((call) => {
+            const props = call[0];
+            return props !== undefined && props.variant === undefined;
+          }),
+        ).toBe(true);
+      });
+    });
+
+    it('forwards deprecated paginationVariant to custom pagination components', async () => {
+      const mockPagination = jest.fn((props: { variant?: 'pill' | 'dot' }) => null);
+
+      render(
+        <TestCarouselWithItems
+          PaginationComponent={mockPagination}
+          itemCount={5}
+          paginationVariant="pill"
+        />,
+      );
+
+      await waitFor(() => {
+        expect(mockPagination.mock.calls.some((call) => call[0]?.variant === 'pill')).toBe(true);
+      });
     });
   });
 
@@ -1181,7 +1212,7 @@ describe('Carousel', () => {
 
       fireEvent.press(screen.getByTestId('get-current-page'));
 
-      expect(screen.getByTestId('current-page-display')).toHaveTextContent('Page 1 of');
+      expect(screen.getByTestId('current-page-display')).toHaveTextContent(/Page 1 of/);
 
       fireEvent.press(screen.getByTestId('go-to-page-2'));
 
@@ -1194,7 +1225,7 @@ describe('Carousel', () => {
 
       fireEvent.press(screen.getByTestId('get-current-page'));
 
-      expect(screen.getByTestId('current-page-display')).toHaveTextContent('Page 1 of');
+      expect(screen.getByTestId('current-page-display')).toHaveTextContent(/Page 1 of/);
     });
   });
 
@@ -1215,9 +1246,13 @@ describe('Carousel', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByTestId('render-props-content')).toBeOnTheScreen();
-      expect(screen.getByTestId('visibility-indicator')).toBeOnTheScreen();
-      expect(screen.getByText('Content')).toBeOnTheScreen();
+      expect(
+        screen.getByTestId('render-props-content', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(
+        screen.getByTestId('visibility-indicator', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(screen.getByText('Content', { includeHiddenElements: true })).toBeOnTheScreen();
     });
 
     it('supports both regular children and render props', () => {
@@ -1241,11 +1276,21 @@ describe('Carousel', () => {
         </DefaultThemeProvider>,
       );
 
-      expect(screen.getByTestId('regular-content')).toBeOnTheScreen();
-      expect(screen.getByTestId('render-props-content')).toBeOnTheScreen();
-      expect(screen.getByText('Regular Content')).toBeOnTheScreen();
-      expect(screen.getByText('Render Props Content')).toBeOnTheScreen();
-      expect(screen.getByTestId('visibility-status')).toBeOnTheScreen();
+      expect(
+        screen.getByTestId('regular-content', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(
+        screen.getByTestId('render-props-content', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(
+        screen.getByText('Regular Content', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(
+        screen.getByText('Render Props Content', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
+      expect(
+        screen.getByTestId('visibility-status', { includeHiddenElements: true }),
+      ).toBeOnTheScreen();
     });
   });
 

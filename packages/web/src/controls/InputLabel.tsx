@@ -7,6 +7,7 @@ export type InputLabelProps = TextProps<'label'>;
 export const InputLabel = memo(function InputLabel({
   color = 'fg',
   disabled = false,
+  font = 'label1',
   ...props
 }: InputLabelProps) {
   return (
@@ -15,7 +16,7 @@ export const InputLabel = memo(function InputLabel({
       color={color}
       disabled={disabled}
       display="block"
-      font="label1"
+      font={font}
       paddingY={0.5}
       {...props}
     />

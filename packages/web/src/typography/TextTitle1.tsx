@@ -8,8 +8,16 @@ export const textTitle1DefaultElement = 'span';
 
 export type TextTitle1DefaultElement = typeof textTitle1DefaultElement;
 
+/**
+ * @deprecated Use `Text` with `font="title1"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TextTitle1BaseProps = TextBaseProps;
 
+/**
+ * @deprecated Use `Text` with `font="title1"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export type TextTitle1Props<AsComponent extends React.ElementType> = Polymorphic.Props<
   AsComponent,
   TextTitle1BaseProps
@@ -20,6 +28,10 @@ type TextTitle1Component = (<AsComponent extends React.ElementType = TextTitle1D
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
+/**
+ * @deprecated Use `Text` with `font="title1"` instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v10
+ */
 export const TextTitle1: TextTitle1Component = forwardRef<
   React.ReactElement<TextTitle1BaseProps>,
   TextTitle1BaseProps

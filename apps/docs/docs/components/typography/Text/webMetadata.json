@@ -7,6 +7,10 @@
     {
       "label": "Link",
       "url": "/components/typography/Link/"
+    },
+    {
+      "label": "Fallback",
+      "url": "/components/feedback/Fallback/"
     }
   ],
   "dependencies": []

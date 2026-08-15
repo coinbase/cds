@@ -8,6 +8,407 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.16.0 (8/13/2026 PST)
+
+#### 🚀 Updates
+
+- Deprecate invertColorScheme in favor of new, canoncical active prop for the Chip family of props. [[#843](https://github.com/coinbase/cds/pull/843)]
+
+## 9.15.0 (8/11/2026 PST)
+
+#### 🚀 Updates
+
+[[#839](https://github.com/coinbase/cds/pull/839)]
+
+- Add new prop: variant to Switch component.
+- Add new prop: showItemSeparators to Accordion component.
+- Add new prop: showHeaderBorder to AccordionItem component.
+- Add AccordionItem to ComponentConfig system.
+- Add new prop: equalWidth to SegmentedTabs component.
+
+## 9.14.0 (8/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support different tick label overflow- #835. [[#835](https://github.com/coinbase/cds/pull/835)]
+
+## 9.13.0 (8/11/2026 PST)
+
+#### 🚀 Updates
+
+- Add a lightweight static render path for non-animated LineChart/CartesianChart (animate={false} uses a cheap rectangular clip instead of the anti-aliased path clip); ScrubberProvider now skips the pan gesture and animated reaction when scrubbing is disabled; add a strokeWidth prop to ReferenceLine. [[#840](https://github.com/coinbase/cds/pull/840)]
+
+## 9.12.3 (8/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: reuse initial path on mobile charts. [[#837](https://github.com/coinbase/cds/pull/837)]
+
+## 9.12.2 (8/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support flex grow charts. [[#836](https://github.com/coinbase/cds/pull/836)]
+
+## 9.12.1 (8/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: disable mount animation for DefaultTabsActiveIndicator. [[#834](https://github.com/coinbase/cds/pull/834)]
+
+## 9.12.0 (8/7/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support text in component config. [[#831](https://github.com/coinbase/cds/pull/831)]
+- Feat: add support for font scaling in TextFallback. [[#831](https://github.com/coinbase/cds/pull/831)]
+
+## 9.11.0 (8/7/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add a tertiary-level header to AccordionItem. [[#830](https://github.com/coinbase/cds/pull/830)]
+
+## 9.10.4 (8/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Enable chart scrubbing inside Tray/Drawer on Android (GestureHandlerRootView in Modal; chart claims touch responder so outside-handle pan-to-dismiss does not block long-press scrub). [[#827](https://github.com/coinbase/cds/pull/827)]
+
+## 9.10.3 (8/5/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: remove unnecessary padding on inputstack. [[#823](https://github.com/coinbase/cds/pull/823)]
+
+## 9.10.2 (7/31/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: move Pressalbe props from MediaCardProps to MediaCardBaseProps to allow them to be accessed in ComponentConfig settings which only manages -BaseProps". [[#819](https://github.com/coinbase/cds/pull/819)]
+
+## 9.10.1 (7/30/2026 PST)
+
+#### 🐞 Fixes
+
+- Size LinearGradient svg to measured pixels under Fabric. [[#810](https://github.com/coinbase/cds/pull/810)]
+
+## 9.10.0 (7/30/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add new prop, size to input & control components, deprecating compact. [[#809](https://github.com/coinbase/cds/pull/809)]
+
+## 9.9.0 (7/27/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support disabling icon scaling. [[#811](https://github.com/coinbase/cds/pull/811)]
+
+## 9.8.0 (7/23/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add createIcon factory to decouple Icon from a single icon set. [[#786](https://github.com/coinbase/cds/pull/786)]
+
+## 9.7.2 (7/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust select placeholder fallback. [[#805](https://github.com/coinbase/cds/pull/805)]
+
+## 9.7.1 (7/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Prevent Overlay/Modal scrim collapsing to 0x0 under Fabric. [[#804](https://github.com/coinbase/cds/pull/804)]
+
+## 9.7.0 (7/22/2026 PST)
+
+#### 🚀 Updates
+
+- Add hideSeparator prop to numpad. [[#799](https://github.com/coinbase/cds/pull/799)]
+
+## 9.6.11 (7/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Reduce top padding of mobile Tray content when handle bar is positioned inside. [[#802](https://github.com/coinbase/cds/pull/802)]
+
+## 9.6.10 ((7/22/2026, 08:37 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.9 (7/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust messaging card imports. [[#800](https://github.com/coinbase/cds/pull/800)]
+
+## 9.6.8 ((7/22/2026, 06:23 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.6.7 (7/20/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: TextInput inside labelVariant padding. [[#797](https://github.com/coinbase/cds/pull/797)]
+
+## 9.6.6 (7/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: do not animate initial animated caret render. [[#792](https://github.com/coinbase/cds/pull/792)]
+
+## 9.6.5 (7/13/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore(CDS-2463): Support non-token color customizations in RollingNumber. [[#787](https://github.com/coinbase/cds/pull/787)]
+
+## 9.6.4 (7/13/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: tabs remount single frame delay. [[#791](https://github.com/coinbase/cds/pull/791)]
+- Fix: tabs reanimated value changes during render. [[#791](https://github.com/coinbase/cds/pull/791)]
+
+## 9.6.3 (7/9/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: reconcile drawer pan offset on gesture termination. [[#785](https://github.com/coinbase/cds/pull/785)]
+
+## 9.6.2 (7/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: refactor from React.forwardRef to ref as prop for all cds-mobile components. [[#741](https://github.com/coinbase/cds/pull/741)]
+
+## 9.6.1 (7/7/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: memoize fallback styles. [[#782](https://github.com/coinbase/cds/pull/782)]
+
+## 9.6.0 (7/6/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add TextFallback. [[#780](https://github.com/coinbase/cds/pull/780)]
+
+## 9.5.0 (6/25/2026 PST)
+
+#### 🚀 Updates
+
+- Chore: add styled element for Tab's TabContainer component to support equal width tabs. [[#772](https://github.com/coinbase/cds/pull/772)]
+
+## 9.4.3 (6/23/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Add `activeBackground` and `activeColor` props to alpha `TabbedChips`. `activeBackground` sets a custom chip background color when active (replacing the default `invertColorScheme` behavior); `activeColor` sets a custom chip label text color when active. [[#766](https://github.com/coinbase/cds/pull/766)]
+
+## 9.4.2 ((6/23/2026, 07:32 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.4.1 (6/15/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: Modal appearance props now apply to the modal card. [[#758](https://github.com/coinbase/cds/pull/758)]
+
+## 9.4.0 (6/15/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add gray4 illustration color token. [[#746](https://github.com/coinbase/cds/pull/746)]
+
+## 9.3.1 (6/12/2026 PST)
+
+#### 🐞 Fixes
+
+- Chore: replace barrel file imports with targeted imports to specific modules. [[#757](https://github.com/coinbase/cds/pull/757)]
+
+## 9.3.0 (6/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support tooltip theming. [[#753](https://github.com/coinbase/cds/pull/753)]
+
+## 9.2.2 (6/10/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: custom Switch sizes now center in the background track correctly. [[#750](https://github.com/coinbase/cds/pull/750)]
+
+## 9.2.1 (6/9/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: add tabbed-chips to exports in web/mobile packages.
+
+## 9.2.0 (5/28/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: improve Select theming support. [[#733](https://github.com/coinbase/cds/pull/733)]
+- Feat: add readOnly support to Select. [[#733](https://github.com/coinbase/cds/pull/733)]
+
+## 9.1.3 (5/28/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust StickyFooter padding to match design. [[#728](https://github.com/coinbase/cds/pull/728)]
+
+## 9.1.2 ((5/28/2026, 06:59 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.1.1 (5/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support inside label variant on select. [[#726](https://github.com/coinbase/cds/pull/726)]
+
+## 9.1.0 (5/26/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support DotCount theming. [[#723](https://github.com/coinbase/cds/pull/723)]
+
+#### 🐞 Fixes
+
+- Fix: DotCount border mixing with background color. [[#723](https://github.com/coinbase/cds/pull/723)]
+
+## 9.0.2 ((5/22/2026, 09:54 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.0.1 (5/22/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: update tray drag position live on iOS during swipe. [[#718](https://github.com/coinbase/cds/pull/718)]
+
+## 9.0.0 (5/20/2026 PST)
+
+CDS 9 is here!!
+
+For more details and to help upgrading from CDS 8 using our automated migration tool, see our official [upgrade guide](https://cds.coinbase.com/guides/v9-upgrade-guide)!
+
+#### 💥 Breaking
+
+- Peer dependency range updated: React 19 & React Native 0.81.5 (Expo SDK 54)
+- Removed remaining instances of fixed height/width values across all components which may cause subtle layout shifts in your app.
+- Some component props’ types have narrowed in response to React 19 upgrade.
+- Read our upgrade guilde for more details!
+
+#### 🚀 Updates
+
+- Migrated full set of components from mobile-visualization package to new `visualizations/chart` and `visualizations/sparkline` sub-paths.
+- Read our upgrade guilde for more details!
+
+## 8.75.2 ((5/19/2026, 01:13 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.75.1 ((5/19/2026, 07:30 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.75.0 (5/15/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support selectionColor on Inputs. [[#688](https://github.com/coinbase/cds/pull/688)]
+
+#### 🐞 Fixes
+
+- Fix: set proper height for TextInput for inside labelVariant. [[#688](https://github.com/coinbase/cds/pull/688)]
+
+## 8.74.3 ((5/14/2026, 05:35 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.2 ((5/14/2026, 10:50 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.74.1 (5/14/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: adjust tabs default tab label padding. [[#682](https://github.com/coinbase/cds/pull/682)]
+
+## 8.74.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add illustration theming via applyTheme prop. [[#672](https://github.com/coinbase/cds/pull/672)]
+
+## 8.73.0 (5/13/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support more props on TextInputBaseProps. [[#679](https://github.com/coinbase/cds/pull/679)]
+
+#### 🐞 Fixes
+
+- Fix: tabs props spreaidng order. [[#679](https://github.com/coinbase/cds/pull/679)]
+
+## 8.72.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support key Tag props in component configs. [[#671](https://github.com/coinbase/cds/pull/671)]
+
+## 8.71.0 (5/12/2026 PST)
+
+#### 🚀 Updates
+
+- Add icon glyph and progress circle styles to IconButton. [[#606](https://github.com/coinbase/cds/pull/606)]
+
+## 8.70.0 (5/8/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support active color on Tabs. [[#669](https://github.com/coinbase/cds/pull/669)]
+
+## 8.69.1 (5/6/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support BoxBaseProps in mobile ListCell. [[#667](https://github.com/coinbase/cds/pull/666)]
+
+## 8.69.0 ((5/5/2026, 02:27 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.68.0 (5/1/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: update bgWarning to orange60. [[#659](https://github.com/coinbase/cds/pull/659)]
+
+## 8.67.0 (5/1/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Add legalText prop to PageFooter component. [[#661](https://github.com/coinbase/cds/pull/661)]
+
+## 8.66.2 ((4/28/2026, 01:06 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 8.66.1 (4/27/2026 PST)
+
+#### 🐞 Fixes
+
+- Remove unused `react-native-linear-gradient` dependency. [[#643](https://github.com/coinbase/cds/pull/643)]
+
 ## 8.66.0 ((4/16/2026, 01:57 PM PST))
 
 This is an artificial version bump with no new change.

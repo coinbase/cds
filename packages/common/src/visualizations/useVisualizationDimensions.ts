@@ -1,20 +1,18 @@
 import { useMemo } from 'react';
 
-import type { DimensionValue } from '../types';
-
-type VisualizationDimensions = {
-  userDefinedWidth: DimensionValue;
-  userDefinedHeight: DimensionValue;
+type VisualizationDimensions<DimensionType> = {
+  userDefinedWidth: DimensionType;
+  userDefinedHeight: DimensionType;
   calculatedWidth: number;
   calculatedHeight: number;
 };
 
-export const useVisualizationDimensions = ({
+export const useVisualizationDimensions = <DimensionType = string | number | undefined | null>({
   userDefinedWidth,
   userDefinedHeight,
   calculatedWidth,
   calculatedHeight,
-}: VisualizationDimensions) => {
+}: VisualizationDimensions<DimensionType>) => {
   return useMemo(() => {
     let width = calculatedWidth;
     let height = calculatedHeight;
