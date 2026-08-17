@@ -14,6 +14,7 @@ import type { BoxBaseProps, BoxProps } from '../layout/Box';
 import { HStack } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { ColorSurge } from '../motion/ColorSurge';
+import { Pressable } from '../system/Pressable';
 
 export type InputStackBaseProps = SharedProps & {
   /**
@@ -86,6 +87,12 @@ export type InputStackBaseProps = SharedProps & {
    * @default 'bg'
    */
   inputBackground?: ThemeVars.Color;
+  /**
+   * Press handler for the bordered field chrome only (not the label or helper).
+   * Use for trigger-style controls so padding on the field remains tappable.
+   * Do not use for text fields — the native input must stay the focus target.
+   */
+  onFieldPress?: () => void;
 };
 
 export type InputStackProps = Omit<BoxProps, 'width' | 'height' | 'borderRadius'> &
@@ -133,6 +140,7 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
     inputBackground = 'bg',
     borderWidth = 100,
     focusedBorderWidth = borderWidth,
+    onFieldPress,
     styles,
     style,
     ...props
@@ -249,6 +257,30 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
     [inputAreaStyles, styles?.input],
   );
 
+  const inputArea = (
+    <Animated.View
+      onLayout={onInputAreaLayout}
+      style={combinedInputAreaStyles}
+      testID={testID && `${testID}-input-area`}
+    >
+      {focused && enableColorSurge && (
+        <ColorSurge background={variant ? variantColorMap[variant] : undefined} />
+      )}
+      {!!startNode && <>{startNode}</>}
+      {!!labelNode && labelVariant === 'inside' ? (
+        // A stacked inside label tightens its top/bottom spacing so the label + input still
+        // fit the same natural field height an outside label produces.
+        <VStack flexGrow={1} paddingY={0.75}>
+          {labelNode}
+          {inputNode}
+        </VStack>
+      ) : (
+        inputNode
+      )}
+      {!!endNode && <>{endNode}</>}
+    </Animated.View>
+  );
+
   return (
     <VStack
       gap={inputStackGap}
@@ -263,27 +295,22 @@ export const InputStack = memo(function InputStack(_props: InputStackProps) {
         {!!prependNode && <>{prependNode}</>}
         <View style={inputContainerStyles}>
           {focused && <Animated.View style={borderFocusedStyles} />}
-          <Animated.View
-            onLayout={onInputAreaLayout}
-            style={combinedInputAreaStyles}
-            testID={testID && `${testID}-input-area`}
-          >
-            {focused && enableColorSurge && (
-              <ColorSurge background={variant ? variantColorMap[variant] : undefined} />
-            )}
-            {!!startNode && <>{startNode}</>}
-            {!!labelNode && labelVariant === 'inside' ? (
-              // A stacked inside label tightens its top/bottom spacing so the label + input still
-              // fit the same natural field height an outside label produces.
-              <VStack flexGrow={1} paddingY={0.75}>
-                {labelNode}
-                {inputNode}
-              </VStack>
-            ) : (
-              inputNode
-            )}
-            {!!endNode && <>{endNode}</>}
-          </Animated.View>
+          {onFieldPress ? (
+            <Pressable
+              noScaleOnPress
+              accessible={false}
+              background="transparent"
+              borderColor="transparent"
+              borderWidth={0}
+              disabled={disabled}
+              flexGrow={1}
+              onPress={onFieldPress}
+            >
+              {inputArea}
+            </Pressable>
+          ) : (
+            inputArea
+          )}
         </View>
         {!!appendNode && <>{appendNode}</>}
       </HStack>

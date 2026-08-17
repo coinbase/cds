@@ -137,6 +137,12 @@ export type InputStackBaseProps = SharedProps &
      * @default 'bg'
      */
     inputBackground?: ThemeVars.Color;
+    /**
+     * Press handler for the bordered field chrome only (not the label or helper).
+     * Use for trigger-style controls so padding on the field remains tappable.
+     * Do not use for text fields — the native input must stay the focus target.
+     */
+    onFieldPress?: React.MouseEventHandler;
   };
 
 export type InputStackProps = Omit<
@@ -190,6 +196,7 @@ export const InputStack = memo(
       labelVariant = 'outside',
       blendStyles,
       inputBackground = 'bg',
+      onFieldPress,
       className,
       style,
       classNames,
@@ -279,6 +286,7 @@ export const InputStack = memo(
               className={cx(baseCss, focused && persistedFocusCss, classNames?.input)}
               disabled={disabled}
               height={height}
+              onClick={disabled ? undefined : onFieldPress}
               style={{ ...inputAreaStyles, ...styles?.input }}
               testID="input-interactable-area"
             >
