@@ -1,5 +1,5 @@
 import React, { createRef, useCallback, useState } from 'react';
-import { Animated, Dimensions, Modal as RNModal, StyleSheet } from 'react-native';
+import { Animated, Dimensions, Modal as RNModal, StyleSheet, View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react-native';
@@ -269,9 +269,11 @@ describe('Modal', () => {
 
   it('renders ReactNode title', async () => {
     render(
-      <DefaultThemeProvider>
-        <MockModal title={<Text testID="custom-title">Custom Title</Text>} />
-      </DefaultThemeProvider>,
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal title={<Text testID="custom-title">Custom Title</Text>} />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
     );
 
     fireEvent.press(screen.getByText('Open Modal'));
@@ -282,9 +284,11 @@ describe('Modal', () => {
 
   it('applies custom font prop to title text', async () => {
     render(
-      <DefaultThemeProvider>
-        <MockModal font="title1" textTransform="uppercase" title="Styled Title" />
-      </DefaultThemeProvider>,
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal font="title1" textTransform="uppercase" title="Styled Title" />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
     );
 
     fireEvent.press(screen.getByText('Open Modal'));
@@ -448,5 +452,61 @@ describe('Modal', () => {
 
     expect(ref.current).not.toBeNull();
     expect(typeof ref.current?.onRequestClose).toBe('function');
+  });
+
+  it('applies root safe-area insets as padding inside the native modal window', () => {
+    const notchedSafeAreaMetrics = {
+      frame: { x: 0, y: 0, width: 390, height: 844 },
+      insets: { top: 59, left: 0, right: 0, bottom: 34 },
+    };
+
+    render(
+      <SafeAreaProvider initialMetrics={notchedSafeAreaMetrics}>
+        <DefaultThemeProvider>
+          <Modal visible onRequestClose={jest.fn()}>
+            <Text testID="modal-content">Content</Text>
+          </Modal>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    const hasSafeAreaPadding = screen.UNSAFE_getAllByType(View).some((node) => {
+      const flattened = StyleSheet.flatten(node.props.style);
+      return (
+        flattened?.paddingTop === notchedSafeAreaMetrics.insets.top &&
+        flattened?.paddingBottom === notchedSafeAreaMetrics.insets.bottom &&
+        flattened?.paddingLeft === notchedSafeAreaMetrics.insets.left &&
+        flattened?.paddingRight === notchedSafeAreaMetrics.insets.right
+      );
+    });
+
+    expect(hasSafeAreaPadding).toBe(true);
+  });
+
+  it('lets styles.safeArea override the default inset padding', () => {
+    const notchedSafeAreaMetrics = {
+      frame: { x: 0, y: 0, width: 390, height: 844 },
+      insets: { top: 59, left: 0, right: 0, bottom: 34 },
+    };
+
+    render(
+      <SafeAreaProvider initialMetrics={notchedSafeAreaMetrics}>
+        <DefaultThemeProvider>
+          <Modal visible onRequestClose={jest.fn()} styles={{ safeArea: { paddingTop: 0 } }}>
+            <Text testID="modal-content">Content</Text>
+          </Modal>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    const hasOverriddenPadding = screen.UNSAFE_getAllByType(View).some((node) => {
+      const flattened = StyleSheet.flatten(node.props.style);
+      return (
+        flattened?.paddingTop === 0 &&
+        flattened?.paddingBottom === notchedSafeAreaMetrics.insets.bottom
+      );
+    });
+
+    expect(hasOverriddenPadding).toBe(true);
   });
 });
