@@ -1146,6 +1146,34 @@ export const All = () => {
             />
           </VStack>
         </Example>
+        <Example title="ColorMap with Opacity">
+          <BarChart
+            showXAxis
+            showYAxis
+            height={300}
+            series={[
+              {
+                id: 'confidence',
+                data: [25, 35, 45, 55, 65, 75, 85],
+                gradient: {
+                  axis: 'y',
+                  stops: ({ min, max }: { min: number; max: number }) => [
+                    { offset: min, color: 'var(--color-accentBoldBlue)', opacity: 0 },
+                    { offset: max, color: 'var(--color-accentBoldBlue)', opacity: 1 },
+                  ],
+                },
+              },
+            ]}
+            xAxis={{
+              data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            }}
+            yAxis={{
+              requestedTickCount: 5,
+              tickLabelFormatter: (value) => `${value}%`,
+              showGrid: true,
+            }}
+          />
+        </Example>
       </VStack>
     </React.StrictMode>
   );

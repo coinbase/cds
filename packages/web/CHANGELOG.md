@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.17.0 (8/14/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support charts gradients for bars. [[#844](https://github.com/coinbase/cds/pull/844)]
+
 ## 9.16.0 (8/13/2026 PST)
 
 #### 🚀 Updates
