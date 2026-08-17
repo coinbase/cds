@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.17.1 (8/17/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: restore Select field press target after chrome padding adjustments in tshirt size work.
+
 ## 9.17.0 (8/14/2026 PST)
 
 #### 🚀 Updates
