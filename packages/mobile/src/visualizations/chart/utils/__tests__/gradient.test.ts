@@ -2,6 +2,7 @@ import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
 
 import {
   evaluateGradientAtValue,
+  evaluateGradientOpacityAtValue,
   getGradientConfig,
   getGradientStops,
   type GradientDefinition,
@@ -176,6 +177,43 @@ describe('evaluateGradientAtValue includeAlpha parameter', () => {
     expect(color).toBeTruthy();
     // Opacity is always ignored for point evaluation, so alpha should be 1
     expect(color).toMatch(/rgba\(\s*\d+,\s*\d+,\s*\d+,\s*1\s*\)/);
+  });
+});
+
+describe('evaluateGradientOpacityAtValue', () => {
+  const linearScale = getNumericScale({
+    scaleType: 'linear',
+    domain: { min: 0, max: 100 },
+    range: { min: 0, max: 400 },
+  });
+
+  it('should return undefined when stops do not define opacity', () => {
+    const stops = [
+      { offset: 0, color: 'red' },
+      { offset: 100, color: 'blue' },
+    ];
+
+    expect(evaluateGradientOpacityAtValue(stops, 50, linearScale)).toBeUndefined();
+  });
+
+  it('should return undefined when all processed stops have full opacity', () => {
+    const stops = [
+      { offset: 0, color: 'red', opacity: 1 },
+      { offset: 100, color: 'blue', opacity: 1 },
+    ];
+
+    expect(evaluateGradientOpacityAtValue(stops, 50, linearScale)).toBeUndefined();
+  });
+
+  it('should interpolate opacity between stops', () => {
+    const stops = [
+      { offset: 0, color: 'red', opacity: 0 },
+      { offset: 100, color: 'blue', opacity: 1 },
+    ];
+
+    expect(evaluateGradientOpacityAtValue(stops, 0, linearScale)).toBe(0);
+    expect(evaluateGradientOpacityAtValue(stops, 100, linearScale)).toBe(1);
+    expect(evaluateGradientOpacityAtValue(stops, 50, linearScale)).toBe(0.5);
   });
 });
 
