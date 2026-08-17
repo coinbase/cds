@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.21.0 (8/21/2026 PST)
+
+#### 🚀 Updates
+
+- Fix: apply root safe-area insets inside mobile Modal. [[#846](https://github.com/coinbase/cds/pull/846)]
+
 ## 9.20.0 (8/20/2026 PST)
 
 #### 🚀 Updates
