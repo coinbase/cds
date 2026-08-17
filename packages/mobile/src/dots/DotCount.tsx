@@ -147,7 +147,7 @@ export const DotCount = memo((_props: DotCountProps) => {
 
   const opacityAnimatedValue = useSharedValue(opacityEnter.fromValue);
   const scaleAnimatedValue = useSharedValue(scaleEnter.fromValue);
-  const [shouldUnmount, setShouldUnmount] = useState(count === 0);
+  const [shouldUnmount, setShouldUnmount] = useState(count <= 0);
   const [countInternal, setCountInternal] = useState(count);
   const prevCount = usePreviousValue<number>(count);
 
@@ -163,9 +163,9 @@ export const DotCount = memo((_props: DotCountProps) => {
     return {};
   }, [pin, transforms]);
 
-  // avoid displaying 0 during animations and preserve exit animation
+  // avoid displaying non-positive counts during animations and preserve exit animation
   useEffect(() => {
-    if (count !== 0) {
+    if (count > 0) {
       setCountInternal(count);
     }
   }, [count]);
@@ -174,14 +174,14 @@ export const DotCount = memo((_props: DotCountProps) => {
     () => count,
     (result) => {
       // play enter animation
-      if ((prevCount === 0 || prevCount === undefined) && result > 0) {
+      if ((prevCount === undefined || prevCount <= 0) && result > 0) {
         runOnJS(setShouldUnmount)(false);
         opacityAnimatedValue.value = withMotionTiming(opacityEnter);
         scaleAnimatedValue.value = withMotionTiming(scaleEnter);
       }
 
       // play exit animation
-      if (prevCount && prevCount > 0 && result === 0) {
+      if (prevCount !== undefined && prevCount > 0 && result <= 0) {
         opacityAnimatedValue.value = withMotionTiming(opacityExit, () => {
           runOnJS(setShouldUnmount)(true);
         });
