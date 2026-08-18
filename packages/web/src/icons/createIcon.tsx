@@ -10,6 +10,8 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 
+import { useIconGlyphSources } from './IconGlyphSourceContext';
+
 const COMPONENT_STATIC_CLASSNAME = 'cds-Icon';
 
 /** Default font family for the CDS icon glyph font. */
@@ -169,6 +171,20 @@ const defaultGetGlyph = <Name extends string>({
   return glyphMap[key];
 };
 
+/** Returns the first source that has a glyph for the request, with its font. */
+const resolveGlyph = (
+  sources: readonly CreateIconConfig<any>[],
+  args: Omit<IconGlyphResolverArgs<string>, 'glyphMap'>,
+): { char: string; fontFamily: string } | undefined => {
+  for (const source of sources) {
+    const char = (source.getGlyph ?? defaultGetGlyph)({ ...args, glyphMap: source.glyphMap });
+    if (char !== undefined) {
+      return { char, fontFamily: source.fontFamily ?? DEFAULT_ICON_FONT_FAMILY };
+    }
+  }
+  return undefined;
+};
+
 /**
  * Creates a typed `Icon` component bound to a specific icon set (glyph map,
  * font family, and name union). The default CDS `Icon` is created from this
@@ -176,11 +192,7 @@ const defaultGetGlyph = <Name extends string>({
  * icon component that reuses all of the CDS rendering, accessibility, and
  * theming behavior.
  */
-export function createIcon<Name extends string>({
-  glyphMap,
-  fontFamily = DEFAULT_ICON_FONT_FAMILY,
-  getGlyph = defaultGetGlyph,
-}: CreateIconConfig<Name>) {
+export function createIcon<Name extends string>(config: CreateIconConfig<Name>) {
   const Icon = memo(
     forwardRef((_props: IconProps<Name>, ref: React.Ref<HTMLElement>) => {
       const mergedProps = useComponentConfig('Icon', _props);
@@ -203,6 +215,17 @@ export function createIcon<Name extends string>({
 
       const iconSize = theme.iconSize[size];
 
+      // Sources added by `IconGlyphSourceProvider` are tried before this set's
+      // own, so a consumer's icons resolve — and can override a built-in — with
+      // no change to the components that render icons by name.
+      const contextSources = useIconGlyphSources();
+      const resolved = resolveGlyph([...contextSources, config], {
+        name,
+        size,
+        pixelSize: iconSize,
+        active: Boolean(active),
+      });
+
       const rootStyle = useMemo(
         () => ({
           ...(dangerouslySetColor ? { color: dangerouslySetColor } : {}),
@@ -212,28 +235,22 @@ export function createIcon<Name extends string>({
         [dangerouslySetColor, style, styles?.root],
       );
 
-      // Only override the font-family CSS variable when a custom font is bound;
-      // the default is applied by the static Linaria block's fallback value.
+      // The matching source decides the font, since composed sets mix fonts.
+      // Only override the CSS variable for non-default fonts; the default is
+      // applied by the static Linaria block's fallback value.
+      const fontFamily = resolved?.fontFamily;
       const iconStyle = useMemo(
         () =>
-          fontFamily === DEFAULT_ICON_FONT_FAMILY
+          fontFamily === undefined || fontFamily === DEFAULT_ICON_FONT_FAMILY
             ? styles?.icon
             : ({
                 '--cds-icon-font-family': fontFamily,
                 ...styles?.icon,
               } as React.CSSProperties),
-        [styles?.icon],
+        [fontFamily, styles?.icon],
       );
 
-      const glyph = getGlyph({
-        glyphMap,
-        name,
-        size,
-        pixelSize: iconSize,
-        active: Boolean(active),
-      });
-
-      if (glyph === undefined) {
+      if (resolved === undefined) {
         if (isDevelopment()) {
           console.error(`Unable to find glyph for icon "${name}" at size "${size}"`);
         }
@@ -266,7 +283,7 @@ export function createIcon<Name extends string>({
             title={accessibilityLabel}
             translate="no"
           >
-            {glyph}
+            {resolved.char}
           </span>
         </Box>
       );

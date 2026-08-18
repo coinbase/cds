@@ -19,6 +19,8 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 
+import { useIconGlyphSources } from './IconGlyphSourceContext';
+
 /** Default font family for the CDS icon glyph font. */
 export const DEFAULT_ICON_FONT_FAMILY = 'CoinbaseIcons';
 
@@ -127,6 +129,20 @@ const defaultGetGlyph = <Name extends string>({
   return glyphMap[key];
 };
 
+/** Returns the first source that has a glyph for the request, with its font. */
+const resolveGlyph = (
+  sources: readonly CreateIconConfig<any>[],
+  args: Omit<IconGlyphResolverArgs<string>, 'glyphMap'>,
+): { char: string; fontFamily: string } | undefined => {
+  for (const source of sources) {
+    const char = (source.getGlyph ?? defaultGetGlyph)({ ...args, glyphMap: source.glyphMap });
+    if (char !== undefined) {
+      return { char, fontFamily: source.fontFamily ?? DEFAULT_ICON_FONT_FAMILY };
+    }
+  }
+  return undefined;
+};
+
 /**
  * Creates a typed `Icon` component bound to a specific icon set (glyph map,
  * font family, and name union). The default CDS `Icon` is created from this
@@ -134,11 +150,7 @@ const defaultGetGlyph = <Name extends string>({
  * icon component that reuses all of the CDS rendering, accessibility, and
  * theming behavior.
  */
-export function createIcon<Name extends string>({
-  glyphMap,
-  fontFamily = DEFAULT_ICON_FONT_FAMILY,
-  getGlyph = defaultGetGlyph,
-}: CreateIconConfig<Name>) {
+export function createIcon<Name extends string>(config: CreateIconConfig<Name>) {
   const Icon = memo(({ ref, ..._props }: IconProps<Name> & { ref?: React.Ref<Text> }) => {
     const mergedProps = useComponentConfig('Icon', _props);
     const {
@@ -172,6 +184,17 @@ export function createIcon<Name extends string>({
     const iconColor = theme.color[color];
     const finalColor = dangerouslySetColor ?? iconColor;
 
+    // Sources added by `IconGlyphSourceProvider` are tried before this set's
+    // own, so a consumer's icons resolve — and can override a built-in — with
+    // no change to the components that render icons by name.
+    const contextSources = useIconGlyphSources();
+    const resolved = resolveGlyph([...contextSources, config], {
+      name,
+      size,
+      pixelSize: iconSize,
+      active: Boolean(active),
+    });
+
     const rootStyle = useMemo(
       () => [
         {
@@ -197,10 +220,11 @@ export function createIcon<Name extends string>({
       ],
     );
 
+    // The matching source decides the font, since composed sets mix fonts.
     const iconStyle = useMemo(
       () => [
         {
-          fontFamily,
+          fontFamily: resolved?.fontFamily,
           fontSize: iconSize,
           height: iconSize,
           width: iconSize,
@@ -209,18 +233,10 @@ export function createIcon<Name extends string>({
         },
         styles?.icon,
       ],
-      [finalColor, iconSize, styles?.icon],
+      [finalColor, iconSize, resolved?.fontFamily, styles?.icon],
     );
 
-    const glyph = getGlyph({
-      glyphMap,
-      name,
-      size,
-      pixelSize: iconSize,
-      active: Boolean(active),
-    });
-
-    if (glyph === undefined) {
+    if (resolved === undefined) {
       if (isDevelopment()) {
         console.error(`Unable to find glyph for icon "${name}" at size "${size}"`);
       }
@@ -240,7 +256,7 @@ export function createIcon<Name extends string>({
           // TODO https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
           style={iconStyle as StyleProp<TextStyle>}
         >
-          {glyph}
+          {resolved.char}
         </TextComponent>
       </Box>
     );

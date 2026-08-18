@@ -2,8 +2,10 @@ import { render, screen } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/test';
 import { createIcon, type GlyphMap } from '../createIcon';
+import { IconGlyphSourceProvider } from '../IconGlyphSourceContext';
 
 const GLYPH = '\u2605'; // ★
+const OTHER_GLYPH = '\u25B2'; // ▲
 
 type DemoIconName = 'star';
 
@@ -60,5 +62,36 @@ describe('createIcon', () => {
     expect(screen.getByTestId('fallback')).toBeTruthy();
 
     consoleError.mockRestore();
+  });
+
+  it('resolves a name from a glyph source added through the provider', () => {
+    const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+    renderIcon(
+      <IconGlyphSourceProvider
+        source={{
+          glyphMap: { 'triangle-24-inactive': OTHER_GLYPH },
+          fontFamily: 'ExtraFont',
+        }}
+      >
+        <Icon name={'triangle' as DemoIconName} />
+      </IconGlyphSourceProvider>,
+    );
+
+    const glyph = screen.getByTestId('icon-base-glyph');
+    expect(glyph).toHaveTextContent(OTHER_GLYPH);
+    expect(glyph.style.getPropertyValue('--cds-icon-font-family')).toBe('ExtraFont');
+  });
+
+  it('lets a provider source override a name owned by the bound set', () => {
+    const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+    renderIcon(
+      <IconGlyphSourceProvider source={{ glyphMap: { 'star-24-inactive': OTHER_GLYPH } }}>
+        <Icon name="star" />
+      </IconGlyphSourceProvider>,
+    );
+
+    expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(OTHER_GLYPH);
   });
 });

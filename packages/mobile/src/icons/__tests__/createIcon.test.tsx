@@ -5,9 +5,11 @@ import { render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { createIcon, DEFAULT_ICON_FONT_FAMILY, type GlyphMap } from '../createIcon';
+import { IconGlyphSourceProvider } from '../IconGlyphSourceContext';
 
 const INACTIVE_GLYPH = '\u2606'; // ☆
 const ACTIVE_GLYPH = '\u2605'; // ★
+const OTHER_GLYPH = '\u25B2'; // ▲
 
 type DemoIconName = 'star';
 
@@ -98,6 +100,33 @@ describe('createIcon', () => {
     expect(getGlyph).toHaveBeenCalledWith(
       expect.objectContaining({ name: 'star', size: 'l', active: true }),
     );
+  });
+
+  it('resolves a name from a glyph source added through the provider', () => {
+    const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+    renderIcon(
+      <IconGlyphSourceProvider
+        source={{ glyphMap: { 'triangle-24-inactive': OTHER_GLYPH }, fontFamily: 'ExtraFont' }}
+      >
+        <Icon name={'triangle' as DemoIconName} />
+      </IconGlyphSourceProvider>,
+    );
+
+    expect(screen.getByText(OTHER_GLYPH)).toHaveStyle({ fontFamily: 'ExtraFont' });
+  });
+
+  it('lets a provider source override a name owned by the bound set', () => {
+    const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+    renderIcon(
+      <IconGlyphSourceProvider source={{ glyphMap: { 'star-24-inactive': OTHER_GLYPH } }}>
+        <Icon name="star" />
+      </IconGlyphSourceProvider>,
+    );
+
+    expect(screen.getByText(OTHER_GLYPH)).toBeTruthy();
+    expect(screen.queryByText(INACTIVE_GLYPH)).toBeNull();
   });
 
   describe('allowFontScaling', () => {

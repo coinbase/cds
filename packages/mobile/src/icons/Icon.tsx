@@ -1,4 +1,4 @@
-import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { RegisteredIconName } from '@coinbase/cds-common/types/IconName';
 import { glyphMap } from '@coinbase/cds-icons/glyphMap';
 
 import {
@@ -9,10 +9,12 @@ import {
   type IconProps as IconPropsGeneric,
 } from './createIcon';
 
-export type IconBaseProps = IconBasePropsGeneric<IconName>;
-export type IconProps = IconPropsGeneric<IconName>;
+// Accepted names include any registered through `Cds.IconNameRegistry`, so
+// glyphs added via `IconGlyphSourceProvider` can be rendered by name.
+export type IconBaseProps = IconBasePropsGeneric<RegisteredIconName>;
+export type IconProps = IconPropsGeneric<RegisteredIconName>;
 
-export const Icon = createIcon<IconName>({
+export const Icon = createIcon<RegisteredIconName>({
   glyphMap,
   fontFamily: DEFAULT_ICON_FONT_FAMILY,
 });
