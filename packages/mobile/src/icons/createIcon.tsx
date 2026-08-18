@@ -109,6 +109,31 @@ export type IconProps<Name extends string = string> = IconBaseProps<Name> & {
   };
 };
 
+/**
+ * Minimal structural contract for a component that can stand in for the CDS
+ * `Icon` in another component's `IconComponent` prop.
+ *
+ * `name` is intentionally `any`. Function props are checked contravariantly, so
+ * requiring `name: string` here would reject exactly the components this is meant
+ * to accept — a set-bound component from `createIcon` narrows `name` to its own
+ * union. Every other entry is a prop CDS components drive the icon with, sourced
+ * from `IconProps` so the contract tracks `Icon` itself.
+ *
+ * Being a structural contract, this can only guarantee the shape of `name`; a
+ * component that silently ignores `size` or `color` still satisfies it.
+ */
+export type IconLike = (props: {
+  name: any;
+  size?: IconProps['size'];
+  active?: IconProps['active'];
+  color?: IconProps['color'];
+  accessibilityLabel?: IconProps['accessibilityLabel'];
+  testID?: IconProps['testID'];
+  styles?: IconProps['styles'];
+  paddingX?: IconProps['paddingX'];
+  paddingY?: IconProps['paddingY'];
+}) => React.ReactNode;
+
 const getIconSourceSize = (iconSize: number): IconSourcePixelSize => {
   if (iconSize <= 12) return 12;
   if (iconSize <= 16) return 16;

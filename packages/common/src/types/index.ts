@@ -22,6 +22,7 @@ export * from './FallbackBaseProps';
 export * from './Grid';
 export * from './Helpers';
 export * from './IconButtonBaseProps';
+export * from './IconComponent';
 export * from './IconName';
 export * from './IconSize';
 export * from './IllustrationNames';

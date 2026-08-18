@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type { IconButtonVariant } from '@coinbase/cds-common/types/IconButtonBaseProps';
-import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconNameOf } from '@coinbase/cds-common/types/IconComponent';
 import type { IconSize } from '@coinbase/cds-common/types/IconSize';
 import { css } from '@linaria/core';
 
@@ -10,6 +10,7 @@ import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useResolveResponsiveProp } from '../hooks/useResolveResponsiveProp';
 import { useTheme } from '../hooks/useTheme';
+import type { IconLike } from '../icons/createIcon';
 import { Icon } from '../icons/Icon';
 import { Pressable, type PressableBaseProps } from '../system/Pressable';
 import type { StylesAndClassNames } from '../types';
@@ -50,49 +51,74 @@ const iconButtonSizes = {
 
 const defaultIconButtonSize: IconButtonSize = 'l';
 
-export type IconButtonBaseProps = Polymorphic.ExtendableProps<
-  Omit<PressableBaseProps, 'children'>,
-  Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'flush'> & {
-    /** Name of the icon, as defined in Figma. */
-    name: IconName;
-    /**
-     * Size for the icon rendered inside the button.
-     * @default 's' for size xs/s, 'm' for size m/l
-     */
-    iconSize?: IconSize;
-    /** Whether the icon is active */
-    active?: boolean;
-    /**
-     * Toggle design and visual variants.
-     * @default primary
-     */
-    variant?: IconButtonVariant;
-    /**
-     * Reduces the button's padding and icon size. Unlike most CDS components, IconButton
-     * enables `compact` by default, so an IconButton with no `size` renders at `size="s"`.
-     * Set `compact={false}` (or pass an explicit `size`) to opt out.
-     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
-     */
-    compact?: boolean;
-    /**
-     * Sets the size of the button. An explicit `size` always takes precedence over `compact`.
-     * IconButton enables `compact` by default, so until `compact` is removed an IconButton
-     * with no `size` renders at `s`.
-     * @default l
-     */
-    size?: IconButtonSize;
-  }
->;
+export type IconButtonBaseProps<IconComponentType extends IconLike = typeof Icon> =
+  Polymorphic.ExtendableProps<
+    Omit<PressableBaseProps, 'children'>,
+    Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'flush'> & {
+      /**
+       * Name of the icon, as defined in Figma. Accepted values are derived from
+       * `IconComponent`, so they narrow to a custom icon set's names when one is
+       * passed and stay the built-in `IconName` otherwise.
+       */
+      name: IconNameOf<IconComponentType>;
+      /**
+       * Component used to render `name`. Pass an icon component built with
+       * `createIcon` to render icons from a set CDS does not ship; `name` is then
+       * type-checked against that set instead of the built-in names.
+       * @default Icon
+       */
+      IconComponent?: IconComponentType;
+      /**
+       * Size for the icon rendered inside the button.
+       * @default 's' for size xs/s, 'm' for size m/l
+       */
+      iconSize?: IconSize;
+      /** Whether the icon is active */
+      active?: boolean;
+      /**
+       * Toggle design and visual variants.
+       * @default primary
+       */
+      variant?: IconButtonVariant;
+      /**
+       * Reduces the button's padding and icon size. Unlike most CDS components, IconButton
+       * enables `compact` by default, so an IconButton with no `size` renders at `size="s"`.
+       * Set `compact={false}` (or pass an explicit `size`) to opt out.
+       * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+       * @deprecationExpectedRemoval v10
+       */
+      compact?: boolean;
+      /**
+       * Sets the size of the button. An explicit `size` always takes precedence over `compact`.
+       * IconButton enables `compact` by default, so until `compact` is removed an IconButton
+       * with no `size` renders at `s`.
+       * @default l
+       */
+      size?: IconButtonSize;
+    }
+  >;
 
-export type IconButtonProps<AsComponent extends React.ElementType> = Polymorphic.Props<
-  AsComponent,
-  IconButtonBaseProps
-> &
+export type IconButtonProps<
+  AsComponent extends React.ElementType,
+  IconComponentType extends IconLike = typeof Icon,
+> = Polymorphic.Props<AsComponent, IconButtonBaseProps<IconComponentType>> &
   StylesAndClassNames<typeof iconButtonClassNames>;
 
-type IconButtonComponent = (<AsComponent extends React.ElementType = IconButtonDefaultElement>(
-  props: IconButtonProps<AsComponent>,
+/**
+ * `memo` and `forwardRef` both erase type parameters — they take a concrete props
+ * type, so a generic render function collapses to one instantiation and `name`
+ * stops tracking `IconComponent`. The generic therefore lives only here, in the
+ * exported call signature, and the wrapped component is cast to it. The
+ * implementation below is deliberately left non-generic and sees the default
+ * instantiation; it only needs to forward `name` to whichever component it was
+ * handed. `IconButton` already used this shape for `as`, so the icon set rides
+ * along as a second type parameter.
+ */
+type IconButtonComponent = (<
+  AsComponent extends React.ElementType = IconButtonDefaultElement,
+  IconComponentType extends IconLike = typeof Icon,
+>(
+  props: IconButtonProps<AsComponent, IconComponentType>,
 ) => Polymorphic.ReactReturn) &
   Polymorphic.ReactNamed;
 
@@ -101,7 +127,7 @@ const baseCss = css`
   height: fit-content;
 `;
 
-export const IconButton: IconButtonComponent = memo(
+export const IconButton = memo(
   forwardRef<React.ReactElement<IconButtonBaseProps>, IconButtonBaseProps>(
     <AsComponent extends React.ElementType>(
       _props: IconButtonProps<AsComponent>,
@@ -125,6 +151,7 @@ export const IconButton: IconButtonComponent = memo(
         style,
         padding: paddingProp,
         name,
+        IconComponent,
         iconSize: iconSizeProp,
         active,
         flush,
@@ -137,6 +164,7 @@ export const IconButton: IconButtonComponent = memo(
         ...props
       } = mergedProps;
       const Component = (as ?? iconButtonDefaultElement) satisfies React.ElementType;
+      const ResolvedIcon: IconLike = IconComponent ?? Icon;
       const theme = useTheme();
 
       // `size` wins when both `size` and `compact` are set. IconButton defaults `compact`
@@ -205,7 +233,7 @@ export const IconButton: IconButtonComponent = memo(
               weight="thin"
             />
           ) : (
-            <Icon
+            <ResolvedIcon
               active={active}
               classNames={{ icon: cx(iconButtonClassNames.icon, classNames?.icon) }}
               color="currentColor"
@@ -218,6 +246,6 @@ export const IconButton: IconButtonComponent = memo(
       );
     },
   ),
-);
+) as unknown as IconButtonComponent;
 
 IconButton.displayName = 'IconButton';

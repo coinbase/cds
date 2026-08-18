@@ -11,13 +11,14 @@ import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { BannerVariantStyle } from '@coinbase/cds-common/tokens/banner';
 import { bannerMinWidth, variants } from '@coinbase/cds-common/tokens/banner';
 import type { BannerStyleVariant, BannerVariant } from '@coinbase/cds-common/types/BannerBaseProps';
-import type { IconName } from '@coinbase/cds-common/types/IconName';
+import type { IconNameOf } from '@coinbase/cds-common/types/IconComponent';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import { css } from '@linaria/core';
 
 import { Collapsible } from '../collapsible/Collapsible';
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import type { IconLike } from '../icons/createIcon';
 import { Icon } from '../icons/Icon';
 import { Box } from '../layout/Box';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
@@ -62,11 +63,25 @@ export const bannerClassNames = {
   dismiss: 'cds-Banner-dismiss',
 } as const;
 
-export type BannerBaseProps = SharedProps & {
+export type BannerBaseProps<IconComponentType extends IconLike = typeof Icon> = SharedProps & {
   /** Sets the variant of the banner - which is responsible for foreground and background color assignment */
   variant: BannerVariant;
-  /** Name of icon to be shown in the banner */
-  startIcon: IconName;
+  /**
+   * Name of icon to be shown in the banner. Accepted values are derived from
+   * `IconComponent`, so they narrow to a custom icon set's names when one is
+   * passed and stay the built-in `IconName` otherwise.
+   */
+  startIcon: IconNameOf<IconComponentType>;
+  /**
+   * Component used to render `startIcon`. Pass an icon component built with
+   * `createIcon` to render icons from a set CDS does not ship; `startIcon` is then
+   * type-checked against that set instead of the built-in names.
+   *
+   * Note that this reaches only `startIcon`. The dismiss button's `close` icon is
+   * chosen by Banner itself and always renders from the built-in set.
+   * @default Icon
+   */
+  IconComponent?: IconComponentType;
   /** Whether the start icon is active */
   startIconActive?: boolean;
   /** Provide a CDS Link component to be used as a primary action. It will inherit colors depending on the provided variant */
@@ -111,9 +126,20 @@ export type BannerBaseProps = SharedProps & {
   borderRadius?: ThemeVars.BorderRadius;
 };
 
-export type BannerProps = BannerBaseProps &
-  StylesAndClassNames<typeof bannerClassNames> &
-  Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
+export type BannerProps<IconComponentType extends IconLike = typeof Icon> =
+  BannerBaseProps<IconComponentType> &
+    StylesAndClassNames<typeof bannerClassNames> &
+    Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
+
+/**
+ * Unlike `IconButton`, `Banner` is not polymorphic, so it had no generic call
+ * signature to extend — one has to be introduced purely to carry the icon set
+ * through `memo(forwardRef(...))`, which erases type parameters. This is the
+ * per-component cost of the pattern for the majority of CDS components.
+ */
+type BannerComponent = (<IconComponentType extends IconLike = typeof Icon>(
+  props: BannerProps<IconComponentType>,
+) => React.ReactNode) & { displayName?: string };
 
 export const Banner = memo(
   forwardRef((_props: BannerProps, ref: React.ForwardedRef<HTMLDivElement>) => {
@@ -121,6 +147,7 @@ export const Banner = memo(
     const {
       variant,
       startIcon,
+      IconComponent,
       startIconActive,
       onClose,
       primaryAction,
@@ -151,6 +178,7 @@ export const Banner = memo(
     } = mergedProps;
     const [isCollapsed, setIsCollapsed] = useState(false);
     const titleId = useId();
+    const ResolvedStartIcon: IconLike = IconComponent ?? Icon;
 
     const accessibilityLabelledBy = typeof title === 'string' ? titleId : undefined;
 
@@ -247,7 +275,7 @@ export const Banner = memo(
           paddingY={0.25}
           style={styles?.start}
         >
-          <Icon
+          <ResolvedStartIcon
             accessibilityLabel={startIconAccessibilityLabel}
             active={startIconActive}
             color={iconColor}
@@ -332,6 +360,8 @@ export const Banner = memo(
               role="button"
               testID={`${testID}-dismiss-btn`}
             >
+              {/* Out of reach of `IconComponent`: this glyph is Banner's choice,
+                  not the consumer's, so it always comes from the built-in set. */}
               <Icon color={iconButtonColor} name="close" size="s" />
             </Pressable>
           </Box>
@@ -365,4 +395,4 @@ export const Banner = memo(
       </Box>
     );
   }),
-);
+) as unknown as BannerComponent;
