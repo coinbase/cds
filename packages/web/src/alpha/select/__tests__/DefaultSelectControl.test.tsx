@@ -148,6 +148,34 @@ describe('DefaultSelectControl', () => {
       expect(setOpen).toHaveBeenCalledWith(expect.any(Function));
     });
 
+    it('calls setOpen when the field chrome is clicked', async () => {
+      const setOpen = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} helperText="Help" setOpen={setOpen} />
+        </DefaultThemeProvider>,
+      );
+
+      await user.click(screen.getByTestId('input-interactable-area'));
+
+      expect(setOpen).toHaveBeenCalledWith(expect.any(Function));
+    });
+
+    it('does not call setOpen when helper text is clicked', async () => {
+      const setOpen = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} helperText="Help" setOpen={setOpen} />
+        </DefaultThemeProvider>,
+      );
+
+      await user.click(screen.getByText('Help'));
+
+      expect(setOpen).not.toHaveBeenCalled();
+    });
+
     it('renders with start node', () => {
       render(
         <DefaultThemeProvider>

@@ -135,6 +135,7 @@ const EnabledScrubberProvider: React.FC<ScrubberProviderProps> = ({
 
     return pan
       .onStart(function onStart(event) {
+        'worklet';
         runOnJS(handleStartEndHaptics)();
 
         // Android does not trigger onUpdate when the gesture starts. This achieves consistent behavior across both iOS and Android
@@ -147,6 +148,7 @@ const EnabledScrubberProvider: React.FC<ScrubberProviderProps> = ({
         }
       })
       .onUpdate(function onUpdate(event) {
+        'worklet';
         const pointerPosition = categoryAxisIsX ? event.x : event.y;
         const newScrubberPosition = getDataIndexFromPosition(pointerPosition);
         if (newScrubberPosition !== scrubberPosition.value) {
@@ -154,10 +156,12 @@ const EnabledScrubberProvider: React.FC<ScrubberProviderProps> = ({
         }
       })
       .onEnd(function onEnd() {
+        'worklet';
         runOnJS(handleStartEndHaptics)();
         scrubberPosition.value = undefined;
       })
       .onTouchesCancelled(function onTouchesCancelled() {
+        'worklet';
         scrubberPosition.value = undefined;
       });
   }, [

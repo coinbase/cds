@@ -41,6 +41,16 @@ const multiSelectVerticalSpaceVar: Record<SelectSize, string> = {
 // and a stacked inside label — stay within the field's natural height.
 const multiSelectValueChipSize = 'xs';
 
+// Inner control stays the tab stop but must not paint its own hover/press. The
+// field chrome (InputStack Interactable) owns that look so padding and content
+// share one press treatment instead of double-dimming.
+const inertInnerBlendStyles = {
+  hoveredBackground: 'rgba(0, 0, 0, 0)',
+  hoveredOpacity: 1,
+  pressedBackground: 'rgba(0, 0, 0, 0)',
+  pressedOpacity: 1,
+} as const;
+
 const noFocusOutlineCss = css`
   &:focus,
   &:focus-visible,
@@ -441,7 +451,7 @@ const DefaultSelectControlComponent = memo(
             aria-readonly={readOnly}
             as={role === 'combobox' ? 'div' : 'button'}
             background="transparent"
-            blendStyles={interactableBlendStyles}
+            blendStyles={inertInnerBlendStyles}
             borderWidth={0}
             className={cx(noFocusOutlineCss, classNames?.controlInputNode)}
             disabled={disabled}
@@ -449,7 +459,6 @@ const DefaultSelectControlComponent = memo(
             flexShrink={1}
             focusable={false}
             minWidth={0}
-            onClick={handleToggleOpen}
             onKeyDown={onKeyDown}
             role={role}
             style={styles?.controlInputNode}
@@ -548,25 +557,23 @@ const DefaultSelectControlComponent = memo(
           align,
           valueNode,
           contentNode,
-          handleToggleOpen,
         ],
       );
 
       const endNode = useMemo(
         () => (
-          <Pressable aria-hidden flexShrink={0} onClick={handleToggleOpen} tabIndex={-1}>
-            <HStack
-              alignItems="center"
-              className={classNames?.controlEndNode}
-              flexGrow={1}
-              height="100%"
-              justifyContent={insideVerticalLabel ? 'flex-end' : undefined}
-              paddingStart={2}
-              style={styles?.controlEndNode}
-            >
-              {customEndNode ? customEndNode : <AnimatedCaret color="fg" rotate={open ? 0 : 180} />}
-            </HStack>
-          </Pressable>
+          <HStack
+            aria-hidden
+            alignItems="center"
+            alignSelf="stretch"
+            className={classNames?.controlEndNode}
+            flexShrink={0}
+            justifyContent={insideVerticalLabel ? 'flex-end' : undefined}
+            paddingStart={2}
+            style={styles?.controlEndNode}
+          >
+            {customEndNode ? customEndNode : <AnimatedCaret color="fg" rotate={open ? 0 : 180} />}
+          </HStack>
         ),
         [
           classNames?.controlEndNode,
@@ -574,7 +581,6 @@ const DefaultSelectControlComponent = memo(
           styles?.controlEndNode,
           customEndNode,
           open,
-          handleToggleOpen,
         ],
       );
 
@@ -617,6 +623,7 @@ const DefaultSelectControlComponent = memo(
           styles={{ input: inputStackStyles }}
           variant={variant}
           {...props}
+          onFieldPress={handleToggleOpen}
         />
       );
     },
