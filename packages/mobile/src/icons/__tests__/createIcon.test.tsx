@@ -143,8 +143,7 @@ describe('createIcon', () => {
       </IconGlyphSourceProvider>,
     );
 
-    // The inner source applies, and the outer one is gone rather than layered
-    // underneath it, so its name falls through to the bound set and misses.
+    // `triangle` falls through to the bound set and misses, hence the fallback.
     expect(screen.getByText(NESTED_GLYPH)).toBeTruthy();
     expect(screen.queryByText(OTHER_GLYPH)).toBeNull();
     expect(screen.getByTestId('fallback')).toBeTruthy();

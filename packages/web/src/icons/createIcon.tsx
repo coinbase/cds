@@ -17,38 +17,23 @@ const COMPONENT_STATIC_CLASSNAME = 'cds-Icon';
 /** Default font family for the CDS icon glyph font. */
 export const DEFAULT_ICON_FONT_FAMILY = 'CoinbaseIcons';
 
-/**
- * Shape of the glyph map an icon set must provide. Keys are
- * `${name}-${sourcePixelSize}-${'active' | 'inactive'}` and values are the
- * single Unicode character rendered in the icon font.
- */
+/** Values are the single character to render in the icon font. */
 export type GlyphMap<Name extends string> = Record<
   `${Name}-${IconSourcePixelSize}-${'active' | 'inactive'}`,
   string
 >;
 
-/** Arguments passed to a glyph resolver to look up an icon's glyph. */
 export type IconGlyphResolverArgs<Name extends string> = {
-  /** Glyph map bound to this icon set. */
   glyphMap: GlyphMap<Name>;
-  /** Icon name requested via the `name` prop. */
   name: Name;
-  /** Size token requested via the `size` prop. */
   size: IconSize;
-  /** Resolved pixel size from the theme for the requested `size` token. */
+  /** Pixel size resolved from the theme for the requested `size` token. */
   pixelSize: number;
-  /** Whether the active variant was requested. */
   active: boolean;
 };
 
-/**
- * An icon font and the glyphs it provides. Pass it to `createIcon` to bind a
- * typed `Icon` component, or to `IconGlyphSourceProvider` to add its glyphs to
- * the icons rendered below, so an icon package can expose one object usable
- * either way.
- */
+/** An icon font and the glyphs it provides. */
 export type IconGlyphSource<Name extends string = string> = {
-  /** Generated glyph map for this icon set. */
   glyphMap: GlyphMap<Name>;
   /**
    * `@font-face` family name registered by the icon set's font.
@@ -56,10 +41,8 @@ export type IconGlyphSource<Name extends string = string> = {
    */
   fontFamily?: string;
   /**
-   * Resolves the glyph to render for an icon from the glyph map. Override to
-   * support a custom key format or size model. Defaults to the CDS scheme:
-   * `${name}-${sourceSize}-${'active' | 'inactive'}`, where `sourceSize` is
-   * `12`, `16`, or `24`.
+   * Override to use a custom key format or size model. Defaults to the CDS
+   * scheme: `${name}-${sourceSize}-${state}`, with `sourceSize` 12, 16, or 24.
    */
   getGlyph?: (args: IconGlyphResolverArgs<Name>) => string | undefined;
 };
@@ -178,7 +161,7 @@ const defaultGetGlyph = <Name extends string>({
 
 type ResolvedGlyph = { char: string; fontFamily: string };
 
-/** Looks a glyph up in one source, paired with the font that source declares. */
+/** Resolves a glyph from one source, with that source's font. */
 const resolveFromSource = (
   source: IconGlyphSource<any>,
   args: Omit<IconGlyphResolverArgs<string>, 'glyphMap'>,
@@ -189,7 +172,6 @@ const resolveFromSource = (
     : { char, fontFamily: source.fontFamily ?? DEFAULT_ICON_FONT_FAMILY };
 };
 
-/** Returns the first source that has a glyph for the request, with its font. */
 const resolveGlyph = (
   contextSource: IconGlyphSource<any> | undefined,
   boundSource: IconGlyphSource<any>,
@@ -199,13 +181,7 @@ const resolveGlyph = (
   return fromContext ?? resolveFromSource(boundSource, args);
 };
 
-/**
- * Creates a typed `Icon` component bound to a specific icon set (glyph map,
- * font family, and name union). The default CDS `Icon` is created from this
- * factory; consumers with their own icon package can create their own typed
- * icon component that reuses all of the CDS rendering, accessibility, and
- * theming behavior.
- */
+/** Creates a typed `Icon` component bound to an icon set. */
 export function createIcon<Name extends string>(source: IconGlyphSource<Name>) {
   const Icon = memo(
     forwardRef((_props: IconProps<Name>, ref: React.Ref<HTMLElement>) => {
@@ -229,9 +205,7 @@ export function createIcon<Name extends string>(source: IconGlyphSource<Name>) {
 
       const iconSize = theme.iconSize[size];
 
-      // The source added by `IconGlyphSourceProvider` is tried before this set's
-      // own, so a consumer's icons resolve — and can override a built-in — with
-      // no change to the components that render icons by name.
+      // Tried before the bound set, so a source can override a built-in icon.
       const contextSource = useIconGlyphSource();
       const resolved = resolveGlyph(contextSource, source, {
         name,
@@ -249,11 +223,9 @@ export function createIcon<Name extends string>(source: IconGlyphSource<Name>) {
         [dangerouslySetColor, style, styles?.root],
       );
 
-      // The matching source decides the font: a source can cover one size or
-      // state of a name and not another, so a single name can still fall
-      // through to the bound set and render in a different font.
-      // Only override the CSS variable for non-default fonts; the default is
-      // applied by the static Linaria block's fallback value.
+      // The matching source decides the font, so a source covering only some
+      // sizes or states of a name mixes fonts across that name.
+      // Only set the variable for non-default fonts; the Linaria block has the default.
       const fontFamily = resolved?.fontFamily;
       const iconStyle = useMemo(
         () =>

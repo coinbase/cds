@@ -13,11 +13,6 @@ import {
   withMaterialIconsFont,
 } from './materialIcons';
 
-/**
- * `createIcon` bound to a different font (Google Material Icons), showing a
- * consumer can supply their own glyph map, font, and name union while reusing
- * the CDS Icon renderer.
- */
 const MaterialIcon = createIcon<MaterialIconName>({
   glyphMap: materialGlyphMap,
   fontFamily: materialFontFamily,

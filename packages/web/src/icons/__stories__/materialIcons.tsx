@@ -4,9 +4,8 @@ import type { Decorator } from '@storybook/react';
 import type { GlyphMap } from '../createIcon';
 
 /**
- * Google Material Icons codepoints, used by the stories that demo a
- * non-CDS icon font. The names overlap with CDS icon names so the same set
- * works both as a standalone icon component and as an override of built-ins.
+ * Material Icons codepoints for the stories that demo a non-CDS icon font.
+ * Names overlap with CDS names so the set can also override built-ins.
  */
 const materialCodepoints = {
   home: 0xe88a,

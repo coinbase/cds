@@ -8,10 +8,6 @@ import { IconGlyphSourceProvider } from '../IconGlyphSourceContext';
 
 import { materialFontFamily, materialGlyphMap, withMaterialIconsFont } from './materialIcons';
 
-/**
- * A glyph source built from a non-CDS font. Its names overlap with built-in
- * CDS icon names, so it re-skins those icons everywhere below the provider.
- */
 const materialSource = {
   glyphMap: materialGlyphMap,
   fontFamily: materialFontFamily,
