@@ -32,7 +32,13 @@ export type IconGlyphSourceProviderProps = {
  * name-prop components (`IconButton`, `Button`, `Tag`, …) render the same
  * `Icon`, and `Icon` consults this context itself, no component needs to change.
  *
- * Pair with `Cds.IconNameRegistry` registration so the added names type-check.
+ * Scope this to the subtree that wants the custom glyphs rather than the app
+ * root: every icon below resolves against the source first, so a source sharing
+ * a name with a built-in icon re-skins that icon throughout the subtree,
+ * including the icons CDS renders internally (`close`, `caretUp`, `checkmark`).
+ *
+ * The source's names must be names the icon component already accepts; the
+ * `name` prop's type is unchanged.
  */
 export function IconGlyphSourceProvider({ source, children }: IconGlyphSourceProviderProps) {
   const inherited = useIconGlyphSources();

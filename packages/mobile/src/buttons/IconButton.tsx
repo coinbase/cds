@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { type StyleProp, type TextStyle, type View, type ViewStyle } from 'react-native';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type { IconButtonVariant } from '@coinbase/cds-common/types/IconButtonBaseProps';
-import type { RegisteredIconName } from '@coinbase/cds-common/types/IconName';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
 import type { IconSize } from '@coinbase/cds-common/types/IconSize';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { NegativeSpace } from '@coinbase/cds-common/types/SpacingProps';
@@ -36,7 +36,7 @@ export type IconButtonBaseProps = SharedProps &
   Omit<PressableBaseProps, 'children'> &
   Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'flush' | 'loading' | 'progressCircleSize'> & {
     /** Name of the icon, as defined in Figma. */
-    name: RegisteredIconName;
+    name: IconName;
     /**
      * Size for the icon rendered inside the button.
      * @default 's' for size xs/s, 'm' for size m/l

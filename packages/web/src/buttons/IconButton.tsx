@@ -1,7 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
 import { transparentVariants, variants } from '@coinbase/cds-common/tokens/button';
 import type { IconButtonVariant } from '@coinbase/cds-common/types/IconButtonBaseProps';
-import type { RegisteredIconName } from '@coinbase/cds-common/types/IconName';
+import type { IconName } from '@coinbase/cds-common/types/IconName';
 import type { IconSize } from '@coinbase/cds-common/types/IconSize';
 import { css } from '@linaria/core';
 
@@ -54,7 +54,7 @@ export type IconButtonBaseProps = Polymorphic.ExtendableProps<
   Omit<PressableBaseProps, 'children'>,
   Pick<ButtonBaseProps, 'disabled' | 'transparent' | 'flush'> & {
     /** Name of the icon, as defined in Figma. */
-    name: RegisteredIconName;
+    name: IconName;
     /**
      * Size for the icon rendered inside the button.
      * @default 's' for size xs/s, 'm' for size m/l
