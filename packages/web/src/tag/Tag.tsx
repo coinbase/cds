@@ -99,6 +99,7 @@ export const Tag = memo(
       fontSize,
       fontWeight,
       lineHeight,
+      textTransform,
       testID = tagStaticClassName,
       ...props
     } = mergedProps;
@@ -146,6 +147,7 @@ export const Tag = memo(
           fontWeight={fontWeight}
           lineHeight={lineHeight}
           overflow="truncate"
+          textTransform={textTransform}
           testID={`${testID}--text`}
         >
           {children}
