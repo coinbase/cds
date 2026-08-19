@@ -1,21 +1,20 @@
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext } from 'react';
 
 import type { IconGlyphSource } from './createIcon';
 
-const NO_SOURCES: readonly IconGlyphSource<any>[] = [];
+const IconGlyphSourceContext = createContext<IconGlyphSource<any> | undefined>(undefined);
 
-const IconGlyphSourceContext = createContext(NO_SOURCES);
-
-/** Glyph sources added by ancestor providers, innermost last. */
-export function useIconGlyphSources(): readonly IconGlyphSource<any>[] {
+/** Glyph source added by the nearest ancestor provider, if there is one. */
+export function useIconGlyphSource(): IconGlyphSource<any> | undefined {
   return useContext(IconGlyphSourceContext);
 }
 
 export type IconGlyphSourceProviderProps = {
   /**
    * Glyph source to add. It's consulted before the built-in CDS glyphs, so it
-   * can also override an individual built-in icon. Nest providers to add more
-   * than one source; the innermost wins.
+   * can also override an individual built-in icon. Only the nearest provider
+   * applies: nesting one inside another replaces the outer source rather than
+   * adding to it.
    */
   source: IconGlyphSource<any>;
   children: React.ReactNode;
@@ -35,10 +34,7 @@ export type IconGlyphSourceProviderProps = {
  * `name` prop's type is unchanged.
  */
 export function IconGlyphSourceProvider({ source, children }: IconGlyphSourceProviderProps) {
-  const inherited = useIconGlyphSources();
-  const value = useMemo(() => [source, ...inherited], [source, inherited]);
-
   return (
-    <IconGlyphSourceContext.Provider value={value}>{children}</IconGlyphSourceContext.Provider>
+    <IconGlyphSourceContext.Provider value={source}>{children}</IconGlyphSourceContext.Provider>
   );
 }

@@ -129,7 +129,11 @@ import { glyphMap } from '@my-org/icons/glyphMap';
 </IconGlyphSourceProvider>;
 ```
 
-The `source` is the same object shape `createIcon` takes, so an icon package can export one object usable either way. Sources are consulted before the built-in CDS glyphs, which means a source that reuses a built-in name re-skins that icon rather than being ignored. Nest providers to add more than one source; the innermost one wins.
+The `source` is the same object shape `createIcon` takes, so an icon package can export one object usable either way. Your source is consulted before the built-in CDS glyphs, which means a source that reuses a built-in name re-skins that icon rather than being ignored; anything it doesn't provide falls back to the CDS set.
+
+Exactly one custom source is ever in effect. Nesting a provider inside another **replaces** the outer source rather than adding to it, so only the nearest provider applies.
+
+Because the fallback is per glyph rather than per icon set, a source that covers a name at one size or state but not another leaves that icon resolving partly from your font and partly from the CDS font. Generate your glyph map for every size and state you use.
 
 Scope the provider to the subtree that wants the custom glyphs rather than the app root. Every icon below it resolves against your source first, including the icons CDS renders internally for you — the `close` on a modal, the `caretUp` on an accordion, the `checkmark` on a checkbox.
 

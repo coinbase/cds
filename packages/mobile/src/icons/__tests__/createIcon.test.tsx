@@ -10,6 +10,7 @@ import { IconGlyphSourceProvider } from '../IconGlyphSourceContext';
 const INACTIVE_GLYPH = '\u2606'; // ☆
 const ACTIVE_GLYPH = '\u2605'; // ★
 const OTHER_GLYPH = '\u25B2'; // ▲
+const NESTED_GLYPH = '\u25A0'; // ■
 
 type DemoIconName = 'star';
 
@@ -127,6 +128,42 @@ describe('createIcon', () => {
 
     expect(screen.getByText(OTHER_GLYPH)).toBeTruthy();
     expect(screen.queryByText(INACTIVE_GLYPH)).toBeNull();
+  });
+
+  it('replaces the outer source when providers are nested', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+    renderIcon(
+      <IconGlyphSourceProvider source={{ glyphMap: { 'triangle-24-inactive': OTHER_GLYPH } }}>
+        <IconGlyphSourceProvider source={{ glyphMap: { 'square-24-inactive': NESTED_GLYPH } }}>
+          <Icon name={'square' as DemoIconName} />
+          <Icon fallback={<View testID="fallback" />} name={'triangle' as DemoIconName} />
+        </IconGlyphSourceProvider>
+      </IconGlyphSourceProvider>,
+    );
+
+    // The inner source applies, and the outer one is gone rather than layered
+    // underneath it, so its name falls through to the bound set and misses.
+    expect(screen.getByText(NESTED_GLYPH)).toBeTruthy();
+    expect(screen.queryByText(OTHER_GLYPH)).toBeNull();
+    expect(screen.getByTestId('fallback')).toBeTruthy();
+
+    consoleError.mockRestore();
+  });
+
+  it('still falls back to the bound set inside a nested provider', () => {
+    const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+    renderIcon(
+      <IconGlyphSourceProvider source={{ glyphMap: { 'triangle-24-inactive': OTHER_GLYPH } }}>
+        <IconGlyphSourceProvider source={{ glyphMap: { 'square-24-inactive': NESTED_GLYPH } }}>
+          <Icon name="star" />
+        </IconGlyphSourceProvider>
+      </IconGlyphSourceProvider>,
+    );
+
+    expect(screen.getByText(INACTIVE_GLYPH)).toBeTruthy();
   });
 
   describe('allowFontScaling', () => {

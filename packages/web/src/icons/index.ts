@@ -1,6 +1,6 @@
 export * from './Icon';
 export type { IconGlyphSourceProviderProps } from './IconGlyphSourceContext';
-export { IconGlyphSourceProvider, useIconGlyphSources } from './IconGlyphSourceContext';
+export { IconGlyphSourceProvider, useIconGlyphSource } from './IconGlyphSourceContext';
 export { createIcon, DEFAULT_ICON_FONT_FAMILY } from './createIcon';
 export type { GlyphMap, IconGlyphResolverArgs, IconGlyphSource } from './createIcon';
 export * from './LogoMark';

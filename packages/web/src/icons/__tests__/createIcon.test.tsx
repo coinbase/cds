@@ -6,6 +6,7 @@ import { IconGlyphSourceProvider } from '../IconGlyphSourceContext';
 
 const GLYPH = '\u2605'; // ★
 const OTHER_GLYPH = '\u25B2'; // ▲
+const NESTED_GLYPH = '\u25A0'; // ■
 
 type DemoIconName = 'star';
 
@@ -93,5 +94,40 @@ describe('createIcon', () => {
     );
 
     expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(OTHER_GLYPH);
+  });
+
+  it('replaces the outer source when providers are nested', () => {
+    const consoleError = jest.spyOn(console, 'error').mockImplementation(() => undefined);
+    const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+    renderIcon(
+      <IconGlyphSourceProvider source={{ glyphMap: { 'triangle-24-inactive': OTHER_GLYPH } }}>
+        <IconGlyphSourceProvider source={{ glyphMap: { 'square-24-inactive': NESTED_GLYPH } }}>
+          <Icon name={'square' as DemoIconName} />
+          <Icon name={'triangle' as DemoIconName} fallback={<span data-testid="fallback" />} />
+        </IconGlyphSourceProvider>
+      </IconGlyphSourceProvider>,
+    );
+
+    // The inner source applies, and the outer one is gone rather than layered
+    // underneath it, so its name falls through to the bound set and misses.
+    expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(NESTED_GLYPH);
+    expect(screen.getByTestId('fallback')).toBeTruthy();
+
+    consoleError.mockRestore();
+  });
+
+  it('still falls back to the bound set inside a nested provider', () => {
+    const Icon = createIcon<DemoIconName>({ glyphMap: demoGlyphMap });
+
+    renderIcon(
+      <IconGlyphSourceProvider source={{ glyphMap: { 'triangle-24-inactive': OTHER_GLYPH } }}>
+        <IconGlyphSourceProvider source={{ glyphMap: { 'square-24-inactive': NESTED_GLYPH } }}>
+          <Icon name="star" />
+        </IconGlyphSourceProvider>
+      </IconGlyphSourceProvider>,
+    );
+
+    expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(GLYPH);
   });
 });

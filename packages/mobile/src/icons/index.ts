@@ -2,7 +2,7 @@ export type { GlyphMap, IconGlyphResolverArgs, IconGlyphSource } from './createI
 export { createIcon, DEFAULT_ICON_FONT_FAMILY } from './createIcon';
 export * from './Icon';
 export type { IconGlyphSourceProviderProps } from './IconGlyphSourceContext';
-export { IconGlyphSourceProvider, useIconGlyphSources } from './IconGlyphSourceContext';
+export { IconGlyphSourceProvider, useIconGlyphSource } from './IconGlyphSourceContext';
 export * from './LogoMark';
 export * from './LogoWordmark';
 export * from './SubBrandLogoMark';

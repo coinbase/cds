@@ -19,7 +19,7 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 
-import { useIconGlyphSources } from './IconGlyphSourceContext';
+import { useIconGlyphSource } from './IconGlyphSourceContext';
 
 /** Default font family for the CDS icon glyph font. */
 export const DEFAULT_ICON_FONT_FAMILY = 'CoinbaseIcons';
@@ -134,18 +134,27 @@ const defaultGetGlyph = <Name extends string>({
   return glyphMap[key];
 };
 
+type ResolvedGlyph = { char: string; fontFamily: string };
+
+/** Looks a glyph up in one source, paired with the font that source declares. */
+const resolveFromSource = (
+  source: IconGlyphSource<any>,
+  args: Omit<IconGlyphResolverArgs<string>, 'glyphMap'>,
+): ResolvedGlyph | undefined => {
+  const char = (source.getGlyph ?? defaultGetGlyph)({ ...args, glyphMap: source.glyphMap });
+  return char === undefined
+    ? undefined
+    : { char, fontFamily: source.fontFamily ?? DEFAULT_ICON_FONT_FAMILY };
+};
+
 /** Returns the first source that has a glyph for the request, with its font. */
 const resolveGlyph = (
-  sources: readonly IconGlyphSource<any>[],
+  contextSource: IconGlyphSource<any> | undefined,
+  boundSource: IconGlyphSource<any>,
   args: Omit<IconGlyphResolverArgs<string>, 'glyphMap'>,
-): { char: string; fontFamily: string } | undefined => {
-  for (const source of sources) {
-    const char = (source.getGlyph ?? defaultGetGlyph)({ ...args, glyphMap: source.glyphMap });
-    if (char !== undefined) {
-      return { char, fontFamily: source.fontFamily ?? DEFAULT_ICON_FONT_FAMILY };
-    }
-  }
-  return undefined;
+): ResolvedGlyph | undefined => {
+  const fromContext = contextSource ? resolveFromSource(contextSource, args) : undefined;
+  return fromContext ?? resolveFromSource(boundSource, args);
 };
 
 /**
@@ -189,11 +198,11 @@ export function createIcon<Name extends string>(source: IconGlyphSource<Name>) {
     const iconColor = theme.color[color];
     const finalColor = dangerouslySetColor ?? iconColor;
 
-    // Sources added by `IconGlyphSourceProvider` are tried before this set's
+    // The source added by `IconGlyphSourceProvider` is tried before this set's
     // own, so a consumer's icons resolve — and can override a built-in — with
     // no change to the components that render icons by name.
-    const contextSources = useIconGlyphSources();
-    const resolved = resolveGlyph([...contextSources, source], {
+    const contextSource = useIconGlyphSource();
+    const resolved = resolveGlyph(contextSource, source, {
       name,
       size,
       pixelSize: iconSize,
@@ -225,7 +234,9 @@ export function createIcon<Name extends string>(source: IconGlyphSource<Name>) {
       ],
     );
 
-    // The matching source decides the font, since composed sets mix fonts.
+    // The matching source decides the font: a source can cover one size or
+    // state of a name and not another, so a single name can still fall through
+    // to the bound set and render in a different font.
     const iconStyle = useMemo(
       () => [
         {
