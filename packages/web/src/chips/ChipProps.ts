@@ -84,7 +84,7 @@ export type ChipBaseProps = SharedProps &
     /**
      * Reduces spacing around the chip.
      * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     compact?: boolean;
     /**

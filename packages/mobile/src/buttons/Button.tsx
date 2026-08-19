@@ -101,7 +101,7 @@ export type ButtonBaseProps = SharedProps &
     /**
      * Reduce the inner padding within the button itself.
      * @deprecated Use `size="s"` instead. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     compact?: boolean;
     /**

@@ -114,7 +114,7 @@ export type TextInputBaseProps = SharedProps &
      * Enables compact variation. Prefer `size="s"` or `size="m"` with an explicit `labelVariant`.
      *
      * @deprecated Unset and use `size="s"` instead. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     compact?: boolean;
     /**

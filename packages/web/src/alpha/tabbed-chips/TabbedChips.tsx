@@ -115,7 +115,7 @@ export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
    * Turn on to use a compact Chip component for each tab.
    * @default false
    * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
+   * @deprecationExpectedRemoval v11
    */
   compact?: boolean;
   /**

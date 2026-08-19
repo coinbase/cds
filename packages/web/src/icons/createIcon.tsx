@@ -87,7 +87,7 @@ export type IconBaseProps<Name extends string = string> = SharedProps &
     active?: boolean;
     /**
      * @deprecated Use `style`, `styles.root`, `className`, `classNames.root`, or the `color` prop to customize icon color. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     dangerouslySetColor?: string;
   };

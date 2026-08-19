@@ -56,7 +56,7 @@ export type NativeTextAreaBaseProp = {
    * Decreases the padding within the textarea element.
    * @default false
    * @deprecated Use `padding` props instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
+   * @deprecationExpectedRemoval v11
    */
   compact?: boolean;
 } & SharedProps;

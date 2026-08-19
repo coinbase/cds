@@ -91,7 +91,7 @@ export type IconBaseProps<Name extends string = string> = SharedProps &
     color?: ThemeVars.Color;
     /**
      * @deprecated Use `style`, `styles.icon`, or the `color` prop to customize icon color. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     dangerouslySetColor?: string | Animated.AnimatedInterpolation<string>;
     animated?: boolean;
