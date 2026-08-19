@@ -4,9 +4,14 @@ import { m as motion } from 'framer-motion';
 
 import type { Polymorphic } from '../../core/polymorphism';
 import { cx } from '../../cx';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { Box } from '../../layout/Box';
 import { SegmentedTab, type SegmentedTabProps } from '../../tabs/SegmentedTab';
-import { SegmentedTabs, type SegmentedTabsProps } from '../../tabs/SegmentedTabs';
+import {
+  SegmentedTabs,
+  type SegmentedTabsBaseProps,
+  type SegmentedTabsProps,
+} from '../../tabs/SegmentedTabs';
 import {
   type TabComponent,
   type TabsActiveIndicatorProps,
@@ -131,31 +136,33 @@ const PeriodSelectorTab: TabComponent = memo(
   )),
 );
 
-export type PeriodSelectorProps = SegmentedTabsProps;
+export type PeriodSelectorBaseProps<TabId extends string = string> = SegmentedTabsBaseProps<TabId>;
+
+export type PeriodSelectorProps<TabId extends string = string> = SegmentedTabsProps<TabId>;
 
 /**
  * PeriodSelector is a specialized version of SegmentedTabs optimized for chart period selection.
  * It provides transparent background, primary wash active state, and full-width layout by default.
  */
 export const PeriodSelector = memo(
-  forwardRef(
-    (
-      {
-        background = 'transparent',
-        activeBackground = 'bgPrimaryWash',
-        activeColor = 'fgPrimary',
-        width = '100%',
-        justifyContent = 'space-between',
-        TabComponent = PeriodSelectorTab,
-        TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
-        className,
-        classNames,
-        style,
-        styles,
-        ...props
-      }: PeriodSelectorProps,
-      ref: React.ForwardedRef<HTMLElement>,
-    ) => (
+  forwardRef((_props: PeriodSelectorProps, ref: React.ForwardedRef<HTMLElement>) => {
+    const mergedProps = useComponentConfig('PeriodSelector', _props);
+    const {
+      background = 'transparent',
+      activeBackground = 'bgPrimaryWash',
+      activeColor = 'fgPrimary',
+      width = '100%',
+      justifyContent = 'space-between',
+      TabComponent = PeriodSelectorTab,
+      TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
+      className,
+      classNames,
+      style,
+      styles,
+      ...props
+    } = mergedProps;
+
+    return (
       <SegmentedTabs
         ref={ref}
         TabComponent={TabComponent}
@@ -177,6 +184,6 @@ export const PeriodSelector = memo(
         width={width}
         {...props}
       />
-    ),
-  ),
+    );
+  }),
 );

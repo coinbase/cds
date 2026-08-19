@@ -91,6 +91,19 @@ describe('SegmentedTab', () => {
     });
   });
 
+  it('resolves borderRadius token on the pressable', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} borderRadius={200} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      borderRadius: defaultTheme.borderRadius[200],
+    });
+  });
+
   it('triggers onPress when clicking the tab', () => {
     const onPress = jest.fn();
     render(

@@ -69,6 +69,7 @@ const SegmentedTabComponent = memo(
       'aria-selected': ariaSelected,
       accessibilityRole = 'button',
       testID,
+      borderRadius = 1000,
       font = 'headline',
       fontFamily,
       fontSize,
@@ -106,10 +107,10 @@ const SegmentedTabComponent = memo(
 
     const pressableStyle = useMemo(
       () => ({
-        borderRadius: theme.borderRadius[1000],
+        borderRadius: theme.borderRadius[borderRadius],
         opacity: disabledProp && !allTabsDisabled ? accessibleOpacityDisabled : undefined,
       }),
-      [theme.borderRadius, disabledProp, allTabsDisabled],
+      [theme.borderRadius, borderRadius, disabledProp, allTabsDisabled],
     );
 
     return (
@@ -117,6 +118,7 @@ const SegmentedTabComponent = memo(
         ref={ref}
         accessibilityRole={accessibilityRole}
         aria-selected={ariaSelected ?? isActive}
+        borderRadius={borderRadius}
         disabled={isDisabled}
         onPress={handlePress}
         style={[pressableStyle, style]}
