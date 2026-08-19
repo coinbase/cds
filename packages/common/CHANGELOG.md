@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## Unreleased
+
+#### 📘 Misc
+
+- Docs: correct deprecation notices referencing the incorrect CDS version.
+
 ## 9.17.1 ((8/17/2026, 02:53 PM PST))
 
 This is an artificial version bump with no new change.
