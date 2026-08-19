@@ -60,6 +60,7 @@ export const TooltipContent = memo(
         fontSize,
         fontWeight,
         lineHeight,
+        textTransform,
         ...props
       }: TooltipContentProps,
       ref: React.ForwardedRef<HTMLDivElement>,
@@ -110,6 +111,7 @@ export const TooltipContent = memo(
                 fontSize={fontSize}
                 fontWeight={fontWeight}
                 lineHeight={lineHeight}
+                textTransform={textTransform}
               >
                 {content}
               </Text>

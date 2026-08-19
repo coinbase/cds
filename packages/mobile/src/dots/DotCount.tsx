@@ -135,6 +135,7 @@ export const DotCount = memo((_props: DotCountProps) => {
     fontSize,
     fontWeight,
     lineHeight,
+    textTransform,
     overflow = 'hidden',
     ...props
   } = mergedProps;
@@ -251,6 +252,7 @@ export const DotCount = memo((_props: DotCountProps) => {
               fontWeight={fontWeight}
               lineHeight={lineHeight}
               style={styles?.text}
+              textTransform={textTransform}
             >
               {displayCount}
             </Text>

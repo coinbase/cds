@@ -20,7 +20,10 @@ import { Text, type TextBaseProps } from '../typography/Text';
 import { tabsSpringConfig } from './Tabs';
 
 export type SegmentedTabBaseProps<TabId extends string = string> = TabValue<TabId> &
-  Pick<TextBaseProps, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight'> &
+  Pick<
+    TextBaseProps,
+    'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight' | 'textTransform'
+  > &
   Omit<PressableBaseProps, 'children' | 'disabled' | 'onPress' | 'style'> & {
     /**
      * Text color when active.
@@ -71,6 +74,7 @@ const SegmentedTabComponent = memo(
       fontSize,
       fontWeight,
       lineHeight,
+      textTransform,
       ...props
     } = mergedProps;
     const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<TabId>();
@@ -129,6 +133,7 @@ const SegmentedTabComponent = memo(
               fontWeight={fontWeight}
               lineHeight={lineHeight}
               style={animatedTextStyles}
+              textTransform={textTransform}
               testID={`${testID}-label`}
             >
               {label}

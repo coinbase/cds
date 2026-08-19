@@ -223,6 +223,7 @@ export const Button: ButtonComponent = memo(
         fontWeight,
         height = 'fit-content',
         lineHeight,
+        textTransform,
         background,
         color,
         className,
@@ -344,6 +345,7 @@ export const Button: ButtonComponent = memo(
               lineHeight={lineHeight}
               numberOfLines={numberOfLines}
               textAlign={textAlign}
+              textTransform={textTransform}
             >
               <span className={cx(loading && hiddenCss)}>{children}</span>
             </Text>

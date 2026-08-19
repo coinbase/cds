@@ -118,6 +118,17 @@ describe('DotCount', () => {
     expect(screen.getByText('1')).toBeTruthy();
   });
 
+  it('forwards textTransform to the count text', () => {
+    renderDotCount({
+      count: 1,
+      testID: DOTCOUNT_TESTID,
+      textTransform: 'uppercase',
+      variant: 'negative',
+    });
+    triggerChildrenLayout();
+    expect(screen.getByText('1')).toHaveStyle({ textTransform: 'uppercase' });
+  });
+
   it('renders correct count when count  0', () => {
     renderDotCount({ count: 0, testID: DOTCOUNT_TESTID, variant: 'negative' });
     triggerChildrenLayout();

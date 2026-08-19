@@ -328,6 +328,7 @@ describe('Button', () => {
           fontSize="caption"
           fontWeight="label1"
           lineHeight="display3"
+          textTransform="uppercase"
         >
           Child
         </Button>
@@ -343,5 +344,6 @@ describe('Button', () => {
     expect(textWrapper!.props.fontSize).toBe('caption');
     expect(textWrapper!.props.fontWeight).toBe('label1');
     expect(textWrapper!.props.lineHeight).toBe('display3');
+    expect(textWrapper!.props.textTransform).toBe('uppercase');
   });
 });

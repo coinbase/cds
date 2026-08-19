@@ -55,6 +55,7 @@ const MockModal = ({
   onDidClose,
   onBackButtonClick,
   font,
+  textTransform,
   title = 'Basic Modal',
   visible: externalVisible = false,
   testID,
@@ -108,6 +109,7 @@ const MockModal = ({
           closeAccessibilityLabel={closeAccessibilityLabel}
           font={font}
           onBackButtonClick={onBackButtonClick}
+          textTransform={textTransform}
           title={title}
         />
         <ModalBody>
@@ -281,13 +283,15 @@ describe('Modal', () => {
   it('applies custom font prop to title text', async () => {
     render(
       <DefaultThemeProvider>
-        <MockModal font="title1" title="Styled Title" />
+        <MockModal font="title1" textTransform="uppercase" title="Styled Title" />
       </DefaultThemeProvider>,
     );
 
     fireEvent.press(screen.getByText('Open Modal'));
 
-    expect(await screen.findByText('Styled Title')).toBeTruthy();
+    const title = await screen.findByText('Styled Title');
+    expect(title).toBeTruthy();
+    expect(title).toHaveStyle({ textTransform: 'uppercase' });
   });
 
   it('renders modal body', async () => {

@@ -64,6 +64,19 @@ describe('SegmentedTab', () => {
     });
   });
 
+  it('forwards textTransform to the label', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} textTransform="uppercase" />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(`${TEST_ID}-label`)).toHaveStyle({
+      textTransform: 'uppercase',
+    });
+  });
+
   it('renders correct color when active', () => {
     render(
       <DefaultThemeProvider>
