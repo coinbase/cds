@@ -77,8 +77,6 @@ export const PeriodSelectorActiveIndicator = memo(
   },
 );
 
-PeriodSelectorActiveIndicator.displayName = 'PeriodSelectorActiveIndicator';
-
 export type LiveTabLabelBaseProps = TextBaseProps & {
   /**
    * The label to display.
