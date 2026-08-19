@@ -41,8 +41,13 @@ export type IconGlyphResolverArgs<Name extends string> = {
   active: boolean;
 };
 
-/** Configuration used to bind an icon set to a typed `Icon` component. */
-export type CreateIconConfig<Name extends string> = {
+/**
+ * An icon font and the glyphs it provides. Pass it to `createIcon` to bind a
+ * typed `Icon` component, or to `IconGlyphSourceProvider` to add its glyphs to
+ * the icons rendered below, so an icon package can expose one object usable
+ * either way.
+ */
+export type IconGlyphSource<Name extends string = string> = {
   /** Generated glyph map for this icon set. */
   glyphMap: GlyphMap<Name>;
   /**
@@ -173,7 +178,7 @@ const defaultGetGlyph = <Name extends string>({
 
 /** Returns the first source that has a glyph for the request, with its font. */
 const resolveGlyph = (
-  sources: readonly CreateIconConfig<any>[],
+  sources: readonly IconGlyphSource<any>[],
   args: Omit<IconGlyphResolverArgs<string>, 'glyphMap'>,
 ): { char: string; fontFamily: string } | undefined => {
   for (const source of sources) {
@@ -192,7 +197,7 @@ const resolveGlyph = (
  * icon component that reuses all of the CDS rendering, accessibility, and
  * theming behavior.
  */
-export function createIcon<Name extends string>(config: CreateIconConfig<Name>) {
+export function createIcon<Name extends string>(source: IconGlyphSource<Name>) {
   const Icon = memo(
     forwardRef((_props: IconProps<Name>, ref: React.Ref<HTMLElement>) => {
       const mergedProps = useComponentConfig('Icon', _props);
@@ -219,7 +224,7 @@ export function createIcon<Name extends string>(config: CreateIconConfig<Name>) 
       // own, so a consumer's icons resolve — and can override a built-in — with
       // no change to the components that render icons by name.
       const contextSources = useIconGlyphSources();
-      const resolved = resolveGlyph([...contextSources, config], {
+      const resolved = resolveGlyph([...contextSources, source], {
         name,
         size,
         pixelSize: iconSize,

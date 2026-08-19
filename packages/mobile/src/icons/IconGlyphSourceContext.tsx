@@ -1,12 +1,6 @@
 import React, { createContext, useContext, useMemo } from 'react';
 
-import type { CreateIconConfig } from './createIcon';
-
-/**
- * An icon font and the glyphs it provides — the same shape `createIcon` takes,
- * so an icon package exposes one object usable either way.
- */
-export type IconGlyphSource<Name extends string = string> = CreateIconConfig<Name>;
+import type { IconGlyphSource } from './createIcon';
 
 const NO_SOURCES: readonly IconGlyphSource<any>[] = [];
 
