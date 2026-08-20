@@ -4,7 +4,7 @@ import type { IconGlyphSource } from './createIcon';
 
 const IconGlyphSourceContext = createContext<IconGlyphSource<any> | undefined>(undefined);
 
-/** The nearest ancestor provider's glyph source, if any. */
+/** The nearest ancestor provider's glyph source, or `undefined` to fall back to the bound set. */
 export function useIconGlyphSource(): IconGlyphSource<any> | undefined {
   return useContext(IconGlyphSourceContext);
 }
