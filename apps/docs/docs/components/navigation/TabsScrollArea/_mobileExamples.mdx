@@ -1,0 +1,125 @@
+TabsScrollArea wraps a horizontal [Tabs](/components/navigation/Tabs/) row in a `ScrollView` and shows edge gradients when content overflows. Use a **function child** that receives `onActiveTabElementChange` and pass it through to **`Tabs`** so the active tab can scroll into view.
+
+## Basics
+
+Set **`width`** / **`maxWidth`** on **`TabsScrollArea`** so the tab row overflows on smaller screens; gradients appear when there is offscreen content.
+
+```jsx
+function Example() {
+  const tabs = [
+    { id: 't1', label: 'Overview' },
+    { id: 't2', label: 'Markets' },
+    { id: 't3', label: 'Trade' },
+    { id: 't4', label: 'Earn' },
+    { id: 't5', label: 'Learn' },
+    { id: 't6', label: 'More' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <TabsScrollArea accessibilityLabel="Scrollable tab list" maxWidth={320} width="100%">
+      {({ onActiveTabElementChange }) => (
+        <Tabs
+          TabComponent={DefaultTab}
+          TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
+          accessibilityLabel="Tabs"
+          activeBackground="bgPrimary"
+          activeTab={activeTab}
+          background="bg"
+          gap={4}
+          onActiveTabElementChange={onActiveTabElementChange}
+          onChange={setActiveTab}
+          tabs={tabs}
+        />
+      )}
+    </TabsScrollArea>
+  );
+}
+```
+
+## Overflow indicator
+
+On React Native, the default **`TabsScrollAreaOverflowIndicator`** renders an **`OverflowGradient`** at each edge when there is offscreen content. Scrolling is **gesture-based** (horizontal pan on the **`ScrollView`**); the default gradient is **visual-only** and does not receive press handlers from **`TabsScrollArea`**.
+
+### Custom `OverflowIndicatorComponent`
+
+Provide a component that satisfies **`TabsScrollAreaOverflowIndicatorProps`**: **`direction`** (`'left'` \| `'right'`), **`show`**, optional **`style`**, and **`testID`**. The default implementation maps **`direction`** to **`OverflowGradient`**’s **`pin`**.
+
+The example below replaces the gradient with a simple edge strip (visual-only; no scroll wiring).
+
+```tsx
+import { Box } from '@coinbase/cds-mobile/layout';
+import {
+  DefaultTab,
+  DefaultTabsActiveIndicator,
+  Tabs,
+  TabsScrollArea,
+  type TabsScrollAreaOverflowIndicatorProps,
+} from '@coinbase/cds-mobile/tabs';
+
+function CustomOverflowIndicator({
+  direction,
+  show,
+  style,
+  testID,
+}: TabsScrollAreaOverflowIndicatorProps) {
+  if (!show) {
+    return null;
+  }
+  const isLeft = direction === 'left';
+  return (
+    <Box
+      background="fgMuted"
+      borderRadius={200}
+      bottom={8}
+      position="absolute"
+      style={[isLeft ? { left: 4 } : { right: 4 }, style]}
+      testID={testID}
+      top={8}
+      width={4}
+    />
+  );
+}
+
+function Example() {
+  const tabs = [
+    { id: 't1', label: 'Overview' },
+    { id: 't2', label: 'Markets' },
+    { id: 't3', label: 'Trade' },
+    { id: 't4', label: 'Earn' },
+    { id: 't5', label: 'Learn' },
+    { id: 't6', label: 'More' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <TabsScrollArea
+      OverflowIndicatorComponent={CustomOverflowIndicator}
+      accessibilityLabel="Scrollable tab list"
+      maxWidth={320}
+      width="100%"
+    >
+      {({ onActiveTabElementChange }) => (
+        <Tabs
+          TabComponent={DefaultTab}
+          TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
+          accessibilityLabel="Tabs"
+          activeBackground="bgPrimary"
+          activeTab={activeTab}
+          background="bg"
+          gap={4}
+          onActiveTabElementChange={onActiveTabElementChange}
+          onChange={setActiveTab}
+          tabs={tabs}
+        />
+      )}
+    </TabsScrollArea>
+  );
+}
+```
+
+## Styling
+
+Use **`styles.root`**, **`styles.scrollContainer`**, and **`styles.overflowIndicator`** to align with layout tokens. Mobile uses a single **`overflowIndicator`** style slot for both edges (see **Styles** tab).
+
+## Accessibility
+
+Set **`accessibilityLabel`** on **`TabsScrollArea`** (root container) and on **`Tabs`** for screen readers.

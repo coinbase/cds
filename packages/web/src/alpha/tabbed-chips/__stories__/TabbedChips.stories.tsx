@@ -97,13 +97,13 @@ export const Default = () => {
       </Text>
       <Demo />
       <Text as="p" display="block" font="headline">
-        With paddles
+        With overflow (many tabs)
       </Text>
       <Demo tabs={sampleTabs} />
       <Text as="p" display="block" font="headline">
-        With custom sized paddles
+        With custom sized overflow controls
       </Text>
-      <Demo styles={{ paddle: { transform: 'scale(0.5)' } }} tabs={sampleTabs} />
+      <Demo styles={{ overflowIndicatorButton: { transform: 'scale(0.5)' } }} tabs={sampleTabs} />
       <Text as="p" display="block" font="headline">
         With long text
       </Text>
