@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.19.0 (8/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support custom icon sets in name-prop components. [[#848](https://github.com/coinbase/cds/pull/848)]
+
 ## 9.18.0 (8/19/2026 PST)
 
 #### 🚀 Updates
