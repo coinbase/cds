@@ -1,4 +1,4 @@
-import React, { forwardRef, memo, useMemo } from 'react';
+import React, { createContext, forwardRef, memo, useContext, useMemo } from 'react';
 import type { IconSize, IconSourcePixelSize } from '@coinbase/cds-common/types/IconSize';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { ValidateProps } from '@coinbase/cds-common/types/SpreadPropsSafely';
@@ -9,8 +9,6 @@ import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
-
-import { useIconGlyphSource } from './IconGlyphSourceContext';
 
 const COMPONENT_STATIC_CLASSNAME = 'cds-Icon';
 
@@ -46,6 +44,27 @@ export type IconGlyphSource<Name extends string = string> = {
    */
   getGlyph?: (args: IconGlyphResolverArgs<Name>) => string | undefined;
 };
+
+const IconGlyphSourceContext = createContext<IconGlyphSource<any> | undefined>(undefined);
+
+export type IconGlyphSourceProviderProps = {
+  /** Consulted before the built-in glyphs. A nested provider replaces it. */
+  source: IconGlyphSource<any>;
+  children: React.ReactNode;
+};
+
+/**
+ * Adds a custom glyph source to every CDS icon rendered below.
+ *
+ * Scope this to a subtree: a source reusing a built-in name re-skins that icon
+ * everywhere below, including icons CDS renders internally (`close`, `caretUp`,
+ * `checkmark`). Its names must be names the icon component already accepts.
+ */
+export function IconGlyphSourceProvider({ source, children }: IconGlyphSourceProviderProps) {
+  return (
+    <IconGlyphSourceContext.Provider value={source}>{children}</IconGlyphSourceContext.Provider>
+  );
+}
 
 export type IconBaseProps<Name extends string = string> = SharedProps &
   Pick<
@@ -206,7 +225,7 @@ export function createIcon<Name extends string>(source: IconGlyphSource<Name>) {
       const iconSize = theme.iconSize[size];
 
       // Tried before the bound set, so a source can override a built-in icon.
-      const contextSource = useIconGlyphSource();
+      const contextSource = useContext(IconGlyphSourceContext);
       const resolved = resolveGlyph(contextSource, source, {
         name,
         size,

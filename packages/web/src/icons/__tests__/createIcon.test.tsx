@@ -1,8 +1,7 @@
 import { render, screen } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../utils/test';
-import { createIcon, type GlyphMap } from '../createIcon';
-import { IconGlyphSourceProvider } from '../IconGlyphSourceContext';
+import { createIcon, type GlyphMap, IconGlyphSourceProvider } from '../createIcon';
 
 const GLYPH = '\u2605'; // ★
 const OTHER_GLYPH = '\u25B2'; // ▲

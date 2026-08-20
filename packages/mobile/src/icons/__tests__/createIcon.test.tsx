@@ -4,8 +4,12 @@ import { Text, View } from 'react-native';
 import { render, screen } from '@testing-library/react-native';
 
 import { DefaultThemeProvider } from '../../utils/testHelpers';
-import { createIcon, DEFAULT_ICON_FONT_FAMILY, type GlyphMap } from '../createIcon';
-import { IconGlyphSourceProvider } from '../IconGlyphSourceContext';
+import {
+  createIcon,
+  DEFAULT_ICON_FONT_FAMILY,
+  type GlyphMap,
+  IconGlyphSourceProvider,
+} from '../createIcon';
 
 const INACTIVE_GLYPH = '\u2606'; // ☆
 const ACTIVE_GLYPH = '\u2605'; // ★

@@ -3,8 +3,8 @@ import React from 'react';
 import { IconButton } from '../../buttons/IconButton';
 import { HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
+import { IconGlyphSourceProvider } from '../createIcon';
 import { Icon } from '../Icon';
-import { IconGlyphSourceProvider } from '../IconGlyphSourceContext';
 
 import { materialFontFamily, materialGlyphMap, withMaterialIconsFont } from './materialIcons';
 

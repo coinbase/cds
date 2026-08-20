@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { createContext, memo, useContext, useMemo } from 'react';
 import {
   Animated,
   type StyleProp,
@@ -18,8 +18,6 @@ import { isDevelopment } from '@coinbase/cds-utils';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
-
-import { useIconGlyphSource } from './IconGlyphSourceContext';
 
 /** Default font family for the CDS icon glyph font. */
 export const DEFAULT_ICON_FONT_FAMILY = 'CoinbaseIcons';
@@ -53,6 +51,30 @@ export type IconGlyphSource<Name extends string = string> = {
    */
   getGlyph?: (args: IconGlyphResolverArgs<Name>) => string | undefined;
 };
+
+const IconGlyphSourceContext = createContext<IconGlyphSource<any> | undefined>(undefined);
+
+export type IconGlyphSourceProviderProps = {
+  /**
+   * Consulted before the built-in glyphs. A nested provider replaces it. Its
+   * font must be loaded (e.g. via `expo-font`).
+   */
+  source: IconGlyphSource<any>;
+  children: React.ReactNode;
+};
+
+/**
+ * Adds a custom glyph source to every CDS icon rendered below.
+ *
+ * Scope this to a subtree: a source reusing a built-in name re-skins that icon
+ * everywhere below, including icons CDS renders internally (`close`, `caretUp`,
+ * `checkmark`). Its names must be names the icon component already accepts.
+ */
+export function IconGlyphSourceProvider({ source, children }: IconGlyphSourceProviderProps) {
+  return (
+    <IconGlyphSourceContext.Provider value={source}>{children}</IconGlyphSourceContext.Provider>
+  );
+}
 
 export type IconBaseProps<Name extends string = string> = SharedProps &
   PaddingProps &
@@ -175,7 +197,7 @@ export function createIcon<Name extends string>(source: IconGlyphSource<Name>) {
     const finalColor = dangerouslySetColor ?? iconColor;
 
     // Tried before the bound set, so a source can override a built-in icon.
-    const contextSource = useIconGlyphSource();
+    const contextSource = useContext(IconGlyphSourceContext);
     const resolved = resolveGlyph(contextSource, source, {
       name,
       size,
