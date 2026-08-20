@@ -8,6 +8,14 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.20.0 ((8/20/2026, 11:23 AM PST))
+
+This is an artificial version bump with no new change.
+
+#### 📘 Misc
+
+- Docs: Update input props jsdocs.
+
 ## 9.19.0 ((8/20/2026, 10:00 AM PST))
 
 This is an artificial version bump with no new change.

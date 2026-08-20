@@ -162,8 +162,8 @@ export const TextInput = memo(
     const mergedProps = useComponentConfig('TextInput', _props);
     const {
       label,
-      labelFont = 'label1',
-      labelColor = 'fg',
+      labelFont = 'label2',
+      labelColor = 'fgMuted',
       helperText = '',
       variant = 'foregroundMuted',
       testID,

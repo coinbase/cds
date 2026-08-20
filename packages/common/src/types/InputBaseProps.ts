@@ -18,9 +18,15 @@ export type SharedInputProps = {
   compact?: boolean;
   /** Short messageArea indicating purpose of input */
   label?: string;
-  /** Typography token for the field label. */
+  /**
+   * Typography token for the field label.
+   * @default 'label2'
+   */
   labelFont?: ThemeVars.Font;
-  /** Color token for the field label. */
+  /**
+   * Color token for the field label.
+   * @default 'fgMuted'
+   */
   labelColor?: ThemeVars.Color;
   /** Placeholder text displayed inside of the input. Will be replaced if there is a value. */
   placeholder?: string;

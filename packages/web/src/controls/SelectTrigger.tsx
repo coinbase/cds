@@ -122,7 +122,7 @@ export const SelectTrigger = memo(
           )}
           {shouldShowCompactLabel ? (
             <HStack alignItems="center" height="100%" maxWidth="40%" paddingEnd={1}>
-              <InputLabel color="fg" id={accessibilityLabelId} overflow="truncate">
+              <InputLabel color="fg" font="label1" id={accessibilityLabelId} overflow="truncate">
                 {label}
               </InputLabel>
             </HStack>
@@ -145,7 +145,13 @@ export const SelectTrigger = memo(
             >
               {!compact && labelVariant === 'inside' ? (
                 <VStack width="100%">
-                  <InputLabel color="fg" id={accessibilityLabelId} overflow="truncate" paddingY={0}>
+                  <InputLabel
+                    color="fg"
+                    font="label1"
+                    id={accessibilityLabelId}
+                    overflow="truncate"
+                    paddingY={0}
+                  >
                     {label}
                   </InputLabel>
                   {textNode}

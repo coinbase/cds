@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.20.0 (8/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: update default label style for input components: TextInput, Select, Combobox, DateInput, etc. Font: label1 -=> label2; color: fg => fgMuted.
+
 ## 9.19.0 (8/20/2026 PST)
 
 #### 🚀 Updates
