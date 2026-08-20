@@ -557,5 +557,13 @@ export const names: IconName[] = [
   'stop',
   'desktop',
   'liveEvents',
-  'lineChartPoints'
+  'lineChartPoints',
+  'rewards',
+  'advanced',
+  'predictions',
+  'inviteFriends',
+  'borrow',
+  'creditCard',
+  'advisor',
+  'standWithCrypto'
 ];

@@ -8,6 +8,19 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+
+
+##### ⭐️ Added (8)
+
+- rewards
+- advanced
+- predictions
+- inviteFriends
+- borrow
+- creditCard
+- advisor
+- standWithCrypto
+
 ## 5.21.0 (7/15/2026 PST)
 
 #### 🚀 Updates
