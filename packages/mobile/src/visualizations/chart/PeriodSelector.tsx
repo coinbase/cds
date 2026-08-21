@@ -174,6 +174,7 @@ export const PeriodSelector = memo(
       justifyContent = 'space-between',
       TabComponent = PeriodSelectorTab,
       TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
+      font = 'label1',
       ...props
     } = mergedProps;
 
@@ -185,6 +186,7 @@ export const PeriodSelector = memo(
         activeBackground={activeBackground}
         activeColor={activeColor}
         background={background}
+        font={font}
         justifyContent={justifyContent}
         width={width}
         {...props}

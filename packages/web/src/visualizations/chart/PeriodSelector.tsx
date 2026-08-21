@@ -155,6 +155,7 @@ export const PeriodSelector = memo(
       justifyContent = 'space-between',
       TabComponent = PeriodSelectorTab,
       TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
+      font = 'label1',
       className,
       classNames,
       style,
@@ -175,6 +176,7 @@ export const PeriodSelector = memo(
           tab: classNames?.tab,
           activeIndicator: classNames?.activeIndicator,
         }}
+        font={font}
         justifyContent={justifyContent}
         style={styles?.root ? { ...style, ...styles.root } : style}
         styles={{
