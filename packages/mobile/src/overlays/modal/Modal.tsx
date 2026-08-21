@@ -153,11 +153,8 @@ export const Modal = memo(
     const [internalVisible, setInternalVisible] = useState(visible);
     const prevVisible = usePreviousValue(visible);
     const { width, height } = useWindowDimensions();
-    // React Native's <Modal> presents a separate native surface (UIViewController
-    // on iOS, Dialog on Android) instead of rendering into the app window. A
-    // native SafeAreaView would measure that surface, which often reports 0
-    // insets. SafeAreaProvider already measured the app window, so its React
-    // context still has the device insets — read those here and apply as padding.
+    // RN Modal is a separate native surface; SafeAreaView inside it often reports 0 insets.
+    // useSafeAreaInsets() still reads the root provider, which has the device insets.
     const insets = useSafeAreaInsets();
     const safeAreaStyle = useMemo(() => {
       const androidStatusBarHeight = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0;
