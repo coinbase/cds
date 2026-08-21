@@ -153,8 +153,8 @@ export const Modal = memo(
     const [internalVisible, setInternalVisible] = useState(visible);
     const prevVisible = usePreviousValue(visible);
     const { width, height } = useWindowDimensions();
-    // RN Modal is a separate native surface; SafeAreaView inside it often reports 0 insets.
-    // useSafeAreaInsets() still reads the root provider, which has the device insets.
+    // RN Modal is a separate native surface; SafeAreaView often reports 0 insets.
+    // useSafeAreaInsets() reads the root provider (device insets).
     const insets = useSafeAreaInsets();
     const safeAreaStyle = useMemo(() => {
       const androidStatusBarHeight = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0;
