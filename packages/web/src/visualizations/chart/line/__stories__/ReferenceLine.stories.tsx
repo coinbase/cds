@@ -8,7 +8,7 @@ import { Text } from '../../../../typography';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { Scrubber } from '../../scrubber';
 import { ChartText } from '../../text/ChartText';
-import { useScrubberContext } from '../../utils';
+import { useHighlightContext } from '../../utils';
 import { DefaultReferenceLineLabel } from '../DefaultReferenceLineLabel';
 import { DottedLine } from '../DottedLine';
 import { LineChart } from '../LineChart';
@@ -311,7 +311,8 @@ const DraggableReferenceLine = memo(
 const FADE_ZONE = 128;
 
 const StartPriceLabel = memo<React.ComponentProps<typeof DefaultReferenceLineLabel>>((props) => {
-  const { scrubberPosition } = useScrubberContext();
+  const { highlight } = useHighlightContext();
+  const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
   const { getXScale, drawingArea } = useCartesianChartContext();
   const isScrubbing = scrubberPosition !== undefined;
 
@@ -355,7 +356,7 @@ const StartPriceReferenceLine = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       areaType="dotted"
       height={300}

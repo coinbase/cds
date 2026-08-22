@@ -21,7 +21,7 @@ import {
   type ScrubberLabelProps,
   type ScrubberRef,
   useCartesianChartContext,
-  useScrubberContext,
+  useHighlightContext,
 } from '../..';
 import { LineChart, SolidLine } from '../../line';
 import { Scrubber } from '../Scrubber';
@@ -50,7 +50,7 @@ const Example: React.FC<
 const BasicScrubber = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -75,7 +75,7 @@ const BasicScrubber = () => {
 const SeriesFilter = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
@@ -111,7 +111,7 @@ const SeriesFilter = () => {
 const WithLabels = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
@@ -130,7 +130,7 @@ const WithLabels = () => {
 const IdlePulse = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
@@ -152,7 +152,7 @@ const ImperativePulse = () => {
   return (
     <VStack gap={2}>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         height={{ base: 150, tablet: 200, desktop: 250 }}
         series={[
@@ -173,7 +173,7 @@ const BeaconStroke = () => {
   return (
     <Box borderRadius={300} padding={2} style={{ background: 'rgb(var(--red40))' }}>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         height={{ base: 150, tablet: 200, desktop: 250 }}
         series={[
@@ -208,7 +208,7 @@ const CustomBeacon = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -236,7 +236,8 @@ const CustomBeaconLabel = () => {
   const MyScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, dataLength } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),
@@ -269,7 +270,7 @@ const CustomBeaconLabel = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       areaType="dotted"
@@ -313,7 +314,8 @@ const PercentageBeaconLabels = ({ preferredSide }: { preferredSide?: ScrubberLab
   const PercentageScrubberBeaconLabel = memo(
     ({ seriesId, color, label, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, dataLength } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),
@@ -357,7 +359,7 @@ const PercentageBeaconLabels = ({ preferredSide }: { preferredSide?: ScrubberLab
   return (
     <Box borderRadius={300} padding={2} style={{ background }}>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         areaType="dotted"
         height={250}
@@ -396,7 +398,7 @@ const PercentageBeaconLabels = ({ preferredSide }: { preferredSide?: ScrubberLab
 const HideBeaconLabels = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       legend
       showArea
       height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -428,7 +430,7 @@ const HideBeaconLabels = () => {
 const LabelElevated = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 150, tablet: 200, desktop: 250 }}
       inset={{ top: 60 }}
@@ -465,7 +467,7 @@ const CustomLabelComponent = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 150, tablet: 200, desktop: 250 }}
       inset={{ top: 16, bottom: 64 }}
@@ -487,7 +489,7 @@ const CustomLabelComponent = () => {
 const LabelFonts = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -523,7 +525,7 @@ const LabelBoundsInset = () => {
     <VStack gap={4}>
       <Box marginX={-3}>
         <LineChart
-          enableScrubbing
+          enableHighlighting
           showArea
           height={{ base: 150, tablet: 200, desktop: 250 }}
           inset={{ left: 0, right: 0 }}
@@ -539,7 +541,7 @@ const LabelBoundsInset = () => {
       </Box>
       <Box marginX={-3}>
         <LineChart
-          enableScrubbing
+          enableHighlighting
           showArea
           height={{ base: 150, tablet: 200, desktop: 250 }}
           inset={{ left: 0, right: 0 }}
@@ -563,7 +565,7 @@ const LabelBoundsInset = () => {
 const CustomLine = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
@@ -580,14 +582,16 @@ const CustomLine = () => {
 
 const HiddenScrubberWhenIdle = () => {
   const MyScrubberBeacon = memo((props: ScrubberBeaconProps) => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
     const isScrubbing = scrubberPosition !== undefined;
 
     return <DefaultScrubberBeacon {...props} opacity={isScrubbing ? 1 : 0} />;
   });
 
   const MyScrubberBeaconLabel = memo((props: ScrubberBeaconLabelProps) => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
     const isScrubbing = scrubberPosition !== undefined;
 
     return <DefaultScrubberBeaconLabel {...props} opacity={isScrubbing ? 1 : 0} />;
@@ -595,7 +599,7 @@ const HiddenScrubberWhenIdle = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
@@ -614,7 +618,7 @@ const HiddenScrubberWhenIdle = () => {
 const HideOverlay = () => {
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
@@ -742,7 +746,8 @@ const MatchupBeaconLabels = () => {
   const MatchupScrubberBeaconLabel = memo(
     ({ seriesId, color, ...props }: ScrubberBeaconLabelProps) => {
       const { getSeriesData, dataLength } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
 
       const seriesData = useMemo(
         () => getLineData(getSeriesData(seriesId)),
@@ -777,7 +782,7 @@ const MatchupBeaconLabels = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       areaType="dotted"
       height={250}

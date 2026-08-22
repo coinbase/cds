@@ -20,7 +20,7 @@ import type ReactReconciler from 'react-reconciler';
 
 import { ThemeContext } from '../../system/ThemeProvider';
 
-import { ScrubberContext } from './utils/context';
+import { HighlightContext, ScrubberContext } from './utils/context';
 import { CartesianChartContext } from './ChartProvider';
 
 /**
@@ -28,7 +28,12 @@ import { CartesianChartContext } from './ChartProvider';
  * Only these contexts will be made available inside the chart's Skia tree.
  * This improves performance by avoiding the overhead of rendering every bridged context.
  */
-const BRIDGED_CONTEXTS: Context<any>[] = [ThemeContext, CartesianChartContext, ScrubberContext];
+const BRIDGED_CONTEXTS: Context<any>[] = [
+  ThemeContext,
+  CartesianChartContext,
+  ScrubberContext,
+  HighlightContext,
+];
 
 /**
  * Represents a react-internal tree node.

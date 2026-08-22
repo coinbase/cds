@@ -24,6 +24,7 @@ export type BarPlotBaseProps = Pick<
   | 'barMinSize'
   | 'stackMinSize'
   | 'BarStackComponent'
+  | 'fadeOnHighlight'
 > & {
   /**
    * Array of series IDs to render.
@@ -63,6 +64,7 @@ export const BarPlot = memo<BarPlotProps>(
     stackMinSize,
     transitions,
     transition,
+    fadeOnHighlight,
   }) => {
     const { animate, series: allSeries, drawingArea } = useCartesianChartContext();
 
@@ -128,6 +130,7 @@ export const BarPlot = memo<BarPlotProps>(
             barMinSize={barMinSize}
             barPadding={barPadding}
             borderRadius={defaultBorderRadius}
+            fadeOnHighlight={fadeOnHighlight}
             fillOpacity={defaultFillOpacity}
             roundBaseline={roundBaseline}
             series={group.series}

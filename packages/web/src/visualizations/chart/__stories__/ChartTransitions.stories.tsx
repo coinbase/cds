@@ -80,7 +80,7 @@ const TransitionLineChart = memo<{
   animate?: boolean;
   idlePulse?: boolean;
   scrubberRef?: RefObject<ScrubberRef | null>;
-  enableScrubbing?: boolean;
+  enableHighlighting?: boolean;
   points?: LineProps['points'];
 }>(
   ({
@@ -90,18 +90,18 @@ const TransitionLineChart = memo<{
     animate: animateProp,
     idlePulse,
     scrubberRef,
-    enableScrubbing = true,
+    enableHighlighting = true,
     points,
   }) => (
     <CartesianChart
       animate={animateProp}
-      enableScrubbing={enableScrubbing}
+      enableHighlighting={enableHighlighting}
       height={{ base: 200, tablet: 225, desktop: 250 }}
       inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
       series={[{ id: 'values', data }]}
     >
       <Line points={points} seriesId="values" strokeWidth={3} transitions={transitions} />
-      {enableScrubbing && (
+      {enableHighlighting && (
         <Scrubber
           ref={scrubberRef as RefObject<ScrubberRef>}
           hideOverlay
@@ -120,7 +120,7 @@ const TransitionAreaChart = memo<{
   scrubberRef?: RefObject<ScrubberRef | null>;
 }>(({ data, transitions, idlePulse, scrubberRef }) => (
   <CartesianChart
-    enableScrubbing
+    enableHighlighting
     height={{ base: 200, tablet: 225, desktop: 250 }}
     inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
     series={[{ id: 'values', data }]}
@@ -142,7 +142,7 @@ const MultiLineChart = memo<{
   transitions: PathProps['transitions'];
 }>(({ data1, data2, transitions }) => (
   <CartesianChart
-    enableScrubbing
+    enableHighlighting
     height={{ base: 200, tablet: 225, desktop: 250 }}
     inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
     series={[
@@ -285,7 +285,7 @@ function SessionBaselineAreaTransitionsExample() {
     <VStack gap={2}>
       <CartesianChart
         key={resetKey}
-        enableScrubbing
+        enableHighlighting
         height={{ base: 200, tablet: 225, desktop: 250 }}
         inset={{ top: 16, bottom: 16, left: 16, right: 16 }}
         series={[
@@ -321,7 +321,7 @@ function generateBarData() {
 
 const barChartProps = {
   showXAxis: true,
-  enableScrubbing: true,
+  enableHighlighting: true,
   height: 250,
   xAxis: { data: barCategories },
   yAxis: { domain: { min: 0, max: 100 } },

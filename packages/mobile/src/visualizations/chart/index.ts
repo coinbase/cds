@@ -6,6 +6,7 @@ export * from './CartesianChart';
 export * from './ChartContextBridge';
 export * from './ChartProvider';
 export * from './gradient';
+export * from './HighlightProvider';
 export * from './legend';
 export * from './line';
 export * from './Path';

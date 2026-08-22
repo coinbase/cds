@@ -22,7 +22,7 @@ import {
 } from '../line/ReferenceLine';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import { type ChartInset, type Series } from '../utils/chart';
-import { useScrubberContext } from '../utils/context';
+import { useHighlightContext } from '../utils/context';
 import { getPointOnSerializableScale } from '../utils/point';
 import type { Transition } from '../utils/transition';
 import {
@@ -154,7 +154,7 @@ export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
 export type ScrubberLabelProps = ReferenceLineLabelComponentProps;
 export type ScrubberLabelComponent = React.FC<ScrubberLabelProps>;
 
-export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse'> &
+export type ScrubberBaseProps = Pick<ScrubberBeaconGroupBaseProps, 'idlePulse' | 'highlightIndex'> &
   Pick<ReferenceLineBaseProps, 'LineComponent' | 'LabelComponent' | 'labelElevated'> &
   Pick<ScrubberBeaconGroupProps, 'BeaconComponent'> &
   Pick<ScrubberBeaconLabelGroupProps, 'BeaconLabelComponent'> & {
@@ -270,6 +270,7 @@ export const Scrubber = memo(
     labelBoundsInset,
     beaconLabelFont,
     idlePulse,
+    highlightIndex = 0,
     beaconTransitions,
     transitions = beaconTransitions,
     beaconStroke,
@@ -279,7 +280,13 @@ export const Scrubber = memo(
     const theme = useTheme();
     const beaconGroupRef = React.useRef<ScrubberBeaconGroupRef>(null);
 
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight, enabled } = useHighlightContext();
+    const scrubberPosition = useDerivedValue(() => {
+      if (!enabled) return undefined;
+      const items = highlight.value;
+      const idx = items[highlightIndex]?.dataIndex;
+      return typeof idx === 'number' ? idx : undefined;
+    }, [highlight, enabled, highlightIndex]);
     const {
       layout,
       getXSerializableScale,
@@ -458,6 +465,7 @@ export const Scrubber = memo(
         <ScrubberBeaconGroup
           ref={beaconGroupRef}
           BeaconComponent={BeaconComponent}
+          highlightIndex={highlightIndex}
           idlePulse={idlePulse}
           seriesIds={filteredSeriesIds}
           stroke={beaconStroke}
@@ -466,6 +474,7 @@ export const Scrubber = memo(
         {showBeaconLabels && (
           <ScrubberBeaconLabelGroup
             BeaconLabelComponent={BeaconLabelComponent}
+            highlightIndex={highlightIndex}
             labelFont={beaconLabelFont}
             labelHorizontalOffset={beaconLabelHorizontalOffset}
             labelMinGap={beaconLabelMinGap}

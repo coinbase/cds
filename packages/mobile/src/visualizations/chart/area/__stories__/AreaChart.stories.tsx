@@ -27,7 +27,7 @@ const BasicExample = () => {
 
   return (
     <AreaChart
-      enableScrubbing
+      enableHighlighting
       showYAxis
       accessibilityLabel={`Area chart with ${basicData.length} data points. Swipe to navigate.`}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -63,7 +63,7 @@ const StackedExample = () => {
 
   return (
     <AreaChart
-      enableScrubbing
+      enableHighlighting
       showLines
       stacked
       accessibilityLabel={`Stacked rewards chart with ${currentRewardsData.length} data points. Swipe to navigate.`}
@@ -146,7 +146,7 @@ const CustomBaselineExample = () => {
 
   return (
     <AreaChart
-      enableScrubbing
+      enableHighlighting
       showLines
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
@@ -191,7 +191,7 @@ const AxisBaselineThresholdExample = () => {
   return (
     <VStack gap={2}>
       <AreaChart
-        enableScrubbing
+        enableHighlighting
         showLines
         showYAxis
         accessibilityLabel="Area chart with threshold baseline at 30."
@@ -221,7 +221,7 @@ const AxisBaselineThresholdExample = () => {
         <Scrubber />
       </AreaChart>
       <AreaChart
-        enableScrubbing
+        enableHighlighting
         showLines
         showXAxis
         accessibilityLabel="Horizontal area chart with threshold baseline at 30."
@@ -297,7 +297,7 @@ const AreaChartStories = () => {
       </Example>
       <Example title="Negative Values">
         <AreaChart
-          enableScrubbing
+          enableHighlighting
           showLines
           showYAxis
           accessibilityLabel="Area chart with negative values. 7 data points. Swipe to navigate."
@@ -324,7 +324,7 @@ const AreaChartStories = () => {
       </Example>
       <Example title="Axis Baseline">
         <AreaChart
-          enableScrubbing
+          enableHighlighting
           showLines
           showYAxis
           accessibilityLabel="Area chart with custom axis baseline at 100."
@@ -356,7 +356,7 @@ const AreaChartStories = () => {
       </Example>
       <Example title="Styles">
         <AreaChart
-          enableScrubbing={false}
+          enableHighlighting={false}
           height={350}
           series={[
             {
@@ -384,7 +384,7 @@ const AreaChartStories = () => {
       </Example>
       <Example title="Horizontal Layout">
         <AreaChart
-          enableScrubbing
+          enableHighlighting
           showLines
           showXAxis
           showYAxis

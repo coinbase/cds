@@ -1,4 +1,6 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useCallback, useMemo } from 'react';
+import { cx } from '@coinbase/cds-web';
+import { m as motion, type Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import { Path } from '../Path';
@@ -8,10 +10,15 @@ import {
   withStaggerDelayTransition,
 } from '../utils/bar';
 import { type BarTransition, getNormalizedStagger } from '../utils/bar';
+import { useHighlightContext } from '../utils/context';
+import type { HighlightedItem } from '../utils/highlight';
 import { getBarPath } from '../utils/path';
 import { defaultTransition, getTransition } from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
+
+const fadeOpacity = 0.3;
+const fadeTransition: Transition = { duration: 0.1, ease: 'easeOut' };
 
 export type DefaultBarProps = BarComponentProps & {
   /**
@@ -25,7 +32,7 @@ export type DefaultBarProps = BarComponentProps & {
 };
 
 /**
- * Default bar component that renders a solid bar with animation.
+ * Default bar component that renders a solid bar with animation and highlighting support.
  */
 export const DefaultBar = memo<DefaultBarProps>(
   ({
@@ -46,9 +53,76 @@ export const DefaultBar = memo<DefaultBarProps>(
     minSize = 1,
     transitions,
     transition,
+    fadeOnHighlight,
     ...props
   }) => {
     const { animate, drawingArea, layout } = useCartesianChartContext();
+    const highlightContext = useHighlightContext();
+    const { enabled: highlightEnabled, highlight, scope } = highlightContext;
+
+    const dataIndex = useMemo(() => {
+      if (typeof dataX === 'number') return dataX;
+      if (typeof dataY === 'number') return dataY;
+      return null;
+    }, [dataX, dataY]);
+
+    const highlightByDataIndex = scope.dataIndex ?? false;
+    const highlightBySeries = scope.series ?? false;
+
+    const highlightOpacity = useMemo(() => {
+      if (!fadeOnHighlight || !highlightEnabled) return 1;
+
+      let opacity = 1;
+      if (highlight.length > 0) {
+        const isHighlighted = highlight.some((item) => {
+          const indexMatch =
+            !highlightByDataIndex ||
+            (typeof item.dataIndex === 'number' && item.dataIndex === dataIndex);
+          // When seriesId is null/undefined (pointer between bars), all series at this index match.
+          // Only narrow to a specific series when one is identified.
+          const seriesMatch =
+            !highlightBySeries || item.seriesId == null || item.seriesId === seriesId;
+          return indexMatch && seriesMatch;
+        });
+        opacity = isHighlighted ? 1 : fadeOpacity;
+      }
+      return opacity;
+    }, [
+      fadeOnHighlight,
+      highlightEnabled,
+      highlight,
+      highlightByDataIndex,
+      highlightBySeries,
+      dataIndex,
+      seriesId,
+    ]);
+
+    const handlePointerEnter = useCallback(
+      (event: React.PointerEvent<SVGPathElement>) => {
+        if (!highlightEnabled || !highlightBySeries) return;
+        const item: HighlightedItem = { seriesId };
+        if (highlightByDataIndex && typeof dataIndex === 'number') {
+          item.dataIndex = dataIndex;
+        }
+        highlightContext.updatePointerHighlight(event.pointerId, item);
+      },
+      [
+        highlightContext,
+        highlightEnabled,
+        highlightBySeries,
+        highlightByDataIndex,
+        seriesId,
+        dataIndex,
+      ],
+    );
+
+    const handlePointerLeave = useCallback(
+      (event: React.PointerEvent<SVGPathElement>) => {
+        if (!highlightEnabled || !highlightBySeries) return;
+        highlightContext.updatePointerHighlight(event.pointerId, { seriesId: null });
+      },
+      [highlightContext, highlightEnabled, highlightBySeries],
+    );
 
     const normalizedStagger = useMemo(
       () => getNormalizedStagger(layout, x, y, drawingArea),
@@ -136,7 +210,7 @@ export const DefaultBar = memo<DefaultBarProps>(
       minSize,
     ]);
 
-    return (
+    const path = (
       <Path
         animate={animate}
         clipRect={null}
@@ -144,6 +218,8 @@ export const DefaultBar = memo<DefaultBarProps>(
         fill={fill}
         fillOpacity={fillOpacity}
         initialPath={initialPath}
+        onPointerEnter={highlightEnabled && highlightBySeries ? handlePointerEnter : undefined}
+        onPointerLeave={highlightEnabled && highlightBySeries ? handlePointerLeave : undefined}
         transitions={{
           enter: enterTransitionWithStagger,
           enterOpacity: enterOpacityTransitionWithStagger,
@@ -152,5 +228,19 @@ export const DefaultBar = memo<DefaultBarProps>(
         {...props}
       />
     );
+
+    if (fadeOnHighlight) {
+      return (
+        <motion.g
+          animate={{ opacity: highlightOpacity }}
+          initial={false}
+          transition={fadeTransition}
+        >
+          {path}
+        </motion.g>
+      );
+    }
+
+    return path;
   },
 );

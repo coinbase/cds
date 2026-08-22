@@ -42,7 +42,7 @@ const renderChartWithScrubber = (scrubberProps?: React.ComponentProps<typeof Scr
   return render(
     <DefaultThemeProvider>
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         animate={false}
         height={400}
         series={[{ id: 'test', data: [10, 20, 30, 40, 50] }]}
@@ -62,7 +62,7 @@ const renderMultiSeriesChartWithScrubber = (
   return render(
     <DefaultThemeProvider>
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         animate={false}
         height={400}
         series={[
@@ -103,7 +103,7 @@ const renderHorizontalMultiSeriesChartWithScrubber = (
   return render(
     <DefaultThemeProvider>
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         animate={false}
         height={400}
         layout="horizontal"

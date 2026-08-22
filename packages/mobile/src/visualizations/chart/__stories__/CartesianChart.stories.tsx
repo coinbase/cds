@@ -16,7 +16,7 @@ import { Line } from '../line/Line';
 import { Point } from '../point/Point';
 import { Scrubber } from '../scrubber/Scrubber';
 import { ChartText } from '../text';
-import { type GradientDefinition, isCategoricalScale } from '../utils';
+import { type GradientDefinition, type HighlightedItem, isCategoricalScale } from '../utils';
 import { CartesianChart, DottedArea, ReferenceLine, SolidLine, type SolidLineProps } from '../';
 
 const defaultChartHeight = 250;
@@ -230,11 +230,7 @@ const currentPrice = btcPrices[displayIndex];
 const currentDate = btcDates[displayIndex];
 
 const PriceWithVolumeChart = memo(
-  ({
-    onScrubberPositionChange,
-  }: {
-    onScrubberPositionChange: (index: number | undefined) => void;
-  }) => {
+  ({ onHighlightChange }: { onHighlightChange: (items: HighlightedItem[]) => void }) => {
     const theme = useTheme();
 
     const formatPriceInThousands = useCallback((price: number) => {
@@ -279,11 +275,11 @@ const PriceWithVolumeChart = memo(
 
     return (
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         accessibilityLabel={chartAccessibilityLabel}
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={defaultChartHeight}
-        onScrubberPositionChange={onScrubberPositionChange}
+        onHighlightChange={onHighlightChange}
         series={[
           {
             id: 'prices',
@@ -371,10 +367,14 @@ const PriceWithVolumeHeader = memo(({ currentIndex }: { currentIndex: number | u
 const PriceWithVolume = memo(() => {
   const [currentIndex, setCurrentIndex] = useState<number | undefined>();
 
+  const onHighlightChange = useCallback((items: HighlightedItem[]) => {
+    setCurrentIndex(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <VStack gap={2}>
       <PriceWithVolumeHeader currentIndex={currentIndex} />
-      <PriceWithVolumeChart onScrubberPositionChange={setCurrentIndex} />
+      <PriceWithVolumeChart onHighlightChange={onHighlightChange} />
     </VStack>
   );
 });

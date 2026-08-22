@@ -5,6 +5,7 @@ import type { SkTypefaceFontProvider } from '@shopify/react-native-skia';
 
 import type { CartesianAxisConfig } from './axis';
 import type { Series } from './chart';
+import type { BarBounds, HighlightedItem, HighlightScope } from './highlight';
 import type { ChartScaleFunction, SerializableScale } from './scale';
 
 /**
@@ -15,20 +16,39 @@ import type { ChartScaleFunction, SerializableScale } from './scale';
  */
 export type CartesianChartLayout = 'horizontal' | 'vertical';
 
-/**
- * Context value for Cartesian (X/Y) coordinate charts.
- * Contains axis-specific methods and properties for rectangular coordinate systems.
- */
-export type CartesianChartContextValue = {
+export type ChartType = 'cartesian';
+
+export type ChartContextValue = {
   /**
-   * Chart layout - describes the direction bars/areas grow.
-   * @default 'vertical'
+   * Whether to animate the chart.
    */
-  layout: CartesianChartLayout;
+  animate: boolean;
+  /**
+   * The chart type.
+   */
+  type: ChartType;
   /**
    * The series data for the chart.
    */
   series: Series[];
+  /**
+   * Width of the chart SVG.
+   */
+  width: number;
+  /**
+   * Height of the chart SVG.
+   */
+  height: number;
+  /**
+   * Drawing area of the chart.
+   */
+  drawingArea: Rect;
+  /**
+   * Length of the data domain.
+   * This is equal to the length of xAxis.data or the longest series data length
+   * This equals the number of possible scrubber positions
+   */
+  dataLength: number;
   /**
    * Returns the series which matches the seriesId or undefined.
    * @param seriesId - A series' id
@@ -41,18 +61,6 @@ export type CartesianChartContextValue = {
    */
   getSeriesData: (seriesId?: string) => Array<[number, number] | null> | undefined;
   /**
-   * Whether to animate the chart.
-   */
-  animate: boolean;
-  /**
-   * Width of the chart SVG.
-   */
-  width: number;
-  /**
-   * Height of the chart SVG.
-   */
-  height: number;
-  /**
    * Default font families to use within ChartText.
    * When not set, should use the default for the system.
    */
@@ -61,6 +69,18 @@ export type CartesianChartContextValue = {
    * Skia font provider.
    */
   fontProvider: SkTypefaceFontProvider;
+};
+
+/**
+ * Context value for Cartesian (X/Y) coordinate charts.
+ * Contains axis-specific methods and properties for rectangular coordinate systems.
+ */
+export type CartesianChartContextValue = ChartContextValue & {
+  /**
+   * Chart layout - describes the direction bars/areas grow.
+   * @default 'vertical'
+   */
+  layout: CartesianChartLayout;
   /**
    * Get x-axis configuration by ID.
    * @param id - The axis ID. Defaults to defaultAxisId.
@@ -92,16 +112,6 @@ export type CartesianChartContextValue = {
    */
   getYSerializableScale: (id?: string) => SerializableScale | undefined;
   /**
-   * Drawing area of the chart.
-   */
-  drawingArea: Rect;
-  /**
-   * Length of the data domain.
-   * This is equal to the length of xAxis.data or the longest series data length
-   * This equals the number of possible scrubber positions
-   */
-  dataLength: number;
-  /**
    * Registers an axis.
    * Used by axis components to reserve space in the chart, preventing overlap with the drawing area.
    * @param id - The axis ID
@@ -120,6 +130,12 @@ export type CartesianChartContextValue = {
   getAxisBounds: (id: string) => Rect | undefined;
 };
 
+/**
+ * Context value for scrubber interaction state and position.
+ *
+ * @deprecated Use `useHighlightContext` and `HighlightContext`, and enable chart interaction with `enableHighlighting` instead of `enableScrubbing`. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
+ */
 export type ScrubberContextValue = {
   /**
    * Enables scrubbing interactions.
@@ -132,12 +148,72 @@ export type ScrubberContextValue = {
   scrubberPosition: SharedValue<number | undefined>;
 };
 
+/**
+ * @deprecated Use `HighlightContext` instead. Prefer `useHighlightContext` and `enableHighlighting` over this context and `enableScrubbing`. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
+ */
 export const ScrubberContext = createContext<ScrubberContextValue | undefined>(undefined);
 
+/**
+ * @deprecated Use `useHighlightContext` instead. Prefer `enableHighlighting` over `enableScrubbing` on charts. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
+ */
 export const useScrubberContext = (): ScrubberContextValue => {
   const context = useContext(ScrubberContext);
   if (!context) {
     throw new Error('useScrubberContext must be used within a Chart component');
+  }
+  return context;
+};
+
+/**
+ * Context value for chart highlighting state.
+ */
+export type HighlightContextValue = {
+  /**
+   * Whether highlighting is enabled.
+   */
+  enabled: boolean;
+  /**
+   * The highlight scope configuration.
+   */
+  scope: HighlightScope;
+  /**
+   * The current highlighted item(s) during interaction.
+   */
+  highlight: SharedValue<HighlightedItem[]>;
+  /**
+   * Set the highlighted items.
+   */
+  setHighlight: (items: HighlightedItem[]) => void;
+  /**
+   * Update a highlighted item for a specific pointer.
+   */
+  updatePointerHighlight: (pointerId: number, item: HighlightedItem) => void;
+  /**
+   * Remove a specific pointer's entry from highlight state.
+   */
+  removePointer: (pointerId: number) => void;
+  /**
+   * Register a bar element for hit testing.
+   */
+  registerBar: (bounds: BarBounds) => void;
+  /**
+   * Unregister a bar element.
+   */
+  unregisterBar: (seriesId: string, dataIndex: number) => void;
+};
+
+export const HighlightContext = createContext<HighlightContextValue | undefined>(undefined);
+
+/**
+ * Hook to access the highlight context.
+ * @throws Error if used outside of a HighlightProvider
+ */
+export const useHighlightContext = (): HighlightContextValue => {
+  const context = useContext(HighlightContext);
+  if (!context) {
+    throw new Error('useHighlightContext must be used within a HighlightProvider');
   }
   return context;
 };

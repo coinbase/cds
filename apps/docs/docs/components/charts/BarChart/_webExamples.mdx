@@ -47,6 +47,8 @@ function HorizontalBars() {
 
   return (
     <BarChart
+      enableHighlighting
+      fadeOnHighlight
       height={400}
       layout="horizontal"
       series={[
@@ -932,74 +934,101 @@ function Candlesticks() {
 
   const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
 
-  // Custom line component that renders a rect to highlight the entire bandwidth
-  const BandwidthHighlight = memo(({ d, stroke }) => {
-    const { getXScale, drawingArea, getXAxis } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
-    const xScale = getXScale();
-    const xAxis = getXAxis();
-
-    if (!xScale || scrubberPosition === undefined) return;
-
-    const xPos = xScale(scrubberPosition);
-
-    if (xPos === undefined) return;
-
-    return (
-      <rect
-        fill={stroke}
-        height={drawingArea.height}
-        width={xScale.bandwidth()}
-        x={xPos}
-        y={drawingArea.y}
-      />
-    );
-  });
-
   const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]);
 
   const staggerDelay = 0.25;
 
-  const CandlestickBarComponent = memo(({ x, y, width, height, originY, dataX, ...props }) => {
-    const { getYScale, drawingArea } = useCartesianChartContext();
-    const yScale = getYScale();
+  const CandlestickBarComponent = memo(
+    ({ x, y, width, height, originY, dataX, dataY, fadeOnHighlight, seriesId, ...props }) => {
+      const { getYScale, drawingArea } = useCartesianChartContext();
+      const highlightContext = useHighlightContext();
+      const yScale = getYScale();
 
-    const normalizedX = React.useMemo(
-      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
-      [x, drawingArea.x, drawingArea.width],
-    );
+      const dataIndex = React.useMemo(() => {
+        if (typeof dataX === 'number') return dataX;
+        if (typeof dataY === 'number') return dataY;
+        return null;
+      }, [dataX, dataY]);
 
-    const transition = React.useMemo(
-      () => ({
-        type: 'tween',
-        duration: 0.325,
-        delay: normalizedX * staggerDelay,
-      }),
-      [normalizedX],
-    );
+      const { enabled: highlightEnabled, highlight, scope } = highlightContext;
+      const highlightByDataIndex = scope.dataIndex ?? false;
+      const highlightBySeries = scope.series ?? false;
 
-    const wickX = x + width / 2;
+      const highlightOpacity = React.useMemo(() => {
+        if (!fadeOnHighlight || !highlightEnabled) return 1;
 
-    const timePeriodValue = stockData[dataX];
+        let opacity = 1;
+        if (highlight.length > 0) {
+          const isHighlighted = highlight.some((item) => {
+            const indexMatch =
+              !highlightByDataIndex ||
+              (typeof item.dataIndex === 'number' && item.dataIndex === dataIndex);
+            const seriesMatch =
+              !highlightBySeries || item.seriesId == null || item.seriesId === seriesId;
+            return indexMatch && seriesMatch;
+          });
+          opacity = isHighlighted ? 1 : 0.3;
+        }
+        return opacity;
+      }, [
+        fadeOnHighlight,
+        highlightEnabled,
+        highlight,
+        highlightByDataIndex,
+        highlightBySeries,
+        dataIndex,
+        seriesId,
+      ]);
 
-    const open = parseFloat(timePeriodValue.open);
-    const close = parseFloat(timePeriodValue.close);
+      const normalizedX = React.useMemo(
+        () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+        [x, drawingArea.x, drawingArea.width],
+      );
 
-    const bullish = open < close;
-    const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
-    const openY = yScale?.(open) ?? 0;
-    const closeY = yScale?.(close) ?? 0;
+      const transition = React.useMemo(
+        () => ({
+          type: 'tween',
+          duration: 0.325,
+          delay: normalizedX * staggerDelay,
+        }),
+        [normalizedX],
+      );
 
-    const bodyHeight = Math.abs(openY - closeY);
-    const bodyY = openY < closeY ? openY : closeY;
+      const fadeTransition = { duration: 0.1, ease: 'easeOut' };
 
-    return (
-      <m.g animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 12 }} transition={transition}>
-        <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
-        <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
-      </m.g>
-    );
-  });
+      const wickX = x + width / 2;
+
+      const timePeriodValue = stockData[dataX];
+
+      const open = parseFloat(timePeriodValue.open);
+      const close = parseFloat(timePeriodValue.close);
+
+      const bullish = open < close;
+      const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+      const openY = yScale?.(open) ?? 0;
+      const closeY = yScale?.(close) ?? 0;
+
+      const bodyHeight = Math.abs(openY - closeY);
+      const bodyY = openY < closeY ? openY : closeY;
+
+      const candlestick = (
+        <m.g animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 12 }} transition={transition}>
+          <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
+          <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+        </m.g>
+      );
+
+      if (fadeOnHighlight) {
+        return (
+          <m.g animate={{ opacity: highlightOpacity }} initial={false} transition={fadeTransition}>
+            {candlestick}
+          </m.g>
+        );
+      }
+
+      return candlestick;
+    },
+  );
 
   const formatPrice = React.useCallback((price) => {
     return new Intl.NumberFormat('en-US', {
@@ -1043,20 +1072,29 @@ function Candlesticks() {
   );
 
   const updateInfoText = React.useCallback(
-    (index) => {
+    (items) => {
       if (!infoTextRef.current) return;
 
+      const fallbackText = formatPrice(stockData[stockData.length - 1].close);
+
+      if (items.length === 0) {
+        infoTextRef.current.textContent = fallbackText;
+        selectedIndexRef.current = undefined;
+        return;
+      }
+
+      const index = items[0]?.dataIndex;
       const text =
-        index !== null && index !== undefined
+        typeof index === 'number' && index >= 0 && index < stockData.length
           ? `Open: ${formatThousandsPrice(stockData[index].open)}, Close: ${formatThousandsPrice(
               stockData[index].close,
             )}, Volume: ${(parseFloat(stockData[index].volume) / 1000).toFixed(2)}k`
-          : formatPrice(stockData[stockData.length - 1].close);
+          : fallbackText;
 
       infoTextRef.current.textContent = text;
-      selectedIndexRef.current = index;
+      selectedIndexRef.current = typeof index === 'number' ? index : undefined;
     },
-    [stockData, formatPrice, formatVolume],
+    [stockData, formatPrice, formatThousandsPrice],
   );
   const initialInfo = formatPrice(stockData[stockData.length - 1].close);
 
@@ -1066,7 +1104,8 @@ function Candlesticks() {
         <span ref={infoTextRef}>{initialInfo}</span>
       </Text>
       <BarChart
-        enableScrubbing
+        enableHighlighting
+        fadeOnHighlight
         showXAxis
         showYAxis
         BarComponent={CandlestickBarComponent}
@@ -1074,7 +1113,7 @@ function Candlesticks() {
         borderRadius={0}
         height={{ base: 150, tablet: 200, desktop: 250 }}
         inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
-        onScrubberPositionChange={updateInfoText}
+        onHighlightChange={updateInfoText}
         series={[
           {
             id: 'stock-prices',
@@ -1092,14 +1131,7 @@ function Candlesticks() {
           GridLineComponent: ThinSolidLine,
         }}
         aria-labelledby={infoTextId}
-      >
-        <Scrubber
-          hideOverlay
-          LineComponent={BandwidthHighlight}
-          lineStroke="var(--color-fgMuted)"
-          seriesIds={[]}
-        />
-      </BarChart>
+      />
     </VStack>
   );
 }

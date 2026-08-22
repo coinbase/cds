@@ -45,7 +45,7 @@ function MultipleLine() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -103,7 +103,7 @@ function DataFormat() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -196,7 +196,7 @@ function LiveUpdates() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 200, tablet: 225, desktop: 250 }}
       inset={{ right: 64 }}
@@ -232,7 +232,7 @@ function MissingData() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -313,24 +313,28 @@ LineChart uses `linear` scaling on axes by default, but you can also use other t
 
 ## Interaction
 
-Charts have built in functionality enabled through scrubbing, which can be used by setting `enableScrubbing` to true. You can listen to value changes through `onScrubberPositionChange`. Adding `Scrubber` to LineChart showcases the current scrubber position.
+Charts support interaction when `enableHighlighting` is true. Use `onHighlightChange` to listen for updates. Adding `Scrubber` to LineChart shows the visual scrubber for the current position.
 
 ```jsx live
 function Interaction() {
   const [scrubberPosition, setScrubberPosition] = useState();
 
+  const onHighlightChange = useCallback((items) => {
+    setScrubberPosition(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <VStack gap={2}>
       <Text font="label1">
         {scrubberPosition !== undefined
-          ? `Scrubber position: ${scrubberPosition}`
-          : 'Not scrubbing'}
+          ? `Highlighted index: ${scrubberPosition}`
+          : 'Not interacting'}
       </Text>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         height={{ base: 200, tablet: 225, desktop: 250 }}
-        onScrubberPositionChange={setScrubberPosition}
+        onHighlightChange={onHighlightChange}
         series={[
           {
             id: 'prices',
@@ -495,7 +499,7 @@ function Transitions() {
 
     return (
       <CartesianChart
-        enableScrubbing
+        enableHighlighting
         height={{ base: 200, tablet: 250, desktop: 300 }}
         inset={{ top: 32, bottom: 32, left: 16, right: 16 }}
         series={[
@@ -553,7 +557,7 @@ function BasicAccessible() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
@@ -601,7 +605,7 @@ function AccessibleWithHeader() {
         {displayLabel}
       </Text>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         showYAxis
         aria-labelledby={headerId}
@@ -814,7 +818,7 @@ function GainLossChart() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
@@ -926,7 +930,7 @@ You can also add instances of [ReferenceLine](/components/charts/ReferenceLine) 
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   showArea
   height={{ base: 200, tablet: 225, desktop: 250 }}
   series={[
@@ -1019,7 +1023,7 @@ function StylingScrubber() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -1180,7 +1184,7 @@ function Compact() {
     <Box style={{ padding: 1 }}>
       <LineChart
         {...dimensions}
-        enableScrubbing={false}
+        enableHighlighting={false}
         inset={0}
         series={[
           {
@@ -1414,7 +1418,7 @@ function AssetPriceWithDottedArea() {
           title={<Text font="title1">Bitcoin</Text>}
         />
         <LineChart
-          enableScrubbing
+          enableHighlighting
           showArea
           accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
@@ -1534,7 +1538,7 @@ function MonotoneAssetPrice() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showYAxis
       height={{ base: 200, tablet: 250, desktop: 300 }}
       inset={{ top: 64 }}
@@ -1712,7 +1716,7 @@ function ServiceAvailability() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
@@ -1768,17 +1772,110 @@ function ServiceAvailability() {
 
 ### Forecast Asset Price
 
-You can combine multiple lines within a series to change styles dynamically.
+You can combine multiple lines within a series to change styles dynamically. You can also control highlight state to keep the scrubber on the forecast boundary at rest and follows the pointer while scrubbing.
 
 ```jsx live
+// Stable LineComponent types + clip constants: defining these inside `ForecastAssetPrice` recreates
+// them every `userHighlight` update and invalidates `Line`’s memo and path work.
+const FORECAST_EXAMPLE_STROKE_WIDTH = 3;
+const FORECAST_EXAMPLE_CLIP_OFFSET = FORECAST_EXAMPLE_STROKE_WIDTH;
+const FORECAST_EXAMPLE_SPLIT_INDEX = 6;
+
+const ForecastAssetPriceHistoricalLine = memo((props) => {
+  const { drawingArea, getXScale } = useCartesianChartContext();
+  const xScale = getXScale();
+
+  if (!xScale || !drawingArea) return;
+
+  const currentX = xScale(FORECAST_EXAMPLE_SPLIT_INDEX);
+
+  if (currentX === undefined) return;
+
+  return (
+    <>
+      <defs>
+        <clipPath id="doc-forecast-asset-historical-clip">
+          <rect
+            height={drawingArea.height + FORECAST_EXAMPLE_CLIP_OFFSET * 2}
+            width={currentX + FORECAST_EXAMPLE_CLIP_OFFSET - drawingArea.x}
+            x={drawingArea.x - FORECAST_EXAMPLE_CLIP_OFFSET}
+            y={drawingArea.y - FORECAST_EXAMPLE_CLIP_OFFSET}
+          />
+        </clipPath>
+      </defs>
+      <g clipPath="url(#doc-forecast-asset-historical-clip)">
+        <SolidLine strokeWidth={FORECAST_EXAMPLE_STROKE_WIDTH} {...props} />
+      </g>
+    </>
+  );
+});
+ForecastAssetPriceHistoricalLine.displayName = 'ForecastAssetPriceHistoricalLine';
+
+const ForecastAssetPriceFutureLine = memo((props) => {
+  const { drawingArea, getXScale } = useCartesianChartContext();
+  const xScale = getXScale();
+
+  if (!xScale || !drawingArea) return;
+
+  const currentX = xScale(FORECAST_EXAMPLE_SPLIT_INDEX);
+
+  if (currentX === undefined) return;
+
+  return (
+    <>
+      <defs>
+        <clipPath id="doc-forecast-asset-future-clip">
+          <rect
+            height={drawingArea.height + FORECAST_EXAMPLE_CLIP_OFFSET * 2}
+            width={drawingArea.x + drawingArea.width - currentX + FORECAST_EXAMPLE_CLIP_OFFSET * 2}
+            x={currentX}
+            y={drawingArea.y - FORECAST_EXAMPLE_CLIP_OFFSET}
+          />
+        </clipPath>
+      </defs>
+      <g clipPath="url(#doc-forecast-asset-future-clip)">
+        <DottedLine
+          strokeDasharray={`0 ${FORECAST_EXAMPLE_STROKE_WIDTH * 2}`}
+          strokeWidth={FORECAST_EXAMPLE_STROKE_WIDTH}
+          {...props}
+        />
+      </g>
+    </>
+  );
+});
+ForecastAssetPriceFutureLine.displayName = 'ForecastAssetPriceFutureLine';
+
+const FORECAST_EXAMPLE_CHART_DATA = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];
+const FORECAST_EXAMPLE_CHART_HEIGHT = { base: 200, tablet: 225, desktop: 250 };
+const FORECAST_EXAMPLE_CHART_STYLE = { margin: '0 auto' };
+const FORECAST_EXAMPLE_MOTION = { duration: 0.15, delay: 0.35 };
+
+const ForecastAssetPriceScrubber = memo(function ForecastAssetPriceScrubber({ hideLine }) {
+  return (
+    <m.g animate={{ opacity: 1 }} initial={{ opacity: 0 }} transition={FORECAST_EXAMPLE_MOTION}>
+      <Scrubber hideLine={hideLine} hideOverlay />
+    </m.g>
+  );
+});
+
 function ForecastAssetPrice() {
   const startYear = 2020;
-  const data = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];
-  const currentIndex = 6;
+  const [userHighlight, setUserHighlight] = useState([]);
 
-  const strokeWidth = 3;
-  // To prevent cutting off the edge of our lines
-  const clipOffset = strokeWidth;
+  const defaultHighlight = useMemo(() => [{ dataIndex: FORECAST_EXAMPLE_SPLIT_INDEX }], []);
+  const effectiveHighlight = useMemo(
+    () => (userHighlight.length > 0 ? userHighlight : defaultHighlight),
+    [userHighlight, defaultHighlight],
+  );
+  // `hideLine` also hides the line label. Set `alwaysHideScrubberLine` to always use beacons only.
+  const alwaysHideScrubberLine = false;
+  const isUserScrubbing = userHighlight.length > 0;
+  const hideScrubberLine = alwaysHideScrubberLine || !isUserScrubbing;
+
+  const series = useMemo(
+    () => [{ id: 'price', data: FORECAST_EXAMPLE_CHART_DATA, color: assets.btc.color }],
+    [],
+  );
 
   const axisFormatter = useCallback(
     (dataIndex) => {
@@ -1787,104 +1884,25 @@ function ForecastAssetPrice() {
     [startYear],
   );
 
-  const HistoricalLineComponent = memo((props) => {
-    const { drawingArea, getXScale } = useCartesianChartContext();
-    const xScale = getXScale();
-
-    if (!xScale || !drawingArea) return;
-
-    const currentX = xScale(currentIndex);
-
-    if (currentX === undefined) return;
-
-    return (
-      <>
-        <defs>
-          <clipPath id="historical-clip">
-            <rect
-              height={drawingArea.height + clipOffset * 2}
-              width={currentX + clipOffset - drawingArea.x}
-              x={drawingArea.x - clipOffset}
-              y={drawingArea.y - clipOffset}
-            />
-          </clipPath>
-        </defs>
-        <g clipPath="url(#historical-clip)">
-          <SolidLine strokeWidth={strokeWidth} {...props} />
-        </g>
-      </>
-    );
-  });
-
-  // Since the solid and dotted line have different curves,
-  // we need two separate line components. Otherwise we could
-  // have one line component with SolidLine and DottedLine inside
-  // of it and two clipPaths.
-  const ForecastLineComponent = memo((props) => {
-    const { drawingArea, getXScale } = useCartesianChartContext();
-    const xScale = getXScale();
-
-    if (!xScale || !drawingArea) return;
-
-    const currentX = xScale(currentIndex);
-
-    if (currentX === undefined) return;
-
-    return (
-      <>
-        <defs>
-          <clipPath id="forecast-clip">
-            <rect
-              height={drawingArea.height + clipOffset * 2}
-              width={drawingArea.x + drawingArea.width - currentX + clipOffset * 2}
-              x={currentX}
-              y={drawingArea.y - clipOffset}
-            />
-          </clipPath>
-        </defs>
-        <g clipPath="url(#forecast-clip)">
-          <DottedLine
-            strokeDasharray={`0 ${strokeWidth * 2}`}
-            strokeWidth={strokeWidth}
-            {...props}
-          />
-        </g>
-      </>
-    );
-  });
-
-  const CustomScrubber = memo(() => {
-    const { scrubberPosition } = useScrubberContext();
-    const isScrubbing = scrubberPosition !== undefined;
-    // We need a fade in animation for the Scrubber
-    return (
-      <m.g
-        animate={{ opacity: 1 }}
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.15, delay: 0.35 }}
-      >
-        <g style={{ opacity: isScrubbing ? 1 : 0 }}>
-          <Scrubber hideOverlay />
-        </g>
-        <g style={{ opacity: isScrubbing ? 0 : 1 }}>
-          <DefaultScrubberBeacon dataX={currentIndex} dataY={data[currentIndex]} seriesId="price" />
-        </g>
-      </m.g>
-    );
-  });
-
   return (
     <CartesianChart
-      enableScrubbing
-      height={{ base: 200, tablet: 225, desktop: 250 }}
+      enableHighlighting
+      highlight={effectiveHighlight}
+      onHighlightChange={setUserHighlight}
+      height={FORECAST_EXAMPLE_CHART_HEIGHT}
       maxWidth={512}
-      series={[{ id: 'price', data, color: assets.btc.color }]}
-      style={{ margin: '0 auto' }}
+      series={series}
+      style={FORECAST_EXAMPLE_CHART_STYLE}
     >
-      <Line LineComponent={HistoricalLineComponent} curve="linear" seriesId="price" />
-      <Line LineComponent={ForecastLineComponent} curve="monotone" seriesId="price" type="dotted" />
+      <Line LineComponent={ForecastAssetPriceHistoricalLine} curve="linear" seriesId="price" />
+      <Line
+        LineComponent={ForecastAssetPriceFutureLine}
+        curve="monotone"
+        seriesId="price"
+        type="dotted"
+      />
       <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
-      <CustomScrubber />
+      <ForecastAssetPriceScrubber hideLine={hideScrubberLine} />
     </CartesianChart>
   );
 }

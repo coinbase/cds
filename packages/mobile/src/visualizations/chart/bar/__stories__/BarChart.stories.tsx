@@ -1,8 +1,8 @@
 import { memo, useCallback, useEffect, useId, useMemo, useState } from 'react';
-import { useDerivedValue } from 'react-native-reanimated';
+import { Easing, useDerivedValue } from 'react-native-reanimated';
 import { assets } from '@coinbase/cds-common/internal/data/assets';
 import { candles as btcCandles } from '@coinbase/cds-common/internal/data/candles';
-import { Line as SkiaLine, Rect } from '@shopify/react-native-skia';
+import { Group, Line as SkiaLine, Rect } from '@shopify/react-native-skia';
 
 import { Button, IconButton } from '../../../../buttons';
 import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
@@ -13,9 +13,10 @@ import { XAxis, YAxis } from '../../axis';
 import { CartesianChart, type CartesianChartProps } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { DefaultLegendEntry } from '../../legend';
-import { type LineComponentProps, ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
-import { Scrubber } from '../../scrubber';
-import { getPointOnSerializableScale, unwrapAnimatedValue, useScrubberContext } from '../../utils';
+import { ReferenceLine, SolidLine, type SolidLineProps } from '../../line';
+import type { HighlightedItem } from '../../utils';
+import { useHighlightContext } from '../../utils/context';
+import { buildTransition, type Transition } from '../../utils/transition';
 import type { BarComponentProps } from '../Bar';
 import { Bar } from '../Bar';
 import { BarChart, type BarChartProps } from '../BarChart';
@@ -24,6 +25,13 @@ import type { BarStackComponentProps } from '../BarStack';
 import { DefaultBarStack } from '../DefaultBarStack';
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+const candlestickHighlightFadeOpacity = 0.3;
+const candlestickHighlightFadeTransition: Transition = {
+  type: 'timing',
+  duration: 100,
+  easing: Easing.out(Easing.ease),
+};
 
 const defaultChartHeight = 250;
 const baselineThresholdData = [40, 28, 21, 5, 48, 5, 28, 2, 29, 48, 18, 30, 29, 8].map(
@@ -666,12 +674,11 @@ const CandlesticksHeader = memo(({ currentIndex }: { currentIndex: number | unde
 const CandlesticksChart = memo(
   ({
     infoTextId,
-    onScrubberPositionChange,
+    onHighlightChange,
   }: {
     infoTextId: string;
-    onScrubberPositionChange: (index: number | undefined) => void;
+    onHighlightChange: (items: HighlightedItem[]) => void;
   }) => {
-    const theme = useTheme();
     const min = useMemo(
       () => Math.min(...candlestickStockData.map((data) => parseFloat(data.low))),
       [],
@@ -680,41 +687,6 @@ const CandlesticksChart = memo(
     const CandleThinSolidLine = memo((props: SolidLineProps) => (
       <SolidLine {...props} strokeWidth={1} />
     ));
-
-    const BandwidthHighlight = memo(({ stroke }: LineComponentProps) => {
-      const { getXSerializableScale, drawingArea } = useCartesianChartContext();
-      const { scrubberPosition } = useScrubberContext();
-      const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
-
-      const rectWidth = useMemo(() => {
-        if (xScale !== undefined && xScale.type === 'band') {
-          return xScale.bandwidth;
-        }
-        return 0;
-      }, [xScale]);
-
-      const xPos = useDerivedValue(() => {
-        const position = unwrapAnimatedValue(scrubberPosition);
-        const xPos =
-          position !== undefined && xScale
-            ? getPointOnSerializableScale(position, xScale)
-            : undefined;
-        return xPos !== undefined ? xPos - rectWidth / 2 : 0;
-      }, [scrubberPosition, xScale]);
-
-      const opacity = useDerivedValue(() => (xPos.value !== undefined ? 1 : 0), [xPos]);
-
-      return (
-        <Rect
-          color={stroke}
-          height={drawingArea.height}
-          opacity={opacity}
-          width={rectWidth}
-          x={xPos}
-          y={drawingArea.y}
-        />
-      );
-    });
 
     const candlesData = useMemo(
       () =>
@@ -726,9 +698,49 @@ const CandlesticksChart = memo(
     );
 
     const CandlestickBarComponent = memo<BarComponentProps>(
-      ({ x, y, width, height, dataX, ...props }) => {
+      ({ x, y, width, height, dataX, dataY, fadeOnHighlight, seriesId }) => {
         const { getYScale } = useCartesianChartContext();
+        const highlightContext = useHighlightContext();
         const yScale = getYScale();
+        const theme = useTheme();
+
+        const dataIndex = useMemo(() => {
+          if (typeof dataX === 'number') return dataX;
+          if (typeof dataY === 'number') return dataY;
+          return null;
+        }, [dataX, dataY]);
+
+        const { enabled: highlightEnabled, scope } = highlightContext;
+        const highlightByDataIndex = scope.dataIndex ?? false;
+        const highlightBySeries = scope.series ?? false;
+
+        const highlightOpacity = useDerivedValue(() => {
+          if (!fadeOnHighlight || !highlightEnabled) return 1;
+
+          const items = highlightContext.highlight.value;
+          let opacity = 1;
+
+          if (items.length > 0) {
+            const isHighlighted = items.some((item) => {
+              const indexMatch =
+                !highlightByDataIndex ||
+                (typeof item.dataIndex === 'number' && item.dataIndex === dataIndex);
+              const seriesMatch =
+                !highlightBySeries || item.seriesId == null || item.seriesId === seriesId;
+              return indexMatch && seriesMatch;
+            });
+            opacity = isHighlighted ? 1 : candlestickHighlightFadeOpacity;
+          }
+
+          return buildTransition(opacity, candlestickHighlightFadeTransition);
+        }, [
+          fadeOnHighlight,
+          highlightEnabled,
+          highlightByDataIndex,
+          highlightBySeries,
+          dataIndex,
+          seriesId,
+        ]);
 
         const wickX = x + width / 2;
 
@@ -738,7 +750,6 @@ const CandlesticksChart = memo(
         const close = parseFloat(timePeriodValue.close);
 
         const bullish = open < close;
-        const theme = useTheme();
         const color = bullish ? theme.color.fgPositive : theme.color.fgNegative;
         const openY = yScale?.(open) ?? 0;
         const closeY = yScale?.(close) ?? 0;
@@ -746,7 +757,7 @@ const CandlesticksChart = memo(
         const bodyHeight = Math.abs(openY - closeY);
         const bodyY = openY < closeY ? openY : closeY;
 
-        return (
+        const candlestick = (
           <>
             <SkiaLine
               color={color}
@@ -757,6 +768,12 @@ const CandlesticksChart = memo(
             <Rect color={color} height={bodyHeight} width={width} x={x} y={bodyY} />
           </>
         );
+
+        if (fadeOnHighlight) {
+          return <Group opacity={highlightOpacity}>{candlestick}</Group>;
+        }
+
+        return candlestick;
       },
     );
 
@@ -780,25 +797,38 @@ const CandlesticksChart = memo(
       });
     }, []);
 
-    const getScrubberAccessibilityLabel = useCallback(
-      (index: number) => {
-        const candle = candlestickStockData[index];
-        return `${formatTime(index)}: O ${formatThousandsPriceNumber(parseFloat(candle.open))} H ${formatThousandsPriceNumber(parseFloat(candle.high))} L ${formatThousandsPriceNumber(parseFloat(candle.low))} C ${formatThousandsPriceNumber(parseFloat(candle.close))}`;
+    const accessibilityLabel = useCallback(
+      (items: HighlightedItem[]) => {
+        if (items.length === 0) {
+          return `Candlestick chart with ${candlesData.length} data points. Swipe to navigate.`;
+        }
+        const labels = items
+          .map((item) => {
+            const idx = item.dataIndex;
+            if (typeof idx !== 'number' || idx < 0 || idx >= candlestickStockData.length)
+              return null;
+            const candle = candlestickStockData[idx];
+            return `${formatTime(idx)}: O ${formatThousandsPriceNumber(parseFloat(candle.open))} H ${formatThousandsPriceNumber(parseFloat(candle.high))} L ${formatThousandsPriceNumber(parseFloat(candle.low))} C ${formatThousandsPriceNumber(parseFloat(candle.close))}`;
+          })
+          .filter(Boolean);
+        return (
+          labels.join('; ') ||
+          `Candlestick chart with ${candlesData.length} data points. Swipe to navigate.`
+        );
       },
-      [formatTime, formatThousandsPriceNumber],
+      [candlesData.length, formatTime, formatThousandsPriceNumber],
     );
 
     return (
       <CartesianChart
-        enableScrubbing
-        accessibilityLabel={`Candlestick chart with ${candlesData.length} data points. Swipe to navigate.`}
+        enableHighlighting
+        accessibilityLabel={accessibilityLabel}
         animate={false}
         aria-labelledby={infoTextId}
         borderRadius={0}
-        getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={150}
         inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
-        onScrubberPositionChange={onScrubberPositionChange}
+        onHighlightChange={onHighlightChange}
         series={[
           {
             id: 'stock-prices',
@@ -819,13 +849,8 @@ const CandlesticksChart = memo(
           tickLabelFormatter={formatThousandsPriceNumber}
           width={40}
         />
-        <Scrubber
-          hideOverlay
-          LineComponent={BandwidthHighlight}
-          lineStroke={theme.color.fgMuted}
-          seriesIds={[]}
-        />
         <BarPlot
+          fadeOnHighlight
           BarComponent={CandlestickBarComponent}
           BarStackComponent={({ children }) => <>{children}</>}
         />
@@ -838,10 +863,19 @@ const Candlesticks = () => {
   const infoTextId = useId();
   const [currentIndex, setCurrentIndex] = useState<number | undefined>();
 
+  const handleHighlightChange = useCallback((items: HighlightedItem[]) => {
+    if (items.length === 0) {
+      setCurrentIndex(undefined);
+      return;
+    }
+    const idx = items[0]?.dataIndex;
+    setCurrentIndex(typeof idx === 'number' ? idx : undefined);
+  }, []);
+
   return (
     <VStack gap={2}>
       <CandlesticksHeader currentIndex={currentIndex} />
-      <CandlesticksChart infoTextId={infoTextId} onScrubberPositionChange={setCurrentIndex} />
+      <CandlesticksChart infoTextId={infoTextId} onHighlightChange={handleHighlightChange} />
     </VStack>
   );
 };
@@ -985,6 +1019,8 @@ const HorizontalBarChart = () => {
 
   return (
     <BarChart
+      enableHighlighting
+      fadeOnHighlight
       showXAxis
       showYAxis
       height={220}

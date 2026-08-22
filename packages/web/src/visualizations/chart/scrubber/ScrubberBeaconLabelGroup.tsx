@@ -5,7 +5,7 @@ import type { Transition } from 'framer-motion';
 
 import { useCartesianChartContext } from '../ChartProvider';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
-import { useScrubberContext } from '../utils/context';
+import { useHighlightContext } from '../utils/context';
 import { getPointOnScale } from '../utils/point';
 import {
   calculateLabelYPositions,
@@ -17,6 +17,7 @@ import {
 import { defaultTransition, getTransition, instantTransition } from '../utils/transition';
 
 import { DefaultScrubberBeaconLabel } from './DefaultScrubberBeaconLabel';
+import type { ScrubberBeaconGroupBaseProps } from './ScrubberBeaconGroup';
 import type {
   ScrubberBeaconLabelComponent,
   ScrubberBeaconLabelProps,
@@ -84,32 +85,33 @@ const PositionedLabel = memo<{
   },
 );
 
-export type ScrubberBeaconLabelGroupBaseProps = SharedProps & {
-  /**
-   * Labels to be displayed.
-   */
-  labels: Array<Pick<ScrubberBeaconLabelProps, 'seriesId' | 'label' | 'color'>>;
-  /**
-   * Minimum gap between labels in pixels.
-   * @default 4
-   */
-  labelMinGap?: number;
-  /**
-   * Horizontal offset of labels from the scrubber line in pixels.
-   * @default 16
-   */
-  labelHorizontalOffset?: number;
-  /**
-   * Font style for the beacon labels.
-   */
-  labelFont?: ChartTextProps['font'];
-  /**
-   * Preferred side for labels.
-   * @note labels will switch to the opposite side if there's not enough space on the preferred side.
-   * @default 'right'
-   */
-  labelPreferredSide?: ScrubberLabelPosition;
-};
+export type ScrubberBeaconLabelGroupBaseProps = SharedProps &
+  Pick<ScrubberBeaconGroupBaseProps, 'highlightIndex'> & {
+    /**
+     * Labels to be displayed.
+     */
+    labels: Array<Pick<ScrubberBeaconLabelProps, 'seriesId' | 'label' | 'color'>>;
+    /**
+     * Minimum gap between labels in pixels.
+     * @default 4
+     */
+    labelMinGap?: number;
+    /**
+     * Horizontal offset of labels from the scrubber line in pixels.
+     * @default 16
+     */
+    labelHorizontalOffset?: number;
+    /**
+     * Font style for the beacon labels.
+     */
+    labelFont?: ChartTextProps['font'];
+    /**
+     * Preferred side for labels.
+     * @note labels will switch to the opposite side if there's not enough space on the preferred side.
+     * @default 'right'
+     */
+    labelPreferredSide?: ScrubberLabelPosition;
+  };
 
 export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & {
   /**
@@ -134,6 +136,7 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
   ({
     labels,
+    highlightIndex = 0,
     labelMinGap = 4,
     labelHorizontalOffset = 16,
     labelFont,
@@ -153,7 +156,11 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
       dataLength,
       animate,
     } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = useMemo(
+      () => highlight[highlightIndex]?.dataIndex ?? undefined,
+      [highlight, highlightIndex],
+    );
 
     const isIdle = scrubberPosition === undefined;
 

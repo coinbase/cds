@@ -29,7 +29,7 @@ function BasicLegend() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       legend
       showArea
       showXAxis
@@ -157,7 +157,7 @@ function WrappedLegend() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       legend
       showArea
       showXAxis
@@ -601,7 +601,8 @@ function CustomLegendEntry() {
   );
 
   const ValueLegendEntry = memo(function ValueLegendEntry({ seriesId, label, color, shape }) {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = highlight[0]?.dataIndex;
     const { series: chartSeries, dataLength } = useCartesianChartContext();
 
     const dataIndex = scrubberPosition ?? dataLength - 1;
@@ -625,7 +626,7 @@ function CustomLegendEntry() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis

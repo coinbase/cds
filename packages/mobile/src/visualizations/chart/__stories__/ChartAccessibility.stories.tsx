@@ -39,7 +39,7 @@ const BasicLineChart = memo(function BasicLineChart() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -70,7 +70,7 @@ const DataFormatLineChart = memo(function DataFormatLineChart() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       points
       showArea
       showXAxis
@@ -107,7 +107,7 @@ const AccessibilityBarChart = memo(function AccessibilityBarChart() {
 
   return (
     <BarChart
-      enableScrubbing
+      enableHighlighting
       showXAxis
       showYAxis
       accessibilityLabel={`Bar chart with ${values.length} months. Swipe to navigate.`}
@@ -148,7 +148,7 @@ const AccessibilityHorizontalBarChart = memo(function AccessibilityHorizontalBar
 
   return (
     <BarChart
-      enableScrubbing
+      enableHighlighting
       showXAxis
       showYAxis
       accessibilityLabel={`Horizontal bar chart showing Seoul rainfall by month. ${dataset.length} months. Swipe to navigate.`}
@@ -205,7 +205,7 @@ const ServiceAvailability = memo(function ServiceAvailability() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={`Service availability chart with ${availabilityEvents.length} data points. Swipe to navigate.`}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
@@ -277,7 +277,7 @@ const BasicPricesWithManyPoints = memo(function BasicPricesWithManyPoints() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={`Line chart with ${data.length} data points. Swipe to navigate.`}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -326,7 +326,7 @@ const PositiveAndNegativeCashFlow = memo(function PositiveAndNegativeCashFlow() 
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={`Cash flow chart: ${categories.length} days with gains and losses. Swipe to navigate.`}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={280}
@@ -360,7 +360,7 @@ const LegendPosition = memo(function LegendPosition() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel="Bar chart showing Revenue and Profit Margin by month. January through June. Swipe to navigate."
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
@@ -549,7 +549,7 @@ const AssetPriceWithDottedArea = memo(function AssetPriceWithDottedArea() {
         title={<Text font="title1">Bitcoin</Text>}
       />
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         accessibilityLabel={chartAccessibilityLabel}
         areaType="dotted"

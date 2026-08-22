@@ -21,6 +21,7 @@ export type BarStackGroupProps = Pick<
   | 'BarStackComponent'
   | 'transitions'
   | 'transition'
+  | 'fadeOnHighlight'
 > &
   Pick<BarStackProps, 'series' | 'xAxisId' | 'yAxisId'> & {
     /**

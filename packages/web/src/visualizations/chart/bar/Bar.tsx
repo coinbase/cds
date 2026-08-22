@@ -39,6 +39,10 @@ export type BarBaseProps = Rect & {
   BarComponent?: BarComponent;
   /** Minimum bar size in pixels. When set, bars shorter than this value are expanded. */
   minSize?: number;
+  /**
+   * Whether non-highlighted bars should fade when highlighting is active.
+   */
+  fadeOnHighlight?: boolean;
 };
 
 export type BarProps = BarBaseProps & {
@@ -129,6 +133,7 @@ export const Bar = memo<BarProps>(
     minSize,
     transitions,
     transition,
+    fadeOnHighlight,
   }) => {
     const { layout } = useCartesianChartContext();
 
@@ -149,6 +154,7 @@ export const Bar = memo<BarProps>(
         d={barPath}
         dataX={dataX}
         dataY={dataY}
+        fadeOnHighlight={fadeOnHighlight}
         fill={fill}
         fillOpacity={fillOpacity}
         height={height}

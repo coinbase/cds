@@ -9,7 +9,7 @@ import { CartesianChart } from '../../CartesianChart';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { LineChart } from '../../line';
 import { Scrubber } from '../../scrubber';
-import { useScrubberContext } from '../../utils';
+import { useHighlightContext } from '../../utils';
 import type { LegendShapeVariant, Series } from '../../utils/chart';
 import { DefaultLegendShape } from '../DefaultLegendShape';
 import { Legend, type LegendEntryProps } from '../Legend';
@@ -80,7 +80,7 @@ const Basic = () => {
   return (
     <Example title="Basic Legend">
       <LineChart
-        enableScrubbing
+        enableHighlighting
         legend
         showArea
         showXAxis
@@ -192,7 +192,7 @@ const AutoScale = () => {
   return (
     <Example title="Auto Scale">
       <LineChart
-        enableScrubbing
+        enableHighlighting
         legend
         showArea
         showXAxis
@@ -375,7 +375,8 @@ const DynamicData = () => {
     color,
     shape,
   }: LegendEntryProps) {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
     const { series, dataLength } = useCartesianChartContext();
 
     const dataIndex = scrubberPosition ?? dataLength - 1;
@@ -400,7 +401,7 @@ const DynamicData = () => {
   return (
     <Example title="Dynamic Data">
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         showXAxis
         showYAxis

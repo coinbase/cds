@@ -468,14 +468,18 @@ function DynamicLabel() {
     [seriesConfig, dataIndex],
   );
 
+  const onHighlightChange = useCallback((items) => {
+    setScrubberPosition(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={250}
       legend={<Legend EntryComponent={ValueLegendEntry} justifyContent="flex-start" paddingX={2} />}
       legendPosition="top"
-      onScrubberPositionChange={setScrubberPosition}
+      onHighlightChange={onHighlightChange}
       series={seriesConfig}
       width="100%"
       xAxis={{
