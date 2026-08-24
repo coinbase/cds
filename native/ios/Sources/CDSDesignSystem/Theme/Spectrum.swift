@@ -2,13 +2,14 @@ import Foundation
 
 /// Raw spectrum palette (tier 1 of the CDS two-layer color system).
 ///
-/// These values are copied from `packages/mobile/src/themes/defaultTheme.ts` (the hues
-/// consumed by the semantic layer below — blue/green/orange/gray/red).
-/// In production this file would be **generated** from a single token source (e.g.
-/// Style Dictionary / a tokens JSON) that also emits the TS themes and a Kotlin
-/// equivalent — keeping web, React Native, iOS, and Android in lockstep.
-enum CDSSpectrumData {
-    static let light: [String: String] = [
+/// These values are copied verbatim from `packages/mobile/src/themes/defaultTheme.ts`
+/// (`lightSpectrum` / `darkSpectrum`) and cover all 11 CDS hues × 13 shades.
+///
+/// In production this file should be **generated** from the single token source that also
+/// emits the TS themes (and a Kotlin equivalent), keeping web, React Native, iOS, and
+/// Android in lockstep rather than hand-copied.
+public enum CDSSpectrumData {
+    public static let light: [String: String] = [
         "blue0": "245,248,255", "blue5": "211,225,255", "blue10": "176,202,255",
         "blue15": "146,182,255", "blue20": "115,162,255", "blue30": "70,132,255",
         "blue40": "38,110,255", "blue50": "16,94,255", "blue60": "0,82,255",
@@ -25,13 +26,37 @@ enum CDSSpectrumData {
         "gray15": "222,225,231", "gray20": "206,210,219", "gray30": "177,183,195",
         "gray40": "137,144,158", "gray50": "113,120,134", "gray60": "91,97,110",
         "gray70": "70,75,85", "gray80": "50,53,61", "gray90": "30,32,37", "gray100": "10,11,13",
+        "indigo0": "246,247,255", "indigo5": "230,232,255", "indigo10": "214,218,254",
+        "indigo15": "198,204,253", "indigo20": "181,189,253", "indigo30": "148,161,251",
+        "indigo40": "116,135,247", "indigo50": "89,111,242", "indigo60": "66,91,233",
+        "indigo70": "47,74,215", "indigo80": "31,54,173", "indigo90": "17,32,107", "indigo100": "8,15,51",
+        "pink0": "255,245,255", "pink5": "253,228,253", "pink10": "251,212,250",
+        "pink15": "248,195,245", "pink20": "244,178,240", "pink30": "235,143,227",
+        "pink40": "221,110,209", "pink50": "203,81,187", "pink60": "179,58,162",
+        "pink70": "149,39,133", "pink80": "116,26,102", "pink90": "83,17,72", "pink100": "51,10,44",
+        "purple0": "251,247,255", "purple5": "244,232,255", "purple10": "237,217,255",
+        "purple15": "230,201,255", "purple20": "222,184,255", "purple30": "205,153,253",
+        "purple40": "188,123,251", "purple50": "157,107,242", "purple60": "138,85,233",
+        "purple70": "119,67,215", "purple80": "90,48,173", "purple90": "54,27,107", "purple100": "25,13,51",
         "red0": "255,245,246", "red5": "254,225,228", "red10": "253,206,210",
         "red15": "251,186,191", "red20": "249,166,173", "red30": "244,127,136",
         "red40": "237,89,102", "red50": "225,57,71", "red60": "207,32,47",
         "red70": "181,15,29", "red80": "145,5,16", "red90": "100,1,9", "red100": "51,0,4",
+        "teal0": "240,254,255", "teal5": "188,246,253", "teal10": "136,237,251",
+        "teal15": "93,226,248", "teal20": "51,213,244", "teal30": "0,188,235",
+        "teal40": "0,169,221", "teal50": "0,147,203", "teal60": "0,123,179",
+        "teal70": "0,97,149", "teal80": "0,71,116", "teal90": "0,47,83", "teal100": "0,27,51",
+        "yellow0": "255,252,241", "yellow5": "255,244,192", "yellow10": "255,240,145",
+        "yellow15": "255,234,100", "yellow20": "255,228,54", "yellow30": "247,210,26",
+        "yellow40": "235,186,0", "yellow50": "207,151,0", "yellow60": "174,113,0",
+        "yellow70": "136,76,0", "yellow80": "96,48,0", "yellow90": "58,20,0", "yellow100": "27,6,0",
+        "chartreuse0": "245,255,250", "chartreuse5": "221,251,232", "chartreuse10": "198,247,209",
+        "chartreuse15": "176,242,182", "chartreuse20": "159,238,155", "chartreuse30": "137,223,117",
+        "chartreuse40": "127,208,87", "chartreuse50": "86,179,64", "chartreuse60": "53,151,48",
+        "chartreuse70": "35,122,43", "chartreuse80": "25,93,41", "chartreuse90": "17,64,35", "chartreuse100": "7,26,17",
     ]
 
-    static let dark: [String: String] = [
+    public static let dark: [String: String] = [
         "blue0": "0,16,51", "blue5": "1,29,91", "blue10": "1,42,130",
         "blue15": "3,51,154", "blue20": "5,59,177", "blue30": "10,72,206",
         "blue40": "19,84,225", "blue50": "33,98,238", "blue60": "55,115,245",
@@ -48,9 +73,33 @@ enum CDSSpectrumData {
         "gray15": "40,43,49", "gray20": "50,53,61", "gray30": "70,75,85",
         "gray40": "91,97,110", "gray50": "114,120,134", "gray60": "138,145,158",
         "gray70": "165,170,182", "gray80": "193,198,207", "gray90": "224,226,231", "gray100": "255,255,255",
+        "indigo0": "8,15,51", "indigo5": "14,27,91", "indigo10": "21,39,130",
+        "indigo15": "27,47,154", "indigo20": "33,56,177", "indigo30": "48,73,206",
+        "indigo40": "68,92,225", "indigo50": "92,113,238", "indigo60": "121,138,245",
+        "indigo70": "153,165,250", "indigo80": "187,194,253", "indigo90": "219,223,255", "indigo100": "246,247,255",
+        "pink0": "51,10,44", "pink5": "70,14,61", "pink10": "89,19,78",
+        "pink15": "108,24,94", "pink20": "126,30,111", "pink30": "159,44,142",
+        "pink40": "187,64,170", "pink50": "208,88,193", "pink60": "225,117,214",
+        "pink70": "237,149,230", "pink80": "246,184,243", "pink90": "252,217,251", "pink100": "255,245,255",
+        "purple0": "25,13,51", "purple5": "43,22,89", "purple10": "73,30,137",
+        "purple15": "97,37,175", "purple20": "123,45,211", "purple30": "142,51,234",
+        "purple40": "164,84,244", "purple50": "188,123,251", "purple60": "205,153,253",
+        "purple70": "217,176,254", "purple80": "230,201,255", "purple90": "237,217,255", "purple100": "251,247,255",
         "red0": "51,0,4", "red5": "79,0,7", "red10": "107,1,10",
         "red15": "131,4,14", "red20": "155,7,19", "red30": "189,19,33",
         "red40": "213,38,52", "red50": "230,64,78", "red60": "240,97,109",
         "red70": "248,134,144", "red80": "252,174,181", "red90": "254,213,216", "red100": "255,245,246",
+        "teal0": "0,20,38", "teal5": "0,32,59", "teal10": "0,45,79",
+        "teal15": "0,58,99", "teal20": "0,72,118", "teal30": "0,99,153",
+        "teal40": "0,125,182", "teal50": "0,149,205", "teal60": "0,170,223",
+        "teal70": "6,190,236", "teal80": "69,217,245", "teal90": "149,239,251", "teal100": "240,254,255",
+        "yellow0": "27,6,0", "yellow5": "49,17,0", "yellow10": "81,40,0",
+        "yellow15": "96,48,0", "yellow20": "115,64,0", "yellow30": "147,96,0",
+        "yellow40": "175,128,0", "yellow50": "199,158,0", "yellow60": "222,189,23",
+        "yellow70": "229,205,48", "yellow80": "242,222,94", "yellow90": "255,240,145", "yellow100": "255,252,241",
+        "chartreuse0": "5,22,14", "chartreuse5": "14,54,29", "chartreuse10": "21,79,34",
+        "chartreuse15": "29,103,36", "chartreuse20": "45,128,40", "chartreuse30": "73,152,54",
+        "chartreuse40": "107,176,73", "chartreuse50": "123,200,105", "chartreuse60": "140,209,136",
+        "chartreuse70": "158,217,163", "chartreuse80": "178,222,188", "chartreuse90": "209,238,220", "chartreuse100": "245,255,250",
     ]
 }

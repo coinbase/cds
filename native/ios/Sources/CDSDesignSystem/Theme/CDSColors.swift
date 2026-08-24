@@ -3,8 +3,8 @@ import SwiftUI
 /// Semantic color tokens (tier 2 of the CDS two-layer color system).
 ///
 /// Semantic tokens are what components actually consume (`bg`, `fgPrimary`, `bgLineHeavy`,
-/// …). Each one resolves to a spectrum value per color scheme, mirroring the derivation in
-/// `defaultTheme.ts` (`lightColor` / `darkColor`).
+/// `accentBoldBlue`, …). Each one resolves to a spectrum value per color scheme, mirroring
+/// the derivation in `defaultTheme.ts` (`lightColor` / `darkColor`).
 ///
 /// Consumers can customize a theme by either:
 /// - copying a built-in set and tweaking a few tokens: `CDSColors.light.with { $0.bgPrimary = … }`,
@@ -40,11 +40,33 @@ public struct CDSColors: Sendable {
     // Line
     public var bgLine: Color
     public var bgLineHeavy: Color
+    public var bgLineInverse: Color
     public var bgLinePrimary: Color
+    public var bgLinePrimarySubtle: Color
 
     // Elevation
     public var bgElevation1: Color
     public var bgElevation2: Color
+
+    // Accent
+    public var accentSubtleGreen: Color
+    public var accentBoldGreen: Color
+    public var accentSubtleBlue: Color
+    public var accentBoldBlue: Color
+    public var accentSubtlePurple: Color
+    public var accentBoldPurple: Color
+    public var accentSubtleYellow: Color
+    public var accentBoldYellow: Color
+    public var accentSubtleRed: Color
+    public var accentBoldRed: Color
+    public var accentSubtleGray: Color
+    public var accentBoldGray: Color
+
+    // Special
+    /// The current inherited foreground color. `currentColor` in RN/web has no direct
+    /// SwiftUI analog; it maps to the environment's primary content color.
+    public var currentColor: Color
+    public var transparent: Color
 
     public init(
         fg: Color,
@@ -71,9 +93,25 @@ public struct CDSColors: Sendable {
         bgWarningWash: Color,
         bgLine: Color,
         bgLineHeavy: Color,
+        bgLineInverse: Color,
         bgLinePrimary: Color,
+        bgLinePrimarySubtle: Color,
         bgElevation1: Color,
-        bgElevation2: Color
+        bgElevation2: Color,
+        accentSubtleGreen: Color,
+        accentBoldGreen: Color,
+        accentSubtleBlue: Color,
+        accentBoldBlue: Color,
+        accentSubtlePurple: Color,
+        accentBoldPurple: Color,
+        accentSubtleYellow: Color,
+        accentBoldYellow: Color,
+        accentSubtleRed: Color,
+        accentBoldRed: Color,
+        accentSubtleGray: Color,
+        accentBoldGray: Color,
+        currentColor: Color = .primary,
+        transparent: Color = .clear
     ) {
         self.fg = fg
         self.fgMuted = fgMuted
@@ -99,9 +137,25 @@ public struct CDSColors: Sendable {
         self.bgWarningWash = bgWarningWash
         self.bgLine = bgLine
         self.bgLineHeavy = bgLineHeavy
+        self.bgLineInverse = bgLineInverse
         self.bgLinePrimary = bgLinePrimary
+        self.bgLinePrimarySubtle = bgLinePrimarySubtle
         self.bgElevation1 = bgElevation1
         self.bgElevation2 = bgElevation2
+        self.accentSubtleGreen = accentSubtleGreen
+        self.accentBoldGreen = accentBoldGreen
+        self.accentSubtleBlue = accentSubtleBlue
+        self.accentBoldBlue = accentBoldBlue
+        self.accentSubtlePurple = accentSubtlePurple
+        self.accentBoldPurple = accentBoldPurple
+        self.accentSubtleYellow = accentSubtleYellow
+        self.accentBoldYellow = accentBoldYellow
+        self.accentSubtleRed = accentSubtleRed
+        self.accentBoldRed = accentBoldRed
+        self.accentSubtleGray = accentSubtleGray
+        self.accentBoldGray = accentBoldGray
+        self.currentColor = currentColor
+        self.transparent = transparent
     }
 }
 
@@ -149,9 +203,23 @@ public extension CDSColors {
             bgWarningWash: spectrumColor(s, "orange0"),
             bgLine: spectrumColor(s, "gray60", 0.2),
             bgLineHeavy: spectrumColor(s, "gray60", 0.66),
+            bgLineInverse: spectrumColor(s, "gray0"),
             bgLinePrimary: spectrumColor(s, "blue60"),
+            bgLinePrimarySubtle: spectrumColor(s, "blue20"),
             bgElevation1: spectrumColor(s, "gray0"),
-            bgElevation2: spectrumColor(s, "gray0")
+            bgElevation2: spectrumColor(s, "gray0"),
+            accentSubtleGreen: spectrumColor(s, "green0"),
+            accentBoldGreen: spectrumColor(s, "green60"),
+            accentSubtleBlue: spectrumColor(s, "blue0"),
+            accentBoldBlue: spectrumColor(s, "blue60"),
+            accentSubtlePurple: spectrumColor(s, "purple0"),
+            accentBoldPurple: spectrumColor(s, "purple80"),
+            accentSubtleYellow: spectrumColor(s, "yellow0"),
+            accentBoldYellow: spectrumColor(s, "yellow30"),
+            accentSubtleRed: spectrumColor(s, "red0"),
+            accentBoldRed: spectrumColor(s, "red60"),
+            accentSubtleGray: spectrumColor(s, "gray10"),
+            accentBoldGray: spectrumColor(s, "gray80")
         )
     }
 
@@ -183,9 +251,23 @@ public extension CDSColors {
             bgWarningWash: spectrumColor(s, "orange0"),
             bgLine: spectrumColor(s, "gray60", 0.2),
             bgLineHeavy: spectrumColor(s, "gray60", 0.66),
+            bgLineInverse: spectrumColor(s, "gray0"),
             bgLinePrimary: spectrumColor(s, "blue70"),
+            bgLinePrimarySubtle: spectrumColor(s, "blue20"),
             bgElevation1: spectrumColor(s, "gray5"),
-            bgElevation2: spectrumColor(s, "gray10")
+            bgElevation2: spectrumColor(s, "gray10"),
+            accentSubtleGreen: spectrumColor(s, "green0"),
+            accentBoldGreen: spectrumColor(s, "green60"),
+            accentSubtleBlue: spectrumColor(s, "blue0"),
+            accentBoldBlue: spectrumColor(s, "blue60"),
+            accentSubtlePurple: spectrumColor(s, "purple0"),
+            accentBoldPurple: spectrumColor(s, "purple80"),
+            accentSubtleYellow: spectrumColor(s, "yellow0"),
+            accentBoldYellow: spectrumColor(s, "yellow30"),
+            accentSubtleRed: spectrumColor(s, "red0"),
+            accentBoldRed: spectrumColor(s, "red60"),
+            accentSubtleGray: spectrumColor(s, "gray10"),
+            accentBoldGray: spectrumColor(s, "gray80")
         )
     }
 
