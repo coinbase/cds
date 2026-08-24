@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.21.1 (8/24/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix DotCount not rendering on mount when count is greater than 0. [[#858](https://github.com/coinbase/cds/pull/858)]
+
 ## 9.21.0 (8/21/2026 PST)
 
 #### 🚀 Updates
