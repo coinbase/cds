@@ -159,6 +159,10 @@ android
 # local.properties are still ignored by the Android/IntelliJ rules near the top of this file.
 !/android/
 
+# native-rewrite: committed native source, not RN-generated ios/android artifacts
+!native/ios/
+!native/android/
+
 # expo-app generated artifacts
 apps/expo-app/artifacts
 apps/expo-app/build/
