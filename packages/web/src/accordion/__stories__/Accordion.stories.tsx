@@ -26,6 +26,7 @@ const BasicAccordion = () => {
     <Accordion defaultActiveKey="2" onChange={handlePress}>
       <AccordionItem
         itemKey="1"
+        tertiaryTitle="tertiaryTitle1"
         media={<CellMedia active name="wallet" type="icon" />}
         subtitle="subtitle1"
         title="Accordion #1"
@@ -34,6 +35,7 @@ const BasicAccordion = () => {
       </AccordionItem>
       <AccordionItem
         itemKey="2"
+        tertiaryTitle="tertiaryTitle2"
         media={<CellMedia active name="wallet" type="icon" />}
         onClick={handlePress}
         subtitle="subtitle2"
@@ -76,6 +78,32 @@ const NoSubtitle = () => {
         itemKey="2"
         media={<CellMedia active name="wallet" type="icon" />}
         onClick={handlePress}
+        title="Accordion #2"
+      >
+        <Text as="p" display="block" font="body">
+          Accordion Content
+        </Text>
+      </AccordionItem>
+    </Accordion>
+  );
+};
+
+const SubtitleWithoutTertiaryTitle = () => {
+  return (
+    <Accordion defaultActiveKey="1" onChange={handlePress}>
+      <AccordionItem
+        itemKey="1"
+        media={<CellMedia active name="wallet" type="icon" />}
+        subtitle="subtitle1"
+        title="Accordion #1"
+      >
+        <TextInput compact label="Amount" placeholder="8293323.23" suffix="USD" />
+      </AccordionItem>
+      <AccordionItem
+        itemKey="2"
+        media={<CellMedia active name="wallet" type="icon" />}
+        onClick={handlePress}
+        subtitle="subtitle2"
         title="Accordion #2"
       >
         <Text as="p" display="block" font="body">
@@ -173,4 +201,12 @@ export const NestedButtons = () => {
     </Accordion>
   );
 };
-export { BasicAccordion, CustomStyle, LongContent, NoMedia, NoSubtitle, TitleOnly };
+export {
+  BasicAccordion,
+  CustomStyle,
+  LongContent,
+  NoMedia,
+  NoSubtitle,
+  SubtitleWithoutTertiaryTitle,
+  TitleOnly,
+};

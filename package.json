@@ -77,13 +77,8 @@
     "react-native": "patch:react-native@npm:0.81.5#.yarn/patches/react-native-npm-0.81.5-0a0008b930.patch",
     "expo-modules-core": "patch:expo-modules-core@npm:3.0.29#.yarn/patches/expo-modules-core-npm-3.0.29-7b93dc0961.patch",
     "react-helmet-async": "^2.0.5",
-    "ajv@^6.0.0": "^6.14.0",
-    "elliptic": "^6.6.0",
-    "ip": "^2.0.1",
     "minimatch": "^10.2.4",
-    "koa": "^3.1.2",
-    "tar": "^7.5.12",
-    "bn.js": "^5.2.3"
+    "tar": "^7.5.12"
   },
   "resolutionComments": {
     "@types/react": "Forces a single version across all packages to prevent dual React types. Without this, dependencies like @docusaurus/types resolve a nested @types/react@18 which conflicts with React 19 types.",
@@ -96,13 +91,8 @@
     "react-native": "[Managed by CMR] Fixes bug presenting a modal on iOS (See https://github.cbhq.net/consumer/react-native/pull/30568). Allows to use React 19.1.2 due to a high severity security vulnerability.",
     "expo-modules-core": "[Managed by CMR] Avoid initializing EXJavaScriptRuntimeManager runtimeFromBridge from the main thread on iOS to avoid JSI crash",
     "react-helmet-async": "Working around Nx graph resolution issue",
-    "ajv": "Request from Coinbase Security team to fix security vulnerability",
-    "elliptic": "Request from Coinbase Security team to fix security vulnerability",
-    "ip": "Request from Coinbase Security team to fix security vulnerability",
     "minimatch": "Request from Coinbase Security team to fix security vulnerability",
-    "koa": "Request from Coinbase Security team to fix security vulnerability",
-    "tar": "Request from Coinbase Security team to fix security vulnerability",
-    "bn.js": "Request from Coinbase Security team to fix security vulnerability"
+    "tar": "Request from Coinbase Security team to fix security vulnerability"
   },
   "workspaces": [
     "actions/*",
@@ -162,7 +152,6 @@
     "@typescript-eslint/parser": "^7.18.0",
     "@yarnpkg/types": "^4.0.0",
     "autoprefixer": "^10.4.7",
-    "axios": "^0.18.0",
     "babel-loader": "^10.0.0",
     "babel-plugin-dotenv-import": "^3.0.1",
     "babel-plugin-module-resolver": "^4.1.0",

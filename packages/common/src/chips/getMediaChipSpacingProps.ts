@@ -9,7 +9,7 @@ type GetMediaChipSpacingPropsParams = {
   /**
    * Retained for backward compatibility; when `size` is omitted it is derived from `compact`.
    * @deprecated Pass `size` instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
+   * @deprecationExpectedRemoval v11
    */
   compact?: boolean;
   size?: ChipSizeCommon;

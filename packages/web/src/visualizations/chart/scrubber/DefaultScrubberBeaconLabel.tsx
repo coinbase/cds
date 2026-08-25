@@ -39,13 +39,13 @@ export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
     return (
       <motion.g animate={{ y }} initial={false} transition={transition}>
         <ChartText
-          disableRepositioning
           background={background}
           borderRadius={borderRadius}
           color={color}
           elevated={elevated}
           font={font}
           inset={inset}
+          repositionAxes="none"
           verticalAlignment={verticalAlignment}
           y={transition ? 0 : y}
           {...chartTextProps}

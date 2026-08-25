@@ -55,11 +55,27 @@ const thumbCss = css`
   left: calc((var(--controlSize-switchHeight) - var(--controlSize-switchThumbSize)) / 2);
 `;
 
+/** Semantic color variants for Switch, matching the semantics used by other control components. */
+export type SwitchVariant = 'primary' | 'positive' | 'negative';
+
+/** Track background color applied when Switch is checked, keyed by `variant`. */
+const switchVariantBackground: Record<SwitchVariant, ThemeVars.Color> = {
+  primary: 'bgPrimary',
+  positive: 'bgPositive',
+  negative: 'bgNegative',
+};
+
 export type SwitchBaseProps = ControlBaseProps<string> & {
   /** Sets the checked/active color of the control.
    * @default bgPrimary
    */
   controlColor?: ThemeVars.Color;
+  /**
+   * Semantic color variant applied to the track when checked. The `background` prop always
+   * takes priority over the background set by the variant, as does any custom `style`/`styles.track`.
+   * @default primary
+   */
+  variant?: SwitchVariant;
 };
 
 export type SwitchProps = SwitchBaseProps &
@@ -97,7 +113,10 @@ const SwitchWithRef = forwardRef<HTMLInputElement, SwitchProps>(
       disabled,
       elevation,
       controlColor,
-      background = checked ? 'bgPrimary' : 'bgTertiary',
+      variant = 'primary',
+      // The variant only informs the track color while checked; the background prop is more
+      // specific and always wins when provided.
+      background = checked ? switchVariantBackground[variant] : 'bgTertiary',
       borderColor,
       borderRadius = 1000,
       borderWidth,

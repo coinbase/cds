@@ -18,7 +18,10 @@ export type AccordionPanelBaseProps = SharedProps &
     maxHeight?: CollapsibleBaseProps['maxHeight'];
   };
 
-export type AccordionPanelProps = AccordionPanelBaseProps;
+export type AccordionPanelProps = AccordionPanelBaseProps & {
+  className?: string;
+  style?: React.CSSProperties;
+};
 
 /**
  * Renders a collapsible element to use as the primary content container for an AccordionItem.
@@ -33,14 +36,18 @@ export const AccordionPanel = memo(
         itemKey,
         testID,
         maxHeight: maxHeightParam,
+        className,
+        style,
       }: AccordionPanelProps,
       forwardedRef: React.ForwardedRef<HTMLDivElement>,
     ) => {
       return (
         <Collapsible
           ref={forwardedRef}
+          className={className}
           collapsed={collapsed}
           maxHeight={maxHeightParam ?? accordionVisibleMaxHeight}
+          style={style}
           testID={testID}
           {...accordionSpacing}
           // a11y guideline: https://www.w3.org/TR/wai-aria-practices/#accordion

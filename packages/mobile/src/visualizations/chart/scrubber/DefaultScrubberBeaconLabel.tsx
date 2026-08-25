@@ -37,13 +37,13 @@ export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
     const theme = useTheme();
     return (
       <ChartText
-        disableRepositioning
         background={background ?? theme.color.bg}
         borderRadius={borderRadius}
         color={color ?? theme.color.fgPrimary}
         elevated={elevated}
         font={font}
         inset={inset}
+        repositionAxes="none"
         verticalAlignment={verticalAlignment}
         {...chartTextProps}
       >

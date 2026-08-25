@@ -1,4 +1,5 @@
 import { render, screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 
 import { DefaultThemeProvider } from '../../utils/test';
 import type { InputStackProps } from '../InputStack';
@@ -15,13 +16,20 @@ function renderInputStack(props: Partial<InputStackProps> = {}) {
   );
 }
 
+function getRoot() {
+  return screen.getByTestId(TEST_ID);
+}
+
+function getField() {
+  return screen.getByTestId('input-interactable-area');
+}
+
 describe('InputStack', () => {
   describe('width', () => {
     it.each(['10%', '50%', '100%'] as const)('renders with width="%s"', (width) => {
       renderInputStack({ width });
 
-      const container = screen.getByTestId(TEST_ID);
-      expect(container).toBeInTheDocument();
+      expect(getRoot()).toBeInTheDocument();
     });
   });
 
@@ -29,8 +37,7 @@ describe('InputStack', () => {
     it.each(['10%', '50%', '100%', 56, 40] as const)('renders with height="%s"', (height) => {
       renderInputStack({ height });
 
-      const interactable = screen.getByTestId('input-interactable-area');
-      expect(interactable).toBeInTheDocument();
+      expect(getField()).toBeInTheDocument();
     });
   });
 
@@ -38,15 +45,15 @@ describe('InputStack', () => {
     it('renders without disabled state when disabled=false', () => {
       renderInputStack({ disabled: false });
 
-      const interactable = screen.getByTestId('input-interactable-area');
-      expect(interactable).not.toHaveAttribute('aria-disabled', 'true');
+      expect(getRoot().style.getPropertyValue('--opacity')).toBe('1');
+      expect(getField()).not.toHaveAttribute('aria-disabled', 'true');
     });
 
     it('renders with disabled state when disabled=true', () => {
       renderInputStack({ disabled: true });
 
-      const interactable = screen.getByTestId('input-interactable-area');
-      expect(interactable).toHaveAttribute('aria-disabled', 'true');
+      expect(getRoot().style.getPropertyValue('--opacity')).toBe('0.5');
+      expect(getField()).toHaveAttribute('aria-disabled', 'true');
     });
   });
 
@@ -57,14 +64,63 @@ describe('InputStack', () => {
       ['negative', 'var(--color-bgNegative)'],
       ['positive', 'var(--color-bgPositive)'],
       ['primary', 'var(--color-bgPrimary)'],
-    ] as const)('applies variant="%s" border color styling', (variant, expectedBorderColor) => {
+      ['secondary', 'transparent'],
+    ] as const)('applies variant="%s" unfocused border color', (variant, expectedBorderColor) => {
       renderInputStack({ variant });
 
-      const interactable = screen.getByTestId('input-interactable-area');
-      // The variant affects the CSS custom property --border-color-unfocused via inline style
-      expect(interactable.style.getPropertyValue('--border-color-unfocused')).toBe(
+      expect(getField().style.getPropertyValue('--border-color-unfocused')).toBe(
         expectedBorderColor,
       );
+    });
+  });
+
+  describe('onFieldPress', () => {
+    it('calls onFieldPress when the field chrome is pressed', async () => {
+      const onFieldPress = jest.fn();
+      const user = userEvent.setup();
+      renderInputStack({ onFieldPress, inputNode: <span>value</span> });
+
+      await user.click(getField());
+
+      expect(onFieldPress).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not call onFieldPress when disabled', async () => {
+      const onFieldPress = jest.fn();
+      const user = userEvent.setup();
+      renderInputStack({ disabled: true, onFieldPress, inputNode: <span>value</span> });
+
+      await user.click(getField());
+
+      expect(onFieldPress).not.toHaveBeenCalled();
+    });
+
+    it('does not call onFieldPress when the label is pressed', async () => {
+      const onFieldPress = jest.fn();
+      const user = userEvent.setup();
+      renderInputStack({
+        onFieldPress,
+        inputNode: <span>value</span>,
+        labelNode: 'Label',
+      });
+
+      await user.click(screen.getByText('Label'));
+
+      expect(onFieldPress).not.toHaveBeenCalled();
+    });
+
+    it('does not call onFieldPress when the helper text is pressed', async () => {
+      const onFieldPress = jest.fn();
+      const user = userEvent.setup();
+      renderInputStack({
+        onFieldPress,
+        inputNode: <span>value</span>,
+        helperTextNode: <span>Helper</span>,
+      });
+
+      await user.click(screen.getByText('Helper'));
+
+      expect(onFieldPress).not.toHaveBeenCalled();
     });
   });
 });

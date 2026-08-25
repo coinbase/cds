@@ -707,12 +707,12 @@ const TeamBeaconLabel = memo<TeamBeaconLabelProps>(
     return (
       <motion.g animate={{ y }} initial={false} transition={transition}>
         <ChartText
-          disableRepositioning
           color={color}
           dx={dx}
           font="legal"
           horizontalAlignment={horizontalAlignment}
           onDimensionsChange={handleTeamLabelDimensionsChange}
+          repositionAxes="none"
           verticalAlignment="bottom"
           x={x}
           y={transition ? 0 : y}
@@ -721,12 +721,12 @@ const TeamBeaconLabel = memo<TeamBeaconLabelProps>(
           {teamLabel}
         </ChartText>
         <ChartText
-          disableRepositioning
           color={color}
           dx={dx}
           font="title3"
           horizontalAlignment={horizontalAlignment}
           onDimensionsChange={handlePercentageLabelDimensionsChange}
+          repositionAxes="none"
           verticalAlignment="top"
           x={x}
           y={transition ? 0 : y}

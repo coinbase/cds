@@ -85,8 +85,8 @@ const ChipScreen = () => (
     <Example title="Default">
       <ChipExamples />
     </Example>
-    <Example title="Inverted">
-      <ChipExamples inverted />
+    <Example title="Active">
+      <ChipExamples active />
     </Example>
     <Example title="Size xs">
       <ChipExamples size="xs" />

@@ -19,7 +19,7 @@ const MediaChipExamples = ({
   ...props
 }: { label?: string; direction?: 'row' | 'column' } & Pick<
   ChipBaseProps,
-  'inverted' | 'compact'
+  'active' | 'compact'
 >) => {
   const divRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -73,9 +73,9 @@ export const Default = () => (
     </Text>
     <MediaChipExamples />
     <Text as="h3" display="block" font="headline" paddingTop={3}>
-      Inverted
+      Active
     </Text>
-    <MediaChipExamples inverted />
+    <MediaChipExamples active />
     <Text as="h3" display="block" font="headline" paddingTop={3}>
       Compact
     </Text>

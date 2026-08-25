@@ -33,6 +33,7 @@ export type ReferenceLineLabelComponentProps = Pick<
   | 'inset'
   | 'background'
   | 'borderRadius'
+  | 'repositionAxes'
   | 'disableRepositioning'
   | 'styles'
   | 'classNames'

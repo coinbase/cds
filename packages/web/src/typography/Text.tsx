@@ -4,6 +4,7 @@ import { css } from '@linaria/core';
 
 import type { Polymorphic } from '../core/polymorphism';
 import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxBaseProps } from '../layout/Box';
 
 const baseCss = css`
@@ -138,7 +139,11 @@ type TextComponent = (<AsComponent extends React.ElementType = TextDefaultElemen
 export const Text: TextComponent = memo(
   forwardRef<React.ReactElement<TextBaseProps>, TextBaseProps>(
     <AsComponent extends React.ElementType>(
-      {
+      _props: TextProps<AsComponent>,
+      ref?: Polymorphic.Ref<AsComponent>,
+    ) => {
+      const mergedProps = useComponentConfig('Text', _props);
+      const {
         as,
         font = 'inherit',
         fontFamily = font,
@@ -161,9 +166,7 @@ export const Text: TextComponent = memo(
         children,
         renderEmptyNode = true,
         ...props
-      }: TextProps<AsComponent>,
-      ref?: Polymorphic.Ref<AsComponent>,
-    ) => {
+      } = mergedProps;
       const Component = (as ?? textDefaultElement) satisfies React.ElementType;
       const textStyle = useMemo(
         () => ({

@@ -7,8 +7,17 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { Animated, Keyboard, Modal, Platform, StatusBar, useWindowDimensions } from 'react-native';
+import {
+  Animated,
+  Keyboard,
+  Modal,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  useWindowDimensions,
+} from 'react-native';
 import type { ModalProps, PressableProps, StyleProp, ViewStyle } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import {
   drawerAnimationDefaultDuration,
   MAX_OVER_DRAG,
@@ -37,6 +46,13 @@ import { DrawerStatusBar } from './DrawerStatusBar';
 import { useDrawerAnimation } from './useDrawerAnimation';
 import { useDrawerPanResponder } from './useDrawerPanResponder';
 import { useDrawerSpacing } from './useDrawerSpacing';
+
+const drawerStyles = StyleSheet.create({
+  // Android Modal is outside the app gesture root; RNGH needs one here.
+  gestureRoot: {
+    flex: 1,
+  },
+});
 
 export type DrawerRenderChildren = (args: { handleClose: () => void }) => React.ReactNode;
 
@@ -330,43 +346,45 @@ export const Drawer = memo(
         style={rootStyle}
         {...props}
       >
-        <OverlayContentContext.Provider value={overlayContentContextValue}>
-          {/* for some reason we are hiding on iOS only (see linked issue above) */}
-          {Platform.select({
-            ios: hideStatusBar ? <StatusBar animated hidden /> : null,
-            default: null,
-          })}
-          <Overlay
-            onTouchStart={handleOverlayPress}
-            opacity={opacityAnimation}
-            style={styles?.overlay}
-            testID="drawer-overlay"
-          />
-          <Box
-            {...getContainerPanHandlers}
-            animated
-            // close modal when user performs the "escape" accessibility gesture
-            // https://reactnative.dev/docs/accessibility#onaccessibilityescape-ios
-            onAccessibilityEscape={handleClose}
-            pin={pin}
-            style={containerStyle}
-            width={isSideDrawer ? horizontalDrawerWidth : '100%'}
-          >
-            {showHandleBarOutside && handleBar}
+        <GestureHandlerRootView style={drawerStyles.gestureRoot}>
+          <OverlayContentContext.Provider value={overlayContentContextValue}>
+            {/* for some reason we are hiding on iOS only (see linked issue above) */}
+            {Platform.select({
+              ios: hideStatusBar ? <StatusBar animated hidden /> : null,
+              default: null,
+            })}
+            <Overlay
+              onTouchStart={handleOverlayPress}
+              opacity={opacityAnimation}
+              style={styles?.overlay}
+              testID="drawer-overlay"
+            />
             <Box
-              accessibilityLabel={accessibilityLabel}
-              accessibilityLabelledBy={accessibilityLabelledBy}
-              borderRadius={isSideDrawer ? 0 : 600}
-              bordered={theme.activeColorScheme === 'dark'}
-              elevation={2}
-              maxHeight={!isSideDrawer ? verticalDrawerMaxHeight : '100%'}
-              style={drawerStyle}
+              {...getContainerPanHandlers}
+              animated
+              // close modal when user performs the "escape" accessibility gesture
+              // https://reactnative.dev/docs/accessibility#onaccessibilityescape-ios
+              onAccessibilityEscape={handleClose}
+              pin={pin}
+              style={containerStyle}
+              width={isSideDrawer ? horizontalDrawerWidth : '100%'}
             >
-              {showHandleBarInside && handleBar}
-              {content}
+              {showHandleBarOutside && handleBar}
+              <Box
+                accessibilityLabel={accessibilityLabel}
+                accessibilityLabelledBy={accessibilityLabelledBy}
+                borderRadius={isSideDrawer ? 0 : 600}
+                bordered={theme.activeColorScheme === 'dark'}
+                elevation={2}
+                maxHeight={!isSideDrawer ? verticalDrawerMaxHeight : '100%'}
+                style={drawerStyle}
+              >
+                {showHandleBarInside && handleBar}
+                {content}
+              </Box>
             </Box>
-          </Box>
-        </OverlayContentContext.Provider>
+          </OverlayContentContext.Provider>
+        </GestureHandlerRootView>
       </Modal>
     );
   },

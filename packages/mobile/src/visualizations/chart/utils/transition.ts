@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   type ExtrapolationType,
   type SharedValue,
@@ -265,8 +265,10 @@ export const usePathTransition = ({
   const interpolatorRef = useRef<((t: number) => string) | null>(null);
   const progress = useSharedValue(0);
 
-  const initialSkiaPath =
-    Skia.Path.MakeFromSVGString(initialPath ?? currentPath) ?? Skia.Path.Make();
+  // Re-renders must not re-parse SVG; lazy useState seeds useSharedValue on mount only.
+  const [initialSkiaPath] = useState(
+    () => Skia.Path.MakeFromSVGString(initialPath ?? currentPath) ?? Skia.Path.Make(),
+  );
   const normalizedStartShared = useSharedValue(initialSkiaPath);
   const normalizedEndShared = useSharedValue(initialSkiaPath);
   const fallbackPathShared = useSharedValue(initialSkiaPath);

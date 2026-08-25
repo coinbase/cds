@@ -8,6 +8,23 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 5.22.0 (8/20/2026 PST)
+
+#### 🚀 Updates
+
+- Publish icons 2026-08-20. [[#854](https://github.com/coinbase/cds/pull/854)]
+
+##### ⭐️ Added (8)
+
+- rewards
+- advanced
+- predictions
+- inviteFriends
+- borrow
+- creditCard
+- advisor
+- standWithCrypto
+
 ## 5.21.0 (7/15/2026 PST)
 
 #### 🚀 Updates

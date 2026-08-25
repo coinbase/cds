@@ -64,6 +64,19 @@ describe('SegmentedTab', () => {
     });
   });
 
+  it('forwards textTransform to the label', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} textTransform="uppercase" />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(`${TEST_ID}-label`)).toHaveStyle({
+      textTransform: 'uppercase',
+    });
+  });
+
   it('renders correct color when active', () => {
     render(
       <DefaultThemeProvider>
@@ -75,6 +88,19 @@ describe('SegmentedTab', () => {
     jest.advanceTimersByTime(300);
     expect(screen.getByTestId(`${TEST_ID}-label`)).toHaveAnimatedStyle({
       color: `rgb(${defaultTheme.lightSpectrum.gray0})`,
+    });
+  });
+
+  it('resolves borderRadius token on the pressable', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTab {...exampleProps} borderRadius={200} />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toHaveStyle({
+      borderRadius: defaultTheme.borderRadius[200],
     });
   });
 

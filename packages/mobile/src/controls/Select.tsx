@@ -228,6 +228,7 @@ export const Select = memo(
                 Boolean(label) && (
                   <InputLabel
                     color={labelTextColor}
+                    font="label1"
                     paddingStart={labelVariant === 'outside' || startNode ? 0 : getSpacingStart}
                     paddingY={labelVariant === 'inside' ? 0 : 0.5}
                   >
@@ -240,7 +241,7 @@ export const Select = memo(
                 <>
                   {compact && (
                     <HStack alignItems="center" maxWidth="40%" paddingStart={2}>
-                      <InputLabel noWrap color={labelTextColor} disabled={disabled}>
+                      <InputLabel noWrap color={labelTextColor} disabled={disabled} font="label1">
                         {label}
                       </InputLabel>
                     </HStack>

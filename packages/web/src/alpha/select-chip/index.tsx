@@ -1,2 +1,2 @@
 export * from './SelectChip';
-export * from './SelectChipControl';
+export { SelectChipControl } from './SelectChipControl';

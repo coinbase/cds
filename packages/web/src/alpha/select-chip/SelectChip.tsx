@@ -1,24 +1,17 @@
 import React, { forwardRef, memo, useMemo } from 'react';
+import { getSelectChipActive } from '@coinbase/cds-common/chips/getSelectChipActive';
 
-import type { ChipBaseProps, ChipSize } from '../../chips/ChipProps';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import type { PressableBaseProps } from '../../system/Pressable';
 import { Select, type SelectRef } from '../select/Select';
 import type { SelectControlProps, SelectProps, SelectType } from '../select/types';
 
-import { SelectChipControl } from './SelectChipControl';
+import {
+  SelectChipControl,
+  type SelectChipControlChipProps,
+  type SelectChipControlProps,
+} from './SelectChipControl';
 
-export type SelectChipBaseProps = Pick<
-  ChipBaseProps,
-  'invertColorScheme' | 'numberOfLines' | 'maxWidth' | 'size' | 'compact'
-> & {
-  /**
-   * Override the displayed value in the chip control.
-   * Useful for avoiding truncation, especially in multi-select scenarios where multiple option labels might be too long to display.
-   * When provided, this value takes precedence over the default label generation.
-   */
-  displayValue?: React.ReactNode;
-};
+export type SelectChipBaseProps = Pick<SelectChipControlProps, keyof SelectChipControlChipProps>;
 
 export type SelectChipProps<
   Type extends SelectType = 'single',
@@ -26,51 +19,42 @@ export type SelectChipProps<
 > = SelectChipBaseProps &
   Omit<
     SelectProps<Type, SelectOptionValue>,
-    | 'SelectControlComponent'
-    | 'helperText'
-    | 'labelVariant'
-    | 'variant'
-    | 'maxWidth'
-    | 'size'
-    | 'compact'
+    | 'SelectControlComponent' // fixed to SelectChipControl
+    | 'helperText' // not supported
+    | 'labelVariant' // not supported
+    | 'variant' // not supported
+    | 'maxWidth' // chip-owned
+    | 'size' // ChipSize, not SelectSize
+    | 'compact' // chip-owned
+    | 'bordered' // chip-owned
+    | 'borderWidth' // chip-owned
+    | 'borderColor' // chip-owned
+    | 'borderRadius' // chip-owned
   >;
 
 /**
- * Creates a wrapper component that injects invertColorScheme and numberOfLines
- * into SelectChipControl. This is needed because Select doesn't pass these props
- * to SelectControlComponent, but SelectChipControl requires them.
+ * Creates a wrapper component that injects chip-specific props into SelectChipControl.
+ * Select only forwards generic control props to `SelectControlComponent`; chip styling
+ * and `active` are owned by SelectChip and must be closed over here.
  */
 function createSelectChipControlWrapper<
   Type extends SelectType,
   SelectOptionValue extends string = string,
->({
-  invertColorScheme,
-  numberOfLines,
-  maxWidth,
-  displayValue,
-  size,
-  compact,
-}: {
-  invertColorScheme?: boolean;
-  numberOfLines?: number;
-  maxWidth?: PressableBaseProps['maxWidth'];
-  displayValue?: React.ReactNode;
-  size?: ChipSize;
-  compact?: boolean;
-}): React.FC<SelectControlProps<Type, SelectOptionValue> & { ref?: React.Ref<HTMLDivElement> }> {
+>(
+  chipProps: SelectChipBaseProps,
+): React.FC<SelectControlProps<Type, SelectOptionValue> & { ref?: React.Ref<HTMLDivElement> }> {
   return memo(
     forwardRef<HTMLDivElement, SelectControlProps<Type, SelectOptionValue>>(
       (controlProps, controlRef) => {
+        // Chip props are spread last so they win at runtime; the cast bridges overlapping keys
+        // (`size`, borders) where SelectControlProps and SelectChipBaseProps use different types.
         return (
           <SelectChipControl
-            {...controlProps}
+            {...({ ...controlProps, ...chipProps } as SelectChipControlProps<
+              Type,
+              SelectOptionValue
+            >)}
             ref={controlRef}
-            compact={compact}
-            displayValue={displayValue}
-            invertColorScheme={invertColorScheme}
-            maxWidth={maxWidth}
-            numberOfLines={numberOfLines}
-            size={size}
           />
         );
       },
@@ -88,20 +72,78 @@ const SelectChipComponent = memo(
       _props: SelectChipProps<Type, SelectOptionValue>,
       ref: React.Ref<SelectRef>,
     ) => {
-      const mergedProps = useComponentConfig('SelectChip', _props);
-      const { invertColorScheme, numberOfLines, maxWidth, displayValue, size, compact, ...props } =
-        mergedProps;
+      // Resolve `active` from instance props before config merge so state-aware resolvers
+      // (active vs inactive border styling) see the final selection state. `value` and
+      // legacy invert props are pulled out with `active` and passed back explicitly because
+      // they feed that resolution and must remain available to the config resolver input.
+      const { active: activeProp, invertColorScheme, inverted, value, ...restProps } = _props;
+      const resolvedActive = getSelectChipActive(activeProp, value, invertColorScheme, inverted);
+      const mergedProps = useComponentConfig('SelectChip', {
+        ...restProps,
+        value,
+        active: resolvedActive,
+        invertColorScheme,
+        inverted,
+      });
+      // SelectChip composes Select + MediaChip; peel chip props off merged props so the rest
+      // can flow to `<Select>` without chip-only fields leaking into the select interface.
+      const {
+        active,
+        activeBackground,
+        activeColor,
+        background,
+        color,
+        numberOfLines,
+        maxWidth,
+        displayValue,
+        size,
+        compact,
+        borderWidth,
+        borderColor,
+        bordered,
+        borderRadius,
+        invertColorScheme: mergedInvertColorScheme,
+        inverted: mergedInverted,
+        ...selectProps
+      } = mergedProps;
       const WrappedSelectChipControl = useMemo(
         () =>
           createSelectChipControlWrapper<Type, SelectOptionValue>({
-            invertColorScheme,
+            active,
+            activeBackground,
+            activeColor,
+            background,
+            color,
             numberOfLines,
             maxWidth,
             displayValue,
             size,
             compact,
+            borderWidth,
+            borderColor,
+            bordered,
+            borderRadius,
+            invertColorScheme: mergedInvertColorScheme,
+            inverted: mergedInverted,
           }),
-        [displayValue, invertColorScheme, numberOfLines, maxWidth, size, compact],
+        [
+          active,
+          activeBackground,
+          activeColor,
+          background,
+          color,
+          displayValue,
+          numberOfLines,
+          maxWidth,
+          size,
+          compact,
+          borderWidth,
+          borderColor,
+          bordered,
+          borderRadius,
+          mergedInvertColorScheme,
+          mergedInverted,
+        ],
       );
 
       return (
@@ -112,9 +154,9 @@ const SelectChipComponent = memo(
             dropdown: {
               width: 'max-content',
             },
-            ...props.styles,
+            ...selectProps.styles,
           }}
-          {...props}
+          {...selectProps}
         />
       );
     },

@@ -54,6 +54,7 @@ export const Tooltip = memo((_props: TooltipProps) => {
     fontSize,
     fontWeight,
     lineHeight,
+    textTransform,
     ...props
   } = mergedProps;
   const subjectRef = useRef<View | null>(null);
@@ -211,6 +212,7 @@ export const Tooltip = memo((_props: TooltipProps) => {
             placement={placement}
             subjectLayout={subjectLayout}
             testID={testID}
+            textTransform={textTransform}
             translateY={translateY}
             yShiftByStatusBarHeight={yShiftByStatusBarHeight}
             {...props}

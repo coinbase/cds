@@ -192,4 +192,50 @@ describe('Switch.test', () => {
 
     expect(track.className).toContain('bgTertiary');
   });
+
+  it('applies bgPositive background when variant is positive and checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch checked onChange={jest.fn()} testID="test-switch" variant="positive" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('switch-track').className).toContain('bgPositive');
+  });
+
+  it('applies bgNegative background when variant is negative and checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch checked onChange={jest.fn()} testID="test-switch" variant="negative" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('switch-track').className).toContain('bgNegative');
+  });
+
+  it('does not apply variant background when unchecked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()} testID="test-switch" variant="negative" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('switch-track').className).toContain('bgTertiary');
+  });
+
+  it('background prop takes priority over variant when checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch
+          background="bgWarning"
+          checked
+          onChange={jest.fn()}
+          testID="test-switch"
+          variant="positive"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('switch-track').className).toContain('bgWarning');
+  });
 });

@@ -15,7 +15,6 @@ import { IconExample } from './examples/Icon';
 import { InputChipExample } from './examples/InputChip';
 import { ListCellExample } from './examples/ListCell';
 import { SearchExample } from './examples/Search';
-import { SegmentedTabsExample } from './examples/SegmentedTabs';
 import { SelectExample } from './examples/Select';
 import { SelectChipExample } from './examples/SelectChip';
 import { TabsExample } from './examples/Tabs';
@@ -31,9 +30,6 @@ export const StickerSheet = memo(() => {
         <VStack gap={2}>
           <Container title="Switch / Checkbox / Radio">
             <ControlsExample />
-          </Container>
-          <Container title="Segmented Tabs">
-            <SegmentedTabsExample />
           </Container>
           <Container title="Tabs">
             <TabsExample />

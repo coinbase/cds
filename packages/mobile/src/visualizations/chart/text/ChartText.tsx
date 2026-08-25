@@ -63,6 +63,12 @@ export type TextHorizontalAlignment = 'left' | 'center' | 'right';
  */
 export type TextVerticalAlignment = 'top' | 'middle' | 'bottom';
 
+/**
+ * Which axes ChartText may nudge labels along to stay in bounds.
+ * @default 'both'
+ */
+export type ChartTextRepositionAxes = 'x' | 'y' | 'both' | 'none';
+
 export type ChartTextBaseProps = {
   /**
    * The text color.
@@ -79,7 +85,19 @@ export type ChartTextBaseProps = {
    */
   elevated?: boolean;
   /**
-   * When true, disables automatic repositioning to fit within bounds.
+   * Which axes to reposition labels on when they would overflow bounds.
+   * @default 'both'
+   */
+  repositionAxes?: ChartTextRepositionAxes;
+  /**
+   * Disables automatic repositioning to fit within bounds.
+   *
+   * @note `true` is equivalent to `repositionAxes='none'`, `false`/omit equals `repositionAxes='both'`.
+   *
+   * @deprecated Use `repositionAxes` instead
+   *
+   * This will be removed in a future major release.
+   * @deprecationExpectedRemoval v11
    */
   disableRepositioning?: boolean;
   /**
@@ -131,12 +149,12 @@ export type ChartTextProps = ChartTextBaseProps & {
   children: ChartTextChildren;
   /**
    * The desired x position in pixels.
-   * @note Text will be automatically positioned to fit within bounds unless `disableRepositioning` is true.
+   * @note Text will be automatically positioned to fit within bounds based on `repositionAxes`.
    */
   x: AnimatedProp<number>;
   /**
    * The desired y position in pixels.
-   * @note Text will be automatically positioned to fit within bounds unless `disableRepositioning` is true.
+   * @note Text will be automatically positioned to fit within bounds based on `repositionAxes`.
    */
   y: AnimatedProp<number>;
   /**
@@ -215,6 +233,7 @@ export const ChartText = memo<ChartTextProps>(
     verticalAlignment = 'middle',
     paragraphAlignment = TextAlign.Left,
     disableRepositioning = false,
+    repositionAxes = disableRepositioning ? 'none' : 'both',
     bounds,
     color,
     background: backgroundProp,
@@ -357,9 +376,8 @@ export const ChartText = memo<ChartTextProps>(
     );
 
     const overflowAmount = useDerivedValue(() => {
-      if (disableRepositioning) {
-        return { x: 0, y: 0 };
-      }
+      const repositionX = repositionAxes === 'both' || repositionAxes === 'x';
+      const repositionY = repositionAxes === 'both' || repositionAxes === 'y';
 
       const parentBounds = bounds ?? fullChartBounds;
       if (!parentBounds || parentBounds.width <= 0 || parentBounds.height <= 0) {
@@ -369,34 +387,36 @@ export const ChartText = memo<ChartTextProps>(
       let offsetX = 0;
       let offsetY = 0;
 
-      // X-axis overflow
-      if (backgroundRect.value.x < parentBounds.x) {
-        offsetX = parentBounds.x - backgroundRect.value.x;
-      } else if (
-        backgroundRect.value.x + backgroundRect.value.width >
-        parentBounds.x + parentBounds.width
-      ) {
-        offsetX =
-          parentBounds.x +
-          parentBounds.width -
-          (backgroundRect.value.x + backgroundRect.value.width);
+      if (repositionX) {
+        if (backgroundRect.value.x < parentBounds.x) {
+          offsetX = parentBounds.x - backgroundRect.value.x;
+        } else if (
+          backgroundRect.value.x + backgroundRect.value.width >
+          parentBounds.x + parentBounds.width
+        ) {
+          offsetX =
+            parentBounds.x +
+            parentBounds.width -
+            (backgroundRect.value.x + backgroundRect.value.width);
+        }
       }
 
-      // Y-axis overflow
-      if (backgroundRect.value.y < parentBounds.y) {
-        offsetY = parentBounds.y - backgroundRect.value.y;
-      } else if (
-        backgroundRect.value.y + backgroundRect.value.height >
-        parentBounds.y + parentBounds.height
-      ) {
-        offsetY =
-          parentBounds.y +
-          parentBounds.height -
-          (backgroundRect.value.y + backgroundRect.value.height);
+      if (repositionY) {
+        if (backgroundRect.value.y < parentBounds.y) {
+          offsetY = parentBounds.y - backgroundRect.value.y;
+        } else if (
+          backgroundRect.value.y + backgroundRect.value.height >
+          parentBounds.y + parentBounds.height
+        ) {
+          offsetY =
+            parentBounds.y +
+            parentBounds.height -
+            (backgroundRect.value.y + backgroundRect.value.height);
+        }
       }
 
       return { x: offsetX, y: offsetY };
-    }, [backgroundRect, fullChartBounds, bounds, disableRepositioning]);
+    }, [backgroundRect, fullChartBounds, bounds, repositionAxes]);
 
     // Final adjusted positions
     const backgroundRectWithOffset = useDerivedValue<Rect>(() => {

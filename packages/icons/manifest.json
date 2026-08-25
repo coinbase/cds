@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-07-15T19:23:03.976Z",
-  "lastUnicode": 986358,
+  "lastUpdated": "2026-08-20T15:26:31.294Z",
+  "lastUnicode": 986406,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -25990,6 +25990,382 @@
           "active": true,
           "size": 12,
           "unicode": 986353
+        }
+      ]
+    },
+    {
+      "nodeId": "7846:84",
+      "name": "rewards",
+      "description": "gift box, present, rewards, joy, contribution, perk, giving, 🎁, 🎉, 🎊, 🥳",
+      "assetsHash": "S9bnHQq2S8sxcMkC/g21zByBfDccl2NUpvPhj7MUuk8=",
+      "nameHash": "rGfQ1MeQwEULi1SbQy7GSywcZlqqYtabj01967NmpDU=",
+      "createdAt": "2026-08-20T15:09:55.701Z",
+      "lastUpdated": "2026-08-20T15:09:55.701Z",
+      "svgs": [
+        {
+          "name": "rewards-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986400
+        },
+        {
+          "name": "rewards-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986399
+        },
+        {
+          "name": "rewards-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986398
+        },
+        {
+          "name": "rewards-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986397
+        },
+        {
+          "name": "rewards-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986396
+        },
+        {
+          "name": "rewards-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986395
+        }
+      ]
+    },
+    {
+      "nodeId": "7846:71",
+      "name": "advanced",
+      "description": "advanced, advance, trade, trading, product",
+      "assetsHash": "G6H3Vz18Zl+yNnvVL/cq5r9eauHzMwtuSQcVdAB/icI=",
+      "nameHash": "hRUkIy0atZYPmCRpNIKg5yv6XRuEakhqUs6mMYKB2Pw=",
+      "createdAt": "2026-08-20T15:09:55.707Z",
+      "lastUpdated": "2026-08-20T15:09:55.707Z",
+      "svgs": [
+        {
+          "name": "advanced-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986364
+        },
+        {
+          "name": "advanced-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986363
+        },
+        {
+          "name": "advanced-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986362
+        },
+        {
+          "name": "advanced-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986361
+        },
+        {
+          "name": "advanced-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986360
+        },
+        {
+          "name": "advanced-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986359
+        }
+      ]
+    },
+    {
+      "nodeId": "7846:45",
+      "name": "predictions",
+      "description": "",
+      "assetsHash": "RZmUK/ThvRPrMHDNAmHNA+0OIhJv/C98mBLeWBUJVyE=",
+      "nameHash": "/QoMIAEJ9EtnrExRHV7BKTOHCgNQ9EuZ3jkzdD6DHKk=",
+      "createdAt": "2026-08-20T15:09:55.713Z",
+      "lastUpdated": "2026-08-20T15:09:55.713Z",
+      "svgs": [
+        {
+          "name": "predictions-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986394
+        },
+        {
+          "name": "predictions-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986393
+        },
+        {
+          "name": "predictions-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986392
+        },
+        {
+          "name": "predictions-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986391
+        },
+        {
+          "name": "predictions-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986390
+        },
+        {
+          "name": "predictions-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986389
+        }
+      ]
+    },
+    {
+      "nodeId": "7846:136",
+      "name": "inviteFriends",
+      "description": "",
+      "assetsHash": "0GgPccSpS9TYJJTyBAjOR7TexdMkeJGnZX09HCQJkEM=",
+      "nameHash": "0RXMdab78orbhaXM2SdhlmAYnXXquHty2raq2i/YYHI=",
+      "createdAt": "2026-08-20T15:09:55.719Z",
+      "lastUpdated": "2026-08-20T15:09:55.719Z",
+      "svgs": [
+        {
+          "name": "inviteFriends-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986388
+        },
+        {
+          "name": "inviteFriends-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986387
+        },
+        {
+          "name": "inviteFriends-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986386
+        },
+        {
+          "name": "inviteFriends-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986385
+        },
+        {
+          "name": "inviteFriends-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986384
+        },
+        {
+          "name": "inviteFriends-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986383
+        }
+      ]
+    },
+    {
+      "nodeId": "7846:110",
+      "name": "borrow",
+      "description": "nav, borrow, product",
+      "assetsHash": "8vMmUjHTTrtTbt8Edm7rXWdu0buR+d/yFC3hBE6Ma0U=",
+      "nameHash": "rQLHbm++oQvnMPC0hFAyaJWuyZCZTA7Hu82tf8g9XFk=",
+      "createdAt": "2026-08-20T15:09:55.724Z",
+      "lastUpdated": "2026-08-20T15:09:55.724Z",
+      "svgs": [
+        {
+          "name": "borrow-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986376
+        },
+        {
+          "name": "borrow-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986375
+        },
+        {
+          "name": "borrow-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986374
+        },
+        {
+          "name": "borrow-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986373
+        },
+        {
+          "name": "borrow-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986372
+        },
+        {
+          "name": "borrow-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986371
+        }
+      ]
+    },
+    {
+      "nodeId": "7846:58",
+      "name": "creditCard",
+      "description": "card, pay, credit, debit, money, 💳, 🏦, 🏧",
+      "assetsHash": "qwnMVOg0UskI4HexfeDxfvnLzqNoF70z+06kSJukZXk=",
+      "nameHash": "aUXuEK8i+rA+/Wj/JfQdx4tgC23F8LYPRG847QUi3x4=",
+      "createdAt": "2026-08-20T15:09:55.730Z",
+      "lastUpdated": "2026-08-20T15:09:55.730Z",
+      "svgs": [
+        {
+          "name": "creditCard-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986382
+        },
+        {
+          "name": "creditCard-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986381
+        },
+        {
+          "name": "creditCard-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986380
+        },
+        {
+          "name": "creditCard-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986379
+        },
+        {
+          "name": "creditCard-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986378
+        },
+        {
+          "name": "creditCard-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986377
+        }
+      ]
+    },
+    {
+      "nodeId": "7846:149",
+      "name": "advisor",
+      "description": "",
+      "assetsHash": "eiqvlWHcvRJ//ApalPWvES/lAmh8s4tmmuE4cstOhds=",
+      "nameHash": "+g1JO/getUAYKKKPAZfTIxQITN6yZgtoP+mtaBXDGQU=",
+      "createdAt": "2026-08-20T15:09:55.735Z",
+      "lastUpdated": "2026-08-20T15:09:55.735Z",
+      "svgs": [
+        {
+          "name": "advisor-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986370
+        },
+        {
+          "name": "advisor-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986369
+        },
+        {
+          "name": "advisor-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986368
+        },
+        {
+          "name": "advisor-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986367
+        },
+        {
+          "name": "advisor-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986366
+        },
+        {
+          "name": "advisor-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986365
+        }
+      ]
+    },
+    {
+      "nodeId": "7846:175",
+      "name": "standWithCrypto",
+      "description": "shield, safety, security, trust, ouline",
+      "assetsHash": "BQdleRXmgVjbIugKSVJTZYl33vOtasvgA/bQpVshUEQ=",
+      "nameHash": "+Dcn4N6wwsUarftef5qta9023uDMTeDhBmSTg4vqscY=",
+      "createdAt": "2026-08-20T15:09:55.741Z",
+      "lastUpdated": "2026-08-20T15:09:55.741Z",
+      "svgs": [
+        {
+          "name": "standWithCrypto-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986406
+        },
+        {
+          "name": "standWithCrypto-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986405
+        },
+        {
+          "name": "standWithCrypto-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986404
+        },
+        {
+          "name": "standWithCrypto-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986403
+        },
+        {
+          "name": "standWithCrypto-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986402
+        },
+        {
+          "name": "standWithCrypto-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986401
         }
       ]
     }

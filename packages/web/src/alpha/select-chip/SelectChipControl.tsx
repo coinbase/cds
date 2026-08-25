@@ -1,5 +1,7 @@
 import React, { forwardRef, memo, useMemo } from 'react';
+import { getSelectChipHasValue } from '@coinbase/cds-common/chips/getSelectChipActive';
 
+import type { ChipBaseProps } from '../../chips/ChipProps';
 import { MediaChip } from '../../chips/MediaChip';
 import { AnimatedCaret } from '../../motion/AnimatedCaret';
 import type { SelectRef } from '../select/Select';
@@ -10,7 +12,52 @@ import {
   type SelectType,
 } from '../select/types';
 
-import type { SelectChipBaseProps } from './SelectChip';
+/**
+ * Chip props accepted by {@link SelectChipControl} and forwarded to {@link MediaChip}.
+ * Includes selection state, layout, borders, and `displayValue` for the control label.
+ */
+export type SelectChipControlChipProps = Pick<
+  ChipBaseProps,
+  | 'active'
+  | 'activeBackground'
+  | 'activeColor'
+  | 'background'
+  | 'color'
+  | 'invertColorScheme'
+  | 'inverted'
+  | 'numberOfLines'
+  | 'maxWidth'
+  | 'size'
+  | 'compact'
+  | 'borderWidth'
+  | 'borderColor'
+  | 'bordered'
+  | 'borderRadius'
+> & {
+  /**
+   * Override the displayed value in the chip control.
+   * Useful for avoiding truncation, especially in multi-select scenarios where multiple option labels might be too long to display.
+   * When provided, this value takes precedence over the default label generation.
+   */
+  displayValue?: React.ReactNode;
+};
+
+/**
+ * SelectControlProps fields superseded by {@link SelectChipControlChipProps}.
+ * Omit is required: intersection would merge overlapping keys (e.g. `size` as SelectSize &
+ * ChipSize, `background` as responsive Box vs chip tokens) instead of replacing select-scale
+ * definitions.
+ */
+type SelectControlPropsReplacedByChipProps = keyof Pick<
+  SelectControlProps,
+  'size' | 'compact' | 'borderWidth' | 'borderColor' | 'bordered' | 'borderRadius'
+>;
+
+export type SelectChipControlProps<
+  Type extends SelectType = 'single',
+  SelectOptionValue extends string = string,
+> = Omit<SelectControlProps<Type, SelectOptionValue>, SelectControlPropsReplacedByChipProps> &
+  SelectChipControlChipProps;
 
 const SelectChipControlComponent = memo(
   forwardRef(
@@ -31,19 +78,28 @@ const SelectChipControlComponent = memo(
         maxSelectedOptionsToShow = 2,
         hiddenSelectedOptionsLabel = 'more',
         label,
+        disabled,
         compact,
         size,
+        active,
+        activeBackground,
+        activeColor,
+        background,
+        color,
         invertColorScheme,
+        inverted,
         numberOfLines,
-        disabled,
         maxWidth,
         displayValue,
-      }: Omit<SelectControlProps<Type, SelectOptionValue>, 'size' | 'compact'> &
-        SelectChipBaseProps,
+        borderWidth,
+        borderColor,
+        bordered,
+        borderRadius,
+      }: SelectChipControlProps<Type, SelectOptionValue>,
       ref: React.Ref<SelectRef>,
     ) => {
       const isMultiSelect = type === 'multi';
-      const hasValue = value !== null && !(Array.isArray(value) && value.length === 0);
+      const hasValue = getSelectChipHasValue(value);
 
       // Map of options to their values
       // If multiple options share the same value, the first occurrence wins (matches native HTML select behavior)
@@ -123,40 +179,38 @@ const SelectChipControlComponent = memo(
         hiddenSelectedOptionsLabel,
       ]);
 
+      const resolvedColor = active && activeColor !== undefined ? activeColor : color;
+
       const endNode = useMemo(() => {
+        // Match Chip's label color. `fg` still inverts with the chip when active uses theme inversion.
         return (
           customEndNode ?? (
-            <AnimatedCaret
-              active
-              color={hasValue ? 'fgInverse' : 'fg'}
-              rotate={open ? 0 : 180}
-              size="xs"
-            />
+            <AnimatedCaret active color={resolvedColor ?? 'fg'} rotate={open ? 0 : 180} size="xs" />
           )
         );
-      }, [customEndNode, hasValue, open]);
-
-      const color = useMemo(() => {
-        return hasValue ? 'fgInverse' : 'fg';
-      }, [hasValue]);
-
-      const background = useMemo(() => {
-        return hasValue ? 'bgInverse' : 'bgSecondary';
-      }, [hasValue]);
+      }, [customEndNode, open, resolvedColor]);
 
       return (
         <MediaChip
           ref={ref as React.Ref<HTMLButtonElement>}
           noScaleOnPress
           accessibilityLabel={accessibilityLabel}
+          active={active}
+          activeBackground={activeBackground}
+          activeColor={activeColor}
           aria-haspopup={ariaHaspopup}
           background={background}
+          bordered={bordered}
+          borderColor={borderColor}
+          borderRadius={borderRadius}
+          borderWidth={borderWidth}
           className={className}
           color={color}
           compact={compact}
           disabled={disabled}
           end={endNode}
           invertColorScheme={invertColorScheme}
+          inverted={inverted}
           maxWidth={maxWidth}
           numberOfLines={numberOfLines}
           onClick={() => setOpen((s) => !s)}
@@ -171,12 +225,14 @@ const SelectChipControlComponent = memo(
   ),
 );
 
+SelectChipControlComponent.displayName = 'SelectChipControl';
+
+/** Generic memo components need an explicit cast for the public polymorphic signature. */
 export const SelectChipControl = SelectChipControlComponent as <
   Type extends SelectType,
   SelectOptionValue extends string = string,
 >(
-  props: Omit<SelectControlProps<Type, SelectOptionValue>, 'size' | 'compact'> &
-    SelectChipBaseProps & {
-      ref?: React.Ref<HTMLElement>;
-    },
+  props: SelectChipControlProps<Type, SelectOptionValue> & {
+    ref?: React.Ref<HTMLElement>;
+  },
 ) => React.ReactElement;

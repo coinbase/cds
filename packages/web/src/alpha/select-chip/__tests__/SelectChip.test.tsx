@@ -4,6 +4,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
 import { DefaultThemeProvider } from '../../../utils/test';
+import { defaultTheme } from '../../../themes/defaultTheme';
+import { ComponentConfigProvider } from '../../../system';
 import type { SelectOption } from '../../select/types';
 import type { SelectChipProps } from '../SelectChip';
 import { SelectChip } from '../SelectChip';
@@ -27,6 +29,16 @@ const defaultProps: SelectChipProps<'single'> = {
   value: null,
   onChange: jest.fn(),
   placeholder: 'Select an option',
+};
+
+const getSelectChipControl = () => screen.getByRole('button');
+
+const expectInvertedChip = (chip: HTMLElement) => {
+  expect(chip.parentElement).toHaveClass('dark');
+};
+
+const expectNonInvertedChip = (chip: HTMLElement) => {
+  expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
 };
 
 describe('SelectChip', () => {
@@ -105,6 +117,163 @@ describe('SelectChip', () => {
       );
 
       expect(screen.getByText('Select an option')).toBeInTheDocument();
+    });
+
+    it('defaults to active colors when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button');
+      const activeWrapper = chip.parentElement;
+      expect(activeWrapper).toHaveClass('dark');
+      expect(activeWrapper).toHaveStyle({
+        '--color-bgSecondary': defaultTheme.darkColor.bgSecondary,
+        '--color-fg': defaultTheme.darkColor.fg,
+      });
+    });
+
+    it('renders inactive colors when no value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button');
+      expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+    });
+
+    it('respects explicit active={false} when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} active={false} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button');
+      expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+    });
+
+    it('respects explicit invertColorScheme={false} opt-out when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} invertColorScheme={false} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button');
+      expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+    });
+
+    it('applies legacy invertColorScheme when no value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} invertColorScheme value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button');
+      expect(chip.parentElement).toHaveClass('dark');
+    });
+
+    it('applies border props from ComponentConfigProvider', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              SelectChip: {
+                borderWidth: 100,
+                bordered: true,
+                borderColor: 'bgLine',
+              },
+            }}
+          >
+            <SelectChip {...defaultProps} value={null} />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('button')).toHaveStyle({
+        borderColor: 'var(--color-bgLine)',
+        borderWidth: 'var(--borderWidth-100)',
+      });
+    });
+
+    it('forces active chip colors when active is true without a selected value', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} active value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expectInvertedChip(getSelectChipControl());
+    });
+
+    it('applies activeBackground without inverting when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip
+            {...defaultProps}
+            activeBackground="bgPositive"
+            activeColor="fgPositive"
+            value="option1"
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = getSelectChipControl();
+      expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgPositive)' });
+      expect(screen.getByText('Option 1')).toHaveStyle({ color: 'var(--color-fgPositive)' });
+      expectNonInvertedChip(chip);
+    });
+
+    it('applies color to the default caret', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} color="fgPrimary" value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('icon-base-glyph')).toHaveStyle({
+        color: 'var(--color-fgPrimary)',
+      });
+    });
+
+    it('applies activeColor to the default caret when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} activeColor="fgPositive" value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('icon-base-glyph')).toHaveStyle({
+        color: 'var(--color-fgPositive)',
+      });
+    });
+
+    it('applies active branch styling from ComponentConfigProvider when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              SelectChip: (props) =>
+                props.active
+                  ? { activeBackground: 'bgPositive', activeColor: 'fgPositive' }
+                  : { background: 'bg' },
+            }}
+          >
+            <SelectChip {...defaultProps} value="option1" />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      const chip = getSelectChipControl();
+      expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgPositive)' });
+      expect(screen.getByText('Option 1')).toHaveStyle({ color: 'var(--color-fgPositive)' });
+      expectNonInvertedChip(chip);
     });
 
     it('opens dropdown when clicked', async () => {
@@ -277,6 +446,26 @@ describe('SelectChip', () => {
       );
 
       expect(screen.getByText('Option 1, Option 2')).toBeInTheDocument();
+    });
+
+    it('defaults to inactive chip colors for an empty multi-select value', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...multiSelectProps} value={[]} />
+        </DefaultThemeProvider>,
+      );
+
+      expectNonInvertedChip(getSelectChipControl());
+    });
+
+    it('defaults to active chip colors when multi-select has values', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...multiSelectProps} value={['option1']} />
+        </DefaultThemeProvider>,
+      );
+
+      expectInvertedChip(getSelectChipControl());
     });
 
     it('shows truncated selection with more count', () => {

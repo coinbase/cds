@@ -8,6 +8,88 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.21.1 ((8/24/2026, 08:38 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.21.0 ((8/21/2026, 09:28 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.20.0 ((8/20/2026, 11:23 AM PST))
+
+This is an artificial version bump with no new change.
+
+#### 📘 Misc
+
+- Docs: Update input props jsdocs.
+
+## 9.19.0 ((8/20/2026, 10:00 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.18.0 ((8/19/2026, 02:37 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.17.2 ((8/19/2026, 12:36 PM PST))
+
+This is an artificial version bump with no new change.
+
+#### 📘 Misc
+
+- Docs: correct deprecation notices referencing the incorrect CDS version.
+
+## 9.17.1 ((8/17/2026, 02:53 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.17.0 ((8/14/2026, 07:06 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.16.0 (8/13/2026 PST)
+
+#### 🚀 Updates
+
+- Add utility for SelectChip to share across packages. [[#843](https://github.com/coinbase/cds/pull/843)]
+
+## 9.15.0 ((8/11/2026, 12:23 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.14.0 ((8/11/2026, 11:48 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.13.0 ((8/11/2026, 09:52 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.3 ((8/10/2026, 09:17 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.2 ((8/10/2026, 07:45 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.1 ((8/8/2026, 07:26 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.0 ((8/7/2026, 09:30 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.11.0 ((8/7/2026, 07:46 PM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.10.4 ((8/6/2026, 12:30 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 9.10.3 ((8/5/2026, 07:07 AM PST))
 
 This is an artificial version bump with no new change.

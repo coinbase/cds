@@ -1,5 +1,5 @@
 import { memo, useCallback, useMemo } from 'react';
-import { Pressable, type StyleProp, TouchableOpacity, type ViewStyle } from 'react-native';
+import { type StyleProp, TouchableOpacity, type ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useInputVariant } from '@coinbase/cds-common/hooks/useInputVariant';
 
@@ -69,8 +69,8 @@ export const DefaultSelectControlComponent = memo(
     size,
     align = 'start',
     font = 'body',
-    labelColor = 'fg',
-    labelFont = 'label1',
+    labelColor = 'fgMuted',
+    labelFont = 'label2',
     bordered = true,
     borderWidth = bordered ? 100 : 0,
     focusedBorderWidth = bordered ? undefined : 200,
@@ -394,6 +394,7 @@ export const DefaultSelectControlComponent = memo(
           disabled={disabled}
           onBlur={onBlur ?? undefined}
           onFocus={onFocus ?? undefined}
+          activeOpacity={1}
           onPress={handleToggleOpen}
           style={[{ flexGrow: 1 }, styles?.controlInputNode]}
         >
@@ -469,17 +470,17 @@ export const DefaultSelectControlComponent = memo(
 
     const endNode = useMemo(
       () => (
-        <Pressable
-          accessible={customEndNode ? true : false}
-          disabled={disabled}
-          onPress={handleToggleOpen}
+        <HStack
+          alignItems="center"
+          alignSelf="stretch"
+          flexShrink={0}
+          paddingStart={2}
+          style={styles?.controlEndNode}
         >
-          <HStack alignItems="center" flexGrow={1} paddingStart={2} style={styles?.controlEndNode}>
-            {customEndNode ? customEndNode : <AnimatedCaret color="fg" rotate={open ? 0 : 180} />}
-          </HStack>
-        </Pressable>
+          {customEndNode ? customEndNode : <AnimatedCaret color="fg" rotate={open ? 0 : 180} />}
+        </HStack>
       ),
-      [styles?.controlEndNode, disabled, customEndNode, open, handleToggleOpen],
+      [styles?.controlEndNode, customEndNode, open],
     );
 
     const inputStackStyles: StyleProp<ViewStyle> = useMemo(() => {
@@ -523,6 +524,7 @@ export const DefaultSelectControlComponent = memo(
         styles={{ input: inputStackStyles }}
         variant={variant}
         {...props}
+        onFieldPress={handleToggleOpen}
       />
     );
   },

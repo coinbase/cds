@@ -10,6 +10,7 @@ import {
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTextAlign } from '../hooks/useTextAlign';
 import { useTheme } from '../hooks/useTheme';
 import { getStyles, type StyleProps } from '../styles/styleProps';
@@ -24,8 +25,8 @@ export type TextBaseProps = StyleProps & {
    */
   align?: 'start' | 'end' | 'center' | 'justify';
   /**
-   * Set text font family.
-   * @default body
+   * Typography font token used for text.
+   * @default inherit
    */
   font?: ThemeVars.FontFamily | 'inherit';
   /**
@@ -99,97 +100,101 @@ const styles = StyleSheet.create({
 const HEADER_FONTS = new Set(['display1', 'display2', 'display3', 'title1', 'title2']);
 
 export const Text = memo(
-  ({
-    ref,
-    children,
-    style,
-    animated,
-    disabled,
-    mono,
-    underline,
-    tabularNumbers,
-    numberOfLines,
-    ellipsize,
-    noWrap,
-    testID,
-    dangerouslySetColor,
-    dangerouslySetBackground,
+  (
+    _props: TextProps & {
+      ref?: React.Ref<NativeText>;
+    },
+  ) => {
+    const mergedProps = useComponentConfig('Text', _props);
+    const {
+      ref,
+      children,
+      style,
+      animated,
+      disabled,
+      mono,
+      underline,
+      tabularNumbers,
+      numberOfLines,
+      ellipsize,
+      noWrap,
+      testID,
+      dangerouslySetColor,
+      dangerouslySetBackground,
 
-    // Begin style props
-    display,
+      // Begin style props
+      display,
 
-    position,
-    overflow,
-    zIndex,
-    gap,
-    columnGap,
-    rowGap,
-    justifyContent,
-    alignContent,
-    alignItems,
-    alignSelf,
-    flexDirection,
-    flexWrap,
-    color = 'fg',
-    background,
-    borderColor,
-    borderTopLeftRadius,
-    borderTopRightRadius,
-    borderBottomLeftRadius,
-    borderBottomRightRadius,
-    borderTopWidth,
-    borderEndWidth,
-    borderBottomWidth,
-    borderStartWidth,
-    elevation,
-    borderWidth,
-    borderRadius,
-    font = 'inherit',
-    fontFamily = font,
-    fontSize = font,
-    fontWeight = font,
-    lineHeight = font,
-    align = 'start',
-    textDecorationStyle,
-    textDecorationLine,
-    textTransform,
-    padding,
-    paddingX,
-    paddingY,
-    paddingTop,
-    paddingBottom,
-    paddingStart,
-    paddingEnd,
-    margin,
-    marginX,
-    marginY,
-    marginTop,
-    marginBottom,
-    marginStart,
-    marginEnd,
-    userSelect,
-    width,
-    height,
-    minWidth,
-    minHeight,
-    maxWidth,
-    maxHeight,
-    aspectRatio,
-    top,
-    bottom,
-    left,
-    right,
-    transform,
-    flexBasis,
-    flexShrink,
-    flexGrow,
-    opacity,
-    renderEmptyNode = true,
-    accessibilityRole = HEADER_FONTS.has(font) ? 'header' : undefined,
-    ...props
-  }: TextProps & {
-    ref?: React.Ref<NativeText>;
-  }) => {
+      position,
+      overflow,
+      zIndex,
+      gap,
+      columnGap,
+      rowGap,
+      justifyContent,
+      alignContent,
+      alignItems,
+      alignSelf,
+      flexDirection,
+      flexWrap,
+      color = 'fg',
+      background,
+      borderColor,
+      borderTopLeftRadius,
+      borderTopRightRadius,
+      borderBottomLeftRadius,
+      borderBottomRightRadius,
+      borderTopWidth,
+      borderEndWidth,
+      borderBottomWidth,
+      borderStartWidth,
+      elevation,
+      borderWidth,
+      borderRadius,
+      font = 'inherit',
+      fontFamily = font,
+      fontSize = font,
+      fontWeight = font,
+      lineHeight = font,
+      align = 'start',
+      textDecorationStyle,
+      textDecorationLine,
+      textTransform,
+      padding,
+      paddingX,
+      paddingY,
+      paddingTop,
+      paddingBottom,
+      paddingStart,
+      paddingEnd,
+      margin,
+      marginX,
+      marginY,
+      marginTop,
+      marginBottom,
+      marginStart,
+      marginEnd,
+      userSelect,
+      width,
+      height,
+      minWidth,
+      minHeight,
+      maxWidth,
+      maxHeight,
+      aspectRatio,
+      top,
+      bottom,
+      left,
+      right,
+      transform,
+      flexBasis,
+      flexShrink,
+      flexGrow,
+      opacity,
+      renderEmptyNode = true,
+      accessibilityRole = HEADER_FONTS.has(font) ? 'header' : undefined,
+      ...props
+    } = mergedProps;
     const Component = animated ? Animated.Text : NativeText;
 
     const theme = useTheme();

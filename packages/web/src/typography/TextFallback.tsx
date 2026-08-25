@@ -1,6 +1,7 @@
 import { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
+import { useComponentConfig } from '../hooks/useComponentConfig';
 import {
   Fallback,
   type FallbackBaseProps,
@@ -21,11 +22,9 @@ export type TextFallbackProps = Omit<FallbackProps<typeof fallbackDefaultElement
  *
  * @note Requires theme `fontSize` and `lineHeight` tokens to be length values (for example `rem` or `px`). Unitless or percentage values will not size accurately.
  */
-export const TextFallback = memo(function TextFallback({
-  font,
-  style,
-  ...props
-}: TextFallbackProps) {
+export const TextFallback = memo(function TextFallback(_props: TextFallbackProps) {
+  const mergedProps = useComponentConfig('TextFallback', _props);
+  const { font, style, ...props } = mergedProps;
   const textFallbackStyle = useMemo(
     () => ({
       paddingTop: `max((var(--lineHeight-${font}) - var(--fontSize-${font})) / 2, 0px)`,

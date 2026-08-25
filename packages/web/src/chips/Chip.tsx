@@ -1,4 +1,4 @@
-import { forwardRef, Fragment, memo, type ReactNode, useMemo } from 'react';
+import { forwardRef, Fragment, memo, useMemo } from 'react';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
 import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 import { css } from '@linaria/core';
@@ -69,6 +69,9 @@ export const Chip = memo(
       justifyContent,
       children,
       maxWidth = chipMaxWidth,
+      active = false,
+      activeBackground,
+      activeColor,
       invertColorScheme,
       inverted,
       numberOfLines = 1,
@@ -85,10 +88,18 @@ export const Chip = memo(
       onClick,
       ...props
     } = mergedProps;
-    const WrapperComponent = (invertColorScheme ?? inverted) ? InvertedThemeProvider : Fragment;
+
+    const hasActiveColorOverrides = activeBackground !== undefined || activeColor !== undefined;
+    const activeUsesThemeInversion = active && !hasActiveColorOverrides;
+    const shouldInvert = Boolean(invertColorScheme ?? inverted) || activeUsesThemeInversion;
+    const WrapperComponent = shouldInvert ? InvertedThemeProvider : Fragment;
+
+    const resolvedBackground =
+      active && activeBackground !== undefined ? activeBackground : background;
+    const resolvedColor = active && activeColor !== undefined ? activeColor : color;
 
     const containerProps = {
-      background,
+      background: resolvedBackground,
       borderRadius,
       className: cx(transitionCss, className, classNames?.root),
       style: { ...style, ...styles?.root },
@@ -117,11 +128,11 @@ export const Chip = memo(
         >
           {start}
           {typeof children === 'string' ? (
-            <Text color={color} flexShrink={1} font={font} numberOfLines={numberOfLines}>
+            <Text color={resolvedColor} flexShrink={1} font={font} numberOfLines={numberOfLines}>
               {children}
             </Text>
           ) : children ? (
-            <Box color={color} flexShrink={1}>
+            <Box color={resolvedColor} flexShrink={1}>
               {children}
             </Box>
           ) : null}
@@ -145,14 +156,14 @@ export const Chip = memo(
       styles?.content,
       start,
       children,
-      color,
+      resolvedColor,
       font,
       numberOfLines,
       end,
     ]);
 
     return (
-      <WrapperComponent {...(inverted ? { display: 'content' } : {})}>
+      <WrapperComponent {...(shouldInvert && inverted ? { display: 'content' } : {})}>
         {onClick ? (
           <Pressable
             ref={ref as React.ForwardedRef<HTMLButtonElement>}

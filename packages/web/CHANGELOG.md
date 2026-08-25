@@ -8,6 +8,112 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.21.1 ((8/24/2026, 08:38 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.21.0 ((8/21/2026, 09:28 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.20.0 (8/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: update default label style for input components: TextInput, Select, Combobox, DateInput, etc. Font: label1 -=> label2; color: fg => fgMuted.
+
+## 9.19.0 (8/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support custom icon sets in name-prop components. [[#848](https://github.com/coinbase/cds/pull/848)]
+
+## 9.18.0 (8/19/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support PeriodSelector in component theming. [[#852](https://github.com/coinbase/cds/pull/852)]
+
+## 9.17.2 (8/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support textTransform forwarding to Text on components. [[#851](https://github.com/coinbase/cds/pull/851)]
+
+#### 📘 Misc
+
+- Docs: correct deprecation notices referencing the incorrect CDS version.
+
+## 9.17.1 (8/17/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: restore Select field press target after chrome padding adjustments in recent tshirt size work.
+
+## 9.17.0 (8/14/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support charts gradients for bars. [[#844](https://github.com/coinbase/cds/pull/844)]
+
+## 9.16.0 (8/13/2026 PST)
+
+#### 🚀 Updates
+
+- Deprecate invertColorScheme in favor of new, canoncical active prop for the Chip family of props. [[#843](https://github.com/coinbase/cds/pull/843)]
+
+## 9.15.0 (8/11/2026 PST)
+
+#### 🚀 Updates
+
+[[#839](https://github.com/coinbase/cds/pull/839)]
+
+- Add new prop: variant to Switch component.
+- Add new prop: showItemSeparators to Accordion component.
+- Add new prop: showHeaderBorder to AccordionItem component.
+- Add AccordionItem to ComponentConfig system.
+- Add new prop: equalWidth to SegmentedTabs component.
+
+## 9.14.0 (8/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support different tick label overflow- #835. [[#835](https://github.com/coinbase/cds/pull/835)]
+
+## 9.13.0 ((8/11/2026, 09:52 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.3 ((8/10/2026, 09:17 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.2 ((8/10/2026, 07:45 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.12.1 (8/8/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: disable mount animation for DefaultTabsActiveIndicator. [[#834](https://github.com/coinbase/cds/pull/834)]
+
+## 9.12.0 (8/7/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support text in component config. [[#831](https://github.com/coinbase/cds/pull/831)]
+
+## 9.11.0 (8/7/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: add a tertiary-level header to AccordionItem. [[#830](https://github.com/coinbase/cds/pull/830)]
+
+## 9.10.4 ((8/6/2026, 12:30 PM PST))
+
+This is an artificial version bump with no new change.
+
 ## 9.10.3 (8/5/2026 PST)
 
 #### 🐞 Fixes

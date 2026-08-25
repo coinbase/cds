@@ -306,7 +306,7 @@ export type SelectControlProps<
     /**
      * Whether to use compact styling for the control.
      * @deprecated Use `size="s"` instead. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     compact?: boolean;
     /**
@@ -483,7 +483,7 @@ export type SelectBaseProps<
     /**
      * Whether to use compact styling for the select.
      * @deprecated Use `size="s"` instead. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     compact?: boolean;
     /**

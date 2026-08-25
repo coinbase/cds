@@ -2,7 +2,9 @@ import React from 'react';
 import { View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
-import { DefaultThemeProvider } from '../../../utils/testHelpers';
+import { DefaultThemeProvider, treeHasStyleProp } from '../../../utils/testHelpers';
+import { defaultTheme } from '../../../themes/defaultTheme';
+import { ComponentConfigProvider } from '../../../system/ComponentConfigProvider';
 import type { SelectOption, SelectOptionGroup } from '../../select/Select';
 import type { SelectChipProps } from '../SelectChip';
 import { SelectChip } from '../SelectChip';
@@ -29,6 +31,8 @@ const defaultProps: SelectChipProps<'single'> = {
   onChange: jest.fn(),
   placeholder: 'Select an option',
 };
+
+const getSelectChipControl = () => screen.getByRole('button');
 
 describe('SelectChip', () => {
   beforeEach(() => {
@@ -94,6 +98,166 @@ describe('SelectChip', () => {
       expect(screen.getByText('Select an option')).toBeTruthy();
     });
 
+    it('defaults to active colors when a value is selected', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(toJSON(), (s) => s.backgroundColor === defaultTheme.darkColor.bgSecondary),
+      ).toBe(true);
+      expect(screen.getByText('Option 1')).toHaveStyle({
+        color: defaultTheme.darkColor.fg,
+      });
+    });
+
+    it('renders inactive colors when no value is selected', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(
+          toJSON(),
+          (s) => s.backgroundColor === defaultTheme.lightColor.bgSecondary,
+        ),
+      ).toBe(true);
+    });
+
+    it('respects explicit active={false} when a value is selected', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} active={false} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(
+          toJSON(),
+          (s) => s.backgroundColor === defaultTheme.lightColor.bgSecondary,
+        ),
+      ).toBe(true);
+      expect(screen.getByText('Option 1')).toHaveStyle({
+        color: defaultTheme.lightColor.fg,
+      });
+    });
+
+    it('respects explicit invertColorScheme={false} opt-out when a value is selected', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} invertColorScheme={false} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(
+          toJSON(),
+          (s) => s.backgroundColor === defaultTheme.lightColor.bgSecondary,
+        ),
+      ).toBe(true);
+    });
+
+    it('applies legacy invertColorScheme when no value is selected', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} invertColorScheme value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(toJSON(), (s) => s.backgroundColor === defaultTheme.darkColor.bgSecondary),
+      ).toBe(true);
+    });
+
+    it('applies border props from ComponentConfigProvider', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              SelectChip: {
+                borderWidth: 100,
+                bordered: true,
+                borderColor: 'bgLine',
+              },
+            }}
+          >
+            <SelectChip {...defaultProps} value={null} />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(toJSON(), (style) => style.borderColor === defaultTheme.lightColor.bgLine),
+      ).toBe(true);
+      expect(treeHasStyleProp(toJSON(), (style) => style.borderWidth === 1)).toBe(true);
+    });
+
+    it('forces active chip colors when active is true without a selected value', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} active value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(toJSON(), (s) => s.backgroundColor === defaultTheme.darkColor.bgSecondary),
+      ).toBe(true);
+    });
+
+    it('applies activeBackground without inverting when a value is selected', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <SelectChip
+            {...defaultProps}
+            activeBackground="bgPositive"
+            activeColor="fgPositive"
+            value="option1"
+          />
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(
+          toJSON(),
+          (style) => style.backgroundColor === defaultTheme.lightColor.bgPositive,
+        ),
+      ).toBe(true);
+      expect(screen.getByText('Option 1')).toHaveStyle({
+        color: defaultTheme.lightColor.fgPositive,
+      });
+    });
+
+    it('applies active branch styling from ComponentConfigProvider when a value is selected', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              SelectChip: (props) =>
+                props.active
+                  ? { activeBackground: 'bgPositive', activeColor: 'fgPositive' }
+                  : { background: 'bg' },
+            }}
+          >
+            <SelectChip {...defaultProps} value="option1" />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(
+          toJSON(),
+          (style) => style.backgroundColor === defaultTheme.lightColor.bgPositive,
+        ),
+      ).toBe(true);
+      expect(screen.getByText('Option 1')).toHaveStyle({
+        color: defaultTheme.lightColor.fgPositive,
+      });
+    });
+
     it('opens dropdown when pressed', () => {
       render(
         <DefaultThemeProvider>
@@ -151,6 +315,16 @@ describe('SelectChip', () => {
       );
 
       expect(screen.getByTestId('end-node')).toBeTruthy();
+    });
+
+    it('renders with compact prop and applies compact styling', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} compact />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('button')).toBeTruthy();
     });
 
     it('renders disabled state', () => {
@@ -238,6 +412,33 @@ describe('SelectChip', () => {
       );
 
       expect(screen.getByText('Option 1, Option 2')).toBeTruthy();
+    });
+
+    it('defaults to inactive chip colors for an empty multi-select value', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <SelectChip {...multiSelectProps} value={[]} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(
+          toJSON(),
+          (s) => s.backgroundColor === defaultTheme.lightColor.bgSecondary,
+        ),
+      ).toBe(true);
+    });
+
+    it('defaults to active chip colors when multi-select has values', () => {
+      const { toJSON } = render(
+        <DefaultThemeProvider>
+          <SelectChip {...multiSelectProps} value={['option1']} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(
+        treeHasStyleProp(toJSON(), (s) => s.backgroundColor === defaultTheme.darkColor.bgSecondary),
+      ).toBe(true);
     });
 
     it('shows truncated selection with more count', () => {

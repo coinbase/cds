@@ -22,13 +22,9 @@ export type ScrubberProviderProps = Partial<Pick<ScrubberContextValue, 'enableSc
   onScrubberPositionChange?: (index: number | undefined) => void;
 };
 
-/**
- * A component which encapsulates the ScrubberContext.
- * It depends on a ChartContext in order to provide accurate touch tracking.
- */
-export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
+// Sets up the pan gesture + animated reaction. Only mounted when scrubbing is enabled.
+const EnabledScrubberProvider: React.FC<ScrubberProviderProps> = ({
   children,
-  enableScrubbing,
   onScrubberPositionChange,
   allowOverflowGestures,
 }) => {
@@ -121,68 +117,89 @@ export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
     [onScrubberPositionChange],
   );
 
-  // Create the long press pan gesture
-  const longPressGesture = useMemo(
-    () =>
-      Gesture.Pan()
-        .activateAfterLongPress(110)
-        .shouldCancelWhenOutside(!allowOverflowGestures)
-        .onStart(function onStart(event) {
-          runOnJS(handleStartEndHaptics)();
+  const longPressGesture = useMemo(() => {
+    const pan = Gesture.Pan()
+      .activateAfterLongPress(110)
+      .shouldCancelWhenOutside(!allowOverflowGestures);
 
-          // Android does not trigger onUpdate when the gesture starts. This achieves consistent behavior across both iOS and Android
-          if (Platform.OS === 'android') {
-            const pointerPosition = categoryAxisIsX ? event.x : event.y;
-            const newScrubberPosition = getDataIndexFromPosition(pointerPosition);
-            if (newScrubberPosition !== scrubberPosition.value) {
-              scrubberPosition.value = newScrubberPosition;
-            }
-          }
-        })
-        .onUpdate(function onUpdate(event) {
+    // Fail on cross-axis movement so parent pan-to-dismiss can win.
+    if (categoryAxisIsX) {
+      pan.failOffsetY([-15, 15]);
+    } else {
+      pan.failOffsetX([-15, 15]);
+    }
+
+    return pan
+      .onStart(function onStart(event) {
+        'worklet';
+        runOnJS(handleStartEndHaptics)();
+
+        // Android does not trigger onUpdate when the gesture starts. This achieves consistent behavior across both iOS and Android
+        if (Platform.OS === 'android') {
           const pointerPosition = categoryAxisIsX ? event.x : event.y;
           const newScrubberPosition = getDataIndexFromPosition(pointerPosition);
           if (newScrubberPosition !== scrubberPosition.value) {
             scrubberPosition.value = newScrubberPosition;
           }
-        })
-        .onEnd(function onEnd() {
-          if (enableScrubbing) {
-            runOnJS(handleStartEndHaptics)();
-            scrubberPosition.value = undefined;
-          }
-        })
-        .onTouchesCancelled(function onTouchesCancelled() {
-          if (enableScrubbing) {
-            scrubberPosition.value = undefined;
-          }
-        }),
-    [
-      allowOverflowGestures,
-      handleStartEndHaptics,
-      getDataIndexFromPosition,
-      categoryAxisIsX,
-      scrubberPosition,
-      enableScrubbing,
-    ],
-  );
+        }
+      })
+      .onUpdate(function onUpdate(event) {
+        'worklet';
+        const pointerPosition = categoryAxisIsX ? event.x : event.y;
+        const newScrubberPosition = getDataIndexFromPosition(pointerPosition);
+        if (newScrubberPosition !== scrubberPosition.value) {
+          scrubberPosition.value = newScrubberPosition;
+        }
+      })
+      .onEnd(function onEnd() {
+        'worklet';
+        runOnJS(handleStartEndHaptics)();
+        scrubberPosition.value = undefined;
+      })
+      .onTouchesCancelled(function onTouchesCancelled() {
+        'worklet';
+        scrubberPosition.value = undefined;
+      });
+  }, [
+    allowOverflowGestures,
+    handleStartEndHaptics,
+    getDataIndexFromPosition,
+    categoryAxisIsX,
+    scrubberPosition,
+  ]);
 
   const contextValue: ScrubberContextValue = useMemo(
-    () => ({
-      enableScrubbing: !!enableScrubbing,
-      scrubberPosition,
-    }),
-    [enableScrubbing, scrubberPosition],
+    () => ({ enableScrubbing: true, scrubberPosition }),
+    [scrubberPosition],
   );
 
-  const content = (
-    <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>
+  return (
+    <GestureDetector gesture={longPressGesture}>
+      <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>
+    </GestureDetector>
+  );
+};
+
+// Supplies the ScrubberContext without the gesture/animated reaction (the common, disabled case).
+const DisabledScrubberProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const scrubberPosition = useSharedValue<number | undefined>(undefined);
+
+  const contextValue = useMemo<ScrubberContextValue>(
+    () => ({ enableScrubbing: false, scrubberPosition }),
+    [scrubberPosition],
   );
 
-  // Wrap with gesture handler only if scrubbing is enabled
-  if (enableScrubbing) {
-    return <GestureDetector gesture={longPressGesture}>{content}</GestureDetector>;
+  return <ScrubberContext.Provider value={contextValue}>{children}</ScrubberContext.Provider>;
+};
+
+/**
+ * A component which encapsulates the ScrubberContext.
+ * It depends on a ChartContext in order to provide accurate touch tracking.
+ */
+export const ScrubberProvider: React.FC<ScrubberProviderProps> = (props) => {
+  if (props.enableScrubbing) {
+    return <EnabledScrubberProvider {...props} />;
   }
 
-  return content;
+  return <DisabledScrubberProvider>{props.children}</DisabledScrubberProvider>;
 };

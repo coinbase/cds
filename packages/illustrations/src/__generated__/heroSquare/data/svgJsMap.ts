@@ -362,6 +362,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/cbdoge-0.js').content,
     themeable: () => require('../svgJs/cjs/themeable/cbdoge-0.js').content,
   },
+  cbhype: {
+    light: () => require('../svgJs/cjs/light/cbhype-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/cbhype-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/cbhype-0.js').content,
+  },
   cbltc: {
     light: () => require('../svgJs/cjs/light/cbltc-0.js').content,
     dark: () => require('../svgJs/cjs/dark/cbltc-0.js').content,
@@ -376,6 +381,11 @@ const svgJsMap = {
     light: () => require('../svgJs/cjs/light/cbxrp-0.js').content,
     dark: () => require('../svgJs/cjs/dark/cbxrp-0.js').content,
     themeable: () => require('../svgJs/cjs/themeable/cbxrp-0.js').content,
+  },
+  cbzec: {
+    light: () => require('../svgJs/cjs/light/cbzec-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/cbzec-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/cbzec-0.js').content,
   },
   chickenFishSystemError: {
     light: () => require('../svgJs/cjs/light/chickenFishSystemError-3.js').content,

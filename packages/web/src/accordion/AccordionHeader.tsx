@@ -1,17 +1,21 @@
-import React, { forwardRef, memo, useCallback } from 'react';
+import React, { forwardRef, memo, useCallback, useMemo } from 'react';
 import { useAccordionContext } from '@coinbase/cds-common/accordion/AccordionProvider';
 import {
   accordionIconHiddenRotate,
   accordionIconVisibleRotate,
 } from '@coinbase/cds-common/animation/accordion';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { listHeight } from '@coinbase/cds-common/tokens/cell';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 import { css } from '@linaria/core';
 
+import type { CellSpacing } from '../cells/Cell';
 import type { CollapsibleBaseProps } from '../collapsible/Collapsible';
 import { useCellSpacing } from '../hooks/useCellSpacing';
 import { Box } from '../layout/Box';
-import { HStack } from '../layout/HStack';
+import { HStack, type HStackBaseProps } from '../layout/HStack';
 import { VStack } from '../layout/VStack';
 import { AnimatedCaret } from '../motion/AnimatedCaret';
 import { Pressable } from '../system/Pressable';
@@ -33,14 +37,24 @@ export type AccordionTitleBaseProps = {
    * Subtitle of the accordion item
    */
   subtitle?: string;
+  /**
+   * Tertiary text of the accordion item. Uses the CDS `legal` font.
+   */
+  tertiaryTitle?: string;
 };
 
-export type AccordionIconBaseProps = Pick<CollapsibleBaseProps, 'collapsed'>;
+export type AccordionIconBaseProps = Pick<CollapsibleBaseProps, 'collapsed'> & {
+  /** Size of the caret icon.
+   * @default s
+   */
+  caretSize?: IconSize;
+};
 
 export type AccordionHeaderBaseProps = SharedProps &
   AccordionMediaBaseProps &
   AccordionTitleBaseProps &
-  AccordionIconBaseProps & {
+  AccordionIconBaseProps &
+  Pick<HStackBaseProps, keyof PaddingProps> & {
     /**
      * Callback function fired when the accordion item is clicked
      */
@@ -51,7 +65,25 @@ export type AccordionHeaderBaseProps = SharedProps &
      * unless you want multiple items to be controlled at the same time.
      */
     itemKey: string;
+    /**
+     * Background color of the header pressable.
+     * @default bg
+     */
+    background?: ThemeVars.Color;
   };
+
+export type AccordionHeaderProps = AccordionHeaderBaseProps & {
+  className?: string;
+  style?: React.CSSProperties;
+};
+
+const compactPaddingProps = (
+  paddingProps: Pick<HStackBaseProps, keyof PaddingProps>,
+): CellSpacing | undefined => {
+  const entries = Object.entries(paddingProps).filter(([, value]) => value !== undefined);
+  if (entries.length === 0) return undefined;
+  return Object.fromEntries(entries) as CellSpacing;
+};
 
 const baseCss = css`
   margin: 0;
@@ -81,7 +113,7 @@ export const AccordionMedia = memo(({ media }: AccordionMediaProps) => (
 
 type AccordionTitleProps = AccordionTitleBaseProps;
 
-export const AccordionTitle = memo(({ title, subtitle }: AccordionTitleProps) => (
+export const AccordionTitle = memo(({ title, subtitle, tertiaryTitle }: AccordionTitleProps) => (
   <Box className={titleCss} flexGrow={1} flexShrink={1} justifyContent="flex-start">
     <VStack>
       <Text as="div" display="block" font="headline" overflow="wrap">
@@ -91,12 +123,24 @@ export const AccordionTitle = memo(({ title, subtitle }: AccordionTitleProps) =>
         <Text
           as="div"
           className={subtitleCss}
-          color="fgMuted"
+          color={tertiaryTitle ? undefined : 'fgMuted'}
           display="block"
-          font="body"
+          font="label2"
           overflow="wrap"
         >
           {subtitle}
+        </Text>
+      )}
+      {!!tertiaryTitle && (
+        <Text
+          as="div"
+          className={subtitleCss}
+          color="fgMuted"
+          display="block"
+          font="legal"
+          overflow="wrap"
+        >
+          {tertiaryTitle}
         </Text>
       )}
     </VStack>
@@ -105,15 +149,16 @@ export const AccordionTitle = memo(({ title, subtitle }: AccordionTitleProps) =>
 
 type AccordionIconProps = AccordionIconBaseProps;
 
-export const AccordionIcon = memo(({ collapsed }: AccordionIconProps) => {
+export const AccordionIcon = memo(({ collapsed, caretSize = 's' }: AccordionIconProps) => {
   return (
     <Box justifyContent="flex-end">
-      <AnimatedCaret rotate={collapsed ? accordionIconHiddenRotate : accordionIconVisibleRotate} />
+      <AnimatedCaret
+        rotate={collapsed ? accordionIconHiddenRotate : accordionIconVisibleRotate}
+        size={caretSize}
+      />
     </Box>
   );
 });
-
-type AccordionHeaderProps = AccordionHeaderBaseProps;
 
 /**
  * Renders a Pressable element to use as the header to an AccordionItem.
@@ -122,11 +167,45 @@ type AccordionHeaderProps = AccordionHeaderBaseProps;
 export const AccordionHeader = memo(
   forwardRef(
     (
-      { itemKey, title, subtitle, onClick, media, collapsed = false, testID }: AccordionHeaderProps,
+      {
+        itemKey,
+        title,
+        subtitle,
+        tertiaryTitle,
+        onClick,
+        media,
+        collapsed = false,
+        testID,
+        className,
+        style,
+        background = 'bg',
+        caretSize,
+        padding,
+        paddingX,
+        paddingY,
+        paddingTop,
+        paddingBottom,
+        paddingStart,
+        paddingEnd,
+      }: AccordionHeaderProps,
       forwardedRef: React.ForwardedRef<HTMLButtonElement>,
     ) => {
       const { setActiveKey, activeKey } = useAccordionContext();
-      const spacing = useCellSpacing();
+      const outerSpacing = useMemo(
+        () =>
+          compactPaddingProps({
+            padding,
+            paddingX,
+            paddingY,
+            paddingTop,
+            paddingBottom,
+            paddingStart,
+            paddingEnd,
+          }),
+        [padding, paddingX, paddingY, paddingTop, paddingBottom, paddingStart, paddingEnd],
+      );
+      // Header padding follows the same outer spacing rules as Cell.
+      const spacing = useCellSpacing({ outerSpacing });
 
       const handleClick = useCallback(() => {
         onClick?.(itemKey);
@@ -141,9 +220,11 @@ export const AccordionHeader = memo(
             transparentWhileInactive
             aria-controls={getAccordionPanelId(itemKey)}
             aria-expanded={!collapsed} // a11y guideline: https://www.w3.org/TR/wai-aria-practices/#accordion
-            background="bg"
+            background={background}
+            className={className}
             id={getAccordionHeaderId(itemKey)}
             onClick={handleClick}
+            style={style}
             testID={testID}
             width="100%"
           >
@@ -155,8 +236,8 @@ export const AccordionHeader = memo(
               {...spacing.outer}
             >
               {!!media && <AccordionMedia media={media} />}
-              <AccordionTitle subtitle={subtitle} title={title} />
-              <AccordionIcon collapsed={collapsed} />
+              <AccordionTitle subtitle={subtitle} tertiaryTitle={tertiaryTitle} title={title} />
+              <AccordionIcon caretSize={caretSize} collapsed={collapsed} />
             </HStack>
           </Pressable>
         </h2>

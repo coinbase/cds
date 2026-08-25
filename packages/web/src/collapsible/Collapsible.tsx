@@ -4,9 +4,9 @@ import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 import type { PaddingProps } from '@coinbase/cds-common/types/SpacingProps';
 import { m as motion } from 'framer-motion';
 
+import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxDefaultElement, type BoxProps } from '../layout/Box';
-import { HStack } from '../layout/HStack';
 
 import { useCollapsibleMotionProps } from './useCollapsibleMotionProps';
 
@@ -44,7 +44,10 @@ export type CollapsibleBaseProps = SharedProps &
     maxWidth?: BoxProps<BoxDefaultElement>['maxWidth'];
   };
 
-export type CollapsibleProps = CollapsibleBaseProps;
+export type CollapsibleProps = CollapsibleBaseProps & {
+  className?: string;
+  style?: React.CSSProperties;
+};
 
 export const Collapsible = memo(
   forwardRef((_props: CollapsibleProps, forwardedRef: React.ForwardedRef<HTMLDivElement>) => {
@@ -60,6 +63,8 @@ export const Collapsible = memo(
       id,
       role = 'region',
       dangerouslyDisableOverflowHidden = false,
+      className,
+      style: styleProp,
       // Spacing
       padding,
       paddingBottom,
@@ -100,8 +105,9 @@ export const Collapsible = memo(
     }, [collapsed]);
 
     const style = useMemo(() => {
-      return isDisplayNone ? { ...motionStyle, display: 'none' } : motionStyle;
-    }, [motionStyle, isDisplayNone]);
+      const nextStyle = isDisplayNone ? { ...motionStyle, display: 'none' } : motionStyle;
+      return styleProp ? { ...nextStyle, ...styleProp } : nextStyle;
+    }, [motionStyle, isDisplayNone, styleProp]);
 
     return (
       // TODO: Remove type assertion after upgrading framer-motion to v11+ for React 19 compatibility
@@ -110,7 +116,7 @@ export const Collapsible = memo(
           ...motionProps,
           ref: forwardedRef,
           'aria-labelledby': accessibilityLabelledBy,
-          className: COMPONENT_STATIC_CLASSNAME,
+          className: cx(COMPONENT_STATIC_CLASSNAME, className),
           'data-testid': testID,
           id: id,
           onAnimationComplete: handleAnimationComplete,

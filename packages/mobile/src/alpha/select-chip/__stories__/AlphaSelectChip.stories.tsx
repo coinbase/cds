@@ -186,7 +186,7 @@ export const MultiSelectWithAssets = () => {
   );
 };
 
-export const InvertColorScheme = () => {
+export const Active = () => {
   const exampleOptions = [
     { value: '1', label: 'Option 1' },
     { value: '2', label: 'Option 2' },
@@ -196,7 +196,7 @@ export const InvertColorScheme = () => {
   return (
     <VStack background="bgAlternate" borderRadius={200} padding={2}>
       <SelectChip
-        invertColorScheme
+        active
         onChange={setValue}
         options={exampleOptions}
         placeholder="Choose an option"
@@ -502,8 +502,8 @@ const SelectChipScreen = () => {
       <Example title="Multi-Select with Assets">
         <MultiSelectWithAssets />
       </Example>
-      <Example title="Invert Color Scheme">
-        <InvertColorScheme />
+      <Example title="Active">
+        <Active />
       </Example>
       <Example title="Empty Options">
         <EmptyOptions />

@@ -78,7 +78,7 @@ export const SelectStack = memo(
           !!label && (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events, jsx-a11y/no-static-element-interactions
             <div onClick={handlePreventPropagation}>
-              <InputLabel color="fg" id={accessibilityLabelId} overflow="truncate">
+              <InputLabel color="fg" font="label1" id={accessibilityLabelId} overflow="truncate">
                 {label}
               </InputLabel>
             </div>

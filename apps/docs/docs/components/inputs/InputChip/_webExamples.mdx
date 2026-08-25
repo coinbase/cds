@@ -86,20 +86,16 @@ function Example() {
 }
 ```
 
-### Invert color scheme
+### Active
 
-Use `invertColorScheme` to emphasize removable values.
+InputChip is active by default. Set `active={false}` for a less emphasized appearance.
 
 ```tsx live
 function Example() {
   return (
     <HStack gap={2} flexWrap="wrap">
-      <InputChip onClick={() => console.log('Remove Default')} value="Default" />
-      <InputChip
-        invertColorScheme
-        onClick={() => console.log('Remove Inverted')}
-        value="Inverted"
-      />
+      <InputChip onClick={() => console.log('Remove Active')} value="Active (default)" />
+      <InputChip active={false} onClick={() => console.log('Remove Inactive')} value="Inactive" />
     </HStack>
   );
 }

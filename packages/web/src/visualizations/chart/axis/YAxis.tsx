@@ -20,6 +20,7 @@ import {
   axisTickMarkStyles,
   axisUpdateAnimationTransition,
 } from './Axis';
+import { AxisTickLabelOverflowMask } from './AxisTickLabelOverflowMask';
 import { DefaultAxisTickLabel } from './DefaultAxisTickLabel';
 
 const AXIS_WIDTH = 44;
@@ -81,6 +82,7 @@ export const YAxis = memo<YAxisProps>(
     testID = 'y-axis',
     bandGridLinePlacement = 'edges',
     bandTickMarkPlacement = 'middle',
+    tickLabelOverflow = 'reposition',
     ...props
   }) => {
     const registrationId = useId();
@@ -94,6 +96,7 @@ export const YAxis = memo<YAxisProps>(
       getAxisBounds,
       drawingArea,
     } = useCartesianChartContext();
+    const fadeTickLabels = tickLabelOverflow === 'fade';
 
     const yScale = getYScale(axisId);
     const yAxis = getYAxis(axisId);
@@ -235,6 +238,8 @@ export const YAxis = memo<YAxisProps>(
             verticalAlignment: 'middle',
             style: styles?.tickLabel,
             horizontalAlignment: position === 'left' ? 'right' : 'left',
+            repositionAxes:
+              tickLabelOverflow === 'visible' ? 'none' : fadeTickLabels ? 'x' : 'both',
           },
         };
       });
@@ -248,6 +253,8 @@ export const YAxis = memo<YAxisProps>(
       formatTick,
       classNames?.tickLabel,
       styles?.tickLabel,
+      fadeTickLabels,
+      tickLabelOverflow,
     ]);
 
     if (!yScale || !axisBounds || !drawingArea) return;
@@ -304,14 +311,24 @@ export const YAxis = memo<YAxisProps>(
             )}
           </g>
         )}
-        {chartTextData && (
-          <ChartTextGroup
-            prioritizeEndLabels
-            LabelComponent={TickLabelComponent}
-            labels={chartTextData}
-            minGap={minTickLabelGap}
-          />
-        )}
+        {chartTextData &&
+          (fadeTickLabels ? (
+            <AxisTickLabelOverflowMask axis="y" testID={`${testID}-tick-label-overflow`}>
+              <ChartTextGroup
+                prioritizeEndLabels
+                LabelComponent={TickLabelComponent}
+                labels={chartTextData}
+                minGap={minTickLabelGap}
+              />
+            </AxisTickLabelOverflowMask>
+          ) : (
+            <ChartTextGroup
+              prioritizeEndLabels
+              LabelComponent={TickLabelComponent}
+              labels={chartTextData}
+              minGap={minTickLabelGap}
+            />
+          ))}
         {showTickMarks && (
           <g data-testid={`${testID}-tick-marks`}>
             {tickMarkPositions.map(({ y, key }) =>
@@ -376,9 +393,9 @@ export const YAxis = memo<YAxisProps>(
             }}
           >
             <ChartText
-              disableRepositioning
               className={classNames?.label}
               horizontalAlignment="center"
+              repositionAxes="none"
               style={styles?.label}
               testID={`${testID}-label-text`}
               verticalAlignment="middle"

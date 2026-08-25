@@ -40,6 +40,8 @@ import {
 import { useChartContextBridge } from './ChartContextBridge';
 import { CartesianChartProvider } from './ChartProvider';
 
+const claimTouchResponder = () => true;
+
 type ChartCanvasProps = Pick<
   CartesianChartProps,
   'accessible' | 'accessibilityLabel' | 'accessibilityLiveRegion'
@@ -116,7 +118,8 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      */
     layout?: CartesianChartLayout;
     /**
-     * Whether to animate the chart.
+     * Whether to animate the chart. When `false`, lines render via a lightweight static path
+     * (a cheap rectangular clip) suited to non-interactive charts like row sparklines.
      * @default true
      */
     animate?: boolean;
@@ -617,16 +620,32 @@ export const CartesianChart = memo(
       return legend;
     }, [legend, legendAccessibilityLabel, legendPosition]);
 
-    const rootBoxProps: BoxProps = useMemo(
-      () => ({
+    const rootBoxProps: BoxProps = useMemo(() => {
+      const rootProps = {
         ref,
         height,
         style: rootStyles,
         width,
         ...props,
-      }),
-      [ref, height, rootStyles, width, props],
-    );
+        // Claim RN responder so parent PanResponders (e.g. Tray) don't steal the touch.
+        ...(enableScrubbing
+          ? {
+              onStartShouldSetResponder: claimTouchResponder,
+              onMoveShouldSetResponder: claimTouchResponder,
+            }
+          : null),
+      };
+
+      if (enableScrubbing) {
+        return {
+          ...rootProps,
+          onStartShouldSetResponder: claimTouchResponder,
+          onMoveShouldSetResponder: claimTouchResponder,
+        };
+      }
+
+      return rootProps;
+    }, [ref, height, rootStyles, width, props, enableScrubbing]);
 
     return (
       <CartesianChartProvider value={contextValue}>

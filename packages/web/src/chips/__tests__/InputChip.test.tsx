@@ -4,6 +4,7 @@ import { renderA11y } from '@coinbase/cds-web-utils';
 import { fireEvent, render, screen } from '@testing-library/react';
 
 import { RemoteImage } from '../../media';
+import { defaultTheme } from '../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../utils/test';
 import type { InputChipProps } from '../ChipProps';
 import { InputChip } from '../InputChip';
@@ -55,5 +56,45 @@ describe('InputChip', () => {
     render(<TestInputChip onClick={() => {}}>USD</TestInputChip>);
 
     expect(screen.getByLabelText('Remove USD')).toBeTruthy();
+  });
+
+  it('defaults to active colors', () => {
+    render(<TestInputChip onClick={() => {}}>USD</TestInputChip>);
+
+    const chip = screen.getByTestId(chipTestID);
+    const activeWrapper = chip.parentElement;
+    expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    expect(screen.getByText('USD')).toHaveStyle({ color: 'var(--color-fg)' });
+    expect(activeWrapper).toHaveClass('dark');
+    expect(activeWrapper).toHaveStyle({
+      '--color-bgSecondary': defaultTheme.darkColor.bgSecondary,
+      '--color-fg': defaultTheme.darkColor.fg,
+    });
+  });
+
+  it('renders inactive colors when active is false', () => {
+    render(
+      <TestInputChip active={false} onClick={() => {}}>
+        USD
+      </TestInputChip>,
+    );
+
+    const chip = screen.getByTestId(chipTestID);
+    expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    expect(screen.getByText('USD')).toHaveStyle({ color: 'var(--color-fg)' });
+    expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+  });
+
+  it('respects explicit invertColorScheme={false} opt-out', () => {
+    render(
+      <TestInputChip invertColorScheme={false} onClick={() => {}}>
+        USD
+      </TestInputChip>,
+    );
+
+    const chip = screen.getByTestId(chipTestID);
+    expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    expect(screen.getByText('USD')).toHaveStyle({ color: 'var(--color-fg)' });
+    expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
   });
 });
