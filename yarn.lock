@@ -11291,6 +11291,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"android-app@workspace:apps/android-app":
+  version: 0.0.0-use.local
+  resolution: "android-app@workspace:apps/android-app"
+  languageName: unknown
+  linkType: soft
+
 "anser@npm:^1.4.9":
   version: 1.4.10
   resolution: "anser@npm:1.4.10"
@@ -12669,6 +12675,12 @@ __metadata:
   checksum: 10c0/3939b1664390174484322bc3f45b798462e6c07ee6384cb3d645e0aa2f318502d174845198c1561930e1d431087f74cf1fe291ae9a4722821a9f4ba67e574350
   languageName: node
   linkType: hard
+
+"cds-android@workspace:packages/cds-android":
+  version: 0.0.0-use.local
+  resolution: "cds-android@workspace:packages/cds-android"
+  languageName: unknown
+  linkType: soft
 
 "chai@npm:^5.2.0":
   version: 5.3.1
