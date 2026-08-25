@@ -445,7 +445,7 @@ jobs:
           payload: |
             {
               "username": "CDS Publish",
-              "text": ":red_circle: Failed to publish NPM packages, <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|see details here>.\ncc @design-systems-eng-oncall"
+              "text": ":red_circle: Failed to publish NPM packages, <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|see details here>.\ncc @design-systems-oncall"
             }
         env:
           # Accessible from https://api.slack.com/apps
