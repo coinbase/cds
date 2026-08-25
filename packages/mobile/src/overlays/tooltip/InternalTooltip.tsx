@@ -38,6 +38,7 @@ export const InternalTooltip = memo(function InternalTooltip({
   fontSize,
   fontWeight,
   lineHeight,
+  textTransform,
   ...props
 }: InternalTooltipProps) {
   const theme = useTheme();
@@ -106,6 +107,7 @@ export const InternalTooltip = memo(function InternalTooltip({
             fontSize={fontSize}
             fontWeight={fontWeight}
             lineHeight={lineHeight}
+            textTransform={textTransform}
           >
             {content}
           </Text>

@@ -4,7 +4,8 @@ import { NoopFn } from '@coinbase/cds-common/utils/mockUtils';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
 import { RemoteImage } from '../../media';
-import { DefaultThemeProvider } from '../../utils/testHelpers';
+import { defaultTheme } from '../../themes/defaultTheme';
+import { DefaultThemeProvider, treeHasStyleProp } from '../../utils/testHelpers';
 import type { InputChipProps } from '../ChipProps';
 import { InputChip } from '../InputChip';
 
@@ -55,5 +56,47 @@ describe('InputChip', () => {
     render(<TestInputChip onPress={NoopFn}>USD</TestInputChip>);
 
     expect(screen.getByTestId(`${chipTestID}-close-icon`)).toBeVisible();
+  });
+
+  it('defaults to active colors', () => {
+    const { toJSON } = render(<TestInputChip onPress={NoopFn}>USD</TestInputChip>);
+
+    // Pressable applies background on its Interactable child, not the testID host.
+    expect(
+      treeHasStyleProp(toJSON(), (s) => s.backgroundColor === defaultTheme.darkColor.bgSecondary),
+    ).toBe(true);
+    expect(screen.getByText('USD')).toHaveStyle({
+      color: defaultTheme.darkColor.fg,
+    });
+  });
+
+  it('renders inactive colors when active is false', () => {
+    const { toJSON } = render(
+      <TestInputChip active={false} onPress={NoopFn}>
+        USD
+      </TestInputChip>,
+    );
+
+    expect(
+      treeHasStyleProp(toJSON(), (s) => s.backgroundColor === defaultTheme.lightColor.bgSecondary),
+    ).toBe(true);
+    expect(screen.getByText('USD')).toHaveStyle({
+      color: defaultTheme.lightColor.fg,
+    });
+  });
+
+  it('respects explicit invertColorScheme={false} opt-out', () => {
+    const { toJSON } = render(
+      <TestInputChip invertColorScheme={false} onPress={NoopFn}>
+        USD
+      </TestInputChip>,
+    );
+
+    expect(
+      treeHasStyleProp(toJSON(), (s) => s.backgroundColor === defaultTheme.lightColor.bgSecondary),
+    ).toBe(true);
+    expect(screen.getByText('USD')).toHaveStyle({
+      color: defaultTheme.lightColor.fg,
+    });
   });
 });

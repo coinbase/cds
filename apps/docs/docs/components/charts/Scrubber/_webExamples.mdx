@@ -792,12 +792,12 @@ function MatchupBeaconLabels() {
       return (
         <m.g animate={{ y }} initial={false} transition={transition}>
           <ChartText
-            disableRepositioning
             color={color}
             dx={dx}
             font="legal"
             horizontalAlignment={horizontalAlignment}
             onDimensionsChange={handleTeamLabelDimensionsChange}
+            repositionAxes="none"
             verticalAlignment="bottom"
             x={x}
             y={transition ? 0 : y}
@@ -806,12 +806,12 @@ function MatchupBeaconLabels() {
             {teamLabel}
           </ChartText>
           <ChartText
-            disableRepositioning
             color={color}
             dx={dx}
             font="title3"
             horizontalAlignment={horizontalAlignment}
             onDimensionsChange={handlePercentageLabelDimensionsChange}
+            repositionAxes="none"
             verticalAlignment="top"
             x={x}
             y={transition ? 0 : y}

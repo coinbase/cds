@@ -1,7 +1,12 @@
 import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
 import { scaleLinear } from 'd3-scale';
 
-import { evaluateGradientAtValue, getGradientConfig, type GradientDefinition } from '../gradient';
+import {
+  evaluateGradientAtValue,
+  evaluateGradientOpacityAtValue,
+  getGradientConfig,
+  type GradientDefinition,
+} from '../gradient';
 import type { ChartScaleFunction } from '../scale';
 
 describe('gradient utilities', () => {
@@ -320,6 +325,34 @@ describe('gradient utilities', () => {
       // This shouldn't happen in practice, but test for robustness
       const stops: any[] = [];
       expect(evaluateGradientAtValue(stops, 50, scale)).toBeUndefined();
+    });
+
+    describe('evaluateGradientOpacityAtValue', () => {
+      it('should return undefined when stops do not define opacity', () => {
+        const gradient: GradientDefinition = {
+          stops: [
+            { offset: 0, color: '#ff0000' },
+            { offset: 100, color: '#00ff00' },
+          ],
+        };
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
+
+        expect(evaluateGradientOpacityAtValue(stops, 50, scale)).toBeUndefined();
+      });
+
+      it('should interpolate opacity between stops', () => {
+        const gradient: GradientDefinition = {
+          stops: [
+            { offset: 0, color: '#ff0000', opacity: 0 },
+            { offset: 100, color: '#00ff00', opacity: 1 },
+          ],
+        };
+        const stops = getGradientConfig(gradient, scale, scale) ?? [];
+
+        expect(evaluateGradientOpacityAtValue(stops, 0, scale)).toBe(0);
+        expect(evaluateGradientOpacityAtValue(stops, 100, scale)).toBe(1);
+        expect(evaluateGradientOpacityAtValue(stops, 50, scale)).toBe(0.5);
+      });
     });
   });
 });

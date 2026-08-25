@@ -1,4 +1,4 @@
-import React, { Fragment, memo } from 'react';
+import React, { Fragment, memo, useMemo } from 'react';
 import type { View } from 'react-native';
 import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 
@@ -44,6 +44,9 @@ export const Chip = memo(function Chip({
     children,
     start,
     end,
+    active = false,
+    activeBackground,
+    activeColor,
     invertColorScheme,
     inverted,
     maxWidth = chipMaxWidth,
@@ -71,14 +74,25 @@ export const Chip = memo(function Chip({
     font = sizeConfig.font,
     ...props
   } = mergedProps;
-  const WrapperComponent = (invertColorScheme ?? inverted) ? InvertedThemeProvider : Fragment;
+
+  const hasActiveColorOverrides = activeBackground !== undefined || activeColor !== undefined;
+  const activeUsesThemeInversion = active && !hasActiveColorOverrides;
+  const shouldInvert = Boolean(invertColorScheme ?? inverted) || activeUsesThemeInversion;
+  const WrapperComponent = shouldInvert ? InvertedThemeProvider : Fragment;
+
+  const resolvedBackground =
+    active && activeBackground !== undefined ? activeBackground : background;
+  const resolvedColor = active && activeColor !== undefined ? activeColor : color;
+
+  const containerStyle = useMemo(() => [style, styles?.root], [style, styles?.root]);
+
   const containerProps = {
     testID,
-    background,
+    background: resolvedBackground,
     borderRadius,
     ref,
     alignSelf,
-    style: [style, styles?.root],
+    style: containerStyle,
   };
 
   const content = (
@@ -99,11 +113,11 @@ export const Chip = memo(function Chip({
     >
       {start}
       {typeof children === 'string' ? (
-        <Text color={color} flexShrink={1} font={font} numberOfLines={numberOfLines}>
+        <Text color={resolvedColor} flexShrink={1} font={font} numberOfLines={numberOfLines}>
           {children}
         </Text>
       ) : children ? (
-        <Box color={color} flexShrink={1}>
+        <Box color={resolvedColor} flexShrink={1}>
           {children}
         </Box>
       ) : null}

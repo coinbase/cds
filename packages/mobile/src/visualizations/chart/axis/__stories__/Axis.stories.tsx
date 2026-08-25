@@ -1,64 +1,67 @@
-import { memo, useCallback, useEffect, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import { IconButton } from '../../../../buttons';
 import { Example, ExampleScreen } from '../../../../examples/ExampleScreen';
 import { useTheme } from '../../../../hooks/useTheme';
+import { HStack, VStack } from '../../../../layout';
+import { Text } from '../../../../typography';
 import { BarChart, BarPlot } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { LineChart, SolidLine, type SolidLineProps } from '../../line';
 import { Line } from '../../line/Line';
 import { Scrubber } from '../../scrubber/Scrubber';
-import { XAxis, YAxis } from '..';
+import { type AxisTickLabelOverflow, XAxis, YAxis } from '..';
 
 const defaultChartHeight = 250;
 
 const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
 
-const Simple = () => {
-  const data = [
-    {
-      name: 'Page A',
-      uv: 4000,
-      pv: 2400,
-      amt: 2400,
-    },
-    {
-      name: 'Page B',
-      uv: 3000,
-      pv: 1398,
-      amt: 2210,
-    },
-    {
-      name: 'Page C',
-      uv: 2000,
-      pv: 9800,
-      amt: 2290,
-    },
-    {
-      name: 'Page D',
-      uv: 2780,
-      pv: 3908,
-      amt: 2000,
-    },
-    {
-      name: 'Page E',
-      uv: 1890,
-      pv: 4800,
-      amt: 2181,
-    },
-    {
-      name: 'Page F',
-      uv: 2390,
-      pv: 3800,
-      amt: 2500,
-    },
-    {
-      name: 'Page G',
-      uv: 3490,
-      pv: 4300,
-      amt: 2100,
-    },
-  ];
+const data = [
+  {
+    name: 'Page A',
+    uv: 4000,
+    pv: 2400,
+    amt: 2400,
+  },
+  {
+    name: 'Page B',
+    uv: 3000,
+    pv: 1398,
+    amt: 2210,
+  },
+  {
+    name: 'Page C',
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    name: 'Page D',
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: 'Page E',
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: 'Page F',
+    uv: 2390,
+    pv: 3800,
+    amt: 2500,
+  },
+  {
+    name: 'Page G',
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+];
 
+const Simple = () => {
   const pageViews = data.map((d) => d.pv);
   const pageNames = data.map((d) => d.name);
   const pageUniqueVisitors = data.map((d) => d.uv);
@@ -500,70 +503,219 @@ const LineChartOnBandScale = ({
   );
 };
 
-const AxisStories = () => {
+const tickLabelOverflowModes: AxisTickLabelOverflow[] = ['reposition', 'fade', 'visible'];
+const ordinalLabels = ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th'];
+const overflowSeriesData = [10, 22, 29, 45, 98, 45, 22];
+
+const TickLabelOverflowYAxes = () => {
   return (
-    <ExampleScreen>
-      <Example title="Basic">
-        <Simple />
-      </Example>
-      <Example title="Time of Day">
-        <TimeOfDayAxesExample />
-      </Example>
-      <Example title="Multiple Axes on Same Side">
-        <MultipleYAxesExample />
-      </Example>
-      <Example title="Strict Domain Limit">
-        <DomainLimitType limit="strict" />
-      </Example>
-      <Example title="Nice Domain Limit">
-        <DomainLimitType limit="nice" />
-      </Example>
-      <Example title="Band Axis Grid Alignment">
-        <CartesianChart
-          height={350}
-          inset={8}
-          series={[
-            {
-              id: 'prices',
-              data: [10, 22, 29, 45, 98, 45, 22],
-            },
-          ]}
-          xAxis={{
-            scaleType: 'band',
-            data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-          }}
-          yAxis={{
-            domain: { min: 0 },
-          }}
-        >
-          <XAxis showGrid showLine showTickMarks label="Default" />
-          <XAxis showLine showTickMarks bandTickMarkPlacement="start" label="Start" />
-          <XAxis showLine showTickMarks bandTickMarkPlacement="end" label="End" />
-          <XAxis showLine showTickMarks bandTickMarkPlacement="middle" label="Middle" />
-          <XAxis showLine showTickMarks bandTickMarkPlacement="edges" label="Edges" />
-          <BarPlot />
-        </CartesianChart>
-      </Example>
-      <Example title="Band Scale - Tick Filtering">
-        <BandScaleTickFiltering />
-      </Example>
-      <Example title="Band Scale - Explicit Ticks">
-        <BandScaleExplicitTicks />
-      </Example>
-      <Example title="Line Chart on Band Scale - Grid Positions">
-        <LineChartOnBandScale bandGridLinePlacement="edges" />
-        <LineChartOnBandScale bandGridLinePlacement="start" />
-        <LineChartOnBandScale bandGridLinePlacement="middle" />
-        <LineChartOnBandScale bandGridLinePlacement="end" />
-      </Example>
-      <Example title="Axes on All Sides">
-        <AxesOnAllSides />
-      </Example>
-      <Example title="Custom Tick Mark Sizes">
-        <CustomTickMarkSizes />
-      </Example>
-    </ExampleScreen>
+    <CartesianChart
+      height={320}
+      series={[
+        {
+          id: 'line1',
+          data: overflowSeriesData,
+        },
+      ]}
+      yAxis={{ domain: { min: 0 } }}
+      inset={0}
+    >
+      {tickLabelOverflowModes.map((tickLabelOverflow) => (
+        <YAxis
+          key={`left-${tickLabelOverflow}`}
+          position="left"
+          tickLabelOverflow={tickLabelOverflow}
+          width={30}
+        />
+      ))}
+      {tickLabelOverflowModes.map((tickLabelOverflow) => (
+        <YAxis
+          key={`right-${tickLabelOverflow}`}
+          position="right"
+          tickLabelOverflow={tickLabelOverflow}
+          width={30}
+        />
+      ))}
+      <Line seriesId="line1" />
+    </CartesianChart>
   );
 };
 
-export default AxisStories;
+const TickLabelOverflowXAxes = () => {
+  return (
+    <CartesianChart
+      height={420}
+      series={[
+        {
+          id: 'line1',
+          data: overflowSeriesData,
+        },
+      ]}
+      xAxis={{
+        data: ordinalLabels,
+      }}
+      yAxis={{ domain: { min: 0 } }}
+      inset={0}
+    >
+      {tickLabelOverflowModes.map((tickLabelOverflow) => (
+        <XAxis
+          key={`bottom-${tickLabelOverflow}`}
+          showLine
+          showTickMarks
+          label={tickLabelOverflow}
+          position="bottom"
+          tickLabelOverflow={tickLabelOverflow}
+        />
+      ))}
+      {tickLabelOverflowModes.map((tickLabelOverflow) => (
+        <XAxis
+          key={`top-${tickLabelOverflow}`}
+          showLine
+          showTickMarks
+          label={tickLabelOverflow}
+          position="top"
+          tickLabelOverflow={tickLabelOverflow}
+        />
+      ))}
+      <Line seriesId="line1" />
+    </CartesianChart>
+  );
+};
+
+const TickLabelOverflowAllSides = () => {
+  const theme = useTheme();
+
+  return (
+    <CartesianChart
+      height={250}
+      series={[
+        {
+          id: 'line1',
+          data: overflowSeriesData,
+          color: theme.color.accentBoldBlue,
+        },
+      ]}
+      xAxis={{
+        data: ordinalLabels,
+      }}
+      yAxis={{ domain: { min: 0, max: 100 } }}
+      inset={0}
+    >
+      <XAxis showLine showTickMarks label="Fade" position="bottom" tickLabelOverflow="fade" />
+      <YAxis showLine showTickMarks label="Visible" position="left" tickLabelOverflow="visible" />
+      <Line curve="natural" seriesId="line1" />
+    </CartesianChart>
+  );
+};
+
+type ExampleItem = {
+  title: string;
+  component: ReactNode;
+};
+
+function ExampleNavigator() {
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const examples = useMemo<ExampleItem[]>(
+    () => [
+      { title: 'Basic', component: <Simple /> },
+      { title: 'Time of Day', component: <TimeOfDayAxesExample /> },
+      { title: 'Multiple Axes on Same Side', component: <MultipleYAxesExample /> },
+      { title: 'Strict Domain Limit', component: <DomainLimitType limit="strict" /> },
+      { title: 'Nice Domain Limit', component: <DomainLimitType limit="nice" /> },
+      {
+        title: 'Band Axis Grid Alignment',
+        component: (
+          <CartesianChart
+            height={350}
+            inset={8}
+            series={[
+              {
+                id: 'prices',
+                data: [10, 22, 29, 45, 98, 45, 22],
+              },
+            ]}
+            xAxis={{
+              scaleType: 'band',
+              data: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+            }}
+            yAxis={{
+              domain: { min: 0 },
+            }}
+          >
+            <XAxis showGrid showLine showTickMarks label="Default" />
+            <XAxis showLine showTickMarks bandTickMarkPlacement="start" label="Start" />
+            <XAxis showLine showTickMarks bandTickMarkPlacement="end" label="End" />
+            <XAxis showLine showTickMarks bandTickMarkPlacement="middle" label="Middle" />
+            <XAxis showLine showTickMarks bandTickMarkPlacement="edges" label="Edges" />
+            <BarPlot />
+          </CartesianChart>
+        ),
+      },
+      { title: 'Band Scale - Tick Filtering', component: <BandScaleTickFiltering /> },
+      { title: 'Band Scale - Explicit Ticks', component: <BandScaleExplicitTicks /> },
+      {
+        title: 'Line Chart on Band Scale - Grid Positions',
+        component: (
+          <>
+            <LineChartOnBandScale bandGridLinePlacement="edges" />
+            <LineChartOnBandScale bandGridLinePlacement="start" />
+            <LineChartOnBandScale bandGridLinePlacement="middle" />
+            <LineChartOnBandScale bandGridLinePlacement="end" />
+          </>
+        ),
+      },
+      { title: 'Axes on All Sides', component: <AxesOnAllSides /> },
+      { title: 'Custom Tick Mark Sizes', component: <CustomTickMarkSizes /> },
+      { title: 'Y Axis Label Repositioning', component: <TickLabelOverflowYAxes /> },
+      { title: 'X Axis Label Repositioning', component: <TickLabelOverflowXAxes /> },
+      {
+        title: 'Ineffective Repositioning',
+        component: <TickLabelOverflowAllSides />,
+      },
+    ],
+    [],
+  );
+
+  const currentExample = examples[currentIndex];
+
+  const handlePrevious = useCallback(() => {
+    setCurrentIndex((prev) => (prev - 1 + examples.length) % examples.length);
+  }, [examples.length]);
+
+  const handleNext = useCallback(() => {
+    setCurrentIndex((prev) => (prev + 1) % examples.length);
+  }, [examples.length]);
+
+  return (
+    <ExampleScreen paddingX={0}>
+      <VStack gap={4}>
+        <HStack alignItems="center" justifyContent="space-between" padding={2}>
+          <IconButton
+            accessibilityHint="Navigate to previous example"
+            accessibilityLabel="Previous"
+            name="arrowLeft"
+            onPress={handlePrevious}
+            variant="secondary"
+          />
+          <VStack alignItems="center">
+            <Text font="title3">{currentExample.title}</Text>
+            <Text color="fgMuted" font="label1">
+              {currentIndex + 1} / {examples.length}
+            </Text>
+          </VStack>
+          <IconButton
+            accessibilityHint="Navigate to next example"
+            accessibilityLabel="Next"
+            name="arrowRight"
+            onPress={handleNext}
+            variant="secondary"
+          />
+        </HStack>
+        <Example>{currentExample.component}</Example>
+      </VStack>
+    </ExampleScreen>
+  );
+}
+
+export default ExampleNavigator;

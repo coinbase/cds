@@ -208,7 +208,8 @@ const AnimatedPath = memo<
   },
 );
 
-export const Path = memo<PathProps>((props) => {
+// Animated path: reanimated clip-reveal + shared values. Used when the chart animates (default).
+const AnimatedChartPath = memo<PathProps>((props) => {
   const {
     animate: animateProp,
     clipRect,
@@ -349,39 +350,7 @@ export const Path = memo<PathProps>((props) => {
     return undefined;
   }, [clipPathProp, animateClip, targetClipPath]);
 
-  // Convert SVG path string to SkPath for static rendering
-  const staticPath = useDerivedValue(() => {
-    const dValue = unwrapAnimatedValue(d);
-    if (!dValue) return Skia.Path.Make();
-    return Skia.Path.MakeFromSVGString(dValue) ?? Skia.Path.Make();
-  }, [d]);
-
-  const isFilled = fill !== undefined && fill !== 'none';
-  const isStroked = stroke !== undefined && stroke !== 'none';
-
-  const content = !animate ? (
-    <>
-      {isFilled && (
-        <SkiaPath color={fill} opacity={fillOpacity} path={staticPath} style="fill" {...pathProps}>
-          {children}
-        </SkiaPath>
-      )}
-      {isStroked && (
-        <SkiaPath
-          color={stroke}
-          opacity={strokeOpacity}
-          path={staticPath}
-          strokeCap={strokeCap}
-          strokeJoin={strokeJoin}
-          strokeWidth={strokeWidth}
-          style="stroke"
-          {...pathProps}
-        >
-          {children}
-        </SkiaPath>
-      )}
-    </>
-  ) : (
+  const content = (
     <AnimatedPath
       d={d}
       fill={fill}
@@ -416,3 +385,105 @@ export const Path = memo<PathProps>((props) => {
     </Group>
   );
 });
+
+// Non-animated path: skips the clip-reveal animation and uses a cheap rectangular clip.
+const StaticChartPath = memo<
+  Omit<PathProps, 'animate' | 'initialPath' | 'transition' | 'transitions'>
+>(
+  ({
+    clipRect,
+    clipPath: clipPathProp,
+    clipOffset = 0,
+    d = '',
+    fill,
+    fillOpacity,
+    stroke,
+    strokeOpacity,
+    strokeWidth,
+    strokeCap,
+    strokeJoin,
+    children,
+    ...pathProps
+  }) => {
+    const context = useCartesianChartContext();
+    const rect = clipRect ?? context.drawingArea;
+
+    // Derived (not memoized) so an animated `d` — e.g. a reference line — still tracks scrubbing.
+    const path = useDerivedValue(() => {
+      const dValue = unwrapAnimatedValue(d);
+      if (!dValue) return Skia.Path.Make();
+      return Skia.Path.MakeFromSVGString(dValue) ?? Skia.Path.Make();
+    }, [d]);
+
+    // Rect clip routes to canvas.clipRect (a cheap GPU scissor), not the anti-aliased path clip.
+    const clip = useMemo(() => {
+      if (clipPathProp !== undefined) return clipPathProp;
+      if (!rect) return null;
+      return {
+        x: rect.x - clipOffset,
+        y: rect.y - clipOffset,
+        width: rect.width + clipOffset * 2,
+        height: rect.height + clipOffset * 2,
+      };
+    }, [clipPathProp, rect, clipOffset]);
+
+    const isFilled = fill !== undefined && fill !== 'none';
+    const isStroked = stroke !== undefined && stroke !== 'none';
+
+    const content = (
+      <>
+        {isFilled && (
+          <SkiaPath color={fill} opacity={fillOpacity} path={path} style="fill" {...pathProps}>
+            {children}
+          </SkiaPath>
+        )}
+        {isStroked && (
+          <SkiaPath
+            color={stroke}
+            opacity={strokeOpacity}
+            path={path}
+            strokeCap={strokeCap}
+            strokeJoin={strokeJoin}
+            strokeWidth={strokeWidth}
+            style="stroke"
+            {...pathProps}
+          >
+            {children}
+          </SkiaPath>
+        )}
+      </>
+    );
+
+    if (clip === null) {
+      return <Group>{content}</Group>;
+    }
+
+    return <Group clip={clip}>{content}</Group>;
+  },
+);
+
+/**
+ * Renders a chart path. Delegates to a lightweight static renderer when the chart is not
+ * animating (no reanimated hooks, cheap rect clip) and to the animated renderer otherwise.
+ */
+export const Path = memo<PathProps>(
+  ({ animate: animateProp, initialPath, transition, transitions, ...staticProps }) => {
+    const context = useCartesianChartContext();
+    const animate = animateProp ?? context.animate;
+
+    if (animate) {
+      return (
+        <AnimatedChartPath
+          animate={animateProp}
+          initialPath={initialPath}
+          transition={transition}
+          transitions={transitions}
+          {...staticProps}
+        />
+      );
+    }
+
+    // Animation-only props are omitted from the static renderer.
+    return <StaticChartPath {...staticProps} />;
+  },
+);

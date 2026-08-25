@@ -146,7 +146,7 @@ export type SlideButtonBaseProps = Omit<PressableProps, 'loading'> & {
   /**
    * Reduces the height, borderRadius and inner padding within the button.
    * @deprecated Use `size="s"` instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
+   * @deprecationExpectedRemoval v11
    */
   compact?: boolean;
   /**

@@ -333,7 +333,7 @@ const MyPage = () => {
 
 In CDS v8, the concept of scale/density no longer exists. To achieve dense/xSmall scale styles, you can create a new theme that updates the values of `space`, `fontSize`, `lineHeight`, `controlSize`, `iconSize`, etc.
 
-We have an example `coinbaseDenseTheme` you can use to emulate the old dense/xSmall scale styles - [web link](https://github.com/coinbase/cds-staging/blob/master/packages/web/src/themes/coinbaseDenseTheme.ts) and [mobile link](https://github.com/coinbase/cds-staging/blob/master/packages/mobile/src/themes/coinbaseDenseTheme.ts). However you need to copy this theme into your application, it will be deleted from CDS in the next major release.
+We have an example `coinbaseDenseTheme` you can use to emulate the old dense/xSmall scale styles - [web link](https://github.com/coinbase/cds/blob/master/packages/web/src/themes/coinbaseDenseTheme.ts) and [mobile link](https://github.com/coinbase/cds/blob/master/packages/mobile/src/themes/coinbaseDenseTheme.ts). However you need to copy this theme into your application, it will be deleted from CDS in the next major release.
 
 ### Inverting the Theme
 
@@ -392,7 +392,7 @@ This causes CDS CSS to have lower style specificity than styles that are not on 
 
 ### New Web Global Styles
 
-CDS web global styles now include a CSS reset which override the browser default styles for some elements. This ensures that polymorphic components render correctly, regardless of their HTML element. See the [full style reset here](https://github.com/coinbase/cds-staging/blob/master/packages/web/src/styles/global.ts).
+CDS web global styles now include a CSS reset which override the browser default styles for some elements. This ensures that polymorphic components render correctly, regardless of their HTML element. See the [full style reset here](https://github.com/coinbase/cds/blob/master/packages/web/src/styles/global.ts).
 
 ### Improved Polymorphism
 
@@ -773,7 +773,7 @@ This release includes:
 
 ### Are migration scripts available?
 
-Yes! We provide the `@coinbase/cds-migrator` package to assist with automated migration. For detailed instructions, refer to the [Migrator Guide](https://github.com/coinbase/cds-staging/blob/master/packages/migrator/README.md).
+Yes! We provide the `@coinbase/cds-migrator` package to assist with automated migration. For detailed instructions, refer to the [Migrator Guide](https://github.com/coinbase/cds/blob/master/packages/migrator/README.md).
 
 </MDXArticle>
 </MDXSection>

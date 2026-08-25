@@ -1,67 +1,81 @@
 import React, { memo, useEffect, useMemo, useRef } from 'react';
-import { StyleSheet, View, type ViewStyle } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
 
+import { useComponentConfig } from '../../hooks/useComponentConfig';
 import { useTheme } from '../../hooks/useTheme';
+import { Box } from '../../layout/Box';
 import { SegmentedTab, type SegmentedTabProps } from '../../tabs/SegmentedTab';
-import { SegmentedTabs, type SegmentedTabsProps } from '../../tabs/SegmentedTabs';
+import {
+  SegmentedTabs,
+  type SegmentedTabsBaseProps,
+  type SegmentedTabsProps,
+} from '../../tabs/SegmentedTabs';
 import { type TabComponent, type TabsActiveIndicatorProps } from '../../tabs/Tabs';
 import { tabsSpringConfig } from '../../tabs/Tabs';
 import { Text, type TextBaseProps } from '../../typography/Text';
 
-export const PeriodSelectorActiveIndicator = ({
-  activeTabRect,
-  background = 'bgPrimaryWash',
-  position = 'absolute',
-  borderRadius = 1000,
-}: TabsActiveIndicatorProps) => {
-  const theme = useTheme();
-  const { width, height, x, y } = activeTabRect;
+const AnimatedBox = Animated.createAnimatedComponent(Box);
 
-  const backgroundColorKey = background as keyof typeof theme.color;
-  const targetColor = theme.color[backgroundColorKey] || background;
+export const PeriodSelectorActiveIndicator = memo(
+  ({
+    activeTabRect,
+    background = 'bgPrimaryWash',
+    position = 'absolute',
+    borderRadius = 1000,
+    style,
+    testID = 'period-selector-active-indicator',
+    ...props
+  }: TabsActiveIndicatorProps) => {
+    const theme = useTheme();
+    const { width, height, x, y } = activeTabRect;
 
-  const animatedValues = useSharedValue({ x, y, width, backgroundColor: targetColor });
-  const isFirstRenderWithWidth = useRef(true);
+    const backgroundColorKey = background as keyof typeof theme.color;
+    const targetColor = theme.color[backgroundColorKey] || background;
 
-  useEffect(() => {
-    const nextAnimatedValues = { x, y, width, backgroundColor: targetColor };
+    const animatedValues = useSharedValue({ x, y, width, backgroundColor: targetColor });
+    const isFirstRenderWithWidth = useRef(true);
 
-    if (width <= 0) return;
+    useEffect(() => {
+      const nextAnimatedValues = { x, y, width, backgroundColor: targetColor };
 
-    if (isFirstRenderWithWidth.current) {
-      animatedValues.value = nextAnimatedValues;
-      isFirstRenderWithWidth.current = false;
-    } else {
-      animatedValues.value = withSpring(nextAnimatedValues, tabsSpringConfig);
-    }
-  }, [animatedValues, targetColor, width, x, y]);
+      if (width <= 0) return;
 
-  const animatedStyles = useAnimatedStyle(
-    () => ({
-      transform: [{ translateX: animatedValues.value.x }, { translateY: animatedValues.value.y }],
-      width: animatedValues.value.width,
-      backgroundColor: animatedValues.value.backgroundColor,
-    }),
-    [animatedValues],
-  );
+      if (isFirstRenderWithWidth.current) {
+        animatedValues.value = nextAnimatedValues;
+        isFirstRenderWithWidth.current = false;
+      } else {
+        animatedValues.value = withSpring(nextAnimatedValues, tabsSpringConfig);
+      }
+    }, [animatedValues, targetColor, width, x, y]);
 
-  if (!width) return;
+    const animatedStyles = useAnimatedStyle(
+      () => ({
+        transform: [{ translateX: animatedValues.value.x }, { translateY: animatedValues.value.y }],
+        width: animatedValues.value.width,
+        backgroundColor: animatedValues.value.backgroundColor,
+      }),
+      [animatedValues],
+    );
 
-  return (
-    <Animated.View
-      style={[
-        {
-          position: position as ViewStyle['position'],
-          height,
-          borderRadius,
-        },
-        animatedStyles,
-      ]}
-      testID="period-selector-active-indicator"
-    />
-  );
-};
+    const indicatorStyle = useMemo(() => [animatedStyles, style], [animatedStyles, style]);
+
+    if (!width) return null;
+
+    return (
+      <AnimatedBox
+        animated
+        borderRadius={borderRadius}
+        height={height}
+        position={position}
+        role="none"
+        style={indicatorStyle}
+        testID={testID}
+        {...props}
+      />
+    );
+  },
+);
 
 export type LiveTabLabelBaseProps = TextBaseProps & {
   /**
@@ -136,7 +150,9 @@ const PeriodSelectorTab: TabComponent = memo(
   }) => <SegmentedTab ref={ref} font="label1" {...props} />,
 );
 
-export type PeriodSelectorProps = SegmentedTabsProps;
+export type PeriodSelectorBaseProps<TabId extends string = string> = SegmentedTabsBaseProps<TabId>;
+
+export type PeriodSelectorProps<TabId extends string = string> = SegmentedTabsProps<TabId>;
 
 /**
  * PeriodSelector is a specialized version of SegmentedTabs optimized for chart period selection.
@@ -145,27 +161,34 @@ export type PeriodSelectorProps = SegmentedTabsProps;
 export const PeriodSelector = memo(
   ({
     ref,
-    background = 'transparent',
-    activeBackground = 'bgPrimaryWash',
-    activeColor = 'fgPrimary',
-    width = '100%',
-    justifyContent = 'space-between',
-    TabComponent = PeriodSelectorTab,
-    TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
-    ...props
+    ..._props
   }: PeriodSelectorProps & {
     ref?: React.Ref<any>;
-  }) => (
-    <SegmentedTabs
-      ref={ref}
-      TabComponent={TabComponent}
-      TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
-      activeBackground={activeBackground}
-      activeColor={activeColor}
-      background={background}
-      justifyContent={justifyContent}
-      width={width}
-      {...props}
-    />
-  ),
+  }) => {
+    const mergedProps = useComponentConfig('PeriodSelector', _props);
+    const {
+      background = 'transparent',
+      activeBackground = 'bgPrimaryWash',
+      activeColor = 'fgPrimary',
+      width = '100%',
+      justifyContent = 'space-between',
+      TabComponent = PeriodSelectorTab,
+      TabsActiveIndicatorComponent = PeriodSelectorActiveIndicator,
+      ...props
+    } = mergedProps;
+
+    return (
+      <SegmentedTabs
+        ref={ref}
+        TabComponent={TabComponent}
+        TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
+        activeBackground={activeBackground}
+        activeColor={activeColor}
+        background={background}
+        justifyContent={justifyContent}
+        width={width}
+        {...props}
+      />
+    );
+  },
 );

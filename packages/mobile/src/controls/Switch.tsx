@@ -1,5 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { type StyleProp, StyleSheet, type View, type ViewStyle } from 'react-native';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useTheme } from '../hooks/useTheme';
@@ -8,10 +9,30 @@ import { Interactable } from '../system/Interactable';
 
 import { Control, type ControlBaseProps, type ControlIconProps } from './Control';
 
+/** Border width of the switch head/handle, kept as a hairline regardless of theme. */
+const switchThumbBorderWidth = 0.5;
+
+/** Semantic color variants for Switch, matching the semantics used by other control components. */
+export type SwitchVariant = 'primary' | 'positive' | 'negative';
+
+/** Track background color applied when Switch is checked, keyed by `variant`. */
+const switchVariantBackground: Record<SwitchVariant, ThemeVars.Color> = {
+  primary: 'bgPrimary',
+  positive: 'bgPositive',
+  negative: 'bgNegative',
+};
+
 export type SwitchBaseProps<SwitchValue extends string> = Omit<
   ControlBaseProps<SwitchValue>,
   'controlSize' | 'dotSize'
->;
+> & {
+  /**
+   * Semantic color variant applied to the track when checked. The `background` prop always
+   * takes priority over the background set by the variant, as does any custom `style`/`styles.control`.
+   * @default primary
+   */
+  variant?: SwitchVariant;
+};
 
 export type SwitchProps<SwitchValue extends string> = SwitchBaseProps<SwitchValue> & {
   /**
@@ -40,7 +61,7 @@ const SwitchIcon = ({
   checked,
   disabled,
   controlColor,
-  background = checked ? 'bgPrimary' : 'bgTertiary',
+  background = 'bgTertiary',
   borderColor,
   borderRadius = 1000,
   borderWidth = 0,
@@ -78,6 +99,7 @@ const SwitchIcon = ({
         position: 'absolute',
         top: thumbInset - borderSize,
         left: thumbInset - borderSize,
+        borderWidth: switchThumbBorderWidth,
       } as const,
       {
         transform: [
@@ -126,12 +148,26 @@ const SwitchWithRef = function SwitchWithRef<SwitchValue extends string>({
   ref?: React.Ref<View>;
 }) {
   const mergedProps = useComponentConfig('Switch', _props);
-  const { children, style, styles, ...props } = mergedProps;
+  const {
+    children,
+    style,
+    styles,
+    variant = 'primary',
+    background,
+    checked,
+    ...props
+  } = mergedProps;
   const theme = useTheme();
   const { switchHeight } = theme.controlSize;
   const controlStyles = useMemo(
     () => StyleSheet.flatten([style, styles?.control]),
     [style, styles?.control],
+  );
+  // The variant only informs the track color while checked; the background prop is more
+  // specific and always wins when provided.
+  const resolvedBackground = useMemo(
+    () => background ?? (checked ? switchVariantBackground[variant] : undefined),
+    [background, checked, variant],
   );
 
   const switchNode = (
@@ -140,6 +176,8 @@ const SwitchWithRef = function SwitchWithRef<SwitchValue extends string>({
       accessible
       shouldUseSwitchTransition
       accessibilityRole="switch"
+      background={resolvedBackground}
+      checked={checked}
       label={children}
       style={controlStyles}
       {...props}

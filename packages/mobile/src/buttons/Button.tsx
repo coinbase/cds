@@ -101,7 +101,7 @@ export type ButtonBaseProps = SharedProps &
     /**
      * Reduce the inner padding within the button itself.
      * @deprecated Use `size="s"` instead. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     compact?: boolean;
     /**
@@ -171,6 +171,7 @@ export const Button = memo(function Button({
     fontSize,
     fontWeight,
     lineHeight,
+    textTransform,
     background,
     color,
     style,
@@ -239,6 +240,7 @@ export const Button = memo(function Button({
           fontWeight={fontWeight}
           lineHeight={lineHeight}
           numberOfLines={numberOfLines}
+          textTransform={textTransform}
           selectable={false}
           style={styles.text}
           testID="text-headline"
@@ -246,7 +248,17 @@ export const Button = memo(function Button({
           {children}
         </Text>
       ),
-    [children, colorValue, font, fontFamily, fontSize, fontWeight, lineHeight, numberOfLines],
+    [
+      children,
+      colorValue,
+      font,
+      fontFamily,
+      fontSize,
+      fontWeight,
+      lineHeight,
+      numberOfLines,
+      textTransform,
+    ],
   );
 
   return (

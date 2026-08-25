@@ -1077,9 +1077,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/cardSuccess-4.js').content,
   },
   cb1BankTransfers: {
-    light: () => require('../svgJs/cjs/light/cb1BankTransfers-2.js').content,
-    dark: () => require('../svgJs/cjs/dark/cb1BankTransfers-2.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/cb1BankTransfers-2.js').content,
+    light: () => require('../svgJs/cjs/light/cb1BankTransfers-3.js').content,
+    dark: () => require('../svgJs/cjs/dark/cb1BankTransfers-3.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/cb1BankTransfers-3.js').content,
   },
   chart: {
     light: () => require('../svgJs/cjs/light/chart-2.js').content,
@@ -1095,6 +1095,11 @@ const svgJsMap = {
     light: () => require('../svgJs/cjs/light/checkmark-3.js').content,
     dark: () => require('../svgJs/cjs/dark/checkmark-3.js').content,
     themeable: () => require('../svgJs/cjs/themeable/checkmark-3.js').content,
+  },
+  chfTrade: {
+    light: () => require('../svgJs/cjs/light/chfTrade-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/chfTrade-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/chfTrade-0.js').content,
   },
   clock: {
     light: () => require('../svgJs/cjs/light/clock-3.js').content,
@@ -1480,6 +1485,11 @@ const svgJsMap = {
     light: () => require('../svgJs/cjs/light/ethToken-1.js').content,
     dark: () => require('../svgJs/cjs/dark/ethToken-1.js').content,
     themeable: () => require('../svgJs/cjs/themeable/ethToken-1.js').content,
+  },
+  eurTrade: {
+    light: () => require('../svgJs/cjs/light/eurTrade-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/eurTrade-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/eurTrade-0.js').content,
   },
   exchangeNavigation: {
     light: () => require('../svgJs/cjs/light/exchangeNavigation-6.js').content,
@@ -2565,6 +2575,11 @@ const svgJsMap = {
     light: () => require('../svgJs/cjs/light/usdcToken-1.js').content,
     dark: () => require('../svgJs/cjs/dark/usdcToken-1.js').content,
     themeable: () => require('../svgJs/cjs/themeable/usdcToken-1.js').content,
+  },
+  usdTrade: {
+    light: () => require('../svgJs/cjs/light/usdTrade-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/usdTrade-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/usdTrade-0.js').content,
   },
   venturesNavigation: {
     light: () => require('../svgJs/cjs/light/venturesNavigation-4.js').content,

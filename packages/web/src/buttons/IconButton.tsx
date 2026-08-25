@@ -72,7 +72,7 @@ export type IconButtonBaseProps = Polymorphic.ExtendableProps<
      * enables `compact` by default, so an IconButton with no `size` renders at `size="s"`.
      * Set `compact={false}` (or pass an explicit `size`) to opt out.
      * @deprecated Use `size="s"` instead. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     compact?: boolean;
     /**

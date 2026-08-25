@@ -1,4 +1,5 @@
 import type { AccordionBaseProps } from '../accordion/Accordion';
+import type { AccordionItemBaseProps } from '../accordion/AccordionItem';
 import type { ComboboxBaseProps } from '../alpha/combobox/Combobox';
 import type { SelectBaseProps } from '../alpha/select/types';
 import type { SelectChipBaseProps } from '../alpha/select-chip/SelectChip';
@@ -85,6 +86,7 @@ import type { TourBaseProps } from '../tour/Tour';
 import type { LinkBaseProps } from '../typography/Link';
 import type { TextBaseProps } from '../typography/Text';
 import type { TextFallbackBaseProps } from '../typography/TextFallback';
+import type { PeriodSelectorBaseProps } from '../visualizations/chart/PeriodSelector';
 import type { ProgressBaseProps } from '../visualizations/ProgressBar';
 import type { ProgressBarWithFixedLabelsBaseProps } from '../visualizations/ProgressBarWithFixedLabels';
 import type { ProgressBarWithFloatLabelBaseProps } from '../visualizations/ProgressBarWithFloatLabel';
@@ -103,6 +105,7 @@ export type ConfigResolver<P> = Partial<P> | ((props: P) => Partial<P>);
  */
 export type ComponentConfig = {
   Accordion?: ConfigResolver<AccordionBaseProps>;
+  AccordionItem?: ConfigResolver<AccordionItemBaseProps>;
   Alert?: ConfigResolver<AlertBaseProps>;
   TabbedChips?: ConfigResolver<TabbedChipsBaseProps>;
   Avatar?: ConfigResolver<AvatarBaseProps>;
@@ -156,6 +159,7 @@ export type ComponentConfig = {
   PageFooter?: ConfigResolver<PageFooterBaseProps>;
   PageHeader?: ConfigResolver<PageHeaderBaseProps>;
   Pagination?: ConfigResolver<PaginationBaseProps>;
+  PeriodSelector?: ConfigResolver<PeriodSelectorBaseProps>;
   PopoverPanel?: ConfigResolver<PopoverPanelBaseProps>;
   ProgressBar?: ConfigResolver<ProgressBaseProps>;
   ProgressBarWithFixedLabels?: ConfigResolver<ProgressBarWithFixedLabelsBaseProps>;

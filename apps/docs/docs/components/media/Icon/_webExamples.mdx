@@ -23,7 +23,14 @@
 
 ### Custom icon sets
 
-Most apps only need the default `Icon`. If you have your own icon font, `createIcon` builds a matching, fully-typed `Icon` for it that reuses the same sizing, color, and accessibility behavior — only the glyphs, font, and `name` type change. Support for building your own icon set is expected to become more self-service over time.
+Most apps only need the default `Icon`. There are two ways to bring your own glyphs, and they solve different problems:
+
+- **`createIcon`** builds a separate, fully-typed icon component for your font. Use it when your icons are their own set, rendered through your own component.
+- **`IconGlyphSourceProvider`** adds your glyphs to the icons CDS already renders. Use it when you want the components you're already using — `IconButton`, `Button`, `Tag` — to draw their icons from your font. Its names must be names `Icon` already accepts.
+
+#### Building a typed icon component
+
+`createIcon` builds a matching, fully-typed `Icon` for your font that reuses the same sizing, color, and accessibility behavior — only the glyphs, font, and `name` type change. Support for building your own icon set is expected to become more self-service over time.
 
 ```jsx
 import { createIcon } from '@coinbase/cds-web/icons';
@@ -51,7 +58,7 @@ If your icon set uses a different key format or size model, pass a `getGlyph` re
 
 On web the font family is applied via the `--cds-icon-font-family` CSS variable (its default is `CoinbaseIcons`). Beyond passing `fontFamily` to `createIcon`, you can override the font per instance through `classNames`/`styles`, or scope it on an ancestor by setting that variable.
 
-#### Live demo
+#### Live demo: a typed icon component
 
 The example below binds `createIcon` to Google's Material Icons font. The glyph map is built inline from Material's codepoints, but in a real app you'd import a generated map from your icon package. Notice `MaterialIcon` reuses the exact same sizing, color, and accessibility behavior as the default CDS `Icon` — only the font and glyphs differ. Edit the code to try other icons or sizes.
 
@@ -101,6 +108,92 @@ function Demo() {
           </VStack>
         ))}
       </HStack>
+    </VStack>
+  );
+}
+
+render(<Demo />);
+```
+
+#### Overriding the glyphs of existing components
+
+`IconGlyphSourceProvider` adds a glyph source to every CDS icon rendered below it. Because every component that takes a `name` prop renders the same `Icon`, and `Icon` reads this context itself, nothing you render has to change or even know about it:
+
+```jsx
+import { IconGlyphSourceProvider } from '@coinbase/cds-web/icons';
+import { glyphMap } from '@my-org/icons/glyphMap';
+
+<IconGlyphSourceProvider source={{ glyphMap, fontFamily: 'MyIcons' }}>
+  {/* An ordinary IconButton, now drawing its glyph from your font */}
+  <IconButton name="settings" accessibilityLabel="Settings" />
+</IconGlyphSourceProvider>;
+```
+
+The `source` is the same object shape `createIcon` takes, so an icon package can export one object usable either way. Your source is consulted before the built-in CDS glyphs, which means a source that reuses a built-in name re-skins that icon rather than being ignored; anything it doesn't provide falls back to the CDS set.
+
+Exactly one custom source is ever in effect. Nesting a provider inside another **replaces** the outer source rather than adding to it, so only the nearest provider applies.
+
+Because the fallback is per glyph rather than per icon set, a source that covers a name at one size or state but not another leaves that icon resolving partly from your font and partly from the CDS font. Generate your glyph map for every size and state you use.
+
+Scope the provider to the subtree that wants the custom glyphs rather than the app root. Every icon below it resolves against your source first, including the icons CDS renders internally for you — the `close` on a modal, the `caretUp` on an accordion, the `checkmark` on a checkbox.
+
+The names in your source have to be names the icon component already accepts; the `name` prop's type is unchanged.
+
+#### Live demo: overriding built-in icons
+
+The two rows below render identical, unmodified `IconButton`s. Only the first is wrapped in an `IconGlyphSourceProvider`, so only it picks up the Material Icons glyphs — the second still renders the CDS icons. Try adding a name to `codepoints` or removing the provider.
+
+```jsx live noInline
+// Material Icons codepoints for three names CDS already has, so the source
+// re-skins those built-in icons.
+const codepoints = {
+  home: 0xe88a,
+  settings: 0xe8b8,
+  search: 0xe8b6,
+};
+
+const glyphMap = Object.fromEntries(
+  Object.keys(codepoints).flatMap((name) =>
+    [12, 16, 24].flatMap((size) =>
+      ['active', 'inactive'].map((state) => [
+        `${name}-${size}-${state}`,
+        String.fromCodePoint(codepoints[name]),
+      ]),
+    ),
+  ),
+);
+
+const materialSource = { glyphMap, fontFamily: 'Material Icons' };
+
+const names = Object.keys(codepoints);
+
+function Demo() {
+  return (
+    <VStack gap={4}>
+      {/* Loads the Material Icons web font for this demo */}
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+      <VStack gap={1}>
+        <Text color="fgMuted" font="legal">
+          Inside the provider
+        </Text>
+        <IconGlyphSourceProvider source={materialSource}>
+          <HStack alignItems="center" gap={2}>
+            {names.map((name) => (
+              <IconButton key={name} accessibilityLabel={name} name={name} variant="secondary" />
+            ))}
+          </HStack>
+        </IconGlyphSourceProvider>
+      </VStack>
+      <VStack gap={1}>
+        <Text color="fgMuted" font="legal">
+          Outside the provider
+        </Text>
+        <HStack alignItems="center" gap={2}>
+          {names.map((name) => (
+            <IconButton key={name} accessibilityLabel={name} name={name} variant="secondary" />
+          ))}
+        </HStack>
+      </VStack>
     </VStack>
   );
 }

@@ -200,7 +200,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'chartLine',
     'advancedTradeProduct',
     'candlesticks',
-    'orderBook'
+    'orderBook',
+    'advanced'
   ],
   'math': [
     'trading',
@@ -781,7 +782,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'securityShield',
     'shield',
     'protection',
-    'shieldOutline'
+    'shieldOutline',
+    'standWithCrypto'
   ],
   'protection': [
     'securityShield',
@@ -813,7 +815,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'shield',
     'safe',
     'protection',
-    'shieldOutline'
+    'shieldOutline',
+    'standWithCrypto'
   ],
   'security': [
     'securityShield',
@@ -825,7 +828,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'protection',
     'key',
     'securityKey',
-    'shieldOutline'
+    'shieldOutline',
+    'standWithCrypto'
   ],
   'invoice': [
     'invoice'
@@ -1026,7 +1030,10 @@ export const descriptionMap: Record<string, IconName[]> = {
     'column',
     'caretExpand',
     'caretCollapse',
-    'learningCenter'
+    'learningCenter',
+    'predictions',
+    'inviteFriends',
+    'advisor'
   ],
   'profile': [
     'account',
@@ -1099,11 +1106,13 @@ export const descriptionMap: Record<string, IconName[]> = {
     'bookmark'
   ],
   'gift box': [
-    'giftBox'
+    'giftBox',
+    'rewards'
   ],
   'present': [
     'giftBox',
-    'giftCard'
+    'giftCard',
+    'rewards'
   ],
   'rewards': [
     'giftBox',
@@ -1115,35 +1124,44 @@ export const descriptionMap: Record<string, IconName[]> = {
     'medal',
     'ribbon',
     'starTrophy',
-    'starAward'
+    'starAward',
+    'rewards'
   ],
   'joy': [
-    'giftBox'
+    'giftBox',
+    'rewards'
   ],
   'contribution': [
-    'giftBox'
+    'giftBox',
+    'rewards'
   ],
   'perk': [
-    'giftBox'
+    'giftBox',
+    'rewards'
   ],
   'giving': [
-    'giftBox'
+    'giftBox',
+    'rewards'
   ],
   '🎁': [
     'giftBox',
-    'giftCard'
+    'giftCard',
+    'rewards'
   ],
   '🎉': [
     'giftBox',
-    'giftCard'
+    'giftCard',
+    'rewards'
   ],
   '🎊': [
     'giftBox',
-    'giftCard'
+    'giftCard',
+    'rewards'
   ],
   '🥳': [
     'giftBox',
-    'giftCard'
+    'giftCard',
+    'rewards'
   ],
   'support': [
     'support',
@@ -1278,7 +1296,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'cashSingaporeDollar',
     'cashCanadianDollar',
     'payments',
-    'earnRewards'
+    'earnRewards',
+    'creditCard'
   ],
   'transfer': [
     'directDeposit',
@@ -1307,7 +1326,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'directDepositIcon',
     'card',
     'payProduct',
-    'payments'
+    'payments',
+    'creditCard'
   ],
   '💰': [
     'directDeposit',
@@ -1874,23 +1894,27 @@ export const descriptionMap: Record<string, IconName[]> = {
     'identityCard',
     'card',
     'coinbaseCardProduct',
-    'coinbaseOneCard'
+    'coinbaseOneCard',
+    'creditCard'
   ],
   'credit': [
     'paymentCard',
     'wireTransfer',
-    'card'
+    'card',
+    'creditCard'
   ],
   'debit': [
     'paymentCard',
-    'card'
+    'card',
+    'creditCard'
   ],
   '💳': [
     'paymentCard',
     'sofort',
     'paypal',
     'card',
-    'ideal'
+    'ideal',
+    'creditCard'
   ],
   '🏦': [
     'paymentCard',
@@ -1898,12 +1922,14 @@ export const descriptionMap: Record<string, IconName[]> = {
     'paypal',
     'card',
     'bank',
-    'ideal'
+    'ideal',
+    'creditCard'
   ],
   '🏧': [
     'paymentCard',
     'card',
-    'bank'
+    'bank',
+    'creditCard'
   ],
   'qr code': [
     'scanQrCode',
@@ -4107,7 +4133,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'derivativesProduct',
     'apiPlug',
     'candlesticks',
-    'orderBook'
+    'orderBook',
+    'advanced'
   ],
   'buy': [
     'crossTrade'
@@ -4939,7 +4966,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'coinbaseOneLogo',
     'developerAPIProduct',
     'folderOpen',
-    'verifiedPools'
+    'verifiedPools',
+    'borrow'
   ],
   'icon': [
     'base',
@@ -4993,7 +5021,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'helpCenterQuestionMark',
     'borrowProduct',
     'developerPlatformProduct',
-    'developerAPIProduct'
+    'developerAPIProduct',
+    'advanced',
+    'borrow'
   ],
   'key': [
     'key',
@@ -5073,10 +5103,12 @@ export const descriptionMap: Record<string, IconName[]> = {
     'candlesticks',
     'orderBook',
     'plusMinus',
-    'addModuleUI'
+    'addModuleUI',
+    'advanced'
   ],
   'advance': [
-    'advancedTradeProduct'
+    'advancedTradeProduct',
+    'advanced'
   ],
   'C': [
     'coinbase'
@@ -5181,7 +5213,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   'borrow': [
     'borrowProduct',
     'leadCoin',
-    'leadChart'
+    'leadChart',
+    'borrow'
   ],
   'ui': [
     'crypto',
@@ -5451,10 +5484,12 @@ export const descriptionMap: Record<string, IconName[]> = {
     'bellPlus'
   ],
   'trust': [
-    'shieldOutline'
+    'shieldOutline',
+    'standWithCrypto'
   ],
   'ouline': [
-    'shieldOutline'
+    'shieldOutline',
+    'standWithCrypto'
   ],
   'google': [
     'googleLogo'

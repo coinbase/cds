@@ -118,7 +118,8 @@ export type CartesianChartBaseProps = Omit<BoxBaseProps, 'fontFamily'> &
      */
     layout?: CartesianChartLayout;
     /**
-     * Whether to animate the chart.
+     * Whether to animate the chart. When `false`, lines render via a lightweight static path
+     * (a cheap rectangular clip) suited to non-interactive charts like row sparklines.
      * @default true
      */
     animate?: boolean;

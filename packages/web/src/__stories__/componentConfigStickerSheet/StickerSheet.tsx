@@ -30,7 +30,6 @@ import { ModalExample } from './examples/ModalExample';
 import { PaginationExample } from './examples/Pagination';
 import { RollingNumberExample } from './examples/RollingNumber';
 import { SearchExample } from './examples/Search';
-import { SegmentedTabsExample } from './examples/SegmentedTabs';
 import { SelectExample } from './examples/Select';
 import { SelectChipExample } from './examples/SelectChip';
 import { StepperHorizontalBasicExample } from './examples/StepperHorizontal';
@@ -63,14 +62,9 @@ export const StickerSheet = memo(() => {
             <ControlsExample />
           </Container>
 
-          <VStack gap={2}>
-            <Container title="Segmented Tabs">
-              <SegmentedTabsExample />
-            </Container>
-            <Container title="Tabs">
-              <TabsExample />
-            </Container>
-          </VStack>
+          <Container title="Tabs">
+            <TabsExample />
+          </Container>
 
           <HStack gap={2}>
             <Container width={160}>

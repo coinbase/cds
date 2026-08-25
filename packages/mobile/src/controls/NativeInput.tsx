@@ -21,7 +21,7 @@ export type NativeInputProps = {
    * Decreases the padding within the input element
    * @default false
    * @deprecated Use style object instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
+   * @deprecationExpectedRemoval v11
    */
   compact?: boolean;
   /**

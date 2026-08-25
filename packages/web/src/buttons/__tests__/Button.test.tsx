@@ -192,6 +192,18 @@ describe('Button', () => {
     });
   });
 
+  it('forwards textTransform to internal text', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button textTransform="uppercase">Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByText('Child').parentElement).toHaveStyle({
+      '--text-textTransform': 'uppercase',
+    });
+  });
+
   it('applies Button defaults from ComponentConfigProvider', () => {
     render(
       <DefaultThemeProvider>

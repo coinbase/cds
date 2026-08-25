@@ -135,6 +135,7 @@ export const DotCount = memo((_props: DotCountProps) => {
     fontSize,
     fontWeight,
     lineHeight,
+    textTransform,
     overflow = 'hidden',
     ...props
   } = mergedProps;
@@ -145,8 +146,13 @@ export const DotCount = memo((_props: DotCountProps) => {
     overlap,
   );
 
-  const opacityAnimatedValue = useSharedValue(opacityEnter.fromValue);
-  const scaleAnimatedValue = useSharedValue(scaleEnter.fromValue);
+  // When mounting with a count already present, initialize to the visible state so
+  // the badge renders immediately. The enter reaction only fires on a 0->N transition,
+  // which never happens on first mount and may not fire on mount in release builds.
+  const opacityAnimatedValue = useSharedValue(
+    count > 0 ? opacityEnter.toValue : opacityEnter.fromValue,
+  );
+  const scaleAnimatedValue = useSharedValue(count > 0 ? scaleEnter.toValue : scaleEnter.fromValue);
   const [shouldUnmount, setShouldUnmount] = useState(count === 0);
   const [countInternal, setCountInternal] = useState(count);
   const prevCount = usePreviousValue<number>(count);
@@ -251,6 +257,7 @@ export const DotCount = memo((_props: DotCountProps) => {
               fontWeight={fontWeight}
               lineHeight={lineHeight}
               style={styles?.text}
+              textTransform={textTransform}
             >
               {displayCount}
             </Text>

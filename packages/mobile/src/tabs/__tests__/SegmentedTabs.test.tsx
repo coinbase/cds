@@ -151,6 +151,28 @@ describe('SegmentedTabs', () => {
     expect(screen.getByTestId('custom-indicator')).toBeTruthy();
   });
 
+  it('renders with equalWidth without error', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} equalWidth />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toBeTruthy();
+  });
+
+  it('equalWidth alignSelf can be overridden', () => {
+    render(
+      <DefaultThemeProvider>
+        <TabsContext.Provider value={mockApi}>
+          <SegmentedTabs {...exampleProps} alignSelf="flex-start" equalWidth />
+        </TabsContext.Provider>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(TEST_ID)).toBeTruthy();
+  });
+
   it('forwards ref correctly', () => {
     const ref = React.createRef<View>();
     render(

@@ -35,6 +35,11 @@ export type TextHorizontalAlignment = 'left' | 'center' | 'right';
  */
 export type TextVerticalAlignment = 'top' | 'middle' | 'bottom';
 
+/**
+ * Which axes ChartText may nudge labels along to stay in bounds.
+ */
+export type ChartTextRepositionAxes = 'x' | 'y' | 'both' | 'none';
+
 export type ChartTextBaseProps = SharedProps & {
   /**
    * The text color.
@@ -48,11 +53,22 @@ export type ChartTextBaseProps = SharedProps & {
   background?: string;
   /**
    * Whether the text should have an elevated appearance with a shadow.
-   * @default false
    */
   elevated?: boolean;
   /**
-   * When true, disables automatic repositioning to fit within bounds.
+   * Which axes to reposition labels on when they would overflow bounds.
+   * @default 'both'
+   */
+  repositionAxes?: ChartTextRepositionAxes;
+  /**
+   * Disables automatic repositioning to fit within bounds.
+   *
+   * @note `true` is equivalent to `repositionAxes='none'`, `false`/omit equals `repositionAxes='both'`.
+   *
+   * @deprecated Use `repositionAxes` instead
+   *
+   * This will be removed in a future major release.
+   * @deprecationExpectedRemoval v11
    */
   disableRepositioning?: boolean;
   /**
@@ -94,12 +110,12 @@ export type ChartTextProps = ChartTextBaseProps &
     children: ChartTextChildren;
     /**
      * The desired x position in SVG pixels.
-     * @note Text will be automatically positioned to fit within bounds unless `disableRepositioning` is true.
+     * @note Text will be automatically positioned to fit within bounds based on `repositionAxes`.
      */
     x: number;
     /**
      * The desired y position in SVG pixels.
-     * @note Text will be automatically positioned to fit within bounds unless `disableRepositioning` is true.
+     * @note Text will be automatically positioned to fit within bounds based on `repositionAxes`.
      */
     y: number;
     /**
@@ -167,7 +183,8 @@ export const ChartText = memo<ChartTextProps>(
     verticalAlignment = 'middle',
     dx,
     dy,
-    disableRepositioning,
+    disableRepositioning = false,
+    repositionAxes = disableRepositioning ? 'none' : 'both',
     bounds,
     opacity,
     testID,
@@ -194,7 +211,7 @@ export const ChartText = memo<ChartTextProps>(
 
     const textRef = useRef<SVGTextElement | null>(null);
     const [textBBox, setTextBBox] = useState<Rect | null>(null);
-    const isDimensionsReady = disableRepositioning || textRef.current !== null;
+    const isDimensionsReady = repositionAxes === 'none' || textRef.current !== null;
 
     const backgroundRectDimensions = useMemo(() => {
       if (!textBBox) {
@@ -211,9 +228,8 @@ export const ChartText = memo<ChartTextProps>(
     }, [textBBox, insetInput]);
 
     const overflowAmount = useMemo(() => {
-      if (disableRepositioning) {
-        return { x: 0, y: 0 };
-      }
+      const repositionX = repositionAxes === 'both' || repositionAxes === 'x';
+      const repositionY = repositionAxes === 'both' || repositionAxes === 'y';
 
       const parentBounds = bounds ?? fullChartBounds;
       if (
@@ -225,35 +241,39 @@ export const ChartText = memo<ChartTextProps>(
         return { x: 0, y: 0 };
       }
 
-      let x = 0;
-      let y = 0;
+      let nextX = 0;
+      let nextY = 0;
 
-      if (backgroundRectDimensions.x < parentBounds.x) {
-        x = parentBounds.x - backgroundRectDimensions.x; // positive = shift right
-      } else if (
-        backgroundRectDimensions.x + backgroundRectDimensions.width >
-        parentBounds.x + parentBounds.width
-      ) {
-        x =
-          parentBounds.x +
-          parentBounds.width -
-          (backgroundRectDimensions.x + backgroundRectDimensions.width); // negative = shift left
+      if (repositionX) {
+        if (backgroundRectDimensions.x < parentBounds.x) {
+          nextX = parentBounds.x - backgroundRectDimensions.x;
+        } else if (
+          backgroundRectDimensions.x + backgroundRectDimensions.width >
+          parentBounds.x + parentBounds.width
+        ) {
+          nextX =
+            parentBounds.x +
+            parentBounds.width -
+            (backgroundRectDimensions.x + backgroundRectDimensions.width);
+        }
       }
 
-      if (backgroundRectDimensions.y < parentBounds.y) {
-        y = parentBounds.y - backgroundRectDimensions.y; // positive = shift down
-      } else if (
-        backgroundRectDimensions.y + backgroundRectDimensions.height >
-        parentBounds.y + parentBounds.height
-      ) {
-        y =
-          parentBounds.y +
-          parentBounds.height -
-          (backgroundRectDimensions.y + backgroundRectDimensions.height); // negative = shift up
+      if (repositionY) {
+        if (backgroundRectDimensions.y < parentBounds.y) {
+          nextY = parentBounds.y - backgroundRectDimensions.y;
+        } else if (
+          backgroundRectDimensions.y + backgroundRectDimensions.height >
+          parentBounds.y + parentBounds.height
+        ) {
+          nextY =
+            parentBounds.y +
+            parentBounds.height -
+            (backgroundRectDimensions.y + backgroundRectDimensions.height);
+        }
       }
 
-      return { x, y };
-    }, [backgroundRectDimensions, fullChartBounds, bounds, disableRepositioning]);
+      return { x: nextX, y: nextY };
+    }, [backgroundRectDimensions, fullChartBounds, bounds, repositionAxes]);
 
     // Compose the final reported rect including any overflow translation applied
     const reportedRect = useMemo(() => {

@@ -202,6 +202,60 @@ describe('Switch.test', () => {
     });
   });
 
+  it('applies bgPositive background when variant is positive and checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch checked onChange={jest.fn()} testID="test-test-id" variant="positive" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-test-id')).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgPositive,
+    });
+  });
+
+  it('applies bgNegative background when variant is negative and checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch checked onChange={jest.fn()} testID="test-test-id" variant="negative" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-test-id')).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgNegative,
+    });
+  });
+
+  it('does not apply variant background when unchecked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch onChange={jest.fn()} testID="test-test-id" variant="negative" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-test-id')).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgTertiary,
+    });
+  });
+
+  it('background prop takes priority over variant when checked', () => {
+    render(
+      <DefaultThemeProvider>
+        <Switch
+          background="bgWarning"
+          checked
+          onChange={jest.fn()}
+          testID="test-test-id"
+          variant="positive"
+        />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-test-id')).toHaveStyle({
+      backgroundColor: defaultTheme.lightColor.bgWarning,
+    });
+  });
+
   it('applies styles.root', () => {
     const { toJSON } = render(
       <DefaultThemeProvider>

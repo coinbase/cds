@@ -35,6 +35,21 @@ describe('DotCount', () => {
     expect(screen.getByText('1')).toBeTruthy();
   });
 
+  it('forwards textTransform to the count text', () => {
+    render(
+      <MockDotCountWithTheme
+        count={1}
+        testID={DOTCOUNT_TESTID}
+        textTransform="uppercase"
+        variant="negative"
+      />,
+    );
+
+    expect(screen.getByText('1')).toHaveStyle({
+      '--text-textTransform': 'uppercase',
+    });
+  });
+
   it('renders correct count when count  0', () => {
     render(<MockDotCountWithTheme count={0} variant="negative" />);
 

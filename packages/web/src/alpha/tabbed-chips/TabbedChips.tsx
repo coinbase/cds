@@ -34,6 +34,7 @@ const scrollContainerCss = css`
 const DefaultTabComponent = <TabId extends string = string>({
   label = '',
   id,
+  Component: _Component,
   activeBackground,
   activeColor,
   color,
@@ -60,10 +61,10 @@ const DefaultTabComponent = <TabId extends string = string>({
   return (
     <MediaChip
       ref={chipRef}
+      active={isActive && !activeBackground}
       aria-selected={isActive}
       background={isActive && activeBackground ? activeBackground : undefined}
       color={isActive && activeColor ? activeColor : color}
-      invertColorScheme={isActive && !activeBackground}
       onClick={handleClick}
       role="tab"
       width="max-content"
@@ -86,11 +87,14 @@ export type TabbedChipProps<TabId extends string = string> = Omit<
     Component?: React.FC<Omit<ChipProps, 'children'> & TabValue<TabId>>;
     /**
      * Custom background color applied to the chip when it is the active tab.
-     * When set, takes precedence over the default `invertColorScheme` behavior.
+     * Skips color-scheme inversion and paints this token directly. Any `start`,
+     * `end`, or custom tab content must set explicit colors to match.
      */
     activeBackground?: MediaChipBaseProps['background'];
     /**
      * Custom foreground color applied to the chip label when it is the active tab.
+     * Skips color-scheme inversion when set. Any `start`, `end`, or custom tab
+     * content must set explicit colors to match.
      */
     activeColor?: MediaChipBaseProps['color'];
   };
@@ -111,7 +115,7 @@ export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
    * Turn on to use a compact Chip component for each tab.
    * @default false
    * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
+   * @deprecationExpectedRemoval v11
    */
   compact?: boolean;
   /**

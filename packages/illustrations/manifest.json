@@ -1,6 +1,6 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-08-07T20:06:50.065Z",
+  "lastUpdated": "2026-08-12T17:36:20.703Z",
   "colors": {
     "light": [
       {
@@ -23450,23 +23450,23 @@
     "12487:70": {
       "type": "pictogram",
       "name": "cb1BankTransfers",
-      "hash": "iEiR9AIWif4SoHi1MLvsG5Mr4w+GdYDm9wuQ/bllvPg=",
+      "hash": "ef3slXnMCOzEICeqy9PulqlS3V5jLtXBYzjjYkGxo/A=",
       "width": 48,
-      "height": 40,
+      "height": 48,
       "description": "",
       "createdAt": "2024-10-25T15:28:55.715Z",
-      "lastUpdated": "2026-06-08T19:45:05.815Z",
+      "lastUpdated": "2026-08-10T17:27:55.423Z",
       "outputs": {
-        "svgLight": "./pictogram/svg/light/cb1BankTransfers-2.svg",
-        "svgDark": "./pictogram/svg/dark/cb1BankTransfers-2.svg",
-        "svgJsLight": "./pictogram/svgJs/cjs/light/cb1BankTransfers-2.js",
-        "svgJsDark": "./pictogram/svgJs/cjs/dark/cb1BankTransfers-2.js",
-        "pngLight": "./pictogram/png/light/cb1BankTransfers-2.png",
-        "pngDark": "./pictogram/png/dark/cb1BankTransfers-2.png",
-        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/cb1BankTransfers-2.js",
-        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/cb1BankTransfers-2.js"
+        "svgLight": "./pictogram/svg/light/cb1BankTransfers-3.svg",
+        "svgDark": "./pictogram/svg/dark/cb1BankTransfers-3.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/cb1BankTransfers-3.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/cb1BankTransfers-3.js",
+        "pngLight": "./pictogram/png/light/cb1BankTransfers-3.png",
+        "pngDark": "./pictogram/png/dark/cb1BankTransfers-3.png",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/cb1BankTransfers-3.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/cb1BankTransfers-3.js"
       },
-      "version": 2
+      "version": 3
     },
     "12487:86": {
       "type": "spotRectangle",
@@ -33818,6 +33818,69 @@
         "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/cbzec-0.js",
         "pngLight": "./heroSquare/png/light/cbzec-0.png",
         "pngDark": "./heroSquare/png/dark/cbzec-0.png"
+      },
+      "version": 0
+    },
+    "31240:265": {
+      "type": "pictogram",
+      "name": "eurTrade",
+      "hash": "OyIklSW0GQW1OpdvCJQbvWQcTV3JxtxWUdY+w/47+oY=",
+      "width": 48,
+      "height": 48,
+      "description": "pictogram, coin, crypto learning, rewards, bitcoin, btc, satoshi, giveaway, free, competition, eur, europe",
+      "createdAt": "2026-08-10T17:27:55.403Z",
+      "lastUpdated": "2026-08-10T17:27:55.403Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/eurTrade-0.svg",
+        "svgDark": "./pictogram/svg/dark/eurTrade-0.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/eurTrade-0.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/eurTrade-0.js",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/eurTrade-0.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/eurTrade-0.js",
+        "pngLight": "./pictogram/png/light/eurTrade-0.png",
+        "pngDark": "./pictogram/png/dark/eurTrade-0.png"
+      },
+      "version": 0
+    },
+    "31240:266": {
+      "type": "pictogram",
+      "name": "usdTrade",
+      "hash": "wIdir8/XgJUNrrxUydu55m2j5SlJiFJmxh/PQR7x6/w=",
+      "width": 48,
+      "height": 48,
+      "description": "pictogram, coin, crypto learning, rewards, bitcoin, btc, satoshi, giveaway, free, competition, usd, united, states, dollar",
+      "createdAt": "2026-08-10T17:27:55.392Z",
+      "lastUpdated": "2026-08-10T17:27:55.392Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/usdTrade-0.svg",
+        "svgDark": "./pictogram/svg/dark/usdTrade-0.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/usdTrade-0.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/usdTrade-0.js",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/usdTrade-0.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/usdTrade-0.js",
+        "pngLight": "./pictogram/png/light/usdTrade-0.png",
+        "pngDark": "./pictogram/png/dark/usdTrade-0.png"
+      },
+      "version": 0
+    },
+    "31240:267": {
+      "type": "pictogram",
+      "name": "chfTrade",
+      "hash": "h6SObvJgq27bLIJfhctGXIDWZIogo7DFUVRvFg4Y2uA=",
+      "width": 48,
+      "height": 48,
+      "description": "pictogram, coin, crypto learning, rewards, bitcoin, btc, satoshi, giveaway, free, competition, swiss, switzerland, franc, chf",
+      "createdAt": "2026-08-10T17:27:55.409Z",
+      "lastUpdated": "2026-08-10T17:27:55.409Z",
+      "outputs": {
+        "svgLight": "./pictogram/svg/light/chfTrade-0.svg",
+        "svgDark": "./pictogram/svg/dark/chfTrade-0.svg",
+        "svgJsLight": "./pictogram/svgJs/cjs/light/chfTrade-0.js",
+        "svgJsDark": "./pictogram/svgJs/cjs/dark/chfTrade-0.js",
+        "svgJsThemed": "./pictogram/svgJs/cjs/themeable/chfTrade-0.js",
+        "svgEsmThemed": "./pictogram/svgJs/esm/themeable/chfTrade-0.js",
+        "pngLight": "./pictogram/png/light/chfTrade-0.png",
+        "pngDark": "./pictogram/png/dark/chfTrade-0.png"
       },
       "version": 0
     }

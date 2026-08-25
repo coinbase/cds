@@ -5,9 +5,10 @@ import {
   StatusBar,
   StyleSheet,
   useWindowDimensions,
+  View,
 } from 'react-native';
 import type { ModalProps as RNModalProps, StyleProp, ViewStyle } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { usePreviousValue } from '@coinbase/cds-common/hooks/usePreviousValue';
 import { ModalContext, type ModalContextValue } from '@coinbase/cds-common/overlays/ModalContext';
 import {
@@ -152,6 +153,22 @@ export const Modal = memo(
     const [internalVisible, setInternalVisible] = useState(visible);
     const prevVisible = usePreviousValue(visible);
     const { width, height } = useWindowDimensions();
+    // RN Modal is a separate native surface; SafeAreaView often reports 0 insets.
+    // useSafeAreaInsets() reads the root provider (device insets).
+    const insets = useSafeAreaInsets();
+    const safeAreaStyle = useMemo(() => {
+      const androidStatusBarHeight = Platform.OS === 'android' ? (StatusBar.currentHeight ?? 0) : 0;
+      return [
+        styles.safeAreaContainer,
+        {
+          paddingTop: Math.max(insets.top, androidStatusBarHeight),
+          paddingBottom: insets.bottom,
+          paddingLeft: insets.left,
+          paddingRight: insets.right,
+        },
+        customStyles?.safeArea,
+      ];
+    }, [customStyles?.safeArea, insets.bottom, insets.left, insets.right, insets.top]);
 
     const handleClose = useCallback(() => {
       animateOut.start(({ finished }) => {
@@ -245,11 +262,11 @@ export const Modal = memo(
             style={[{ transform: [{ scale }], opacity }, customStyles?.modal]}
             width={width}
           >
-            <SafeAreaView style={[styles.safeAreaContainer, customStyles?.safeArea]}>
+            <View style={safeAreaStyle}>
               <ModalContext.Provider value={modalData}>
                 {typeof children === 'function' ? children(renderChildrenProps) : children}
               </ModalContext.Provider>
-            </SafeAreaView>
+            </View>
           </VStack>
         </RNModal>
       </OverlayContentContext.Provider>
@@ -260,6 +277,5 @@ export const Modal = memo(
 const styles = StyleSheet.create({
   safeAreaContainer: {
     flex: 1,
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
 });

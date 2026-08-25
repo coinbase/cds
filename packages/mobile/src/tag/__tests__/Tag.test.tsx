@@ -141,6 +141,19 @@ describe('Tag', () => {
     expect(screen.getByTestId('custom-start')).toBeDefined();
   });
 
+  it('forwards textTransform to the text', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="blue" testID={TEST_ID} textTransform="uppercase">
+          Tag
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(`${TEST_ID}--text`)).toHaveStyle({
+      textTransform: 'uppercase',
+    });
+  });
+
   it('renders with a custom end node', () => {
     render(
       <DefaultThemeProvider>

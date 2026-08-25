@@ -63,6 +63,7 @@ export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = 
     fontSize,
     fontWeight,
     lineHeight,
+    textTransform,
     title,
     onBackButtonClick,
     backAccessibilityLabel,
@@ -103,6 +104,7 @@ export const ModalHeader: React.FC<React.PropsWithChildren<ModalHeaderProps>> = 
               fontSize={fontSize}
               fontWeight={fontWeight}
               lineHeight={lineHeight}
+              textTransform={textTransform}
             >
               {title}
             </Text>

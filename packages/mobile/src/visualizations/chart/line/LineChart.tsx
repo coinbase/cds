@@ -96,6 +96,10 @@ export type LineChartProps = LineChartBaseProps &
     scrubberAccessibilityLabelStep?: number;
   };
 
+/**
+ * A line chart built on `CartesianChart`. For non-interactive usage (e.g. row sparklines), pass
+ * `animate={false}` for a lightweight static render (cheap rectangular clip, no entrance animation).
+ */
 export const LineChart = memo(
   ({
     ref,

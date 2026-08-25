@@ -21,6 +21,7 @@ module.exports = {
       'Components/Chart/CartesianChart: Transitions',
       // Network font makes pixels non-deterministic across runs
       'Icons/createIcon',
+      'Icons/IconGlyphSourceProvider',
       // Visreg tested in other story, this is for manual testing
       'Components/Chart/CartesianChart: Advanced',
     ],

@@ -490,7 +490,7 @@ const Interactive = () => {
         compact
         accessibilityLabel={`${isEmphasized ? 'Remove emphasis from' : 'Emphasize'} ${label} series`}
         aria-pressed={isEmphasized}
-        invertColorScheme={isEmphasized}
+        active={isEmphasized}
         onClick={() => handleToggle(seriesId)}
         style={{
           backgroundColor: `rgb(var(${baseColor}10))`,

@@ -103,6 +103,79 @@ const processGradientStops = (
   return normalizedStops;
 };
 
+const GRADIENT_OFFSET_EPSILON = 1e-10;
+
+/**
+ * Returns stop indices and blend progress for a data value.
+ * When startIndex === endIndex, use that stop directly; otherwise blend with t.
+ */
+const getGradientStopInterpolation = (
+  stops: GradientStop[],
+  dataValue: number,
+  scale: ChartScaleFunction,
+): [number, number, number] | undefined => {
+  if (stops.length === 0) return;
+
+  // Use scale to map values to positions (handles log scales correctly)
+  // For numeric scales: scale(value) returns pixel position
+  // We normalize these positions to 0-1 based on the range
+  const scaleRange = scale.range();
+  const [rangeMin, rangeMax] = Array.isArray(scaleRange)
+    ? (scaleRange as [number, number])
+    : [scaleRange, scaleRange]; // fallback for band scales
+
+  const rangeSpan = Math.abs(rangeMax - rangeMin);
+  if (rangeSpan === 0) return [0, 0, 0];
+
+  // Map dataValue through scale to get position
+  const dataPosition = scale(dataValue);
+  if (dataPosition === undefined) return [0, 0, 0];
+
+  // Normalize to 0-1 based on range
+  const normalizedValue = Math.max(0, Math.min(1, Math.abs(dataPosition - rangeMin) / rangeSpan));
+
+  // stops already have normalized offsets (0-1), use them directly
+  const positions = stops.map((stop) => stop.offset);
+
+  // Find which segment we're in
+  if (normalizedValue < positions[0]) return [0, 0, 0];
+
+  const lastIndex = stops.length - 1;
+  if (normalizedValue >= positions[lastIndex]) return [lastIndex, lastIndex, 0];
+
+  // Check if normalizedValue matches any stop offset exactly (for hard transitions)
+  for (let i = 0; i < stops.length; i++) {
+    if (Math.abs(normalizedValue - stops[i].offset) < GRADIENT_OFFSET_EPSILON) {
+      // Found exact match - check if there are multiple stops at this offset (hard transition)
+      // Use the LAST stop at this offset for hard transitions
+      let lastIndexAtOffset = i;
+      while (
+        lastIndexAtOffset + 1 < stops.length &&
+        Math.abs(stops[lastIndexAtOffset + 1].offset - stops[i].offset) < GRADIENT_OFFSET_EPSILON
+      ) {
+        lastIndexAtOffset++;
+      }
+      return [lastIndexAtOffset, lastIndexAtOffset, 0];
+    }
+  }
+
+  // Find the two stops to mix based on normalized positions
+  for (let i = 0; i < positions.length - 1; i++) {
+    const start = positions[i];
+    const end = positions[i + 1];
+
+    if (normalizedValue >= start && normalizedValue <= end) {
+      if (end === start) return [i, i, 0];
+
+      const t = (normalizedValue - start) / (end - start);
+      return [i, i + 1, t];
+    }
+  }
+
+  // If we didn't reach any to be mixed, return the last stop
+  return [lastIndex, lastIndex, 0];
+};
+
 /**
  * Evaluates the color at a specific data value based on the gradient stops, ignoring opacity.
  * @param stops - The gradient stops configuration
@@ -115,70 +188,43 @@ export const evaluateGradientAtValue = (
   dataValue: number,
   scale: ChartScaleFunction,
 ): string | undefined => {
-  if (stops.length === 0) return;
+  const interpolation = getGradientStopInterpolation(stops, dataValue, scale);
+  if (!interpolation) return;
+
+  const [startIndex, endIndex, t] = interpolation;
 
   // Use srgb color space to match our linearGradient which uses srgb color space
   // https://www.w3.org/TR/SVG11/painting.html#ColorInterpolationProperty
   const colorSpace = 'srgb';
 
-  // Use scale to map values to positions (handles log scales correctly)
-  // For numeric scales: scale(value) returns pixel position
-  // We normalize these positions to 0-1 based on the range
-  const scaleRange = scale.range();
-  const [rangeMin, rangeMax] = Array.isArray(scaleRange)
-    ? (scaleRange as [number, number])
-    : [scaleRange, scaleRange]; // fallback for band scales
+  if (startIndex === endIndex) return stops[startIndex].color;
 
-  const rangeSpan = Math.abs(rangeMax - rangeMin);
-  if (rangeSpan === 0) return stops[0].color;
+  // Mix colors between the resolved stops
+  return `color-mix(in ${colorSpace}, ${stops[endIndex].color} ${t * 100}%, ${stops[startIndex].color})`;
+};
 
-  // Map dataValue through scale to get position
-  const dataPosition = scale(dataValue);
-  if (dataPosition === undefined) return stops[0].color;
+/**
+ * Evaluates the opacity at a specific data value based on gradient stops.
+ * Returns undefined when no stops define opacity.
+ */
+export const evaluateGradientOpacityAtValue = (
+  stops: GradientStop[],
+  dataValue: number,
+  scale: ChartScaleFunction,
+): number | undefined => {
+  if (stops.length === 0) return;
+  if (stops.every((stop) => (stop.opacity ?? 1) === 1)) return;
 
-  // Normalize to 0-1 based on range
-  const normalizedValue = Math.max(0, Math.min(1, Math.abs(dataPosition - rangeMin) / rangeSpan));
+  const interpolation = getGradientStopInterpolation(stops, dataValue, scale);
+  if (!interpolation) return;
 
-  // stops already have normalized offsets (0-1), use them directly
-  const positions = stops.map((stop) => stop.offset);
+  const [startIndex, endIndex, t] = interpolation;
+  const startOpacity = stops[startIndex].opacity ?? 1;
 
-  // Find which segment we're in
-  if (normalizedValue < positions[0]) {
-    return stops[0].color;
-  }
-  if (normalizedValue >= positions[positions.length - 1]) {
-    return stops[stops.length - 1].color;
-  }
+  if (startIndex === endIndex) return startOpacity;
 
-  // Check if normalizedValue matches any stop offset exactly (for hard transitions)
-  for (let i = 0; i < stops.length; i++) {
-    if (Math.abs(normalizedValue - stops[i].offset) < 1e-10) {
-      // Found exact match - check if there are multiple stops at this offset (hard transition)
-      // Use the LAST color at this offset for hard transitions
-      let lastIndexAtOffset = i;
-      while (
-        lastIndexAtOffset + 1 < stops.length &&
-        Math.abs(stops[lastIndexAtOffset + 1].offset - stops[i].offset) < 1e-10
-      ) {
-        lastIndexAtOffset++;
-      }
-      return stops[lastIndexAtOffset].color;
-    }
-  }
-
-  // Find the two colors to mix based on normalized positions
-  for (let i = 0; i < positions.length - 1; i++) {
-    const start = positions[i];
-    const end = positions[i + 1];
-
-    if (normalizedValue >= start && normalizedValue <= end) {
-      const segmentProgress = (normalizedValue - start) / (end - start);
-      return `color-mix(in ${colorSpace}, ${stops[i + 1].color} ${segmentProgress * 100}%, ${stops[i].color})`;
-    }
-  }
-
-  // If we didn't reach any to be mixed, return the last color
-  return stops[stops.length - 1].color;
+  const endOpacity = stops[endIndex].opacity ?? 1;
+  return startOpacity + (endOpacity - startOpacity) * t;
 };
 
 /**

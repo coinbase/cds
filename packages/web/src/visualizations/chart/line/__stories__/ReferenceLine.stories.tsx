@@ -291,11 +291,11 @@ const DraggableReferenceLine = memo(
             y={yPixel}
           />
           <ChartText
-            disableRepositioning
             color={color}
             font="label1"
             horizontalAlignment="left"
             onDimensionsChange={(dimensions) => setTextDimensions(dimensions)}
+            repositionAxes="none"
             verticalAlignment="middle"
             x={drawingArea.x + padding + dragIconSize + iconGap + trendArrowIconSize}
             y={yPixel + 1}

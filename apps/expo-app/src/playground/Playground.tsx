@@ -12,6 +12,7 @@ import { Text } from '@coinbase/cds-mobile/typography/Text';
 import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { CustomerComponentConfigScreen } from './CustomerComponentConfigScreen';
 import { ExamplesListScreen } from './ExamplesListScreen';
 import { ExamplesSearchProvider, SearchContext } from './ExamplesSearchProvider';
 import { IconSheetScreen } from './IconSheetScreen';
@@ -242,6 +243,11 @@ const PlaygroundContent = memo(
           component={IconSheetScreen}
           name="DebugIconSheet"
           options={{ title: 'Icon Sheet' }}
+        />
+        <Stack.Screen
+          component={CustomerComponentConfigScreen}
+          name="DebugCustomerComponentConfig"
+          options={{ title: 'Retail Theme / Config' }}
         />
         {exampleScreens}
       </Stack.Navigator>

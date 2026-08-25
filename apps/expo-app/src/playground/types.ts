@@ -5,6 +5,7 @@ type RouteParams = { routeKeys: string[] } | undefined;
 export type PlaygroundStackParamList = {
   DebugExamples: { routeKeys: string[] };
   DebugIconSheet: undefined;
+  DebugCustomerComponentConfig: undefined;
 } & {
   [key: string]: RouteParams;
 };

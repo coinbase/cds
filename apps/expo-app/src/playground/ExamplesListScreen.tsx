@@ -12,6 +12,11 @@ import { keyToRouteName } from './keyToRouteName';
 import type { ExamplesListScreenProps } from './types';
 
 const innerSpacingConfig: CellSpacing = { paddingX: 1 };
+const pinnedRouteKeys = ['CustomerComponentConfig'];
+// Friendly display labels for pinned route keys that don't read well as raw PascalCase.
+const pinnedRouteLabels: Record<string, string> = {
+  CustomerComponentConfig: 'Retail Theme / Config',
+};
 
 export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
   const { filter, isOpen, resetSearch, closeSearch } = useContext(SearchContext);
@@ -29,7 +34,8 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
   // Shown as a shortcut button above the filtered list when search is active.
   const exactMatch = useMemo(() => {
     if (!isOpen || filter.length === 0) return null;
-    return routeKeys.find((key) => key.toLowerCase() === filter.toLowerCase()) ?? null;
+    const searchableKeys = [...routeKeys, 'IconSheet', ...pinnedRouteKeys];
+    return searchableKeys.find((key) => key.toLowerCase() === filter.toLowerCase()) ?? null;
   }, [isOpen, filter, routeKeys]);
 
   const navigate = useCallback(
@@ -48,22 +54,28 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
         accessory="arrow"
         innerSpacing={innerSpacingConfig}
         onPress={() => navigate(item)}
-        title={item}
+        title={pinnedRouteLabels[item] ?? item}
       />
     ),
     [navigate],
   );
 
   const data = useMemo(() => {
-    const sorted = [...routeKeys, 'IconSheet'].sort().filter((key) => key !== 'Examples');
-
-    if (!isOpen || filter === '') return sorted;
-
-    return sorted.filter((key) => {
+    const filterBySearch = (key: string) => {
+      if (!isOpen || filter === '') return true;
       // Exclude the exact match from the list — it's shown as the shortcut button above.
       if (exactMatch && key === exactMatch) return false;
       return key.toLowerCase().includes(filter.toLowerCase());
-    });
+    };
+
+    const pinnedData = pinnedRouteKeys.filter(filterBySearch);
+    const sortedData = [...routeKeys, 'IconSheet']
+      .sort()
+      .filter((key) => key !== 'Examples')
+      .filter((key) => !pinnedRouteKeys.includes(key))
+      .filter(filterBySearch);
+
+    return [...pinnedData, ...sortedData];
   }, [routeKeys, isOpen, filter, exactMatch]);
 
   return (

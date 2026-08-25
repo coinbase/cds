@@ -85,7 +85,7 @@ export type NativeInputBaseProps = BoxBaseProps & {
    * Decreases the padding within the input element
    * @default false
    * @deprecated Use `padding` props instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
+   * @deprecationExpectedRemoval v11
    */
   compact?: boolean;
   /** Custom container spacing if needed. This will add to the existing spacing */

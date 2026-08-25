@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+#### 📘 Misc
+
+- Docs: correct deprecation notices referencing the incorrect CDS version.
+
 ## 1.1.0 (7/29/2026 PST)
 
 #### 🚀 Updates
