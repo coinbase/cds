@@ -805,7 +805,7 @@ const BorderCustomization = () => {
         checked={isCondensed}
         onChange={(_, nextChecked) => setIsCondensed(Boolean(nextChecked))}
       >
-        Spacing variant: {spacingVariant}
+        {`Spacing variant: ${spacingVariant}`}
       </Switch>
       <ListCell
         bordered
