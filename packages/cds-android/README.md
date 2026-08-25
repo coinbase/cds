@@ -209,19 +209,10 @@ show up immediately without a publish step.
 
 ## Cutting a release
 
-Build the AAR and attach it to a GitHub Release. There is no publish pipeline yet; this is a
-manual step.
-
-```sh
-yarn nx run cds-android:assemble
-gh release create <tag> packages/cds-android/build/outputs/aar/cds-release.aar
-```
-
-Pick a tag that cannot be confused with the npm packages' 9.x tags. Because consumers get no POM
-(see [Installing in a Compose app](#installing-in-a-compose-app)), the release notes are the only
-place they learn about dependency requirements — **state the Compose BOM floor from
-`android/gradle/libs.versions.toml` in every release**, and call out any change to `compileSdk`,
-`minSdk`, or the minimum Kotlin version.
+Publishing is manual. Follow [docs/releasing.md](docs/releasing.md) for the full checklist:
+bump the Gradle version, add a [`CHANGELOG.md`](CHANGELOG.md) entry, build the AAR, and attach
+it to a GitHub Release tagged `android-v<version>`. Do not use `yarn release` or
+`yarn bump-version`.
 
 ## Follow-ups
 

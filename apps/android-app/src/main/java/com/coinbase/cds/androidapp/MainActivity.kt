@@ -6,40 +6,34 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
-import com.coinbase.cds.components.button.Button
-import com.coinbase.cds.components.button.ButtonSize
-import com.coinbase.cds.components.button.ButtonVariant
-import com.coinbase.cds.components.slidebutton.SlideButton
-import com.coinbase.cds.components.text.Text
-import com.coinbase.cds.theme.CdsFontToken
 import com.coinbase.cds.androidapp.gallery.CdsThemeGallery
 import com.coinbase.cds.theme.CdsColorScheme
 import com.coinbase.cds.theme.CdsDefaultTheme
 import com.coinbase.cds.theme.CdsTheme
 import com.coinbase.cds.theme.CdsThemeProvider
 import com.coinbase.cds.androidapp.theme.AcmeTheme
-import kotlinx.coroutines.delay
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,9 +74,10 @@ class MainActivity : ComponentActivity() {
 }
 
 /**
- * A bespoke screen built on CDS primitives (color, space, radius, typography) plus the ported
- * [Text], [Button], and [SlideButton] components -- the rest of the layout still composes raw
- * Compose foundation building blocks the way a CDS consumer would before more component ports land.
+ * A bespoke screen built on CDS theme tokens (color, space, radius, typography). CDS components
+ * (`Text`, `Button`, `SlideButton`) are temporarily internal for the first AAR release, so this
+ * screen uses Compose Foundation primitives plus tokens — the way a consumer would until those
+ * components return to the public API.
  */
 @Composable
 fun CdsSampleScreen(
@@ -93,13 +88,13 @@ fun CdsSampleScreen(
     onShowGallery: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var slideConfirmed by remember { mutableStateOf(false) }
-    LaunchedEffect(slideConfirmed) {
-        if (slideConfirmed) {
-            delay(1500)
-            slideConfirmed = false
-        }
-    }
+    // var slideConfirmed by remember { mutableStateOf(false) }
+    // LaunchedEffect(slideConfirmed) {
+    //     if (slideConfirmed) {
+    //         delay(1500)
+    //         slideConfirmed = false
+    //     }
+    // }
 
     Box(
         modifier = modifier
@@ -115,13 +110,13 @@ fun CdsSampleScreen(
             modifier = Modifier.verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.spacedBy(CdsTheme.space.x2),
         ) {
-            Text(
+            SampleText(
                 text = "Coinbase Design System",
-                font = CdsFontToken.Title1,
+                style = CdsTheme.typography.title1,
             )
-            Text(
+            SampleText(
                 text = "Jetpack Compose port of the default theme.",
-                font = CdsFontToken.Body,
+                style = CdsTheme.typography.body,
                 color = CdsTheme.colors.fgMuted,
             )
 
@@ -133,38 +128,39 @@ fun CdsSampleScreen(
                     .padding(CdsTheme.space.x2),
             ) {
                 Column(verticalArrangement = Arrangement.spacedBy(CdsTheme.space.x1_5)) {
-                    Text(
+                    SampleText(
                         text = "Primary action surface",
-                        font = CdsFontToken.Headline,
+                        style = CdsTheme.typography.headline,
                     )
-                    Text(
+                    SampleText(
                         text = "This card's colors, spacing, corner radius, and type all come " +
                             "from CdsTheme.",
-                        font = CdsFontToken.Body,
+                        style = CdsTheme.typography.body,
                         color = CdsTheme.colors.fgMuted,
                     )
-                    Button(
+                    SampleControl(
                         text = if (darkTheme) "Switch to light theme" else "Switch to dark theme",
                         onClick = onToggleDarkTheme,
-                        variant = ButtonVariant.Primary,
-                        size = ButtonSize.M,
                     )
-                    Button(
+                    SampleControl(
                         text = if (customBrand) "Switch to default CDS theme" else "Switch to Acme brand theme",
                         onClick = onToggleBrand,
-                        variant = ButtonVariant.Tertiary,
-                        size = ButtonSize.M,
+                        emphasized = false,
                     )
-                    Button(
+                    SampleText(
                         text = "View theme gallery",
-                        onClick = onShowGallery,
-                        variant = ButtonVariant.Primary,
-                        size = ButtonSize.M,
-                        transparent = true,
+                        style = CdsTheme.typography.headline,
+                        color = CdsTheme.colors.fgPrimary,
+                        modifier = Modifier
+                            .clickable(onClick = onShowGallery)
+                            .padding(vertical = CdsTheme.space.x0_5),
                     )
                 }
             }
 
+            // CDS components (Text / Button / SlideButton) are temporarily internal for the first
+            // AAR release. Restore this gallery when they return to the public API.
+            /*
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -206,7 +202,41 @@ fun CdsSampleScreen(
                     )
                 }
             }
+            */
         }
+    }
+}
+
+/** Theme-token text. CDS [com.coinbase.cds.components.text.Text] is temporarily internal. */
+@Composable
+private fun SampleText(
+    text: String,
+    style: TextStyle,
+    modifier: Modifier = Modifier,
+    color: Color = CdsTheme.colors.fg,
+) {
+    BasicText(text = text, modifier = modifier, style = style.copy(color = color))
+}
+
+/** Theme-token control. CDS [com.coinbase.cds.components.button.Button] is temporarily internal. */
+@Composable
+private fun SampleControl(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    emphasized: Boolean = true,
+) {
+    val container = if (emphasized) CdsTheme.colors.bgPrimary else CdsTheme.colors.bgTertiary
+    val content = if (emphasized) CdsTheme.colors.fgInverse else CdsTheme.colors.fg
+    Box(
+        modifier = modifier
+            .fillMaxWidth()
+            .clip(RoundedCornerShape(CdsTheme.borderRadius.radius900))
+            .background(container)
+            .clickable(onClick = onClick)
+            .padding(horizontal = CdsTheme.space.x3, vertical = CdsTheme.space.x1_5),
+    ) {
+        SampleText(text = text, style = CdsTheme.typography.headline, color = content)
     }
 }
 
@@ -258,6 +288,9 @@ fun CdsThemeGalleryPreview() {
     CdsThemeGallery(theme = CdsDefaultTheme, colorScheme = CdsColorScheme.Light)
 }
 
+// CDS Button is temporarily internal for the first AAR release. Restore this preview when it
+// returns to the public API.
+/*
 @Preview(showBackground = true, heightDp = 620)
 @Composable
 fun ButtonShowcasePreview() {
@@ -286,3 +319,4 @@ fun ButtonShowcasePreview() {
         }
     }
 }
+*/

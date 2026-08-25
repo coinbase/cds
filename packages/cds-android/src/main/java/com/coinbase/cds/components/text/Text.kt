@@ -17,6 +17,9 @@ import com.coinbase.cds.theme.CdsTypography
 private const val DisabledAlpha = 0.4f
 
 /**
+ * Temporarily `internal` for the first AAR release — this was an experiment and is not customer
+ * API yet.
+ *
  * CDS's text primitive. [font] is the primary feature -- it alone drives
  * family/size/weight/line-height -- and [color] is the close second, defaulting to `fg`. [align],
  * [maxLines]/[overflow], [underline], [mono], and [enabled] round out the rest of what's genuinely
@@ -34,7 +37,7 @@ private const val DisabledAlpha = 0.4f
  * closest equivalent Android already provides for free.
  */
 @Composable
-public fun Text(
+internal fun Text(
     text: String,
     modifier: Modifier = Modifier,
     font: CdsFontToken = CdsFontToken.Body,

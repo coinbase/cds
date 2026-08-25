@@ -19,8 +19,10 @@ so the compiler rejects any declaration whose visibility was inherited rather th
   cannot express something with the public API, either the API is genuinely missing something or
   the app is doing something it should not.
 - Changing the signature of an existing `public` declaration is a breaking change.
-- The public surface lives in `com.coinbase.cds.theme` and `com.coinbase.cds.components.*`.
-  Anything under `components/internal/` is off-limits to consumers by construction.
+- The public surface lives in `com.coinbase.cds.theme`. Components under
+  `com.coinbase.cds.components.*` are temporarily `internal` for the first release — they were
+  experiments and are not customer API yet. Anything under `components/internal/` stays off-limits
+  to consumers by construction.
 
 ## Theming
 
@@ -53,7 +55,8 @@ that get violated most often here: every element accepts and respects a `Modifie
   metadata and hard-fails consumers compiling against anything lower, so raising it forces every
   consuming app to move. Raise it only when this module actually needs a newer API.
 - Gradle owns the version (`0.0.1` in `build.gradle.kts`). It is unrelated to the 9.x npm
-  versions and must never be pulled into `yarn release`.
+  versions and must never be pulled into `yarn release`. Cutting a release is manual; follow
+  [`docs/releasing.md`](docs/releasing.md) and record the version in [`CHANGELOG.md`](CHANGELOG.md).
 
 ## Commands
 

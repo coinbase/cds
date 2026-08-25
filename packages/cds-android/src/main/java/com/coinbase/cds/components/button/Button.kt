@@ -29,10 +29,10 @@ import com.coinbase.cds.theme.CdsTheme
 import com.coinbase.cds.theme.CdsThemeProvider
 
 /** Visual/semantic variant -- the five in the current Figma Button spec. */
-public enum class ButtonVariant { Primary, Secondary, Tertiary, Positive, Negative }
+internal enum class ButtonVariant { Primary, Secondary, Tertiary, Positive, Negative }
 
 /** Size tier. The four sizes (`xs`/`s`/`m`/`l`) in the Figma Button spec. */
-public enum class ButtonSize { Xs, S, M, L }
+internal enum class ButtonSize { Xs, S, M, L }
 
 private const val PressedScale = 0.98f
 private const val DisabledAlpha = 0.4f
@@ -44,6 +44,9 @@ private const val PressedBlendFraction = 0.15f
  * overrides are deliberately absent -- re-theme via [CdsThemeProvider] instead, so the override
  * applies consistently rather than one call site at a time.
  *
+ * Temporarily `internal` for the first AAR release — this was an experiment and is not customer
+ * API yet.
+ *
  * Reads colors and metrics from the ambient [CdsTheme], so wrapping a subtree in a
  * [CdsThemeProvider] override -- e.g. a customer brand theme -- is picked up automatically with no
  * extra wiring.
@@ -54,7 +57,7 @@ private const val PressedBlendFraction = 0.15f
  * automatically matches the label and stays correct across variants and themes.
  */
 @Composable
-public fun Button(
+internal fun Button(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,

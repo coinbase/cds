@@ -45,15 +45,18 @@ import com.coinbase.cds.theme.CdsThemeProvider
  * Visual/semantic variant -- the subset of [com.coinbase.cds.components.button.ButtonVariant] that
  * makes sense for a confirm-by-sliding action.
  */
-public enum class SlideButtonVariant { Primary, Positive, Negative }
+internal enum class SlideButtonVariant { Primary, Positive, Negative }
 
 /** Size tier (`s`/`m`/`l`). */
-public enum class SlideButtonSize { S, M, L }
+internal enum class SlideButtonSize { S, M, L }
 
 private const val DisabledAlpha = 0.4f
 private val SettleSpring = spring<Float>(dampingRatio = Spring.DampingRatioLowBouncy, stiffness = Spring.StiffnessMedium)
 
 /**
+ * Temporarily `internal` for the first AAR release — this was an experiment and is not customer
+ * API yet.
+ *
  * A "slide to confirm" control for actions that shouldn't trigger on a single accidental tap.
  * Covers [variant], [size], [enabled], [checkThreshold], and [onSlideComplete]. The thumb, track,
  * and icon aren't swappable -- this always renders CDS's own arrow/spinner treatment.
@@ -78,7 +81,7 @@ private val SettleSpring = spring<Float>(dampingRatio = Spring.DampingRatioLowBo
  * effects like haptics or analytics, not for state changes.
  */
 @Composable
-public fun SlideButton(
+internal fun SlideButton(
     checked: Boolean,
     onCheckedChange: (Boolean) -> Unit,
     uncheckedLabel: String,

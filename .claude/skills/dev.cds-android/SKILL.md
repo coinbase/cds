@@ -48,8 +48,6 @@ inherited rather than chosen.
 - **Never widen visibility so `apps/android-app` compiles.** The demo app is a consumer; if it
   cannot do something with the public API, either the API is missing something real or the app is
   wrong.
-- `ButtonStyle`, `Spinner`, and everything under `components/internal/` are internal. The gallery
-  lives in the app module, not the AAR.
 
 ## Theming
 
