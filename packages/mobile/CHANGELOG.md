@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.22.0 (8/25/2026 PST)
+
+#### 🚀 Updates
+
+- Fix: do not wrap checkbox labels with ReactNode in text. [[#838](https://github.com/coinbase/cds/pull/838)]
+
 ## 9.21.1 (8/24/2026 PST)
 
 #### 🐞 Fixes
