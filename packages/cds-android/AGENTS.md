@@ -67,4 +67,7 @@ yarn nx run cds-android:assemble   # AAR -> packages/cds-android/build/outputs/a
 yarn nx run cds-android:test       # JUnit; headless composition, no Robolectric
 ```
 
+CI runs the same Gradle test task (`.github/workflows/android.yml`) on PRs and pushes that touch
+this package, `apps/android-app`, or `android/`. Do not add Gradle jobs to the JavaScript `ci.yml`.
+
 `build/`, `.gradle/`, `.idea/`, and `local.properties` are generated and stay untracked.

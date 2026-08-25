@@ -170,6 +170,11 @@ yarn nx run cds-android:test       # JUnit unit tests
 yarn nx run android-app:launch     # build + install + start the demo app
 ```
 
+Pull requests and pushes that touch this package, `apps/android-app`, or `android/` run
+`./android/gradlew -p android :cds:test` in [`.github/workflows/android.yml`](../../.github/workflows/android.yml)
+— JDK 21 and the Android SDK, not the JavaScript `CI` workflow. Tag any new Android Nx project
+`platform:android` so `ci.yml` keeps excluding it.
+
 There is no dev server. Unlike Expo, where Metro stays resident and serves JavaScript to a native
 shell, Compose compiles into the APK — so `launch` installs, starts the app, and exits. Re-run it
 to pick up changes; see [Android Studio](#android-studio) for the faster loop.
@@ -257,13 +262,6 @@ Anything marked with it is a compile error for consumers unless they explicitly 
 accident, and it makes the eventual breaking change defensible — which is exactly the Hyrum's Law
 problem the JavaScript packages have. Decisions still to make: whether one marker is enough or we
 want separate ones per subsystem, and whether `ERROR` or `WARNING` is the right level to start at.
-
-### Android CI
-
-Builds are intentionally local-only for now, and the JavaScript CI workflow explicitly skips these
-paths. The eventual shape is a separate `android.yml` with JDK 21 and
-`android-actions/setup-android`, triggered by path filters on `packages/cds-android/**`,
-`apps/android-app/**`, and `android/**`.
 
 ### Token codegen
 

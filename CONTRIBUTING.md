@@ -51,6 +51,9 @@ yarn nx run cds-android:test
 yarn nx run cds-android:assemble
 ```
 
+Those unit tests also run in CI via a dedicated Android workflow (not the JavaScript `CI`
+pipeline) whenever `packages/cds-android`, `apps/android-app`, or `android/` change.
+
 ## Submitting a Pull Request
 
 ### From a Forked Repository

@@ -54,6 +54,10 @@ yarn nx run android-app:launch        # build + install + start the demo app
 The `-p android` is what points Gradle at this directory. Without it, Gradle looks in the current
 directory, finds no `settings.gradle.kts`, and fails.
 
+CI runs `:cds:test` from [`.github/workflows/android.yml`](../.github/workflows/android.yml) when
+these paths change. That workflow is separate from the JavaScript `CI` pipeline on purpose: it
+needs JDK 21 and the Android SDK, which those runners do not have.
+
 ## Working in Android Studio
 
 **File → Open → this `android/` folder.** Not the repo root — Studio would find no Gradle build

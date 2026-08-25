@@ -92,6 +92,10 @@ root.
 
 - `:cds` compiles with Kotlin **explicit API mode**. Do not add a `public` declaration unless it
   is intentional customer API.
+- Tag every Android Nx project `platform:android`. JavaScript CI (`ci.yml`) excludes that tag from
+  every `nx affected` job; Android unit tests run in a separate workflow
+  (`.github/workflows/android.yml`) on runners with JDK 21 and the Android SDK. Do not fold
+  Gradle jobs into `ci.yml`.
 - Never name an Android Nx target `build`, `typecheck`, or `lint`. Those names are wired to
   JavaScript CI jobs that run on machines with no JDK or Android SDK.
 - Android versions independently, in Gradle. Never fold it into `yarn release` or the 9.x version
