@@ -74,7 +74,7 @@ the JavaScript side unless a section says otherwise; see "Native Android" below.
 
 Kotlin/Jetpack Compose, built by Gradle. Read `packages/cds-android/AGENTS.md` before editing
 anything under `packages/cds-android/` - it is the source of truth for that module's API
-boundary. Load the `jetpack-best-practices` and `dev.cds-android` skills when writing Compose.
+boundary. Load the `jetpack-best-practices` skill when writing Compose.
 
 **Layout.** The Gradle root is `android/`, and it maps two Gradle modules onto the Nx layout:
 `:cds` -> `packages/cds-android`, `:app` -> `apps/android-app`. Nx project names are
