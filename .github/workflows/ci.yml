@@ -19,6 +19,8 @@ on:
       - 'packages/cds-android/**'
       - '.github/workflows/android.yml'
       - '.github/actions/setup-android/**'
+      - 'ios/**'
+      - '.github/workflows/ios.yml'
   pull_request:
     branches:
       - master
@@ -31,6 +33,8 @@ on:
       - 'packages/cds-android/**'
       - '.github/workflows/android.yml'
       - '.github/actions/setup-android/**'
+      - 'ios/**'
+      - '.github/workflows/ios.yml'
 
 concurrency:
   group: CI-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
@@ -90,13 +94,15 @@ jobs:
         # preventing the count from growing unbounded. Lower it as the backlog is
         # paid down.
         #
-        # Every Android Nx project is tagged `platform:android` and excluded from every
-        # `nx affected` job in this workflow. Their targets shell out to Gradle, and these
-        # runners have no JDK or Android SDK, so a mixed JS+Android PR would otherwise fail
-        # here on the Android half. Today only `test` would actually match; the tag exclude
-        # is on every target so that adding a Gradle-backed target — or a new Android
-        # project with the same tag — cannot silently start invoking Gradle on a JS runner.
-        run: yarn nx affected --exclude=tag:platform:android --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=300
+        # Every Android Nx project is tagged `platform:android` and every native-iOS Nx project
+        # is tagged `platform:ios`; both are excluded from every `nx affected` job in this
+        # workflow. Their targets shell out to Gradle (Android) or Swift/Xcode (iOS), and these
+        # Linux runners have no JDK, Android SDK, Swift, or Xcode, so a mixed PR would otherwise
+        # fail here on the native half. Today only `test` would actually match; the tag exclude
+        # is on every target so that adding a native-backed target — or a new native project with
+        # the same tag — cannot silently start invoking Gradle/Swift on a JS runner. The native
+        # pipelines run in android.yml / ios.yml instead.
+        run: yarn nx affected --exclude=tag:platform:android,tag:platform:ios --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=300
 
   format:
     name: Format
@@ -126,7 +132,7 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Test
-        run: yarn nx affected --exclude=tag:platform:android --target=test --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude=tag:platform:android,tag:platform:ios --target=test --base=$NX_BASE --head=$NX_HEAD
 
   typecheck:
     name: Typecheck
@@ -141,7 +147,7 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Typecheck
-        run: yarn nx affected --exclude=tag:platform:android --target=typecheck --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude=tag:platform:android,tag:platform:ios --target=typecheck --base=$NX_BASE --head=$NX_HEAD
 
   build:
     name: Build
@@ -156,7 +162,7 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Build
-        run: yarn nx affected --exclude=expo-app,tag:platform:android --target=build --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude=expo-app,tag:platform:android,tag:platform:ios --target=build --base=$NX_BASE --head=$NX_HEAD
 
   depcheck:
     name: Depcheck
@@ -327,4 +333,4 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Lint Styles
-        run: yarn nx affected --exclude=tag:platform:android --target=lint-styles --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude=tag:platform:android,tag:platform:ios --target=lint-styles --base=$NX_BASE --head=$NX_HEAD

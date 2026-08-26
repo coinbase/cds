@@ -1,0 +1,72 @@
+name: iOS
+
+# Native iOS pipeline: Swift 6 + SwiftPM + Xcode. Do not fold these jobs into ci.yml — those
+# Linux runners have no Swift or Xcode, and `nx affected --target=test` would otherwise invoke
+# `swift test` for any project tagged `platform:ios`.
+#
+# Path filters are the inverse of ci.yml's paths-ignore, so an iOS-only change runs here and not
+# there, a JS-only change runs there and not here, and a mixed PR runs both. Keep the two lists in
+# sync when adding iOS paths.
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+    paths:
+      - 'ios/**'
+      - '.github/workflows/ios.yml'
+  pull_request:
+    branches:
+      - master
+    paths:
+      - 'ios/**'
+      - '.github/workflows/ios.yml'
+
+concurrency:
+  group: iOS-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
+  cancel-in-progress: ${{github.event_name == 'pull_request'}}
+
+permissions:
+  contents: read
+
+env:
+  CI: true
+
+jobs:
+  test:
+    name: Build & Test (SwiftPM)
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      # Same commands as `yarn nx run cds-ios:test` / `cds-ios:assemble` (ios/project.json),
+      # invoked directly so this workflow needs no Yarn, Node, or the JS install.
+      - name: Swift test (theme library)
+        working-directory: ios
+        run: swift test
+      - name: Swift build (release — includes the macOS gallery executable)
+        working-directory: ios
+        run: swift build -c release
+
+  simulator-build:
+    name: iOS Simulator build (gallery app)
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      # Regenerate the (git-ignored) Xcode project from project.yml, then compile the iOS app
+      # target for a simulator. This is what `swift build` on the host cannot cover: it validates
+      # that the shared gallery sources compile for the iOS SDK, not just macOS.
+      - name: Generate Xcode project
+        working-directory: ios
+        run: xcodegen generate
+      - name: Build CDSGalleryiOS for the Simulator
+        working-directory: ios
+        run: |
+          xcodebuild -project CDSGallery.xcodeproj -scheme CDSGalleryiOS \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath .build/xcode \
+            build

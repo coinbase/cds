@@ -121,11 +121,27 @@ CDSTextStyle.allCases        // display1…legal (the font token)
 
 ## Build
 
+Directly with SwiftPM:
+
 ```bash
 cd ios
 swift build
 swift test
 ```
+
+Or through Nx (project `cds-ios`, tagged `platform:ios`):
+
+```bash
+yarn nx run cds-ios:test        # swift test (theme library)
+yarn nx run cds-ios:assemble    # swift build -c release
+yarn nx run cds-ios:run         # swift run CDSGalleryApp (macOS window)
+yarn nx run cds-ios:launch      # build + install + run the gallery on an iOS Simulator
+```
+
+`platform:ios` projects are excluded from the JavaScript CI (`ci.yml`) — Swift/Xcode builds run
+in a separate macOS workflow (`.github/workflows/ios.yml`), mirroring how Android uses
+`android.yml`. Never name a `cds-ios` target `build`, `typecheck`, or `lint`: those names are
+wired to JS CI jobs that run on Linux runners with no Swift toolchain.
 
 ## Demo app
 

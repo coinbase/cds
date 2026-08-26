@@ -12682,6 +12682,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"cds-ios@workspace:packages/cds-ios":
+  version: 0.0.0-use.local
+  resolution: "cds-ios@workspace:packages/cds-ios"
+  languageName: unknown
+  linkType: soft
+
 "chai@npm:^5.2.0":
   version: 5.3.1
   resolution: "chai@npm:5.3.1"
@@ -19231,6 +19237,12 @@ __metadata:
   checksum: 10c0/64cbbaf697feaf811d06806225773fd19030dcc9c6d38939672cf9ba0a7059a4c73246b1320fc62de67116175287e4c646432673f3f67e63855c901bcdca1365
   languageName: node
   linkType: hard
+
+"ios-gallery@workspace:apps/ios-gallery":
+  version: 0.0.0-use.local
+  resolution: "ios-gallery@workspace:apps/ios-gallery"
+  languageName: unknown
+  linkType: soft
 
 "ip-address@npm:^10.0.1":
   version: 10.0.1
