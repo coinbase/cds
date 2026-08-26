@@ -1,6 +1,8 @@
 // swift-tools-version: 6.0
 import PackageDescription
 
+// The vendored CDS iOS theme library. The demo gallery that consumes it lives in
+// `apps/ios-gallery` (an Xcode app), mirroring how `apps/android-app` consumes `packages/cds-android`.
 let package = Package(
     name: "CDSDesignSystem",
     platforms: [
@@ -12,20 +14,10 @@ let package = Package(
     ],
     products: [
         .library(name: "CDSDesignSystem", targets: ["CDSDesignSystem"]),
-        // A runnable SwiftUI gallery of the theme (the iOS counterpart to `apps/android-app`).
-        // Builds on the host with `swift build`; launch it with `swift run CDSGalleryApp`.
-        .executable(name: "CDSGalleryApp", targets: ["CDSGalleryApp"]),
     ],
     targets: [
         .target(
             name: "CDSDesignSystem",
-            swiftSettings: [
-                .swiftLanguageMode(.v6),
-            ]
-        ),
-        .executableTarget(
-            name: "CDSGalleryApp",
-            dependencies: ["CDSDesignSystem"],
             swiftSettings: [
                 .swiftLanguageMode(.v6),
             ]

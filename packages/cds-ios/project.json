@@ -1,15 +1,15 @@
 {
   "name": "cds-ios",
-  "$schema": "../node_modules/nx/schemas/project-schema.json",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
-  "sourceRoot": "ios/Sources",
+  "sourceRoot": "packages/cds-ios/Sources",
   "tags": ["platform:ios"],
   "targets": {
     "assemble": {
       "executor": "nx:run-commands",
       "options": {
         "command": "swift build -c release",
-        "cwd": "ios"
+        "cwd": "packages/cds-ios"
       },
       "dependsOn": [],
       "inputs": ["default"],
@@ -19,27 +19,11 @@
       "executor": "nx:run-commands",
       "options": {
         "command": "swift test",
-        "cwd": "ios"
+        "cwd": "packages/cds-ios"
       },
       "dependsOn": [],
       "inputs": ["default"],
       "cache": true
-    },
-    "run": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "swift run CDSGalleryApp",
-        "cwd": "ios"
-      },
-      "cache": false
-    },
-    "launch": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "./scripts/launch-simulator.sh",
-        "cwd": "ios"
-      },
-      "cache": false
     }
   }
 }

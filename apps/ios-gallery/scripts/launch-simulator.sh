@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Build the CDS theme gallery and run it on an iOS Simulator.
-# The iOS counterpart to `apps/android-app:launch`. Invoked via `yarn nx run cds-ios:launch`.
+# The iOS counterpart to `apps/android-app:launch`. Invoked via `yarn nx run ios-gallery:launch`.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."

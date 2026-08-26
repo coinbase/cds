@@ -15,12 +15,16 @@ on:
       - master
     paths:
       - 'ios/**'
+      - 'packages/cds-ios/**'
+      - 'apps/ios-gallery/**'
       - '.github/workflows/ios.yml'
   pull_request:
     branches:
       - master
     paths:
       - 'ios/**'
+      - 'packages/cds-ios/**'
+      - 'apps/ios-gallery/**'
       - '.github/workflows/ios.yml'
 
 concurrency:
@@ -33,20 +37,23 @@ permissions:
 env:
   CI: true
 
+# Unlike android.yml, these jobs have no step-security/harden-runner step: that action only
+# supports Ubuntu runners, and iOS builds must run on macOS (Swift/Xcode). Keep secrets out of
+# this workflow (it needs none) rather than relying on egress hardening.
 jobs:
   test:
-    name: Build & Test (SwiftPM)
+    name: Build & Test (theme library)
     runs-on: macos-15
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      # Same commands as `yarn nx run cds-ios:test` / `cds-ios:assemble` (ios/project.json),
+      # Same commands as `yarn nx run cds-ios:test` / `cds-ios:assemble` (packages/cds-ios/project.json),
       # invoked directly so this workflow needs no Yarn, Node, or the JS install.
-      - name: Swift test (theme library)
-        working-directory: ios
+      - name: Swift test
+        working-directory: packages/cds-ios
         run: swift test
-      - name: Swift build (release — includes the macOS gallery executable)
-        working-directory: ios
+      - name: Swift build (release)
+        working-directory: packages/cds-ios
         run: swift build -c release
 
   simulator-build:
@@ -58,13 +65,13 @@ jobs:
       - name: Install XcodeGen
         run: brew install xcodegen
       # Regenerate the (git-ignored) Xcode project from project.yml, then compile the iOS app
-      # target for a simulator. This is what `swift build` on the host cannot cover: it validates
-      # that the shared gallery sources compile for the iOS SDK, not just macOS.
+      # target for a simulator. This validates that the gallery sources — and the local
+      # packages/cds-ios dependency — compile for the iOS SDK. Mirrors `yarn nx run ios-gallery:assemble`.
       - name: Generate Xcode project
-        working-directory: ios
+        working-directory: apps/ios-gallery
         run: xcodegen generate
       - name: Build CDSGalleryiOS for the Simulator
-        working-directory: ios
+        working-directory: apps/ios-gallery
         run: |
           xcodebuild -project CDSGallery.xcodeproj -scheme CDSGalleryiOS \
             -destination 'generic/platform=iOS Simulator' \

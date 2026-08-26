@@ -5,21 +5,19 @@ options:
     iOS: "17.0"
   createIntermediateGroups: true
 
-# Consume the sibling Swift package (this same directory) for the theme library.
+# Consume the vendored theme library from packages/cds-ios (the iOS analog of apps/android-app
+# depending on packages/cds-android). The generated CDSGallery.xcodeproj is git-ignored;
+# project.yml is the source of truth.
 packages:
   CDSDesignSystem:
-    path: .
+    path: ../../packages/cds-ios
 
 targets:
-  # A thin iOS app that reuses the gallery sources and renders the theme on the Simulator.
-  # The macOS SPM executable (`swift run CDSGalleryApp`) and this iOS app share the exact same
-  # source files under Sources/CDSGalleryApp — the AppKit bits there are `#if os(macOS)`-gated.
-  # Named distinctly from the SPM `CDSGalleryApp` product so the scheme isn't ambiguous.
   CDSGalleryiOS:
     type: application
     platform: iOS
     sources:
-      - path: Sources/CDSGalleryApp
+      - path: Sources
     dependencies:
       - package: CDSDesignSystem
         product: CDSDesignSystem

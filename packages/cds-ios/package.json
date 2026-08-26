@@ -1,0 +1,7 @@
+{
+  "name": "cds-ios",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Placeholder manifest. The real artifact is a Swift Package (CDSDesignSystem) built by SwiftPM/Xcode; this file only exists so Yarn and the Nx CI helpers can see the project.",
+  "license": "Apache-2.0"
+}
