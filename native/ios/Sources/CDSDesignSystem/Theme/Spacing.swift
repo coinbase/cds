@@ -4,7 +4,7 @@ import CoreGraphics
 ///
 /// Token names map to the RN scale (e.g. `x1 == 8`, `x0_5 == 4`). Carried on the theme so
 /// consumers can override the scale per ``CDSThemeProvider`` (RN parity: `space` is themeable).
-public struct CDSSpacing: Sendable {
+public struct CDSSpacing: Sendable, Equatable {
     public var x0: CGFloat
     public var x0_25: CGFloat
     public var x0_5: CGFloat
@@ -37,7 +37,7 @@ public struct CDSSpacing: Sendable {
 }
 
 /// Border radius scale, mirroring `theme.borderRadius` in `defaultTheme.ts`.
-public struct CDSRadius: Sendable {
+public struct CDSRadius: Sendable, Equatable {
     public var r0: CGFloat
     public var r100: CGFloat
     public var r200: CGFloat
@@ -65,7 +65,7 @@ public struct CDSRadius: Sendable {
 }
 
 /// Border width scale, mirroring `theme.borderWidth` in `defaultTheme.ts`.
-public struct CDSBorderWidth: Sendable {
+public struct CDSBorderWidth: Sendable, Equatable {
     public var w0: CGFloat
     public var w100: CGFloat
     public var w200: CGFloat

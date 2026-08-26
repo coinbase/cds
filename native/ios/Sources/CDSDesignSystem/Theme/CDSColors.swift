@@ -6,11 +6,14 @@ import SwiftUI
 /// `accentBoldBlue`, …). Each one resolves to a spectrum value per color scheme, mirroring
 /// the derivation in `defaultTheme.ts` (`lightColor` / `darkColor`).
 ///
-/// Consumers can customize a theme by either:
-/// - copying a built-in set and tweaking a few tokens: `CDSColors.light.with { $0.bgPrimary = … }`,
-/// - deriving a full set from their own palette: `CDSColors.lightDeriving(from:)`, or
-/// - constructing one from scratch via ``init``.
-public struct CDSColors: Sendable {
+/// The memberwise initializer is intentionally `internal`. A public initializer would put the
+/// full token schema into the API, making every added token a source-breaking change for anyone
+/// constructing a set from scratch. Consumers instead build sets through the evolution-safe
+/// surface:
+/// - copy a built-in set and tweak a few tokens: `CDSColors.light.with { $0.bgPrimary = … }`,
+/// - derive a full set from a spectrum palette: `CDSColors.lightDeriving(from:)`, or
+/// - address tokens dynamically via ``subscript(_:)`` and ``CDSColorToken``.
+public struct CDSColors: Sendable, Equatable {
     // Foreground
     public var fg: Color
     public var fgMuted: Color
@@ -68,7 +71,7 @@ public struct CDSColors: Sendable {
     public var currentColor: Color
     public var transparent: Color
 
-    public init(
+    init(
         fg: Color,
         fgMuted: Color,
         fgInverse: Color,
@@ -157,10 +160,56 @@ public struct CDSColors: Sendable {
         self.currentColor = currentColor
         self.transparent = transparent
     }
-}
 
-private func spectrumColor(_ table: [String: String], _ key: String, _ opacity: Double = 1) -> Color {
-    Color(cdsSpectrum: table[key] ?? "0,0,0", opacity: opacity)
+    /// Resolve a semantic color token: `theme.colors[.fgMuted]`. Pairs with ``CDSColorToken``
+    /// for dynamic, data-driven, and serialized theme lookups.
+    public subscript(_ token: CDSColorToken) -> Color {
+        switch token {
+        case .fg: return fg
+        case .fgMuted: return fgMuted
+        case .fgInverse: return fgInverse
+        case .fgPrimary: return fgPrimary
+        case .fgPositive: return fgPositive
+        case .fgNegative: return fgNegative
+        case .fgWarning: return fgWarning
+        case .bg: return bg
+        case .bgAlternate: return bgAlternate
+        case .bgInverse: return bgInverse
+        case .bgOverlay: return bgOverlay
+        case .bgPrimary: return bgPrimary
+        case .bgPrimaryWash: return bgPrimaryWash
+        case .bgSecondary: return bgSecondary
+        case .bgTertiary: return bgTertiary
+        case .bgSecondaryWash: return bgSecondaryWash
+        case .bgNegative: return bgNegative
+        case .bgNegativeWash: return bgNegativeWash
+        case .bgPositive: return bgPositive
+        case .bgPositiveWash: return bgPositiveWash
+        case .bgWarning: return bgWarning
+        case .bgWarningWash: return bgWarningWash
+        case .bgLine: return bgLine
+        case .bgLineHeavy: return bgLineHeavy
+        case .bgLineInverse: return bgLineInverse
+        case .bgLinePrimary: return bgLinePrimary
+        case .bgLinePrimarySubtle: return bgLinePrimarySubtle
+        case .bgElevation1: return bgElevation1
+        case .bgElevation2: return bgElevation2
+        case .accentSubtleGreen: return accentSubtleGreen
+        case .accentBoldGreen: return accentBoldGreen
+        case .accentSubtleBlue: return accentSubtleBlue
+        case .accentBoldBlue: return accentBoldBlue
+        case .accentSubtlePurple: return accentSubtlePurple
+        case .accentBoldPurple: return accentBoldPurple
+        case .accentSubtleYellow: return accentSubtleYellow
+        case .accentBoldYellow: return accentBoldYellow
+        case .accentSubtleRed: return accentSubtleRed
+        case .accentBoldRed: return accentBoldRed
+        case .accentSubtleGray: return accentSubtleGray
+        case .accentBoldGray: return accentBoldGray
+        case .currentColor: return currentColor
+        case .transparent: return transparent
+        }
+    }
 }
 
 public extension CDSColors {
@@ -175,102 +224,102 @@ public extension CDSColors {
         return copy
     }
 
-    /// Derive the **light** semantic set from a spectrum palette, applying the same mapping
-    /// as `defaultTheme.ts` `lightColor`. Pass your own `"hue"` → `"r,g,b"` table to rebrand.
-    static func lightDeriving(from s: [String: String]) -> CDSColors {
+    /// Derive the **light** semantic set from a ``CDSSpectrum`` palette, applying the same
+    /// mapping as `defaultTheme.ts` `lightColor`. Pass a custom spectrum to rebrand.
+    static func lightDeriving(from s: CDSSpectrum) -> CDSColors {
         CDSColors(
-            fg: spectrumColor(s, "gray100"),
-            fgMuted: spectrumColor(s, "gray60"),
-            fgInverse: spectrumColor(s, "gray0"),
-            fgPrimary: spectrumColor(s, "blue60"),
-            fgPositive: spectrumColor(s, "green60"),
-            fgNegative: spectrumColor(s, "red60"),
-            fgWarning: spectrumColor(s, "orange60"),
-            bg: spectrumColor(s, "gray0"),
-            bgAlternate: spectrumColor(s, "gray10"),
-            bgInverse: spectrumColor(s, "gray100"),
-            bgOverlay: spectrumColor(s, "gray80", 0.33),
-            bgPrimary: spectrumColor(s, "blue60"),
-            bgPrimaryWash: spectrumColor(s, "blue0"),
-            bgSecondary: spectrumColor(s, "gray10"),
-            bgTertiary: spectrumColor(s, "gray20"),
-            bgSecondaryWash: spectrumColor(s, "gray5"),
-            bgNegative: spectrumColor(s, "red60"),
-            bgNegativeWash: spectrumColor(s, "red0"),
-            bgPositive: spectrumColor(s, "green60"),
-            bgPositiveWash: spectrumColor(s, "green0"),
-            bgWarning: spectrumColor(s, "orange60"),
-            bgWarningWash: spectrumColor(s, "orange0"),
-            bgLine: spectrumColor(s, "gray60", 0.2),
-            bgLineHeavy: spectrumColor(s, "gray60", 0.66),
-            bgLineInverse: spectrumColor(s, "gray0"),
-            bgLinePrimary: spectrumColor(s, "blue60"),
-            bgLinePrimarySubtle: spectrumColor(s, "blue20"),
-            bgElevation1: spectrumColor(s, "gray0"),
-            bgElevation2: spectrumColor(s, "gray0"),
-            accentSubtleGreen: spectrumColor(s, "green0"),
-            accentBoldGreen: spectrumColor(s, "green60"),
-            accentSubtleBlue: spectrumColor(s, "blue0"),
-            accentBoldBlue: spectrumColor(s, "blue60"),
-            accentSubtlePurple: spectrumColor(s, "purple0"),
-            accentBoldPurple: spectrumColor(s, "purple80"),
-            accentSubtleYellow: spectrumColor(s, "yellow0"),
-            accentBoldYellow: spectrumColor(s, "yellow30"),
-            accentSubtleRed: spectrumColor(s, "red0"),
-            accentBoldRed: spectrumColor(s, "red60"),
-            accentSubtleGray: spectrumColor(s, "gray10"),
-            accentBoldGray: spectrumColor(s, "gray80")
+            fg: s.gray.step100,
+            fgMuted: s.gray.step60,
+            fgInverse: s.gray.step0,
+            fgPrimary: s.blue.step60,
+            fgPositive: s.green.step60,
+            fgNegative: s.red.step60,
+            fgWarning: s.orange.step60,
+            bg: s.gray.step0,
+            bgAlternate: s.gray.step10,
+            bgInverse: s.gray.step100,
+            bgOverlay: s.gray.step80.opacity(0.33),
+            bgPrimary: s.blue.step60,
+            bgPrimaryWash: s.blue.step0,
+            bgSecondary: s.gray.step10,
+            bgTertiary: s.gray.step20,
+            bgSecondaryWash: s.gray.step5,
+            bgNegative: s.red.step60,
+            bgNegativeWash: s.red.step0,
+            bgPositive: s.green.step60,
+            bgPositiveWash: s.green.step0,
+            bgWarning: s.orange.step60,
+            bgWarningWash: s.orange.step0,
+            bgLine: s.gray.step60.opacity(0.2),
+            bgLineHeavy: s.gray.step60.opacity(0.66),
+            bgLineInverse: s.gray.step0,
+            bgLinePrimary: s.blue.step60,
+            bgLinePrimarySubtle: s.blue.step20,
+            bgElevation1: s.gray.step0,
+            bgElevation2: s.gray.step0,
+            accentSubtleGreen: s.green.step0,
+            accentBoldGreen: s.green.step60,
+            accentSubtleBlue: s.blue.step0,
+            accentBoldBlue: s.blue.step60,
+            accentSubtlePurple: s.purple.step0,
+            accentBoldPurple: s.purple.step80,
+            accentSubtleYellow: s.yellow.step0,
+            accentBoldYellow: s.yellow.step30,
+            accentSubtleRed: s.red.step0,
+            accentBoldRed: s.red.step60,
+            accentSubtleGray: s.gray.step10,
+            accentBoldGray: s.gray.step80
         )
     }
 
-    /// Derive the **dark** semantic set from a spectrum palette, applying the same mapping
-    /// as `defaultTheme.ts` `darkColor`.
-    static func darkDeriving(from s: [String: String]) -> CDSColors {
+    /// Derive the **dark** semantic set from a ``CDSSpectrum`` palette, applying the same
+    /// mapping as `defaultTheme.ts` `darkColor`.
+    static func darkDeriving(from s: CDSSpectrum) -> CDSColors {
         CDSColors(
-            fg: spectrumColor(s, "gray100"),
-            fgMuted: spectrumColor(s, "gray60"),
-            fgInverse: spectrumColor(s, "gray0"),
-            fgPrimary: spectrumColor(s, "blue70"),
-            fgPositive: spectrumColor(s, "green60"),
-            fgNegative: spectrumColor(s, "red60"),
-            fgWarning: spectrumColor(s, "orange70"),
-            bg: spectrumColor(s, "gray0"),
-            bgAlternate: spectrumColor(s, "gray5"),
-            bgInverse: spectrumColor(s, "gray100"),
-            bgOverlay: spectrumColor(s, "gray0", 0.33),
-            bgPrimary: spectrumColor(s, "blue70"),
-            bgPrimaryWash: spectrumColor(s, "blue0"),
-            bgSecondary: spectrumColor(s, "gray15"),
-            bgTertiary: spectrumColor(s, "gray20"),
-            bgSecondaryWash: spectrumColor(s, "gray5"),
-            bgNegative: spectrumColor(s, "red60"),
-            bgNegativeWash: spectrumColor(s, "red0"),
-            bgPositive: spectrumColor(s, "green60"),
-            bgPositiveWash: spectrumColor(s, "green0"),
-            bgWarning: spectrumColor(s, "orange60"),
-            bgWarningWash: spectrumColor(s, "orange0"),
-            bgLine: spectrumColor(s, "gray60", 0.2),
-            bgLineHeavy: spectrumColor(s, "gray60", 0.66),
-            bgLineInverse: spectrumColor(s, "gray0"),
-            bgLinePrimary: spectrumColor(s, "blue70"),
-            bgLinePrimarySubtle: spectrumColor(s, "blue20"),
-            bgElevation1: spectrumColor(s, "gray5"),
-            bgElevation2: spectrumColor(s, "gray10"),
-            accentSubtleGreen: spectrumColor(s, "green0"),
-            accentBoldGreen: spectrumColor(s, "green60"),
-            accentSubtleBlue: spectrumColor(s, "blue0"),
-            accentBoldBlue: spectrumColor(s, "blue60"),
-            accentSubtlePurple: spectrumColor(s, "purple0"),
-            accentBoldPurple: spectrumColor(s, "purple80"),
-            accentSubtleYellow: spectrumColor(s, "yellow0"),
-            accentBoldYellow: spectrumColor(s, "yellow30"),
-            accentSubtleRed: spectrumColor(s, "red0"),
-            accentBoldRed: spectrumColor(s, "red60"),
-            accentSubtleGray: spectrumColor(s, "gray10"),
-            accentBoldGray: spectrumColor(s, "gray80")
+            fg: s.gray.step100,
+            fgMuted: s.gray.step60,
+            fgInverse: s.gray.step0,
+            fgPrimary: s.blue.step70,
+            fgPositive: s.green.step60,
+            fgNegative: s.red.step60,
+            fgWarning: s.orange.step70,
+            bg: s.gray.step0,
+            bgAlternate: s.gray.step5,
+            bgInverse: s.gray.step100,
+            bgOverlay: s.gray.step0.opacity(0.33),
+            bgPrimary: s.blue.step70,
+            bgPrimaryWash: s.blue.step0,
+            bgSecondary: s.gray.step15,
+            bgTertiary: s.gray.step20,
+            bgSecondaryWash: s.gray.step5,
+            bgNegative: s.red.step60,
+            bgNegativeWash: s.red.step0,
+            bgPositive: s.green.step60,
+            bgPositiveWash: s.green.step0,
+            bgWarning: s.orange.step60,
+            bgWarningWash: s.orange.step0,
+            bgLine: s.gray.step60.opacity(0.2),
+            bgLineHeavy: s.gray.step60.opacity(0.66),
+            bgLineInverse: s.gray.step0,
+            bgLinePrimary: s.blue.step70,
+            bgLinePrimarySubtle: s.blue.step20,
+            bgElevation1: s.gray.step5,
+            bgElevation2: s.gray.step10,
+            accentSubtleGreen: s.green.step0,
+            accentBoldGreen: s.green.step60,
+            accentSubtleBlue: s.blue.step0,
+            accentBoldBlue: s.blue.step60,
+            accentSubtlePurple: s.purple.step0,
+            accentBoldPurple: s.purple.step80,
+            accentSubtleYellow: s.yellow.step0,
+            accentBoldYellow: s.yellow.step30,
+            accentSubtleRed: s.red.step0,
+            accentBoldRed: s.red.step60,
+            accentSubtleGray: s.gray.step10,
+            accentBoldGray: s.gray.step80
         )
     }
 
-    static let light: CDSColors = lightDeriving(from: CDSSpectrumData.light)
-    static let dark: CDSColors = darkDeriving(from: CDSSpectrumData.dark)
+    static let light: CDSColors = lightDeriving(from: .light)
+    static let dark: CDSColors = darkDeriving(from: .dark)
 }

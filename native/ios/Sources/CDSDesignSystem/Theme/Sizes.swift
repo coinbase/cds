@@ -1,7 +1,7 @@
 import CoreGraphics
 
 /// Icon size scale, mirroring `theme.iconSize` in `defaultTheme.ts`.
-public struct CDSIconSize: Sendable {
+public struct CDSIconSize: Sendable, Equatable {
     public var xs: CGFloat
     public var s: CGFloat
     public var m: CGFloat
@@ -15,7 +15,7 @@ public struct CDSIconSize: Sendable {
 }
 
 /// Avatar size scale, mirroring `theme.avatarSize` in `defaultTheme.ts`.
-public struct CDSAvatarSize: Sendable {
+public struct CDSAvatarSize: Sendable, Equatable {
     public var s: CGFloat
     public var m: CGFloat
     public var l: CGFloat
@@ -35,7 +35,7 @@ public struct CDSAvatarSize: Sendable {
 }
 
 /// Control size scale, mirroring `theme.controlSize` in `defaultTheme.ts`.
-public struct CDSControlSize: Sendable {
+public struct CDSControlSize: Sendable, Equatable {
     public var checkboxSize: CGFloat
     public var radioSize: CGFloat
     public var switchWidth: CGFloat

@@ -1,105 +1,161 @@
-import Foundation
+import SwiftUI
 
-/// Raw spectrum palette (tier 1 of the CDS two-layer color system).
+/// One hue's thirteen tonal steps — the strongly-typed replacement for the old
+/// `[String: String]` spectrum tables. Each step is a resolved ``Color`` rather than a
+/// stringly-keyed lookup, so a missing step is a compile error instead of a runtime `nil`.
 ///
-/// These values are copied verbatim from `packages/mobile/src/themes/defaultTheme.ts`
-/// (`lightSpectrum` / `darkSpectrum`) and cover all 11 CDS hues × 13 shades.
-///
-/// In production this file should be **generated** from the single token source that also
-/// emits the TS themes (and a Kotlin equivalent), keeping web, React Native, iOS, and
-/// Android in lockstep rather than hand-copied.
-public enum CDSSpectrumData {
-    public static let light: [String: String] = [
-        "blue0": "245,248,255", "blue5": "211,225,255", "blue10": "176,202,255",
-        "blue15": "146,182,255", "blue20": "115,162,255", "blue30": "70,132,255",
-        "blue40": "38,110,255", "blue50": "16,94,255", "blue60": "0,82,255",
-        "blue70": "0,75,235", "blue80": "0,62,193", "blue90": "0,41,130", "blue100": "0,24,77",
-        "green0": "245,255,251", "green5": "203,245,227", "green10": "163,235,205",
-        "green15": "131,224,186", "green20": "101,214,167", "green30": "60,194,138",
-        "green40": "34,173,115", "green50": "18,153,97", "green60": "9,133,81",
-        "green70": "4,112,67", "green80": "2,83,50", "green90": "0,57,35", "green100": "0,31,18",
-        "orange0": "255,250,245", "orange5": "254,232,210", "orange10": "253,213,176",
-        "orange15": "251,194,147", "orange20": "249,174,118", "orange30": "244,140,76",
-        "orange40": "237,112,47", "orange50": "225,89,27", "orange60": "207,71,14",
-        "orange70": "181,54,6", "orange80": "145,39,2", "orange90": "100,26,0", "orange100": "51,13,0",
-        "gray0": "255,255,255", "gray5": "247,248,249", "gray10": "238,240,243",
-        "gray15": "222,225,231", "gray20": "206,210,219", "gray30": "177,183,195",
-        "gray40": "137,144,158", "gray50": "113,120,134", "gray60": "91,97,110",
-        "gray70": "70,75,85", "gray80": "50,53,61", "gray90": "30,32,37", "gray100": "10,11,13",
-        "indigo0": "246,247,255", "indigo5": "230,232,255", "indigo10": "214,218,254",
-        "indigo15": "198,204,253", "indigo20": "181,189,253", "indigo30": "148,161,251",
-        "indigo40": "116,135,247", "indigo50": "89,111,242", "indigo60": "66,91,233",
-        "indigo70": "47,74,215", "indigo80": "31,54,173", "indigo90": "17,32,107", "indigo100": "8,15,51",
-        "pink0": "255,245,255", "pink5": "253,228,253", "pink10": "251,212,250",
-        "pink15": "248,195,245", "pink20": "244,178,240", "pink30": "235,143,227",
-        "pink40": "221,110,209", "pink50": "203,81,187", "pink60": "179,58,162",
-        "pink70": "149,39,133", "pink80": "116,26,102", "pink90": "83,17,72", "pink100": "51,10,44",
-        "purple0": "251,247,255", "purple5": "244,232,255", "purple10": "237,217,255",
-        "purple15": "230,201,255", "purple20": "222,184,255", "purple30": "205,153,253",
-        "purple40": "188,123,251", "purple50": "157,107,242", "purple60": "138,85,233",
-        "purple70": "119,67,215", "purple80": "90,48,173", "purple90": "54,27,107", "purple100": "25,13,51",
-        "red0": "255,245,246", "red5": "254,225,228", "red10": "253,206,210",
-        "red15": "251,186,191", "red20": "249,166,173", "red30": "244,127,136",
-        "red40": "237,89,102", "red50": "225,57,71", "red60": "207,32,47",
-        "red70": "181,15,29", "red80": "145,5,16", "red90": "100,1,9", "red100": "51,0,4",
-        "teal0": "240,254,255", "teal5": "188,246,253", "teal10": "136,237,251",
-        "teal15": "93,226,248", "teal20": "51,213,244", "teal30": "0,188,235",
-        "teal40": "0,169,221", "teal50": "0,147,203", "teal60": "0,123,179",
-        "teal70": "0,97,149", "teal80": "0,71,116", "teal90": "0,47,83", "teal100": "0,27,51",
-        "yellow0": "255,252,241", "yellow5": "255,244,192", "yellow10": "255,240,145",
-        "yellow15": "255,234,100", "yellow20": "255,228,54", "yellow30": "247,210,26",
-        "yellow40": "235,186,0", "yellow50": "207,151,0", "yellow60": "174,113,0",
-        "yellow70": "136,76,0", "yellow80": "96,48,0", "yellow90": "58,20,0", "yellow100": "27,6,0",
-        "chartreuse0": "245,255,250", "chartreuse5": "221,251,232", "chartreuse10": "198,247,209",
-        "chartreuse15": "176,242,182", "chartreuse20": "159,238,155", "chartreuse30": "137,223,117",
-        "chartreuse40": "127,208,87", "chartreuse50": "86,179,64", "chartreuse60": "53,151,48",
-        "chartreuse70": "35,122,43", "chartreuse80": "25,93,41", "chartreuse90": "17,64,35", "chartreuse100": "7,26,17",
-    ]
+/// Instances come from ``CDSSpectrum``; build a modified one with ``with(_:)`` or
+/// ``CDSSpectrum/with(_:)``. Values are authored from the CDS token source
+/// (`packages/mobile/src/themes/defaultTheme.ts`); in production this file should be generated
+/// from the same source that emits the TS and Kotlin themes.
+public struct CDSColorRamp: Sendable, Equatable {
+    public var step0: Color
+    public var step5: Color
+    public var step10: Color
+    public var step15: Color
+    public var step20: Color
+    public var step30: Color
+    public var step40: Color
+    public var step50: Color
+    public var step60: Color
+    public var step70: Color
+    public var step80: Color
+    public var step90: Color
+    public var step100: Color
 
-    public static let dark: [String: String] = [
-        "blue0": "0,16,51", "blue5": "1,29,91", "blue10": "1,42,130",
-        "blue15": "3,51,154", "blue20": "5,59,177", "blue30": "10,72,206",
-        "blue40": "19,84,225", "blue50": "33,98,238", "blue60": "55,115,245",
-        "blue70": "87,139,250", "blue80": "132,170,253", "blue90": "185,207,255", "blue100": "245,248,255",
-        "green0": "0,31,18", "green5": "0,48,29", "green10": "1,70,42",
-        "green15": "2,82,48", "green20": "2,92,55", "green30": "6,112,68",
-        "green40": "11,133,82", "green50": "21,153,98", "green60": "39,173,117",
-        "green70": "68,194,141", "green80": "111,214,171", "green90": "171,235,208", "green100": "245,255,251",
-        "orange0": "51,13,0", "orange5": "79,20,0", "orange10": "107,28,1",
-        "orange15": "131,36,2", "orange20": "155,44,4", "orange30": "189,59,9",
-        "orange40": "213,76,18", "orange50": "230,96,32", "orange60": "240,120,54",
-        "orange70": "248,150,86", "orange80": "252,185,131", "orange90": "254,219,185", "orange100": "255,250,245",
-        "gray0": "10,11,13", "gray5": "20,21,25", "gray10": "30,32,37",
-        "gray15": "40,43,49", "gray20": "50,53,61", "gray30": "70,75,85",
-        "gray40": "91,97,110", "gray50": "114,120,134", "gray60": "138,145,158",
-        "gray70": "165,170,182", "gray80": "193,198,207", "gray90": "224,226,231", "gray100": "255,255,255",
-        "indigo0": "8,15,51", "indigo5": "14,27,91", "indigo10": "21,39,130",
-        "indigo15": "27,47,154", "indigo20": "33,56,177", "indigo30": "48,73,206",
-        "indigo40": "68,92,225", "indigo50": "92,113,238", "indigo60": "121,138,245",
-        "indigo70": "153,165,250", "indigo80": "187,194,253", "indigo90": "219,223,255", "indigo100": "246,247,255",
-        "pink0": "51,10,44", "pink5": "70,14,61", "pink10": "89,19,78",
-        "pink15": "108,24,94", "pink20": "126,30,111", "pink30": "159,44,142",
-        "pink40": "187,64,170", "pink50": "208,88,193", "pink60": "225,117,214",
-        "pink70": "237,149,230", "pink80": "246,184,243", "pink90": "252,217,251", "pink100": "255,245,255",
-        "purple0": "25,13,51", "purple5": "43,22,89", "purple10": "73,30,137",
-        "purple15": "97,37,175", "purple20": "123,45,211", "purple30": "142,51,234",
-        "purple40": "164,84,244", "purple50": "188,123,251", "purple60": "205,153,253",
-        "purple70": "217,176,254", "purple80": "230,201,255", "purple90": "237,217,255", "purple100": "251,247,255",
-        "red0": "51,0,4", "red5": "79,0,7", "red10": "107,1,10",
-        "red15": "131,4,14", "red20": "155,7,19", "red30": "189,19,33",
-        "red40": "213,38,52", "red50": "230,64,78", "red60": "240,97,109",
-        "red70": "248,134,144", "red80": "252,174,181", "red90": "254,213,216", "red100": "255,245,246",
-        "teal0": "0,20,38", "teal5": "0,32,59", "teal10": "0,45,79",
-        "teal15": "0,58,99", "teal20": "0,72,118", "teal30": "0,99,153",
-        "teal40": "0,125,182", "teal50": "0,149,205", "teal60": "0,170,223",
-        "teal70": "6,190,236", "teal80": "69,217,245", "teal90": "149,239,251", "teal100": "240,254,255",
-        "yellow0": "27,6,0", "yellow5": "49,17,0", "yellow10": "81,40,0",
-        "yellow15": "96,48,0", "yellow20": "115,64,0", "yellow30": "147,96,0",
-        "yellow40": "175,128,0", "yellow50": "199,158,0", "yellow60": "222,189,23",
-        "yellow70": "229,205,48", "yellow80": "242,222,94", "yellow90": "255,240,145", "yellow100": "255,252,241",
-        "chartreuse0": "5,22,14", "chartreuse5": "14,54,29", "chartreuse10": "21,79,34",
-        "chartreuse15": "29,103,36", "chartreuse20": "45,128,40", "chartreuse30": "73,152,54",
-        "chartreuse40": "107,176,73", "chartreuse50": "123,200,105", "chartreuse60": "140,209,136",
-        "chartreuse70": "158,217,163", "chartreuse80": "178,222,188", "chartreuse90": "209,238,220", "chartreuse100": "245,255,250",
-    ]
+    init(
+        step0: Color, step5: Color, step10: Color, step15: Color, step20: Color,
+        step30: Color, step40: Color, step50: Color, step60: Color, step70: Color,
+        step80: Color, step90: Color, step100: Color
+    ) {
+        self.step0 = step0; self.step5 = step5; self.step10 = step10; self.step15 = step15
+        self.step20 = step20; self.step30 = step30; self.step40 = step40; self.step50 = step50
+        self.step60 = step60; self.step70 = step70; self.step80 = step80; self.step90 = step90
+        self.step100 = step100
+    }
+
+    /// Resolve a step token: `theme.spectrum.blue[.step60]`.
+    public subscript(_ token: CDSColorRampToken) -> Color {
+        switch token {
+        case .step0: return step0
+        case .step5: return step5
+        case .step10: return step10
+        case .step15: return step15
+        case .step20: return step20
+        case .step30: return step30
+        case .step40: return step40
+        case .step50: return step50
+        case .step60: return step60
+        case .step70: return step70
+        case .step80: return step80
+        case .step90: return step90
+        case .step100: return step100
+        }
+    }
+
+    /// Return a copy with a handful of steps overridden.
+    public func with(_ mutate: (inout CDSColorRamp) -> Void) -> CDSColorRamp {
+        var copy = self
+        mutate(&copy)
+        return copy
+    }
+}
+
+/// The raw CDS color palette ("spectrum"): eleven hues, each a ``CDSColorRamp``. This is the
+/// primitive tier that the semantic ``CDSColors`` tier is derived from.
+///
+/// Public deliberately: hiding it wouldn't stop anyone reaching past the semantic tier, it would
+/// only push them to a hardcoded `Color(...)`, which is invisible to theming and tooling.
+public struct CDSSpectrum: Sendable, Equatable {
+    public var blue: CDSColorRamp
+    public var green: CDSColorRamp
+    public var orange: CDSColorRamp
+    public var gray: CDSColorRamp
+    public var indigo: CDSColorRamp
+    public var pink: CDSColorRamp
+    public var purple: CDSColorRamp
+    public var red: CDSColorRamp
+    public var teal: CDSColorRamp
+    public var yellow: CDSColorRamp
+    public var chartreuse: CDSColorRamp
+
+    init(
+        blue: CDSColorRamp, green: CDSColorRamp, orange: CDSColorRamp, gray: CDSColorRamp,
+        indigo: CDSColorRamp, pink: CDSColorRamp, purple: CDSColorRamp, red: CDSColorRamp,
+        teal: CDSColorRamp, yellow: CDSColorRamp, chartreuse: CDSColorRamp
+    ) {
+        self.blue = blue; self.green = green; self.orange = orange; self.gray = gray
+        self.indigo = indigo; self.pink = pink; self.purple = purple; self.red = red
+        self.teal = teal; self.yellow = yellow; self.chartreuse = chartreuse
+    }
+
+    /// Resolve a hue token: `theme.spectrum[.blue][.step60]` walks a fully token-addressed path.
+    public subscript(_ token: CDSSpectrumHueToken) -> CDSColorRamp {
+        switch token {
+        case .blue: return blue
+        case .green: return green
+        case .orange: return orange
+        case .gray: return gray
+        case .indigo: return indigo
+        case .pink: return pink
+        case .purple: return purple
+        case .red: return red
+        case .teal: return teal
+        case .yellow: return yellow
+        case .chartreuse: return chartreuse
+        }
+    }
+
+    /// Return a copy with a handful of hues overridden.
+    public func with(_ mutate: (inout CDSSpectrum) -> Void) -> CDSSpectrum {
+        var copy = self
+        mutate(&copy)
+        return copy
+    }
+
+    /// The `cds-default` spectrum in the light color scheme.
+    public static let light = CDSSpectrum(
+        blue: cdsRamp("245,248,255", "211,225,255", "176,202,255", "146,182,255", "115,162,255", "70,132,255", "38,110,255", "16,94,255", "0,82,255", "0,75,235", "0,62,193", "0,41,130", "0,24,77"),
+        green: cdsRamp("245,255,251", "203,245,227", "163,235,205", "131,224,186", "101,214,167", "60,194,138", "34,173,115", "18,153,97", "9,133,81", "4,112,67", "2,83,50", "0,57,35", "0,31,18"),
+        orange: cdsRamp("255,250,245", "254,232,210", "253,213,176", "251,194,147", "249,174,118", "244,140,76", "237,112,47", "225,89,27", "207,71,14", "181,54,6", "145,39,2", "100,26,0", "51,13,0"),
+        gray: cdsRamp("255,255,255", "247,248,249", "238,240,243", "222,225,231", "206,210,219", "177,183,195", "137,144,158", "113,120,134", "91,97,110", "70,75,85", "50,53,61", "30,32,37", "10,11,13"),
+        indigo: cdsRamp("246,247,255", "230,232,255", "214,218,254", "198,204,253", "181,189,253", "148,161,251", "116,135,247", "89,111,242", "66,91,233", "47,74,215", "31,54,173", "17,32,107", "8,15,51"),
+        pink: cdsRamp("255,245,255", "253,228,253", "251,212,250", "248,195,245", "244,178,240", "235,143,227", "221,110,209", "203,81,187", "179,58,162", "149,39,133", "116,26,102", "83,17,72", "51,10,44"),
+        purple: cdsRamp("251,247,255", "244,232,255", "237,217,255", "230,201,255", "222,184,255", "205,153,253", "188,123,251", "157,107,242", "138,85,233", "119,67,215", "90,48,173", "54,27,107", "25,13,51"),
+        red: cdsRamp("255,245,246", "254,225,228", "253,206,210", "251,186,191", "249,166,173", "244,127,136", "237,89,102", "225,57,71", "207,32,47", "181,15,29", "145,5,16", "100,1,9", "51,0,4"),
+        teal: cdsRamp("240,254,255", "188,246,253", "136,237,251", "93,226,248", "51,213,244", "0,188,235", "0,169,221", "0,147,203", "0,123,179", "0,97,149", "0,71,116", "0,47,83", "0,27,51"),
+        yellow: cdsRamp("255,252,241", "255,244,192", "255,240,145", "255,234,100", "255,228,54", "247,210,26", "235,186,0", "207,151,0", "174,113,0", "136,76,0", "96,48,0", "58,20,0", "27,6,0"),
+        chartreuse: cdsRamp("245,255,250", "221,251,232", "198,247,209", "176,242,182", "159,238,155", "137,223,117", "127,208,87", "86,179,64", "53,151,48", "35,122,43", "25,93,41", "17,64,35", "7,26,17")
+    )
+
+    /// The `cds-default` spectrum in the dark color scheme.
+    public static let dark = CDSSpectrum(
+        blue: cdsRamp("0,16,51", "1,29,91", "1,42,130", "3,51,154", "5,59,177", "10,72,206", "19,84,225", "33,98,238", "55,115,245", "87,139,250", "132,170,253", "185,207,255", "245,248,255"),
+        green: cdsRamp("0,31,18", "0,48,29", "1,70,42", "2,82,48", "2,92,55", "6,112,68", "11,133,82", "21,153,98", "39,173,117", "68,194,141", "111,214,171", "171,235,208", "245,255,251"),
+        orange: cdsRamp("51,13,0", "79,20,0", "107,28,1", "131,36,2", "155,44,4", "189,59,9", "213,76,18", "230,96,32", "240,120,54", "248,150,86", "252,185,131", "254,219,185", "255,250,245"),
+        gray: cdsRamp("10,11,13", "20,21,25", "30,32,37", "40,43,49", "50,53,61", "70,75,85", "91,97,110", "114,120,134", "138,145,158", "165,170,182", "193,198,207", "224,226,231", "255,255,255"),
+        indigo: cdsRamp("8,15,51", "14,27,91", "21,39,130", "27,47,154", "33,56,177", "48,73,206", "68,92,225", "92,113,238", "121,138,245", "153,165,250", "187,194,253", "219,223,255", "246,247,255"),
+        pink: cdsRamp("51,10,44", "70,14,61", "89,19,78", "108,24,94", "126,30,111", "159,44,142", "187,64,170", "208,88,193", "225,117,214", "237,149,230", "246,184,243", "252,217,251", "255,245,255"),
+        purple: cdsRamp("25,13,51", "43,22,89", "73,30,137", "97,37,175", "123,45,211", "142,51,234", "164,84,244", "188,123,251", "205,153,253", "217,176,254", "230,201,255", "237,217,255", "251,247,255"),
+        red: cdsRamp("51,0,4", "79,0,7", "107,1,10", "131,4,14", "155,7,19", "189,19,33", "213,38,52", "230,64,78", "240,97,109", "248,134,144", "252,174,181", "254,213,216", "255,245,246"),
+        teal: cdsRamp("0,20,38", "0,32,59", "0,45,79", "0,58,99", "0,72,118", "0,99,153", "0,125,182", "0,149,205", "0,170,223", "6,190,236", "69,217,245", "149,239,251", "240,254,255"),
+        yellow: cdsRamp("27,6,0", "49,17,0", "81,40,0", "96,48,0", "115,64,0", "147,96,0", "175,128,0", "199,158,0", "222,189,23", "229,205,48", "242,222,94", "255,240,145", "255,252,241"),
+        chartreuse: cdsRamp("5,22,14", "14,54,29", "21,79,34", "29,103,36", "45,128,40", "73,152,54", "107,176,73", "123,200,105", "140,209,136", "158,217,163", "178,222,188", "209,238,220", "245,255,250")
+    )
+}
+
+/// Builds a ramp from thirteen `"r,g,b"` literals in step order. Authoring convenience only —
+/// values are parsed once into typed ``Color``s; there is no stringly-typed lookup at use time.
+private func cdsRamp(
+    _ s0: String, _ s5: String, _ s10: String, _ s15: String, _ s20: String,
+    _ s30: String, _ s40: String, _ s50: String, _ s60: String, _ s70: String,
+    _ s80: String, _ s90: String, _ s100: String
+) -> CDSColorRamp {
+    CDSColorRamp(
+        step0: Color(cdsSpectrum: s0), step5: Color(cdsSpectrum: s5), step10: Color(cdsSpectrum: s10),
+        step15: Color(cdsSpectrum: s15), step20: Color(cdsSpectrum: s20), step30: Color(cdsSpectrum: s30),
+        step40: Color(cdsSpectrum: s40), step50: Color(cdsSpectrum: s50), step60: Color(cdsSpectrum: s60),
+        step70: Color(cdsSpectrum: s70), step80: Color(cdsSpectrum: s80), step90: Color(cdsSpectrum: s90),
+        step100: Color(cdsSpectrum: s100)
+    )
 }

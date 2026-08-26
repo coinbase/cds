@@ -1,17 +1,22 @@
 import SwiftUI
 
-/// The set of typography roles, mirroring the `font*` maps in `defaultTheme.ts`.
+/// The set of typography roles, mirroring the `font*` maps in `defaultTheme.ts`. Doubles as the
+/// font token (the counterpart to Android's `CdsFontToken`): enumerate every role with
+/// `CDSTextStyle.allCases` and resolve one against a theme with `theme.typography[role]`.
 public enum CDSTextStyle: String, CaseIterable, Sendable {
     case display1, display2, display3
     case title1, title2, title3, title4
     case headline, body
     case label1, label2
     case caption, legal
+
+    /// The canonical CDS spelling (`title1`), for labels and serialized themes.
+    public var tokenName: String { rawValue }
 }
 
 /// The resolved attributes for a single typography role — the per-role slice of
 /// `fontSize` / `lineHeight` / `fontWeight` / `textTransform` (+ optional `fontFamily`).
-public struct CDSTextAttributes: Sendable {
+public struct CDSTextAttributes: Sendable, Equatable {
     public var size: CGFloat
     public var lineHeight: CGFloat
     public var weight: Font.Weight
@@ -43,7 +48,7 @@ public struct CDSTextAttributes: Sendable {
 
 /// Typography scale carried on the theme, so a consumer can override sizes / weights / fonts
 /// per ``CDSThemeProvider`` (RN parity: `fontSize`, `lineHeight`, etc. are themeable).
-public struct CDSTypography: Sendable {
+public struct CDSTypography: Sendable, Equatable {
     private var roles: [CDSTextStyle: CDSTextAttributes]
 
     public init(roles: [CDSTextStyle: CDSTextAttributes]) {
@@ -111,3 +116,27 @@ public struct CDSText: View {
             .foregroundStyle(color ?? theme.colors.fg)
     }
 }
+
+#if DEBUG
+// No provider on purpose: inside an Xcode Preview this renders the default theme via the
+// preview fallback instead of trapping, so a component preview "just works".
+#Preview("CDSText — preview fallback (no provider)") {
+    VStack(alignment: .leading, spacing: 8) {
+        CDSText("Display 3", style: .display3)
+        CDSText("Headline", style: .headline)
+        CDSText("Body", style: .body)
+        CDSText("Caption", style: .caption)
+    }
+    .padding()
+}
+
+#Preview("CDSText — with CDSThemeProvider") {
+    CDSThemeProvider {
+        VStack(alignment: .leading, spacing: 8) {
+            CDSText("Title 2", style: .title2)
+            CDSText("Body", style: .body)
+        }
+        .padding()
+    }
+}
+#endif

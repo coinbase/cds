@@ -6,7 +6,7 @@ import SwiftUI
 /// These are the tokens consumed by CDS illustrations/pictograms. In RN every token is
 /// optional and omitted tokens fall back to the default theme; here the defaults are always
 /// fully populated and consumers override selectively via ``with(_:)``.
-public struct CDSIllustrationColors: Sendable {
+public struct CDSIllustrationColors: Sendable, Equatable {
     public var primary: Color
     public var black: Color
     public var white: Color
@@ -23,7 +23,9 @@ public struct CDSIllustrationColors: Sendable {
     public var invert: Color
     public var invert2: Color
 
-    public init(
+    // `internal`: build a custom palette with ``with(_:)`` from ``light`` / ``dark`` so adding a
+    // token stays a non-breaking change (mirrors ``CDSColors``).
+    init(
         primary: Color,
         black: Color,
         white: Color,

@@ -1,3 +1,4 @@
+import Foundation
 import SwiftUI
 
 /// The fully-resolved theme for the current color scheme.
@@ -5,8 +6,11 @@ import SwiftUI
 /// Analogous to the object returned by RN's `useTheme()`. `colors` and `illustration` are the
 /// scheme-dependent slices; the scales (`spacing`, `radius`, `typography`, …) are
 /// scheme-independent but still carried here so components read everything from one place.
-public struct CDSTheme: Sendable {
+public struct CDSTheme: Sendable, Equatable {
     public let id: String
+    /// The raw spectrum palette for the resolved scheme — read `theme.spectrum[.blue][.step60]`
+    /// to reach past the semantic tier when necessary.
+    public let spectrum: CDSSpectrum
     public let colors: CDSColors
     public let illustration: CDSIllustrationColors
     public let spacing: CDSSpacing
@@ -19,8 +23,11 @@ public struct CDSTheme: Sendable {
     public let shadow: CDSShadowScale
     public let colorScheme: ColorScheme
 
-    public init(
+    // `internal`: a resolved theme is produced by ``CDSThemeSet/resolve(_:)``, not built by hand.
+    // Keeping the schema out of the public initializer makes adding a token a non-breaking change.
+    init(
         id: String = "cds-default",
+        spectrum: CDSSpectrum,
         colors: CDSColors,
         illustration: CDSIllustrationColors,
         spacing: CDSSpacing,
@@ -34,6 +41,7 @@ public struct CDSTheme: Sendable {
         colorScheme: ColorScheme
     ) {
         self.id = id
+        self.spectrum = spectrum
         self.colors = colors
         self.illustration = illustration
         self.spacing = spacing
@@ -59,8 +67,10 @@ public struct CDSTheme: Sendable {
 /// scheme-independent scales. This is the object a consumer supplies to ``CDSThemeProvider``,
 /// analogous to a `ThemeConfig` in RN. All fields default to the built-in CDS theme so a
 /// consumer can override just the tokens they care about.
-public struct CDSThemeSet: Sendable {
+public struct CDSThemeSet: Sendable, Equatable {
     public var id: String
+    public var lightSpectrum: CDSSpectrum
+    public var darkSpectrum: CDSSpectrum
     public var light: CDSColors
     public var dark: CDSColors
     public var lightIllustration: CDSIllustrationColors
@@ -74,8 +84,13 @@ public struct CDSThemeSet: Sendable {
     public var typography: CDSTypography
     public var shadow: CDSShadowScale
 
+    // Every parameter is defaulted, so adding a token to the set stays a source-compatible
+    // change: existing call sites keep compiling. Combined with ``cdsTheme(base:_:)`` this is
+    // the evolution-safe construction surface for a full theme.
     public init(
         id: String = "cds-default",
+        lightSpectrum: CDSSpectrum = .light,
+        darkSpectrum: CDSSpectrum = .dark,
         light: CDSColors = .light,
         dark: CDSColors = .dark,
         lightIllustration: CDSIllustrationColors = .light,
@@ -90,6 +105,8 @@ public struct CDSThemeSet: Sendable {
         shadow: CDSShadowScale = .default
     ) {
         self.id = id
+        self.lightSpectrum = lightSpectrum
+        self.darkSpectrum = darkSpectrum
         self.light = light
         self.dark = dark
         self.lightIllustration = lightIllustration
@@ -107,9 +124,17 @@ public struct CDSThemeSet: Sendable {
     /// The built-in CDS default theme.
     public static let `default` = CDSThemeSet()
 
+    /// Return a copy with a handful of axes overridden. See also ``cdsTheme(base:_:)``.
+    public func with(_ mutate: (inout CDSThemeSet) -> Void) -> CDSThemeSet {
+        var copy = self
+        mutate(&copy)
+        return copy
+    }
+
     public func resolve(_ scheme: ColorScheme) -> CDSTheme {
         CDSTheme(
             id: id,
+            spectrum: scheme == .dark ? darkSpectrum : lightSpectrum,
             colors: scheme == .dark ? dark : light,
             illustration: scheme == .dark ? darkIllustration : lightIllustration,
             spacing: spacing,
@@ -125,18 +150,79 @@ public struct CDSThemeSet: Sendable {
     }
 }
 
+/// Builds a ``CDSThemeSet`` by overriding tokens on a base theme — the ergonomic, evolution-safe
+/// construction surface, mirroring Android's `cdsTheme { }` DSL.
+///
+/// ```swift
+/// let acme = cdsTheme {
+///     $0.id = "acme"
+///     $0.light.bgPrimary = Color(cdsRGB: 124, 58, 237)
+///     $0.dark.bgPrimary = Color(cdsRGB: 124, 58, 237)
+///     $0.spacing.x2 = 24
+/// }
+/// ```
+///
+/// To rebrand from a custom palette, override the spectrum and re-derive the semantic colors:
+///
+/// ```swift
+/// let brand = cdsTheme {
+///     $0.lightSpectrum = $0.lightSpectrum.with { $0.blue = $0.blue.with { $0.step60 = brandBlue } }
+///     $0.light = .lightDeriving(from: $0.lightSpectrum)
+/// }
+/// ```
+///
+/// Adding a token to the theme never changes this signature, so a from-a-base build stays
+/// compiling across minor versions.
+public func cdsTheme(
+    base: CDSThemeSet = .default,
+    _ block: (inout CDSThemeSet) -> Void
+) -> CDSThemeSet {
+    base.with(block)
+}
+
+// `nil` means no ``CDSThemeProvider`` is installed above the reader. Storing an optional (rather
+// than defaulting to the light theme) is what lets a missing provider be *detected* instead of
+// silently papered over — see ``CDSThemeEnvironment``.
 private struct CDSThemeKey: EnvironmentKey {
-    static let defaultValue: CDSTheme = CDSThemeSet.default.resolve(.light)
+    static let defaultValue: CDSTheme? = nil
 }
 
 private struct CDSThemeSetKey: EnvironmentKey {
     static let defaultValue: CDSThemeSet = .default
 }
 
+/// Resolves what a `\.cdsTheme` reader sees, and decides how to treat a missing provider.
+///
+/// This mirrors Android's `CdsTheme.current`: a component with no ``CDSThemeProvider`` ancestor
+/// renders the default theme inside an Xcode Preview (so unwrapped component previews work), and
+/// hard-fails everywhere else so a missing provider surfaces immediately in development rather
+/// than shipping subtly-wrong colors.
+enum CDSThemeEnvironment {
+    static func resolved(stored: CDSTheme?, scheme: ColorScheme, isPreview: Bool) -> CDSTheme {
+        if let stored { return stored }
+        if isPreview { return CDSThemeSet.default.resolve(scheme) }
+        preconditionFailure("No CDS theme found. Wrap your views in CDSThemeProvider { … }.")
+    }
+
+    /// Whether the process is rendering an Xcode Preview — the SwiftUI analog of Compose's
+    /// `LocalInspectionMode.current`.
+    static let isRunningInXcodePreview: Bool =
+        ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+}
+
 public extension EnvironmentValues {
     /// The active resolved CDS theme. Read it in components via `@Environment(\.cdsTheme) var theme`.
+    ///
+    /// Requires a ``CDSThemeProvider`` ancestor at runtime; without one, reading this traps
+    /// (except inside an Xcode Preview, which falls back to the default theme).
     var cdsTheme: CDSTheme {
-        get { self[CDSThemeKey.self] }
+        get {
+            CDSThemeEnvironment.resolved(
+                stored: self[CDSThemeKey.self],
+                scheme: self.colorScheme,
+                isPreview: CDSThemeEnvironment.isRunningInXcodePreview
+            )
+        }
         set { self[CDSThemeKey.self] = newValue }
     }
 
@@ -176,6 +262,11 @@ public struct CDSThemeProvider<Content: View>: View {
 
     public var body: some View {
         let scheme = forcedScheme ?? systemScheme
+        // `resolve` runs on every body pass, but the injected value is `Equatable`: when a
+        // re-render produces a theme equal to the previous one (e.g. an ancestor recomposed
+        // without changing tokens), SwiftUI's environment diffing skips invalidating the
+        // views that read `\.cdsTheme`. This is the SwiftUI analog of Compose keying
+        // `remember(theme, colorScheme)` on value equality.
         content
             .environment(\.cdsTheme, theme.resolve(scheme))
             .environment(\.cdsThemeSet, theme)

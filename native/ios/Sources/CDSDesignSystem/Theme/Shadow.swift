@@ -2,7 +2,7 @@ import SwiftUI
 
 /// A single shadow definition, mirroring an entry in `theme.shadow` in `defaultTheme.ts`
 /// (`shadowColor`, `shadowOffset`, `shadowOpacity`, `shadowRadius`).
-public struct CDSShadow: Sendable {
+public struct CDSShadow: Sendable, Equatable {
     public var color: Color
     public var opacity: Double
     public var radius: CGFloat
@@ -25,7 +25,7 @@ public struct CDSShadow: Sendable {
 }
 
 /// Shadow (elevation) scale, mirroring `theme.shadow` in `defaultTheme.ts`.
-public struct CDSShadowScale: Sendable {
+public struct CDSShadowScale: Sendable, Equatable {
     public var elevation1: CDSShadow
     public var elevation2: CDSShadow
 
