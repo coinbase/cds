@@ -12,10 +12,20 @@ let package = Package(
     ],
     products: [
         .library(name: "CDSDesignSystem", targets: ["CDSDesignSystem"]),
+        // A runnable SwiftUI gallery of the theme (the iOS counterpart to `apps/android-app`).
+        // Builds on the host with `swift build`; launch it with `swift run CDSGalleryApp`.
+        .executable(name: "CDSGalleryApp", targets: ["CDSGalleryApp"]),
     ],
     targets: [
         .target(
             name: "CDSDesignSystem",
+            swiftSettings: [
+                .swiftLanguageMode(.v6),
+            ]
+        ),
+        .executableTarget(
+            name: "CDSGalleryApp",
+            dependencies: ["CDSDesignSystem"],
             swiftSettings: [
                 .swiftLanguageMode(.v6),
             ]

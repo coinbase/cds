@@ -6,6 +6,10 @@ Native SwiftUI implementation of the CDS theme system, the foundation for the
 This package contains the **theme provider and theming layer** only — no UI components. It is a
 Swift Package (`CDSDesignSystem`) that builds standalone with `swift build` / `swift test`.
 
+It also ships a runnable **theme gallery** (`CDSGalleryApp`) — the iOS counterpart to Android's
+`apps/android-app` — that renders every token scale live with light/dark and custom-theme
+switching. See [Demo app](#demo-app).
+
 It aims for parity with the React Native `ThemeProvider` (`packages/mobile/src/core/theme.ts`,
 `packages/mobile/src/themes/defaultTheme.ts`).
 
@@ -23,6 +27,7 @@ It aims for parity with the React Native `ThemeProvider` (`packages/mobile/src/c
 | `Theme/Shadow.swift` | Shadow (elevation) tokens + `.cdsShadow()` modifier |
 | `Theme/Typography.swift` | Themeable typography (`CDSTypography`, `CDSTextAttributes`, `CDSTextStyle` font token) + `CDSText` primitive |
 | `Theme/CDSTheme.swift` | `CDSTheme`, `CDSThemeSet`, `cdsTheme { }` builder, `CDSThemeProvider`, `InvertedThemeProvider` |
+| `Sources/CDSGalleryApp/` | Runnable SwiftUI theme gallery (colors, spectrum, typography, scales, components, `AcmeTheme`) |
 
 ## RN parity
 
@@ -121,6 +126,29 @@ cd native/ios
 swift build
 swift test
 ```
+
+## Demo app
+
+`CDSGalleryApp` is a runnable SwiftUI gallery — the iOS counterpart to Android's
+`apps/android-app` — that renders the whole theme live so you can eyeball parity and try custom
+themes. It has segmented controls to switch **theme** (CDS default vs. the sample `AcmeTheme`
+brand) and **color scheme** (system / light / dark), and sections for:
+
+- **Semantic colors** — every `CDSColorToken` swatch (`theme.colors[token]`)
+- **Spectrum** — all 11 hues × 13 steps (`theme.spectrum[hue][step]`)
+- **Typography** — every `CDSTextStyle` role with its size / line-height / weight
+- **Spacing / Radius / Border width / Sizes / Shadows** — each themeable scale, drawn to size
+- **Components** — `CDSText` variants, token-built surfaces, and an `InvertedThemeProvider` demo
+
+```bash
+cd native/ios
+swift run CDSGalleryApp        # launches the gallery on the macOS host
+```
+
+Because the package targets iOS + macOS, the gallery builds with `swift build` and runs on the
+host for quick iteration. To run it in the iOS Simulator, add it to an Xcode app project that
+depends on this package (the app shell is `Sources/CDSGalleryApp/CDSGalleryApp.swift`).
+`AcmeTheme.swift` shows how a consumer builds a brand theme with the `cdsTheme { }` builder.
 
 ## Note on token source
 
