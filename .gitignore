@@ -159,9 +159,11 @@ android
 # local.properties are still ignored by the Android/IntelliJ rules near the top of this file.
 !/android/
 
-# native-rewrite: committed native source, not RN-generated ios/android artifacts
-!native/ios/
-!native/android/
+# native-rewrite: committed native iOS source, not RN-generated ios artifacts.
+# The bare `ios` pattern above matches any directory with that name (aimed at Expo prebuild
+# output), so this negation is what keeps the root native iOS package tracked. Its .build/,
+# DerivedData/, and *.xcodeproj are still ignored by ios/.gitignore and the iOS rules above.
+!/ios/
 
 # expo-app generated artifacts
 apps/expo-app/artifacts

@@ -122,7 +122,7 @@ CDSTextStyle.allCases        // display1…legal (the font token)
 ## Build
 
 ```bash
-cd native/ios
+cd ios
 swift build
 swift test
 ```
@@ -143,7 +143,7 @@ brand) and **color scheme** (system / light / dark), and sections for:
 **On the macOS host (fastest):**
 
 ```bash
-cd native/ios
+cd ios
 swift run CDSGalleryApp        # launches the gallery as a Mac window
 ```
 
@@ -155,7 +155,7 @@ host for quick iteration.
 git-ignored — regenerate it locally:
 
 ```bash
-cd native/ios
+cd ios
 brew install xcodegen          # once
 xcodegen generate              # writes CDSGallery.xcodeproj from project.yml
 open CDSGallery.xcodeproj      # pick the "CDSGalleryiOS" scheme + a simulator, then Run
