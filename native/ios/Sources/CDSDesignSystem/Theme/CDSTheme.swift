@@ -210,20 +210,34 @@ enum CDSThemeEnvironment {
         ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
 }
 
+extension EnvironmentValues {
+    /// Non-trapping storage the providers write to.
+    ///
+    /// The public ``cdsTheme`` read accessor is intentionally get-only + trapping. Injecting a
+    /// value through a *computed, writable* key path is unsafe here: SwiftUI's
+    /// `swift_setAtWritableKeyPath` materializes a mutable address by first calling the property's
+    /// getter, so writing through a trapping getter would crash during injection. Providers write
+    /// this plain optional instead, whose getter never traps.
+    var cdsThemeStorage: CDSTheme? {
+        get { self[CDSThemeKey.self] }
+        set { self[CDSThemeKey.self] = newValue }
+    }
+}
+
 public extension EnvironmentValues {
     /// The active resolved CDS theme. Read it in components via `@Environment(\.cdsTheme) var theme`.
     ///
     /// Requires a ``CDSThemeProvider`` ancestor at runtime; without one, reading this traps
     /// (except inside an Xcode Preview, which falls back to the default theme).
+    ///
+    /// This is read-only by design — install a theme with ``CDSThemeProvider`` rather than setting
+    /// `\.cdsTheme` directly (see ``cdsThemeStorage`` for why).
     var cdsTheme: CDSTheme {
-        get {
-            CDSThemeEnvironment.resolved(
-                stored: self[CDSThemeKey.self],
-                scheme: self.colorScheme,
-                isPreview: CDSThemeEnvironment.isRunningInXcodePreview
-            )
-        }
-        set { self[CDSThemeKey.self] = newValue }
+        CDSThemeEnvironment.resolved(
+            stored: self[CDSThemeKey.self],
+            scheme: self.colorScheme,
+            isPreview: CDSThemeEnvironment.isRunningInXcodePreview
+        )
     }
 
     /// The active theme configuration (light + dark). Used by ``InvertedThemeProvider`` to
@@ -268,7 +282,7 @@ public struct CDSThemeProvider<Content: View>: View {
         // views that read `\.cdsTheme`. This is the SwiftUI analog of Compose keying
         // `remember(theme, colorScheme)` on value equality.
         content
-            .environment(\.cdsTheme, theme.resolve(scheme))
+            .environment(\.cdsThemeStorage, theme.resolve(scheme))
             .environment(\.cdsThemeSet, theme)
             .environment(\.colorScheme, scheme)
     }
@@ -290,7 +304,7 @@ public struct InvertedThemeProvider<Content: View>: View {
     public var body: some View {
         let inverse: ColorScheme = theme.colorScheme == .dark ? .light : .dark
         content
-            .environment(\.cdsTheme, themeSet.resolve(inverse))
+            .environment(\.cdsThemeStorage, themeSet.resolve(inverse))
             .environment(\.colorScheme, inverse)
     }
 }

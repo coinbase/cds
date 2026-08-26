@@ -160,6 +160,16 @@ final class CDSThemeTests: XCTestCase {
         XCTAssertEqual(resolved, brand)
     }
 
+    func testProviderStorageRoundTripsToReadAccessor() {
+        // The provider injects `cdsThemeStorage` (non-trapping) and components read `cdsTheme`.
+        // These must stay split: injecting through the trapping `cdsTheme` getter crashes SwiftUI's
+        // writable-key-path materialization at runtime.
+        var env = EnvironmentValues()
+        let brand = cdsTheme { $0.light.bgPrimary = Color(cdsRGB: 4, 5, 6) }.resolve(.light)
+        env.cdsThemeStorage = brand
+        XCTAssertEqual(env.cdsTheme, brand)
+    }
+
     func testNoProviderFallsBackToDefaultThemeInPreview() {
         // Mirrors Android's LocalInspectionMode fallback: unwrapped component previews render the
         // default theme (honoring the preview's color scheme) instead of trapping.
