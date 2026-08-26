@@ -52,7 +52,7 @@ export type IconGlyphSource<Name extends string = string> = {
   getGlyph?: (args: IconGlyphResolverArgs<Name>) => string | undefined;
 };
 
-const IconGlyphSourceContext = createContext<IconGlyphSource<any> | undefined>(undefined);
+export const IconGlyphSourceContext = createContext<IconGlyphSource<any> | undefined>(undefined);
 
 export type IconGlyphSourceProviderProps = {
   /**
