@@ -8,6 +8,12 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.23.0 (8/26/2026 PST)
+
+#### 🚀 Updates
+
+- Let TextIcon respect IconGlyphSourceContext overrides. [[#862](https://github.com/coinbase/cds/pull/862)]
+
 ## 9.22.0 (8/25/2026 PST)
 
 #### 🚀 Updates
