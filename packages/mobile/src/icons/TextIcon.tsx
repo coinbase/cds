@@ -1,4 +1,4 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, useContext, useMemo } from 'react';
 import { Animated, Text } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
 import type { IconName } from '@coinbase/cds-common/types/IconName';
@@ -8,7 +8,7 @@ import { isDevelopment } from '@coinbase/cds-utils';
 import { useTheme } from '../hooks/useTheme';
 
 import type { IconProps } from './Icon';
-import { getIconSourceSize } from './Icon';
+import { DEFAULT_ICON_FONT_FAMILY, getIconSourceSize, IconGlyphSourceContext } from './createIcon';
 
 export type TextIconProps = Pick<IconProps, 'color' | 'size' | 'testID'> & {
   name: IconName;
@@ -44,26 +44,46 @@ export const TextIcon = memo(function TextIcon({
   const sourceSize = getIconSourceSize(iconSize);
   const iconColor = theme.color[color];
 
+  const contextSource = useContext(IconGlyphSourceContext);
+
+  const iconKey = `${name}-${sourceSize}-${active ? 'active' : 'inactive'}`;
+
+  // Context source (e.g. retail-icons override) takes priority over the CDS glyphMap.
+  const contextGlyph = contextSource
+    ? contextSource.getGlyph
+      ? contextSource.getGlyph({
+          glyphMap: contextSource.glyphMap,
+          name,
+          size,
+          pixelSize: iconSize,
+          active: Boolean(active),
+        })
+      : contextSource.glyphMap[iconKey as keyof typeof contextSource.glyphMap]
+    : undefined;
+
+  const glyph = contextGlyph ?? glyphMap[iconKey as keyof typeof glyphMap];
+  const fontFamily =
+    contextGlyph !== undefined
+      ? (contextSource?.fontFamily ?? DEFAULT_ICON_FONT_FAMILY)
+      : DEFAULT_ICON_FONT_FAMILY;
+
   const styles = useMemo(
     () =>
       [
         {
-          fontFamily: 'CoinbaseIcons',
+          fontFamily,
           fontSize: iconSize,
           color: iconColor,
         },
         style,
         // TODO https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
       ] as StyleProp<TextStyle>,
-    [style, iconColor, iconSize],
+    [style, iconColor, iconSize, fontFamily],
   );
-
-  const iconName = `${name}-${sourceSize}-${active ? 'active' : 'inactive'}`;
-  const glyph = glyphMap[iconName as keyof typeof glyphMap];
 
   if (glyph === undefined) {
     if (isDevelopment()) {
-      console.error(`Unable to find glyph for icon name "${name}" with glyph key "${iconName}"`);
+      console.error(`Unable to find glyph for icon name "${name}" with glyph key "${iconKey}"`);
     }
     return null;
   }
