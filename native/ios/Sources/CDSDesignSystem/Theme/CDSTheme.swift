@@ -4,8 +4,11 @@ import SwiftUI
 /// The fully-resolved theme for the current color scheme.
 ///
 /// Analogous to the object returned by RN's `useTheme()`. `colors` and `illustration` are the
-/// scheme-dependent slices; the scales (`spacing`, `radius`, `typography`, …) are
-/// scheme-independent but still carried here so components read everything from one place.
+/// color-scheme-dependent slices (they differ between light and dark mode); the scales
+/// (`spacing`, `radius`, `typography`, …) are color-scheme-independent — identical in light and
+/// dark — but still carried here so components read everything from one place. (Note: all slices
+/// can still vary by *brand theme*; "color-scheme-independent" only means they don't change with
+/// light/dark.)
 public struct CDSTheme: Sendable, Equatable {
     public let id: String
     /// The raw spectrum palette for the resolved scheme — read `theme.spectrum[.blue][.step60]`
@@ -63,8 +66,9 @@ public struct CDSTheme: Sendable, Equatable {
     }
 }
 
-/// A complete theme configuration: its scheme-dependent color/illustration sets plus the
-/// scheme-independent scales. This is the object a consumer supplies to ``CDSThemeProvider``,
+/// A complete theme configuration: its color-scheme-dependent color/illustration sets (one each
+/// for light and dark) plus the color-scheme-independent scales. This is the object a consumer
+/// supplies to ``CDSThemeProvider``,
 /// analogous to a `ThemeConfig` in RN. All fields default to the built-in CDS theme so a
 /// consumer can override just the tokens they care about.
 public struct CDSThemeSet: Sendable, Equatable {

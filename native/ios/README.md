@@ -140,14 +140,34 @@ brand) and **color scheme** (system / light / dark), and sections for:
 - **Spacing / Radius / Border width / Sizes / Shadows** — each themeable scale, drawn to size
 - **Components** — `CDSText` variants, token-built surfaces, and an `InvertedThemeProvider` demo
 
+**On the macOS host (fastest):**
+
 ```bash
 cd native/ios
-swift run CDSGalleryApp        # launches the gallery on the macOS host
+swift run CDSGalleryApp        # launches the gallery as a Mac window
 ```
 
 Because the package targets iOS + macOS, the gallery builds with `swift build` and runs on the
-host for quick iteration. To run it in the iOS Simulator, add it to an Xcode app project that
-depends on this package (the app shell is `Sources/CDSGalleryApp/CDSGalleryApp.swift`).
+host for quick iteration.
+
+**In the iOS Simulator:** the same gallery sources are wired into a thin iOS app via
+[XcodeGen](https://github.com/yonaskolb/XcodeGen) (`project.yml`). The generated `.xcodeproj` is
+git-ignored — regenerate it locally:
+
+```bash
+cd native/ios
+brew install xcodegen          # once
+xcodegen generate              # writes CDSGallery.xcodeproj from project.yml
+open CDSGallery.xcodeproj      # pick the "CDSGalleryiOS" scheme + a simulator, then Run
+```
+
+Or straight from the CLI:
+
+```bash
+xcodebuild -project CDSGallery.xcodeproj -scheme CDSGalleryiOS \
+  -destination 'platform=iOS Simulator,name=iPhone 17 Pro' build
+```
+
 `AcmeTheme.swift` shows how a consumer builds a brand theme with the `cdsTheme { }` builder.
 
 ## Note on token source
