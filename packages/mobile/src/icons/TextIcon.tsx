@@ -1,4 +1,4 @@
-import React, { memo, useContext, useMemo } from 'react';
+import React, { memo, useMemo } from 'react';
 import { Animated, Text } from 'react-native';
 import type { StyleProp, TextStyle } from 'react-native';
 import type { IconName } from '@coinbase/cds-common/types/IconName';
@@ -8,7 +8,7 @@ import { isDevelopment } from '@coinbase/cds-utils';
 import { useTheme } from '../hooks/useTheme';
 
 import type { IconProps } from './Icon';
-import { DEFAULT_ICON_FONT_FAMILY, getIconSourceSize, IconGlyphSourceContext } from './createIcon';
+import { DEFAULT_ICON_FONT_FAMILY, getIconSourceSize, useResolvedGlyph } from './createIcon';
 
 export type TextIconProps = Pick<IconProps, 'color' | 'size' | 'testID'> & {
   name: IconName;
@@ -23,6 +23,10 @@ export type TextIconProps = Pick<IconProps, 'color' | 'size' | 'testID'> & {
         style?: StyleProp<TextStyle>;
       }
   );
+
+/** Stable bound source so TextIcon participates in the same context resolution as Icon. */
+const cdsGlyphSource = { glyphMap, fontFamily: DEFAULT_ICON_FONT_FAMILY };
+
 /**
  *
  * This is a simplified, text-only version of the Icon component.
@@ -41,56 +45,39 @@ export const TextIcon = memo(function TextIcon({
   const theme = useTheme();
   const Component = animated ? Animated.Text : Text;
   const iconSize = theme.iconSize[size];
-  const sourceSize = getIconSourceSize(iconSize);
   const iconColor = theme.color[color];
 
-  const contextSource = useContext(IconGlyphSourceContext);
-
-  const iconKey = `${name}-${sourceSize}-${active ? 'active' : 'inactive'}`;
-
-  // Context source (e.g. retail-icons override) takes priority over the CDS glyphMap.
-  const contextGlyph = contextSource
-    ? contextSource.getGlyph
-      ? contextSource.getGlyph({
-          glyphMap: contextSource.glyphMap,
-          name,
-          size,
-          pixelSize: iconSize,
-          active: Boolean(active),
-        })
-      : contextSource.glyphMap[iconKey as keyof typeof contextSource.glyphMap]
-    : undefined;
-
-  const glyph = contextGlyph ?? glyphMap[iconKey as keyof typeof glyphMap];
-  const fontFamily =
-    contextGlyph !== undefined
-      ? (contextSource?.fontFamily ?? DEFAULT_ICON_FONT_FAMILY)
-      : DEFAULT_ICON_FONT_FAMILY;
+  const resolved = useResolvedGlyph(cdsGlyphSource, {
+    name,
+    size,
+    pixelSize: iconSize,
+    active: Boolean(active),
+  });
 
   const styles = useMemo(
     () =>
       [
         {
-          fontFamily,
+          fontFamily: resolved?.fontFamily,
           fontSize: iconSize,
           color: iconColor,
         },
         style,
         // TODO https://linear.app/coinbase/issue/CDS-1518/audit-potentially-harmful-reactnative-animated-pattern
       ] as StyleProp<TextStyle>,
-    [style, iconColor, iconSize, fontFamily],
+    [style, iconColor, iconSize, resolved?.fontFamily],
   );
 
-  if (glyph === undefined) {
+  if (resolved === undefined) {
     if (isDevelopment()) {
-      console.error(`Unable to find glyph for icon name "${name}" with glyph key "${iconKey}"`);
+      console.error(`Unable to find glyph for icon name "${name}" at size "${size}"`);
     }
     return null;
   }
 
   return (
     <Component accessibilityRole="image" style={styles} testID={testID}>
-      {glyph}
+      {resolved.char}
     </Component>
   );
 });
