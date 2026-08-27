@@ -19,6 +19,24 @@ struct ColorGallery: View {
     }
 }
 
+/// Every illustration color token, resolved from the active theme. Driven by
+/// `CDSIllustrationColorToken.allCases` — walks `theme.illustrationColors[token]`.
+struct IllustrationGallery: View {
+    @Environment(\.cdsTheme) private var cds
+
+    private let columns = [GridItem(.adaptive(minimum: 92), spacing: 12)]
+
+    var body: some View {
+        SectionCard("Illustration colors", subtitle: "\(CDSIllustrationColorToken.allCases.count) tokens · theme.illustrationColors[token]") {
+            LazyVGrid(columns: columns, alignment: .leading, spacing: cds.spacing.x1_5) {
+                ForEach(CDSIllustrationColorToken.allCases, id: \.self) { token in
+                    Swatch(color: cds.illustrationColors[token], label: token.tokenName)
+                }
+            }
+        }
+    }
+}
+
 /// The raw spectrum: every hue as a row of its 13 tonal steps. Driven by the hue/step token
 /// enums, walking `theme.spectrum[hue][step]`.
 struct SpectrumGallery: View {

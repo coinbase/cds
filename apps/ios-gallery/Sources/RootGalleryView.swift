@@ -59,6 +59,7 @@ struct GalleryScreen: View {
                 controls
 
                 ColorGallery()
+                IllustrationGallery()
                 SpectrumGallery()
                 TypographyGallery()
                 SpacingGallery()

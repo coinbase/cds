@@ -37,6 +37,14 @@ public struct CDSShadowScale: Sendable, Equatable {
         self.elevation2 = elevation2
     }
 
+    /// Resolve a shadow token: `theme.shadow[.elevation1]`. Pairs with ``CDSShadowToken``.
+    public subscript(_ token: CDSShadowToken) -> CDSShadow {
+        switch token {
+        case .elevation1: return elevation1
+        case .elevation2: return elevation2
+        }
+    }
+
     public static let `default` = CDSShadowScale()
 }
 

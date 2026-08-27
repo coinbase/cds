@@ -3,7 +3,7 @@ import SwiftUI
 
 /// The fully-resolved theme for the current color scheme.
 ///
-/// Analogous to the object returned by RN's `useTheme()`. `colors` and `illustration` are the
+/// Analogous to the object returned by RN's `useTheme()`. `colors` and `illustrationColors` are the
 /// color-scheme-dependent slices (they differ between light and dark mode); the scales
 /// (`spacing`, `radius`, `typography`, …) are color-scheme-independent — identical in light and
 /// dark — but still carried here so components read everything from one place. (Note: all slices
@@ -15,7 +15,7 @@ public struct CDSTheme: Sendable, Equatable {
     /// to reach past the semantic tier when necessary.
     public let spectrum: CDSSpectrum
     public let colors: CDSColors
-    public let illustration: CDSIllustrationColors
+    public let illustrationColors: CDSIllustrationColors
     public let spacing: CDSSpacing
     public let radius: CDSRadius
     public let borderWidth: CDSBorderWidth
@@ -32,7 +32,7 @@ public struct CDSTheme: Sendable, Equatable {
         id: String = "cds-default",
         spectrum: CDSSpectrum,
         colors: CDSColors,
-        illustration: CDSIllustrationColors,
+        illustrationColors: CDSIllustrationColors,
         spacing: CDSSpacing,
         radius: CDSRadius,
         borderWidth: CDSBorderWidth,
@@ -46,7 +46,7 @@ public struct CDSTheme: Sendable, Equatable {
         self.id = id
         self.spectrum = spectrum
         self.colors = colors
-        self.illustration = illustration
+        self.illustrationColors = illustrationColors
         self.spacing = spacing
         self.radius = radius
         self.borderWidth = borderWidth
@@ -66,7 +66,7 @@ public struct CDSTheme: Sendable, Equatable {
     }
 }
 
-/// A complete theme configuration: its color-scheme-dependent color/illustration sets (one each
+/// A complete theme configuration: its color-scheme-dependent color/illustration-color sets (one each
 /// for light and dark) plus the color-scheme-independent scales. This is the object a consumer
 /// supplies to ``CDSThemeProvider``,
 /// analogous to a `ThemeConfig` in RN. All fields default to the built-in CDS theme so a
@@ -77,8 +77,8 @@ public struct CDSThemeSet: Sendable, Equatable {
     public var darkSpectrum: CDSSpectrum
     public var light: CDSColors
     public var dark: CDSColors
-    public var lightIllustration: CDSIllustrationColors
-    public var darkIllustration: CDSIllustrationColors
+    public var lightIllustrationColors: CDSIllustrationColors
+    public var darkIllustrationColors: CDSIllustrationColors
     public var spacing: CDSSpacing
     public var radius: CDSRadius
     public var borderWidth: CDSBorderWidth
@@ -97,8 +97,8 @@ public struct CDSThemeSet: Sendable, Equatable {
         darkSpectrum: CDSSpectrum = .dark,
         light: CDSColors = .light,
         dark: CDSColors = .dark,
-        lightIllustration: CDSIllustrationColors = .light,
-        darkIllustration: CDSIllustrationColors = .dark,
+        lightIllustrationColors: CDSIllustrationColors = .light,
+        darkIllustrationColors: CDSIllustrationColors = .dark,
         spacing: CDSSpacing = .default,
         radius: CDSRadius = .default,
         borderWidth: CDSBorderWidth = .default,
@@ -113,8 +113,8 @@ public struct CDSThemeSet: Sendable, Equatable {
         self.darkSpectrum = darkSpectrum
         self.light = light
         self.dark = dark
-        self.lightIllustration = lightIllustration
-        self.darkIllustration = darkIllustration
+        self.lightIllustrationColors = lightIllustrationColors
+        self.darkIllustrationColors = darkIllustrationColors
         self.spacing = spacing
         self.radius = radius
         self.borderWidth = borderWidth
@@ -140,7 +140,7 @@ public struct CDSThemeSet: Sendable, Equatable {
             id: id,
             spectrum: scheme == .dark ? darkSpectrum : lightSpectrum,
             colors: scheme == .dark ? dark : light,
-            illustration: scheme == .dark ? darkIllustration : lightIllustration,
+            illustrationColors: scheme == .dark ? darkIllustrationColors : lightIllustrationColors,
             spacing: spacing,
             radius: radius,
             borderWidth: borderWidth,

@@ -6,13 +6,7 @@ struct SpacingGallery: View {
     @Environment(\.cdsTheme) private var cds
 
     private var items: [(String, CGFloat)] {
-        [
-            ("x0", cds.spacing.x0), ("x0_25", cds.spacing.x0_25), ("x0_5", cds.spacing.x0_5),
-            ("x0_75", cds.spacing.x0_75), ("x1", cds.spacing.x1), ("x1_5", cds.spacing.x1_5),
-            ("x2", cds.spacing.x2), ("x3", cds.spacing.x3), ("x4", cds.spacing.x4),
-            ("x5", cds.spacing.x5), ("x6", cds.spacing.x6), ("x7", cds.spacing.x7),
-            ("x8", cds.spacing.x8), ("x9", cds.spacing.x9), ("x10", cds.spacing.x10),
-        ]
+        CDSSpacingToken.allCases.map { ($0.rawValue, cds.spacing[$0]) }
     }
 
     var body: some View {
@@ -31,17 +25,12 @@ struct SpacingGallery: View {
     }
 }
 
-/// Border radius scale, drawn as rounded squares (the pill value is clamped for display).
+/// Border radius scale, drawn as rounded squares (the r1000 pill value is clamped for display).
 struct RadiusGallery: View {
     @Environment(\.cdsTheme) private var cds
 
     private var items: [(String, CGFloat)] {
-        [
-            ("r0", cds.radius.r0), ("r100", cds.radius.r100), ("r200", cds.radius.r200),
-            ("r300", cds.radius.r300), ("r400", cds.radius.r400), ("r500", cds.radius.r500),
-            ("r600", cds.radius.r600), ("r700", cds.radius.r700), ("r800", cds.radius.r800),
-            ("r900", cds.radius.r900), ("pill", cds.radius.pill),
-        ]
+        CDSRadiusToken.allCases.map { ($0.rawValue, cds.radius[$0]) }
     }
 
     var body: some View {
@@ -68,10 +57,7 @@ struct BorderWidthGallery: View {
     @Environment(\.cdsTheme) private var cds
 
     private var items: [(String, CGFloat)] {
-        [
-            ("w0", cds.borderWidth.w0), ("w100", cds.borderWidth.w100), ("w200", cds.borderWidth.w200),
-            ("w300", cds.borderWidth.w300), ("w400", cds.borderWidth.w400), ("w500", cds.borderWidth.w500),
-        ]
+        CDSBorderWidthToken.allCases.map { ($0.rawValue, cds.borderWidth[$0]) }
     }
 
     var body: some View {
@@ -96,9 +82,9 @@ struct SizesGallery: View {
     var body: some View {
         SectionCard("Sizes", subtitle: "theme.iconSize · avatarSize · controlSize") {
             VStack(alignment: .leading, spacing: cds.spacing.x1_5) {
-                sizeRow("Icon", [("xs", cds.iconSize.xs), ("s", cds.iconSize.s), ("m", cds.iconSize.m), ("l", cds.iconSize.l)])
-                sizeRow("Avatar", [("s", cds.avatarSize.s), ("m", cds.avatarSize.m), ("l", cds.avatarSize.l), ("xl", cds.avatarSize.xl), ("xxl", cds.avatarSize.xxl), ("xxxl", cds.avatarSize.xxxl)])
-                sizeRow("Control", [("checkbox", cds.controlSize.checkboxSize), ("radio", cds.controlSize.radioSize), ("thumb", cds.controlSize.switchThumbSize)])
+                sizeRow("Icon", CDSIconSizeToken.allCases.map { ($0.rawValue, cds.iconSize[$0]) })
+                sizeRow("Avatar", CDSAvatarSizeToken.allCases.map { ($0.rawValue, cds.avatarSize[$0]) })
+                sizeRow("Control", CDSControlSizeToken.allCases.map { ($0.tokenName, cds.controlSize[$0]) })
             }
         }
     }
@@ -128,8 +114,9 @@ struct ShadowGallery: View {
     var body: some View {
         SectionCard("Shadows", subtitle: "theme.shadow · .cdsShadow()") {
             HStack(spacing: cds.spacing.x3) {
-                shadowCard("elevation1", cds.shadow.elevation1)
-                shadowCard("elevation2", cds.shadow.elevation2)
+                ForEach(CDSShadowToken.allCases, id: \.self) { token in
+                    shadowCard(token.rawValue, cds.shadow[token])
+                }
             }
             .padding(.vertical, cds.spacing.x1)
         }

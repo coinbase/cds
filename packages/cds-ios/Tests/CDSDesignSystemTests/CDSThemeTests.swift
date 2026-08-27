@@ -23,7 +23,67 @@ final class CDSThemeTests: XCTestCase {
         XCTAssertEqual(CDSSpectrumHueToken.blue.tokenName, "blue")
         XCTAssertEqual(CDSColorRampToken.step60.tokenName, "60")
         XCTAssertEqual(CDSColorRampToken.step0.tokenName, "0")
+        XCTAssertEqual(CDSRadiusToken.r400.tokenName, "400")
+        XCTAssertEqual(CDSRadiusToken.r1000.tokenName, "1000")
+        XCTAssertEqual(CDSSpacingToken.x1_5.tokenName, "1.5")
+        XCTAssertEqual(CDSSpacingToken.x0_25.tokenName, "0.25")
+        XCTAssertEqual(CDSSpacingToken.x2.tokenName, "2")
+        XCTAssertEqual(CDSBorderWidthToken.w100.tokenName, "100")
+        XCTAssertEqual(CDSIconSizeToken.m.tokenName, "m")
+        XCTAssertEqual(CDSAvatarSizeToken.xl.tokenName, "xl")
+        XCTAssertEqual(CDSControlSizeToken.checkboxSize.tokenName, "checkboxSize")
+        XCTAssertEqual(CDSIllustrationColorToken.gray4.tokenName, "gray4")
+        XCTAssertEqual(CDSShadowToken.elevation1.tokenName, "elevation1")
         XCTAssertEqual(CDSTextStyle.title1.tokenName, "title1")
+    }
+
+    func testScaleSubscriptsMatchStoredProperties() {
+        let radius = CDSRadius.default
+        XCTAssertEqual(radius[.r200], radius.r200)
+        XCTAssertEqual(radius[.r1000], radius.r1000)
+
+        let spacing = CDSSpacing.default
+        XCTAssertEqual(spacing[.x2], spacing.x2)
+        XCTAssertEqual(spacing[.x1_5], spacing.x1_5)
+
+        let borderWidth = CDSBorderWidth.default
+        XCTAssertEqual(borderWidth[.w100], borderWidth.w100)
+
+        let iconSize = CDSIconSize.default
+        XCTAssertEqual(iconSize[.m], iconSize.m)
+
+        let avatarSize = CDSAvatarSize.default
+        XCTAssertEqual(avatarSize[.xl], avatarSize.xl)
+
+        let controlSize = CDSControlSize.default
+        XCTAssertEqual(controlSize[.checkboxSize], controlSize.checkboxSize)
+
+        let illustration = CDSIllustrationColors.light
+        XCTAssertEqual(illustration[.primary], illustration.primary)
+        XCTAssertEqual(illustration[.gray4], illustration.gray4)
+
+        let shadow = CDSShadowScale.default
+        XCTAssertEqual(shadow[.elevation1], shadow.elevation1)
+        XCTAssertEqual(shadow[.elevation2], shadow.elevation2)
+
+        // Every subscript is exhaustive over its token enum.
+        for t in CDSRadiusToken.allCases { _ = radius[t] }
+        for t in CDSSpacingToken.allCases { _ = spacing[t] }
+        for t in CDSBorderWidthToken.allCases { _ = borderWidth[t] }
+        for t in CDSIconSizeToken.allCases { _ = iconSize[t] }
+        for t in CDSAvatarSizeToken.allCases { _ = avatarSize[t] }
+        for t in CDSControlSizeToken.allCases { _ = controlSize[t] }
+        for t in CDSIllustrationColorToken.allCases { _ = illustration[t] }
+        for t in CDSShadowToken.allCases { _ = shadow[t] }
+
+        XCTAssertEqual(CDSRadiusToken.allCases.count, 11)
+        XCTAssertEqual(CDSSpacingToken.allCases.count, 15)
+        XCTAssertEqual(CDSBorderWidthToken.allCases.count, 6)
+        XCTAssertEqual(CDSIconSizeToken.allCases.count, 4)
+        XCTAssertEqual(CDSAvatarSizeToken.allCases.count, 6)
+        XCTAssertEqual(CDSControlSizeToken.allCases.count, 6)
+        XCTAssertEqual(CDSIllustrationColorToken.allCases.count, 15)
+        XCTAssertEqual(CDSShadowToken.allCases.count, 2)
     }
 
     func testColorSubscriptMatchesStoredProperties() {
@@ -191,7 +251,7 @@ final class CDSThemeTests: XCTestCase {
 
     func testIllustrationColorsResolveByScheme() {
         XCTAssertEqual(
-            CDSThemeSet.default.resolve(.light).illustration.primary.resolve(in: .init()).blue,
+            CDSThemeSet.default.resolve(.light).illustrationColors.primary.resolve(in: .init()).blue,
             Color(cdsRGB: 0, 82, 255).resolve(in: .init()).blue,
             accuracy: 0.01
         )

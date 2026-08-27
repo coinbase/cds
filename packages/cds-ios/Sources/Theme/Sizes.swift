@@ -11,6 +11,16 @@ public struct CDSIconSize: Sendable, Equatable {
         self.xs = xs; self.s = s; self.m = m; self.l = l
     }
 
+    /// Resolve an icon-size token: `theme.iconSize[.m]`. Pairs with ``CDSIconSizeToken``.
+    public subscript(_ token: CDSIconSizeToken) -> CGFloat {
+        switch token {
+        case .xs: return xs
+        case .s: return s
+        case .m: return m
+        case .l: return l
+        }
+    }
+
     public static let `default` = CDSIconSize()
 }
 
@@ -29,6 +39,18 @@ public struct CDSAvatarSize: Sendable, Equatable {
     ) {
         self.s = s; self.m = m; self.l = l
         self.xl = xl; self.xxl = xxl; self.xxxl = xxxl
+    }
+
+    /// Resolve an avatar-size token: `theme.avatarSize[.xl]`. Pairs with ``CDSAvatarSizeToken``.
+    public subscript(_ token: CDSAvatarSizeToken) -> CGFloat {
+        switch token {
+        case .s: return s
+        case .m: return m
+        case .l: return l
+        case .xl: return xl
+        case .xxl: return xxl
+        case .xxxl: return xxxl
+        }
     }
 
     public static let `default` = CDSAvatarSize()
@@ -54,6 +76,18 @@ public struct CDSControlSize: Sendable, Equatable {
         self.switchHeight = switchHeight
         self.switchThumbSize = switchThumbSize
         self.tileSize = tileSize
+    }
+
+    /// Resolve a control measurement: `theme.controlSize[.checkboxSize]`. Pairs with ``CDSControlSizeToken``.
+    public subscript(_ token: CDSControlSizeToken) -> CGFloat {
+        switch token {
+        case .checkboxSize: return checkboxSize
+        case .radioSize: return radioSize
+        case .switchWidth: return switchWidth
+        case .switchHeight: return switchHeight
+        case .switchThumbSize: return switchThumbSize
+        case .tileSize: return tileSize
+        }
     }
 
     public static let `default` = CDSControlSize()

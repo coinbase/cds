@@ -65,6 +65,28 @@ public struct CDSIllustrationColors: Sendable, Equatable {
         return copy
     }
 
+    /// Resolve an illustration color token: `theme.illustrationColors[.primary]`. Pairs with
+    /// ``CDSIllustrationColorToken`` for dynamic, data-driven, and serialized lookups.
+    public subscript(_ token: CDSIllustrationColorToken) -> Color {
+        switch token {
+        case .primary: return primary
+        case .black: return black
+        case .white: return white
+        case .gray: return gray
+        case .gray2: return gray2
+        case .gray3: return gray3
+        case .gray4: return gray4
+        case .positive: return positive
+        case .negative: return negative
+        case .accent1: return accent1
+        case .accent2: return accent2
+        case .accent3: return accent3
+        case .accent4: return accent4
+        case .invert: return invert
+        case .invert2: return invert2
+        }
+    }
+
     public static let light = CDSIllustrationColors(
         primary: Color(cdsRGB: 0, 82, 255),
         black: Color(cdsRGB: 10, 11, 13),

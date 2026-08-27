@@ -17,7 +17,7 @@ It aims for parity with the React Native `ThemeProvider` (`packages/mobile/src/c
 
 | Path | Purpose |
 | --- | --- |
-| `Theme/Tokens.swift` | Enumerable, addressable token names (`CDSColorToken`, `CDSSpectrumHueToken`, `CDSColorRampToken`) with canonical `tokenName`s |
+| `Theme/Tokens.swift` | Enumerable, addressable token names for every scale (`CDSColorToken`, `CDSSpectrumHueToken`, `CDSColorRampToken`, `CDSRadiusToken`, `CDSSpacingToken`, `CDSBorderWidthToken`, `CDSIconSizeToken`, `CDSAvatarSizeToken`, `CDSControlSizeToken`, `CDSIllustrationColorToken`, `CDSShadowToken`) with canonical `tokenName`s |
 | `Theme/Spectrum.swift` | Tier-1 strongly-typed spectrum palette (`CDSSpectrum` / `CDSColorRamp`) — all 11 hues × 13 shades (light + dark) |
 | `Theme/CDSColors.swift` | Tier-2 semantic color tokens (fg/bg/line/elevation/accent/…) + token subscript + custom-theme factories |
 | `Theme/CDSIllustrationColors.swift` | Illustration color palette (light + dark) |
@@ -40,8 +40,10 @@ typography, light/dark resolution, custom themes, and `InvertedThemeProvider`.
 the theme (not global constants), so a consumer can override them per `CDSThemeProvider`, just
 like RN.
 
-Also covered: token addressability (enumerable `CDSColorToken` / `CDSSpectrumHueToken` /
-`CDSColorRampToken` with canonical `tokenName`s), `Equatable` token types (so SwiftUI skips
+Also covered: token addressability (every scale is enumerable and addressable — `CDSColorToken` /
+`CDSSpectrumHueToken` / `CDSColorRampToken` / `CDSRadiusToken` / `CDSSpacingToken` /
+`CDSBorderWidthToken` / `CDSIconSizeToken` / `CDSAvatarSizeToken` / `CDSControlSizeToken` /
+`CDSIllustrationColorToken` / `CDSShadowToken` — with canonical `tokenName`s), `Equatable` token types (so SwiftUI skips
 re-invalidating theme readers on no-op re-renders), and a strict no-provider policy with an
 Xcode-Preview fallback.
 
@@ -117,6 +119,14 @@ contract (and serialized/JSON themes) needs:
 CDSColorToken.allCases       // fg, fgMuted, …, transparent  (each has .tokenName "fgMuted")
 CDSSpectrumHueToken.allCases // blue, green, …, chartreuse
 CDSColorRampToken.allCases   // step0…step100 (.tokenName "0"…"100")
+CDSRadiusToken.allCases      // r0…r1000 (.tokenName "0"…"1000"); theme.radius[.r400]
+CDSSpacingToken.allCases     // x0…x10 (.tokenName "0"…"10", "1.5"); theme.spacing[.x2]
+CDSBorderWidthToken.allCases // w0…w500 (.tokenName "0"…"500"); theme.borderWidth[.w100]
+CDSIconSizeToken.allCases    // xs…l; theme.iconSize[.m]
+CDSAvatarSizeToken.allCases  // s…xxxl; theme.avatarSize[.xl]
+CDSControlSizeToken.allCases // checkboxSize…tileSize; theme.controlSize[.checkboxSize]
+CDSIllustrationColorToken.allCases // primary…invert2; theme.illustrationColors[.primary]
+CDSShadowToken.allCases      // elevation1, elevation2; theme.shadow[.elevation1]
 CDSTextStyle.allCases        // display1…legal (the font token)
 ```
 
@@ -151,6 +161,7 @@ controls to switch **theme** (CDS default vs. the sample `AcmeTheme` brand) and 
 (system / light / dark), and sections for:
 
 - **Semantic colors** — every `CDSColorToken` swatch (`theme.colors[token]`)
+- **Illustration colors** — every `CDSIllustrationColorToken` swatch (`theme.illustrationColors[token]`)
 - **Spectrum** — all 11 hues × 13 steps (`theme.spectrum[hue][step]`)
 - **Typography** — every `CDSTextStyle` role with its size / line-height / weight
 - **Spacing / Radius / Border width / Sizes / Shadows** — each themeable scale, drawn to size

@@ -29,7 +29,7 @@ struct ComponentsGallery: View {
             .padding(.horizontal, cds.spacing.x2)
             .padding(.vertical, cds.spacing.x1_5)
             .background(cds.colors.bgPrimary)
-            .clipShape(RoundedRectangle(cornerRadius: cds.radius.pill))
+            .clipShape(RoundedRectangle(cornerRadius: cds.radius.r1000))
     }
 
     /// Same content rendered under `InvertedThemeProvider`, which flips the scheme for its subtree.
