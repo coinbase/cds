@@ -26,9 +26,9 @@ func cdsProgressCircleDiameter(_ size: CDSProgressCircleSize, theme: CDSTheme) -
 /// The size tiers cover standalone use; the explicit-diameter initializer lets ``CDSButton`` and
 /// ``CDSSlideButton`` request the exact icon diameter their busy state computes, so those controls
 /// render identically to before. Colors come from the ambient ``CDSTheme`` and default to
-/// `fgPrimary` (the primary foreground mark). RN's indeterminate `ProgressCircle` uses `fgMuted` and
-/// its deprecated `Spinner` used `bgPrimary`; `fgPrimary` is the closest iOS semantic to RN's intent
-/// of a primary-brand foreground indicator.
+/// `fgMuted` (the muted foreground mark), matching RN's indeterminate `ProgressCircle`. RN's
+/// deprecated `Spinner` used `bgPrimary`; the non-deprecated `ProgressCircle` uses `fgMuted`, so we
+/// mirror that here.
 struct CDSProgressCircle: View {
     @Environment(\.cdsTheme) private var theme
 
@@ -46,7 +46,7 @@ struct CDSProgressCircle: View {
     @State private var rotation = 0.0
 
     /// The component-grade initializer: pick a size tier, optionally override the color, and label it
-    /// for VoiceOver. `color == nil` resolves to `theme.colors.fgPrimary`.
+    /// for VoiceOver. `color == nil` resolves to `theme.colors.fgMuted`.
     init(
         size: CDSProgressCircleSize = .m,
         color: Color? = nil,
@@ -75,7 +75,7 @@ struct CDSProgressCircle: View {
         case .tier(let size): diameter = cdsProgressCircleDiameter(size, theme: theme)
         case .explicit(let value): diameter = value
         }
-        let strokeColor = color ?? theme.colors.fgPrimary
+        let strokeColor = color ?? theme.colors.fgMuted
 
         return Circle()
             .trim(from: 0, to: 0.75)
