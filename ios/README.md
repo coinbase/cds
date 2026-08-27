@@ -6,10 +6,10 @@ for the two Kotlin modules.
 
 Those modules live where Nx expects them, not here:
 
-| Module              | Directory              | Nx project    |
-| ------------------- | ---------------------- | ------------- |
-| `CDSDesignSystem`   | `packages/cds-ios/`    | `cds-ios`     |
-| `CDSGalleryiOS` app | `apps/ios-gallery/`    | `ios-gallery` |
+| Module              | Directory           | Nx project    |
+| ------------------- | ------------------- | ------------- |
+| `CDSDesignSystem`   | `packages/cds-ios/` | `cds-ios`     |
+| `CDSGalleryiOS` app | `apps/ios-gallery/` | `ios-gallery` |
 
 `CDS.xcworkspace` references both so Xcode shows them as peers — you edit the real files in
 `packages/` and `apps/`, not copies.

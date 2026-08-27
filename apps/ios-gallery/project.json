@@ -3,8 +3,12 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "application",
   "sourceRoot": "apps/ios-gallery/Sources",
-  "tags": ["platform:ios"],
-  "implicitDependencies": ["cds-ios"],
+  "tags": [
+    "platform:ios"
+  ],
+  "implicitDependencies": [
+    "cds-ios"
+  ],
   "targets": {
     "assemble": {
       "executor": "nx:run-commands",
