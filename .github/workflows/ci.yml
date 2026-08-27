@@ -7,12 +7,8 @@ on:
       - master
       - 'cds-v[0-9]*'
       - 'release-[0-9]+.x'
-    # This workflow is the JavaScript pipeline: Yarn, Nx, ESLint, Jest, tsc. The native packages
-    # share none of that toolchain — Android is Kotlin/Gradle, iOS is Swift/Xcode — so a change
-    # confined to these paths has nothing here to run; that work lives in android.yml / ios.yml.
-    # A mixed PR (JS + native) touches other paths and still runs here.
-    # (Duplicated below rather than shared via a YAML anchor: GitHub Actions does not expand them.
-    # Keep in sync with the `paths` lists on android.yml and ios.yml when adding native paths.)
+    # JavaScript pipeline (Yarn/Nx/ESLint/Jest/tsc). Native packages run in android.yml / ios.yml,
+    # so their paths are ignored here. Keep in sync with the `paths` lists in those workflows.
     paths-ignore:
       - 'android/**'
       - 'apps/android-app/**'
@@ -98,14 +94,9 @@ jobs:
         # preventing the count from growing unbounded. Lower it as the backlog is
         # paid down.
         #
-        # Every Android Nx project is tagged `platform:android` and every native-iOS Nx project
-        # is tagged `platform:ios`; both are excluded from every `nx affected` job in this
-        # workflow. Their targets shell out to Gradle (Android) or Swift/Xcode (iOS), and these
-        # Linux runners have no JDK, Android SDK, Swift, or Xcode, so a mixed PR would otherwise
-        # fail here on the native half. Today only `test` would actually match; the tag exclude
-        # is on every target so that adding a native-backed target — or a new native project with
-        # the same tag — cannot silently start invoking Gradle/Swift on a JS runner. The native
-        # pipelines run in android.yml / ios.yml instead.
+        # Android (`platform:android`) and iOS (`platform:ios`) Nx projects are excluded from every
+        # `nx affected` job: their targets need Gradle/Swift/Xcode, which these Linux runners lack.
+        # They run in android.yml / ios.yml instead.
         run: yarn nx affected --exclude=tag:platform:android,tag:platform:ios --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=300
 
   format:

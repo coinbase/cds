@@ -70,9 +70,7 @@ public struct CDSRadius: Sendable, Equatable {
     public var     r800: CGFloat
     public var r900: CGFloat
     /// The pill rung (`borderRadius["1000"]` in RN, `radius1000` on Android): deliberately
-    /// oversized (1e5) so it always renders fully rounded at any size. Keep it absurd if you
-    /// override the scale — a "large but plausible" value stops looking like a pill once a
-    /// component grows past it.
+    /// oversized (1e5) so it always renders fully rounded at any size.
     public var r1000: CGFloat
 
     public init(

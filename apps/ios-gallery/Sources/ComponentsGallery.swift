@@ -1,41 +1,66 @@
-import CDSDesignSystem
+@testable import CDSDesignSystem
 import SwiftUI
 
-/// The (currently small) component surface: `CDSText` color variants, a themed "button"-style
-/// surface built from tokens, and an `InvertedThemeProvider` demo.
+/// The component surface. `CDSText`, `CDSButton`, and `CDSSlideButton` are `internal` (not customer
+/// API yet), so the gallery reaches them via `@testable import` (Debug enables testability) to demo
+/// the real components.
 struct ComponentsGallery: View {
     @Environment(\.cdsTheme) private var cds
+    @State private var slideChecked = false
 
     var body: some View {
-        SectionCard("Components", subtitle: "CDSText · token-built surfaces · inverted theme") {
-            VStack(alignment: .leading, spacing: cds.spacing.x2) {
-                VStack(alignment: .leading, spacing: cds.spacing.x0_5) {
-                    CDSText("Default foreground", style: .body)
-                    CDSText("Muted foreground", style: .body, color: cds.colors.fgMuted)
-                    CDSText("Primary foreground", style: .body, color: cds.colors.fgPrimary)
-                    CDSText("Positive / Negative", style: .body, color: cds.colors.fgPositive)
-                }
-
-                pseudoButton
-
+        SectionCard("Components", subtitle: "CDSText · CDSButton · CDSSlideButton · inverted theme") {
+            VStack(alignment: .leading, spacing: cds.spacing.x3) {
+                text
+                buttons
+                slideButton
                 invertedDemo
             }
         }
     }
 
-    /// A primary "button" surface assembled purely from theme tokens (no Button component yet).
-    private var pseudoButton: some View {
-        CDSText("Primary action", style: .headline, color: cds.colors.fgInverse)
-            .padding(.horizontal, cds.spacing.x2)
-            .padding(.vertical, cds.spacing.x1_5)
-            .background(cds.colors.bgPrimary)
-            .clipShape(RoundedRectangle(cornerRadius: cds.radius.r1000))
+    private var text: some View {
+        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+            CDSText("CDSText", style: .label1, color: cds.colors.fgMuted)
+            CDSText("Default foreground", style: .body)
+            CDSText("Muted foreground", style: .body, color: cds.colors.fgMuted)
+            CDSText("Underlined", style: .body, underline: true)
+            CDSText("Monospace 1234567890", style: .body, mono: true)
+            CDSText("Disabled", style: .body, enabled: false)
+        }
+    }
+
+    private var buttons: some View {
+        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+            CDSText("CDSButton", style: .label1, color: cds.colors.fgMuted)
+            CDSButton(text: "Primary", action: {})
+            CDSButton(text: "Secondary", action: {}, variant: .secondary)
+            CDSButton(text: "Tertiary", action: {}, variant: .tertiary)
+            CDSButton(text: "Positive", action: {}, variant: .positive)
+            CDSButton(text: "Negative", action: {}, variant: .negative)
+            CDSButton(text: "Ghost", action: {}, transparent: true)
+            CDSButton(text: "Disabled", action: {}, isEnabled: false)
+            CDSButton(text: "Loading", action: {}, loading: true)
+            CDSButton(text: "Full width", action: {}, fullWidth: true)
+        }
+    }
+
+    private var slideButton: some View {
+        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+            CDSText("CDSSlideButton", style: .label1, color: cds.colors.fgMuted)
+            CDSSlideButton(
+                checked: $slideChecked,
+                uncheckedLabel: "Slide to confirm",
+                checkedLabel: "Confirming…"
+            )
+            CDSButton(text: "Reset slider", action: { slideChecked = false }, variant: .secondary, size: .s)
+        }
     }
 
     /// Same content rendered under `InvertedThemeProvider`, which flips the scheme for its subtree.
     private var invertedDemo: some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x0_5) {
-            CDSText("InvertedThemeProvider", style: .label1)
+        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+            CDSText("InvertedThemeProvider", style: .label1, color: cds.colors.fgMuted)
             InvertedThemeProvider {
                 InvertedCard()
             }

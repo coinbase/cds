@@ -3,8 +3,11 @@
 Native SwiftUI implementation of the CDS theme system, the foundation for the
 `native-rewrite` initiative (moving CDS off React Native toward native iOS).
 
-This package contains the **theme provider and theming layer** only — no UI components. It is a
-Swift Package (`CDSDesignSystem`) that builds standalone with `swift build` / `swift test`.
+This package contains the **theme provider and theming layer** plus a small set of experimental
+**components** (`CDSText`, `CDSButton`, `CDSSlideButton`). The components are `internal` — they
+compile into the artifact but are **not customer API yet** — mirroring how Android ships `Button`,
+`Text`, and `SlideButton` as `internal` for the first release. It is a Swift Package
+(`CDSDesignSystem`) that builds standalone with `swift build` / `swift test`.
 
 A runnable **theme gallery** that renders every token scale live (light/dark + custom-theme
 switching) lives in [`apps/ios-gallery/`](../../apps/ios-gallery/) — the iOS counterpart to
@@ -15,20 +18,25 @@ It aims for parity with the React Native `ThemeProvider` (`packages/mobile/src/c
 
 ## What's here
 
-| Path | Purpose |
-| --- | --- |
-| `Theme/Tokens.swift` | Enumerable, addressable token names for every scale (`CDSColorToken`, `CDSSpectrumHueToken`, `CDSColorRampToken`, `CDSRadiusToken`, `CDSSpacingToken`, `CDSBorderWidthToken`, `CDSIconSizeToken`, `CDSAvatarSizeToken`, `CDSControlSizeToken`, `CDSIllustrationColorToken`, `CDSShadowToken`) with canonical `tokenName`s |
-| `Theme/Spectrum.swift` | Tier-1 strongly-typed spectrum palette (`CDSSpectrum` / `CDSColorRamp`) — all 11 hues × 13 shades (light + dark) |
-| `Theme/CDSColors.swift` | Tier-2 semantic color tokens (fg/bg/line/elevation/accent/…) + token subscript + custom-theme factories |
-| `Theme/CDSIllustrationColors.swift` | Illustration color palette (light + dark) |
-| `Theme/Color+RGB.swift` | `Color` init from CDS RGB strings / components |
-| `Theme/Spacing.swift` | Themeable spacing / radius / border-width scales |
-| `Theme/Sizes.swift` | Themeable icon / avatar / control size scales |
-| `Theme/Shadow.swift` | Shadow (elevation) tokens + `.cdsShadow()` modifier |
-| `Theme/Typography.swift` | Themeable typography (`CDSTypography`, `CDSTextAttributes`, `CDSTextStyle` font token) + `CDSText` primitive |
-| `Theme/CDSTheme.swift` | `CDSTheme`, `CDSThemeSet`, `cdsTheme { }` builder, `CDSThemeProvider`, `InvertedThemeProvider` |
+| Path                                | Purpose                                                                                                                                                                                                                                                                                                                   |
+| ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `Theme/Tokens.swift`                | Enumerable, addressable token names for every scale (`CDSColorToken`, `CDSSpectrumHueToken`, `CDSColorRampToken`, `CDSRadiusToken`, `CDSSpacingToken`, `CDSBorderWidthToken`, `CDSIconSizeToken`, `CDSAvatarSizeToken`, `CDSControlSizeToken`, `CDSIllustrationColorToken`, `CDSShadowToken`) with canonical `tokenName`s |
+| `Theme/Spectrum.swift`              | Tier-1 strongly-typed spectrum palette (`CDSSpectrum` / `CDSColorRamp`) — all 11 hues × 13 shades (light + dark)                                                                                                                                                                                                          |
+| `Theme/CDSColors.swift`             | Tier-2 semantic color tokens (fg/bg/line/elevation/accent/…) + token subscript + custom-theme factories                                                                                                                                                                                                                   |
+| `Theme/CDSIllustrationColors.swift` | Illustration color palette (light + dark)                                                                                                                                                                                                                                                                                 |
+| `Theme/Color+RGB.swift`             | `Color` init from CDS RGB strings / components                                                                                                                                                                                                                                                                            |
+| `Theme/Spacing.swift`               | Themeable spacing / radius / border-width scales                                                                                                                                                                                                                                                                          |
+| `Theme/Sizes.swift`                 | Themeable icon / avatar / control size scales                                                                                                                                                                                                                                                                             |
+| `Theme/Shadow.swift`                | Shadow (elevation) tokens + `.cdsShadow()` modifier                                                                                                                                                                                                                                                                       |
+| `Theme/Typography.swift`            | Themeable typography (`CDSTypography`, `CDSTextAttributes`, `CDSTextStyle` font token)                                                                                                                                                                                                                                    |
+| `Theme/CDSTheme.swift`              | `CDSTheme`, `CDSThemeSet`, `cdsTheme { }` builder, `CDSThemeProvider`, `InvertedThemeProvider`                                                                                                                                                                                                                            |
+| `Components/`                       | **Internal** (not customer API): `CDSText`, `CDSButton` (+ variants/sizes), `CDSSlideButton` (drag-to-confirm), and a shared `CDSSpinner`. Ships in the artifact; kept off the public surface until stabilized                                                                                                            |
 
 The demo gallery that consumes this library lives in [`apps/ios-gallery/`](../../apps/ios-gallery/).
+Because the components are `internal`, the gallery reaches them with `@testable import
+CDSDesignSystem` (Debug builds enable testability) — so it demos the real components rather than
+reimplementing stand-ins. That is an iOS advantage over Android, whose sample app must define local
+look-alikes since Kotlin has no `@testable` equivalent.
 
 ## RN parity
 
@@ -145,6 +153,7 @@ Or through Nx (project `cds-ios`, tagged `platform:ios`):
 ```bash
 yarn nx run cds-ios:test        # swift test (theme library)
 yarn nx run cds-ios:assemble    # swift build -c release
+yarn nx run cds-ios:xcframework # build the distributable CDSDesignSystem.xcframework (+ checksum)
 ```
 
 `platform:ios` projects are excluded from the JavaScript CI (`ci.yml`) — Swift/Xcode builds run
@@ -165,7 +174,7 @@ controls to switch **theme** (CDS default vs. the sample `AcmeTheme` brand) and 
 - **Spectrum** — all 11 hues × 13 steps (`theme.spectrum[hue][step]`)
 - **Typography** — every `CDSTextStyle` role with its size / line-height / weight
 - **Spacing / Radius / Border width / Sizes / Shadows** — each themeable scale, drawn to size
-- **Components** — `CDSText` variants, token-built surfaces, and an `InvertedThemeProvider` demo
+- **Components** — the real (internal) `CDSText`, `CDSButton`, and `CDSSlideButton`, plus an `InvertedThemeProvider` demo
 
 Run it on a Simulator:
 
@@ -176,6 +185,32 @@ yarn nx run ios-gallery:launch   # xcodegen + build + install + launch
 
 `apps/ios-gallery/Sources/AcmeTheme.swift` shows how a consumer builds a brand theme with the
 `cdsTheme { }` builder.
+
+## Installing in an app
+
+Releases ship as a binary **XCFramework** attached to a GitHub Release tagged `ios-v<version>` —
+the iOS analog of Android's AAR. Add it as a binary Swift package target and pin the checksum
+printed by the build script:
+
+```swift
+// Package.swift
+.binaryTarget(
+    name: "CDSDesignSystem",
+    url: "https://github.com/coinbase/cds/releases/download/ios-v0.0.1/CDSDesignSystem.xcframework.zip",
+    checksum: "<checksum from the release notes>"
+)
+```
+
+The library product is `.dynamic` so it can be packaged into a framework/XCFramework; source
+consumers in this monorepo (the gallery app) link the same package locally.
+
+## Cutting a release
+
+Publishing is manual — the direct parallel of Android. Follow
+[`docs/releasing.md`](docs/releasing.md): pick a SemVer bump, add a [`CHANGELOG.md`](CHANGELOG.md)
+entry, build the XCFramework with `yarn nx run cds-ios:xcframework`, and attach
+`CDSDesignSystem.xcframework.zip` to a GitHub Release tagged `ios-v<version>`. Do not use
+`yarn release` or `yarn bump-version`.
 
 ## Note on token source
 

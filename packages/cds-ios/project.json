@@ -3,7 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "projectType": "library",
   "sourceRoot": "packages/cds-ios/Sources",
-  "tags": ["platform:ios"],
+  "tags": [
+    "platform:ios"
+  ],
   "targets": {
     "assemble": {
       "executor": "nx:run-commands",
@@ -12,7 +14,9 @@
         "cwd": "packages/cds-ios"
       },
       "dependsOn": [],
-      "inputs": ["default"],
+      "inputs": [
+        "default"
+      ],
       "cache": true
     },
     "test": {
@@ -22,8 +26,18 @@
         "cwd": "packages/cds-ios"
       },
       "dependsOn": [],
-      "inputs": ["default"],
+      "inputs": [
+        "default"
+      ],
       "cache": true
+    },
+    "xcframework": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./scripts/build-xcframework.sh",
+        "cwd": "packages/cds-ios"
+      },
+      "cache": false
     }
   }
 }

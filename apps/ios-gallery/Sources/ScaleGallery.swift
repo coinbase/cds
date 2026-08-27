@@ -1,4 +1,4 @@
-import CDSDesignSystem
+@testable import CDSDesignSystem
 import SwiftUI
 
 /// Spacing scale, drawn as bars whose width equals the token value.

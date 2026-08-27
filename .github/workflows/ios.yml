@@ -37,9 +37,8 @@ permissions:
 env:
   CI: true
 
-# Unlike android.yml, these jobs have no step-security/harden-runner step: that action only
-# supports Ubuntu runners, and iOS builds must run on macOS (Swift/Xcode). Keep secrets out of
-# this workflow (it needs none) rather than relying on egress hardening.
+# No step-security/harden-runner step: that action only supports Ubuntu, and iOS builds must run on
+# macOS. This workflow needs no secrets.
 jobs:
   test:
     name: Build & Test (theme library)

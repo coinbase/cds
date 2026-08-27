@@ -1,4 +1,4 @@
-import CDSDesignSystem
+@testable import CDSDesignSystem
 import SwiftUI
 
 /// A titled card that groups a gallery section, styled from the active theme.

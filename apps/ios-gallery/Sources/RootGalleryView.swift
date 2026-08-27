@@ -1,4 +1,4 @@
-import CDSDesignSystem
+@testable import CDSDesignSystem
 import SwiftUI
 
 /// Color-scheme choice exposed in the gallery toolbar. `system` follows the OS.

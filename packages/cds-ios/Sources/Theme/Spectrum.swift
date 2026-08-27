@@ -1,13 +1,10 @@
 import SwiftUI
 
-/// One hue's thirteen tonal steps — the strongly-typed replacement for the old
-/// `[String: String]` spectrum tables. Each step is a resolved ``Color`` rather than a
-/// stringly-keyed lookup, so a missing step is a compile error instead of a runtime `nil`.
+/// One hue's thirteen tonal steps, each a resolved ``Color``.
 ///
-/// Instances come from ``CDSSpectrum``; build a modified one with ``with(_:)`` or
-/// ``CDSSpectrum/with(_:)``. Values are authored from the CDS token source
-/// (`packages/mobile/src/themes/defaultTheme.ts`); in production this file should be generated
-/// from the same source that emits the TS and Kotlin themes.
+/// Instances come from ``CDSSpectrum``; build a modified one with ``with(_:)``. Values are authored
+/// from the CDS token source (`packages/mobile/src/themes/defaultTheme.ts`) and should ultimately
+/// be generated from it.
 public struct CDSColorRamp: Sendable, Equatable {
     public var step0: Color
     public var step5: Color
@@ -61,11 +58,9 @@ public struct CDSColorRamp: Sendable, Equatable {
     }
 }
 
-/// The raw CDS color palette ("spectrum"): eleven hues, each a ``CDSColorRamp``. This is the
-/// primitive tier that the semantic ``CDSColors`` tier is derived from.
-///
-/// Public deliberately: hiding it wouldn't stop anyone reaching past the semantic tier, it would
-/// only push them to a hardcoded `Color(...)`, which is invisible to theming and tooling.
+/// The raw CDS color palette ("spectrum"): eleven hues, each a ``CDSColorRamp``. The primitive tier
+/// the semantic ``CDSColors`` tier derives from. Public so consumers can reach past the semantic
+/// tier through theming rather than hardcoding a `Color`.
 public struct CDSSpectrum: Sendable, Equatable {
     public var blue: CDSColorRamp
     public var green: CDSColorRamp
@@ -144,8 +139,7 @@ public struct CDSSpectrum: Sendable, Equatable {
     )
 }
 
-/// Builds a ramp from thirteen `"r,g,b"` literals in step order. Authoring convenience only —
-/// values are parsed once into typed ``Color``s; there is no stringly-typed lookup at use time.
+/// Builds a ramp from thirteen `"r,g,b"` literals in step order.
 private func cdsRamp(
     _ s0: String, _ s5: String, _ s10: String, _ s15: String, _ s20: String,
     _ s30: String, _ s40: String, _ s50: String, _ s60: String, _ s70: String,

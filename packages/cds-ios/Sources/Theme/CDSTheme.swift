@@ -1,14 +1,10 @@
 import Foundation
 import SwiftUI
 
-/// The fully-resolved theme for the current color scheme.
+/// The fully-resolved theme for the current color scheme (RN's `useTheme()` result).
 ///
-/// Analogous to the object returned by RN's `useTheme()`. `colors` and `illustrationColors` are the
-/// color-scheme-dependent slices (they differ between light and dark mode); the scales
-/// (`spacing`, `radius`, `typography`, …) are color-scheme-independent — identical in light and
-/// dark — but still carried here so components read everything from one place. (Note: all slices
-/// can still vary by *brand theme*; "color-scheme-independent" only means they don't change with
-/// light/dark.)
+/// `colors` and `illustrationColors` change with the color scheme (light/dark); the scales
+/// (`spacing`, `radius`, `typography`, …) do not. Any slice can still vary by brand theme.
 public struct CDSTheme: Sendable, Equatable {
     public let id: String
     /// The raw spectrum palette for the resolved scheme — read `theme.spectrum[.blue][.step60]`
@@ -26,8 +22,8 @@ public struct CDSTheme: Sendable, Equatable {
     public let shadow: CDSShadowScale
     public let colorScheme: ColorScheme
 
-    // `internal`: a resolved theme is produced by ``CDSThemeSet/resolve(_:)``, not built by hand.
-    // Keeping the schema out of the public initializer makes adding a token a non-breaking change.
+    // Resolved themes come from ``CDSThemeSet/resolve(_:)``; a non-public init lets new tokens be
+    // added without breaking callers.
     init(
         id: String = "cds-default",
         spectrum: CDSSpectrum,
@@ -66,11 +62,9 @@ public struct CDSTheme: Sendable, Equatable {
     }
 }
 
-/// A complete theme configuration: its color-scheme-dependent color/illustration-color sets (one each
-/// for light and dark) plus the color-scheme-independent scales. This is the object a consumer
-/// supplies to ``CDSThemeProvider``,
-/// analogous to a `ThemeConfig` in RN. All fields default to the built-in CDS theme so a
-/// consumer can override just the tokens they care about.
+/// A complete theme configuration (RN's `ThemeConfig`): the light + dark color/illustration sets
+/// plus the scales. Supplied to ``CDSThemeProvider``. All fields default to the built-in CDS theme,
+/// so a consumer can override only the tokens they care about.
 public struct CDSThemeSet: Sendable, Equatable {
     public var id: String
     public var lightSpectrum: CDSSpectrum
@@ -88,9 +82,7 @@ public struct CDSThemeSet: Sendable, Equatable {
     public var typography: CDSTypography
     public var shadow: CDSShadowScale
 
-    // Every parameter is defaulted, so adding a token to the set stays a source-compatible
-    // change: existing call sites keep compiling. Combined with ``cdsTheme(base:_:)`` this is
-    // the evolution-safe construction surface for a full theme.
+    // Every parameter is defaulted, so adding a token stays source-compatible.
     public init(
         id: String = "cds-default",
         lightSpectrum: CDSSpectrum = .light,
@@ -174,9 +166,6 @@ public struct CDSThemeSet: Sendable, Equatable {
 ///     $0.light = .lightDeriving(from: $0.lightSpectrum)
 /// }
 /// ```
-///
-/// Adding a token to the theme never changes this signature, so a from-a-base build stays
-/// compiling across minor versions.
 public func cdsTheme(
     base: CDSThemeSet = .default,
     _ block: (inout CDSThemeSet) -> Void
@@ -184,9 +173,8 @@ public func cdsTheme(
     base.with(block)
 }
 
-// `nil` means no ``CDSThemeProvider`` is installed above the reader. Storing an optional (rather
-// than defaulting to the light theme) is what lets a missing provider be *detected* instead of
-// silently papered over — see ``CDSThemeEnvironment``.
+// `nil` means no ``CDSThemeProvider`` is installed above the reader, which lets a missing provider
+// be detected — see ``CDSThemeEnvironment``.
 private struct CDSThemeKey: EnvironmentKey {
     static let defaultValue: CDSTheme? = nil
 }
@@ -195,12 +183,9 @@ private struct CDSThemeSetKey: EnvironmentKey {
     static let defaultValue: CDSThemeSet = .default
 }
 
-/// Resolves what a `\.cdsTheme` reader sees, and decides how to treat a missing provider.
-///
-/// This mirrors Android's `CdsTheme.current`: a component with no ``CDSThemeProvider`` ancestor
-/// renders the default theme inside an Xcode Preview (so unwrapped component previews work), and
-/// hard-fails everywhere else so a missing provider surfaces immediately in development rather
-/// than shipping subtly-wrong colors.
+/// Resolves what a `\.cdsTheme` reader sees. With no ``CDSThemeProvider`` ancestor it renders the
+/// default theme inside an Xcode Preview (so unwrapped previews work) and traps everywhere else, so
+/// a missing provider surfaces immediately.
 enum CDSThemeEnvironment {
     static func resolved(stored: CDSTheme?, scheme: ColorScheme, isPreview: Bool) -> CDSTheme {
         if let stored { return stored }
@@ -215,13 +200,8 @@ enum CDSThemeEnvironment {
 }
 
 extension EnvironmentValues {
-    /// Non-trapping storage the providers write to.
-    ///
-    /// The public ``cdsTheme`` read accessor is intentionally get-only + trapping. Injecting a
-    /// value through a *computed, writable* key path is unsafe here: SwiftUI's
-    /// `swift_setAtWritableKeyPath` materializes a mutable address by first calling the property's
-    /// getter, so writing through a trapping getter would crash during injection. Providers write
-    /// this plain optional instead, whose getter never traps.
+    /// Non-trapping storage the providers write to. The public ``cdsTheme`` accessor is get-only and
+    /// traps on a missing provider; providers write this plain optional so injection never trips it.
     var cdsThemeStorage: CDSTheme? {
         get { self[CDSThemeKey.self] }
         set { self[CDSThemeKey.self] = newValue }
@@ -280,11 +260,8 @@ public struct CDSThemeProvider<Content: View>: View {
 
     public var body: some View {
         let scheme = forcedScheme ?? systemScheme
-        // `resolve` runs on every body pass, but the injected value is `Equatable`: when a
-        // re-render produces a theme equal to the previous one (e.g. an ancestor recomposed
-        // without changing tokens), SwiftUI's environment diffing skips invalidating the
-        // views that read `\.cdsTheme`. This is the SwiftUI analog of Compose keying
-        // `remember(theme, colorScheme)` on value equality.
+        // The injected theme is `Equatable`, so SwiftUI skips invalidating `\.cdsTheme` readers when
+        // the resolved tokens are unchanged.
         content
             .environment(\.cdsThemeStorage, theme.resolve(scheme))
             .environment(\.cdsThemeSet, theme)

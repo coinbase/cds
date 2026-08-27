@@ -6,14 +6,15 @@ import PackageDescription
 let package = Package(
     name: "CDSDesignSystem",
     platforms: [
-        // Production would target iOS 26 (per the mobile-skunkworks stack).
-        // The POC targets iOS 17 / macOS 14 so it also builds under `swift build`
-        // on the host and renders in Xcode Previews on a wider range of machines.
+        // iOS 17 / macOS 14 so the package also builds with `swift build` and renders in Xcode
+        // Previews on a wide range of machines.
         .iOS(.v17),
         .macOS(.v14),
     ],
     products: [
-        .library(name: "CDSDesignSystem", targets: ["CDSDesignSystem"]),
+        // `.dynamic` so `xcodebuild archive` emits a CDSDesignSystem.framework for
+        // `scripts/build-xcframework.sh` to package into the distributable XCFramework.
+        .library(name: "CDSDesignSystem", type: .dynamic, targets: ["CDSDesignSystem"]),
     ],
     targets: [
         .target(

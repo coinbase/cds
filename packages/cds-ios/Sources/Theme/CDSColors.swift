@@ -6,13 +6,11 @@ import SwiftUI
 /// `accentBoldBlue`, …). Each one resolves to a spectrum value per color scheme, mirroring
 /// the derivation in `defaultTheme.ts` (`lightColor` / `darkColor`).
 ///
-/// The memberwise initializer is intentionally `internal`. A public initializer would put the
-/// full token schema into the API, making every added token a source-breaking change for anyone
-/// constructing a set from scratch. Consumers instead build sets through the evolution-safe
-/// surface:
-/// - copy a built-in set and tweak a few tokens: `CDSColors.light.with { $0.bgPrimary = … }`,
-/// - derive a full set from a spectrum palette: `CDSColors.lightDeriving(from:)`, or
-/// - address tokens dynamically via ``subscript(_:)`` and ``CDSColorToken``.
+/// The memberwise initializer is `internal` so adding a token stays source-compatible. Build sets
+/// through the evolution-safe surface:
+/// - copy and tweak: `CDSColors.light.with { $0.bgPrimary = … }`,
+/// - derive from a spectrum: `CDSColors.lightDeriving(from:)`, or
+/// - address dynamically via ``subscript(_:)`` and ``CDSColorToken``.
 public struct CDSColors: Sendable, Equatable {
     // Foreground
     public var fg: Color

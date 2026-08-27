@@ -3,9 +3,8 @@ import SwiftUI
 /// Illustration color palette, mirroring `lightIllustrationColor` / `darkIllustrationColor`
 /// in `defaultTheme.ts`.
 ///
-/// These are the tokens consumed by CDS illustrations/pictograms. In RN every token is
-/// optional and omitted tokens fall back to the default theme; here the defaults are always
-/// fully populated and consumers override selectively via ``with(_:)``.
+/// The tokens consumed by CDS illustrations/pictograms. Defaults are always fully populated;
+/// consumers override selectively via ``with(_:)``.
 public struct CDSIllustrationColors: Sendable, Equatable {
     public var primary: Color
     public var black: Color
@@ -23,8 +22,8 @@ public struct CDSIllustrationColors: Sendable, Equatable {
     public var invert: Color
     public var invert2: Color
 
-    // `internal`: build a custom palette with ``with(_:)`` from ``light`` / ``dark`` so adding a
-    // token stays a non-breaking change (mirrors ``CDSColors``).
+    // `internal` so adding a token stays a non-breaking change; build custom palettes with
+    // ``with(_:)`` from ``light`` / ``dark``.
     init(
         primary: Color,
         black: Color,

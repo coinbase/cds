@@ -2,11 +2,9 @@
 <Workspace
    version = "1.0">
    <!--
-     Reference only the app project. It declares a local SwiftPM dependency on
-     ../../packages/cds-ios, so Xcode resolves and shows CDSDesignSystem under the app's
-     "Package Dependencies" (its sources stay editable in place). Do NOT also add the package
-     folder as a separate FileRef here: that duplicates the package reference and triggers
-     "Missing package product 'CDSDesignSystem'" in the GUI (xcodebuild dedupes it, Xcode does not).
+     Reference only the app project; it declares the local SwiftPM dependency on
+     ../../packages/cds-ios, so Xcode shows CDSDesignSystem under "Package Dependencies" with its
+     sources editable in place. Do not add the package folder as a separate FileRef.
    -->
    <FileRef
       location = "group:../apps/ios-gallery/CDSGallery.xcodeproj">

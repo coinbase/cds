@@ -1,4 +1,4 @@
-import CDSDesignSystem
+@testable import CDSDesignSystem
 import SwiftUI
 
 /// Every typography role rendered with `CDSText`, annotated with its size / line-height / weight.

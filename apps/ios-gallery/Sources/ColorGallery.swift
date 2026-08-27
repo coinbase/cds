@@ -1,4 +1,4 @@
-import CDSDesignSystem
+@testable import CDSDesignSystem
 import SwiftUI
 
 /// Every semantic color token, resolved from the active theme. Driven by `CDSColorToken.allCases`

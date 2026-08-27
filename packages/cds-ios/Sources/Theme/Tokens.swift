@@ -4,12 +4,9 @@ import Foundation
 /// `CdsColorToken` / `CdsSpectrumHueToken` / `CdsColorRampToken`.
 ///
 /// These carry no color data themselves. Resolve one against a resolved set
-/// (`theme.colors[token]`, `theme.spectrum[hue][step]`) and enumerate the whole scale with
-/// `.allCases`. Each token also exposes a `tokenName`: the canonical CDS spelling used for
-/// labels and for parsing/serializing themes shared with the web and Android token contracts.
-///
-/// Adding a token in a future minor is a source-compatible addition, so `switch` statements over
-/// these enums outside this module should include a `default` branch.
+/// (`theme.colors[token]`, `theme.spectrum[hue][step]`) and enumerate a scale with `.allCases`.
+/// Each token also exposes a `tokenName`: the canonical CDS spelling shared with the web and
+/// Android token contracts.
 
 /// Every semantic color name in ``CDSColors``.
 public enum CDSColorToken: String, CaseIterable, Sendable {

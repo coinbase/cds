@@ -141,8 +141,17 @@ package (relative path). Run CLI commands from the repo root.
 - The package builds under Swift 6 language mode; theme types are `Sendable` + `Equatable`. Keep
   memberwise initializers `internal` and evolve themes via the `cdsTheme { }` builder so adding a
   token stays source-compatible.
+- The theme layer is the public surface. Components under `Sources/Components/` (`CDSText`,
+  `CDSButton`, `CDSSlideButton`, `CDSSpinner`) are deliberately `internal` — they ship in the
+  XCFramework but are not customer API yet (the same status as Android's `internal` components). Do
+  not add `public` to them to make the gallery compile: `apps/ios-gallery` uses `@testable import
+CDSDesignSystem` (Debug enables testability) to exercise the real components. Promote a component
+  to `public` only when it is an intentional, stable API.
 - iOS versions independently (SwiftPM / XCFramework). Never fold it into `yarn release` or the 9.x
-  version sync.
+  version sync. Cutting a release is manual: build the XCFramework (`yarn nx run cds-ios:xcframework`)
+  and attach it to a GitHub Release tagged `ios-v<version>` — follow
+  [`packages/cds-ios/docs/releasing.md`](packages/cds-ios/docs/releasing.md) and record the version
+  in [`packages/cds-ios/CHANGELOG.md`](packages/cds-ios/CHANGELOG.md).
 - Swift cannot import `@coinbase/cds-common`. iOS tokens are a hand-port today; shared codegen is the
   goal, not something to fake with a runtime dependency.
 - The generated `apps/ios-gallery/CDSGallery.xcodeproj` is disposable — edit
