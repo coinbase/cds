@@ -100,7 +100,7 @@ Run from the repo root:
 
 ```sh
 yarn nx run cds-ios:test        # swift test (theme library)
-yarn nx run cds-ios:assemble    # swift build -c release
+yarn nx run cds-ios:build-ios    # swift build -c release
 yarn nx run cds-ios:xcframework # build the distributable CDSDesignSystem.xcframework (+ checksum)
 ```
 

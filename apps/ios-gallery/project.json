@@ -10,7 +10,7 @@
     "cds-ios"
   ],
   "targets": {
-    "assemble": {
+    "build-ios": {
       "executor": "nx:run-commands",
       "options": {
         "commands": [

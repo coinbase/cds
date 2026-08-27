@@ -126,8 +126,8 @@ package (relative path). Run CLI commands from the repo root.
 **Commands.** These require Swift 6 / Xcode (macOS only):
 
 - `yarn nx run cds-ios:test` - `swift test` (theme library unit tests)
-- `yarn nx run cds-ios:assemble` - `swift build -c release`
-- `yarn nx run ios-gallery:assemble` - `xcodegen generate` + iOS Simulator build of the app
+- `yarn nx run cds-ios:build-ios` - `swift build -c release`
+- `yarn nx run ios-gallery:build-ios` - `xcodegen generate` + iOS Simulator build of the app
 - `yarn nx run ios-gallery:launch` - build + install + run the gallery on an iOS Simulator
 - `cd packages/cds-ios && swift <build|test>` - anything Nx does not wrap
 

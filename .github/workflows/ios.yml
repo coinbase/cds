@@ -46,7 +46,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      # Same commands as `yarn nx run cds-ios:test` / `cds-ios:assemble` (packages/cds-ios/project.json),
+      # Same commands as `yarn nx run cds-ios:test` / `cds-ios:build-ios` (packages/cds-ios/project.json),
       # invoked directly so this workflow needs no Yarn, Node, or the JS install.
       - name: Swift test
         working-directory: packages/cds-ios
@@ -65,7 +65,7 @@ jobs:
         run: brew install xcodegen
       # Regenerate the (git-ignored) Xcode project from project.yml, then compile the iOS app
       # target for a simulator. This validates that the gallery sources — and the local
-      # packages/cds-ios dependency — compile for the iOS SDK. Mirrors `yarn nx run ios-gallery:assemble`.
+      # packages/cds-ios dependency — compile for the iOS SDK. Mirrors `yarn nx run ios-gallery:build-ios`.
       - name: Generate Xcode project
         working-directory: apps/ios-gallery
         run: xcodegen generate

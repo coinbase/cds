@@ -7,7 +7,7 @@
     "platform:ios"
   ],
   "targets": {
-    "assemble": {
+    "build-ios": {
       "executor": "nx:run-commands",
       "options": {
         "command": "swift build -c release",
