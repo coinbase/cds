@@ -47,6 +47,7 @@ export const Tooltip = memo((_props: TooltipProps) => {
     fontSize,
     fontWeight,
     lineHeight,
+    textTransform,
     ...props
   } = mergedProps;
   const { isOpen, handleOnMouseEnter, handleOnMouseLeave, handleOnFocus, handleOnBlur, tooltipId } =
@@ -117,6 +118,7 @@ export const Tooltip = memo((_props: TooltipProps) => {
           paddingY={paddingY}
           placement={placement}
           testID={testID}
+          textTransform={textTransform}
           tooltipId={tooltipId}
           zIndex={zIndex}
           {...props}

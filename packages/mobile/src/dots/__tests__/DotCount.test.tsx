@@ -118,6 +118,27 @@ describe('DotCount', () => {
     expect(screen.getByText('1')).toBeTruthy();
   });
 
+  it('mounts in the visible state when count > 0', () => {
+    renderDotCount({ count: 1, testID: DOTCOUNT_TESTID, variant: 'negative' });
+    triggerChildrenLayout();
+
+    expect(screen.getByTestId('dotcount-container')).toHaveStyle({
+      opacity: 1,
+      transform: [{ scale: 1 }],
+    });
+  });
+
+  it('forwards textTransform to the count text', () => {
+    renderDotCount({
+      count: 1,
+      testID: DOTCOUNT_TESTID,
+      textTransform: 'uppercase',
+      variant: 'negative',
+    });
+    triggerChildrenLayout();
+    expect(screen.getByText('1')).toHaveStyle({ textTransform: 'uppercase' });
+  });
+
   it('renders correct count when count  0', () => {
     renderDotCount({ count: 0, testID: DOTCOUNT_TESTID, variant: 'negative' });
     triggerChildrenLayout();

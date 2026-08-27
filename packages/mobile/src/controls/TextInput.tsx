@@ -114,7 +114,7 @@ export type TextInputBaseProps = SharedProps &
      * Enables compact variation. Prefer `size="s"` or `size="m"` with an explicit `labelVariant`.
      *
      * @deprecated Unset and use `size="s"` instead. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     compact?: boolean;
     /**
@@ -162,8 +162,8 @@ export const TextInput = memo(
     const mergedProps = useComponentConfig('TextInput', _props);
     const {
       label,
-      labelFont = 'label1',
-      labelColor = 'fg',
+      labelFont = 'label2',
+      labelColor = 'fgMuted',
       helperText = '',
       variant = 'foregroundMuted',
       testID,

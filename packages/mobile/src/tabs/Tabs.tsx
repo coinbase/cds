@@ -23,6 +23,7 @@ import type { BoxBaseProps, BoxProps } from '../layout/Box';
 import { Box } from '../layout/Box';
 import type { HStackProps } from '../layout/HStack';
 import { HStack } from '../layout/HStack';
+import type { TextBaseProps } from '../typography/Text';
 
 import { DefaultTab } from './DefaultTab';
 import { DefaultTabsActiveIndicator } from './DefaultTabsActiveIndicator';
@@ -79,6 +80,23 @@ export type TabComponentProps<
    * Color when a tab is active.
    */
   activeColor?: ThemeVars.Color;
+  /**
+   * Typography token applied to the tab's label text (from `Tabs` when set).
+   * @default "headline"
+   */
+  font?: TextBaseProps['font'];
+  /** Font family override for the tab's label text (from `Tabs` when set). */
+  fontFamily?: TextBaseProps['fontFamily'];
+  /** Font size override for the tab's label text (from `Tabs` when set). */
+  fontSize?: TextBaseProps['fontSize'];
+  /** Font weight override for the tab's label text (from `Tabs` when set). */
+  fontWeight?: TextBaseProps['fontWeight'];
+  /** Line height override for the tab's label text (from `Tabs` when set). */
+  lineHeight?: TextBaseProps['lineHeight'];
+  /** Text alignment for the tab's label text (from `Tabs` when set). */
+  align?: TextBaseProps['align'];
+  /** Text transform applied to the tab's label text (from `Tabs` when set). */
+  textTransform?: TextBaseProps['textTransform'];
   style?: StyleProp<ViewStyle>;
 };
 
@@ -94,7 +112,7 @@ export type TabsBaseProps<
   TTab extends TabValue<TabId> = TabValue<TabId>,
 > = Omit<BoxBaseProps, 'onChange'> &
   Omit<TabsOptions<TabId, TTab>, 'tabs'> &
-  Pick<TabComponentProps<TabId, TTab>, 'color' | 'activeColor'> & {
+  Pick<TabComponentProps<TabId, TTab>, 'color' | 'activeColor' | 'align'> & {
     /** The array of tabs data. Each tab may optionally define a custom Component to render. */
     tabs: (TTab & { Component?: TabComponent<TabId, TTab> })[];
     /** The default Component to render each tab. */
@@ -144,6 +162,13 @@ const TabsComponent = memo(
       activeBackground,
       color,
       activeColor,
+      font,
+      fontFamily,
+      fontSize,
+      fontWeight,
+      lineHeight,
+      align,
+      textTransform,
       activeTab,
       disabled,
       onChange,
@@ -242,6 +267,13 @@ const TabsComponent = memo(
             const renderedTabProps = {
               activeColor,
               color,
+              font,
+              fontFamily,
+              fontSize,
+              fontWeight,
+              lineHeight,
+              align,
+              textTransform,
               id,
               style: styles?.tab,
               ...tabRest,

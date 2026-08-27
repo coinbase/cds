@@ -144,7 +144,7 @@ export type ButtonBaseProps = Polymorphic.ExtendableProps<
       /**
        * Reduce the inner padding within the button itself.
        * @deprecated Use `size="s"` instead. This will be removed in a future major release.
-       * @deprecationExpectedRemoval v10
+       * @deprecationExpectedRemoval v11
        */
       compact?: boolean;
       /**
@@ -223,6 +223,7 @@ export const Button: ButtonComponent = memo(
         fontWeight,
         height = 'fit-content',
         lineHeight,
+        textTransform,
         background,
         color,
         className,
@@ -344,6 +345,7 @@ export const Button: ButtonComponent = memo(
               lineHeight={lineHeight}
               numberOfLines={numberOfLines}
               textAlign={textAlign}
+              textTransform={textTransform}
             >
               <span className={cx(loading && hiddenCss)}>{children}</span>
             </Text>

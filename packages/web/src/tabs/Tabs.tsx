@@ -20,6 +20,7 @@ import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box, type BoxBaseProps, type BoxDefaultElement, type BoxProps } from '../layout/Box';
 import { HStack, type HStackDefaultElement, type HStackProps } from '../layout/HStack';
 import type { ResponsiveProp } from '../styles/styleProps';
+import type { TextBaseProps } from '../typography/Text';
 
 import { DefaultTab } from './DefaultTab';
 import { DefaultTabsActiveIndicator } from './DefaultTabsActiveIndicator';
@@ -82,6 +83,23 @@ export type TabComponentProps<
   color?: ResponsiveProp<ThemeVars.Color>;
   /** Active label color (from `Tabs` when set). */
   activeColor?: ResponsiveProp<ThemeVars.Color>;
+  /**
+   * Typography token applied to the tab's label text (from `Tabs` when set).
+   * @default "headline"
+   */
+  font?: TextBaseProps['font'];
+  /** Font family override for the tab's label text (from `Tabs` when set). */
+  fontFamily?: TextBaseProps['fontFamily'];
+  /** Font size override for the tab's label text (from `Tabs` when set). */
+  fontSize?: TextBaseProps['fontSize'];
+  /** Font weight override for the tab's label text (from `Tabs` when set). */
+  fontWeight?: TextBaseProps['fontWeight'];
+  /** Line height override for the tab's label text (from `Tabs` when set). */
+  lineHeight?: TextBaseProps['lineHeight'];
+  /** Text alignment for the tab's label text (from `Tabs` when set). */
+  textAlign?: TextBaseProps['textAlign'];
+  /** Text transform applied to the tab's label text (from `Tabs` when set). */
+  textTransform?: TextBaseProps['textTransform'];
 };
 
 export type TabComponent<
@@ -157,6 +175,13 @@ const TabsComponent = memo(
         activeColor,
         activeTab,
         color,
+        font,
+        fontFamily,
+        fontSize,
+        fontWeight,
+        lineHeight,
+        textAlign,
+        textTransform,
         onActiveTabElementChange,
         disabled,
         onChange,
@@ -299,6 +324,13 @@ const TabsComponent = memo(
               const renderedTabProps = {
                 activeColor,
                 color,
+                font,
+                fontFamily,
+                fontSize,
+                fontWeight,
+                lineHeight,
+                textAlign,
+                textTransform,
                 ...props,
                 'data-rendered-tab': true,
                 className: classNames?.tab,

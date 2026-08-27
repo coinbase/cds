@@ -223,6 +223,16 @@ describe('Tooltip', () => {
     });
   });
 
+  it('forwards textTransform to tooltip text', async () => {
+    render(<StoryExample tooltipProps={{ textTransform: 'uppercase' }} />);
+
+    fireEvent.mouseEnter(screen.getByRole('button'));
+
+    expect(await screen.findByText('This is the content in the tooltip!')).toHaveStyle({
+      '--text-textTransform': 'uppercase',
+    });
+  });
+
   it('keeps local Tooltip props higher precedence than provider defaults', async () => {
     render(
       <DefaultThemeProvider>

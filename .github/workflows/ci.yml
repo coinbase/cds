@@ -7,12 +7,30 @@ on:
       - master
       - 'cds-v[0-9]*'
       - 'release-[0-9]+.x'
+    # This workflow is the JavaScript pipeline: Yarn, Nx, ESLint, Jest, tsc. The native Android
+    # package is Kotlin/Gradle and shares none of that toolchain, so a change confined to these
+    # paths has nothing here to run — that work lives in android.yml. A mixed JS+Android PR
+    # touches other paths and still runs here.
+    # (Duplicated below rather than shared via a YAML anchor: GitHub Actions does not expand them.
+    # Keep in sync with the `paths` list on android.yml when adding Android paths.)
+    paths-ignore:
+      - 'android/**'
+      - 'apps/android-app/**'
+      - 'packages/cds-android/**'
+      - '.github/workflows/android.yml'
+      - '.github/actions/setup-android/**'
   pull_request:
     branches:
       - master
       - 'cds-v[0-9]+' # preferred branch names for CDS feature branches
       - 'cds-v9-master' # one off feature branch for CDS 9 after mistake in cds-v9 branch
       - 'release-[0-9]+.x' # preferred branch names for LTS version branches
+    paths-ignore:
+      - 'android/**'
+      - 'apps/android-app/**'
+      - 'packages/cds-android/**'
+      - '.github/workflows/android.yml'
+      - '.github/actions/setup-android/**'
 
 concurrency:
   group: CI-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
@@ -71,7 +89,14 @@ jobs:
         # (a migration backlog, not a hard error); the budget keeps CI green while
         # preventing the count from growing unbounded. Lower it as the backlog is
         # paid down.
-        run: yarn nx affected --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=300
+        #
+        # Every Android Nx project is tagged `platform:android` and excluded from every
+        # `nx affected` job in this workflow. Their targets shell out to Gradle, and these
+        # runners have no JDK or Android SDK, so a mixed JS+Android PR would otherwise fail
+        # here on the Android half. Today only `test` would actually match; the tag exclude
+        # is on every target so that adding a Gradle-backed target — or a new Android
+        # project with the same tag — cannot silently start invoking Gradle on a JS runner.
+        run: yarn nx affected --exclude=tag:platform:android --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=300
 
   format:
     name: Format
@@ -101,7 +126,7 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Test
-        run: yarn nx affected --target=test --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude=tag:platform:android --target=test --base=$NX_BASE --head=$NX_HEAD
 
   typecheck:
     name: Typecheck
@@ -116,7 +141,7 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Typecheck
-        run: yarn nx affected --target=typecheck --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude=tag:platform:android --target=typecheck --base=$NX_BASE --head=$NX_HEAD
 
   build:
     name: Build
@@ -131,7 +156,7 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Build
-        run: yarn nx affected --exclude=expo-app --target=build --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude=expo-app,tag:platform:android --target=build --base=$NX_BASE --head=$NX_HEAD
 
   depcheck:
     name: Depcheck
@@ -302,4 +327,4 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Lint Styles
-        run: yarn nx affected --target=lint-styles --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude=tag:platform:android --target=lint-styles --base=$NX_BASE --head=$NX_HEAD

@@ -2,7 +2,7 @@
  * Compact → Size Transform
  *
  * Replaces the deprecated `compact` boolean with the t-shirt `size` prop on the components
- * where `compact` was deprecated in favour of `size` (expected removal in v10):
+ * where `compact` was deprecated in favour of `size` (expected removal in v11):
  *
  *   - `size="s"`  → Button, IconButton, SlideButton, TextInput, SearchInput, DateInput,
  *                   DatePicker, and the alpha Select / Combobox controls
@@ -82,7 +82,7 @@ const INPUT_RULE: CompactRule = { compactSize: 's', defaultSize: 'l', labelBehav
 const SELECT_RULE: CompactRule = { compactSize: 's', defaultSize: 'l', labelBehavior: 'select' };
 
 /**
- * Allowlist of import-path groups → component names carrying the v10 `compact` → `size`
+ * Allowlist of import-path groups → component names carrying the v11 `compact` → `size`
  * deprecation. `pathSuffix` is appended after `(cds-web|cds-mobile)` to build the import regex.
  */
 const IMPORT_GROUPS: { pathSuffix: string; components: Record<string, CompactRule> }[] = [

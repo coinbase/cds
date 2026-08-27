@@ -71,6 +71,67 @@ describe('Tabs', () => {
     expect(labelStyle('Two').color).toBe(defaultTheme.lightColor.fg);
   });
 
+  it('forwards font and related typography props to tab labels', () => {
+    const fontTabs = [
+      { id: 'buy', label: 'Buy', testID: 'buy-tab' },
+      { id: 'sell', label: 'Sell', testID: 'sell-tab' },
+    ];
+
+    const Wrapper = ({
+      font,
+      fontWeight,
+      textTransform,
+      align,
+    }: {
+      font?: 'title1';
+      fontWeight?: 'body';
+      textTransform?: 'uppercase';
+      align?: 'center';
+    }) => {
+      const [active, setActive] = useState<(typeof fontTabs)[number] | null>(fontTabs[0]);
+      return (
+        <DefaultThemeProvider>
+          <Tabs
+            activeTab={active}
+            align={align}
+            font={font}
+            fontWeight={fontWeight}
+            onChange={setActive}
+            tabs={fontTabs}
+            textTransform={textTransform}
+          />
+        </DefaultThemeProvider>
+      );
+    };
+
+    const labelStyle = (text: string) => {
+      const node = screen.UNSAFE_getAllByType(RNText).find((n) => n.props.children === text);
+      expect(node).toBeDefined();
+      return StyleSheet.flatten(node!.props.style);
+    };
+
+    const { rerender } = render(<Wrapper />);
+
+    // Defaults to the headline token when no font is provided.
+    expect(labelStyle('Buy').fontSize).toBe(defaultTheme.fontSize.headline);
+
+    // Tabs-level font flows through to every label.
+    rerender(<Wrapper font="title1" />);
+    expect(labelStyle('Buy').fontSize).toBe(defaultTheme.fontSize.title1);
+    expect(labelStyle('Sell').fontSize).toBe(defaultTheme.fontSize.title1);
+
+    // Related typography props (e.g. fontWeight) are forwarded too.
+    rerender(<Wrapper fontWeight="body" />);
+    expect(labelStyle('Buy').fontWeight).toBe(defaultTheme.fontWeight.body);
+
+    // textTransform and align (alignment) are forwarded to the label.
+    rerender(<Wrapper textTransform="uppercase" />);
+    expect(labelStyle('Buy').textTransform).toBe('uppercase');
+
+    rerender(<Wrapper align="center" />);
+    expect(labelStyle('Buy').textAlign).toBe('center');
+  });
+
   it('allows per-tab style to override shared styles.tab', () => {
     const marginTop = 42;
     const styledTabs = [{ id: 'a', label: 'A', testID: 'tab-a', style: { marginTop } }];

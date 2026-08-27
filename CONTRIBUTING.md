@@ -12,9 +12,14 @@ If you encounter a bug, have a feature request, or notice something that could b
 2. Follow the [README setup instructions](README.md#setup)
 3. [Setup a GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key) for signing commits
 
+That setup covers the web and React Native packages. The native Android package
+(`packages/cds-android`) additionally needs JDK 21 and the Android SDK, which `yarn install` does
+not install — see [packages/cds-android/README.md](packages/cds-android/README.md). You only need
+it if you are changing Kotlin code.
+
 ## Making Changes
 
-CDS is a cross-platform library with separate implementations for web and mobile. When fixing bugs or adding features, check if your changes apply to both platforms. See all available [packages](https://github.com/coinbase/cds/tree/master/packages).
+CDS is a cross-platform library with separate implementations for web, React Native, and native Android. When fixing bugs or adding features, check if your changes apply to more than one platform. See all available [packages](https://github.com/coinbase/cds/tree/master/packages).
 
 When making changes:
 
@@ -37,6 +42,17 @@ yarn nx run <project>:lint
 # Format all files
 yarn nx format:write
 ```
+
+For `packages/cds-android` and `apps/android-app` the equivalents are Gradle-backed, and none of
+`typecheck`, `lint`, or Prettier apply:
+
+```sh
+yarn nx run cds-android:test
+yarn nx run cds-android:assemble
+```
+
+Those unit tests also run in CI via a dedicated Android workflow (not the JavaScript `CI`
+pipeline) whenever `packages/cds-android`, `apps/android-app`, or `android/` change.
 
 ## Submitting a Pull Request
 

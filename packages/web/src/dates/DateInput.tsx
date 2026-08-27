@@ -24,7 +24,7 @@ export type DateInputBaseProps = Omit<DateInputOptions, 'intlDateFormat'> &
     /**
      * Enables a smaller, compact input.
      * @deprecated Use `size="s"` instead. This will be removed in a future major release.
-     * @deprecationExpectedRemoval v10
+     * @deprecationExpectedRemoval v11
      */
     compact?: boolean;
   };

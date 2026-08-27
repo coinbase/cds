@@ -129,7 +129,7 @@ These aren't part of any preset — run them directly with `-t`.
 
 | Transform         | What it does                                                                                   |
 | ----------------- | ---------------------------------------------------------------------------------------------- |
-| `compact-to-size` | Replaces the deprecated `compact` prop with the t-shirt `size` prop (expected removal in v10). |
+| `compact-to-size` | Replaces the deprecated `compact` prop with the t-shirt `size` prop (expected removal in v11). |
 
 #### `compact-to-size`
 

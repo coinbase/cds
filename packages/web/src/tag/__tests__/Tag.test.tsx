@@ -148,6 +148,19 @@ describe('Tag', () => {
     expect(screen.getByTestId('custom-start')).toBeInTheDocument();
   });
 
+  it('forwards textTransform to the text', () => {
+    render(
+      <DefaultThemeProvider>
+        <Tag colorScheme="green" intent="informational" testID={TEST_ID} textTransform="uppercase">
+          Green
+        </Tag>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId(`${TEST_ID}--text`)).toHaveStyle({
+      '--text-textTransform': 'uppercase',
+    });
+  });
+
   it('renders with a custom end node', () => {
     render(
       <DefaultThemeProvider>

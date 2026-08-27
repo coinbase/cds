@@ -5,8 +5,8 @@ import figma from 'figma';
 
 const instance = figma.selectedInstance;
 
-// Figma "Sizing" maps to the numeric pixel size used by ProgressCircle
-const size = instance.getEnum('Sizing', {
+// Figma "sizing" maps to the numeric pixel size used by ProgressCircle
+const size = instance.getEnum('sizing', {
   m: 24,
   l: 32,
   xl: 40,

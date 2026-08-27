@@ -161,6 +161,12 @@ space: {
   ```
 - Examples: Select (alpha), Stepper
 
+### Typography props on composites
+
+When a composite wraps inner `Text` and intercepts typography style props so they style the label (not the layout wrapper), intercept **and forward** the full set: `font`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `textTransform`.
+
+Reference: `SegmentedTab` and `Tag`.
+
 ### BaseProps & Props
 
 - Component modules encapsulate two prop Types: `*BaseProps` (platform-agnostic) and `*Props` (extends BaseProps with platform and component specific properties like `className`, `classNames`, `styles`, etc.)

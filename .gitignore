@@ -105,6 +105,7 @@ DerivedData
 
 **/android/**/build/
 **/android/**/.gradle
+**/android/**/.kotlin
 **/android/**/local.properties
 **/android/**/*.iml
 
@@ -151,6 +152,12 @@ npm-debug.*
 web-build/
 ios
 android
+
+# Gradle umbrella for the native Android CDS package (packages/cds-android + apps/android-app).
+# The bare `android` pattern above is aimed at Expo prebuild output, but it matches any directory
+# with that name, so this negation is what keeps the umbrella tracked. Its build/, .gradle/, and
+# local.properties are still ignored by the Android/IntelliJ rules near the top of this file.
+!/android/
 
 # expo-app generated artifacts
 apps/expo-app/artifacts

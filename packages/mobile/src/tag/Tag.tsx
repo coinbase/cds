@@ -97,6 +97,7 @@ export const Tag = memo(
       fontSize,
       fontWeight,
       lineHeight,
+      textTransform,
       testID = 'cds-tag',
       ...props
     } = mergedProps;
@@ -135,6 +136,7 @@ export const Tag = memo(
           numberOfLines={1}
           style={{ color }}
           testID={`${testID}--text`}
+          textTransform={textTransform}
         >
           {children}
         </Text>

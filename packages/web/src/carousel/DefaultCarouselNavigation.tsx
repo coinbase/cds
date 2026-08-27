@@ -73,7 +73,7 @@ export type DefaultCarouselNavigationProps = CarouselNavigationComponentProps & 
   /**
    * Whether the icon button is compact.
    * @deprecated Use `iconButtonSize="s"` instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
+   * @deprecationExpectedRemoval v11
    */
   compact?: boolean;
   /**

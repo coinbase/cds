@@ -6,7 +6,7 @@ import type { BarSeries } from '../bar/BarStack';
 import { defaultAxisId as fallbackAxisId } from './axis';
 import type { CartesianChartLayout } from './context';
 import type { GradientDefinition, GradientStop } from './gradient';
-import { evaluateGradientAtValue } from './gradient';
+import { evaluateGradientAtValue, evaluateGradientOpacityAtValue } from './gradient';
 import type { ChartScaleFunction, SerializableScale } from './scale';
 import { defaultTransition, type Transition } from './transition';
 
@@ -965,6 +965,7 @@ export function getBars(params: {
     if (length <= 0) return;
 
     let barFill = s.color || defaultFill;
+    let barFillOpacity = defaultFillOpacity;
 
     const seriesGradientConfig = seriesGradients.find((g) => g?.seriesId === s.id);
     if (seriesGradientConfig && originalValue !== null && originalValue !== undefined) {
@@ -995,6 +996,18 @@ export function getBars(params: {
       if (evaluatedColor) {
         barFill = evaluatedColor;
       }
+
+      const evaluatedOpacity = evaluateGradientOpacityAtValue(
+        seriesGradientConfig.stops,
+        evalValue,
+        seriesGradientConfig.scale,
+      );
+      if (evaluatedOpacity !== undefined) {
+        barFillOpacity =
+          defaultFillOpacity !== undefined
+            ? defaultFillOpacity * evaluatedOpacity
+            : evaluatedOpacity;
+      }
     }
 
     allBars.push({
@@ -1003,6 +1016,7 @@ export function getBars(params: {
       length,
       dataValue: value,
       fill: barFill,
+      fillOpacity: barFillOpacity,
       roundTop,
       roundBottom,
       shouldApplyGap,
@@ -1080,7 +1094,7 @@ export function getBars(params: {
     dataY: layout === 'vertical' ? bar.dataValue : categoryValue,
     origin: barOrigins[i],
     borderRadius,
-    fillOpacity: defaultFillOpacity,
+    fillOpacity: bar.fillOpacity,
     stroke: defaultStroke,
     strokeWidth: defaultStrokeWidth,
     minSize: initialBarMinSizes[i],

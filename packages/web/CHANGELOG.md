@@ -8,6 +8,66 @@ All notable changes to this project will be documented in this file.
 
 <!-- template-start -->
 
+## 9.22.1 (8/25/2026 PST)
+
+#### 🐞 Fixes
+
+- Support font props on Tabs. [[#825](https://github.com/coinbase/cds/pull/825)]
+
+## 9.22.0 (8/25/2026 PST)
+
+#### 🚀 Updates
+
+- Fix: do not wrap checkbox labels with ReactNode in text. [[#838](https://github.com/coinbase/cds/pull/838)]
+
+## 9.21.1 ((8/24/2026, 08:38 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.21.0 ((8/21/2026, 09:28 AM PST))
+
+This is an artificial version bump with no new change.
+
+## 9.20.0 (8/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: update default label style for input components: TextInput, Select, Combobox, DateInput, etc. Font: label1 -=> label2; color: fg => fgMuted.
+
+## 9.19.0 (8/20/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support custom icon sets in name-prop components. [[#848](https://github.com/coinbase/cds/pull/848)]
+
+## 9.18.0 (8/19/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support PeriodSelector in component theming. [[#852](https://github.com/coinbase/cds/pull/852)]
+
+## 9.17.2 (8/19/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: support textTransform forwarding to Text on components. [[#851](https://github.com/coinbase/cds/pull/851)]
+
+#### 📘 Misc
+
+- Docs: correct deprecation notices referencing the incorrect CDS version.
+
+## 9.17.1 (8/17/2026 PST)
+
+#### 🐞 Fixes
+
+- Fix: restore Select field press target after chrome padding adjustments in recent tshirt size work.
+
+## 9.17.0 (8/14/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: support charts gradients for bars. [[#844](https://github.com/coinbase/cds/pull/844)]
+
 ## 9.16.0 (8/13/2026 PST)
 
 #### 🚀 Updates

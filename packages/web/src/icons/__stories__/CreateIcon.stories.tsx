@@ -1,54 +1,22 @@
 import React from 'react';
-import type { Decorator } from '@storybook/react';
 
 import { HStack, VStack } from '../../layout';
 import { Text } from '../../typography/Text';
-import { createIcon, type GlyphMap } from '../createIcon';
+import { createIcon } from '../createIcon';
 import { Icon } from '../Icon';
 
-/**
- * `createIcon` bound to a different font (Google Material Icons), showing a
- * consumer can supply their own glyph map, font, and name union while reusing
- * the CDS Icon renderer.
- */
-const materialCodepoints = {
-  home: 0xe88a,
-  settings: 0xe8b8,
-  search: 0xe8b6,
-  favorite: 0xe87d,
-  delete: 0xe872,
-} as const;
+import {
+  materialFontFamily,
+  materialGlyphMap,
+  type MaterialIconName,
+  materialNames,
+  withMaterialIconsFont,
+} from './materialIcons';
 
-type MaterialIconName = keyof typeof materialCodepoints;
-
-const sourceSizes = [12, 16, 24] as const;
-
-const materialGlyphMap = Object.fromEntries(
-  (Object.keys(materialCodepoints) as MaterialIconName[]).flatMap((name) =>
-    sourceSizes.flatMap((size) =>
-      (['active', 'inactive'] as const).map((state) => [
-        `${name}-${size}-${state}`,
-        String.fromCodePoint(materialCodepoints[name]),
-      ]),
-    ),
-  ),
-) as GlyphMap<MaterialIconName>;
-
-// A second, fully-typed icon component backed by a different font.
 const MaterialIcon = createIcon<MaterialIconName>({
   glyphMap: materialGlyphMap,
-  fontFamily: 'Material Icons',
+  fontFamily: materialFontFamily,
 });
-
-const withMaterialIconsFont: Decorator = (Story) => (
-  <>
-    {/* React 19 hoists this <link> into <head>. */}
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
-    <Story />
-  </>
-);
-
-const materialNames = Object.keys(materialCodepoints) as MaterialIconName[];
 
 export default {
   title: 'Icons/createIcon (custom font)',

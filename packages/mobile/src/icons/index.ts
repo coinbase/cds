@@ -1,6 +1,11 @@
+export type {
+  GlyphMap,
+  IconGlyphResolverArgs,
+  IconGlyphSource,
+  IconGlyphSourceProviderProps,
+} from './createIcon';
+export { createIcon, DEFAULT_ICON_FONT_FAMILY, IconGlyphSourceProvider } from './createIcon';
 export * from './Icon';
-export { createIcon, DEFAULT_ICON_FONT_FAMILY } from './createIcon';
-export type { CreateIconConfig, GlyphMap, IconGlyphResolverArgs } from './createIcon';
 export * from './LogoMark';
 export * from './LogoWordmark';
 export * from './SubBrandLogoMark';

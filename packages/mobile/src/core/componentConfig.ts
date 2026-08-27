@@ -73,6 +73,7 @@ import type { TourBaseProps } from '../tour/Tour';
 import type { LinkBaseProps } from '../typography/Link';
 import type { TextBaseProps } from '../typography/Text';
 import type { TextFallbackBaseProps } from '../typography/TextFallback';
+import type { PeriodSelectorBaseProps } from '../visualizations/chart/PeriodSelector';
 import type { ProgressBaseProps } from '../visualizations/ProgressBar';
 import type { ProgressBarWithFixedLabelsBaseProps } from '../visualizations/ProgressBarWithFixedLabels';
 import type { ProgressBarWithFloatLabelBaseProps } from '../visualizations/ProgressBarWithFloatLabel';
@@ -142,6 +143,7 @@ export type ComponentConfig = {
   Overlay?: ConfigResolver<OverlayBaseProps>;
   PageFooter?: ConfigResolver<PageFooterBaseProps>;
   PageHeader?: ConfigResolver<PageHeaderBaseProps>;
+  PeriodSelector?: ConfigResolver<PeriodSelectorBaseProps>;
   ProgressBar?: ConfigResolver<ProgressBaseProps>;
   ProgressBarWithFixedLabels?: ConfigResolver<ProgressBarWithFixedLabelsBaseProps>;
   ProgressBarWithFloatLabel?: ConfigResolver<ProgressBarWithFloatLabelBaseProps>;

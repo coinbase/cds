@@ -20,7 +20,7 @@ export type InputIconProps = {
    * Decreases the padding around the icon.
    * @default false
    * @deprecated Use `size="s"` on the parent `TextInput` instead. This will be removed in a future major release.
-   * @deprecationExpectedRemoval v10
+   * @deprecationExpectedRemoval v11
    */
   compact?: boolean;
 } & Omit<IconProps, 'size'> &

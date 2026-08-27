@@ -81,6 +81,22 @@ describe('InternalTooltip.test', () => {
     expect(mockAnimateIn.start).toHaveBeenCalledTimes(1);
   });
 
+  it('forwards textTransform to string content', () => {
+    renderWithProviders(
+      <InternalTooltip
+        animateIn={mockAnimateIn as unknown as Animated.CompositeAnimation}
+        content="test content"
+        opacity={new Animated.Value(1)}
+        placement="bottom"
+        subjectLayout={{ width: 20, height: 30, pageOffsetX: 15, pageOffsetY: 25 }}
+        textTransform="uppercase"
+        translateY={new Animated.Value(5)}
+      />,
+    );
+
+    expect(screen.getByText('test content')).toHaveStyle({ textTransform: 'uppercase' });
+  });
+
   it('renders active colorScheme when invertColorScheme sets to false', () => {
     renderWithProviders(
       <InternalTooltip

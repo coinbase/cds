@@ -127,6 +127,7 @@ export const DotCount = memo((_props: DotCountProps) => {
     fontSize,
     fontWeight,
     lineHeight,
+    textTransform,
     ...props
   } = mergedProps;
   const pinStyles = getTransform(pin, overlap);
@@ -198,6 +199,7 @@ export const DotCount = memo((_props: DotCountProps) => {
               lineHeight={lineHeight}
               style={styles?.text}
               textAlign="center"
+              textTransform={textTransform}
             >
               {displayCount}
             </Text>

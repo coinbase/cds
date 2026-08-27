@@ -20,7 +20,10 @@ import { Text, type TextBaseProps } from '../typography/Text';
 import { tabsSpringConfig } from './Tabs';
 
 export type SegmentedTabBaseProps<TabId extends string = string> = TabValue<TabId> &
-  Pick<TextBaseProps, 'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight'> &
+  Pick<
+    TextBaseProps,
+    'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight' | 'textTransform'
+  > &
   Omit<PressableBaseProps, 'children' | 'disabled' | 'onPress' | 'style'> & {
     /**
      * Text color when active.
@@ -66,11 +69,13 @@ const SegmentedTabComponent = memo(
       'aria-selected': ariaSelected,
       accessibilityRole = 'button',
       testID,
+      borderRadius = 1000,
       font = 'headline',
       fontFamily,
       fontSize,
       fontWeight,
       lineHeight,
+      textTransform,
       ...props
     } = mergedProps;
     const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<TabId>();
@@ -102,10 +107,10 @@ const SegmentedTabComponent = memo(
 
     const pressableStyle = useMemo(
       () => ({
-        borderRadius: theme.borderRadius[1000],
+        borderRadius: theme.borderRadius[borderRadius],
         opacity: disabledProp && !allTabsDisabled ? accessibleOpacityDisabled : undefined,
       }),
-      [theme.borderRadius, disabledProp, allTabsDisabled],
+      [theme.borderRadius, borderRadius, disabledProp, allTabsDisabled],
     );
 
     return (
@@ -113,6 +118,7 @@ const SegmentedTabComponent = memo(
         ref={ref}
         accessibilityRole={accessibilityRole}
         aria-selected={ariaSelected ?? isActive}
+        borderRadius={borderRadius}
         disabled={isDisabled}
         onPress={handlePress}
         style={[pressableStyle, style]}
@@ -129,6 +135,7 @@ const SegmentedTabComponent = memo(
               fontWeight={fontWeight}
               lineHeight={lineHeight}
               style={animatedTextStyles}
+              textTransform={textTransform}
               testID={`${testID}-label`}
             >
               {label}

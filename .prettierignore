@@ -23,6 +23,28 @@ dts/
 # Claude
 CLAUDE.md
 
+# A skill's `references/` holds source material that is quoted, vendored, or otherwise deliberately
+# formatted -- e.g. the AOSP Compose API guidelines, which must stay byte-identical to upstream so
+# they can be re-downloaded and diffed. Prettier stays out of these by convention.
+.claude/skills/*/references/
+.agents/skills/*/references/
+
+# Native Android (Kotlin/Gradle). Prettier has no parser for these, and Kotlin formatting is
+# owned by Android Studio's formatter until a Compose-aware linter is picked (see
+# packages/cds-android/README.md). Markdown under android/ is deliberately not excluded, so the
+# Gradle root's docs stay formatted like every other README.
+*.kt
+*.kts
+**/*.gradle*
+android/build/
+packages/cds-android/build/
+apps/android-app/build/
+
+# Expo prebuild output: generated native projects, and gitignored. Nx's format targets build their
+# file list from the git diff and so never see these; this is here for manual whole-tree runs.
+apps/expo-app/android/
+apps/expo-app/ios/
+
 # MCP Server rules
 packages/mcp-server/src/cds.mdc
 

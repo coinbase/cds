@@ -17,6 +17,27 @@ describe('Control', () => {
     expect(screen.getByText('test children')).toBeTruthy();
   });
 
+  it('renders a ReactNode label without wrapping it in Text', () => {
+    render(
+      <DefaultThemeProvider>
+        <Control
+          label={
+            <span data-testid="custom-label">
+              <strong>custom</strong> label
+            </span>
+          }
+          type="checkbox"
+        >
+          <div>test children</div>
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('custom-label')).toBeTruthy();
+    expect(screen.getByText('custom')).toBeTruthy();
+    expect(screen.queryByText('custom label')).toBeNull();
+  });
+
   it('triggers onChange', () => {
     const onChange = jest.fn();
     render(
