@@ -1,0 +1,1 @@
+import{u as n}from"./motion-minimal-B1h7XI-_.js";import{u as e}from"./use-unmount-effect-DjWyEMV9.js";import{c as s}from"./animate-NV5OIPt9.js";function u(){const t=n(()=>({current:null,animations:[]})),o=n(()=>s(t));return e(()=>{t.animations.forEach(a=>a.stop())}),[t,o]}export{u};

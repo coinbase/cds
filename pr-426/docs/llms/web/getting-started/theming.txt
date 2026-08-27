@@ -1,0 +1,426 @@
+# theming
+
+The theme contains design tokens like colors, fonts, spacing, and more. The ThemeProvider provides access to these values via CSS Variables for web, and React Context for both web and React Native.
+
+import { JSONCodeBlock } from '@site/src/components/page/JSONCodeBlock';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import { createThemeCssVars } from '@coinbase/cds-web/core/createThemeCssVars';
+### ThemeProvider component
+
+The ThemeProvider provides the theme context to all child components, and automatically generates CSS Variables for dynamic theming.
+
+You must pass the `theme` prop to configure the theme, and the `activeColorScheme` prop to set light or dark mode.
+
+[See the ThemeProvider docs here &rarr;](/components/other/ThemeProvider)
+
+```tsx
+import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+
+const App = () => (
+  <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+    {/* Your app components */}
+  </ThemeProvider>
+);
+```
+
+:::tip
+Changing the `activeColorScheme` automatically updates the values returned from the `useTheme` hook and from CSS Variables.
+:::
+
+#### `useTheme` hook
+
+The `useTheme` hook provides access to the current `theme` and `activeColorScheme`.
+
+The `color` and `spectrum` objects automatically change based on the `activeColorScheme`.
+
+[See the `useTheme` docs here &rarr;](/hooks/useTheme)
+
+```jsx
+const theme = useTheme();
+theme.activeColorScheme; // "light" or "dark"
+theme.spectrum; // Resolves to lightSpectrum or darkSpectrum, depends on activeColorScheme
+theme.color; // Resolves to lightColor or darkColor, depends on activeColorScheme
+theme.color.bgPrimary; // "rgb(0,82,255)" or "rgb(87,139,250)", depends on activeColorScheme
+theme.space[2]; // 16
+theme.borderRadius[200]; // 8
+theme.fontSize.display3; // "2.5rem"
+```
+
+:::tip
+For best performance, prefer to use CSS Variables instead of the `useTheme` hook whenever possible.
+:::
+
+#### ThemeProvider CSS Variables
+
+CSS Variables are created for every value in the theme.
+
+For best performance, prefer to use CSS Variables instead of the `useTheme` hook whenever possible.
+
+```jsx
+const theme = useTheme();
+theme.color.bgPrimary; // --color-bgPrimary
+theme.lightColor.bgPrimary; // --lightColor-bgPrimary
+theme.darkColor.bgPrimary; // --darkColor-bgPrimary
+theme.spectrum.blue10; // --blue10
+theme.lightSpectrum.blue10; // --light-blue10
+theme.darkSpectrum.blue10; // --dark-blue10
+theme.space[2]; // --space-2
+theme.space[0.25]; // --space-0_25
+theme.borderRadius[400]; // --borderRadius-400
+theme.fontSize.body; // --fontSize-body
+```
+
+You can see all the CSS Variables for the `defaultTheme` below.
+
+<JSONCodeBlock json={createThemeCssVars(defaultTheme)} />
+
+#### ThemeProvider classnames
+
+The ThemeProvider renders with CSS classnames based on the `activeColorScheme` and the theme's `id`.
+
+This allows you to style components based on the `activeColorScheme` or the theme's `id`.
+
+```jsx
+// Renders with a .cds-default class and a .light class
+<ThemeProvider theme={defaultTheme} activeColorScheme="light" />
+```
+
+#### Nested themes
+
+ThemeProviders can be nested to create theme overrides for specific sections.
+
+```jsx
+<ThemeProvider theme={defaultTheme} activeColorScheme="light">
+  {/* Default theme in light color scheme */}
+
+  <ThemeProvider theme={customTheme} activeColorScheme="dark">
+    {/* Custom theme in dark color scheme */}
+  </ThemeProvider>
+</ThemeProvider>
+```
+
+When nesting, you may want to override specific color values from the current theme. Overrides must be conditionally applied because we don't enforce that a theme has both light and dark colors defined.
+
+```jsx
+// Override parts of the parent theme
+const theme = useTheme();
+const customTheme = {
+  ...theme,
+  ...(theme.lightColor &&
+    theme.lightSpectrum && {
+      lightColor: {
+        ...theme.lightColor,
+        bg: `rgb(${theme.lightSpectrum.orange50})`,
+        bgPrimary: `rgb(${theme.lightSpectrum.red20})`,
+        bgSecondary: `rgb(${theme.lightSpectrum.blue50})`,
+      },
+    }),
+  ...(theme.darkColor &&
+    theme.darkSpectrum && {
+      darkColor: {
+        ...theme.darkColor,
+        bg: `rgb(${theme.darkSpectrum.orange50})`,
+        bgPrimary: `rgb(${theme.darkSpectrum.red20})`,
+        bgSecondary: `rgb(${theme.darkSpectrum.blue50})`,
+      },
+    }),
+} as const satisfies Theme;
+```
+
+#### Theme inheritence
+
+Nested ThemeProviders do not automatically inherit the theme from their parent provider. You can manually inherit the theme with the `useTheme` hook.
+
+```jsx
+const Example = () => {
+  // Pass the parent theme down to another ThemeProvider
+  const theme = useTheme();
+  return (
+    <ThemeProvider theme={theme} activeColorScheme={theme.activeColorScheme}>
+      {children}
+    </ThemeProvider>
+  );
+};
+```
+
+#### InvertedThemeProvider component
+
+The InvertedThemeProvider automatically inherits from its parent theme and flips the `activeColorScheme` to the opposite value.
+
+```jsx
+<ThemeProvider theme={defaultTheme} activeColorScheme="light">
+  {/* Default theme in light color scheme */}
+
+  <InvertedThemeProvider>
+    {/* Default theme in inverse (dark) color scheme */}
+  </InvertedThemeProvider>
+</ThemeProvider>
+```
+
+### `ThemeConfig` vs `Theme` type
+
+Use the `ThemeConfig` type when creating a theme, or when passing the `theme` prop to the ThemeProvider.
+
+Use the `Theme` type for the return value of the `useTheme` hook. The `Theme` type includes all the properties of `ThemeConfig` - plus the `activeColorScheme`, `color`, and `spectrum` properties.
+
+[See the `ThemeConfig` type definition here &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/core/theme.ts#L4)
+
+[See the `Theme` type definition here &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/core/theme.ts#L43)
+
+:::tip
+Although the `Theme` type includes extra properties, you can still pass the `useTheme` return value directly to the ThemeProvider `theme` prop as shown in the [theme inheritence section.](#theme-inheritence)
+:::
+
+### `spectrum` vs `color` values
+
+The `spectrum` variables are partial `"r,g,b"` strings while `color` variables are complete CSS color values.
+
+Both `color` and `spectrum` behave inversely in light and dark mode.
+
+For example with the `defaultTheme` config, `spectrum.gray0` is white in light mode and black in dark mode. We use `spectrum` variables to define `color` variables, so this same behavior extends to `color`.
+
+The `color` variables have semantic names which describe their application in the UI. You should prefer to use `color` variables instead of `spectrum` variables when styling UI.
+
+```jsx
+const theme = useTheme();
+theme.lightSpectrum.gray0; // "255,255,255"
+theme.darkSpectrum.gray0; // "10,11,13"
+theme.spectrum.gray0; // "255,255,255" or "10,11,13", depends on activeColorScheme
+theme.lightColor.bg; // "rgb(255,255,255)"
+theme.darkColor.bg; // "rgb(10,11,13)"
+theme.color.bg; // "rgb(255,255,255)" or "rgb(10,11,13)", depends on activeColorScheme
+```
+
+:::tip
+Prefer to use semantic `color` variables for UI styles. Direct usage of `spectrum` values should be a rare exception.
+:::
+
+### Creating a theme
+#### Defining colors
+
+We recommend defining `lightSpectrum` and `darkSpectrum` as separate objects. This makes it easier to reference them when defining the `lightColor` and `darkColor` values.
+
+The `lightColor` and `darkColor` values must be raw color strings (hex, rgba, hsl, etc), they cannot contain CSS Variables or CSS functions.
+
+#### The `space` scale
+
+CDS expects that the theme `space` values will be multiples of some base number.
+
+For example, the `defaultTheme` uses `8px` as the base number:
+
+```jsx
+theme.space[0]; // 0
+theme.space[0.25]; // 2
+theme.space[0.5]; // 4
+theme.space[1]; // 8
+theme.space[1.5]; // 12
+theme.space[2]; // 16
+theme.space[3]; // 24
+// etc.
+```
+
+While it is possible to customize the `space` values in any way, deviating from this expectation may produce broken styles.
+
+#### Example new theme
+
+In this example we'll start with the `defaultTheme` and customize a couple values.
+
+```tsx
+import type { ThemeConfig } from '@coinbase/cds-web/core/theme';
+import { ThemeProvider } from '@coinbase/cds-web/system/ThemeProvider';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+
+// Define lightSpectrum and darkSpectrum as separate objects
+const lightSpectrum = {
+  ...defaultTheme.lightSpectrum,
+  blue60: '8,90,255',
+};
+
+const darkSpectrum = {
+  ...defaultTheme.darkSpectrum,
+  blue60: '65,125,245',
+};
+
+// Use lightSpectrum and darkSpectrum to define the lightColor and darkColor values
+const myTheme = {
+  ...defaultTheme,
+  id: 'my-custom-theme',
+  lightSpectrum,
+  darkSpectrum,
+  lightColor: {
+    ...defaultTheme.lightColor,
+    bgPrimary: `rgb(${lightSpectrum.red60})`,
+  },
+  darkColor: {
+    ...defaultTheme.darkColor,
+    bgPrimary: `rgb(${darkSpectrum.red60})`,
+  },
+} as const satisfies ThemeConfig;
+
+const App = () => (
+  <ThemeProvider theme={myTheme} activeColorScheme="light">
+    {/* Your app components */}
+  </ThemeProvider>
+);
+```
+
+:::tip
+Use the `ThemeConfig` type with TypeScript's `satisfies` keyword to enforce type safety for your theme.
+:::
+
+### `defaultTheme` config
+
+The `defaultTheme` is a good example of a complete `ThemeConfig`. You can use it as an example when developing your own themes.
+
+[See the `defaultTheme` source code here &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/themes/defaultTheme.ts)
+
+<JSONCodeBlock json={defaultTheme} />
+
+### `ThemeVars` namespace
+
+The `ThemeVars` namespace contains type definitions for all themeable variable names in CDS. It includes any custom theme variables added in `ThemeVarsExtended`.
+
+```tsx
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+
+// All theme variables are accessible through ThemeVars
+ThemeVars.Color; // 'fg' | 'bg' | 'bgPrimary' | 'bgSecondary' | ...
+ThemeVars.SpectrumColor; // 'blue60' | 'red40' | 'gray100' | ...
+ThemeVars.SpectrumHue; // 'blue' | 'green' | 'orange' | 'gray' | ...
+ThemeVars.SpectrumHueStep; // 0 | 5 | 10 | 20 | ...
+ThemeVars.Space; // 0 | 0.25 | 0.5 | 1 | 2 | ...
+ThemeVars.BorderWidth; // 0 | 100 | 200 | ...
+ThemeVars.BorderRadius; // 0 | 100 | 200 | ...
+ThemeVars.Font; // 'display1' | 'title1' | 'body' | ...
+ThemeVars.FontFamily; // 'display1' | 'title1' | 'body' | ...
+ThemeVars.FontSize; // 'display1' | 'title1' | 'body' | ...
+ThemeVars.FontWeight; // 'display1' | 'title1' | 'body' | ...
+ThemeVars.LineHeight; // 'display1' | 'title1' | 'body' | ...
+ThemeVars.TextTransform; // 'display1' | 'title1' | 'body' | ...
+ThemeVars.IconSize; // 'xs' | 's' | 'm' | 'l'
+ThemeVars.AvatarSize; // 's' | 'm' | 'l' | 'xl' | ...
+ThemeVars.ControlSize; // 'checkboxSize' | 'radioSize' | ...
+```
+
+### Extending the theme
+
+You can extend the theme by adding custom theme variables. In this example we'll show how to add a custom color variable, but you can extend other types of `ThemeVars` as well.
+
+Start by overriding interfaces in the `ThemeVarsExtended` namespace to add new theme variables. Only the key names are used, the `void` type is just a necessary placeholder.
+
+```tsx
+declare module '@coinbase/cds-common/core/theme' {
+  export namespace ThemeVarsExtended {
+    export interface Color {
+      myCustomColor: void;
+    }
+  }
+}
+```
+
+This adds `myCustomColor` to `ThemeVars.Color` - which enforces that this variable must be defined in your theme to satisfy the `ThemeConfig` type, and allows this variable name to be passed to the `StyleProps` API anywhere that theme colors are accepted.
+
+Now that `myCustomColor` is defined in your theme the `useTheme` hook will include it in the return value, and the ThemeProvider will create CSS Variables for this value just like every other `ThemeVars.Color`.
+
+Next define the corresponding static classnames for your new theme variables via the `initializeCDS` function `extendStyleProps` options. These static classnames should use the CSS Variable that will be created by the ThemeProvider.
+
+:::tip
+Call the `initializeCDS` function only once in your app entry point, before your app renders.
+:::
+
+Web StyleProps support responsive syntax, so you must provide 4 unique classnames per style prop: one each for `base`, `phone`, `tablet`, and `desktop`. Use the [CDS media object](/getting-started/styling/#responsive-styles) to use the same responsive breakpoints as CDS.
+
+```jsx
+import { initializeCDS } from '@coinbase/cds-web/styles/config';
+
+initializeCDS({
+  extendStyleProps: {
+    // Specify the ThemeVars interface name that you extended
+    Color: {
+      // Specify the new theme variable name that you added
+      myCustomColor: {
+        // Configure the necessary static classNames for the new theme variable
+        background: {
+          base: 'background-myCustomColor',
+          phone: 'background-myCustomColor-phone',
+          tablet: 'background-myCustomColor-tablet',
+          desktop: 'background-myCustomColor-desktop',
+        },
+        color: {
+          base: 'color-myCustomColor',
+          phone: 'color-myCustomColor-phone',
+          tablet: 'color-myCustomColor-tablet',
+          desktop: 'color-myCustomColor-desktop',
+        },
+        borderColor: {
+          base: 'borderColor-myCustomColor',
+          phone: 'borderColor-myCustomColor-phone',
+          tablet: 'borderColor-myCustomColor-tablet',
+          desktop: 'borderColor-myCustomColor-desktop',
+        },
+      },
+    },
+  },
+});
+```
+
+With the classnames defined as follows:
+
+```css
+.background-myCustomColor {
+  background-color: var(--color-myCustomColor);
+}
+
+.background-myCustomColor-phone {
+  @media (max-width: 767px) {
+    background-color: var(--color-myCustomColor);
+  }
+}
+
+.background-myCustomColor-tablet {
+  @media (min-width: 768px) and (max-width: 1279px) {
+    background-color: var(--color-myCustomColor);
+  }
+}
+
+.background-myCustomColor-desktop {
+  @media (min-width: 1280px) {
+    background-color: var(--color-myCustomColor);
+  }
+}
+
+/* etc for color and borderColor */
+```
+
+Or, using CSS-in-JS:
+
+```tsx
+import { css } from '@linaria/core';
+import { media } from '@coinbase/cds-web/styles/media';
+
+const myCustomColor = {
+  background: {
+    base: css`
+      background-color: var(--color-myCustomColor);
+    `,
+    phone: css`
+      @media ${media.phone} {
+        background-color: var(--color-myCustomColor);
+      }
+    `,
+    tablet: css`
+      @media ${media.tablet} {
+        background-color: var(--color-myCustomColor);
+      }
+    `,
+    desktop: css`
+      @media ${media.desktop} {
+        background-color: var(--color-myCustomColor);
+      }
+    `,
+  },
+  // etc for color and borderColor
+};
+```
+

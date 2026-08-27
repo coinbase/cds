@@ -1,0 +1,1064 @@
+# ListCell
+
+A versatile cell component used for displaying content in a list format, supporting various layouts and interactions.
+
+## Import
+
+```tsx
+import { ListCell } from '@coinbase/cds-web/cells/ListCell'
+```
+
+## Examples
+
+### Overview
+
+A ListCell row is divided into the following 5 columns:
+
+- Media
+- Title & description
+- Intermediary
+- End (detail & subdetail or action)
+- Accessory
+
+#### Basic Usage
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="Basic List Cell"
+  description="A simple example of ListCell"
+/>
+```
+
+:::tip
+Prefer `spacingVariant="condensed"` for the new ListCell design. The `compact` may be removed in a future major release.
+:::
+
+#### Spacing Variant
+
+```tsx live
+<VStack>
+  {/* Preferred (new design) */}
+  <ListCell
+    accessory="arrow"
+    description="New design (condensed)"
+    detail="$12,345.00"
+    spacingVariant="condensed"
+    media={<Avatar src={assets.eth.imageUrl} size="m" />}
+    onClick={console.log}
+    title="Condensed"
+    variant="positive"
+  />
+
+  {/* Deprecated options kept for backward compatibility */}
+  <ListCell
+    accessory="arrow"
+    detail="$12,345.00"
+    spacingVariant="compact"
+    media={<Avatar src={assets.eth.imageUrl} size="m" />}
+    onClick={console.log}
+    title="Compact (deprecated)"
+    variant="positive"
+  />
+  <ListCell
+    accessory="arrow"
+    detail="$12,345.00"
+    spacingVariant="normal"
+    media={<Avatar src={assets.eth.imageUrl} size="m" />}
+    onClick={console.log}
+    title="Normal"
+    variant="positive"
+  />
+</VStack>
+```
+
+### Media
+
+::::note
+We have deprecated `CellMedia`; pass media directly as shown below.
+::::
+
+#### Leading Icon
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="List Cell with Icon"
+  description="Shows usage with a leading icon"
+  media={<Icon active name="info" />}
+/>
+```
+
+#### Leading Avatar
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="List Cell with Icon"
+  description="Shows usage with a leading icon"
+  media={<Avatar src={assets.btc.imageUrl} size="l" />}
+/>
+```
+
+### Title & Description
+
+#### Title Line Limits
+
+- In condensed spacing (`spacingVariant="condensed"`), the title shows up to two lines by default, regardless of whether a description is present.
+- In normal and compact spacing, the title shows up to two lines when there is no description; if a description is present, the title is limited to one line.
+- Use `disableMultilineTitle` to force the title to one line in all cases.
+- When provided, the subtitle renders between the title and description and always truncates to a single line. Use `subtitleNode` if you need custom layout or multi-line behavior.
+
+::::warning
+The `title` and `description` props are rendered inside a CDS `Text` with default fonts and truncation. To render arbitrary React nodes without being wrapped by a `<Text>`, use `titleNode` and `descriptionNode`.
+When using the Node props, you are responsible for styling, layout, and truncation behavior.
+::::
+
+#### Custom Title/Description via Node Props
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  media={<Avatar src={assets.eth.imageUrl} size="m" />}
+  titleNode={
+    <HStack gap={1} alignItems="center">
+      <Icon name="checkmark" />
+      <span>Verified account</span>
+    </HStack>
+  }
+  descriptionNode={
+    <HStack gap={1} alignItems="center">
+      <span>Composed description with any React nodes</span>
+      <Icon name="info" />
+    </HStack>
+  }
+/>
+```
+
+#### Subtitle
+
+Use `subtitle` to add one line of supplementary context between the title and description. The subtitle always truncates to a single line; provide a `subtitleNode` when you need your own truncation or layout logic.
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  media={<Avatar src={assets.btc.imageUrl} size="l" />}
+  title="Bitcoin"
+  subtitle="Deposit available in 1-2 days"
+  description="Ending in ••42"
+  detail="$12,345.00"
+/>
+```
+
+#### Multiline Description
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="Multiline Description"
+  description="This is a longer description that demonstrates how the text wraps when the multiline prop is enabled. It can span multiple lines without truncating."
+  multiline
+/>
+```
+
+### Intermediary
+
+```tsx live
+function Intermediary() {
+  const dimensions = { width: 62, height: 18 };
+  const sparklineData = prices
+    .map((price) => parseFloat(price))
+    .filter((price, index) => index % 10 === 0);
+  const referenceY = sparklineData[Math.floor(sparklineData.length / 3)];
+
+  const CompactChart = memo(
+    ({ data, color = 'var(--color-fgPositive)', showArea = false, referenceY }) => (
+      <Box style={{ padding: 1 }}>
+        <LineChart
+          {...dimensions}
+          enableScrubbing={false}
+          overflow="visible"
+          inset={0}
+          showArea={showArea}
+          series={[
+            {
+              id: 'series',
+              data,
+              color,
+            },
+          ]}
+        >
+          <ReferenceLine dataY={referenceY} />
+        </LineChart>
+      </Box>
+    ),
+  );
+
+  return (
+    <ListCell
+      media={<Avatar src={assets.btc.imageUrl} />}
+      spacingVariant="condensed"
+      title="Bitcoin"
+      description="BTC"
+      intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+      detail="$334,239.03"
+      subdetail="+4.06%"
+      priority="start"
+      variant="positive"
+    />
+  );
+}
+```
+
+### End
+
+#### Detail and Subdetail
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="List Cell with Details"
+  description="Shows usage with detail and subdetail"
+  detail="Primary detail"
+  subdetail="Secondary detail"
+/>
+```
+
+::::warning
+Like `title` and `description`, `detail` and `subdetail` props are also rendered inside a CDS `Text` with default fonts. To render arbitrary React nodes without being wrapped by a `<Text>`, use `detailNode` and `subdetailNode`.
+::::
+
+#### Custom Detail/Subdetail via Node Props
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  media={<Avatar src={assets.btc.imageUrl} size="m" />}
+  title="Custom end content"
+  description="Detail and subdetail rendered with custom nodes"
+  detailNode={
+    <HStack gap={2} alignItems="center" justifyContent="flex-end">
+      <Icon name="info" />
+      <Text as="div" font="body" overflow="truncate" textAlign="end">
+        $12,345.00
+      </Text>
+    </HStack>
+  }
+  subdetailNode={
+    <HStack gap={1} alignItems="center" justifyContent="flex-end">
+      <Icon name="info" />
+      <Text as="div" color="fgPositive" font="label2" overflow="truncate" textAlign="end">
+        +5.43%
+      </Text>
+    </HStack>
+  }
+/>
+```
+
+#### End Action
+
+When you pass the `end` prop, it overrides the `detail`/`subdetail`/`detailNode`/`subdetailNode`.
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="End action"
+  detail="This is overridden and won't show up"
+  subdetail="This is overridden and won't show up"
+  detailNode="This is overridden and won't show up"
+  subdetailNode="This is overridden and won't show up"
+  end={
+    <Button
+      compact
+      onClick={() => {
+        alert('Action clicked');
+      }}
+    >
+      Action
+    </Button>
+  }
+/>
+```
+
+### Accessory
+
+#### Interactive Cell with Accessory
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="Interactive List Cell"
+  description="Click or tap to interact"
+  accessory="arrow"
+  onClick={() => alert('Cell clicked!')}
+/>
+```
+
+#### Preserve Layout During Selection
+
+Use the `unselected` accessory to reserve space for the selection checkmark when toggling the `selected` state.
+
+```tsx live
+function PreserveLayoutExample() {
+  const [isSelected, setIsSelected] = useState(false);
+
+  return (
+    <VStack gap={1}>
+      <ListCell
+        accessory={isSelected ? 'selected' : 'unselected'}
+        description="Selected state uses the same space, no layout shift when selected"
+        spacingVariant="condensed"
+        title="Leverage unselected state"
+        selected={isSelected}
+        onClick={() => setIsSelected((prev) => !prev)}
+      />
+    </VStack>
+  );
+}
+```
+
+#### Custom Accessory via Node Prop
+
+```tsx live
+<ListCell
+  spacingVariant="condensed"
+  title="Accessory Node"
+  description="Custom accessory with its own onClick"
+  media={<Avatar src={assets.eth.imageUrl} size="m" />}
+  end={
+    <Button
+      compact
+      onClick={() => {
+        alert('Action clicked');
+      }}
+    >
+      Action
+    </Button>
+  }
+  accessoryNode={
+    <Tooltip content="question">
+      <Icon size="s" name="questionMark" compact variant="secondary" />
+    </Tooltip>
+  }
+/>
+```
+
+### Accessibility Label
+
+The accessibility props are only applied when the `<ListCell>` has a value for the `onClick` prop. Otherwise, content passed into the `<ListCell>` must use accessibility props and attributes as needed.
+
+```tsx live
+<VStack gap={1}>
+  <ListCell
+    accessibilityLabel="Accessibility label. Describes content for entire list cell. Applied when onClick prop has a value"
+    intermediary={<Icon name="chartLine" />}
+    media={<Avatar src={assets.btc.imageUrl} />}
+    onClick={() => window.alert('ListCell clicked!')}
+    title="BTC"
+    spacingVariant="condensed"
+  />
+
+  <ListCell
+    intermediary={<Icon accessibilityLabel="Chart icon" name="chartLine" />}
+    media={<Avatar accessibilityLabel="Bitcoin" src={assets.btc.imageUrl} />}
+    title="BTC"
+    spacingVariant="condensed"
+  />
+</VStack>
+```
+
+### Helper text
+
+```tsx live
+<VStack gap={3}>
+  <ListCell
+    spacingVariant="condensed"
+    title="List Cell with Helper Text"
+    description="Shows usage with helper text below the cell"
+    helperText={
+      <CellHelperText font="label2" paddingStart={6}>
+        This is a default helper message.
+      </CellHelperText>
+    }
+    media={<Avatar src={assets.btc.imageUrl} />}
+    end={<Button compact>Action</Button>}
+  />
+  <ListCell
+    spacingVariant="condensed"
+    title="List Cell with Warning"
+    description="Shows usage with a warning message"
+    helperText={
+      <CellHelperText font="label2" variant="warning" paddingStart={6}>
+        This is a warning message.
+      </CellHelperText>
+    }
+    media={<Avatar src={assets.btc.imageUrl} />}
+    end={<Button compact>Action</Button>}
+  />
+  <ListCell
+    spacingVariant="condensed"
+    title="List Cell with Error"
+    description="Shows usage with an error message"
+    helperText={
+      <CellHelperText font="label2" variant="error" paddingStart={6}>
+        This is an error message.
+      </CellHelperText>
+    }
+    media={<Avatar src={assets.btc.imageUrl} />}
+    end={<Button compact>Action</Button>}
+  />
+</VStack>
+```
+
+### ContentCell
+
+```tsx live
+<ListCell
+  multiline
+  description={
+    <Text as="div" color="fgMuted" font="body">
+      Long description with multiple lines. This section can be arbitrarily long and occupy many
+      many lines.
+    </Text>
+  }
+  end={
+    <HStack alignItems="center" gap={2}>
+      <Text color="fgMuted" font="label2">
+        Meta
+      </Text>
+      <Icon color="fg" name="caretRight" size="s" />
+    </HStack>
+  }
+  media={<Avatar shape="circle" size="l" src={assets.eth.imageUrl} />}
+  onClick={() => console.log('clicked')}
+  priority="end"
+  spacingVariant="condensed"
+  styles={{
+    media: {
+      marginTop: 'var(--space-0_5)',
+      alignSelf: 'flex-start',
+    },
+    end: {
+      marginTop: 'var(--space-0_5)',
+      alignSelf: 'flex-start',
+    },
+  }}
+  subdetail="Subdetail"
+  subtitle="Subtitle"
+  title="Content-style layout"
+/>
+```
+
+### Loading States
+
+The ListCellFallback component provides loading state representations of ListCell. It uses placeholder rectangles to indicate where content will appear, creating a smooth loading experience. The web version uses percentage-based widths and custom layouts to match the ListCell's four-column structure.
+
+```tsx live
+<VStack gap={3}>
+  {/* Basic loading state */}
+  <ListCellFallback title description spacingVariant="condensed" />
+
+  {/* Loading state with media */}
+  <ListCellFallback title description media="icon" spacingVariant="condensed" />
+
+  {/* Loading state with details */}
+  <ListCellFallback title description detail subdetail spacingVariant="condensed" />
+
+  {/* Full loading state with custom widths */}
+  <ListCellFallback
+    spacingVariant="condensed"
+    title
+    description
+    detail
+    subdetail
+    helperText
+    media="icon"
+    rectWidthVariant={2} // Creates a deterministic variant of the loading state
+    disableRandomRectWidth
+    styles={{ helperText: { paddingLeft: 48 } }}
+  />
+</VStack>
+```
+
+### Priority
+
+The priority prop controls which parts of the cell are protected from shrinking and truncation when horizontal space is limited. It accepts start, middle, and end as a string or an array of strings.
+
+```tsx live
+function PriorityContent() {
+  const dimensions = { width: 62, height: 18 };
+  const sparklineData = prices
+    .map((price) => parseFloat(price))
+    .filter((price, index) => index % 10 === 0);
+  const referenceY = sparklineData[Math.floor(sparklineData.length / 3)];
+
+  const CompactChart = memo(
+    ({ data, color = 'var(--color-fgPositive)', showArea = false, referenceY }) => (
+      <Box style={{ padding: 1 }}>
+        <LineChart
+          {...dimensions}
+          enableScrubbing={false}
+          overflow="visible"
+          inset={0}
+          showArea={showArea}
+          series={[
+            {
+              id: 'series',
+              data,
+              color,
+            },
+          ]}
+        >
+          <ReferenceLine dataY={referenceY} />
+        </LineChart>
+      </Box>
+    ),
+  );
+
+  return (
+    <VStack gap={3} style={{ width: '100%', maxWidth: 320, overflow: 'hidden' }}>
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority="start"
+        variant="positive"
+      />
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority="middle"
+        variant="positive"
+      />
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority="end"
+        variant="positive"
+      />
+      <ListCell
+        spacingVariant="condensed"
+        title="Asset with a really long name"
+        description="Some description of the asset"
+        intermediary={<CompactChart data={sparklineData} referenceY={referenceY} />}
+        detail="$334,239.03"
+        subdetail="+4.06%"
+        priority={['start', 'middle', 'end']}
+        variant="warning"
+      />
+    </VStack>
+  );
+}
+```
+
+### Anatomy
+
+Without helper text (top-only layout):
+
+```text
+┌─────────────────────────────────────────────────────────────────────────────────────────┐
+│                               root (Box)                                                │
+│┌───────────────────────────────────────────────────────────────────────────────────────┐│
+││                              pressable                                                ││
+││┌─────────────────────────────────────────────────────────────────────────────────────┐││
+│││                contentContainer & mainContent (HStack)                              │││
+│││  ┌─────┐ ┌──────────────────────────────┐ ┌────────────┐ ┌────────────┐ ┌─────────┐ │││
+│││  │media│ │ titleStackContainer (Box)    │ │intermediary│ │    end     │ │accessory│ │││
+│││  │     │ │ ┌──────────────────────────┐ │ │            │ │ (detail    │ │         │ │││
+│││  │     │ │ │ titleStack (VStack)      │ │ │            │ │    or      │ │         │ │││
+│││  │     │ │ │ ┌──────────┐             │ │ │            │ │  action)   │ │         │ │││
+│││  │     │ │ │ │  title   │             │ │ │            │ │            │ │         │ │││
+│││  │     │ │ │ └──────────┘             │ │ │            │ │            │ │         │ │││
+│││  │     │ │ │ ┌──────────┐             │ │ │            │ │            │ │         │ │││
+│││  │     │ │ │ │ subtitle │             │ │ │            │ │            │ │         │ │││
+│││  │     │ │ │ └──────────┘             │ │ │            │ │            │ │         │ │││
+│││  │     │ │ │ ┌────────────┐           │ │ │            │ │            │ │         │ │││
+│││  │     │ │ │ │ description│           │ │ │            │ │            │ │         │ │││
+│││  │     │ │ │ └────────────┘           │ │ │            │ │            │ │         │ │││
+│││  │     │ │ └──────────────────────────┘ │ │            │ │            │ │         │ │││
+│││  └─────┘ └──────────────────────────────┘ └────────────┘ └────────────┘ └─────────┘ │││
+││└─────────────────────────────────────────────────────────────────────────────────────┘││
+│└───────────────────────────────────────────────────────────────────────────────────────┘│
+└─────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+With helper text (top + bottom layout):
+
+```text
+┌───────────────────────────────────────────────────────────────────────────────────────────┐
+│                                 root (Box)                                                │
+│┌─────────────────────────────────────────────────────────────────────────────────────────┐│
+││                                pressable                                                ││
+││┌───────────────────────────────────────────────────────────────────────────────────────┐││
+│││                        contentContainer (VStack)                                      │││
+│││┌─────────────────────────────────────────────────────────────────────────────────────┐│││
+││││                          mainContent (HStack)                                       ││││
+││││  ┌─────┐ ┌──────────────────────────────┐ ┌────────────┐ ┌────────────┐ ┌─────────┐ ││││
+││││  │media│ │ titleStackContainer (Box)    │ │intermediary│ │    end     │ │accessory│ ││││
+││││  │     │ │ ┌──────────────────────────┐ │ │            │ │ (detail    │ │         │ ││││
+││││  │     │ │ │ titleStack (VStack)      │ │ │            │ │    or      │ │         │ ││││
+││││  │     │ │ │ ┌──────────┐             │ │ │            │ │  action)   │ │         │ ││││
+││││  │     │ │ │ │  title   │             │ │ │            │ │            │ │         │ ││││
+││││  │     │ │ │ └──────────┘             │ │ │            │ │            │ │         │ ││││
+││││  │     │ │ │ ┌──────────┐             │ │ │            │ │            │ │         │ ││││
+││││  │     │ │ │ │ subtitle │             │ │ │            │ │            │ │         │ ││││
+││││  │     │ │ │ └──────────┘             │ │ │            │ │            │ │         │ ││││
+││││  │     │ │ │ ┌────────────┐           │ │ │            │ │            │ │         │ ││││
+││││  │     │ │ │ │ description│           │ │ │            │ │            │ │         │ ││││
+││││  │     │ │ │ └────────────┘           │ │ │            │ │            │ │         │ ││││
+││││  │     │ │ └──────────────────────────┘ │ │            │ │            │ │         │ ││││
+││││  └─────┘ └──────────────────────────────┘ └────────────┘ └────────────┘ └─────────┘ ││││
+│││└─────────────────────────────────────────────────────────────────────────────────────┘│││
+│││┌─────────────────────────────────────────────────────────────────────────────────────┐│││
+││││                              helperText                                             ││││
+│││└─────────────────────────────────────────────────────────────────────────────────────┘│││
+││└───────────────────────────────────────────────────────────────────────────────────────┘││
+│└─────────────────────────────────────────────────────────────────────────────────────────┘│
+└───────────────────────────────────────────────────────────────────────────────────────────┘
+```
+
+Mapping to `styles` / `classNames` keys:
+
+- root: outer `Box` wrapping the entire cell
+- pressable: interactive overlay when `href` / `onClick` keyboard handlers are present
+- contentContainer: container around top and optional bottom content
+- mainContent: inner horizontal layout that holds the main pieces
+- titleStackContainer: wrapper around the title stack (controls flex behavior)
+- titleStack: stacked text column (title/subtitle/description)
+- title/subtitle/description: individual text nodes within `titleStack`
+- media: leading media container
+- intermediary: middle container between main and end
+- end: container for `detail` / `subdetail` or `end` prop you pass in
+- accessory: trailing accessory container
+- helperText: container below main content to display helper text
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `about` | `string \| undefined` | No | `-` | - |
+| `accessKey` | `string \| undefined` | No | `-` | - |
+| `accessory` | `more \| selected \| arrow \| unselected` | No | `-` | Accessory to display at the end of the cell. |
+| `accessoryNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Custom accessory node rendered at the end of the cell. Takes precedence over accessory. |
+| `action` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | - |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `aria-activedescendant` | `string \| undefined` | No | `-` | Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application. |
+| `aria-atomic` | `Booleanish \| undefined` | No | `-` | Indicates whether assistive technologies will present all, or only parts of, the changed region based on the change notifications defined by the aria-relevant attribute. |
+| `aria-autocomplete` | `none \| inline \| list \| both \| undefined` | No | `-` | Indicates whether inputting text could trigger display of one or more predictions of the users intended value for an input and specifies how predictions would be presented if they are made. |
+| `aria-braillelabel` | `string \| undefined` | No | `-` | Defines a string value that labels the current element, which is intended to be converted into Braille. |
+| `aria-brailleroledescription` | `string \| undefined` | No | `-` | Defines a human-readable, author-localized abbreviated description for the role of an element, which is intended to be converted into Braille. |
+| `aria-busy` | `Booleanish \| undefined` | No | `-` | - |
+| `aria-checked` | `boolean \| true \| false \| mixed \| undefined` | No | `-` | Indicates the current checked state of checkboxes, radio buttons, and other widgets. |
+| `aria-colcount` | `number \| undefined` | No | `-` | Defines the total number of columns in a table, grid, or treegrid. |
+| `aria-colindex` | `number \| undefined` | No | `-` | Defines an elements column index or position with respect to the total number of columns within a table, grid, or treegrid. |
+| `aria-colindextext` | `string \| undefined` | No | `-` | Defines a human readable text alternative of aria-colindex. |
+| `aria-colspan` | `number \| undefined` | No | `-` | Defines the number of columns spanned by a cell or gridcell within a table, grid, or treegrid. |
+| `aria-controls` | `string \| undefined` | No | `-` | Identifies the element (or elements) whose contents or presence are controlled by the current element. |
+| `aria-current` | `boolean \| time \| location \| true \| false \| page \| step \| date \| undefined` | No | `-` | Indicates the element that represents the current item within a container or set of related elements. |
+| `aria-describedby` | `string \| undefined` | No | `-` | Identifies the element (or elements) that describes the object. |
+| `aria-description` | `string \| undefined` | No | `-` | Defines a string value that describes or annotates the current element. |
+| `aria-details` | `string \| undefined` | No | `-` | Identifies the element that provides a detailed, extended description for the object. |
+| `aria-disabled` | `Booleanish \| undefined` | No | `-` | Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable. |
+| `aria-dropeffect` | `link \| none \| copy \| execute \| move \| popup \| undefined` | No | `-` | Indicates what functions can be performed when a dragged object is released on the drop target. |
+| `aria-errormessage` | `string \| undefined` | No | `-` | Identifies the element that provides an error message for the object. |
+| `aria-expanded` | `Booleanish \| undefined` | No | `-` | Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed. |
+| `aria-flowto` | `string \| undefined` | No | `-` | Identifies the next element (or elements) in an alternate reading order of content which, at the users discretion, allows assistive technology to override the general default of reading in document source order. |
+| `aria-grabbed` | `Booleanish \| undefined` | No | `-` | Indicates an elements grabbed state in a drag-and-drop operation. |
+| `aria-haspopup` | `boolean \| grid \| dialog \| menu \| true \| false \| listbox \| tree \| undefined` | No | `-` | Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element. |
+| `aria-hidden` | `Booleanish \| undefined` | No | `-` | Indicates whether the element is exposed to an accessibility API. |
+| `aria-invalid` | `boolean \| true \| false \| grammar \| spelling \| undefined` | No | `-` | Indicates the entered value does not conform to the format expected by the application. |
+| `aria-keyshortcuts` | `string \| undefined` | No | `-` | Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element. |
+| `aria-label` | `string \| undefined` | No | `-` | Defines a string value that labels the current element. |
+| `aria-labelledby` | `string \| undefined` | No | `-` | Identifies the element (or elements) that labels the current element. |
+| `aria-level` | `number \| undefined` | No | `-` | Defines the hierarchical level of an element within a structure. |
+| `aria-live` | `off \| assertive \| polite \| undefined` | No | `-` | Indicates that an element will be updated, and describes the types of updates the user agents, assistive technologies, and user can expect from the live region. |
+| `aria-modal` | `Booleanish \| undefined` | No | `-` | Indicates whether an element is modal when displayed. |
+| `aria-multiline` | `Booleanish \| undefined` | No | `-` | Indicates whether a text box accepts multiple lines of input or only a single line. |
+| `aria-multiselectable` | `Booleanish \| undefined` | No | `-` | Indicates that the user may select more than one item from the current selectable descendants. |
+| `aria-orientation` | `horizontal \| vertical \| undefined` | No | `-` | Indicates whether the elements orientation is horizontal, vertical, or unknown/ambiguous. |
+| `aria-owns` | `string \| undefined` | No | `-` | Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship between DOM elements where the DOM hierarchy cannot be used to represent the relationship. |
+| `aria-placeholder` | `string \| undefined` | No | `-` | Defines a short hint (a word or short phrase) intended to aid the user with data entry when the control has no value. A hint could be a sample value or a brief description of the expected format. |
+| `aria-posinset` | `number \| undefined` | No | `-` | Defines an elements number or position in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM. |
+| `aria-pressed` | `boolean \| true \| false \| mixed \| undefined` | No | `-` | Indicates the current pressed state of toggle buttons. |
+| `aria-readonly` | `Booleanish \| undefined` | No | `-` | Indicates that the element is not editable, but is otherwise operable. |
+| `aria-relevant` | `text \| all \| additions \| additions removals \| additions text \| removals \| removals additions \| removals text \| text additions \| text removals \| undefined` | No | `-` | Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified. |
+| `aria-required` | `Booleanish \| undefined` | No | `-` | Indicates that user input is required on the element before a form may be submitted. |
+| `aria-roledescription` | `string \| undefined` | No | `-` | Defines a human-readable, author-localized description for the role of an element. |
+| `aria-rowcount` | `number \| undefined` | No | `-` | Defines the total number of rows in a table, grid, or treegrid. |
+| `aria-rowindex` | `number \| undefined` | No | `-` | Defines an elements row index or position with respect to the total number of rows within a table, grid, or treegrid. |
+| `aria-rowindextext` | `string \| undefined` | No | `-` | Defines a human readable text alternative of aria-rowindex. |
+| `aria-rowspan` | `number \| undefined` | No | `-` | Defines the number of rows spanned by a cell or gridcell within a table, grid, or treegrid. |
+| `aria-selected` | `Booleanish \| undefined` | No | `-` | Indicates the current selected state of various widgets. |
+| `aria-setsize` | `number \| undefined` | No | `-` | Defines the number of items in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM. |
+| `aria-sort` | `none \| ascending \| descending \| other \| undefined` | No | `-` | Indicates if items in a table or grid are sorted in ascending or descending order. |
+| `aria-valuemax` | `number \| undefined` | No | `-` | Defines the maximum allowed value for a range widget. |
+| `aria-valuemin` | `number \| undefined` | No | `-` | Defines the minimum allowed value for a range widget. |
+| `aria-valuenow` | `number \| undefined` | No | `-` | Defines the current value for a range widget. |
+| `aria-valuetext` | `string \| undefined` | No | `-` | Defines the human readable text alternative of aria-valuenow for a range widget. |
+| `as` | `symbol \| object \| style \| div \| a \| abbr \| address \| area \| article \| aside \| audio \| b \| base \| bdi \| bdo \| big \| blockquote \| body \| br \| button \| canvas \| caption \| center \| cite \| code \| col \| colgroup \| data \| datalist \| dd \| del \| details \| dfn \| dialog \| dl \| dt \| em \| embed \| fieldset \| figcaption \| figure \| footer \| form \| h1 \| h2 \| h3 \| h4 \| h5 \| h6 \| head \| header \| hgroup \| hr \| html \| i \| iframe \| img \| input \| ins \| kbd \| keygen \| label \| legend \| li \| link \| main \| map \| mark \| menu \| menuitem \| meta \| meter \| nav \| noindex \| noscript \| ol \| optgroup \| option \| output \| p \| param \| picture \| pre \| progress \| q \| rp \| rt \| ruby \| s \| samp \| search \| slot \| script \| section \| select \| small \| source \| span \| strong \| sub \| summary \| sup \| table \| template \| tbody \| td \| textarea \| tfoot \| th \| thead \| time \| title \| tr \| track \| u \| ul \| var \| video \| wbr \| webview \| svg \| animate \| animateMotion \| animateTransform \| circle \| clipPath \| defs \| desc \| ellipse \| feBlend \| feColorMatrix \| feComponentTransfer \| feComposite \| feConvolveMatrix \| feDiffuseLighting \| feDisplacementMap \| feDistantLight \| feDropShadow \| feFlood \| feFuncA \| feFuncB \| feFuncG \| feFuncR \| feGaussianBlur \| feImage \| feMerge \| feMergeNode \| feMorphology \| feOffset \| fePointLight \| feSpecularLighting \| feSpotLight \| feTile \| feTurbulence \| filter \| foreignObject \| g \| image \| line \| linearGradient \| marker \| mask \| metadata \| mpath \| path \| pattern \| polygon \| polyline \| radialGradient \| rect \| set \| stop \| switch \| text \| textPath \| tspan \| use \| view \| ComponentClass<any, any> \| FunctionComponent<any>` | No | `div` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `autoCapitalize` | `(string & {}) \| none \| off \| on \| sentences \| words \| characters \| undefined` | No | `-` | - |
+| `autoCorrect` | `string \| undefined` | No | `-` | - |
+| `autoFocus` | `boolean \| undefined` | No | `-` | - |
+| `autoSave` | `string \| undefined` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `bottomContent` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | The content to display below the main cell content |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | - |
+| `className` | `string \| undefined` | No | `-` | - |
+| `classNames` | `{ root?: string; media?: string \| undefined; intermediary?: string \| undefined; end?: string \| undefined; accessory?: string \| undefined; contentContainer?: string \| undefined; pressable?: string \| undefined; titleStack?: string \| undefined; titleStackContainer?: string \| undefined; mainContent?: string \| undefined; helperText?: string \| undefined; title?: string \| undefined; subtitle?: string \| undefined; description?: string \| undefined; } \| undefined` | No | `-` | Class names for subcomponents, ignored when the corresponding xxNode prop is used |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `compact` | `boolean` | No | `-` | - |
+| `content` | `string \| undefined` | No | `-` | - |
+| `contentClassName` | `string` | No | `-` | - |
+| `contentEditable` | `inherit \| Booleanish \| plaintext-only \| undefined` | No | `-` | - |
+| `contextMenu` | `string \| undefined` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `dangerouslySetInnerHTML` | `{ __html: string \| TrustedHTML; } \| undefined` | No | `-` | - |
+| `datatype` | `string \| undefined` | No | `-` | - |
+| `defaultChecked` | `boolean \| undefined` | No | `-` | - |
+| `defaultValue` | `string \| number \| readonly string[] \| undefined` | No | `-` | - |
+| `description` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use descriptionNode. |
+| `descriptionNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to render description. Takes precedence over description. When provided, classNames.description and styles.description are not applied. |
+| `detail` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Label and/or extra detail. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use detailNode. |
+| `detailNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to render label and/or extra detail. Takes precedence over detail. |
+| `detailWidth` | `string \| number` | No | `-` | - |
+| `dir` | `string \| undefined` | No | `-` | - |
+| `disableMultilineTitle` | `boolean` | No | `-` | When there is no description the title will take up two lines by default. When this is set to true multiline title behavior is overwritten, and regardless of description text state the title will take up a single line truncating with ellipses. |
+| `disableSelectionAccessory` | `boolean` | No | `-` | Disable the default accessory that is displayed when the cell is selected. If accessory is provided, that will continue to be displayed, otherwise no accessory will be displayed when the cell is selected. |
+| `disabled` | `boolean` | No | `-` | Is the cell disabled? Will apply opacity and disable interaction. |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `draggable` | `Booleanish \| undefined` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | End-aligned content (e.g., CTA, form element, metric). Replacement for the deprecated action prop, and takes precedence over it. If the content is an action (like button, link, etc), we recommend avoiding use alongside onClick. If used alongside onClick, the end action is triggered first and then the onClick handler. |
+| `enterKeyHint` | `search \| enter \| done \| go \| next \| previous \| send \| undefined` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `helperText` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Assitive message to display below the cell content |
+| `hidden` | `boolean \| undefined` | No | `-` | - |
+| `id` | `string \| undefined` | No | `-` | - |
+| `inlist` | `any` | No | `-` | - |
+| `innerSpacing` | `CellSpacing` | No | `-` | The spacing to use on the inner content of Cell |
+| `inputMode` | `search \| text \| none \| email \| tel \| url \| numeric \| decimal \| undefined` | No | `-` | Hints at the type of data that might be entered by the user while editing the element or its contents |
+| `intermediary` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | For internal use only. |
+| `is` | `string \| undefined` | No | `-` | Specify that a standard HTML element should behave like a defined custom built-in element |
+| `itemID` | `string \| undefined` | No | `-` | - |
+| `itemProp` | `string \| undefined` | No | `-` | - |
+| `itemRef` | `string \| undefined` | No | `-` | - |
+| `itemScope` | `boolean \| undefined` | No | `-` | - |
+| `itemType` | `string \| undefined` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null \| undefined` | No | `-` | - |
+| `lang` | `string \| undefined` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `media` | `ReactElement` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `multiline` | `boolean` | No | `-` | Allow the description to span multiple lines. This *will* break fixed height requirements, so should not be used in a FlatList. |
+| `nonce` | `string \| undefined` | No | `-` | - |
+| `onAbort` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onAbortCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onAnimationEnd` | `AnimationEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onAnimationEndCapture` | `AnimationEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onAnimationIteration` | `AnimationEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onAnimationIterationCapture` | `AnimationEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onAnimationStart` | `AnimationEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onAnimationStartCapture` | `AnimationEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onAuxClick` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onAuxClickCapture` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onBeforeInput` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onBeforeInputCapture` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onBlur` | `FocusEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onBlurCapture` | `FocusEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCanPlay` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCanPlayCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCanPlayThrough` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCanPlayThroughCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onChangeCapture` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onClick` | `MouseEventHandler<Element>` | No | `-` | Click handler. |
+| `onClickCapture` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCompositionEnd` | `CompositionEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCompositionEndCapture` | `CompositionEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCompositionStart` | `CompositionEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCompositionStartCapture` | `CompositionEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCompositionUpdate` | `CompositionEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCompositionUpdateCapture` | `CompositionEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onContextMenu` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onContextMenuCapture` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCopy` | `ClipboardEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCopyCapture` | `ClipboardEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCut` | `ClipboardEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onCutCapture` | `ClipboardEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDoubleClick` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDoubleClickCapture` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDrag` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragCapture` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragEnd` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragEndCapture` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragEnter` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragEnterCapture` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragExit` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragExitCapture` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragLeave` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragLeaveCapture` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragOver` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragOverCapture` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragStart` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDragStartCapture` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDrop` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDropCapture` | `DragEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDurationChange` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onDurationChangeCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onEmptied` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onEmptiedCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onEncrypted` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onEncryptedCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onEnded` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onEndedCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onError` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onErrorCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onFocus` | `FocusEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onFocusCapture` | `FocusEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onGotPointerCapture` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onGotPointerCaptureCapture` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onInput` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onInputCapture` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onInvalid` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onInvalidCapture` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onKeyDown` | `KeyboardEventHandler<Element>` | No | `-` | Key down handler for keyboard interaction. |
+| `onKeyDownCapture` | `KeyboardEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onKeyPress` | `KeyboardEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onKeyPressCapture` | `KeyboardEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onKeyUp` | `KeyboardEventHandler<Element>` | No | `-` | Key up handler for keyboard interaction. |
+| `onKeyUpCapture` | `KeyboardEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onLoad` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onLoadCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onLoadStart` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onLoadStartCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onLoadedData` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onLoadedDataCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onLoadedMetadata` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onLoadedMetadataCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onLostPointerCapture` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onLostPointerCaptureCapture` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseDown` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseDownCapture` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseEnter` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseLeave` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseMove` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseMoveCapture` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseOut` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseOutCapture` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseOver` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseOverCapture` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseUp` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onMouseUpCapture` | `MouseEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPaste` | `ClipboardEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPasteCapture` | `ClipboardEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPause` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPauseCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPlay` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPlayCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPlaying` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPlayingCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerCancel` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerCancelCapture` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerDown` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerDownCapture` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerEnter` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerLeave` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerMove` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerMoveCapture` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerOut` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerOutCapture` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerOver` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerOverCapture` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerUp` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onPointerUpCapture` | `PointerEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onProgress` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onProgressCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onRateChange` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onRateChangeCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onReset` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onResetCapture` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onResize` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onResizeCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onScroll` | `UIEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onScrollCapture` | `UIEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onSeeked` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onSeekedCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onSeeking` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onSeekingCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onSelect` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onSelectCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onStalled` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onStalledCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onSubmit` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onSubmitCapture` | `FormEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onSuspend` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onSuspendCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTimeUpdate` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTimeUpdateCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTouchCancel` | `TouchEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTouchCancelCapture` | `TouchEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTouchEnd` | `TouchEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTouchEndCapture` | `TouchEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTouchMove` | `TouchEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTouchMoveCapture` | `TouchEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTouchStart` | `TouchEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTouchStartCapture` | `TouchEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTransitionEnd` | `TransitionEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onTransitionEndCapture` | `TransitionEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onVolumeChange` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onVolumeChangeCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onWaiting` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onWaitingCapture` | `ReactEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onWheel` | `WheelEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `onWheelCapture` | `WheelEventHandler<HTMLDivElement> \| undefined` | No | `-` | - |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `outerSpacing` | `CellSpacing` | No | `-` | The spacing to use on the parent wrapper of Cell |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `prefix` | `string \| undefined` | No | `-` | - |
+| `priority` | `start \| end \| middle \| (start \| end \| middle)[]` | No | `-` | Which piece of content has the highest priority in regards to text truncation, growing, and shrinking. |
+| `property` | `string \| undefined` | No | `-` | - |
+| `radioGroup` | `string \| undefined` | No | `-` | - |
+| `ref` | `any` | No | `-` | - |
+| `rel` | `string \| undefined` | No | `-` | - |
+| `resource` | `string \| undefined` | No | `-` | - |
+| `results` | `number \| undefined` | No | `-` | - |
+| `rev` | `string \| undefined` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `role` | `AriaRole \| undefined` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `security` | `string \| undefined` | No | `-` | - |
+| `selected` | `boolean` | No | `-` | Is the cell selected? Will apply a background and selected accessory. |
+| `shouldOverflow` | `boolean` | No | `-` | - |
+| `shouldTruncate` | `boolean` | No | `true` | Controls whether the main content should truncate with an ellipsis. Defaults to true (truncates) when not provided. |
+| `slot` | `string \| undefined` | No | `-` | - |
+| `spacingVariant` | `normal \| compact \| condensed` | No | `'normal'` | Spacing variant configuration. Deprecated value: compact. Prefer condensed.  When spacingVariant=normal: 1. min-height is 80px 2. padding is var(--space-2) var(--space-3) 3. border-radius is var(--borderRadius-200) 4. when there is a description, titles numberOfLines={1} otherwise titles numberOfLines={2} 5. description and subdetail have font body  When spacingVariant=compact: 1. same as spacingVariant=normal, except min-height is 40px  When spacingVariant=condensed: 1. min-height is undefined 2. padding is var(--space-1) var(--space-2) 3. border-radius is --borderRadius-0 4. titles numberOfLines={2} 5. description and subdetail have font label2 |
+| `spellCheck` | `Booleanish \| undefined` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `styles` | `{ root?: CSSProperties; media?: CSSProperties \| undefined; intermediary?: CSSProperties \| undefined; end?: CSSProperties \| undefined; accessory?: CSSProperties \| undefined; contentContainer?: CSSProperties \| undefined; pressable?: CSSProperties \| undefined; titleStack?: CSSProperties \| undefined; titleStackContainer?: CSSProperties \| undefined; mainContent?: CSSProperties \| undefined; helperText?: CSSProperties \| undefined; title?: CSSProperties \| undefined; subtitle?: CSSProperties \| undefined; description?: CSSProperties \| undefined; } \| undefined` | No | `-` | Styles for subcomponents, ignored when the corresponding xxNode prop is used |
+| `subdetail` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Subdetail providing more information. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use subdetailNode. |
+| `subdetailFont` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | Font to apply to the subdetail text. |
+| `subdetailNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to render subdetail. Takes precedence over subdetail. |
+| `subtitle` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Subtitle to display below the title and above the description. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use subtitleNode. |
+| `subtitleNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to render subtitle. Takes precedence over subtitle. When provided, classNames.subtitle and styles.subtitle are not applied. |
+| `suppressContentEditableWarning` | `boolean \| undefined` | No | `-` | - |
+| `suppressHydrationWarning` | `boolean \| undefined` | No | `-` | - |
+| `tabIndex` | `number \| undefined` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `title` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use titleNode. |
+| `titleNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to render title. Takes precedence over title. When provided, classNames.title and styles.title are not applied. |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `translate` | `yes \| no \| undefined` | No | `-` | - |
+| `typeof` | `string \| undefined` | No | `-` | - |
+| `unselectable` | `off \| on \| undefined` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `variant` | `warning \| positive \| negative \| foregroundMuted` | No | `-` | Variant color to apply to the subdetail text. |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `vocab` | `string \| undefined` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Root element |
+| `media` | `-` | Media element |
+| `intermediary` | `-` | Intermediary element |
+| `end` | `-` | End element |
+| `accessory` | `-` | Accessory element |
+| `contentContainer` | `-` | Content container element |
+| `pressable` | `-` | Pressable wrapper element |
+| `titleStack` | `-` | Title stack element (title/subtitle/description VStack) |
+| `titleStackContainer` | `-` | Title stack container wrapper, controls flex behavior |
+| `mainContent` | `-` | Main content element |
+| `helperText` | `-` | Helper text element |
+| `title` | `-` | Title text element |
+| `subtitle` | `-` | Subtitle text element |
+| `description` | `-` | Description text element |
+
+

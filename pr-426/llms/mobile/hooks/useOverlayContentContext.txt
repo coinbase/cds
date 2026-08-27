@@ -1,0 +1,280 @@
+# useOverlayContentContext
+
+A React context and hook for detecting if components are rendered inside overlay containers like modals, drawers, tours, and trays.
+
+## Import
+
+```tsx
+import { OverlayContentContext, useOverlayContentContext } from '@coinbase/cds-common/overlays/OverlayContentContext'
+```
+
+## API
+
+### useOverlayContentContext
+
+Returns the current overlay context information for mobile applications. This hook does not throw an error when used outside a provider, making it safe to use anywhere in your component tree.
+
+#### Return Value
+
+The hook returns an object with the following properties:
+
+- **`isOverlay?: boolean`** - True if inside any overlay component (derived from other values if not explicitly set)
+- **`isModal?: boolean`** - True if inside a Modal component
+- **`isDrawer?: boolean`** - True if inside a Drawer or Tray component
+- **`isTour?: boolean`** - True if inside a Tour component
+
+### OverlayContentContext
+
+The React context that provides overlay state information for mobile applications. Can be used directly with `React.useContext` or through the `useOverlayContentContext` hook.
+
+#### Context Value Type
+
+```typescript
+type OverlayContentContextValue = {
+  isOverlay?: boolean;
+  isModal?: boolean;
+  isDrawer?: boolean;
+  isTour?: boolean;
+};
+```
+
+### Provider Usage
+
+```tsx
+import { OverlayContentContext } from '@coinbase/cds-common/overlays/OverlayContentContext';
+
+function MyMobileOverlayComponent() {
+  const contextValue = {
+    isModal: true,
+    isDrawer: false,
+    isTour: false,
+    // isOverlay will be automatically derived as true
+  };
+
+  return (
+    <OverlayContentContext.Provider value={contextValue}>
+      {/* Your mobile overlay content */}
+    </OverlayContentContext.Provider>
+  );
+}
+```
+
+### Mobile Considerations
+
+On mobile platforms, overlay contexts are particularly useful for:
+
+- **Touch Handling**: Adjusting touch behaviors based on overlay type
+- **Safe Areas**: Managing safe area insets differently in overlays vs full-screen content
+- **Navigation**: Preventing or modifying navigation gestures in overlay contexts
+- **Accessibility**: Providing appropriate focus management for screen readers
+
+### Automatic Derivation
+
+If `isOverlay` is not explicitly provided in the context value, it will be automatically derived as `true` when any of `isModal`, `isDrawer`, or `isTour` is `true`. This ensures consistent behavior across the system.
+
+**Important**: When adding new overlay types to the `OverlayContentContextValue` type, remember to update the derivation logic in the `useOverlayContentContext` hook.
+
+## Examples
+
+The `useOverlayContentContext` hook provides information about whether a component is rendered inside various types of overlay containers on mobile. This is useful for conditional rendering and behavior based on the overlay context.
+
+### Basic usage
+
+```tsx
+function ExampleComponent() {
+  const { isOverlay, isModal, isDrawer, isTour } = useOverlayContentContext();
+
+  return (
+    <VStack gap={2}>
+      <Text variant="title3">Overlay Context Information</Text>
+      <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
+      <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
+      <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
+      <Text>Is inside tour: {isTour ? 'Yes' : 'No'}</Text>
+    </VStack>
+  );
+}
+```
+
+### Real Modal Example
+
+This example shows how the hook works inside an actual mobile modal:
+
+```tsx
+function ModalExample() {
+  const { openModal } = useModal();
+
+  const ExampleComponent = () => {
+    const { isOverlay, isModal, isDrawer, isTour } = useOverlayContentContext();
+
+    return (
+      <VStack gap={2}>
+        <Text variant="title3">Overlay Context Information</Text>
+        <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
+        <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
+        <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
+        <Text>Is inside tour: {isTour ? 'Yes' : 'No'}</Text>
+      </VStack>
+    );
+  };
+
+  const ModalContent = () => {
+    return (
+      <VStack gap={3}>
+        <Text>This content is rendered inside a mobile modal. Notice the context values:</Text>
+        <VStack gap={2} padding={3} backgroundColor="surface1">
+          <ExampleComponent />
+        </VStack>
+        <Text color="muted" variant="caption">
+          The hook automatically detects it's inside a modal context on mobile!
+        </Text>
+      </VStack>
+    );
+  };
+
+  const handleOpenModal = () => {
+    openModal({
+      children: <ModalContent />,
+      header: 'Mobile Modal with Context',
+    });
+  };
+
+  return (
+    <VStack gap={3}>
+      <VStack gap={2} padding={3} backgroundColor="surface2">
+        <Text variant="title3">Outside Modal</Text>
+        <ExampleComponent />
+      </VStack>
+
+      <Button onPress={handleOpenModal}>Open Modal to See Context Change</Button>
+    </VStack>
+  );
+}
+```
+
+### Using the Context Provider
+
+You can also use the `OverlayContentContext` directly to provide context values:
+
+```tsx
+function ContextProviderExample() {
+  const ExampleComponent = () => {
+    const { isOverlay, isModal, isDrawer, isTour } = useOverlayContentContext();
+
+    return (
+      <VStack gap={2}>
+        <Text variant="title3">Overlay Context Information</Text>
+        <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
+        <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
+        <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
+        <Text>Is inside tour: {isTour ? 'Yes' : 'No'}</Text>
+      </VStack>
+    );
+  };
+
+  const contextValue = {
+    isModal: true,
+    isDrawer: false,
+    isTour: false,
+  };
+
+  return (
+    <OverlayContentContext.Provider value={contextValue}>
+      <VStack gap={2} padding={3} backgroundColor="surface2">
+        <Text variant="title3">Inside Context Provider</Text>
+        <ExampleComponent />
+      </VStack>
+    </OverlayContentContext.Provider>
+  );
+}
+```
+
+### Conditional Rendering
+
+Use the hook to conditionally render content based on overlay context:
+
+```tsx
+function ConditionalRenderingExample() {
+  const { openModal } = useModal();
+
+  const ConditionalContent = () => {
+    const { isOverlay, isModal } = useOverlayContentContext();
+
+    return (
+      <VStack gap={2}>
+        <Text variant="title3">Conditional Content</Text>
+        {isOverlay ? (
+          <VStack gap={1}>
+            <Text color="positive">✓ This content shows when inside an overlay</Text>
+            {isModal && <Text color="primary">🎯 Specifically inside a modal!</Text>}
+          </VStack>
+        ) : (
+          <Text color="muted">This content shows when not in an overlay</Text>
+        )}
+      </VStack>
+    );
+  };
+
+  const handleOpenConditionalModal = () => {
+    openModal({
+      children: <ConditionalContent />,
+      header: 'Conditional Content Demo',
+    });
+  };
+
+  return (
+    <VStack gap={3}>
+      <VStack gap={2} padding={3} backgroundColor="surface2">
+        <Text variant="title3">Outside Modal</Text>
+        <ConditionalContent />
+      </VStack>
+
+      <Button onPress={handleOpenConditionalModal}>Open Modal to See Different Content</Button>
+    </VStack>
+  );
+}
+```
+
+### Mobile-Specific Behavior
+
+```tsx
+function MobileBehaviorExample() {
+  const { isModal, isDrawer, isTour } = useOverlayContentContext();
+
+  // Adjust touch behavior based on overlay type
+  const getTouchHandler = () => {
+    if (isModal) return handleModalTouch;
+    if (isDrawer) return handleDrawerTouch;
+    if (isTour) return handleTourTouch;
+    return handleDefaultTouch;
+  };
+
+  return (
+    <Pressable onPress={getTouchHandler()}>
+      <VStack gap={2} padding={3}>
+        <Text variant="title3">Touch Behavior</Text>
+        <Text>Touch handling adapts to overlay context</Text>
+      </VStack>
+    </Pressable>
+  );
+}
+```
+
+### Safe Area Adjustments
+
+```tsx
+function SafeAreaExample() {
+  const { isModal, isDrawer } = useOverlayContentContext();
+
+  // Adjust safe area behavior for different overlay types
+  const shouldUseSafeArea = !isModal && !isDrawer;
+
+  return (
+    <VStack gap={2} padding={3} paddingTop={shouldUseSafeArea ? 'safeTop' : 3}>
+      <Text variant="title3">Safe Area Handling</Text>
+      <Text>Safe area behavior adapts to overlay context</Text>
+    </VStack>
+  );
+}
+```
+

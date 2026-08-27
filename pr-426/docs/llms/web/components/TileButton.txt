@@ -1,0 +1,428 @@
+# TileButton
+
+A pressable tile component that displays a pictogram or custom content with a title and optional count. Used for grid-based navigation and quick actions.
+
+## Import
+
+```tsx
+import { TileButton } from '@coinbase/cds-web/buttons/TileButton'
+```
+
+## Examples
+
+### Basic usage
+
+```tsx live
+<TileButton title="Coinbase" pictogram="2fa" onClick={() => {}} />
+```
+
+### With count
+
+```tsx live
+<TileButton title="Notifications" pictogram="addToWatchlist" count={3} onClick={() => {}} />
+```
+
+### With custom content
+
+```tsx live
+<TileButton count={0} onClick={() => {}} title="Bitcoin">
+  <RemoteImage source={assets.btc.imageUrl} />
+</TileButton>
+```
+
+### Show overflow
+
+```tsx live
+<Box height={180}>
+  <TileButton
+    title="A very long title that will overflow and show the full text on hover"
+    pictogram="chart"
+    showOverflow
+    onClick={() => {}}
+  />
+</Box>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `title` | `string` | Yes | `-` | - |
+| `about` | `string \| undefined` | No | `-` | - |
+| `accessKey` | `string \| undefined` | No | `-` | - |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `aria-activedescendant` | `string \| undefined` | No | `-` | Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application. |
+| `aria-atomic` | `Booleanish \| undefined` | No | `-` | Indicates whether assistive technologies will present all, or only parts of, the changed region based on the change notifications defined by the aria-relevant attribute. |
+| `aria-autocomplete` | `none \| inline \| list \| both \| undefined` | No | `-` | Indicates whether inputting text could trigger display of one or more predictions of the users intended value for an input and specifies how predictions would be presented if they are made. |
+| `aria-braillelabel` | `string \| undefined` | No | `-` | Defines a string value that labels the current element, which is intended to be converted into Braille. |
+| `aria-brailleroledescription` | `string \| undefined` | No | `-` | Defines a human-readable, author-localized abbreviated description for the role of an element, which is intended to be converted into Braille. |
+| `aria-busy` | `Booleanish \| undefined` | No | `-` | - |
+| `aria-checked` | `boolean \| true \| false \| mixed \| undefined` | No | `-` | Indicates the current checked state of checkboxes, radio buttons, and other widgets. |
+| `aria-colcount` | `number \| undefined` | No | `-` | Defines the total number of columns in a table, grid, or treegrid. |
+| `aria-colindex` | `number \| undefined` | No | `-` | Defines an elements column index or position with respect to the total number of columns within a table, grid, or treegrid. |
+| `aria-colindextext` | `string \| undefined` | No | `-` | Defines a human readable text alternative of aria-colindex. |
+| `aria-colspan` | `number \| undefined` | No | `-` | Defines the number of columns spanned by a cell or gridcell within a table, grid, or treegrid. |
+| `aria-controls` | `string \| undefined` | No | `-` | Identifies the element (or elements) whose contents or presence are controlled by the current element. |
+| `aria-current` | `boolean \| time \| location \| true \| false \| page \| step \| date \| undefined` | No | `-` | Indicates the element that represents the current item within a container or set of related elements. |
+| `aria-describedby` | `string \| undefined` | No | `-` | Identifies the element (or elements) that describes the object. |
+| `aria-description` | `string \| undefined` | No | `-` | Defines a string value that describes or annotates the current element. |
+| `aria-details` | `string \| undefined` | No | `-` | Identifies the element that provides a detailed, extended description for the object. |
+| `aria-disabled` | `Booleanish \| undefined` | No | `-` | Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable. |
+| `aria-dropeffect` | `link \| none \| copy \| execute \| move \| popup \| undefined` | No | `-` | Indicates what functions can be performed when a dragged object is released on the drop target. |
+| `aria-errormessage` | `string \| undefined` | No | `-` | Identifies the element that provides an error message for the object. |
+| `aria-expanded` | `Booleanish \| undefined` | No | `-` | Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed. |
+| `aria-flowto` | `string \| undefined` | No | `-` | Identifies the next element (or elements) in an alternate reading order of content which, at the users discretion, allows assistive technology to override the general default of reading in document source order. |
+| `aria-grabbed` | `Booleanish \| undefined` | No | `-` | Indicates an elements grabbed state in a drag-and-drop operation. |
+| `aria-haspopup` | `boolean \| grid \| dialog \| menu \| true \| false \| listbox \| tree \| undefined` | No | `-` | Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element. |
+| `aria-hidden` | `Booleanish \| undefined` | No | `-` | Indicates whether the element is exposed to an accessibility API. |
+| `aria-invalid` | `boolean \| true \| false \| grammar \| spelling \| undefined` | No | `-` | Indicates the entered value does not conform to the format expected by the application. |
+| `aria-keyshortcuts` | `string \| undefined` | No | `-` | Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element. |
+| `aria-label` | `string \| undefined` | No | `-` | Defines a string value that labels the current element. |
+| `aria-labelledby` | `string \| undefined` | No | `-` | Identifies the element (or elements) that labels the current element. |
+| `aria-level` | `number \| undefined` | No | `-` | Defines the hierarchical level of an element within a structure. |
+| `aria-live` | `off \| assertive \| polite \| undefined` | No | `-` | Indicates that an element will be updated, and describes the types of updates the user agents, assistive technologies, and user can expect from the live region. |
+| `aria-modal` | `Booleanish \| undefined` | No | `-` | Indicates whether an element is modal when displayed. |
+| `aria-multiline` | `Booleanish \| undefined` | No | `-` | Indicates whether a text box accepts multiple lines of input or only a single line. |
+| `aria-multiselectable` | `Booleanish \| undefined` | No | `-` | Indicates that the user may select more than one item from the current selectable descendants. |
+| `aria-orientation` | `horizontal \| vertical \| undefined` | No | `-` | Indicates whether the elements orientation is horizontal, vertical, or unknown/ambiguous. |
+| `aria-owns` | `string \| undefined` | No | `-` | Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship between DOM elements where the DOM hierarchy cannot be used to represent the relationship. |
+| `aria-placeholder` | `string \| undefined` | No | `-` | Defines a short hint (a word or short phrase) intended to aid the user with data entry when the control has no value. A hint could be a sample value or a brief description of the expected format. |
+| `aria-posinset` | `number \| undefined` | No | `-` | Defines an elements number or position in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM. |
+| `aria-pressed` | `boolean \| true \| false \| mixed \| undefined` | No | `-` | Indicates the current pressed state of toggle buttons. |
+| `aria-readonly` | `Booleanish \| undefined` | No | `-` | Indicates that the element is not editable, but is otherwise operable. |
+| `aria-relevant` | `text \| all \| additions \| additions removals \| additions text \| removals \| removals additions \| removals text \| text additions \| text removals \| undefined` | No | `-` | Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified. |
+| `aria-required` | `Booleanish \| undefined` | No | `-` | Indicates that user input is required on the element before a form may be submitted. |
+| `aria-roledescription` | `string \| undefined` | No | `-` | Defines a human-readable, author-localized description for the role of an element. |
+| `aria-rowcount` | `number \| undefined` | No | `-` | Defines the total number of rows in a table, grid, or treegrid. |
+| `aria-rowindex` | `number \| undefined` | No | `-` | Defines an elements row index or position with respect to the total number of rows within a table, grid, or treegrid. |
+| `aria-rowindextext` | `string \| undefined` | No | `-` | Defines a human readable text alternative of aria-rowindex. |
+| `aria-rowspan` | `number \| undefined` | No | `-` | Defines the number of rows spanned by a cell or gridcell within a table, grid, or treegrid. |
+| `aria-selected` | `Booleanish \| undefined` | No | `-` | Indicates the current selected state of various widgets. |
+| `aria-setsize` | `number \| undefined` | No | `-` | Defines the number of items in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM. |
+| `aria-sort` | `none \| ascending \| descending \| other \| undefined` | No | `-` | Indicates if items in a table or grid are sorted in ascending or descending order. |
+| `aria-valuemax` | `number \| undefined` | No | `-` | Defines the maximum allowed value for a range widget. |
+| `aria-valuemin` | `number \| undefined` | No | `-` | Defines the minimum allowed value for a range widget. |
+| `aria-valuenow` | `number \| undefined` | No | `-` | Defines the current value for a range widget. |
+| `aria-valuetext` | `string \| undefined` | No | `-` | Defines the human readable text alternative of aria-valuenow for a range widget. |
+| `as` | `symbol \| object \| style \| div \| a \| abbr \| address \| area \| article \| aside \| audio \| b \| base \| bdi \| bdo \| big \| blockquote \| body \| br \| button \| canvas \| caption \| center \| cite \| code \| col \| colgroup \| data \| datalist \| dd \| del \| details \| dfn \| dialog \| dl \| dt \| em \| embed \| fieldset \| figcaption \| figure \| footer \| form \| h1 \| h2 \| h3 \| h4 \| h5 \| h6 \| head \| header \| hgroup \| hr \| html \| i \| iframe \| img \| input \| ins \| kbd \| keygen \| label \| legend \| li \| link \| main \| map \| mark \| menu \| menuitem \| meta \| meter \| nav \| noindex \| noscript \| ol \| optgroup \| option \| output \| p \| param \| picture \| pre \| progress \| q \| rp \| rt \| ruby \| s \| samp \| search \| slot \| script \| section \| select \| small \| source \| span \| strong \| sub \| summary \| sup \| table \| template \| tbody \| td \| textarea \| tfoot \| th \| thead \| time \| title \| tr \| track \| u \| ul \| var \| video \| wbr \| webview \| svg \| animate \| animateMotion \| animateTransform \| circle \| clipPath \| defs \| desc \| ellipse \| feBlend \| feColorMatrix \| feComponentTransfer \| feComposite \| feConvolveMatrix \| feDiffuseLighting \| feDisplacementMap \| feDistantLight \| feDropShadow \| feFlood \| feFuncA \| feFuncB \| feFuncG \| feFuncR \| feGaussianBlur \| feImage \| feMerge \| feMergeNode \| feMorphology \| feOffset \| fePointLight \| feSpecularLighting \| feSpotLight \| feTile \| feTurbulence \| filter \| foreignObject \| g \| image \| line \| linearGradient \| marker \| mask \| metadata \| mpath \| path \| pattern \| polygon \| polyline \| radialGradient \| rect \| set \| stop \| switch \| text \| textPath \| tspan \| use \| view \| ComponentClass<any, any> \| FunctionComponent<any>` | No | `button` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `autoCapitalize` | `(string & {}) \| none \| off \| on \| sentences \| words \| characters \| undefined` | No | `-` | - |
+| `autoCorrect` | `string \| undefined` | No | `-` | - |
+| `autoFocus` | `boolean \| undefined` | No | `-` | - |
+| `autoSave` | `string \| undefined` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color of the overlay (element being interacted with). |
+| `blendStyles` | `InteractableBlendStyles` | No | `-` | - |
+| `block` | `boolean` | No | `-` | Set element to block and expand to 100% width. |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Border color of the element. |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | - |
+| `className` | `string` | No | `-` | Apply class names to the outer container. |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `content` | `string \| undefined` | No | `-` | - |
+| `contentEditable` | `inherit \| Booleanish \| plaintext-only \| undefined` | No | `-` | - |
+| `contextMenu` | `string \| undefined` | No | `-` | - |
+| `count` | `number` | No | `-` | Surfaces a DotCount around the content |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `dangerouslySetInnerHTML` | `{ __html: string \| TrustedHTML; } \| undefined` | No | `-` | - |
+| `datatype` | `string \| undefined` | No | `-` | - |
+| `defaultChecked` | `boolean \| undefined` | No | `-` | - |
+| `defaultValue` | `string \| number \| readonly string[] \| undefined` | No | `-` | - |
+| `dir` | `string \| undefined` | No | `-` | - |
+| `disabled` | `boolean` | No | `-` | Is the element currently disabled. |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `draggable` | `Booleanish \| undefined` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `enterKeyHint` | `search \| enter \| done \| go \| next \| previous \| send \| undefined` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `focusable` | `boolean` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `form` | `string \| undefined` | No | `-` | - |
+| `formAction` | `string \| undefined` | No | `-` | - |
+| `formEncType` | `string \| undefined` | No | `-` | - |
+| `formMethod` | `string \| undefined` | No | `-` | - |
+| `formNoValidate` | `boolean \| undefined` | No | `-` | - |
+| `formTarget` | `string \| undefined` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `hidden` | `boolean \| undefined` | No | `-` | - |
+| `id` | `string \| undefined` | No | `-` | - |
+| `inlist` | `any` | No | `-` | - |
+| `inputMode` | `search \| text \| none \| email \| tel \| url \| numeric \| decimal \| undefined` | No | `-` | Hints at the type of data that might be entered by the user while editing the element or its contents |
+| `is` | `string \| undefined` | No | `-` | Specify that a standard HTML element should behave like a defined custom built-in element |
+| `itemID` | `string \| undefined` | No | `-` | - |
+| `itemProp` | `string \| undefined` | No | `-` | - |
+| `itemRef` | `string \| undefined` | No | `-` | - |
+| `itemScope` | `boolean \| undefined` | No | `-` | - |
+| `itemType` | `string \| undefined` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null \| undefined` | No | `-` | - |
+| `lang` | `string \| undefined` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `name` | `string \| undefined` | No | `-` | - |
+| `nonce` | `string \| undefined` | No | `-` | - |
+| `onAbort` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onAbortCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onAnimationEnd` | `AnimationEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onAnimationEndCapture` | `AnimationEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onAnimationIteration` | `AnimationEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onAnimationIterationCapture` | `AnimationEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onAnimationStart` | `AnimationEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onAnimationStartCapture` | `AnimationEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onAuxClick` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onAuxClickCapture` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onBeforeInput` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onBeforeInputCapture` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onBlur` | `FocusEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onBlurCapture` | `FocusEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCanPlay` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCanPlayCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCanPlayThrough` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCanPlayThroughCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onChangeCapture` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onClick` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onClickCapture` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCompositionEnd` | `CompositionEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCompositionEndCapture` | `CompositionEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCompositionStart` | `CompositionEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCompositionStartCapture` | `CompositionEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCompositionUpdate` | `CompositionEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCompositionUpdateCapture` | `CompositionEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onContextMenu` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onContextMenuCapture` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCopy` | `ClipboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCopyCapture` | `ClipboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCut` | `ClipboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onCutCapture` | `ClipboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDoubleClick` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDoubleClickCapture` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDrag` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragCapture` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragEnd` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragEndCapture` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragEnter` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragEnterCapture` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragExit` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragExitCapture` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragLeave` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragLeaveCapture` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragOver` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragOverCapture` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragStart` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDragStartCapture` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDrop` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDropCapture` | `DragEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDurationChange` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onDurationChangeCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onEmptied` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onEmptiedCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onEncrypted` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onEncryptedCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onEnded` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onEndedCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onError` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onErrorCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onFocus` | `FocusEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onFocusCapture` | `FocusEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onGotPointerCapture` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onGotPointerCaptureCapture` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onInput` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onInputCapture` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onInvalid` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onInvalidCapture` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onKeyDown` | `KeyboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onKeyDownCapture` | `KeyboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onKeyPress` | `KeyboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onKeyPressCapture` | `KeyboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onKeyUp` | `KeyboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onKeyUpCapture` | `KeyboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onLoad` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onLoadCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onLoadStart` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onLoadStartCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onLoadedData` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onLoadedDataCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onLoadedMetadata` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onLoadedMetadataCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onLostPointerCapture` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onLostPointerCaptureCapture` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseDown` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseDownCapture` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseEnter` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseLeave` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseMove` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseMoveCapture` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseOut` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseOutCapture` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseOver` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseOverCapture` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseUp` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onMouseUpCapture` | `MouseEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPaste` | `ClipboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPasteCapture` | `ClipboardEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPause` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPauseCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPlay` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPlayCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPlaying` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPlayingCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerCancel` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerCancelCapture` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerDown` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerDownCapture` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerEnter` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerLeave` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerMove` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerMoveCapture` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerOut` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerOutCapture` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerOver` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerOverCapture` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerUp` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onPointerUpCapture` | `PointerEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onProgress` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onProgressCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onRateChange` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onRateChangeCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onReset` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onResetCapture` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onResize` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onResizeCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onScroll` | `UIEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onScrollCapture` | `UIEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onSeeked` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onSeekedCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onSeeking` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onSeekingCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onSelect` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onSelectCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onStalled` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onStalledCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onSubmit` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onSubmitCapture` | `FormEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onSuspend` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onSuspendCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTimeUpdate` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTimeUpdateCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTouchCancel` | `TouchEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTouchCancelCapture` | `TouchEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTouchEnd` | `TouchEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTouchEndCapture` | `TouchEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTouchMove` | `TouchEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTouchMoveCapture` | `TouchEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTouchStart` | `TouchEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTouchStartCapture` | `TouchEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTransitionEnd` | `TransitionEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onTransitionEndCapture` | `TransitionEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onVolumeChange` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onVolumeChangeCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onWaiting` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onWaitingCapture` | `ReactEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onWheel` | `WheelEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `onWheelCapture` | `WheelEventHandler<HTMLButtonElement> \| undefined` | No | `-` | - |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pictogram` | `key \| done \| loop \| cardSuccess \| warning \| error \| add \| arrowsUpDown \| browser \| calculator \| calendar \| checkmark \| clock \| coinbaseOneLogo \| crystalBallInsight \| derivativesProduct \| email \| gasFees \| identityCard \| instantUnstakingClock \| laptop \| learningRewardsProduct \| lock \| passport \| paypal \| phone \| pieChartData \| planet \| robot \| safe \| securityKey \| settings \| shield \| support \| taxes \| tokenSales \| trading \| verifiedPools \| wallet \| 2fa \| accountsNavigation \| accreditedInvestor \| addCard \| addPayment \| addPhone \| addressBook \| addToWatchlist \| addWallet \| advancedTradingDesktop \| advancedTradingNavigation \| advancedTradingRebates \| agent \| alerts \| alertsCoinbaseOne \| analyticsNavigation \| apartOfDropsNft \| applyForHigherLimits \| apyInterest \| assetEncryption \| assetHubNavigation \| assetManagement \| assetManagementNavigation \| assetMeasurements \| assetMovement \| authenticationApp \| authenticator \| authenticatorAlt \| authenticatorProgress \| avatarAa \| avatarAb \| avatarAc \| avatarAd \| avatarAe \| avatarAf \| avatarAg \| avatarAh \| avatarAi \| avatarAj \| avatarBa \| avatarBb \| avatarBc \| avatarBd \| avatarBe \| avatarBf \| avatarBg \| avatarBh \| avatarBi \| avatarBj \| avatarCa \| avatarCb \| avatarCc \| avatarCd \| avatarCe \| avatarCf \| avatarCg \| avatarCh \| avatarCi \| avatarCj \| avatarDa \| avatarDb \| avatarDc \| avatarDd \| avatarDe \| avatarDf \| avatarDg \| avatarDh \| avatarDi \| avatarDj \| avatarEa \| avatarEb \| avatarEc \| avatarEd \| avatarEe \| avatarEf \| avatarEg \| avatarEh \| avatarEi \| avatarEj \| avatarFa \| avatarFb \| avatarFc \| avatarFd \| avatarFe \| avatarFf \| avatarFg \| avatarFh \| avatarFi \| avatarFj \| avatarGa \| avatarGb \| avatarGc \| avatarGd \| avatarGe \| avatarGf \| avatarGg \| avatarGh \| avatarGi \| avatarGj \| avatarHa \| avatarHb \| avatarHc \| avatarHd \| avatarHe \| avatarHf \| avatarHg \| avatarHh \| avatarHi \| avatarHj \| avatarIa \| avatarIb \| avatarIc \| avatarId \| avatarIe \| avatarIf \| avatarIg \| avatarIh \| avatarIi \| avatarIj \| avatarJa \| avatarJb \| avatarJc \| avatarJd \| avatarJe \| avatarJf \| avatarJg \| avatarJh \| avatarJi \| avatarJj \| barChart \| baseAscend \| baseCertificateStar \| baseChartSmall \| baseChatBubbleHeart \| baseCheckSmall \| baseCoinCryptoSmall \| baseCoinNetworkSmall \| baseCoinStack \| baseCoinStar \| baseComet \| baseComputer \| baseConfetti \| baseConnectApps \| baseConnectSmall \| baseCreatorCoin \| baseDecentralizationSmall \| baseDiamondSmall \| baseDiamondTrophy \| baseDoor \| baseEarnedBadge \| baseEmptySmall \| baseErrorButterflySmall \| baseErrorSmall \| baseExchange \| baseFire \| baseGem \| baseGlobe \| baseHandStar \| baseLayout \| baseLightningbolt \| baseLoadingSmall \| baseLocationSmall \| baseLogo \| baseLogoNavigation \| baseMedal \| baseMessaging \| baseMintNftSmall \| baseNetworkSmall \| baseNftSmall \| basePaycoinSmall \| basePeopleSmall \| basePiechartSmall \| basePlant \| basePower \| baseRibbon \| baseRocket \| baseRockon \| baseSaved \| baseSecuritySmall \| baseSendSmall \| baseSignin \| baseSmile \| baseStack \| baseStar \| baseTargetSmall \| baseTile \| bigBtcSend \| bitcoin \| bitcoinPizza \| bitcoinRewards \| bitcoinWhitePaper \| blockchainConnection \| bonusFivePercent \| bonusTwoPercent \| borrowCoins \| borrowingLending \| borrowNavigation \| browserMultiPlatform \| browserTransaction \| btcOneHundred \| bundle \| businessProduct \| calendarCaution \| calendarHighlight \| candleSticksGraph \| cardBlocked \| cardDeclined \| cardNavigation \| cb1BankTransfers \| chart \| chat \| cloudNavigation \| coinbaseLogoAdvancedBrand \| coinbaseLogoNavigation \| coinbaseOneAuthenticator \| coinbaseOneChat \| coinbaseOneEarn \| coinbaseOneEarnCoins \| coinbaseOneEarnCoinsLogo \| coinbaseOneFiat \| coinbaseOneProductIcon \| coinbaseOneProductInvestWeekly \| coinbaseOneRefreshed \| coinbaseOneShield \| coinbaseOneTrade \| coinbaseOneTrusted \| coinbaseOneUnlimitedRewards \| coinbaseUnlockOffers \| coinbaseWalletApp \| coinFocus \| coinShare \| coldStorageCheck \| collectionOfAssets \| commerceCheckout \| commerceInvoice \| commerceNavigation \| commodities \| completeQuiz \| complianceNavigation \| congratulations \| connectNavigation \| contactInfo \| controlWalletStorage \| creative \| creditCard \| crypto101 \| cryptoCard \| cryptoCoins \| cryptoFolder \| custodialJourney \| custodyNavigation \| dataMarketplaceNavigation \| decentralizationEverything \| decentralizedExchange \| decentralizedIdentity \| decentralizedWeb3 \| defiEarnMoment \| delegate \| delegateNavigation \| derivativesNavigation \| developerPlatformNavigation \| developerSDKNavigation \| directDepositNavigation \| dollarShowcase \| driversLicense \| driversLicenseWheel \| earnCoins \| earnGraph \| earnNavigation \| easyToUse \| economyGlobal \| emailAndMessages \| enableVoting \| envelope \| ethereumFocus \| ethRewards \| ethStaking \| ethStakingChart \| ethStakingRewards \| ethToken \| exchangeNavigation \| explore \| fast \| faucetNavigation \| feesRestriction \| fiat \| finance \| findYourSelection \| formDownload \| futures \| futuresCoinbaseOne \| gem \| genericCountryIDCard \| getStarted \| giftbox \| globalConnections \| globalPayments \| globalTransactions \| googleAuthenticator \| governance \| hardwareWallet \| helpCenterNavigation \| higherLimits \| holdingCoin \| idBlock \| idError \| idVerification \| increaseLimits \| institutionalNavigation \| institutions \| internationalExchangeNavigation \| internet \| investGraph \| laptopCharts \| laptopVideo \| layerNetworks \| leadGraph \| learn \| learningRewardsNavigation \| lightbulbLearn \| lightningNetworkSend \| linkYourAccount \| listingFees \| locationUsa \| lowFees \| manageWeb3SignersAcct \| miningCoins \| mintedNft \| mobileCharts \| mobileError \| mobileNotifcation \| mobileSuccess \| mobileWarning \| moneyCrypto \| moneyEarn \| moneySwift \| monitoringPerformance \| moreThanBitcoin \| multiAccountsAndCards \| multiPlatform \| multipleAssets \| musicAndSounds \| myNumberCard \| newUserChecklistBuyCrypto \| newUserChecklistCompleteAccount \| newUserChecklistVerifyId \| nftAvatar \| nftLibrary \| nftNavigation \| noAnnualFee \| noNftFound \| notificationHubAnalysis \| notificationHubNews \| notificationHubPortfolio \| notificationHubSocial \| notifications \| noVisibility \| noWiFi \| orders \| outage \| partialCoins \| participateNavigation \| passwordWalletLocked \| payNavigation \| peerToPeer \| pieChart \| pizza \| pluginBrowser \| podium \| positiveReviews \| predictionMarkets \| premiumInvestor \| priceTracking \| primeMobileApp \| primeNavigation \| privateClientNavigation \| proNavigation \| protectionPlan \| queryTransactNavigation \| receipt \| recurringPurchases \| restaking \| reviewAndAdd \| rewardsNavigation \| riskStaking \| rosettaNavigation \| securedAssets \| security \| securityCoinShield \| seedPhrase \| selectAddNft \| selfCustodyWallet \| selfServe \| sellSendAnytime \| sendPaymentToOthers \| settled \| sideChainSide \| signInNavigation \| smsAuthenticate \| sparkleCoinbaseOne \| ssnCard \| stableCoinMetaphor \| stacking \| stakingGraph \| standWithCryptoLogoNavigation \| startToday \| strongInfo \| strongWarning \| successPhone \| supportChat \| takeQuiz \| target \| taxBeta \| taxCenterNavigation \| taxesArrangement \| taxSeason \| timingCheck \| tokenBaskets \| transferSend \| transistor \| trendingAssets \| trusted \| tryAgainLater \| twoBonus \| typeScript \| ubiKey \| usaProduct \| usdcEarn \| usdcInterest \| usdcLoan \| usdcLogo \| usdcRewards \| usdcRewardsRibbon \| usdcToken \| venturesNavigation \| videoCalendar \| videoContent \| waiting \| waitingForConsensus \| walletAsServiceNavigation \| walletDeposit \| walletError \| walletExchange \| walletLinkNavigation \| walletLogoNavigation \| walletNavigation \| walletPassword \| walletSuccess \| walletWarning \| winBTC \| worldwide \| wrapEth` | No | `-` | Name of illustration as defined in Figma |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `prefix` | `string \| undefined` | No | `-` | - |
+| `pressed` | `boolean` | No | `-` | Is the element being pressed. Primarily a mobile feature, but can be used on the web. |
+| `property` | `string \| undefined` | No | `-` | - |
+| `radioGroup` | `string \| undefined` | No | `-` | - |
+| `ref` | `any` | No | `-` | - |
+| `rel` | `string \| undefined` | No | `-` | - |
+| `resource` | `string \| undefined` | No | `-` | - |
+| `results` | `number \| undefined` | No | `-` | - |
+| `rev` | `string \| undefined` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `role` | `AriaRole \| undefined` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `security` | `string \| undefined` | No | `-` | - |
+| `showOverflow` | `boolean` | No | `-` | Reveals truncated title text |
+| `slot` | `string \| undefined` | No | `-` | - |
+| `spellCheck` | `Booleanish \| undefined` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `suppressContentEditableWarning` | `boolean \| undefined` | No | `-` | - |
+| `suppressHydrationWarning` | `boolean \| undefined` | No | `-` | - |
+| `tabIndex` | `number \| undefined` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `translate` | `yes \| no \| undefined` | No | `-` | - |
+| `transparentWhileInactive` | `boolean` | No | `-` | Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc). Must be used in conjunction with the pressed prop |
+| `transparentWhilePressed` | `boolean` | No | `-` | Mark the background and border as transparent even while element is interacted with (elevation underlay issue). Must be used in conjunction with the pressed prop |
+| `type` | `button \| reset \| submit \| undefined` | No | `-` | - |
+| `typeof` | `string \| undefined` | No | `-` | - |
+| `unselectable` | `off \| on \| undefined` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `value` | `string \| number \| readonly string[] \| undefined` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `vocab` | `string \| undefined` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+

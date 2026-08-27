@@ -1,0 +1,416 @@
+# PeriodSelector
+
+A selector component for choosing time periods in charts.
+
+## Import
+
+```tsx
+import { PeriodSelector } from '@coinbase/cds-mobile-visualization'
+```
+
+## Examples
+
+### Basic Example
+
+```jsx
+function BasicExample() {
+  const tabs = [
+    { id: '1H', label: '1H' },
+    { id: '1D', label: '1D' },
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: '1Y', label: '1Y' },
+    { id: 'All', label: 'All' },
+  ];
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  return <PeriodSelector activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### Minimum Width
+
+You can set the `width` prop to `fit-content` to make the period selector as small as possible.
+
+```jsx
+function MinimumWidthExample() {
+  const tabs = [
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: 'YTD', label: 'YTD' },
+  ];
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  return (
+    <PeriodSelector
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+      width="fit-content"
+      gap={0.5}
+    />
+  );
+}
+```
+
+### Many Periods with Overflow
+
+```jsx
+function ManyPeriodsExample() {
+  const tabs = useMemo(
+    () => [
+      {
+        id: '1H',
+        label: <LiveTabLabel />,
+      },
+      { id: '1D', label: '1D' },
+      { id: '1W', label: '1W' },
+      { id: '1M', label: '1M' },
+      { id: 'YTD', label: 'YTD' },
+      { id: '1Y', label: '1Y' },
+      { id: '5Y', label: '5Y' },
+      { id: 'All', label: 'All' },
+    ],
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+  const activeBackground = useMemo(() => (!isLive ? 'bgPrimaryWash' : 'bgNegativeWash'), [isLive]);
+
+  return (
+    <HStack alignItems="center" justifyContent="space-between" maxWidth="100%" width="100%">
+      <ScrollView
+        horizontal
+        contentContainerStyle={{ paddingEnd: 8, flexGrow: 1 }}
+        showsHorizontalScrollIndicator={false}
+      >
+        <PeriodSelector
+          activeBackground={activeBackground}
+          activeTab={activeTab}
+          gap={1}
+          justifyContent="flex-start"
+          onChange={setActiveTab}
+          tabs={tabs}
+          width="fit-content"
+        />
+      </ScrollView>
+      <IconButton
+        compact
+        accessibilityLabel="Configure chart"
+        flexShrink={0}
+        name="filter"
+        variant="secondary"
+      />
+    </HStack>
+  );
+}
+```
+
+### Live Indicator
+
+```jsx
+function LiveExample() {
+  const tabs = useMemo(
+    () => [
+      // LiveTabLabel is exported from PeriodSelector
+      { id: '1H', label: <LiveTabLabel /> },
+      { id: '1D', label: '1D' },
+      { id: '1W', label: '1W' },
+      { id: '1M', label: '1M' },
+      { id: '1Y', label: '1Y' },
+      { id: 'All', label: 'All' },
+    ],
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+  const activeBackground = useMemo(() => (isLive ? 'bgNegativeWash' : 'bgPrimaryWash'), [isLive]);
+
+  return (
+    <PeriodSelector
+      activeBackground={activeBackground}
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Customization
+
+#### Custom Colors
+
+```jsx
+function ColoredBTCExample() {
+  const btcColor = assets.btc.color;
+
+  // Custom active indicator with BTC color
+  const BTCActiveIndicator = memo((props) => {
+    const theme = useTheme();
+    const { activeTab } = useTabsContext();
+    const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+    const backgroundColor = useMemo(
+      () => (isLive ? theme.color.bgNegativeWash : `${btcColor}1A`),
+      [isLive, theme.color.bgNegativeWash],
+    );
+
+    return <PeriodSelectorActiveIndicator {...props} background={backgroundColor} />;
+  });
+
+  // Custom tab component with BTC color
+  const BTCTab = memo(
+    forwardRef(({ label, ...props }, ref) => {
+      const { activeTab } = useTabsContext();
+      const isActive = activeTab?.id === props.id;
+      const theme = useTheme();
+
+      const wrappedLabel =
+        typeof label === 'string' ? (
+          <Text font="label1" dangerouslySetColor={isActive ? btcColor : theme.color.fg}>
+            {label}
+          </Text>
+        ) : (
+          label
+        );
+
+      return <SegmentedTab ref={ref} label={wrappedLabel} {...props} />;
+    }),
+  );
+
+  // Custom live label with BTC color
+  const BTCLiveLabel = memo(
+    forwardRef(({ label = 'LIVE', font = 'label1', hideDot, style, ...props }, ref) => {
+      const theme = useTheme();
+
+      const dotStyle = useMemo(
+        () => ({
+          width: theme.space[1],
+          height: theme.space[1],
+          borderRadius: 1000,
+          marginRight: theme.space[0.75],
+          backgroundColor: btcColor,
+        }),
+        [theme.space],
+      );
+
+      return (
+        <View
+          ref={ref}
+          style={[
+            {
+              flexDirection: 'row',
+              alignItems: 'center',
+            },
+            style,
+          ]}
+        >
+          {!hideDot && <View style={dotStyle} />}
+          <Text font={font} style={{ color: btcColor }} {...props}>
+            {label}
+          </Text>
+        </View>
+      );
+    }),
+  );
+
+  const tabs = [
+    { id: '1H', label: <BTCLiveLabel /> },
+    { id: '1D', label: '1D' },
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: '1Y', label: '1Y' },
+    { id: 'All', label: 'All' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  return (
+    <PeriodSelector
+      TabComponent={BTCTab}
+      TabsActiveIndicatorComponent={BTCActiveIndicator}
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+#### Custom Colors Excluding Live
+
+Customize colors for regular periods while keeping the default red styling for live periods.
+
+```jsx
+function ColoredExcludingLiveExample() {
+  const btcColor = assets.btc.color;
+
+  // Custom active indicator that only applies BTC color to non-live periods
+  const BTCActiveExcludingLiveIndicator = memo((props) => {
+    const theme = useTheme();
+    const { activeTab } = useTabsContext();
+    const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+    const backgroundColor = useMemo(
+      () => (isLive ? theme.color.bgNegativeWash : `${btcColor}1A`),
+      [isLive, theme.color.bgNegativeWash],
+    );
+
+    return <PeriodSelectorActiveIndicator {...props} background={backgroundColor} />;
+  });
+
+  // Custom tab component with BTC color
+  const BTCTab = memo(
+    forwardRef(({ label, ...props }, ref) => {
+      const { activeTab } = useTabsContext();
+      const isActive = activeTab?.id === props.id;
+      const theme = useTheme();
+
+      const wrappedLabel =
+        typeof label === 'string' ? (
+          <Text font="label1" dangerouslySetColor={isActive ? btcColor : theme.color.fg}>
+            {label}
+          </Text>
+        ) : (
+          label
+        );
+
+      return <SegmentedTab ref={ref} label={wrappedLabel} {...props} />;
+    }),
+  );
+
+  const tabs = [
+    { id: '1H', label: <LiveTabLabel /> },
+    { id: '1D', label: '1D' },
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: '1Y', label: '1Y' },
+    { id: 'All', label: 'All' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  return (
+    <PeriodSelector
+      TabComponent={BTCTab}
+      TabsActiveIndicatorComponent={BTCActiveExcludingLiveIndicator}
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `activeTab` | `TabValue<string> \| null` | Yes | `-` | React state for the currently active tab. Setting it to null results in no active tab. |
+| `onChange` | `(activeTab: TabValue<string> \| null) => void` | Yes | `-` | Callback that is fired when the active tab changes. Use this callback to update the activeTab state. |
+| `tabs` | `(TabValue<string> & { Component?: TabComponent<string> \| undefined; })[]` | Yes | `-` | The array of tabs data. Each tab may optionally define a custom Component to render. |
+| `TabComponent` | `TabComponent<string>` | No | `-` | The default Component to render each tab. |
+| `TabsActiveIndicatorComponent` | `TabsActiveIndicatorComponent` | No | `-` | The default Component to render the tabs active indicator. |
+| `activeBackground` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color passed to the TabsActiveIndicatorComponent. |
+| `alignContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly \| stretch` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `animated` | `boolean` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `bgPrimaryWash` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `1000` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `disabled` | `boolean` | No | `-` | Disable interactions on all the tabs. |
+| `display` | `none \| flex` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `FontSize \| inherit` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `onActiveTabElementChange` | `((element: View \| null) => void)` | No | `-` | Optional callback to receive the active tab element. |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `absolute` | - |
+| `ref` | `((instance: any) => void) \| RefObject<any> \| null` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `false \| RegisteredStyle<ViewStyle> \| WithAnimatedObject<ViewStyle> \| Value \| AnimatedInterpolation<string \| number> \| WithAnimatedArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>> \| readonly (ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>)[]> \| null` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| double \| dotted \| dashed` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ perspective: AnimatableNumericValue; } & { rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleX: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `userSelect` | `none \| auto \| text \| contain \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `zIndex` | `number` | No | `-` | - |
+
+

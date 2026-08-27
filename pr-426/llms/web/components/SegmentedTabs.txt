@@ -1,0 +1,325 @@
+# SegmentedTabs
+
+Switches between different views of content.
+
+## Import
+
+```tsx
+import { SegmentedTabs } from '@coinbase/cds-web/tabs/SegmentedTabs'
+```
+
+## Examples
+
+### Basic Example
+
+Use the `onChange` prop to listen and make changes to the `activeTab` state.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### With Initial Value
+
+You can set any tab as the initial active tab.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[1]); // Start with 'Sell'
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### No Initial Value
+
+SegmentedTabs can start with no active selection.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(null); // No initial selection
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Disabled State
+
+You can disable the entire SegmentedTabs component.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      disabled
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Disabled Individual Tab
+
+Individual tabs can be disabled while keeping others interactive.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell', disabled: true },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Custom Tab Component
+
+You can customize individual tabs by providing a custom `Component` for specific tabs.
+
+```jsx live
+function Example() {
+  const CustomSegmentedTabColor = useCallback(
+    (props) => <SegmentedTab {...props} activeColor="fgWarning" color="bgPrimary" font="label2" />,
+    [],
+  );
+
+  const CustomSegmentedTabFont = useCallback(
+    (props) => <SegmentedTab {...props} font="label2" />,
+    [],
+  );
+
+  const tabs = [
+    { id: 'buy', label: 'Buy', Component: CustomSegmentedTabColor },
+    { id: 'sell', label: 'Sell', Component: CustomSegmentedTabFont },
+    { id: 'convert', label: 'Convert', Component: CustomSegmentedTabColor },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      onChange={handleChange}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Custom Active Indicator
+
+You can customize the active indicator component and overall styling.
+
+```jsx live
+function Example() {
+  const CustomActiveIndicator = useCallback(
+    ({ activeTabRect }) => (
+      <TabsActiveIndicator activeTabRect={activeTabRect} background="bgOverlay" />
+    ),
+    [],
+  );
+
+  const AnotherCustomSegmentedTab = useCallback(({ id, label, disabled }) => {
+    const { activeTab } = useTabsContext();
+    const isActive = activeTab?.id === id;
+    const renderedLabel = (
+      <Text color={isActive ? 'fgPositive' : 'fgNegative'} font="label2" overflow="truncate">
+        {label}
+      </Text>
+    );
+
+    return (
+      <SegmentedTab disabled={disabled} id={id} label={renderedLabel} style={{ borderRadius: 0 }} />
+    );
+  }, []);
+
+  const tabs = [
+    { id: 'buy', label: 'Buy' },
+    { id: 'sell', label: 'Sell' },
+    { id: 'convert', label: 'Convert' },
+  ];
+  const [activeTab, updateActiveTab] = useState(tabs[0]);
+  const handleChange = useCallback((activeTab) => updateActiveTab(activeTab), []);
+  return (
+    <SegmentedTabs
+      accessibilityLabel="Switch token action views"
+      activeTab={activeTab}
+      borderRadius={0}
+      onChange={handleChange}
+      tabs={tabs}
+      TabComponent={AnotherCustomSegmentedTab}
+      TabsActiveIndicatorComponent={CustomActiveIndicator}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `activeTab` | `TabValue<TabId> \| null` | Yes | `-` | React state for the currently active tab. Setting it to null results in no active tab. |
+| `onChange` | `(activeTab: TabValue<TabId> \| null) => void` | Yes | `-` | Callback that is fired when the active tab changes. Use this callback to update the activeTab state. |
+| `tabs` | `(TabValue<TabId> & { Component?: TabComponent<TabId> \| undefined; })[]` | Yes | `-` | The array of tabs data. Each tab may optionally define a custom Component to render. |
+| `TabComponent` | `TabComponent<TabId>` | No | `-` | The default Component to render each tab. |
+| `TabsActiveIndicatorComponent` | `TabsActiveIndicatorComponent` | No | `-` | The default Component to render the tabs active indicator. |
+| `activeBackground` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color passed to the TabsActiveIndicatorComponent. |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `as` | `div` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `disabled` | `boolean` | No | `-` | Disable interactions on all the tabs. |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `onActiveTabElementChange` | `((element: HTMLElement \| null) => void)` | No | `-` | Optional callback to receive the active tab element. |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `ref` | `null \| (instance: HTMLElement \| null) => void \| MutableRefObject<HTMLElement \| null>` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+

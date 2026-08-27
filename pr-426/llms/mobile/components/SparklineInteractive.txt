@@ -1,0 +1,349 @@
+# SparklineInteractive
+
+The SparklineInteractive is used to display a Sparkline that has multiple time periods
+
+## Import
+
+```tsx
+import { SparklineInteractive } from '@coinbase/cds-mobile-visualization'
+```
+
+## Examples
+
+### Default usage
+
+```jsx
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
+```
+
+### Fill Type
+
+The fill will be added by default with a gradient style. You can set `fillType="dotted"` to get a dotted gradient fill.
+
+```jsx
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        fill
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        fillType="dotted"
+        formatDate={formatDate}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
+```
+
+### Compact
+
+```jsx
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        compact
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
+```
+
+### Hide period selector
+
+```jsx
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        hidePeriodSelector
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
+```
+
+### Scaling Factor
+
+The scaling factor is usually used when you want to show less variance in the chart. An example of this is a stable coin that doesn't change price by more than a few cents.
+
+```jsx
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        periods={periods}
+        strokeColor="#F7931A"
+        yAxisScalingFactor={0.1}
+      />
+    </Box>
+  );
+};
+```
+
+### With header
+
+```jsx
+<Box padding={3} width="100%">
+  <SparklineInteractive
+    fill
+    data={sparklineInteractiveData}
+    defaultPeriod="day"
+    formatDate={formatDate}
+    headerNode={<SparklineInteractiveHeader ref={headerRef} defaultLabel="Bitcoin Price" ... />}
+    onPeriodChanged={handlePeriodChanged}
+    onScrub={handleScrub}
+    onScrubEnd={handleScrubEnd}
+    periods={periods}
+    strokeColor="#F7931A"
+  />
+</Box>
+```
+
+### Custom hover data
+
+```jsx
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        fill
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        hoverData={sparklineInteractiveHoverData}
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
+```
+
+### Period selector placement
+
+`periodSelectorPlacement` can be used to place the period selector in different positions (`above` or `below`).
+
+```jsx
+() => {
+  const periods = [
+    { label: '1H', value: 'hour' },
+    { label: '1D', value: 'day' },
+    { label: '1W', value: 'week' },
+    { label: '1M', value: 'month' },
+    { label: '1Y', value: 'year' },
+    { label: 'All', value: 'all' },
+  ];
+
+  const formatDate = useCallback((value, period) => {
+    if (period === 'hour' || period === 'day')
+      return value.toLocaleTimeString('en-US', { hour: 'numeric', minute: 'numeric' });
+    if (period === 'week' || period === 'month')
+      return value.toLocaleDateString('en-US', { month: 'numeric', day: 'numeric' });
+    return value.toLocaleDateString('en-US', { month: 'numeric', year: 'numeric' });
+  }, []);
+
+  return (
+    <Box padding={3} width="100%">
+      <SparklineInteractive
+        data={sparklineInteractiveData}
+        defaultPeriod="day"
+        formatDate={formatDate}
+        periodSelectorPlacement="below"
+        periods={periods}
+        strokeColor="#F7931A"
+      />
+    </Box>
+  );
+};
+```
+
+### Custom styles
+
+You can also provide custom styles, such as to remove bottom padding from the header.
+
+```jsx
+<Box padding={3} width="100%">
+  <SparklineInteractive
+    fill
+    data={sparklineInteractiveData}
+    defaultPeriod="day"
+    formatDate={formatDate}
+    headerNode={<SparklineInteractiveHeader ref={headerRef} defaultLabel="Bitcoin Price" ... />}
+    onPeriodChanged={handlePeriodChanged}
+    onScrub={handleScrub}
+    onScrubEnd={handleScrubEnd}
+    periods={periods}
+    strokeColor="#F7931A"
+    styles={{ header: { paddingBottom: 0 } }}
+  />
+</Box>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `defaultPeriod` | `string` | Yes | `-` | default period value that the chart will use |
+| `formatDate` | `ChartFormatDate<Period>` | Yes | `-` | function used to format the date that is shown in the bottom of the chart as the user scrubs |
+| `periods` | `{ label: string; value: Period; }[]` | Yes | `-` | A list of periods that the chart will use. label is what is shown in the bottom of the chart and the value is the key. |
+| `strokeColor` | `string` | Yes | `-` | Color of the line* |
+| `allowOverflowGestures` | `boolean` | No | `-` | Allows continuous gestures on the Sparkline chart to continue outside the bounds of the chart element. |
+| `compact` | `boolean` | No | `false` | Show the chart in compact height |
+| `data` | `Record<Period, ChartData>` | No | `-` | Chart data bucketed by Period. Period is a string key |
+| `disableHorizontalPadding` | `boolean` | No | `-` | The chart applies horizontal padding by default which is specified by the gutter. If the chart is placed in a container with padding then you can disable horizontal padding and set the gutter to match the container padding. |
+| `disableScrubbing` | `boolean` | No | `false` | Disables the scrub user interaction from the chart |
+| `fallback` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Fallback shown in the chart when data is not available. This is usually a loading state. |
+| `fallbackType` | `positive \| negative` | No | `-` | If you use the default fallback then this specifies if the fallback line is decreasing or increasing |
+| `fill` | `boolean` | No | `true` | Adds an area fill to the Sparkline |
+| `fillType` | `dotted \| gradient` | No | `'gradient'` | Type of fill to use for the area |
+| `formatHoverDate` | `((date: Date, period: Period) => string)` | No | `-` | Formats the date above the chart as you scrub. Omit this if you dont want to show the date as the user scrubs |
+| `formatHoverPrice` | `((price: number) => string)` | No | `-` | Formats the price above the chart as you scrub. Omit this if you dont want to show the price as the user scrubs |
+| `formatMinMaxLabel` | `ChartFormatAmount` | No | `-` | function used to format the amount of money used in the minMaxLabel |
+| `gutter` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `3` | The amount of padding to apply to the left and right of the chart. The chart width is calculated by (screen width - 2* gutter). |
+| `headerNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds a header node above the chart. It will be placed next to the period selector on web. |
+| `headerTestID` | `string` | No | `-` | Test ID for the header |
+| `hideMinMaxLabel` | `boolean` | No | `false` | Hides the min and max label |
+| `hidePeriodSelector` | `boolean` | No | `false` | Hides the period selector at the bottom of the chart |
+| `hoverData` | `Record<Period, ChartTimeseries[]>` | No | `-` | Optional data to show on hover/scrub instead of the original sparkline. This allows multiple timeseries lines.  Period => timeseries list |
+| `onPeriodChanged` | `((period: Period) => void)` | No | `-` | Callback when the user selects a new period. |
+| `onScrub` | `((params: ChartScrubParams<Period>) => void)` | No | `-` | Callback used when the user is scrubbing. This will be called for every data point change. |
+| `onScrubEnd` | `(() => void)` | No | `-` | Callback when a user finishes scrubbing |
+| `onScrubStart` | `(() => void)` | No | `-` | Callback when the user starts scrubbing |
+| `periodSelectorPlacement` | `above \| below` | No | `-` | Optional placement prop that position the period selector component above or below the chart |
+| `style` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | Custom style for the root element. |
+| `styles` | `{ header?: StyleProp<ViewStyle>; root?: StyleProp<ViewStyle>; }` | No | `-` | Custom styles for the component. |
+| `timePeriodGutter` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | Optional gutter to add to the Period selector. This is useful if you choose to use the full screen width for the chart |
+| `yAxisScalingFactor` | `number` | No | `-` | Scales the sparkline to show more or less variance. Use a number less than 1 for less variance and a number greater than 1 for more variance. If you use a number greater than 1 it may clip the boundaries of the sparkline. |
+
+

@@ -1,0 +1,48 @@
+# SpotSquare
+
+A square-shaped illustration component for displaying spot graphics.
+
+## Import
+
+```tsx
+import { SpotSquare } from '@coinbase/cds-web/illustratations/SpotSquare'
+```
+
+## Examples
+
+### Basic example
+
+```jsx live
+<SpotSquare name="yieldCenterUSDC" />
+```
+
+### `scaleMultiplier` prop
+
+If no predefined dimensions fit your use case, you can use the `scaleMultiplier` prop to scale the illustration.
+
+Use `scaleMultiplier` sparingly and with caution. We have predefined dimensions to ensure that illustrations scale elegantly.
+
+```jsx live
+<SpotSquare name="yieldCenterUSDC" scaleMultiplier={1.5} />
+```
+
+### Scaling with dimension
+
+If `dimension` and `scaleMultiplier` are both provided the component will scale based on the provided dimension.
+
+```jsx live
+<SpotSquare name="yieldCenterUSDC" dimension="120x120" scaleMultiplier={1.5} />
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `name` | `baseQuickBuy \| blockchain \| bridging \| coinbaseOneLogo \| earn \| nft \| options \| priceAlerts \| refresh \| securityShield \| staking \| addCard \| baseCreatorCoin \| bonusFivePercent \| bonusTwoPercent \| cardBlocked \| cardDeclined \| coinbaseOneEarn \| coinbaseUnlockOffers \| ethStaking \| ethStakingRewards \| futures \| globalTransactions \| idError \| lightningNetworkSend \| outage \| startToday \| wrapEth \| phoneNumber \| accessToAdvancedCharts \| addPhoneNumber \| advancedTrading \| advancedTradingChartsIndicatorsCandles \| advancedTradingUi \| appTrackingTransparency \| automaticPayments \| backedByUsDollar \| basedInUsa \| bigBtc \| borrowWallet \| browserExtension \| coinbaseCardLock \| coinbaseCardPocket \| coinbaseFees \| coinbaseOneDiscountedAmount \| coinbaseOneRewards \| coinbaseOneSavingFunds \| coinbaseOneTokenRewards \| coinbaseOneZeroPortal \| coinFifty \| collectingNfts \| commerceAccounting \| commerceInvoices \| completeAQuiz \| congratulationsOnEarningCrypto \| contactsListWarning \| crossBorderPayments \| cryptoAndMore \| cryptoApps \| cryptoAssets \| cryptoEconomy \| cryptoForBeginners \| cryptoPortfolio \| cryptoWallet \| decentralization \| decentralizedWebWeb3 \| defiDecentralizedBorrowingLending \| defiDecentralizedTradingExchange \| defiEarn \| defiHow \| defiRisk \| didDecentralizedIdentity \| digitalCollectibles \| documentCertified \| documentSuccess \| earnInterest \| earnToLearn \| encryptedEverything \| estimatedAmount \| focusLimitOrders \| freeBtc \| gainsAndLosses \| gasFeesNetworkFees \| getStartedInMinutes \| hardwareWallets \| holdCrypto \| holdingCrypto \| insuranceProtection \| invest \| layeredNetworks \| layerThree \| linkingYourWalletToYourCoinbaseAccount \| mining \| moneyDecentralized \| multicoinSupport \| multiPlatformMobileAppBrowserExtension \| multipleAccountsWalletsForOneUser \| noFees \| notificationsAlt \| onTheList \| openEmail \| optInPushNotificationsEmail \| p2pPayments \| performance \| portfolioPerformance \| poweredByEthereum \| predictionsMarkets \| primeDeFi \| primeEarn \| primeStaking \| quickAndSimple \| readyToTrade \| retailUSDCRewards \| secureAndTrusted \| secureGlobalTransactions \| secureStorage \| selfCustody \| semiCustodial \| sendCryptoFaster \| shareOnSocialMedia \| sidechain \| stableValue \| stayInControlSelfHostedWalletsStorage \| stressTestedColdStorage \| switchAdvancedToSimpleTrading \| taxesDetails \| tradeImmediately \| trendingHotAssets \| verifyEmail \| verifyInfo \| walletNotifications \| walletSecurity \| watchVideos \| eth2SendSell \| ethStakeOrWrap \| ethStakeOrWrapTwo \| linkCoinbaseWallet \| addEth \| addMultipleCrypto \| addPasswordProtection \| announcementAdvancedTrading \| assetForward \| assetRefresh \| baseCautionMedium \| baseChartMedium \| baseCheckMedium \| baseCheckTrophyMedium \| baseCoinCryptoMedium \| baseCoinNetworkMedium \| baseConnectMedium \| baseDecentralizationMedium \| baseDiamondMedium \| baseEmptyMedium \| baseErrorButterflyMedium \| baseErrorMedium \| baseIdMedium \| baseLoadingMedium \| baseLocationMedium \| baseMintNftMedium \| baseNetworkMedium \| baseNftMedium \| basePaycoinMedium \| basePeopleMedium \| basePiechartMedium \| baseRewardChest \| baseRewardClam \| baseRewardPlate \| baseRewardPodium \| baseRewardSun \| baseRewardTrophyEmblem \| baseRewardTrophyStars \| baseSecurityMedium \| baseSendMedium \| baseSwitch \| baseTargetMedium \| baseUsdcMedium \| boostedCard \| borrowLimitsAddressed \| bullishCase \| cardAnnouncement \| cardAutoReload \| cardShipped \| cbEthWrappingUnavailable \| checkVerifacation \| coinbaseCardSparkle \| coinbaseLock \| coinbaseOneBoostedCard \| coinbaseOneBoostedCardCB1 \| coinbaseOneConcierge \| coinbaseOneStakeOrWrap \| coinbaseOneStaking \| coinbaseOneStarToken \| coinbaseOneUSDC \| coinbaseOneZero \| confirmAddress \| confirmEmail \| confirmIDCard \| confirmSocialSecurity \| cryptoEconomyArrows \| dappWallet \| darkModeIntroduction \| defiEarnAnnouncement \| defiNfts \| directDepositExcitement \| earnInterestOnCryptocurrency \| fileYourCryptoTaxesCheckOther \| fileYourCryptoTaxesOther \| frameEmpty \| giftBoxCrypto \| gifting \| goldSilverFutures \| guideBullCase \| guideCryptoBeginner \| guideFiveThings \| guideNftDefi \| guideStartInvesting \| interestForYou \| miniGift \| moneyRewards \| nftTag \| noPortfolio \| nuxChecklist \| nuxEarnCrypto \| nuxEarnYield \| nuxPopularAssets \| nuxRecurringBuys \| offersEmpty \| phoneNotifications \| pixBankDeposits \| pixDeposits \| recommendInvestments \| referralsPeople \| refreshMobileApp \| rewardExpiring \| saveTheDate \| sparkleToken \| starToken \| swapEth \| switchReward \| taxDocuments \| transferringCrypto \| unsupportedAsset \| waitlistSignup \| walletApp \| walletQuestsChest \| walletQuestsTrophy \| yieldCenter \| yieldCenterUSDC` | Yes | `-` | Name of illustration as defined in Figma |
+| `alt` | `string` | No | `"" will identify the image as decorative` | Alt tag to apply to the img |
+| `dimension` | `96x96` | No | `-` | HeroSquare Default:  240x240 SpotSquare Default: 96x96 Pictogram Default: 48x48 SpotRectangle Default: 240x120 |
+| `fallback` | `ReactElement<any, string \| JSXElementConstructor<any>> \| null` | No | `null` | Fallback element to render if unable to find an illustration with the matching name |
+| `scaleMultiplier` | `number` | No | `-` | Multiply the width & height while maintaining aspect ratio |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

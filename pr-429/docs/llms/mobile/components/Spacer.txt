@@ -1,0 +1,83 @@
+# Spacer
+
+Creates space between elements.
+
+## Import
+
+```tsx
+import { Spacer } from '@coinbase/cds-mobile/layout/Spacer'
+```
+
+## Examples
+
+### Vertical Spacer
+
+```tsx
+<VStack>
+  <Box padding={2} background="bgAlternate" borderRadius="300">
+    Box 1
+  </Box>
+  <Spacer vertical={2} />
+  <Box padding={2} background="bgAlternate" borderRadius="300">
+    Box 2
+  </Box>
+  <Spacer vertical={4} />
+  <Box padding={2} background="bgAlternate" borderRadius="300">
+    Box 3
+  </Box>
+  <Spacer vertical={6} />
+  <Box padding={2} background="bgAlternate" borderRadius="300">
+    Box 4
+  </Box>
+</VStack>
+```
+
+### Horizontal Spacer
+
+```tsx
+<HStack>
+  <Box padding={2} background="bgAlternate" borderRadius="300">
+    Box 1
+  </Box>
+  <Spacer horizontal={2} />
+  <Box padding={2} background="bgAlternate" borderRadius="300">
+    Box 2
+  </Box>
+  <Spacer horizontal={4} />
+  <Box padding={2} background="bgAlternate" borderRadius="300">
+    Box 3
+  </Box>
+  <Spacer horizontal={6} />
+  <Box padding={2} background="bgAlternate" borderRadius="300">
+    Box 4
+  </Box>
+</HStack>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `animated` | `boolean` | No | `-` | - |
+| `horizontal` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | Padding in the horizontal direction |
+| `maxHorizontal` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | Max padding in the horizontal direction |
+| `maxVertical` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | Max padding in the vertical direction |
+| `minHorizontal` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | Min padding in the horizontal direction |
+| `minVertical` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | Min padding in the vertical direction |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `style` | `false \| RegisteredStyle<ViewStyle> \| Value \| AnimatedInterpolation<string \| number> \| WithAnimatedObject<ViewStyle> \| WithAnimatedArray<Falsy \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<Falsy \| ViewStyle \| RegisteredStyle<ViewStyle>> \| readonly (Falsy \| ViewStyle \| RegisteredStyle<ViewStyle>)[]> \| null` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID Used to locate this view in end-to-end tests. |
+| `vertical` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | Padding in the vertical direction |
+
+

@@ -1,0 +1,700 @@
+# DatePicker
+
+Date Picker allows our global users to input past, present, future and important dates into our interface in a simple and intuitive manner. Date Picker offers both manual and calendar entry options - accommodating both internationalization and accessibility needs while being adaptable across screen platforms.
+
+## Import
+
+```tsx
+import { DatePicker } from '@coinbase/cds-mobile/dates/DatePicker'
+```
+
+## Examples
+
+DatePicker combines [DateInput](/components/other/DateInput/) with [Calendar](/components/other/Calendar/) for date selection.
+
+### Basics
+
+A basic DatePicker with the minimum props necessary for correct UX.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      calendarIconButtonAccessibilityLabel="Birthdate calendar"
+      nextArrowAccessibilityLabel="Next month"
+      previousArrowAccessibilityLabel="Previous month"
+      helperTextErrorIconAccessibilityLabel="Error"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+#### Validation
+
+##### Invalid dates
+
+Always provide the `invalidDateError` prop for when users type an impossible date like 99/99/2000.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+##### Minimum and maximum dates
+
+Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props. Navigation to dates before the `minDate` and after the `maxDate` is disabled.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const lastMonth15th = new Date(today.getFullYear(), today.getMonth() - 1, 15);
+  const nextMonth15th = new Date(today.getFullYear(), today.getMonth() + 1, 15);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      minDate={lastMonth15th}
+      maxDate={nextMonth15th}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="Date unavailable"
+    />
+  );
+}
+```
+
+##### Required field
+
+Make sure to provide the `requiredError` prop when setting the `required` prop to true. The `requiredError` will be displayed if a user blurs the input, without a date selected, after having typed into it.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      required
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      requiredError="This field is required"
+    />
+  );
+}
+```
+
+##### Custom validation
+
+The DatePicker handles common error states internally, and calls `onErrorDate` when the validity / error state changes.
+
+You can use the `DateInputValidationError` class to create custom error states.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setError(new DateInputValidationError('custom', 'Hello world!'));
+  }, []);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Accessibility
+
+Always provide the accessibility label props and all necessary error props. See the Accessibility section under the Guidelines tab at the top of the page for more info.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      required
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      disabledDates={[new Date()]}
+      label="Birthdate"
+      calendarIconButtonAccessibilityLabel="Birthdate calendar"
+      nextArrowAccessibilityLabel="Next month"
+      previousArrowAccessibilityLabel="Previous month"
+      helperTextErrorIconAccessibilityLabel="Error"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="Date unavailable"
+      requiredError="This field is required"
+    />
+  );
+}
+```
+
+### Localization
+
+The date format is automatically adjusted to the `LocaleContext`. Check `LocaleProvider` usage below.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <LocaleProvider locale="es-ES">
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Birthdate"
+        invalidDateError="Please enter a valid date"
+      />
+    </LocaleProvider>
+  );
+}
+```
+
+### Styling
+
+DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/).
+
+#### Compact
+
+Use the `compact` prop for a smaller input size.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Default size"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        compact
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Compact size"
+        invalidDateError="Please enter a valid date"
+      />
+    </VStack>
+  );
+}
+```
+
+#### Disabled
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(new Date());
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      disabled
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Disabled picker"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+#### Helper text
+
+Use the `helperText` prop to provide additional context below the input.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Start date"
+      helperText="Select when you'd like to begin"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+#### Label
+
+You can pass a ReactNode to `labelNode` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={2}>
+      <DatePicker
+        accessibilityLabel="Birthdate"
+        calendarIconButtonAccessibilityLabel="Birthdate calendar"
+        date={date}
+        error={error}
+        helperTextErrorIconAccessibilityLabel="Error"
+        invalidDateError="Please enter a valid date"
+        labelNode={
+          <HStack alignItems="center">
+            <InputLabel>Birthdate</InputLabel>
+            {/* Add padding to ensure 24x24 tooltip tap target for a11y compliance */}
+            <Tooltip content="This will be visible to other users.">
+              <Icon active color="fg" name="info" padding={0.75} size="xs" />
+            </Tooltip>
+          </HStack>
+        }
+        nextArrowAccessibilityLabel="Next month"
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        previousArrowAccessibilityLabel="Previous month"
+      />
+      <DatePicker
+        required
+        accessibilityLabel="Event date"
+        date={date}
+        error={error}
+        invalidDateError="Please enter a valid date"
+        labelNode={
+          <HStack alignItems="center" gap={0.5}>
+            <InputLabel>Event date</InputLabel>
+            <Text color="fgNegative" font="label1">
+              *
+            </Text>
+          </HStack>
+        }
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        requiredError="This field is required"
+      />
+    </VStack>
+  );
+}
+```
+
+##### Label Variant
+
+Use the `labelVariant` prop to position the label inside the input.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Default label"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Inside label"
+        labelVariant="inside"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        compact
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Compact inside label"
+        labelVariant="inside"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        accessibilityLabel="Event date"
+        date={date}
+        error={error}
+        invalidDateError="Please enter a valid date"
+        labelVariant="inside"
+        labelNode={
+          <HStack alignItems="center" gap={1}>
+            <InputLabel paddingY={0}>Event date</InputLabel>
+            <Text color="fgMuted" font="legal">
+              (optional)
+            </Text>
+          </HStack>
+        }
+        onChangeDate={setDate}
+        onErrorDate={setError}
+      />
+    </VStack>
+  );
+}
+```
+
+#### Seeding the date
+
+Defaults to today when undefined.
+
+On mobile the `seedDate` prop is the default date that the react-native-date-picker keyboard control will open to when there is no selected date value.
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const seedDate = new Date('11/16/1991');
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      seedDate={seedDate}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Composed Examples
+
+#### Date range selector
+
+This is a complex example using many different props. We use multiple DatePickers together to allow a user to select a date range.
+
+We enforce that the time between the start date and end date must be at least 5 days but less than 14 days long, that the end date comes after the start date, and that all days are within the current month. We use the `onChange` prop to automatically suggest an end date of 1 week after the start date, or the last of the month - whichever is sooner. We also explicitly disable 1 week at the beginning of the month.
+
+```jsx
+function Example() {
+  const [startDate, setStartDate] = useState(null);
+  const [startError, setStartError] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [endError, setEndError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const firstDayThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const seventhDayThisMonth = new Date(today.getFullYear(), today.getMonth(), 7);
+  const lastDayThisMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+  const disabledDates = [[firstDayThisMonth, seventhDayThisMonth]];
+
+  const updateEndDate = (endDate, startDate) => {
+    setEndDate(endDate);
+    setEndError(null);
+    if (!endDate) return;
+    // The time from startDate to endDate must be at least 5 days and less than 14 days
+    const endDateMin = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth(),
+      startDate.getDate() + 4,
+    );
+    const endDateMax = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth(),
+      startDate.getDate() + 13,
+    );
+
+    let errorMessage;
+    if (endDate < startDate) errorMessage = 'Must come after start date';
+    else if (endDate < endDateMin) errorMessage = 'Must select at least 5 days';
+    else if (endDate > endDateMax) errorMessage = 'Cannot select more than 14 days';
+
+    if (errorMessage) setEndError(new DateInputValidationError('custom', errorMessage));
+  };
+
+  const handleChangeDateStart = (date) => {
+    setStartDate(date);
+    if (!date) return;
+    // Suggest an end date based on the new start date
+    const suggestedEndDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7);
+    const newEndDate = new Date(Math.min(suggestedEndDate.getTime(), lastDayThisMonth.getTime()));
+    updateEndDate(newEndDate, date);
+  };
+
+  const handleChangeDateEnd = (date) => {
+    if (startDate) updateEndDate(date, startDate);
+  };
+
+  return (
+    <HStack gap={2}>
+      <DatePicker
+        required
+        date={startDate}
+        disabledDateError="Date unavailable"
+        disabledDates={disabledDates}
+        error={startError}
+        highlightedDates={startDate && endDate ? [[startDate, endDate]] : undefined}
+        invalidDateError="Please enter a valid date"
+        label="Start date"
+        maxDate={lastDayThisMonth}
+        minDate={firstDayThisMonth}
+        onChangeDate={handleChangeDateStart}
+        onErrorDate={setStartError}
+        requiredError="This field is required"
+      />
+      <DatePicker
+        required
+        date={endDate}
+        disabled={!startDate}
+        disabledDateError="Date unavailable"
+        disabledDates={startDate ? [...disabledDates, startDate] : disabledDates}
+        error={endError}
+        highlightedDates={
+          startDate && endDate && startDate < endDate
+            ? [[startDate, endDate]]
+            : startDate
+              ? [startDate]
+              : undefined
+        }
+        invalidDateError="Please enter a valid date"
+        label="End date"
+        maxDate={lastDayThisMonth}
+        minDate={firstDayThisMonth}
+        onChangeDate={handleChangeDateEnd}
+        onErrorDate={setEndError}
+        requiredError="This field is required"
+        variant={endError ? 'negative' : undefined}
+      />
+    </HStack>
+  );
+}
+```
+
+### Event Lifecycle
+
+- Selecting a date with the native picker (mobile) or Calendar (web):
+
+  `onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose`
+
+- Closing the native picker (mobile) or Calendar (web) without selecting a date:
+
+  `onOpen -> onCancel -> onClose`
+
+- Typing a date in a blank DateInput:
+
+  `onChange -> onChange -> ... -> onChangeDate -> onErrorDate`
+
+- Typing a date in a DateInput that already had a date:
+
+  `onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate`
+
+```jsx
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleChangeDate = (date) => {
+    console.log('onChangeDate', date);
+    setDate(date);
+  };
+
+  const handleErrorDate = (error) => {
+    console.log('onErrorDate', error);
+    setError(error);
+  };
+
+  return (
+    <DatePicker
+      required
+      date={date}
+      invalidDateError="Please enter a valid date"
+      label="Birthdate"
+      onChange={(event) => console.log('onChange', event)}
+      onChangeDate={handleChangeDate}
+      onConfirm={() => console.log('onConfirm')}
+      onCancel={() => console.log('onCancel')}
+      onErrorDate={handleErrorDate}
+      onOpen={() => console.log('onOpen')}
+      onClose={() => console.log('onClose')}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `date` | `Date \| null` | Yes | `-` | Control the date value of the DatePicker. |
+| `error` | `DateInputValidationError \| null` | Yes | `-` | Control the error value of the DatePicker. Control the error value of the DateInput. |
+| `onChangeDate` | `(selectedDate: Date \| null) => void` | Yes | `-` | Callback function fired when the date changes, e.g. when a valid date is selected or unselected. |
+| `onErrorDate` | `((error: DateInputValidationError \| null) => void) & ((error: DateInputValidationError \| null) => void)` | Yes | `-` | Callback function fired when validation finds an error, e.g. required input fields and impossible or disabled dates. Will always be called after onChangeDate. |
+| `align` | `end \| start \| center \| justify` | No | `start` | Aligns text inside input and helperText |
+| `allowFontScaling` | `boolean` | No | `-` | Specifies whether fonts should scale to respect Text Size accessibility settings. The default is true. |
+| `autoCapitalize` | `none \| sentences \| words \| characters` | No | `-` | Can tell TextInput to automatically capitalize certain characters.      characters: all characters,      words: first letter of each word      sentences: first letter of each sentence (default)      none: dont auto capitalize anything  https://reactnative.dev/docs/textinput#autocapitalize |
+| `autoComplete` | `email \| off \| name \| additional-name \| address-line1 \| address-line2 \| birthdate-day \| birthdate-full \| birthdate-month \| birthdate-year \| cc-csc \| cc-exp \| cc-exp-day \| cc-exp-month \| cc-exp-year \| cc-number \| cc-name \| cc-given-name \| cc-middle-name \| cc-family-name \| cc-type \| country \| current-password \| family-name \| gender \| given-name \| honorific-prefix \| honorific-suffix \| name-family \| name-given \| name-middle \| name-middle-initial \| name-prefix \| name-suffix \| new-password \| nickname \| one-time-code \| organization \| organization-title \| password \| password-new \| postal-address \| postal-address-country \| postal-address-extended \| postal-address-extended-postal-code \| postal-address-locality \| postal-address-region \| postal-code \| street-address \| sms-otp \| tel \| tel-country-code \| tel-national \| tel-device \| url \| username \| username-new` | No | `-` | Specifies autocomplete hints for the system, so it can provide autofill. On Android, the system will always attempt to offer autofill by using heuristics to identify the type of content. To disable autocomplete, set autoComplete to off.  The following values work across platforms:  - additional-name - address-line1 - address-line2 - cc-number - country - current-password - email - family-name - given-name - honorific-prefix - honorific-suffix - name - new-password - off - one-time-code - postal-code - street-address - tel - username  The following values work on iOS only:  - nickname - organization - organization-title - url  The following values work on Android only:  - birthdate-day - birthdate-full - birthdate-month - birthdate-year - cc-csc - cc-exp - cc-exp-day - cc-exp-month - cc-exp-year - gender - name-family - name-given - name-middle - name-middle-initial - name-prefix - name-suffix - password - password-new - postal-address - postal-address-country - postal-address-extended - postal-address-extended-postal-code - postal-address-locality - postal-address-region - sms-otp - tel-country-code - tel-national - tel-device - username-new |
+| `autoCorrect` | `boolean` | No | `-` | If false, disables auto-correct. The default value is true. |
+| `autoFocus` | `boolean` | No | `-` | If true, focuses the input on componentDidMount. The default value is false. |
+| `blurOnSubmit` | `boolean` | No | `-` | If true, the text field will blur when submitted. The default value is true. |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `200` | Leverage one of the borderRadius styles we offer to round the corners of the input. |
+| `bordered` | `boolean` | No | `true` | Determines if the input should have a border |
+| `calendarIconButtonAccessibilityLabel` | `string` | No | `'Open calendar' / 'Close calendar'` | Accessibility label describing the calendar IconButton, which opens the calendar when pressed. |
+| `caretHidden` | `boolean` | No | `-` | If true, caret is hidden. The default value is false. |
+| `clearButtonMode` | `never \| while-editing \| unless-editing \| always` | No | `-` | enum(never, while-editing, unless-editing, always) When the clear button should appear on the right side of the text view |
+| `clearTextOnFocus` | `boolean` | No | `-` | If true, clears the text field automatically when editing begins |
+| `compact` | `boolean` | No | `false` | Enables compact variation |
+| `contextMenuHidden` | `boolean` | No | `-` | If true, context menu is hidden. The default value is false. |
+| `cursorColor` | `ColorValue \| null` | No | `-` | When provided it will set the color of the cursor (or caret) in the component. Unlike the behavior of selectionColor the cursor color will be set independently from the color of the text selection box. |
+| `dataDetectorTypes` | `DataDetectorTypes \| DataDetectorTypes[]` | No | `-` | Determines the types of data converted to clickable URLs in the text input. Only valid if multiline={true} and editable={false}. By default no data types are detected.  You can provide one type or an array of many types.  Possible values for dataDetectorTypes are:  - phoneNumber - link - address - calendarEvent - none - all |
+| `dateInputStyle` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | - |
+| `disableFullscreenUI` | `boolean` | No | `-` | When false, if there is a small amount of space available around a text input (e.g. landscape orientation on a phone),   the OS may choose to have the user edit the text inside of a full screen text input mode. When true, this feature is disabled and users will always edit the text directly inside of the text input. Defaults to false. |
+| `disabled` | `boolean` | No | `false` | Disables user interaction. Toggles input interactability and opacity |
+| `disabledDateError` | `string` | No | `'Date unavailable'` | Error text to display when a disabled date is selected with the DateInput, including dates before the minDate or after the maxDate. |
+| `editable` | `boolean` | No | `-` | If false, text is not editable. The default value is true. |
+| `enableColorSurge` | `boolean` | No | `-` | Enable Color Surge motion |
+| `enablesReturnKeyAutomatically` | `boolean` | No | `-` | If true, the keyboard disables the return key when there is no text and automatically enables it when there is text. The default value is false. |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the end of the inner input. Refer to diagram for location of endNode in InputStack component |
+| `enterKeyHint` | `search \| done \| go \| next \| send \| previous \| enter` | No | `-` | Determines what text should be shown to the return key on virtual keyboards. Has precedence over the returnKeyType prop. |
+| `height` | `string \| number` | No | `-` | Height of input |
+| `helperText` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | For cases where label is not enough information to describe what the text input is for. Can also be used for showing positive/negative messages |
+| `helperTextErrorIconAccessibilityLabel` | `string` | No | `'error'` | Accessibility label for helper text error icon when variant=negative |
+| `importantForAutofill` | `auto \| yes \| no \| noExcludeDescendants \| yesExcludeDescendants` | No | `-` | Determines whether the individual fields in your app should be included in a view structure for autofill purposes on Android API Level 26+. Defaults to auto. To disable auto complete, use off.  *Android Only*  The following values work on Android only:  - auto - let Android decide - no - not important for autofill - noExcludeDescendants - this view and its children arent important for autofill - yes - is important for autofill - yesExcludeDescendants - this view is important for autofill but its children arent |
+| `inlineImageLeft` | `string` | No | `-` | If defined, the provided image resource will be rendered on the left. |
+| `inlineImagePadding` | `number` | No | `-` | Padding between the inline image, if any, and the text input itself. |
+| `inputAccessoryViewID` | `string` | No | `-` | Used to connect to an InputAccessoryView. Not part of react-natives documentation, but present in examples and code. See https://reactnative.dev/docs/inputaccessoryview for more information. |
+| `inputBackground` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `'bg'` | Background color of the input |
+| `inputMode` | `search \| none \| text \| email \| tel \| url \| numeric \| decimal` | No | `-` | Works like the inputmode attribute in HTML, it determines which keyboard to open, e.g. numeric and has precedence over keyboardType. |
+| `invalidDateError` | `string` | No | `'Please enter a valid date'` | Error text to display when an impossible date is selected, e.g. 99/99/2000. This should always be defined for accessibility. Also displays when a date is selected that is more than 100 years before the minDate, or more than 100 years after the maxDate. |
+| `key` | `Key \| null` | No | `-` | - |
+| `keyboardAppearance` | `light \| default \| dark` | No | `-` | Determines the color of the keyboard. |
+| `keyboardType` | `default \| url \| number-pad \| decimal-pad \| numeric \| email-address \| phone-pad \| visible-password \| ascii-capable \| numbers-and-punctuation \| name-phone-pad \| twitter \| web-search` | No | `-` | enum(default, numeric, email-address, ascii-capable, numbers-and-punctuation, url, number-pad, phone-pad, name-phone-pad, decimal-pad, twitter, web-search, visible-password) Determines which keyboard to open, e.g.numeric. The following values work across platforms: - default - numeric - email-address - phone-pad The following values work on iOS: - ascii-capable - numbers-and-punctuation - url - number-pad - name-phone-pad - decimal-pad - twitter - web-search The following values work on Android: - visible-password |
+| `label` | `string` | No | `-` | Short messageArea indicating purpose of input |
+| `labelNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to render label. Takes precedence over label. |
+| `labelVariant` | `inside \| outside` | No | `'outside'` | The variant of the label. Only used when compact is not true. |
+| `lineBreakStrategyIOS` | `none \| standard \| hangul-word \| push-out` | No | `-` | Set line break strategy on iOS. |
+| `maxDate` | `Date` | No | `-` | Maximum date allowed to be selected, inclusive. Dates after the maxDate are disabled. All navigation to months after the maxDate is disabled. |
+| `maxFontSizeMultiplier` | `number \| null` | No | `-` | Specifies largest possible scale a font can reach when allowFontScaling is enabled. Possible values: - null/undefined (default): inherit from the parent node or the global default (0) - 0: no max, ignore parent/global default - >= 1: sets the maxFontSizeMultiplier of this node to this value |
+| `maxLength` | `number` | No | `-` | Limits the maximum number of characters that can be entered. Use this instead of implementing the logic in JS to avoid flicker. |
+| `minDate` | `Date` | No | `-` | Minimum date allowed to be selected, inclusive. Dates before the minDate are disabled. All navigation to months before the minDate is disabled. |
+| `minHeight` | `string \| number` | No | `auto` | minimum height of input |
+| `multiline` | `boolean` | No | `-` | If true, the text input can be multiple lines. The default value is false. |
+| `numberOfLines` | `number` | No | `-` | Sets the number of lines for a TextInput. Use it with multiline set to true to be able to fill the lines. |
+| `onBlur` | `((e: NativeSyntheticEvent<TextInputFocusEventData>) => void)` | No | `-` | Callback that is called when the text input is blurred |
+| `onCancel` | `(() => void)` | No | `-` | Callback function fired when the user closes the react-native-date-picker keyboard control without selecting a date. Interacting with the DateInput does not fire this callback. Will always be called before onClose. |
+| `onChange` | `(((event: NativeSyntheticEvent<TextInputChangeEventData>) => void) & ((e: NativeSyntheticEvent<TextInputChangeEventData>) => void))` | No | `-` | Callback function fired when the DateInput text value changes. Prefer to use onChangeDate instead. Will always be called before onChangeDate. This prop should only be used for edge cases, such as custom error handling. |
+| `onChangeText` | `((text: string) => void)` | No | `-` | - |
+| `onClose` | `(() => void)` | No | `-` | Callback function fired when the react-native-date-picker keyboard control is closed. Will always be called after onCancel, onConfirm, and onChangeDate. |
+| `onConfirm` | `(() => void)` | No | `-` | Callback function fired when the user selects a date using the react-native-date-picker keyboard control. Interacting with the DateInput does not fire this callback. Will always be called before onClose. |
+| `onContentSizeChange` | `((e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => void)` | No | `-` | Callback that is called when the text inputs content size changes. This will be called with { nativeEvent: { contentSize: { width, height } } }.  Only called for multiline text inputs. |
+| `onEndEditing` | `((e: NativeSyntheticEvent<TextInputEndEditingEventData>) => void)` | No | `-` | Callback that is called when text input ends. |
+| `onFocus` | `((e: NativeSyntheticEvent<TextInputFocusEventData>) => void)` | No | `-` | Callback that is called when the text input is focused |
+| `onKeyPress` | `((e: NativeSyntheticEvent<TextInputKeyPressEventData>) => void)` | No | `-` | Callback that is called when a key is pressed. This will be called with  { nativeEvent: { key: keyValue } } where keyValue is Enter or Backspace for respective keys and the typed-in character otherwise including   for space.  Fires before onChange callbacks. Note: on Android only the inputs from soft keyboard are handled, not the hardware keyboard inputs. |
+| `onOpen` | `(() => void)` | No | `-` | Callback function fired when the react-native-date-picker keyboard control is opened. |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPress` | `((e: NativeSyntheticEvent<NativeTouchEvent>) => void)` | No | `-` | Called when a single tap gesture is detected. |
+| `onPressIn` | `((e: NativeSyntheticEvent<NativeTouchEvent>) => void)` | No | `-` | Callback that is called when a touch is engaged. |
+| `onPressOut` | `((e: NativeSyntheticEvent<NativeTouchEvent>) => void)` | No | `-` | Callback that is called when a touch is released. |
+| `onScroll` | `((e: NativeSyntheticEvent<TextInputScrollEventData>) => void)` | No | `-` | Invoked on content scroll with  { nativeEvent: { contentOffset: { x, y } } }.  May also contain other properties from ScrollEvent but on Android contentSize is not provided for performance reasons. |
+| `onSelectionChange` | `((e: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => void)` | No | `-` | Callback that is called when the text input selection is changed. |
+| `onSubmitEditing` | `((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void)` | No | `-` | Callback that is called when the text inputs submit button is pressed. |
+| `onTextInput` | `((e: NativeSyntheticEvent<TextInputTextInputEventData>) => void)` | No | `-` | Callback that is called on new text input with the argument  { nativeEvent: { text, previousText, range: { start, end } } }.  This prop requires multiline={true} to be set. |
+| `passwordRules` | `string \| null` | No | `-` | Provide rules for your password. For example, say you want to require a password with at least eight characters consisting of a mix of uppercase and lowercase letters, at least one number, and at most two consecutive characters. required: upper; required: lower; required: digit; max-consecutive: 2; minlength: 8; |
+| `placeholder` | `string` | No | `-` | Placeholder text displayed inside of the input. Will be replaced if there is a value. The string that will be rendered before text input has been entered |
+| `placeholderTextColor` | `string \| OpaqueColorValue` | No | `-` | The text color of the placeholder string |
+| `readOnly` | `boolean` | No | `-` | If true, text is not editable. The default value is false. |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `rejectResponderTermination` | `boolean \| null` | No | `-` | If true, allows TextInput to pass touch events to the parent component. This allows components to be swipeable from the TextInput on iOS, as is the case on Android by default. If false, TextInput always asks to handle the input (except when disabled). |
+| `required` | `boolean` | No | `-` | If required, the requiredError will be displayed if a user blurs the input, without a date selected, after having typed into it. |
+| `requiredError` | `string` | No | `'This field is required'` | Error text to display when required is true and a user blurs the input without a date selected, after having typed into it. |
+| `returnKeyLabel` | `string` | No | `-` | Sets the return key to the label. Use it instead of returnKeyType. |
+| `returnKeyType` | `search \| join \| done \| none \| default \| go \| next \| send \| previous \| google \| route \| yahoo \| emergency-call` | No | `-` | enum(default, go, google, join, next, route, search, send, yahoo, done, emergency-call) Determines how the return key should look. |
+| `scrollEnabled` | `boolean` | No | `-` | If false, scrolling of the text view will be disabled. The default value is true. Only works with multiline={true} |
+| `secureTextEntry` | `boolean` | No | `-` | If true, the text input obscures the text entered so that sensitive text like passwords stay secure. The default value is false. |
+| `seedDate` | `Date` | No | `-` | Date that the react-native-date-picker keyboard control will open to when there is no value for the date prop, defaults to today. |
+| `selectTextOnFocus` | `boolean` | No | `-` | If true, all text will automatically be selected on focus |
+| `selection` | `{ start: number; end?: number; } \| undefined` | No | `-` | The start and end of the text inputs selection. Set start and end to the same value to position the cursor. |
+| `selectionColor` | `string \| OpaqueColorValue` | No | `-` | The highlight (and cursor on ios) color of the text input |
+| `selectionHandleColor` | `ColorValue \| null` | No | `-` | When provided it will set the color of the selection handles when highlighting text. Unlike the behavior of selectionColor the handle color will be set independently from the color of the text selection box. |
+| `selectionState` | `DocumentSelectionState` | No | `-` | See DocumentSelectionState.js, some state that is responsible for maintaining selection information for a document |
+| `showSoftInputOnFocus` | `boolean` | No | `-` | When false, it will prevent the soft keyboard from showing when the field is focused. The default value is true |
+| `smartInsertDelete` | `boolean` | No | `-` | If false, the iOS system will not insert an extra space after a paste operation neither delete one or two spaces after a cut or delete operation.  The default value is true. |
+| `spellCheck` | `boolean` | No | `-` | If false, disables spell-check style (i.e. red underlines). The default value is inherited from autoCorrect |
+| `start` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the start of the inner input. Refer to diagram for location of startNode in InputStack component |
+| `suffix` | `string` | No | `-` | Adds suffix text to the end of input |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID Used to locate this view in end-to-end tests |
+| `testIDMap` | `{ start?: string; end?: string \| undefined; label?: string \| undefined; helperText?: string \| undefined; } \| undefined` | No | `-` | Add ability to test individual parts of the input |
+| `textAlign` | `left \| right \| center \| unset` | No | `-` | Native TextInput textAlign with the extra unset option to remove the textAlign style. Use this to workaround the issue where long text does not ellipsis in TextInput |
+| `textAlignVertical` | `top \| bottom \| auto \| center` | No | `-` | Vertically align text when multiline is set to true |
+| `textBreakStrategy` | `simple \| highQuality \| balanced` | No | `-` | Set text break strategy on Android API Level 23+, possible values are simple, highQuality, balanced The default value is simple. |
+| `textContentType` | `none \| location \| name \| nickname \| password \| username \| URL \| addressCity \| addressCityAndState \| addressState \| countryName \| creditCardNumber \| creditCardExpiration \| creditCardExpirationMonth \| creditCardExpirationYear \| creditCardSecurityCode \| creditCardType \| creditCardName \| creditCardGivenName \| creditCardMiddleName \| creditCardFamilyName \| emailAddress \| familyName \| fullStreetAddress \| givenName \| jobTitle \| middleName \| namePrefix \| nameSuffix \| organizationName \| postalCode \| streetAddressLine1 \| streetAddressLine2 \| sublocality \| telephoneNumber \| newPassword \| oneTimeCode \| birthdate \| birthdateDay \| birthdateMonth \| birthdateYear` | No | `-` | Give the keyboard and the system information about the expected semantic meaning for the content that users enter.  To disable autofill, set textContentType to none.  Possible values for textContentType are:   - none  - URL  - addressCity  - addressCityAndState  - addressState  - countryName  - creditCardNumber  - creditCardExpiration (iOS 17+)  - creditCardExpirationMonth (iOS 17+)  - creditCardExpirationYear (iOS 17+)  - creditCardSecurityCode (iOS 17+)  - creditCardType (iOS 17+)  - creditCardName (iOS 17+)  - creditCardGivenName (iOS 17+)  - creditCardMiddleName (iOS 17+)  - creditCardFamilyName (iOS 17+)  - emailAddress  - familyName  - fullStreetAddress  - givenName  - jobTitle  - location  - middleName  - name  - namePrefix  - nameSuffix  - nickname  - organizationName  - postalCode  - streetAddressLine1  - streetAddressLine2  - sublocality  - telephoneNumber  - username  - password  - newPassword  - oneTimeCode  - birthdate (iOS 17+)  - birthdateDay (iOS 17+)  - birthdateMonth (iOS 17+)  - birthdateYear (iOS 17+) |
+| `underlineColorAndroid` | `string \| OpaqueColorValue` | No | `-` | The color of the textInput underline. |
+| `variant` | `primary \| secondary \| positive \| negative \| foregroundMuted \| foreground` | No | `-` | Determines the sentiment of the input. Because we allow startContent and endContent to be custom ReactNode, the content placed inside these slots will not change colors according to the variant. You will have to add that yourself |
+| `verticalAlign` | `top \| bottom \| auto \| middle` | No | `-` | Vertically align text when multiline is set to true |
+| `width` | `string \| number` | No | `100%` | Width of input as a percentage string. |
+
+

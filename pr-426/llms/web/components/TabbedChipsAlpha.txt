@@ -1,0 +1,246 @@
+# TabbedChipsAlpha
+
+A chip component commonly used in filter context to refine a date source
+
+## Import
+
+```tsx
+import { TabbedChips } from '@coinbase/cds-web/alpha/tabbed-chips/TabbedChips'
+```
+
+## Examples
+
+### Basic usage
+
+```jsx live
+function ExampleDefault() {
+  const tabs = [
+    { id: 'all', label: 'All' },
+    { id: 'swap', label: 'Swap' },
+    { id: 'collect', label: 'Collect' },
+    { id: 'bridge', label: 'Bridge' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### Compact
+
+```jsx lived
+function ExampleCompactNoStart() {
+  const tabs = [
+    { id: 'all', label: 'All' },
+    { id: 'swap', label: 'Swap' },
+    { id: 'collect', label: 'Collect' },
+    { id: 'bridge', label: 'Bridge' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return <TabbedChips activeTab={activeTab} compact onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### Many tabs (paddles)
+
+:::tip Paddles & overflow
+Paddles appear automatically when the tab list overflows.
+:::
+
+```jsx live
+function ExampleWithPaddles() {
+  const tabs = Array.from({ length: 12 }).map((_, i) => ({
+    id: `tab_${i + 1}`,
+    label: `Tab ${i + 1}`,
+  }));
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### With autoScrollOffset
+
+:::tip Auto-scroll offset
+The `autoScrollOffset` prop controls the X position offset when auto-scrolling to the active tab. This prevents the active tab from being covered by the paddle on the left side. Try clicking tabs near the edges to see the difference.
+:::
+
+```jsx live
+function ExampleAutoScrollOffset() {
+  const tabs = Array.from({ length: 25 }).map((_, i) => ({
+    id: `tab_${i + 1}`,
+    label: `Tab ${i + 1}`,
+  }));
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <VStack gap={2}>
+      <Text as="p" font="body">
+        Default offset (50px)
+      </Text>
+      <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
+      <Text as="p" font="body">
+        Custom offset (100px)
+      </Text>
+      <TabbedChips
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        tabs={tabs}
+        autoScrollOffset={100}
+      />
+    </VStack>
+  );
+}
+```
+
+### With custom sized paddles
+
+:::tip Paddle styling
+You can adjust the size of the paddles via `styles.paddle`.
+:::
+
+```jsx live
+function ExampleCustomPaddles() {
+  const tabs = Array.from({ length: 10 }).map((_, i) => ({
+    id: `t_${i + 1}`,
+    label: `Item ${i + 1}`,
+  }));
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <TabbedChips
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+      styles={{ paddle: { transform: 'scale(0.8)' } }}
+    />
+  );
+}
+```
+
+### Long text tabs
+
+```jsx live
+function ExampleLongText() {
+  const tabs = [
+    { id: 'a', label: 'Very long tab label that can wrap on small widths' },
+    { id: 'b', label: 'Another extra long label to test overflow' },
+    { id: 'c', label: 'Short' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### Disabled tab
+
+```jsx live
+function ExampleDisabled() {
+  const tabs = [
+    { id: 'first', label: 'First' },
+    { id: 'second', label: 'Second', disabled: true },
+    { id: 'third', label: 'Third' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />;
+}
+```
+
+### With start media
+
+:::tip Media sizing
+For start media, use circular images sized 24×24 for regular chips and 16×16 for compact chips.
+:::
+
+```jsx live
+function ExampleWithStart() {
+  const icon = { height: 24, width: 24, shape: 'circle', source: assets.eth.imageUrl };
+  const compactIcon = { height: 16, width: 16, shape: 'circle', source: assets.eth.imageUrl };
+  const tabs = [
+    { id: 'all', label: 'All', start: <RemoteImage {...icon} /> },
+    { id: 'swap', label: 'Swap', start: <RemoteImage {...icon} /> },
+    { id: 'collect', label: 'Collect', start: <RemoteImage {...icon} /> },
+    { id: 'bridge', label: 'Bridge', start: <RemoteImage {...icon} /> },
+  ];
+  const compactTabs = tabs.map((tab) => ({ ...tab, start: <RemoteImage {...compactIcon} /> }));
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <VStack gap={2}>
+      <TabbedChips activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
+      <TabbedChips compact activeTab={activeTab} onChange={setActiveTab} tabs={compactTabs} />
+    </VStack>
+  );
+}
+```
+
+### Custom TabComponent
+
+:::tip Custom Tab behavior
+When providing a custom TabComponent, use `useTabsContext()` and call `updateActiveTab(id)` to update selection state. Reflect the active state (e.g., end icon state) based on `activeTab?.id === id`.
+:::
+
+```tsx live noInline
+function CustomTab({ id, label, ...props }: TabbedChipProps) {
+  const { activeTab, updateActiveTab } = useTabsContext();
+  const isActive = activeTab?.id === id;
+  return (
+    <MediaChip
+      end={<Icon size="s" active={isActive} name="star" />}
+      onClick={() => updateActiveTab(id)}
+      {...props}
+    >
+      {label}
+    </MediaChip>
+  );
+}
+
+const tabs = [
+  { id: 'all', label: 'All' },
+  { id: 'swap', label: 'Swap' },
+  { id: 'collect', label: 'Collect' },
+];
+
+function Example() {
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <TabbedChips
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+      TabComponent={CustomTab}
+    />
+  );
+}
+
+render(<Example />);
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `activeTab` | `TabValue<TabId> \| null` | Yes | `-` | React state for the currently active tab. Setting it to null results in no active tab. |
+| `onChange` | `(activeTab: TabValue<TabId> \| null) => void` | Yes | `-` | Callback that is fired when the active tab changes. Use this callback to update the activeTab state. |
+| `tabs` | `TabbedChipProps<TabId>[]` | Yes | `-` | - |
+| `TabComponent` | `FC<TabbedChipProps<TabId>>` | No | `-` | - |
+| `TabsActiveIndicatorComponent` | `TabsActiveIndicatorComponent` | No | `-` | - |
+| `autoScrollOffset` | `number` | No | `50` | X position offset when auto-scrolling to active tab (to avoid active tab being covered by the paddle on the left side, default: 50px) |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `classNames` | `{ root?: string; scrollContainer?: string \| undefined; tabs?: string \| undefined; } \| undefined` | No | `-` | - |
+| `compact` | `boolean` | No | `false` | Turn on to use a compact Chip component for each tab. |
+| `disabled` | `boolean` | No | `-` | Disable interactions on all the tabs. |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `1` | The spacing between Tabs |
+| `nextArrowAccessibilityLabel` | `string` | No | `-` | - |
+| `previousArrowAccessibilityLabel` | `string` | No | `-` | - |
+| `ref` | `null \| (instance: HTMLElement \| null) => void \| MutableRefObject<HTMLElement \| null>` | No | `-` | - |
+| `styles` | `{ root?: CSSProperties; scrollContainer?: CSSProperties \| undefined; paddle?: CSSProperties \| undefined; tabs?: CSSProperties \| undefined; } \| undefined` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `100%` | The width of the scroll container, defaults to 100% of the parent container If the tabs are wider than the width of the container, paddles will be shown to scroll the tabs. |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Root container element |
+| `scrollContainer` | `-` | Scroll container element |
+| `paddle` | `-` | Paddle icon buttons |
+| `tabs` | `-` | Tabs root element |
+
+

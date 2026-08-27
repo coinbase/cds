@@ -1,0 +1,520 @@
+# SelectChipAlpha
+
+A chip-styled Select control built on top of the Alpha Select component. Supports both single and multi selection.
+
+## Import
+
+```tsx
+import { SelectChip } from '@coinbase/cds-web/alpha/select-chip/SelectChip'
+```
+
+## Examples
+
+SelectChip is built on top of the [Alpha Select](/components/inputs/SelectAlpha/) component. It provides a chip-styled interface while maintaining all the functionality of Select, including support for single and multi-selection, option groups, and custom components.
+
+:::note Duplicate Values
+Avoid using options with duplicate values. Each option's `value` should be unique within the options array to ensure proper selection behavior.
+:::
+
+### Basic usage
+
+```jsx live
+function ExampleDefault() {
+  const exampleOptions = [
+    { value: null, label: 'Clear selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState(null);
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### Single select with groups
+
+```jsx live
+function ExampleSingleGroups() {
+  const exampleOptions = [
+    {
+      label: 'Group A',
+      options: [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2' },
+        { value: '3', label: 'Option 3' },
+      ],
+    },
+    {
+      label: 'Group B',
+      options: [
+        { value: '4', label: 'Option 4' },
+        { value: '5', label: 'Option 5' },
+      ],
+    },
+    {
+      label: 'Group C',
+      options: [{ value: '6', label: 'Option 6' }],
+    },
+  ];
+  const [value, setValue] = useState(null);
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### With disabled option group
+
+```jsx live
+function ExampleDisabledGroup() {
+  const exampleOptions = [
+    {
+      label: 'Group A',
+      options: [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2' },
+        { value: '3', label: 'Option 3' },
+      ],
+    },
+    {
+      label: 'Group B',
+      disabled: true,
+      options: [
+        { value: '4', label: 'Option 4' },
+        { value: '5', label: 'Option 5' },
+      ],
+    },
+    {
+      label: 'Group C',
+      options: [{ value: '6', label: 'Option 6' }],
+    },
+  ];
+  const [value, setValue] = useState(null);
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### Multi-select
+
+:::note Disabled Options and Select All
+Disabled options and options inside disabled groups will be skipped when "Select all" is pressed. Only enabled options will be selected.
+:::
+
+```jsx live
+function ExampleMulti() {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2', disabled: true },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+  ];
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  return (
+    <SelectChip
+      controlAccessibilityLabel="Select multiple values"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Choose options"
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### Multi-select with groups
+
+```jsx live
+function ExampleMultiGroups() {
+  const exampleOptions = [
+    {
+      label: 'Group A',
+      options: [
+        { value: '1', label: 'Option 1' },
+        { value: '2', label: 'Option 2' },
+        { value: '3', label: 'Option 3' },
+      ],
+    },
+    {
+      label: 'Group B',
+      options: [
+        { value: '4', label: 'Option 4' },
+        { value: '5', label: 'Option 5' },
+      ],
+    },
+    {
+      label: 'Group C',
+      options: [{ value: '6', label: 'Option 6' }],
+    },
+  ];
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  return (
+    <SelectChip
+      controlAccessibilityLabel="Select multiple values"
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Choose options"
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### Multi-select with assets
+
+```jsx live
+function ExampleMultiAssets() {
+  const assetImageMap = {
+    btc: assets.btc.imageUrl,
+    eth: assets.eth.imageUrl,
+    dai: assets.dai.imageUrl,
+    ltc: assets.ltc.imageUrl,
+    xrp: assets.xrp.imageUrl,
+  };
+
+  const exampleOptions = [
+    { value: 'btc', label: assets.btc.name },
+    { value: 'eth', label: assets.eth.name },
+    { value: 'dai', label: assets.dai.name },
+    { value: 'ltc', label: assets.ltc.name },
+    { value: 'xrp', label: assets.xrp.name },
+  ];
+  const { value, onChange } = useMultiSelect({
+    initialValue: ['eth', 'btc'],
+  });
+
+  // Get startNode based on selected assets
+  const startNode = useMemo(() => {
+    if (value.length === 0) return null;
+
+    // Multiple assets selected - use RemoteImageGroup
+    return (
+      <RemoteImageGroup shape="circle" size={24}>
+        {value.map((assetValue) => {
+          const imageUrl = assetImageMap[assetValue];
+          if (!imageUrl) return null;
+          return <RemoteImage key={assetValue} source={imageUrl} />;
+        })}
+      </RemoteImageGroup>
+    );
+  }, [value]);
+
+  return (
+    <SelectChip
+      controlAccessibilityLabel="Select multiple assets"
+      maxWidth={400}
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Choose assets"
+      startNode={startNode}
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### Compact
+
+```jsx live
+function ExampleCompact() {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState('1');
+  return (
+    <SelectChip
+      compact
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### With start and end nodes
+
+```jsx live
+function ExampleWithNodes() {
+  const exampleOptions = [
+    { value: 'btc', label: assets.btc.name },
+    { value: 'eth', label: assets.eth.name },
+    { value: 'dai', label: assets.dai.name },
+  ];
+  const [value, setValue] = useState('eth');
+  const getStartNode = (selectedValue) => {
+    if (!selectedValue) return null;
+    const assetMap = {
+      btc: assets.btc.imageUrl,
+      eth: assets.eth.imageUrl,
+      dai: assets.dai.imageUrl,
+    };
+    const imageUrl = assetMap[selectedValue];
+    if (!imageUrl) return null;
+    return <RemoteImage height={24} shape="circle" source={imageUrl} width={24} />;
+  };
+  return (
+    <SelectChip
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an asset"
+      startNode={getStartNode(value)}
+      value={value}
+    />
+  );
+}
+```
+
+### Empty options
+
+```jsx live
+function ExampleEmptyOptions() {
+  const [value, setValue] = useState(null);
+  return <SelectChip onChange={setValue} options={[]} placeholder="Select ..." value={value} />;
+}
+```
+
+### Options with descriptions
+
+```jsx live
+function ExampleDescriptions() {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1', description: 'First option description' },
+    { value: '2', label: 'Option 2', description: 'Second option description' },
+    { value: '3', label: 'Option 3', description: 'Third option description' },
+    { value: '4', label: 'Option 4', description: 'Fourth option description' },
+  ];
+  const [value, setValue] = useState(null);
+  return (
+    <SelectChip
+      accessibilityLabel="Select a value"
+      onChange={setValue}
+      options={exampleOptions}
+      placeholder="Choose an option"
+      value={value}
+    />
+  );
+}
+```
+
+### With display value
+
+Use the `displayValue` prop to override the displayed value and avoid truncation, especially in multi-select scenarios where multiple option labels might be too long to display.
+
+```jsx live
+function ExampleDisplayValue() {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+  ];
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  const displayValue =
+    Array.isArray(value) && value.length > 0
+      ? `${value.length} ${value.length === 1 ? 'option' : 'options'} selected`
+      : undefined;
+  return (
+    <SelectChip
+      controlAccessibilityLabel="Select multiple values"
+      displayValue={displayValue}
+      onChange={onChange}
+      options={exampleOptions}
+      placeholder="Choose options"
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### With max width
+
+```jsx live
+function ExampleMaxWidth() {
+  const exampleOptions = [
+    { value: '1', label: 'Very Long Option Name That Exceeds Default Width' },
+    { value: '2', label: 'Another Extremely Long Option Label' },
+    { value: '3', label: 'Short' },
+    { value: '4', label: 'Medium Length Option' },
+  ];
+  const [value, setValue] = useState(null);
+  return (
+    <VStack gap={2}>
+      <VStack gap={1}>
+        <Text>Default maxWidth (200px):</Text>
+        <SelectChip
+          accessibilityLabel="Select a value"
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Choose an option"
+          value={value}
+        />
+      </VStack>
+      <VStack gap={1}>
+        <Text>Custom maxWidth (150px):</Text>
+        <SelectChip
+          accessibilityLabel="Select a value"
+          maxWidth={150}
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Choose an option"
+          value={value}
+        />
+      </VStack>
+      <VStack gap={1}>
+        <Text>No maxWidth constraint:</Text>
+        <SelectChip
+          accessibilityLabel="Select a value"
+          maxWidth="100%"
+          onChange={setValue}
+          options={exampleOptions}
+          placeholder="Choose an option"
+          value={value}
+        />
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+### Disabled
+
+```jsx live
+function ExampleDisabled() {
+  const exampleOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+  ];
+  const [value, setValue] = useState('1');
+  return (
+    <VStack gap={2}>
+      <SelectChip
+        disabled
+        accessibilityLabel="Select a value"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Choose an option"
+        value={null}
+      />
+      <SelectChip
+        disabled
+        accessibilityLabel="Select a value"
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Choose an option"
+        value={value}
+      />
+    </VStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `onChange` | `(value: Type extends multi ? SelectOptionValue \| SelectOptionValue[] \| null : SelectOptionValue \| null) => void` | Yes | `-` | - |
+| `options` | `SelectOptionList<Type, SelectOptionValue>` | Yes | `-` | Array of options to display in the select dropdown. Can be individual options or groups with label and options |
+| `value` | `string \| SelectOptionValue[] \| null` | Yes | `-` | - |
+| `SelectAllOptionComponent` | `SelectOptionComponent<Type, SelectOptionValue>` | No | `-` | Custom component to render the Select All option |
+| `SelectDropdownComponent` | `SelectDropdownComponent<Type, SelectOptionValue>` | No | `-` | Custom component to render the dropdown container |
+| `SelectEmptyDropdownContentsComponent` | `SelectEmptyDropdownContentComponent` | No | `-` | Custom component to render when no options are available |
+| `SelectOptionComponent` | `SelectOptionComponent<Type, SelectOptionValue>` | No | `-` | Custom component to render individual options |
+| `SelectOptionGroupComponent` | `SelectOptionGroupComponent<Type, SelectOptionValue>` | No | `-` | Custom component to render group headers |
+| `accessibilityRoles` | `{ dropdown?: AriaHasPopupType; option?: string \| undefined; } \| undefined` | No | `-` | Accessibility roles for dropdown and option elements |
+| `accessory` | `ReactElement<CellAccessoryProps, string \| JSXElementConstructor<any>>` | No | `-` | Accessory element rendered at the end of the cell (e.g., chevron). |
+| `align` | `center \| start \| end` | No | `'start'` | Alignment of the value node. |
+| `bordered` | `boolean` | No | `true` | Add a border around all sides of the box. Determines if the control should have a default border. |
+| `className` | `string` | No | `-` | CSS class name for the root element |
+| `classNames` | `{ root?: string; control?: string \| undefined; controlStartNode?: string \| undefined; controlInputNode?: string \| undefined; controlValueNode?: string \| undefined; controlLabelNode?: string \| undefined; controlHelperTextNode?: string \| undefined; controlEndNode?: string \| undefined; dropdown?: string \| undefined; option?: string \| undefined; optionCell?: string \| undefined; optionContent?: string \| undefined; optionLabel?: string \| undefined; optionDescription?: string \| undefined; selectAllDivider?: string \| undefined; emptyContentsContainer?: string \| undefined; emptyContentsText?: string \| undefined; optionGroup?: string \| undefined; } \| undefined` | No | `-` | Custom class names for individual elements of the Select component |
+| `clearAllLabel` | `string` | No | `-` | Label for the Clear All option in multi-select mode |
+| `compact` | `boolean` | No | `-` | Whether to use compact styling for the select |
+| `controlAccessibilityLabel` | `string` | No | `-` | Accessibility label for the control |
+| `defaultOpen` | `boolean` | No | `-` | Initial open state when component mounts (uncontrolled mode) |
+| `disableClickOutsideClose` | `boolean` | No | `-` | Whether clicking outside the dropdown should close it |
+| `disabled` | `boolean` | No | `false` | Toggles input interactability and opacity |
+| `displayValue` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Override the displayed value in the chip control. Useful for avoiding truncation, especially in multi-select scenarios where multiple option labels might be too long to display. When provided, this value takes precedence over the default label generation. |
+| `emptyOptionsLabel` | `string` | No | `-` | Label displayed when there are no options available |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | End-aligned content (e.g., value, status). Replaces the deprecated detail prop. |
+| `endNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the end of the inner input. Refer to diagram for location of endNode in InputStack component |
+| `hiddenSelectedOptionsLabel` | `string` | No | `-` | Label to show for showcasing count of hidden selected options |
+| `hideSelectAll` | `boolean` | No | `-` | Whether to hide the Select All option in multi-select mode |
+| `invertColorScheme` | `boolean` | No | `false` | Invert the foreground and background colors to emphasize the Chip. Depending on your theme, it may be dangerous to use this prop in conjunction with transparentWhileInactive. |
+| `label` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Label displayed above the control |
+| `maxSelectedOptionsToShow` | `number` | No | `-` | Maximum number of selected options to show before truncating |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `200` | If text content overflows, it will get truncated with an ellipsis. |
+| `media` | `ReactElement` | No | `-` | Media rendered at the start of the cell (icon, avatar, image, etc). |
+| `numberOfLines` | `number` | No | `1` | How many lines the text in the chip will be broken into. |
+| `open` | `boolean` | No | `-` | Controlled open state of the dropdown |
+| `placeholder` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Placeholder text displayed when no option is selected |
+| `ref` | `null \| (instance: SelectRef \| null) => void \| RefObject<SelectRef>` | No | `-` | - |
+| `removeSelectedOptionAccessibilityLabel` | `string` | No | `-` | Accessibility label for each chip in a multi-select |
+| `selectAllLabel` | `string` | No | `-` | Label for the Select All option in multi-select mode |
+| `setOpen` | `((open: boolean \| ((open: boolean) => boolean)) => void)` | No | `-` | Callback to update the open state |
+| `startNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the start of the inner input. Refer to diagram for location of startNode in InputStack component |
+| `style` | `CSSProperties` | No | `-` | Inline styles for the root element |
+| `styles` | `{ root?: CSSProperties; control?: CSSProperties \| undefined; controlStartNode?: CSSProperties \| undefined; controlInputNode?: CSSProperties \| undefined; controlValueNode?: CSSProperties \| undefined; controlLabelNode?: CSSProperties \| undefined; controlHelperTextNode?: CSSProperties \| undefined; controlEndNode?: CSSProperties \| undefined; controlBlendStyles?: InteractableBlendStyles \| undefined; dropdown?: CSSProperties \| undefined; option?: CSSProperties \| undefined; optionCell?: CSSProperties \| undefined; optionContent?: CSSProperties \| undefined; optionLabel?: CSSProperties \| undefined; optionDescription?: CSSProperties \| undefined; optionBlendStyles?: InteractableBlendStyles \| undefined; selectAllDivider?: CSSProperties \| undefined; emptyContentsContainer?: CSSProperties \| undefined; emptyContentsText?: CSSProperties \| undefined; optionGroup?: CSSProperties \| undefined; } \| undefined` | No | `-` | Custom styles for individual elements of the Select component |
+| `testID` | `string` | No | `-` | Test ID for the root element |
+| `type` | `multi \| single` | No | `-` | Whether the select allows single or multiple selections |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Root container element |
+| `control` | `-` | Control element |
+| `controlStartNode` | `-` | Start node element |
+| `controlInputNode` | `-` | Input node element |
+| `controlValueNode` | `-` | Value node element |
+| `controlLabelNode` | `-` | Label node element |
+| `controlHelperTextNode` | `-` | Helper text node element |
+| `controlEndNode` | `-` | End node element |
+| `controlBlendStyles` | `-` | Blend styles for control interactivity |
+| `dropdown` | `-` | Dropdown container element |
+| `option` | `-` | Option element |
+| `optionCell` | `-` | Option cell element |
+| `optionContent` | `-` | Option content wrapper |
+| `optionLabel` | `-` | Option label element |
+| `optionDescription` | `-` | Option description element |
+| `optionBlendStyles` | `-` | Option blend styles for interactivity |
+| `selectAllDivider` | `-` | Select all divider element |
+| `emptyContentsContainer` | `-` | Empty contents container element |
+| `emptyContentsText` | `-` | Empty contents text element |
+| `optionGroup` | `-` | Option group element |
+
+

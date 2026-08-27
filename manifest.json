@@ -1,0 +1,47 @@
+{
+  "previews": [
+    {
+      "pr": 432,
+      "title": "test branch deployment",
+      "branch": "adrien/preview-cds-test-2",
+      "author": "adrienzheng-cb",
+      "baseUrl": "/cds/pr-432/",
+      "previews": {
+        "docs": "/cds/pr-432/docs/",
+        "storybook": null
+      },
+      "createdAt": "2026-02-24T22:50:27.469Z",
+      "updatedAt": "2026-02-24T22:50:27.469Z",
+      "commit": "4c9b91aab9ca0cf898d7fbc2fbb972fc092a3e82"
+    },
+    {
+      "pr": 429,
+      "title": "test branch deployment",
+      "branch": "adrien/preview-cds-test-1",
+      "author": "adrienzheng-cb",
+      "baseUrl": "/cds/pr-429/",
+      "previews": {
+        "docs": "/cds/pr-429/docs/",
+        "storybook": null
+      },
+      "createdAt": "2026-02-24T22:36:34.755Z",
+      "updatedAt": "2026-02-24T22:36:34.755Z",
+      "commit": "b66a3d519129f2ea8cba741c25e36df3ae90352a"
+    },
+    {
+      "pr": 426,
+      "title": "feat: auto deploy branches to github page",
+      "branch": "adrien/preview-cds",
+      "author": "adrienzheng-cb",
+      "baseUrl": "/cds/pr-426/",
+      "previews": {
+        "docs": "/cds/pr-426/docs/",
+        "storybook": "/cds/pr-426/storybook/"
+      },
+      "createdAt": "2026-02-24T22:07:37.373Z",
+      "updatedAt": "2026-02-24T23:13:30.799Z",
+      "commit": "9413ffc5ce50f4bb5e5b645115322aa3b47cae2d"
+    }
+  ],
+  "lastUpdated": "2026-02-24T23:13:30.802Z"
+}

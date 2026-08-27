@@ -1,0 +1,317 @@
+# SelectChip
+
+A Chip and Select control for selecting from a list of options.
+
+## Import
+
+```tsx
+import { SelectChip } from '@coinbase/cds-web/controls/SelectChip'
+```
+
+## Examples
+
+### Descriptive menu
+
+Use when needing to explain an item in detail. Once selected, only show the title within the chip
+
+```jsx live
+function SelectChipExample() {
+  const options = [
+    { title: 'All time return', description: 'Lifetime return of each crypto' },
+    { title: 'Past day’s return', description: "Past day's return on your assets", id: 1 },
+    { title: 'Balance', description: 'The amount you own of each asset', id: 2 },
+    { title: 'Price', description: 'The current price of each asset', id: 3 },
+  ];
+  const [value, setValue] = useState(options[0].title);
+  const content = (
+    <VStack>
+      <HStack padding={2}>
+        <Text font="caption" as="p">
+          Metric
+        </Text>
+      </HStack>
+      {options.map(({ title, description, id }) => (
+        <SelectOption key={id} title={title} description={description} value={title} />
+      ))}
+    </VStack>
+  );
+  return (
+    <HStack>
+      <OldSelectChip value={value} onChange={setValue} content={content} minWidth={367} />
+    </HStack>
+  );
+}
+```
+
+### Simple menu
+
+A select chip with dropdown menu. Use when changing format of data
+
+```jsx live
+function SelectChipExample() {
+  const options = ['USD', 'CAD', 'GBP', 'JPY'];
+  const [value, setValue] = useState(options[0]);
+  const content = (
+    <VStack>
+      {options.map((option) => (
+        <SelectOption key={option} title={option} value={option} />
+      ))}
+    </VStack>
+  );
+  return (
+    <HStack>
+      <OldSelectChip value={value} onChange={setValue} content={content} minWidth={150} />
+    </HStack>
+  );
+}
+```
+
+### Single selection
+
+When utilizing single select, replace the label with the selection.
+
+```jsx live
+function SelectChipExample() {
+  const options = [
+    { title: 'Polygon', value: 'polygon', imageUrl: assets.polygon.imageUrl },
+    { title: 'Ethereum', value: 'ethereum', imageUrl: assets.eth.imageUrl },
+    { title: 'DAI', value: 'dai', imageUrl: assets.dai.imageUrl },
+  ];
+  const [value, setValue] = useState();
+  const handleChange = (newValue) => {
+    setValue(options.find(({ value }) => value === newValue));
+  };
+  const content = (
+    <VStack>
+      <HStack padding={2}>
+        <Text font="caption" as="p">
+          Networks
+        </Text>
+      </HStack>
+      <HStack padding={2}>
+        <Text font="headline" as="p">
+          All networks
+        </Text>
+      </HStack>
+      {options.map(({ title, value, imageUrl }) => {
+        return (
+          <SelectOption
+            key={value}
+            title={title}
+            value={value}
+            media={<CellMedia type="asset" source={imageUrl} />}
+          />
+        );
+      })}
+    </VStack>
+  );
+  return (
+    <HStack>
+      <OldSelectChip
+        placeholder="Networks"
+        value={value ? value.value : undefined}
+        valueLabel={value ? value.title : undefined}
+        onChange={(newValue) => handleChange(newValue)}
+        content={content}
+        minWidth={200}
+        active={value !== undefined}
+      />
+    </HStack>
+  );
+}
+```
+
+### Sort by
+
+Use sort when giving the user the ability to change the order in which data is shown. Avoid using in conjunction with table data as that function is already built into the cells, and this would be duplicative.
+
+```jsx live
+function SelectChipExample() {
+  const options = [
+    {
+      label: 'Price',
+      title: 'Price (High to Low)',
+      value: 'price-high-low',
+      iconName: 'arrowDown',
+    },
+    { label: 'Price', title: 'Price (Low to High)', value: 'price-low-high', iconName: 'arrowUp' },
+    {
+      label: 'Market Cap',
+      title: 'Market Cap (High to Low)',
+      value: 'market-cap-high-low',
+      iconName: 'arrowDown',
+    },
+    {
+      label: 'Market Cap',
+      title: 'Market Cap (Low to High)',
+      value: 'market-cap-low-high',
+      iconName: 'arrowUp',
+    },
+  ];
+  const [value, setValue] = useState(options[0]);
+  const handleChange = (newValue) => {
+    setValue(options.find(({ value }) => value === newValue));
+  };
+  const content = (
+    <VStack>
+      <HStack padding={2}>
+        <Text font="caption" as="p">
+          Sort by
+        </Text>
+      </HStack>
+      {options.map(({ title, value }) => (
+        <SelectOption key={value} title={title} value={value} />
+      ))}
+    </VStack>
+  );
+  return (
+    <HStack>
+      <OldSelectChip
+        value={value.value}
+        valueLabel={value.label}
+        end={<Icon size="s" color="fg" name={value.iconName} />}
+        onChange={(newValue) => handleChange(newValue)}
+        content={content}
+      />
+    </HStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `content` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | - |
+| `active` | `boolean` | No | `-` | Indicates that the control is being used to manipulate data elsewhere |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `as` | `button` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color of the overlay (element being interacted with). |
+| `blendStyles` | `InteractableBlendStyles` | No | `-` | - |
+| `block` | `boolean` | No | `false` | Set element to block and expand to 100% width. Makes the Popover Subject fill the width of the parent container |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Border color of the element. |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `className` | `string` | No | `-` | Apply class names to the outer container. |
+| `classNames` | `{ root?: string; content?: string \| undefined; } \| undefined` | No | `-` | Custom class names for individual elements of the Chip component |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `compact` | `boolean` | No | `-` | Reduces spacing around Chip content |
+| `contentPosition` | `PopoverContentPositionConfig` | No | `-` | Override content positioning defaults |
+| `contentStyle` | `CSSProperties` | No | `-` | - |
+| `controlledElementAccessibilityProps` | `{ id: string; accessibilityLabel?: string; } \| undefined` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `disableCloseOnOptionChange` | `boolean` | No | `-` | Prevent menu from closing when an option is selected |
+| `disablePortal` | `boolean` | No | `-` | Does not render the Dropdown inside of a portal (react-dom createPortal). Portal is automatically disabled for SSR |
+| `disableTypeFocus` | `boolean` | No | `-` | Use for editable Search Input components to ensure focus is correctly applied |
+| `disabled` | `boolean` | No | `-` | Is the element currently disabled. Prevents the Dropdown menu from opening. Youll need to surface disabled state on the trigger manually. |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `enableMobileModal` | `boolean` | No | `-` | Enable to have Dropdown render its content inside a Modal as opposed to a relatively positioned Popover Ideal for mobile or smaller devices. |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | ReactNode placed after the value |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `focusable` | `boolean` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `invertColorScheme` | `boolean` | No | `false` | Invert the foreground and background colors to emphasize the Chip. Depending on your theme, it may be dangerous to use this prop in conjunction with transparentWhileInactive. |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `((MaxHeight<string \| number> \| { base?: MaxHeight<string \| number>; phone?: MaxHeight<string \| number> \| undefined; tablet?: MaxHeight<string \| number> \| undefined; desktop?: MaxHeight<string \| number> \| undefined; }) & MaxHeight<string \| number>) \| undefined` | No | `300` | Can optionally pass a maxHeight. |
+| `maxWidth` | `((MaxWidth<string \| number> \| { base?: MaxWidth<string \| number>; phone?: MaxWidth<string \| number> \| undefined; tablet?: MaxWidth<string \| number> \| undefined; desktop?: MaxWidth<string \| number> \| undefined; }) & MaxWidth<string \| number>) \| undefined` | No | `200` | If text content overflows, it will get truncated with an ellipsis. Maximum width of input as a percentage string or number converted to pixels. |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `((MinWidth<string \| number> \| { base?: MinWidth<string \| number>; phone?: MinWidth<string \| number> \| undefined; tablet?: MinWidth<string \| number> \| undefined; desktop?: MinWidth<string \| number> \| undefined; }) & MinWidth<string \| number>) \| undefined` | No | `-` | Minimum width of input as a percentage string or number converted to pixels. |
+| `numberOfLines` | `number` | No | `1` | How many lines the text in the chip will be broken into. |
+| `onBlur` | `(() => void)` | No | `-` | Callback that fires when Dropdown or trigger are blurred |
+| `onChange` | `((newValue: string) => void) \| Dispatch<SetStateAction<string>>` | No | `-` | Callback that is fired whenever a select option is selected |
+| `onCloseMenu` | `(() => void)` | No | `-` | Callback that fires when Dropdown is closed |
+| `onOpenMenu` | `(() => void)` | No | `-` | Callback that fires when Dropdown is opened |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `placeholder` | `string` | No | `-` | Placeholder text displayed inside of the input. Will be replaced if there is a value. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `pressed` | `boolean` | No | `-` | Is the element being pressed. Primarily a mobile feature, but can be used on the web. |
+| `ref` | `((instance: unknown) => void) \| RefObject<unknown> \| null` | No | `-` | - |
+| `respectNegativeTabIndex` | `boolean` | No | `false` | If true, the focus trap will respect negative tabIndex values, removing them from the list of focusable elements. |
+| `restoreFocusOnUnmount` | `boolean` | No | `true` | If true, the focus trap will restore focus to the previously focused element when it unmounts.  WARNING: If you disable this, you need to ensure that focus is restored properly so it doesnt end up on the body |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `showOverlay` | `boolean` | No | `false` | Display an overlay over all content below the Popover menu |
+| `start` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | ReactNode placed before the value |
+| `style` | `CSSProperties` | No | `-` | - |
+| `styles` | `{ root?: CSSProperties; content?: CSSProperties \| undefined; } \| undefined` | No | `-` | Custom styles for individual elements of the Chip component |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `transparentWhileInactive` | `boolean` | No | `-` | Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc). Must be used in conjunction with the pressed prop |
+| `transparentWhilePressed` | `boolean` | No | `-` | Mark the background and border as transparent even while element is interacted with (elevation underlay issue). Must be used in conjunction with the pressed prop |
+| `type` | `button \| reset \| submit` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `value` | `string` | No | `-` | Pass a value that will prepopulate the select input. This will replace the placeholder text. Default selected value, or preselected value |
+| `valueLabel` | `string` | No | `-` | Optional label for selected value when using a value/label object model |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `((Width<string \| number> \| { base?: Width<string \| number>; phone?: Width<string \| number> \| undefined; tablet?: Width<string \| number> \| undefined; desktop?: Width<string \| number> \| undefined; }) & Width<string \| number>) \| undefined` | No | `100%` | Width of input as a percentage string or number converted to pixels. |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+

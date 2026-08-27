@@ -1,0 +1,155 @@
+# FloatingAssetCard
+
+Asset Cards display current and potential future assets, offering a straightforward method to view and manage a customer's holdings.
+
+## Import
+
+```tsx
+import { FloatingAssetCard } from '@coinbase/cds-mobile/cards/FloatingAssetCard'
+```
+
+## Examples
+
+### Default
+
+Most common composition for displaying individual assets like NFTs or dApps.
+
+```jsx
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Balancing the Air',
+      description: '0.5 ETH',
+      subtitle: 'Amber V’s Artwork',
+      onPress: NoopFn,
+      media: (
+        <RemoteImage
+          source="/img/nft.png"
+          height={'100%'}
+          style={{ objectFit: 'cover', cursor: 'pointer' }}
+          width="100%"
+        />
+      ),
+    },
+  ];
+  return (
+    <VStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={1}>
+      {cards.map((card) => (
+        <FloatingAssetCard {...card} />
+      ))}
+    </VStack>
+  );
+}
+```
+
+### Descriptions as trends
+
+Trends help users make decisions about whether or not to invest in an asset.
+
+```jsx
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: '#7560',
+      description: (
+        <Text font="label2" color="fgPositive" numberOfLines={2}>
+          &#x2197;6.37%
+        </Text>
+      ),
+      subtitle: 'Bored Ape',
+      onPress: NoopFn,
+      media: (
+        <RemoteImage
+          source="/img/nft_boredape2.png"
+          height={'100%'}
+          style={{ objectFit: 'cover', cursor: 'pointer' }}
+          width="100%"
+        />
+      ),
+    },
+    {
+      title: '#2015',
+      description: (
+        <Text font="label2" color="fgNegative" numberOfLines={2}>
+          &#x2198;6.37%
+        </Text>
+      ),
+      subtitle: 'Pudgy Penguins',
+      onPress: NoopFn,
+      media: (
+        <RemoteImage
+          source="/img/nft_penguin.png"
+          height={'100%'}
+          style={{ objectFit: 'cover', cursor: 'pointer' }}
+          width="100%"
+        />
+      ),
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <FloatingAssetCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```
+
+### Description as ratings
+
+Use this example for visual assets with ratings.
+
+```jsx
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Parallel',
+      description: (
+        <Text font="label2" color="fgMuted" numberOfLines={2}>
+          &#9733;4.5
+        </Text>
+      ),
+      onPress: NoopFn,
+      media: (
+        <RemoteImage
+          source="/img/collection.png"
+          height={'100%'}
+          style={{ objectFit: 'cover', cursor: 'pointer' }}
+          width="100%"
+        />
+      ),
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <FloatingAssetCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `media` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | Remote Image or other node with media content. |
+| `title` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | Text or ReactNode to be displayed in TextHeadline |
+| `description` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Content to be displayed below the title |
+| `onPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | Callback fired when the card is pressed |
+| `size` | `s \| l` | No | `'s'` | Variant for card size. Can be small or large. |
+| `subtitle` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or ReactNode to be displayed above Title |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

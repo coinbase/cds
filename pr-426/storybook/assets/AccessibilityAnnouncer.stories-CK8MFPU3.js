@@ -1,0 +1,9 @@
+import{r as n,j as e}from"./iframe-BXWLBCkp.js";import{V as l}from"./VStack-CnEfMFeL.js";import{T as i}from"./Text-Ch_dBU4v.js";import{A as d}from"./AccessibilityAnnouncer-GBvlHEBg.js";import{B as u}from"./Button-W9Shg4T1.js";import"./preload-helper-D9Z9MdNV.js";import"./useMergeRefs-DR4sGa7m.js";import"./Icon-CgDQ3NQp.js";import"./useTheme-BJazYlse.js";import"./Spinner-BAI0lrZ-.js";import"./Pressable-sl8uFeki.js";import"./isArray-JxMDBx0e.js";import"./Interactable-D5HQmQer.js";import"./color-Ceo1QMNe.js";const g="This is a title we would want to display, but the announcement is a little more catered to a person navigating with a screen reader.",a=({message:t,...c})=>{const[o,p]=n.useState(t),m=n.useCallback(()=>{p(o===t?"Look, something new and special!":t)},[o,t]);return e.jsxs(l,{gap:2,children:[e.jsx(i,{as:"h2",display:"block",font:"headline",children:"Open VoiceOver and update the Message field 👀"}),e.jsxs(e.Fragment,{children:[e.jsx(i,{"aria-hidden":!0,as:"p",display:"block",font:"body",children:t}),e.jsx(d,{message:o,...c})]}),e.jsx(u,{onClick:m,children:"Update message"})]})},T={title:"Components/AccessibilityAnnouncer",component:a,args:{message:g}},s={...a},r={...a,args:{politeness:"assertive",message:"It isn't common we would want to display alternate text to screen readers, but it is sometimes important"}};s.parameters={...s.parameters,docs:{...s.parameters?.docs,source:{originalSource:`{
+  ...MockAppScreen
+}`,...s.parameters?.docs?.source}}};r.parameters={...r.parameters,docs:{...r.parameters?.docs,source:{originalSource:`{
+  ...MockAppScreen,
+  args: {
+    politeness: 'assertive',
+    message: "It isn't common we would want to display alternate text to screen readers, but it is sometimes important"
+  }
+}`,...r.parameters?.docs?.source}}};const _=["Default","Assertive"];export{r as Assertive,s as Default,_ as __namedExportsOrder,T as default};

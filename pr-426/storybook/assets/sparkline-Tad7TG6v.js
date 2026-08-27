@@ -1,0 +1,1 @@
+import"./tokens-BwScSksM.js";const t=320,e=120,o=[2,4],s={"1H":"1 hour","1D":"1 day","1W":"1 week","1M":"1 month","1Y":"1 year"},r={positive:"+",negative:"-",upwardTrend:"↗",downwardTrend:"↘","":""},n=2;export{t as a,n as b,e as c,o as l,s as p,r as s};

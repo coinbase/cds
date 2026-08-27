@@ -1,0 +1,1 @@
+import{u as l}from"./useTheme-C_Ehsh33.js";const u=()=>{const{lineHeight:t,fontSize:r}=l(),n=t.headline;if(typeof n=="string"&&n.endsWith("%")){const e=r.headline,i=Number(n.replace("%",""))/100;return typeof e=="number"?e*i:e.endsWith("rem")?Number(e.replace("rem",""))*16*i:e.endsWith("px")?Number(e.replace("px",""))*i:i*24}return n};export{u};

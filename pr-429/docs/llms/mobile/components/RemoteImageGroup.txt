@@ -1,0 +1,75 @@
+# RemoteImageGroup
+
+A component to display a group of RemoteImage components in a stack.
+
+## Import
+
+```tsx
+import { RemoteImageGroup } from '@coinbase/cds-mobile/media/RemoteImageGroup'
+```
+
+## Examples
+
+### Basic Usage
+
+```tsx
+<RemoteImageGroup>
+  <RemoteImage source={assets.eth.imageUrl} />
+  <RemoteImage source={assets.eth.imageUrl} />
+  <RemoteImage source={assets.dai.imageUrl} />
+  <RemoteImage source={assets.hbar.imageUrl} />
+  <RemoteImage source={assets.ltc.imageUrl} />
+  <RemoteImage source={assets.uni.imageUrl} />
+</RemoteImageGroup>
+```
+
+### Max Items
+
+```tsx
+<RemoteImageGroup max={4} size={32}>
+  <RemoteImage source={assets.eth.imageUrl} />
+  <RemoteImage source={assets.btc.imageUrl} />
+  <RemoteImage source={assets.dai.imageUrl} />
+  <RemoteImage source={assets.hbar.imageUrl} />
+  <RemoteImage source={assets.ltc.imageUrl} />
+  <RemoteImage source={assets.uni.imageUrl} />
+</RemoteImageGroup>
+```
+
+### Different Shapes
+
+```tsx
+<RemoteImageGroup shape="circle" size="xxl">
+  <RemoteImage shape="squircle" source={squareAssets.human1} />
+  <RemoteImage source={assets.sushi.imageUrl} />
+  <RemoteImage shape="squircle" source={squareAssets.human2} />
+  <RemoteImage source={assets.ltc.imageUrl} />
+</RemoteImageGroup>
+```
+
+### Bordered Images
+
+Use the `borderWidth` and `borderColor` props to change border style of the images in the group. `borderColor` defaults to `bg` when `borderWidth` is set.
+
+```tsx
+<RemoteImageGroup borderWidth={300} max={3}>
+  <RemoteImage source={assets.eth.imageUrl} />
+  <RemoteImage source={assets.btc.imageUrl} />
+  <RemoteImage source={assets.dai.imageUrl} />
+  <RemoteImage source={assets.hbar.imageUrl} />
+</RemoteImageGroup>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `borderWidth ? 'bg' : undefined` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Children content |
+| `max` | `number` | No | `4` | Indicates the number of remote image before it collapses |
+| `shape` | `rectangle \| circle \| squircle \| square \| hexagon` | No | `circle` | Shape of all RemoteImage children in the group |
+| `size` | `number \| AvatarSize` | No | `m` | Size of all RemoteImage children in the group. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

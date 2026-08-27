@@ -1,0 +1,914 @@
+# CartesianChart
+
+A flexible, low-level chart component for displaying data in an x/y coordinate space. Provides a foundation for building custom chart visualizations with full control over rendering.
+
+## Import
+
+```tsx
+import { CartesianChart } from '@coinbase/cds-mobile-visualization'
+```
+
+## Examples
+
+CartesianChart is a customizable, SVG based component that can be used to display a variety of data in a x/y coordinate space. The underlying logic is handled by D3.
+
+### Basics
+
+[AreaChart](/components/graphs/AreaChart/), [BarChart](/components/graphs/BarChart/), and [LineChart](/components/graphs/LineChart/) are built on top of CartesianChart and have default functionality for your chart.
+
+```jsx
+<VStack gap={2}>
+  <AreaChart
+    enableScrubbing
+    height={150}
+    series={[
+      {
+        id: 'prices',
+        data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      },
+    ]}
+    showYAxis
+    yAxis={{
+      showGrid: true,
+    }}
+  >
+    <Scrubber />
+  </AreaChart>
+  <BarChart
+    enableScrubbing
+    height={150}
+    series={[
+      {
+        id: 'prices',
+        data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      },
+    ]}
+    showYAxis
+    yAxis={{
+      showGrid: true,
+    }}
+  >
+    <Scrubber hideOverlay seriesIds={[]} />
+  </BarChart>
+  <LineChart
+    enableScrubbing
+    height={150}
+    series={[
+      {
+        id: 'prices',
+        data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+      },
+    ]}
+    showYAxis
+    showArea
+    yAxis={{
+      showGrid: true,
+    }}
+  >
+    <Scrubber />
+  </LineChart>
+</VStack>
+```
+
+### Setup
+
+All charts use Skia Canvas for rendering, which requires a context bridge to share React contexts with the Skia renderer. You need to wrap your app with `ChartBridgeProvider` at the root of your app to enable charts to access theme and chart contexts.
+
+```jsx
+import { ChartBridgeProvider } from '@coinbase/cds-mobile-visualization/chart';
+import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
+
+function App() {
+  return (
+    <ChartBridgeProvider>
+      <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
+        {/* Your app content with charts */}
+      </ThemeProvider>
+    </ChartBridgeProvider>
+  );
+}
+```
+
+### Series
+
+Series are the data that will be displayed on the chart. Each series must have a defined `id`.
+
+#### Series Data
+
+You can pass in an array of numbers or an array of tuples for the `data` prop. Passing in null values is equivalent to no data at that index.
+
+```jsx
+function ForecastedPrice() {
+  const theme = useTheme();
+
+  const ForecastRect = memo(({ startIndex, endIndex }) => {
+    const { drawingArea, getXScale } = useCartesianChartContext();
+
+    const xScale = getXScale();
+
+    if (!xScale) return;
+
+    const startX = xScale(startIndex);
+    const endX = xScale(endIndex);
+    return (
+      <Rect
+        x={startX}
+        y={drawingArea.y}
+        width={endX - startX}
+        height={drawingArea.height}
+        fill={theme.color.accentSubtleBlue}
+      />
+    );
+  });
+  return (
+    <CartesianChart
+      enableScrubbing
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 54, 60, 64, 68, 72, 76],
+          color: theme.color.accentBoldBlue,
+        },
+        {
+          id: 'variance',
+          data: [
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            [52, 52],
+            [50, 57],
+            [52, 63],
+            [55, 75],
+            [57, 77],
+            [59, 79],
+            [60, 80],
+          ],
+          color: theme.color.accentBoldBlue,
+        },
+      ]}
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <ForecastRect startIndex={7} endIndex={13} />
+      <Area seriesId="variance" type="solid" fillOpacity={0.3} />
+      <Line seriesId="prices" />
+    </CartesianChart>
+  );
+}
+```
+
+#### Series Axis IDs
+
+Each series can have a different `yAxisId`, allowing you to compare data from different contexts.
+
+```jsx
+function SeriesAxisIds() {
+  const theme = useTheme();
+
+  return (
+    <CartesianChart
+      height={150}
+      series={[
+        {
+          id: 'revenue',
+          data: [455, 520, 380, 455, 190, 235],
+          yAxisId: 'revenue',
+          color: theme.color.accentBoldYellow,
+        },
+        {
+          id: 'profit',
+          data: [23, 15, 30, 56, 4, 12],
+          yAxisId: 'profit',
+          color: theme.color.fgPositive,
+        },
+      ]}
+      xAxis={{
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        scaleType: 'band',
+      }}
+      yAxis={[
+        {
+          id: 'revenue',
+        },
+        {
+          id: 'profit',
+        },
+      ]}
+    >
+      <XAxis showLine showTickMarks />
+      <YAxis
+        showGrid
+        showLine
+        showTickMarks
+        axisId="revenue"
+        position="left"
+        requestedTickCount={5}
+        tickLabelFormatter={(value) => `$${value}k`}
+        width={60}
+      />
+      <YAxis
+        showLine
+        showTickMarks
+        axisId="profit"
+        requestedTickCount={5}
+        tickLabelFormatter={(value) => `$${value}k`}
+      />
+      <BarPlot />
+    </CartesianChart>
+  );
+}
+```
+
+#### Series Stacks
+
+You can provide a `stackId` to stack series together.
+
+```jsx
+function SeriesStacks() {
+  const theme = useTheme();
+
+  return (
+    <AreaChart
+      enableScrubbing
+      height={150}
+      series={[
+        {
+          id: 'pricesA',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          stackId: 'prices',
+          color: theme.color.accentBoldGreen,
+        },
+        {
+          id: 'pricesB',
+          data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          stackId: 'prices',
+          color: theme.color.accentBoldPurple,
+        },
+      ]}
+
+      showYAxis
+      yAxis={{
+        showGrid: true,
+      }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
+```
+
+### Axes
+
+You can configure your x and y axes with the `xAxis` and `yAxis` props. `xAxis` accepts an object while `yAxis` accepts an object or array.
+
+```jsx
+<CartesianChart
+  height={150}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    scaleType: 'band',
+  }}
+  yAxis={{
+    domain: { min: 0 },
+  }}
+>
+  <YAxis showLine showTickMarks showGrid />
+  <XAxis showLine showTickMarks />
+  <BarPlot />
+</CartesianChart>
+```
+
+For more info, learn about [XAxis](/components/graphs/XAxis/#axis-config) and [YAxis](/components/graphs/YAxis/#axis-config) configuration.
+
+### Inset
+
+You can adjust the inset around the entire chart (outside the axes) with the `inset` prop. This is useful for when you want to have components that are outside of the drawing area of the data but still within the chart svg.
+
+You can also remove the default inset, such as to have a compact line chart.
+
+```tsx
+function Insets() {
+  const theme = useTheme();
+
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const formatPrice = useCallback((dataIndex: number) => {
+    const price = data[dataIndex];
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <VStack gap={1}>
+        <Text font="label1">No inset</Text>
+        <LineChart
+          height={100}
+          inset={0}
+          series={[
+            {
+              id: 'prices',
+              data,
+            },
+          ]}
+          yAxis={{ domainLimit: 'strict' }}
+          showArea
+          style={{ border: `2px solid ${theme.color.fgPrimary}` }}
+        />
+      </VStack>
+      <VStack gap={1}>
+        <Text font="label1">Custom inset</Text>
+        <LineChart
+          enableScrubbing
+          height={100}
+          inset={{ left: 10, top: 16, right: 10, bottom: 10 }}
+          series={[
+            {
+              id: 'prices',
+              data,
+            },
+          ]}
+          yAxis={{ domainLimit: 'strict' }}
+          showArea
+          style={{ border: `2px solid ${theme.color.fgPrimary}` }}
+        >
+          <Scrubber label={formatPrice} />
+        </LineChart>
+      </VStack>
+      <VStack gap={1}>
+        <Text font="label1">Default inset</Text>
+        <LineChart
+          enableScrubbing
+          height={100}
+          series={[
+            {
+              id: 'prices',
+              data,
+            },
+          ]}
+          yAxis={{ domainLimit: 'strict' }}
+          showArea
+          style={{ border: `2px solid ${theme.color.fgPrimary}` }}
+        >
+          <Scrubber label={formatPrice} />
+        </LineChart>
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+### Scrubbing
+
+CartesianChart has built-in scrubbing functionality that can be enabled with the `enableScrubbing` prop. This will then enable the usage of `onScrubberPositionChange` to get the current position of the scrubber as the user interacts with the chart.
+
+One example of using the scrubber is to provide haptic feedback when the user interacts with the chart. You can trigger a light impact each time the scrubber position changes or even do a dynamic impact depending on the value change, such as a heavy impact when the user crosses a significant boundary of time or reaches a significant market event.
+
+```jsx
+function Scrubbing() {
+  const [scrubIndex, setScrubIndex] = useState(undefined);
+
+  const onScrubberPositionChange = useCallback((index: number | undefined) => {
+    // Do a light impact when the scrubber position changes
+    // An initial and final impact is already configured by the chart
+    if (scrubIndex !== undefined && index !== undefined) {
+     void Haptics.lightImpact();
+    }
+    setScrubIndex(index);
+  }, [scrubIndex]);
+
+  return (
+    <VStack gap={2}>
+    <Text font="label1">Scrubber index: {scrubIndex ?? 'none'}</Text>
+      <LineChart
+        enableScrubbing
+        onScrubberPositionChange={onScrubberPositionChange}
+        height={150}
+        series={[
+          {
+            id: 'prices',
+            data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+          },
+        ]}
+
+        showYAxis
+        showArea
+        yAxis={{
+          showGrid: true,
+          width: 32
+        }}
+        inset={{ right: 0 }}
+      >
+        <Scrubber />
+      </LineChart>
+    </VStack>
+  );
+}
+```
+
+#### Allow Overflow Gestures
+
+By default, the scrubber will not allow overflow gestures. You can allow overflow gestures by setting the `allowOverflowGestures` prop to `true`.
+
+```jsx
+<CartesianChart
+  enableScrubbing
+  allowOverflowGestures
+  ...
+>
+  ...
+</CartesianChart>
+```
+
+### Customization
+
+#### Price with Volume
+
+You can showcase the price and volume of an asset over time within one chart.
+
+```tsx
+function PriceWithVolume() {
+  const theme = useTheme();
+
+  const [scrubIndex, setScrubIndex] = useState(null);
+  const btcData = btcCandles.slice(0, 180).reverse();
+
+  const btcPrices = btcData.map((candle) => parseFloat(candle.close));
+  const btcVolumes = btcData.map((candle) => parseFloat(candle.volume));
+  const btcDates = btcData.map((candle) => new Date(parseInt(candle.start) * 1000));
+
+  const formatPrice = useCallback((price: number) => {
+    return `$${price.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const formatPriceInThousands = useCallback((price: number) => {
+    return `$${(price / 1000).toLocaleString('en-US', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 2,
+    })}k`;
+  }, []);
+
+  const formatVolume = useCallback((volume: number) => {
+    return `${(volume / 1000).toFixed(2)}K`;
+  }, []);
+
+  const formatDate = useCallback((date: Date) => {
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+    });
+  }, []);
+
+  const displayIndex = scrubIndex ?? btcPrices.length - 1;
+  const currentPrice = btcPrices[displayIndex];
+  const currentVolume = btcVolumes[displayIndex];
+  const currentDate = btcDates[displayIndex];
+  const priceChange =
+    displayIndex > 0
+      ? (currentPrice - btcPrices[displayIndex - 1]) / btcPrices[displayIndex - 1]
+      : 0;
+
+  const accessibilityLabel = useMemo(() => {
+    if (scrubIndex === null)
+      return `Current Bitcoin price: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
+    return `Bitcoin price at ${formatDate(currentDate)}: ${formatPrice(currentPrice)}, Volume: ${formatVolume(currentVolume)}`;
+  }, [scrubIndex, currentPrice, currentVolume, currentDate, formatPrice, formatVolume, formatDate]);
+
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const headerId = useId();
+
+  return (
+    <VStack gap={2}>
+      <SectionHeader
+        id={headerId}
+        style={{ padding: 0 }}
+        title={<Text font="title1">Bitcoin</Text>}
+        balance={<Text font="title2">{formatPrice(currentPrice)}</Text>}
+        end={
+          <HStack gap={2}>
+            <VStack justifyContent="center" alignItems="flex-end">
+              <Text font="label1">{formatDate(currentDate)}</Text>
+              <Text font="label2">{formatVolume(currentVolume)}</Text>
+            </VStack>
+            <VStack justifyContent="center">
+              <RemoteImage source={assets.btc.imageUrl} size="xl" shape="circle" />
+            </VStack>
+          </HStack>
+        }
+      />
+      <CartesianChart
+        enableScrubbing
+        onScrubberPositionChange={setScrubIndex}
+        height={150}
+        series={[
+          {
+            id: 'prices',
+            data: btcPrices,
+            color: assets.btc.color,
+            yAxisId: 'price',
+          },
+          {
+            id: 'volume',
+            data: btcVolumes,
+            color: theme.color.fgMuted,
+            yAxisId: 'volume',
+          },
+        ]}
+        xAxis={{ scaleType: 'band', range: ({ min, max }) => ({ min, max: max - 16 }) }}
+        yAxis={[
+          {
+            id: 'price',
+            domain: ({ min, max }) => ({ min: min * 0.9, max }),
+          },
+          {
+            id: 'volume',
+            range: ({ min, max }) => ({ min: max - 32, max }),
+          },
+        ]}
+        accessibilityLabel={accessibilityLabel}
+        aria-labelledby={headerId}
+        inset={{ top: 8, left: 8, right: 0, bottom: 0 }}
+      >
+        <YAxis
+          axisId="price"
+          showGrid
+          tickLabelFormatter={formatPriceInThousands}
+          width={48}
+          GridLineComponent={ThinSolidLine}
+        />
+        <BarPlot seriesIds={['volume']} />
+        <Line seriesId="prices" showArea />
+        <Scrubber seriesIds={['prices']} />
+      </CartesianChart>
+    </VStack>
+  );
+}
+```
+
+#### Earnings History
+
+You can also create your own type of cartesian chart by using `getSeriesData`, `getXScale`, and `getYScale` directly.
+
+```tsx
+function EarningsHistory() {
+  const theme = useTheme();
+  const CirclePlot = memo(({ seriesId, opacity = 1 }: { seriesId: string; opacity?: number }) => {
+    const { drawingArea, getSeries, getSeriesData, getXScale, getYScale } =
+      useCartesianChartContext();
+    const series = getSeries(seriesId);
+    const data = getSeriesData(seriesId);
+    const xScale = getXScale();
+    const yScale = getYScale(series?.yAxisId);
+
+    if (!xScale || !yScale || !data || !isCategoricalScale(xScale)) return null;
+
+    const yScaleSize = Math.abs(yScale.range()[1] - yScale.range()[0]);
+
+    // Have circle diameter be the smaller of the x scale bandwidth or 10% of the y space available
+    const diameter = Math.min(xScale.bandwidth(), yScaleSize / 10);
+
+    return (
+      <G>
+        {data.map((value, index) => {
+          if (value === null || value === undefined) return null;
+
+          // Get x position from band scale - center of the band
+          const xPos = xScale(index);
+          if (xPos === undefined) return null;
+
+          const centerX = xPos + xScale.bandwidth() / 2;
+
+          // Get y position from value
+          const yValue = Array.isArray(value) ? value[1] : value;
+          const centerY = yScale(yValue);
+          if (centerY === undefined) return null;
+
+          return (
+            <Circle
+              key={`${seriesId}-${index}`}
+              cx={centerX}
+              cy={centerY}
+              fill={series?.color || theme.color.fgPrimary}
+              opacity={opacity}
+              r={diameter / 2}
+            />
+          );
+        })}
+      </G>
+    );
+  });
+
+  const quarters = useMemo(() => ['Q1', 'Q2', 'Q3', 'Q4'], []);
+  const estimatedEPS = useMemo(() => [1.71, 1.82, 1.93, 2.34], []);
+  const actualEPS = useMemo(() => [1.68, 1.83, 2.01, 2.24], []);
+
+  const formatEarningAmount = useCallback((value: number) => {
+    return `$${value.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })}`;
+  }, []);
+
+  const surprisePercentage = useCallback(
+    (index: number): ChartTextChildren => {
+      const percentage = (actualEPS[index] - estimatedEPS[index]) / estimatedEPS[index];
+      const percentageString = percentage.toLocaleString('en-US', {
+        style: 'percent',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      });
+
+      return (
+        <tspan
+          style={{
+            fill: percentage > 0 ? theme.color.fgPositive : theme.color.fgNegative,
+            fontWeight: 'bold',
+          }}
+        >
+          {percentage > 0 ? '+' : ''}
+          {percentageString}
+        </tspan>
+      );
+    },
+    [actualEPS, estimatedEPS],
+  );
+
+  const LegendEntry = memo(({ opacity = 1, label }: { opacity?: number; label: string }) => {
+    return (
+      <Box alignItems="center" gap={0.5}>
+        <LegendDot opacity={opacity} />
+        <Text font="label2">{label}</Text>
+      </Box>
+    );
+  });
+
+  const LegendDot = memo((props: BoxBaseProps) => {
+    return <Box borderRadius={1000} width={10} height={10} background="bgPositive" {...props} />;
+  });
+
+  return (
+    <VStack gap={0.5}>
+      <CartesianChart
+        animate={false}
+        height={150}
+        padding={0}
+        series={[
+          {
+            id: 'estimatedEPS',
+            data: estimatedEPS,
+            color: theme.color.bgPositive,
+          },
+          { id: 'actualEPS', data: actualEPS, color: theme.color.bgPositive },
+        ]}
+        xAxis={{ scaleType: 'band', categoryPadding: 0.25 }}
+      >
+        <YAxis
+          showGrid
+          position="left"
+          requestedTickCount={3}
+          tickLabelFormatter={formatEarningAmount}
+        />
+        <XAxis height={20} tickLabelFormatter={(index) => quarters[index]} />
+        <XAxis height={20} tickLabelFormatter={surprisePercentage} />
+        <CirclePlot opacity={0.5} seriesId="estimatedEPS" />
+        <CirclePlot seriesId="actualEPS" />
+      </CartesianChart>
+      <HStack justifyContent="flex-end" gap={2}>
+        <LegendEntry opacity={0.5} label="Estimated EPS" />
+        <LegendEntry label="Actual EPS" />
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+#### Trading Trends
+
+You can have multiple axes with different domains and ranges to showcase different pieces of data over the time time period.
+
+```tsx
+function TradingTrends() {
+  const theme = useTheme();
+
+  function TradingTrends() {
+    const profitData = [34, 24, 28, -4, 8, -16, -3, 12, 24, 18, 20, 28];
+    const gains = profitData.map((value) => (value > 0 ? value : 0));
+    const losses = profitData.map((value) => (value < 0 ? value : 0));
+
+    const renderProfit = useCallback((value: number) => {
+      return `$${value}M`;
+    }, []);
+
+    const ThinSolidLine = memo((props: SolidLineProps) => (
+      <SolidLine {...props} strokeWidth={1} strokeLinecap="butt" />
+    ));
+    const ThickSolidLine = memo((props: SolidLineProps) => (
+      <SolidLine {...props} strokeWidth={2} strokeLinecap="butt" />
+    ));
+
+    return (
+      <CartesianChart
+        height={150}
+        series={[
+          {
+            id: 'gains',
+            data: gains,
+            yAxisId: 'profit',
+            color: theme.color.bgPositive,
+            stackId: 'bars',
+          },
+          {
+            id: 'losses',
+            data: losses,
+            yAxisId: 'profit',
+            color: theme.color.bgNegative,
+            stackId: 'bars',
+          },
+          {
+            id: 'revenue',
+            data: [128, 118, 122, 116, 120, 114, 118, 122, 126, 130, 134, 138],
+            yAxisId: 'revenue',
+            color: theme.color.fgMuted,
+          },
+        ]}
+        xAxis={{
+          scaleType: 'band',
+          data: [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+          ],
+        }}
+        yAxis={[
+          {
+            id: 'profit',
+            range: ({ min, max }) => ({ min: min, max: max - 64 }),
+            domain: { min: -40, max: 40 },
+          },
+          {
+            id: 'revenue',
+            range: ({ min, max }) => ({ min: max - 64, max }),
+            domain: { min: 100 },
+          },
+        ]}
+      >
+        <YAxis
+          axisId="profit"
+          position="left"
+          showGrid
+          tickLabelFormatter={renderProfit}
+          GridLineComponent={ThinSolidLine}
+        />
+        <XAxis />
+        <ReferenceLine
+          LineComponent={ThickSolidLine}
+          dataY={0}
+          yAxisId="profit"
+          stroke={`rgba(${theme.color.gray15.slice(4)})`}
+        />
+        <BarPlot seriesIds={['gains', 'losses']} />
+        <Line seriesId="revenue" showArea />
+      </CartesianChart>
+    );
+  }
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `alignContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly \| stretch` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `allowOverflowGestures` | `boolean` | No | `-` | Allows continuous gestures on the chart to continue outside the bounds of the chart element. |
+| `animate` | `boolean` | No | `true` | Whether to animate the chart. |
+| `animated` | `boolean` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `none \| flex` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. |
+| `enableScrubbing` | `boolean` | No | `-` | Enables scrubbing interactions. When true, allows scrubbing and makes scrubber components interactive. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamilies` | `string[]` | No | `-` | Default font families to use within ChartText. If not provided, will be the default for the system. |
+| `fontProvider` | `SkTypefaceFontProvider` | No | `-` | Skia font provider to allow for custom fonts. If not provided, the only available fonts will be those defined by the system. |
+| `fontSize` | `FontSize \| inherit` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `inset` | `number \| Partial<ChartInset>` | No | `-` | Inset around the entire chart (outside the axes). |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `legend` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Whether to show the legend or a custom legend element. - true renders the default Legend component - A React element renders that element as the legend - false or omitted hides the legend |
+| `legendAccessibilityLabel` | `string` | No | `'Legend'` | Accessibility label for the legend group. |
+| `legendPosition` | `top \| bottom \| left \| right` | No | `'bottom'` | Position of the legend relative to the chart. |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onScrubberPositionChange` | `((index: number) => void) \| undefined` | No | `-` | Callback fired when the scrubber position changes. Receives the dataIndex of the scrubber or undefined when not scrubbing. |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `series` | `Series[]` | No | `-` | Configuration objects that define how to visualize the data. Each series contains its own data array. |
+| `style` | `((false \| RegisteredStyle<ViewStyle> \| WithAnimatedObject<ViewStyle> \| Value \| AnimatedInterpolation<string \| number> \| WithAnimatedArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>> \| readonly (ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>)[]>) & (false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>)) \| null` | No | `-` | Custom styles for the root element. |
+| `styles` | `{ root?: StyleProp<ViewStyle>; chart?: StyleProp<ViewStyle>; }` | No | `-` | Custom styles for the component. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| double \| dotted \| dashed` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ perspective: AnimatableNumericValue; } & { rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleX: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `userSelect` | `none \| auto \| text \| contain \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `xAxis` | `Partial<Omit<AxisConfigProps, id>>` | No | `-` | Configuration for x-axis. |
+| `yAxis` | `Partial<AxisConfigProps> \| Partial<AxisConfigProps>[]` | No | `-` | Configuration for y-axis(es). Can be a single config or array of configs. |
+| `zIndex` | `number` | No | `-` | - |
+
+

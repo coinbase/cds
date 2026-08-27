@@ -1,0 +1,1 @@
+import{bA as m,r as o}from"./iframe-CsG_6vZR.js";const b=s=>{const{addNode:t,removeNode:n}=m(),r=o.useId(),e=o.useMemo(()=>`${s}-${r}`,[s,r]),a=o.useCallback(l=>{const u=o.cloneElement(l,{key:e,visible:!0});return t(e,u),e},[t,e]),c=o.useCallback(()=>{n(e)},[n,e]);return o.useMemo(()=>({open:a,close:c}),[a,c])};export{b as u};

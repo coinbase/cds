@@ -1,0 +1,1 @@
+const o={easing:"global",duration:"moderate3"},a=-16,n=0,t={property:"opacity",fromValue:0,toValue:1,...o},r={property:"opacity",fromValue:1,toValue:0,...o},e={fromValue:a,toValue:n,...o},s={fromValue:n,toValue:a,...o};export{r as a,s as b,t as c,e as d};

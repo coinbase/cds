@@ -1,0 +1,538 @@
+# MediaCard
+
+MediaCard displays content with optional media in a contained card layout. Use it to showcase assets, products, or content with a thumbnail, title, subtitle, description, and optional media placement. MediaCard replaces the deprecated FloatingAssetCard and ContainedAssetCard components.
+
+## Import
+
+```tsx
+import { MediaCard } from '@coinbase/cds-mobile/cards/MediaCard'
+```
+
+## Examples
+
+MediaCard provides a contained card layout with optional media, ideal for showcasing assets, products, or promotional content.
+
+:::info Migrating from FloatingAssetCard or ContainedAssetCard?
+See the [Migration Guide](#migration-from-deprecated-components) at the end of this page.
+:::
+
+### Basic
+
+At minimum, provide a `thumbnail` to display visual content and a `title` for the card heading.
+
+```jsx
+<VStack gap={2}>
+  <MediaCard
+    thumbnail={
+      <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+  />
+  <MediaCard
+    thumbnail={
+      <RemoteImage
+        accessibilityLabel="Ethereum"
+        shape="circle"
+        size="l"
+        source={CDSDataAssets.ethBackground}
+      />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        source={ethBackground}
+        width="100%"
+      />
+    }
+  />
+</VStack>
+```
+
+### Media Placement
+
+Use the `media` prop to display larger visual content. Control its position with `mediaPlacement`:
+
+- `start`: Media on the left
+- `end` (default): Media on the right
+
+```jsx
+<VStack gap={2}>
+  <MediaCard
+    thumbnail={
+      <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        source={ethBackground}
+        width="100%"
+      />
+    }
+    mediaPlacement="start"
+  />
+  <MediaCard
+    thumbnail={
+      <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        source={ethBackground}
+        width="100%"
+      />
+    }
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+### Interactive
+
+MediaCard can be made interactive with the `onPress` prop and `renderAsPressable`.
+
+```jsx
+<MediaCard
+  renderAsPressable
+  accessibilityLabel="View Ethereum details"
+  thumbnail={
+    <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+  }
+  title="Interactive Card"
+  subtitle="Button"
+  description="Clickable card with onPress handler"
+  width={320}
+  media={
+    <RemoteImage
+      accessibilityLabel="Media"
+      height="100%"
+      resizeMode="cover"
+      shape="rectangle"
+      source={ethBackground}
+      width="100%"
+    />
+  }
+  onPress={() => console.log('Card clicked!')}
+/>
+```
+
+### Text Content
+
+#### Long Text
+
+The card handles long text content with truncation.
+
+```jsx
+<MediaCard
+  thumbnail={
+    <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+  }
+  title="This is a very long title text that will get truncated"
+  subtitle="This is a very long subtitle text that will get truncated"
+  description="This is a very long description text that demonstrates how the card handles longer content"
+  width={320}
+  media={
+    <RemoteImage
+      accessibilityLabel="Media"
+      height="100%"
+      resizeMode="cover"
+      shape="rectangle"
+      source={ethBackground}
+      width="100%"
+    />
+  }
+/>
+```
+
+#### Custom Content
+
+Use React nodes for custom styled text content.
+
+```jsx
+<MediaCard
+  thumbnail={
+    <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+  }
+  title={<Text font="title3">Custom Title</Text>}
+  subtitle={
+    <Text font="headline" color="fgPositive">
+      Custom Subtitle
+    </Text>
+  }
+  description={
+    <Text font="label2">
+      Custom description with <Text font="headline">bold text</Text> and{' '}
+      <Text font="label1">italic text</Text>
+    </Text>
+  }
+  width={320}
+  media={
+    <RemoteImage
+      accessibilityLabel="Media"
+      height="100%"
+      resizeMode="cover"
+      shape="rectangle"
+      source={ethBackground}
+      width="100%"
+    />
+  }
+/>
+```
+
+### Styling
+
+Use the `styles` prop to customize specific parts of the card.
+
+```jsx
+<VStack gap={2}>
+  <MediaCard
+    thumbnail={
+      <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        source={ethBackground}
+        width="100%"
+      />
+    }
+    styles={{
+      layoutContainer: { gap: 3 },
+      contentContainer: { padding: 3, gap: 2 },
+      textContainer: { gap: 1 },
+      headerContainer: { gap: 1 },
+      mediaContainer: { borderRadius: 300 },
+    }}
+  />
+  <MediaCard
+    thumbnail={
+      <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        source={ethBackground}
+        width="100%"
+      />
+    }
+    styles={{
+      root: { borderWidth: 2, borderColor: 'blue' },
+    }}
+  />
+</VStack>
+```
+
+### Multiple Cards
+
+Display multiple cards in a carousel.
+
+```jsx
+<Carousel styles={{ carousel: { gap: 16 } }}>
+  <CarouselItem id="card1">
+    <MediaCard
+      thumbnail={
+        <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+      }
+      title="Title"
+      subtitle="Subtitle"
+      description="Description"
+      width={320}
+      media={
+        <RemoteImage
+          accessibilityLabel="Media"
+          height="100%"
+          resizeMode="cover"
+          shape="rectangle"
+          source={ethBackground}
+          width="100%"
+        />
+      }
+    />
+  </CarouselItem>
+  <CarouselItem id="card2">
+    <MediaCard
+      renderAsPressable
+      accessibilityLabel="View Bitcoin details"
+      thumbnail={
+        <RemoteImage
+          accessibilityLabel="Bitcoin thumbnail"
+          shape="square"
+          size="l"
+          source={assets.btc.imageUrl}
+        />
+      }
+      title="Bitcoin"
+      subtitle="BTC"
+      description="Another card with different content"
+      width={320}
+      media={
+        <RemoteImage
+          accessibilityLabel="Ethereum background media"
+          height="100%"
+          resizeMode="cover"
+          shape="rectangle"
+          source={ethBackground}
+          width="100%"
+        />
+      }
+    />
+  </CarouselItem>
+  <CarouselItem id="card3">
+    <MediaCard
+      renderAsPressable
+      accessibilityLabel="View Ethereum details"
+      thumbnail={
+        <RemoteImage
+          accessibilityLabel="Ethereum thumbnail"
+          shape="circle"
+          size="l"
+          source={ethBackground}
+        />
+      }
+      title="Ethereum"
+      subtitle="ETH"
+      description="Card with onPress handler"
+      width={320}
+      onPress={() => {}}
+    />
+  </CarouselItem>
+</Carousel>
+```
+
+### Accessibility
+
+#### Interactive Cards
+
+When making MediaCard interactive with `renderAsPressable`:
+
+- Add an `accessibilityLabel` to summarize the card's action for VoiceOver users (e.g., `accessibilityLabel="View Ethereum details"`)
+
+:::warning Avoid Nested Interactive Elements
+Don't place buttons or pressables inside an interactive card, as this creates accessibility issues for VoiceOver users and can cause unexpected behavior when tapping.
+:::
+
+#### Color Contrast
+
+When customizing card backgrounds, ensure sufficient color contrast between text and background colors. WCAG AA requires a minimum contrast ratio of 4.5:1 for normal text.
+
+### Migration from Deprecated Components
+
+#### Migrating from ContainedAssetCard
+
+Replace `ContainedAssetCard` with `MediaCard`:
+
+```jsx
+// Before
+<ContainedAssetCard
+  header={<RemoteImage source={assets.btc.imageUrl} width={32} height={32} />}
+  title="$309.43"
+  subtitle="Bitcoin"
+  description={<Text color="fgPositive">↗3.37%</Text>}
+  size="l"
+>
+  <RemoteImage source={ethBackground} ... />
+</ContainedAssetCard>
+
+// After
+<MediaCard
+  thumbnail={<RemoteImage source={assets.btc.imageUrl} shape="circle" size="l" />}
+  title="$309.43"
+  subtitle="Bitcoin"
+  description={<Text color="fgPositive">↗3.37%</Text>}
+  media={<RemoteImage source={ethBackground} height="100%" width="100%" resizeMode="cover" />}
+  mediaPlacement="end"
+/>
+```
+
+#### Migrating from FloatingAssetCard
+
+Replace `FloatingAssetCard` with `MediaCard`. Note that the floating variation (media outside the card container) is no longer supported:
+
+```jsx
+// Before
+<FloatingAssetCard
+  title="Balancing the Air"
+  subtitle="Amber V's Artwork"
+  description="0.5 ETH"
+  media={<RemoteImage source={{ uri: '...' }} ... />}
+/>
+
+// After
+<MediaCard
+  thumbnail={<RemoteImage source={{ uri: '...' }} shape="circle" size="l" />}
+  title="Balancing the Air"
+  subtitle="Amber V's Artwork"
+  description="0.5 ETH"
+/>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `thumbnail` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | React node to display as a thumbnail in the content area. |
+| `alignContent` | `flex-start \| flex-end \| center \| stretch \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color of the overlay (element being interacted with). |
+| `blendStyles` | `InteractableBlendStyles` | No | `-` | - |
+| `block` | `boolean` | No | `-` | Set element to block and expand to 100% width. |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `contentStyle` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | Apply animated styles to the inner container. |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `debounceTime` | `number` | No | `500` | The amount of time to wait (in milliseconds) before invoking the debounced function. This prop is used in conjunction with the disableDebounce prop. The debounce function is configured to be invoked as soon as its called, but subsequent calls within the debounceTime period will be ignored. |
+| `description` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React node to display as the card description. Use a Text component to override default color and font. |
+| `disableDebounce` | `boolean` | No | `-` | React Native is historically trash at debouncing touch events. This can cause a lot of unwanted behavior such as double navigations where we push a screen onto the stack 2 times. Debouncing the event 500 miliseconds, but taking the leading event prevents this effect and the accidental double-tap. |
+| `disabled` | `boolean` | No | `-` | Is the element currently disabled. Whether the press behavior is disabled. |
+| `display` | `flex \| none` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. Is the element elevated. |
+| `feedback` | `light \| none \| normal \| heavy` | No | `none` | Haptic feedback to trigger when being pressed. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `loading` | `boolean` | No | `-` | Is the element currenty loading. When set to true, will disable element from press and keyboard events Is the element currenty loading. |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `media` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to display as the main media content. When provided, it will be rendered in an HStack container taking up 50% of the card width. |
+| `mediaPlacement` | `end \| start` | No | `'end'` | The position of the media within the card. |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `noScaleOnPress` | `boolean` | No | `-` | Dont scale element on press. |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | Called when a single tap gesture is detected. |
+| `onPressIn` | `(((event: GestureResponderEvent) => void) & ((event: GestureResponderEvent) => void))` | No | `-` | Callback fired before onPress when button is pressed. Called when a touch is engaged before onPress. |
+| `onPressOut` | `(((event: GestureResponderEvent) => void) & ((event: GestureResponderEvent) => void))` | No | `-` | Callback fired before onPress when button is released. Called when a touch is released before onPress. |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `renderAsPressable` | `boolean` | No | `false` | If true, the CardRoot will be rendered as a Pressable component. When false, renders as an HStack for layout purposes. |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | - |
+| `styles` | `({ layoutContainer?: StyleProp<ViewStyle>; contentContainer?: StyleProp<ViewStyle>; textContainer?: StyleProp<ViewStyle>; headerContainer?: StyleProp<ViewStyle>; mediaContainer?: StyleProp<ViewStyle>; } & { root?: StyleProp<ViewStyle>; })` | No | `-` | - |
+| `subtitle` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React node to display as the card subtitle. Use a Text component to override default color and font. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `title` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React node to display as the card title. Use a Text component to override default color and font. |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `transparentWhileInactive` | `boolean` | No | `-` | Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc). Must be used in conjunction with the pressed prop |
+| `transparentWhilePressed` | `boolean` | No | `-` | Mark the background and border as transparent even while element is interacted with (elevation underlay issue). Must be used in conjunction with the pressed prop |
+| `userSelect` | `auto \| none \| text \| contain \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `wrapperStyles` | `{ base?: StyleProp<ViewStyle>; pressed?: StyleProp<ViewStyle>; disabled?: StyleProp<ViewStyle>; }` | No | `-` | Apply styles to the outer container. |
+| `zIndex` | `number` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `layoutContainer` | `-` | Layout container element |
+| `contentContainer` | `-` | Content container element |
+| `textContainer` | `-` | Text container element |
+| `headerContainer` | `-` | Header container element |
+| `mediaContainer` | `-` | Media container element |
+| `root` | `-` | Root element |
+
+

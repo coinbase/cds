@@ -1,0 +1,138 @@
+# Lottie
+
+Renders After Effects animations as vectors.
+
+## Import
+
+```tsx
+import { Lottie } from '@coinbase/cds-mobile/animation/Lottie'
+```
+
+## Examples
+
+High-quality illustration animations powered by [Lottie](https://airbnb.design/lottie/).
+
+### Basic usage
+
+```jsx
+function BasicExample() {
+  const lottieRef = useRef();
+
+  const handlePlay = () => {
+    lottieRef.current?.play();
+  };
+
+  const handleReset = () => {
+    lottieRef.current?.reset();
+  };
+
+  return (
+    <VStack gap={3} alignItems="center">
+      <Lottie
+        ref={lottieRef}
+        source={activityIndicator}
+        onAnimationFinish={handleReset}
+        width={200}
+        height={200}
+      />
+      <HStack gap={2}>
+        <Button onPress={handlePlay}>Play</Button>
+        <Button onPress={handleReset} variant="secondary">
+          Reset
+        </Button>
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `source` | `LottieSource` | Yes | `-` | The source of animation. Should be pulled from |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `animated` | `boolean` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `autoplay` | `boolean` | No | `false` | A boolean flag indicating whether or not the animation should start automatically when mounted. This only affects the imperative API. |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `colorFilters` | `{ keypath: string; color: string; }[]` | No | `-` | An array of layers you want to override its color filter. |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `flex \| none` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `loop` | `boolean` | No | `false` | A boolean flag indicating whether or not the animation should loop. |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `onAnimationFinish` | `(() => void)` | No | `-` | A callback function which will be called when animation is finished. Note that on mobile, this callback will be called only when loop is set to false. |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `progress` | `number \| Value \| AnimatedInterpolation<number>` | No | `-` | A number between 0 and 1, or an Animated number between 0 and 1. This number represents the normalized progress of the animation. If you update this prop, the animation will correspondingly update to the frame at that progress value. This prop is not required if you are using the imperative API. |
+| `ref` | `((instance: LottieView \| null) => void) \| RefObject<LottieView> \| null` | No | `-` | - |
+| `resizeMode` | `center \| cover \| contain` | No | `contain` | Determines how to resize the animated view when the frame doesnt match the raw image dimensions. Refer to React Native docs [here](https://facebook.github.io/react-native/docs/image.html#resizemode) |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `false \| RegisteredStyle<ViewStyle> \| Value \| AnimatedInterpolation<string \| number> \| WithAnimatedObject<ViewStyle> \| WithAnimatedArray<Falsy \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<Falsy \| ViewStyle \| RegisteredStyle<ViewStyle>> \| readonly (Falsy \| ViewStyle \| RegisteredStyle<ViewStyle>)[]> \| null` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `userSelect` | `none \| auto \| contain \| text \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `zIndex` | `number` | No | `-` | - |
+
+

@@ -1,0 +1,343 @@
+# IconButton
+
+A Button with an Icon for content.
+
+## Import
+
+```tsx
+import { IconButton } from '@coinbase/cds-mobile/buttons/IconButton'
+```
+
+## Examples
+
+IconButton is a compact button that displays only an icon. Use it for actions where the icon alone clearly communicates the purpose.
+
+### Basics
+
+The only required props are `name` (which determines the icon) and `accessibilityLabel` (for screen readers).
+
+```jsx
+<HStack gap={2}>
+  <IconButton name="gear" accessibilityLabel="Open settings" onPress={console.log} />
+  <IconButton name="close" accessibilityLabel="Close modal" onPress={console.log} />
+  <IconButton name="refresh" accessibilityLabel="Refresh data" onPress={console.log} />
+</HStack>
+```
+
+### Variants
+
+Use variants to denote intent and importance. The `active` prop fills the icon when enabled.
+
+```jsx
+<HStack gap={2}>
+  <IconButton
+    active
+    name="orderHistory"
+    accessibilityLabel="View transaction history"
+    variant="primary"
+    onPress={console.log}
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="View settings"
+    variant="secondary"
+    onPress={console.log}
+  />
+  <IconButton
+    name="phone"
+    accessibilityLabel="Call support"
+    variant="tertiary"
+    onPress={console.log}
+  />
+  <IconButton
+    name="checkmark"
+    accessibilityLabel="Approve transaction"
+    variant="foregroundMuted"
+    onPress={console.log}
+  />
+</HStack>
+```
+
+#### Transparent
+
+Use the `transparent` prop to remove the background until the user interacts with the button.
+
+```jsx
+<HStack gap={2}>
+  <IconButton
+    active
+    name="orderHistory"
+    accessibilityLabel="View past order history"
+    variant="primary"
+    transparent
+    onPress={console.log}
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="Update settings"
+    variant="secondary"
+    transparent
+    onPress={console.log}
+  />
+  <IconButton
+    name="phone"
+    accessibilityLabel="Call support"
+    variant="tertiary"
+    transparent
+    onPress={console.log}
+  />
+  <IconButton
+    name="checkmark"
+    accessibilityLabel="Verify your identity"
+    variant="foregroundMuted"
+    transparent
+    onPress={console.log}
+  />
+</HStack>
+```
+
+### States
+
+#### Loading
+
+Use the `loading` prop to show a spinner when an action is in progress. The button becomes non-interactive and displays a loading spinner instead of the icon.
+
+```jsx
+<HStack gap={2}>
+  <IconButton
+    active
+    name="orderHistory"
+    accessibilityLabel="Loading transaction history"
+    variant="primary"
+    loading
+    onPress={console.log}
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="Loading settings"
+    variant="secondary"
+    loading
+    onPress={console.log}
+  />
+</HStack>
+```
+
+#### Disabled
+
+Use the `disabled` prop to prevent interaction and show a disabled visual state.
+
+```jsx
+<HStack gap={2}>
+  <IconButton
+    active
+    name="orderHistory"
+    accessibilityLabel="View transaction history"
+    variant="primary"
+    disabled
+    onPress={console.log}
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="View settings"
+    variant="secondary"
+    disabled
+    onPress={console.log}
+  />
+  <IconButton
+    name="checkmark"
+    accessibilityLabel="Approve transaction"
+    variant="foregroundMuted"
+    disabled
+    onPress={console.log}
+  />
+</HStack>
+```
+
+### Sizing
+
+IconButtons are compact by default. Use `compact={false}` for larger touch targets.
+
+```jsx
+<HStack gap={2} alignItems="center">
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="Settings - compact"
+    variant="primary"
+    compact
+    onPress={console.log}
+  />
+  <IconButton
+    active
+    name="gear"
+    accessibilityLabel="Settings - regular"
+    variant="primary"
+    compact={false}
+    onPress={console.log}
+  />
+</HStack>
+```
+
+### Accessibility
+
+Since icon buttons have no visible text, an `accessibilityLabel` is required to describe the button's purpose for screen readers.
+
+```jsx
+<IconButton name="close" accessibilityLabel="Close trade modal" />
+```
+
+When composing a button with a visible label, use `accessibilityLabelledBy` to reference the label's `id` instead. See the [Claim Drop example](#claim-drop) below.
+
+### Composed Examples
+
+#### Claim Drop
+
+A toggleable icon button with an adjacent label. Uses `accessibilityLabelledBy` to associate the button with its visible label.
+
+```jsx
+function ClaimDropExample() {
+  const [active, setActive] = useState(false);
+  const variant = useMemo(() => (active ? 'primary' : 'foregroundMuted'), [active]);
+  const label = useMemo(() => (active ? 'Reject drop' : 'Claim drop'), [active]);
+
+  return (
+    <HStack gap={2} alignItems="center">
+      <IconButton
+        name="drops"
+        active={active}
+        variant={variant}
+        onPress={() => setActive((active) => !active)}
+        id="claim-drop-button"
+        accessibilityLabelledBy="claim-drop-label"
+      />
+      <Text font="label1" id="claim-drop-label">
+        {label}
+      </Text>
+    </HStack>
+  );
+}
+```
+
+#### Notification Bell
+
+An icon button with a badge showing the notification count. Uses `DotCount` to display the number of unread notifications.
+
+```jsx
+<DotCount count={3} overlap="circular" pin="top-end">
+  <IconButton
+    name="bell"
+    accessibilityLabel="Notifications, 3 unread"
+    variant="secondary"
+    onPress={console.log}
+  />
+</DotCount>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `name` | `key \| search \| pin \| filter \| visible \| continuous \| auto \| loop \| warning \| error \| account \| activity \| add \| addPeople \| advancedMarketSelector \| advancedTradeProduct \| affiliates \| airdrop \| airdropAlt \| airdropCoins \| airdropParachute \| alien \| allTimeHigh \| allocation \| annotation \| api \| apiPlug \| apothecary \| appSwitcher \| apple \| appleLogo \| application \| arrowDown \| arrowLeft \| arrowRight \| arrowUp \| arrowsHorizontal \| arrowsUpDown \| arrowsVertical \| artwork \| assetHubProduct \| assetManagementProduct \| astronautHelmet \| atSign \| atomScience \| autoCar \| avatar \| average \| backArrow \| ballot \| ballotbox \| bandage \| bank \| barChartSimple \| barChartWindow \| base \| baseApps \| baseFeed \| baseNotification \| baseQuickBuy \| baseSquare \| baseTransact \| baseVerification \| baseWallet \| baseball \| basketball \| beaker \| beginningArrow \| bell \| bellCheck \| bellPlus \| birthcertificate \| block \| blockchain \| blog \| book \| bookmark \| borrowProduct \| boxing \| bridging \| briefcase \| briefcaseAlt \| browser \| bug \| building \| calculator \| calendar \| calendarBlank \| calendarDates \| calendarEmpty \| calendarHeart \| calendarMoney \| calendarStar \| camera \| candlesticks \| car \| card \| caret \| caretDown \| caretLeft \| caretRight \| caretUp \| cash \| cashAustralianDollar \| cashBrazilianReal \| cashBrazillianReal \| cashCanadianDollar \| cashCoins \| cashEUR \| cashGBP \| cashIndonesianRupiah \| cashJPY \| cashPhilippinePeso \| cashPolishZloty \| cashRupee \| cashSingaporeDollar \| cashSwissFranc \| cashThaiBaht \| cashTurkishLira \| cashUSD \| cashUaeDirham \| cashVietnameseDong \| chainLink \| chartBar \| chartCandles \| chartLine \| chartPie \| chartPieCircle \| chartVolume \| chatBotAgent \| chatBubble \| chatRequests \| checkboxChecked \| checkboxEmpty \| checkmark \| chess \| circleCheckmark \| circleCross \| circulatingSupply \| city \| clipboard \| clock \| clockOutline \| close \| closeCaption \| clothing \| cloud \| cloudPartial \| cloudProduct \| cluster \| coinbase \| coinbaseCardProduct \| coinbaseOne \| coinbaseOneCard \| coinbaseOneLogo \| coinbaseRewards \| coinsCrypto \| collapse \| collectibles \| collection \| comment \| commentPlus \| commerceProduct \| compass \| complianceProduct \| compose \| computerChip \| concierge \| conciergeBell \| config \| convert \| copy \| corporation \| creatorCoin \| cricket \| cross \| crossTrade \| crypto \| cryptobasics \| crystalBall \| crystalBallInsight \| currencies \| custodyProduct \| dashboard \| dataMarketplaceProduct \| dataStack \| defi \| delegateProduct \| deposit \| derivatives \| derivativesProduct \| derivativesProductNew \| developerAPIProduct \| developerPlatformProduct \| dex \| diagonalDownArrow \| diagonalRightArrow \| diagonalUpArrow \| diamond \| diamondIncentives \| dinnerPlate \| directDeposit \| directDepositIcon \| disabledPhone \| discordLogo \| distribution \| document \| documentation \| dot \| doubleChevronRight \| downArrow \| download \| drag \| drops \| earn \| earnProduct \| earnRewards \| earthquake \| educationBook \| educationPencil \| email \| endArrow \| entertainment \| ethereum \| eventContracts \| exchangeProduct \| exclamationMark \| expand \| expandAddress \| expandAll \| externalLink \| eye \| faceScan \| faces \| factory \| faucet \| fib \| filmStrip \| fingerprint \| flame \| folder \| folderArrow \| folderOpen \| followAdd \| following \| football \| fork \| forwardArrow \| fscsProtection \| gab \| games \| gaming \| gasFees \| gasFeesAlt \| gauge \| gaugeEmpty \| gaugeHigh \| gaugeHighLow \| gaugeHighMid \| gaugeLow \| gaugeLowHigh \| gaugeLowMid \| gaugeMedium \| gavel \| gear \| generalCharacter \| ghost \| gif \| giftBox \| giftCard \| gitHubLogo \| globe \| golf \| googleLogo \| greenEnergy \| grid \| group \| hamburger \| hammer \| heart \| helpCenterProduct \| helpCenterQuestionMark \| hiddenEye \| hockey \| home \| horizontalLine \| hospital \| hospitalCross \| hurricane \| ideal \| identityCard \| image \| info \| initiator \| instagramLogo \| instantUnstakingClock \| institute \| institutionalProduct \| interest \| invisible \| invoice \| keyboard \| laptop \| leadChart \| leadCoin \| learningRewardsProduct \| light \| lightbulb \| lightning \| lightningBolt \| lineChartCrypto \| list \| location \| lock \| login \| logout \| magnifyingGlass \| marketCap \| medal \| megaphone \| menu \| metaverse \| microphone \| microphoneCordless \| microscope \| mint \| minus \| mma \| moneyCardCoin \| moon \| more \| moreVertical \| motorsport \| music \| musicArticles \| needle \| newsFeed \| newsletter \| nft \| nftBuy \| nftOffer \| nftProduct \| nftSale \| noRocket \| noWifi \| nodeProduct \| oil \| options \| orderBook \| orderHistory \| outline \| pFPS \| paperAirplane \| paperclip \| participate \| participateProduct \| passKey \| passport \| pause \| pay \| payProduct \| paymentCard \| payments \| payouts \| paypal \| pencil \| peopleGroup \| peopleStar \| percentage \| perpetualSwap \| phone \| pieChartData \| pillBottle \| pillCapsule \| plane \| planet \| play \| playbutton \| plusMinus \| podiumStar \| politicsBuilding \| politicsCandidate \| politicsFlag \| politicsGavel \| politicsPodium \| politicsStar \| powerTool \| priceAlerts \| priceAlertsCheck \| primePoduct \| privateClientProduct \| proProduct \| profile \| protection \| pulse \| pyramid \| qrCode \| qrCodeAlt \| queryTransact \| questionMark \| quotation \| rain \| ratingsCheck \| ratingsChecks \| ratingsStar \| reCenter \| rectangle \| recurring \| refresh \| regulated \| regulatedFutures \| report \| rewardsProduct \| ribbon \| robot \| rocket \| rocketShip \| rollingSpot \| rosettaProduct \| rottenTomato \| royalty \| safe \| save \| savingsBank \| scanQrCode \| scienceAtom \| scienceBeaker \| scienceMoon \| securityKey \| securityShield \| seen \| sendReceive \| setPinCode \| settings \| share \| shield \| shieldOutline \| shoe \| shoppingCart \| signinProduct \| singleCoin \| singleNote \| singlecloud \| smartContract \| snow \| soccer \| socialChat \| socialReshare \| socialShare \| sofort \| sortDoubleArrow \| sortDown \| sortDownCenter \| sortUp \| sortUpCenter \| soundOff \| soundOn \| sparkle \| speaker \| speechBubble \| stableCoin \| stablecoinStack \| staggeredList \| stake \| staking \| star \| starAward \| starBubble \| starTrophy \| statusDot \| step0 \| step1 \| step2 \| step3 \| step4 \| step5 \| step6 \| step7 \| step8 \| step9 \| strategy \| sun \| support \| tag \| taxes \| taxesReceipt \| telephone \| tennis \| test \| thermometer \| thumbsDown \| thumbsDownOutline \| thumbsUp \| thumbsUpOutline \| tokenLaunchCoin \| tokenLaunchRocket \| tokenSales \| tornado \| trading \| transactions \| trashCan \| trophy \| trophyCup \| tshirt \| tv \| tvStand \| twitterLogo \| ultility \| umbrella \| undo \| unfollowPeople \| unknown \| unlock \| upArrow \| upload \| venturesProduct \| verifiedBadge \| verifiedPools \| verticalLine \| virus \| waasProduct \| wallet \| walletLogo \| walletProduct \| webhooks \| wellness \| wifi \| wind \| wireTransfer \| withdraw \| wrapToken \| xLogo` | Yes | `-` | Name of the icon, as defined in Figma. |
+| `active` | `boolean` | No | `-` | Whether the icon is active |
+| `alignContent` | `flex-start \| flex-end \| center \| stretch \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color of the overlay (element being interacted with). |
+| `blendStyles` | `InteractableBlendStyles` | No | `-` | - |
+| `block` | `boolean` | No | `-` | Set element to block and expand to 100% width. |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `compact` | `boolean` | No | `-` | Reduce the inner padding within the button itself. |
+| `contentStyle` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | Apply animated styles to the inner container. |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `debounceTime` | `number` | No | `500` | The amount of time to wait (in milliseconds) before invoking the debounced function. This prop is used in conjunction with the disableDebounce prop. The debounce function is configured to be invoked as soon as its called, but subsequent calls within the debounceTime period will be ignored. |
+| `disableDebounce` | `boolean` | No | `-` | React Native is historically trash at debouncing touch events. This can cause a lot of unwanted behavior such as double navigations where we push a screen onto the stack 2 times. Debouncing the event 500 miliseconds, but taking the leading event prevents this effect and the accidental double-tap. |
+| `disabled` | `boolean` | No | `-` | Is the element currently disabled. Mark the button as disabled. |
+| `display` | `flex \| none` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. Is the element elevated. |
+| `feedback` | `none \| light \| normal \| heavy` | No | `none` | Haptic feedback to trigger when being pressed. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `flush` | `end \| start` | No | `-` | Ensure the button aligns flush on the left or right. This prop will translate the entire button left/right, so take care to ensure it is not overflowing awkwardly |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `loading` | `boolean` | No | `-` | Is the element currenty loading. When set to true, will disable element from press and keyboard events Is the element currenty loading. Mark the button as loading and display a spinner. |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `noScaleOnPress` | `boolean` | No | `-` | Dont scale element on press. |
+| `onPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | Called when a single tap gesture is detected. |
+| `onPressIn` | `((event: GestureResponderEvent) => void)` | No | `-` | Callback fired before onPress when button is pressed. |
+| `onPressOut` | `((event: GestureResponderEvent) => void)` | No | `-` | Callback fired before onPress when button is released. |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID Used to locate this element in unit and end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `transparent` | `boolean` | No | `-` | Mark the background and border as transparent until interacted with. |
+| `transparentWhileInactive` | `boolean` | No | `-` | Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc). Must be used in conjunction with the pressed prop |
+| `transparentWhilePressed` | `boolean` | No | `-` | Mark the background and border as transparent even while element is interacted with (elevation underlay issue). Must be used in conjunction with the pressed prop |
+| `userSelect` | `none \| auto \| contain \| text \| all` | No | `-` | - |
+| `variant` | `primary \| secondary \| tertiary \| positive \| negative \| foregroundMuted` | No | `primary` | Toggle design and visual variants. |
+| `width` | `string \| number` | No | `-` | - |
+| `wrapperStyles` | `{ base?: StyleProp<ViewStyle>; pressed?: StyleProp<ViewStyle>; disabled?: StyleProp<ViewStyle>; }` | No | `-` | Apply styles to the outer container. |
+| `zIndex` | `number` | No | `-` | - |
+
+

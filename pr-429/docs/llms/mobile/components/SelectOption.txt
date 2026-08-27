@@ -1,0 +1,86 @@
+# SelectOption
+
+A single option of a Select component.
+
+## Import
+
+```tsx
+import { SelectOption } from '@coinbase/cds-mobile/controls/SelectOption'
+```
+
+## Examples
+
+### Mobile
+
+`SelectOption` has almost the same API as a ListCell, but with custom styles specific to usage within a `Select`.
+
+**Key differences:** All `SelectOption`s must be wrapped in a `Menu` component in order to work as a controlled input.
+
+`SelectOption` can be used as part of a `Select` composition or as options in a `Tray`.
+
+#### Default Composition
+
+```tsx
+const SelectMobile = () => {
+  const [isTrayVisible, { toggleOff: handleClose, toggleOn: handleOpenTray }] = useToggler(false);
+  const [value, setValue] = useState();
+  const trayRef = useRef(undefined);
+
+  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5'];
+
+  const handleOptionPress = () => {
+    trayRef.current?.handleClose();
+  };
+
+  return (
+    <>
+      <OldSelect value={value} onPress={handleOpenTray} />
+      {isTrayVisible && (
+        <Tray title={title} onCloseComplete={handleClose} ref={trayRef}>
+          {/* You must wrap options in Menu. Treat it as a Select on web */}
+          <Menu value={value} onChange={setValue}>
+            {options.map((option: string) => (
+              <SelectOption
+                key={option}
+                title={option}
+                description="BTC"
+                onPress={handleOptionPress}
+                value={option}
+              />
+            ))}
+          </Menu>
+        </Tray>
+      )}
+    </>
+  );
+};
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `value` | `string` | Yes | `-` | Unique identifier for each option |
+| `accessory` | `ReactElement<CellAccessoryProps, string \| JSXElementConstructor<any>>` | No | `-` | - |
+| `accessoryNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Custom accessory node rendered at the end of the cell. Takes precedence over accessory. |
+| `blendStyles` | `InteractableBlendStyles` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `bottomContent` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | The content to display below the main cell content. |
+| `description` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Description of content. Max 1 line (with title) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use descriptionNode. |
+| `detail` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | - |
+| `detailWidth` | `string \| number` | No | `-` | - |
+| `disabled` | `boolean` | No | `-` | Is the cell disabled? Will apply opacity and disable interaction. |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | End-aligned content (e.g., value, status). Replaces the deprecated detail prop. |
+| `innerSpacing` | `CellSpacing` | No | `-` | The spacing to use on the inner content of Cell |
+| `intermediary` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Middle content between main content and detail. |
+| `media` | `ReactElement` | No | `-` | Media rendered at the start of the cell (icon, avatar, image, etc). |
+| `multiline` | `boolean` | No | `-` | Allow the description to span multiple lines. This *will* break fixed height requirements, so should not be used in a FlatList. |
+| `onLayout` | `((event: LayoutChangeEvent) => void)` | No | `-` | Measure the dimensions of the cell. |
+| `onPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | Called when a single tap gesture is detected. |
+| `outerSpacing` | `CellSpacing` | No | `-` | The spacing to use on the parent wrapper of Cell |
+| `priority` | `end \| start \| middle \| (end \| start \| middle)[]` | No | `-` | Which piece of content has the highest priority in regards to text truncation, growing, and shrinking. |
+| `styles` | `{ root?: StyleProp<ViewStyle>; contentContainer?: StyleProp<ViewStyle>; topContent?: StyleProp<ViewStyle>; bottomContent?: StyleProp<ViewStyle>; pressable?: StyleProp<ViewStyle>; media?: StyleProp<ViewStyle>; childrenContainer?: StyleProp<ViewStyle>; intermediary?: StyleProp<ViewStyle>; end?: StyleProp<ViewStyle>; accessory?: StyleProp<ViewStyle>; }` | No | `-` | Custom styles for individual elements of the Cell component |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `title` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Title of content. Max 1 line (with description) or 2 lines (without), otherwise will truncate. This prop is only intended to accept a string or Text component; other use cases, while allowed, are not supported and may result in unexpected behavior. For arbitrary content, use titleNode. |
+
+

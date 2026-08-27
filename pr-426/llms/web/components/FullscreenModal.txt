@@ -1,0 +1,166 @@
+# FullscreenModal
+
+FullscreenModal is a component that displays content in a full-screen overlay, typically used for immersive experiences or complex interactions.
+
+## Import
+
+```tsx
+import { FullscreenModal } from '@coinbase/cds-web/overlays/modal/FullscreenModal'
+```
+
+## Examples
+
+Please refer to the [Modal](/components/overlay/Modal) docs for more info on setup and usage.
+
+:::tip Accessibility tip
+
+**Trigger Focus**
+
+A `ref` to the trigger that opens the modal, along with an `onDidClose` method to reset focus on the trigger when the modal closes, needs to be wired up for accessibility (see code example below).
+
+<br />
+
+**Labels**
+
+Modals also require an accessibility label, which we set to `title` by default. However, if you don't want to provide a `title` or there's other text that gives the user better context to the modal, then you can pass an element id to `accessibilityLabelledBy`. Alternatively, you may directly provide a contextual label to `accessibilityLabel`.
+
+:::
+
+### Basic example
+
+```jsx live
+function DefaultModal() {
+  const [visible, setVisible] = useState(false);
+  const triggerRef = useRef(null);
+
+  const toggleOn = useCallback(() => setVisible(true), []);
+  const toggleOff = useCallback(() => setVisible(false), []);
+
+  const handleClose = useCallback(() => {
+    console.log('modal closing');
+    toggleOff();
+  }, [toggleOff]);
+
+  const handleDidClose = useCallback(() => {
+    if (triggerRef.current) {
+      triggerRef.current.focus();
+    }
+  }, []);
+
+  const onClickConsole = () => void console.log;
+
+  const SelectComponent = () => {
+    const [value, setValue] = useState('1');
+    const options = [
+      { value: '1', label: 'Option 1' },
+      { value: '2', label: 'Option 2' },
+      { value: '3', label: 'Option 3' },
+      { value: '4', label: 'Option 4' },
+      { value: '5', label: 'Option 5' },
+      { value: '6', label: 'Option 6' },
+    ];
+
+    return (
+      <Select
+        label="Select an option"
+        value={value}
+        onChange={setValue}
+        options={options}
+        placeholder="Choose something..."
+      />
+    );
+  };
+
+  const primaryContent = (
+    <VStack>
+      <Text as="h1" font="title1">
+        Fullscreen Modal
+      </Text>
+      <Text as="p" font="body">
+        This is a test Fullscreen Modal with components composition.
+      </Text>
+      <ListCell
+        title="Bitcoin"
+        description="BTC"
+        detail="$45,123"
+        subdetail="+4.55%"
+        variant="positive"
+      />
+      <SelectComponent />
+      <HStack paddingY={3} gap={3}>
+        <Button onClick={handleClose}>Yes</Button>
+        <Button onClick={handleClose} variant="secondary">
+          No
+        </Button>
+      </HStack>
+    </VStack>
+  );
+
+  const secondaryContent = (
+    <VStack borderRadius={300} elevation={1}>
+      <Accordion defaultActiveKey="2">
+        <AccordionItem itemKey="1" title="Accordion #1" subtitle="subtitle1">
+          <Text as="p" font="body">
+            {loremIpsum}
+          </Text>
+        </AccordionItem>
+        <AccordionItem itemKey="2" title="Accordion #2" subtitle="subtitle2">
+          <Text as="p" font="body">
+            {loremIpsum}
+          </Text>
+        </AccordionItem>
+      </Accordion>
+    </VStack>
+  );
+
+  return (
+    <PortalProvider>
+      <Button onClick={toggleOn} ref={triggerRef}>
+        Open Modal
+      </Button>
+      <FullscreenModal
+        visible={visible}
+        onRequestClose={handleClose}
+        onDidClose={handleDidClose}
+        primaryContent={primaryContent}
+        secondaryContent={secondaryContent}
+        title="Modal title"
+        closeAccessibilityLabel="Close"
+      />
+    </PortalProvider>
+  );
+}
+```
+
+### Advanced layouts
+
+For more complex layouts, including three-column structures with custom headers and footers, see the [FullscreenModalLayout](/components/overlay/FullscreenModalLayout#three-column-layout-with-fullscreenmodalheader-and-pagefooter) component examples. `FullscreenModalLayout` provides more flexibility for building custom modal layouts while `FullscreenModal` offers a simpler API for common two-column use cases.
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `onRequestClose` | `() => void` | Yes | `-` | Callback function fired when modal is closed. |
+| `primaryContent` | `ReactElement` | Yes | `-` | Primary content element. Primary content is where the core of the task or information should live. |
+| `visible` | `boolean` | Yes | `false false` | Controls visibility of the Modal |
+| `accessibilityLabelledBy` | `string` | No | `-` | On web, maps to aria-labelledby and lists the id(s) of the element(s) that label the element on which the attribute is set. On mobile (Android only), a reference to another element nativeID used to build complex forms. |
+| `closeAccessibilityLabel` | `string` | No | `-` | Sets an accessible label for the close button. On web, maps to aria-label and defines a string value that labels an interactive element. On mobile, VoiceOver will read this string when a user selects the associated element. |
+| `contentContainerClassName` | `string` | No | `-` | Class applied to the content container element |
+| `contentStyle` | `CSSProperties` | No | `-` | Apply styles to content. |
+| `disableFocusTrap` | `boolean` | No | `false` | Set disableFocusTrap to disable keyboard listeners responsible for focus trap behavior This can be useful for scenarios like Yubikey 2fa Disables the focus trap to allow normal keyboard navigation. |
+| `disablePortal` | `boolean` | No | `-` | Disable React portal integration |
+| `focusTabIndexElements` | `boolean` | No | `false false` | Allow any element with tabIndex attribute to be focusable in FocusTrap, rather than only focusing specific interactive element types like button. This can be useful when having long content in a Modal. If true, the focus trap will include all elements with tabIndex values in the list of focusable elements. |
+| `hideDivider` | `boolean` | No | `false` | Hide header bottom divider |
+| `logo` | `ReactElement` | No | `-` | The logo to display |
+| `onDidClose` | `((() => void) & (() => void))` | No | `-` | Callback fired after the component is closed. |
+| `primaryContentClassName` | `string` | No | `-` | Class applied to the primary content element |
+| `restoreFocusOnUnmount` | `boolean` | No | `true` | If true, the focus trap will restore focus to the previously focused element when it unmounts.  WARNING: If you disable this, you need to ensure that focus is restored properly so it doesnt end up on the body |
+| `role` | `dialog \| alertdialog` | No | `-` | WAI-ARIA Roles |
+| `secondaryContent` | `ReactElement` | No | `-` | Secondary content element. Secondary content is supplemental information. |
+| `secondaryContentClassName` | `string` | No | `-` | Class applied to the secondary content element |
+| `shouldCloseOnEscPress` | `boolean` | No | `true` | If pressing the esc key should close the modal |
+| `showSecondaryContentDivider` | `boolean` | No | `false` | Show divider between primary and secondary content |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `title` | `string` | No | `-` | Title displayed in the Fullscreen Modal header. |
+
+

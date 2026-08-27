@@ -1,0 +1,3 @@
+module.exports = {
+  content: `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 32 32"><path fill="#0052FF" d="M31 14H20.998L16 32z"/><path fill="#0A0B0D" d="m11 14 5 18L1 14z"/><path fill="#0052FF" d="M1 14h10l5-10H8.207z"/><path fill="#CED2DB" d="M31 14H21L16 4h7.793z"/><path fill="#FFFFFF" d="m11 14 5-10 5 10z"/><path fill="#CED2DB" d="M21 14H11l5 18z"/></svg>`,
+};

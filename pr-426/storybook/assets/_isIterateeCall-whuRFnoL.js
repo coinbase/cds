@@ -1,0 +1,1 @@
+import{r as I}from"./eq-CQ4zk1HF.js";import{g as m,d as o}from"./Pressable-DDN99tmF.js";import{r as p}from"./_isIndex-CqeJT8IS.js";var i,t;function _(){if(t)return i;t=1;var s=I(),u=m(),n=p(),f=o();function l(q,e,r){if(!f(r))return!1;var a=typeof e;return(a=="number"?u(r)&&n(e,r.length):a=="string"&&e in r)?s(r[e],q):!1}return i=l,i}export{_ as r};

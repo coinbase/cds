@@ -1,0 +1,600 @@
+# Link
+
+A pressable Text component.
+
+## Import
+
+```tsx
+import { Link } from '@coinbase/cds-web/typography/Link'
+```
+
+## Examples
+
+Link renders a pressable [Text](/components/typography/Text) element as an anchor (`<a>`) by default. It inherits parent text styles and supports the same `font` and `color` props as Text.
+
+### Basics
+
+By default, Link inherits the text styles of its parent. Pass an `href` to set the destination URL.
+
+```jsx live
+<Text font="body" as="p">
+  Check out the <Link href="https://www.coinbase.com/">Coinbase homepage</Link> for more info.
+</Text>
+```
+
+### Underline
+
+Use the `underline` prop to add a text decoration underline to the link. This is particularly important for inline links within body text to meet [WCAG 2.0 accessibility requirements](https://webaim.org/standards/wcag/checklist).
+
+```jsx live
+<Text font="body" as="p">
+  Read our{' '}
+  <Link underline href="https://www.coinbase.com/">
+    terms and conditions
+  </Link>{' '}
+  before proceeding.
+</Text>
+```
+
+#### Underline with different fonts
+
+The underline works across all font styles.
+
+```jsx live
+<VStack alignItems="flex-start" gap={3}>
+  <Link underline font="body" href="https://www.coinbase.com/">
+    body link
+  </Link>
+  <Link underline font="label1" href="https://www.coinbase.com/">
+    label1 link
+  </Link>
+  <Link underline font="caption" href="https://www.coinbase.com/">
+    caption link
+  </Link>
+  <Link underline font="legal" href="https://www.coinbase.com/">
+    legal link
+  </Link>
+  <Link underline font="title2" href="https://www.coinbase.com/">
+    title2 link
+  </Link>
+</VStack>
+```
+
+#### Underline within a paragraph
+
+When a link appears inline within body text, always use `underline` so users can distinguish the link from surrounding text without relying on color alone.
+
+```jsx live
+<Text as="p" display="block" font="body">
+  This is a paragraph with an{' '}
+  <Link underline href="https://www.coinbase.com/">
+    inline underlined link
+  </Link>{' '}
+  that is clearly distinguishable from the surrounding text.
+</Text>
+```
+
+### Styling
+
+#### Font
+
+To style a Link, either wrap it in the desired [Text](/components/typography/Text) component with the appropriate `as` prop for semantic HTML, or use the `font` prop directly on the Link.
+
+##### Wrapping in Text
+
+```jsx live
+<VStack alignItems="flex-start" gap={3}>
+  <Text font="body" as="p">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      body link
+    </Link>
+  </Text>
+  <Text font="caption" as="span">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      caption link
+    </Link>
+  </Text>
+  <Text font="label1" as="label">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      label1 link
+    </Link>
+  </Text>
+  <Text font="label2" as="label">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      label2 link
+    </Link>
+  </Text>
+  <Text font="legal" as="span">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      legal link
+    </Link>
+  </Text>
+  <Text font="title1" as="h1">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      title1 link
+    </Link>
+  </Text>
+  <Text font="title2" as="h2">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      title2 link
+    </Link>
+  </Text>
+  <Text font="title3" as="h3">
+    <Link href="https://www.coinbase.com/" openInNewWindow>
+      title3 link
+    </Link>
+  </Text>
+</VStack>
+```
+
+##### Using the font prop
+
+If you need to style a link without wrapping it in a semantically appropriate text element, use the `font` prop directly.
+
+```jsx live
+<VStack alignItems="flex-start" gap={3}>
+  {['body', 'caption', 'label1', 'label2', 'legal', 'title1', 'title2', 'title3'].map((font) => (
+    <Link font={font} href="https://www.coinbase.com/" openInNewWindow>
+      {`${font} link`}
+    </Link>
+  ))}
+</VStack>
+```
+
+#### Color
+
+Override the default link color using the `color` prop with any CDS foreground token.
+
+```jsx live
+<VStack alignItems="flex-start" gap={3}>
+  <Link href="https://www.coinbase.com/" color="fgPrimary">
+    fgPrimary (default)
+  </Link>
+  <Link href="https://www.coinbase.com/" color="fgNegative">
+    fgNegative
+  </Link>
+  <Link underline href="https://www.coinbase.com/" color="fgNegative">
+    fgNegative with underline
+  </Link>
+</VStack>
+```
+
+### Navigation
+
+#### openInNewWindow
+
+Set `openInNewWindow` to open the link in a new browser tab.
+
+```jsx live
+<Link font="body" href="https://www.coinbase.com/" openInNewWindow>
+  Opens in a new tab
+</Link>
+```
+
+#### rel
+
+Use the `rel` prop to set the relationship between the current document and the linked resource.
+
+```jsx live
+<VStack alignItems="flex-start" gap={3}>
+  <Link font="body" href="https://www.coinbase.com/" rel="noreferrer">
+    rel=noreferrer
+  </Link>
+  <Link font="body" href="https://www.coinbase.com/" rel="noopener">
+    rel=noopener
+  </Link>
+</VStack>
+```
+
+### Accessibility
+
+:::tip Accessibility tip
+
+[WCAG 2.0](https://webaim.org/standards/wcag/checklist) has 2 requirements for body text links that are not underlined by default:
+
+<br />
+
+_The link text must have a 3:1 contrast ratio from the surrounding non-link text. The link must present a "non-color designator" (typically the introduction of the underline) on both mouse hover and keyboard focus. These two requirements help ensure that all users can differentiate links from non-link text, even if they have low vision, color deficiency, or have overridden page colors._
+
+:::
+
+Use the `underline` prop on inline links within body text to ensure they are distinguishable without relying on color alone.
+
+```jsx live
+<Text as="p" font="body">
+  By continuing, you agree to the{' '}
+  <Link underline href="https://www.coinbase.com/">
+    Terms of Service
+  </Link>{' '}
+  and{' '}
+  <Link underline href="https://www.coinbase.com/">
+    Privacy Policy
+  </Link>
+  .
+</Text>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `about` | `string \| undefined` | No | `-` | - |
+| `accessKey` | `string \| undefined` | No | `-` | - |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `aria-activedescendant` | `string \| undefined` | No | `-` | Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application. |
+| `aria-atomic` | `Booleanish \| undefined` | No | `-` | Indicates whether assistive technologies will present all, or only parts of, the changed region based on the change notifications defined by the aria-relevant attribute. |
+| `aria-autocomplete` | `none \| inline \| list \| both \| undefined` | No | `-` | Indicates whether inputting text could trigger display of one or more predictions of the users intended value for an input and specifies how predictions would be presented if they are made. |
+| `aria-braillelabel` | `string \| undefined` | No | `-` | Defines a string value that labels the current element, which is intended to be converted into Braille. |
+| `aria-brailleroledescription` | `string \| undefined` | No | `-` | Defines a human-readable, author-localized abbreviated description for the role of an element, which is intended to be converted into Braille. |
+| `aria-busy` | `Booleanish \| undefined` | No | `-` | - |
+| `aria-checked` | `boolean \| true \| false \| mixed \| undefined` | No | `-` | Indicates the current checked state of checkboxes, radio buttons, and other widgets. |
+| `aria-colcount` | `number \| undefined` | No | `-` | Defines the total number of columns in a table, grid, or treegrid. |
+| `aria-colindex` | `number \| undefined` | No | `-` | Defines an elements column index or position with respect to the total number of columns within a table, grid, or treegrid. |
+| `aria-colindextext` | `string \| undefined` | No | `-` | Defines a human readable text alternative of aria-colindex. |
+| `aria-colspan` | `number \| undefined` | No | `-` | Defines the number of columns spanned by a cell or gridcell within a table, grid, or treegrid. |
+| `aria-controls` | `string \| undefined` | No | `-` | Identifies the element (or elements) whose contents or presence are controlled by the current element. |
+| `aria-current` | `boolean \| time \| location \| true \| false \| page \| step \| date \| undefined` | No | `-` | Indicates the element that represents the current item within a container or set of related elements. |
+| `aria-describedby` | `string \| undefined` | No | `-` | Identifies the element (or elements) that describes the object. |
+| `aria-description` | `string \| undefined` | No | `-` | Defines a string value that describes or annotates the current element. |
+| `aria-details` | `string \| undefined` | No | `-` | Identifies the element that provides a detailed, extended description for the object. |
+| `aria-disabled` | `Booleanish \| undefined` | No | `-` | Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable. |
+| `aria-dropeffect` | `link \| none \| copy \| execute \| move \| popup \| undefined` | No | `-` | Indicates what functions can be performed when a dragged object is released on the drop target. |
+| `aria-errormessage` | `string \| undefined` | No | `-` | Identifies the element that provides an error message for the object. |
+| `aria-expanded` | `Booleanish \| undefined` | No | `-` | Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed. |
+| `aria-flowto` | `string \| undefined` | No | `-` | Identifies the next element (or elements) in an alternate reading order of content which, at the users discretion, allows assistive technology to override the general default of reading in document source order. |
+| `aria-grabbed` | `Booleanish \| undefined` | No | `-` | Indicates an elements grabbed state in a drag-and-drop operation. |
+| `aria-haspopup` | `boolean \| grid \| dialog \| menu \| true \| false \| listbox \| tree \| undefined` | No | `-` | Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element. |
+| `aria-hidden` | `Booleanish \| undefined` | No | `-` | Indicates whether the element is exposed to an accessibility API. |
+| `aria-invalid` | `boolean \| true \| false \| grammar \| spelling \| undefined` | No | `-` | Indicates the entered value does not conform to the format expected by the application. |
+| `aria-keyshortcuts` | `string \| undefined` | No | `-` | Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element. |
+| `aria-label` | `string \| undefined` | No | `-` | Defines a string value that labels the current element. |
+| `aria-labelledby` | `string \| undefined` | No | `-` | Identifies the element (or elements) that labels the current element. |
+| `aria-level` | `number \| undefined` | No | `-` | Defines the hierarchical level of an element within a structure. |
+| `aria-live` | `off \| assertive \| polite \| undefined` | No | `-` | Indicates that an element will be updated, and describes the types of updates the user agents, assistive technologies, and user can expect from the live region. |
+| `aria-modal` | `Booleanish \| undefined` | No | `-` | Indicates whether an element is modal when displayed. |
+| `aria-multiline` | `Booleanish \| undefined` | No | `-` | Indicates whether a text box accepts multiple lines of input or only a single line. |
+| `aria-multiselectable` | `Booleanish \| undefined` | No | `-` | Indicates that the user may select more than one item from the current selectable descendants. |
+| `aria-orientation` | `horizontal \| vertical \| undefined` | No | `-` | Indicates whether the elements orientation is horizontal, vertical, or unknown/ambiguous. |
+| `aria-owns` | `string \| undefined` | No | `-` | Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship between DOM elements where the DOM hierarchy cannot be used to represent the relationship. |
+| `aria-placeholder` | `string \| undefined` | No | `-` | Defines a short hint (a word or short phrase) intended to aid the user with data entry when the control has no value. A hint could be a sample value or a brief description of the expected format. |
+| `aria-posinset` | `number \| undefined` | No | `-` | Defines an elements number or position in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM. |
+| `aria-pressed` | `boolean \| true \| false \| mixed \| undefined` | No | `-` | Indicates the current pressed state of toggle buttons. |
+| `aria-readonly` | `Booleanish \| undefined` | No | `-` | Indicates that the element is not editable, but is otherwise operable. |
+| `aria-relevant` | `text \| all \| additions \| additions removals \| additions text \| removals \| removals additions \| removals text \| text additions \| text removals \| undefined` | No | `-` | Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified. |
+| `aria-required` | `Booleanish \| undefined` | No | `-` | Indicates that user input is required on the element before a form may be submitted. |
+| `aria-roledescription` | `string \| undefined` | No | `-` | Defines a human-readable, author-localized description for the role of an element. |
+| `aria-rowcount` | `number \| undefined` | No | `-` | Defines the total number of rows in a table, grid, or treegrid. |
+| `aria-rowindex` | `number \| undefined` | No | `-` | Defines an elements row index or position with respect to the total number of rows within a table, grid, or treegrid. |
+| `aria-rowindextext` | `string \| undefined` | No | `-` | Defines a human readable text alternative of aria-rowindex. |
+| `aria-rowspan` | `number \| undefined` | No | `-` | Defines the number of rows spanned by a cell or gridcell within a table, grid, or treegrid. |
+| `aria-selected` | `Booleanish \| undefined` | No | `-` | Indicates the current selected state of various widgets. |
+| `aria-setsize` | `number \| undefined` | No | `-` | Defines the number of items in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM. |
+| `aria-sort` | `none \| ascending \| descending \| other \| undefined` | No | `-` | Indicates if items in a table or grid are sorted in ascending or descending order. |
+| `aria-valuemax` | `number \| undefined` | No | `-` | Defines the maximum allowed value for a range widget. |
+| `aria-valuemin` | `number \| undefined` | No | `-` | Defines the minimum allowed value for a range widget. |
+| `aria-valuenow` | `number \| undefined` | No | `-` | Defines the current value for a range widget. |
+| `aria-valuetext` | `string \| undefined` | No | `-` | Defines the human readable text alternative of aria-valuenow for a range widget. |
+| `as` | `symbol \| object \| style \| div \| a \| abbr \| address \| area \| article \| aside \| audio \| b \| base \| bdi \| bdo \| big \| blockquote \| body \| br \| button \| canvas \| caption \| center \| cite \| code \| col \| colgroup \| data \| datalist \| dd \| del \| details \| dfn \| dialog \| dl \| dt \| em \| embed \| fieldset \| figcaption \| figure \| footer \| form \| h1 \| h2 \| h3 \| h4 \| h5 \| h6 \| head \| header \| hgroup \| hr \| html \| i \| iframe \| img \| input \| ins \| kbd \| keygen \| label \| legend \| li \| link \| main \| map \| mark \| menu \| menuitem \| meta \| meter \| nav \| noindex \| noscript \| ol \| optgroup \| option \| output \| p \| param \| picture \| pre \| progress \| q \| rp \| rt \| ruby \| s \| samp \| search \| slot \| script \| section \| select \| small \| source \| span \| strong \| sub \| summary \| sup \| table \| template \| tbody \| td \| textarea \| tfoot \| th \| thead \| time \| title \| tr \| track \| u \| ul \| var \| video \| wbr \| webview \| svg \| animate \| animateMotion \| animateTransform \| circle \| clipPath \| defs \| desc \| ellipse \| feBlend \| feColorMatrix \| feComponentTransfer \| feComposite \| feConvolveMatrix \| feDiffuseLighting \| feDisplacementMap \| feDistantLight \| feDropShadow \| feFlood \| feFuncA \| feFuncB \| feFuncG \| feFuncR \| feGaussianBlur \| feImage \| feMerge \| feMergeNode \| feMorphology \| feOffset \| fePointLight \| feSpecularLighting \| feSpotLight \| feTile \| feTurbulence \| filter \| foreignObject \| g \| image \| line \| linearGradient \| marker \| mask \| metadata \| mpath \| path \| pattern \| polygon \| polyline \| radialGradient \| rect \| set \| stop \| switch \| text \| textPath \| tspan \| use \| view \| ComponentClass<any, any> \| FunctionComponent<any>` | No | `a` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `autoCapitalize` | `(string & {}) \| none \| off \| on \| sentences \| words \| characters \| undefined` | No | `-` | - |
+| `autoCorrect` | `string \| undefined` | No | `-` | - |
+| `autoFocus` | `boolean \| undefined` | No | `-` | - |
+| `autoSave` | `string \| undefined` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color of the overlay (element being interacted with). |
+| `blendStyles` | `InteractableBlendStyles` | No | `-` | - |
+| `block` | `boolean` | No | `-` | Set element to block and expand to 100% width. |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Border color of the element. |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | - |
+| `className` | `string` | No | `-` | Apply class names to the outer container. |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `content` | `string \| undefined` | No | `-` | - |
+| `contentEditable` | `inherit \| Booleanish \| plaintext-only \| undefined` | No | `-` | - |
+| `contextMenu` | `string \| undefined` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `dangerouslySetInnerHTML` | `{ __html: string \| TrustedHTML; } \| undefined` | No | `-` | - |
+| `datatype` | `string \| undefined` | No | `-` | - |
+| `defaultChecked` | `boolean \| undefined` | No | `-` | - |
+| `defaultValue` | `string \| number \| readonly string[] \| undefined` | No | `-` | - |
+| `dir` | `string \| undefined` | No | `-` | - |
+| `disabled` | `boolean` | No | `-` | Is the element currently disabled. |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `download` | `any` | No | `-` | - |
+| `draggable` | `Booleanish \| undefined` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `enterKeyHint` | `search \| enter \| done \| go \| next \| previous \| send \| undefined` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `focusable` | `boolean` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `hidden` | `boolean \| undefined` | No | `-` | - |
+| `href` | `string \| undefined` | No | `-` | - |
+| `hrefLang` | `string \| undefined` | No | `-` | - |
+| `id` | `string \| undefined` | No | `-` | - |
+| `inlist` | `any` | No | `-` | - |
+| `inputMode` | `search \| text \| none \| email \| tel \| url \| numeric \| decimal \| undefined` | No | `-` | Hints at the type of data that might be entered by the user while editing the element or its contents |
+| `is` | `string \| undefined` | No | `-` | Specify that a standard HTML element should behave like a defined custom built-in element |
+| `itemID` | `string \| undefined` | No | `-` | - |
+| `itemProp` | `string \| undefined` | No | `-` | - |
+| `itemRef` | `string \| undefined` | No | `-` | - |
+| `itemScope` | `boolean \| undefined` | No | `-` | - |
+| `itemType` | `string \| undefined` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null \| undefined` | No | `-` | - |
+| `lang` | `string \| undefined` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `loading` | `boolean` | No | `-` | Is the element currenty loading. When set to true, will disable element from press and keyboard events |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `media` | `string \| undefined` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `mono` | `boolean` | No | `-` | Use monospace font family. |
+| `noScaleOnPress` | `boolean` | No | `-` | Dont scale element on press. |
+| `nonce` | `string \| undefined` | No | `-` | - |
+| `onAbort` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onAbortCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onAnimationEnd` | `AnimationEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onAnimationEndCapture` | `AnimationEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onAnimationIteration` | `AnimationEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onAnimationIterationCapture` | `AnimationEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onAnimationStart` | `AnimationEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onAnimationStartCapture` | `AnimationEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onAuxClick` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onAuxClickCapture` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onBeforeInput` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onBeforeInputCapture` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onBlur` | `FocusEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onBlurCapture` | `FocusEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCanPlay` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCanPlayCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCanPlayThrough` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCanPlayThroughCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onChangeCapture` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onClick` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onClickCapture` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCompositionEnd` | `CompositionEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCompositionEndCapture` | `CompositionEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCompositionStart` | `CompositionEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCompositionStartCapture` | `CompositionEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCompositionUpdate` | `CompositionEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCompositionUpdateCapture` | `CompositionEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onContextMenu` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onContextMenuCapture` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCopy` | `ClipboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCopyCapture` | `ClipboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCut` | `ClipboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onCutCapture` | `ClipboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDoubleClick` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDoubleClickCapture` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDrag` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragCapture` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragEnd` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragEndCapture` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragEnter` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragEnterCapture` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragExit` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragExitCapture` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragLeave` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragLeaveCapture` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragOver` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragOverCapture` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragStart` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDragStartCapture` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDrop` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDropCapture` | `DragEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDurationChange` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onDurationChangeCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onEmptied` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onEmptiedCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onEncrypted` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onEncryptedCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onEnded` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onEndedCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onError` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onErrorCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onFocus` | `FocusEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onFocusCapture` | `FocusEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onGotPointerCapture` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onGotPointerCaptureCapture` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onInput` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onInputCapture` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onInvalid` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onInvalidCapture` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onKeyDown` | `KeyboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onKeyDownCapture` | `KeyboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onKeyPress` | `KeyboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onKeyPressCapture` | `KeyboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onKeyUp` | `KeyboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onKeyUpCapture` | `KeyboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onLoad` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onLoadCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onLoadStart` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onLoadStartCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onLoadedData` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onLoadedDataCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onLoadedMetadata` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onLoadedMetadataCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onLostPointerCapture` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onLostPointerCaptureCapture` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseDown` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseDownCapture` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseEnter` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseLeave` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseMove` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseMoveCapture` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseOut` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseOutCapture` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseOver` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseOverCapture` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseUp` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onMouseUpCapture` | `MouseEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPaste` | `ClipboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPasteCapture` | `ClipboardEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPause` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPauseCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPlay` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPlayCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPlaying` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPlayingCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerCancel` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerCancelCapture` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerDown` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerDownCapture` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerEnter` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerLeave` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerMove` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerMoveCapture` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerOut` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerOutCapture` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerOver` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerOverCapture` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerUp` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onPointerUpCapture` | `PointerEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onProgress` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onProgressCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onRateChange` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onRateChangeCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onReset` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onResetCapture` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onResize` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onResizeCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onScroll` | `UIEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onScrollCapture` | `UIEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onSeeked` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onSeekedCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onSeeking` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onSeekingCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onSelect` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onSelectCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onStalled` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onStalledCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onSubmit` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onSubmitCapture` | `FormEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onSuspend` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onSuspendCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTimeUpdate` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTimeUpdateCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTouchCancel` | `TouchEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTouchCancelCapture` | `TouchEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTouchEnd` | `TouchEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTouchEndCapture` | `TouchEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTouchMove` | `TouchEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTouchMoveCapture` | `TouchEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTouchStart` | `TouchEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTouchStartCapture` | `TouchEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTransitionEnd` | `TransitionEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onTransitionEndCapture` | `TransitionEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onVolumeChange` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onVolumeChangeCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onWaiting` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onWaitingCapture` | `ReactEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onWheel` | `WheelEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `onWheelCapture` | `WheelEventHandler<HTMLAnchorElement> \| undefined` | No | `-` | - |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `openInNewWindow` | `boolean` | No | `false` | Determines whether the link opens in a new window. - true: Opens the link in a new window. - false: Replaces the current screen with the link.  This prop is only applicable when rendering the Link as an anchor (as=a). |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `ping` | `string \| undefined` | No | `-` | - |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `prefix` | `string \| undefined` | No | `-` | - |
+| `pressed` | `boolean` | No | `-` | Is the element being pressed. Primarily a mobile feature, but can be used on the web. |
+| `property` | `string \| undefined` | No | `-` | - |
+| `radioGroup` | `string \| undefined` | No | `-` | - |
+| `ref` | `any` | No | `-` | - |
+| `referrerPolicy` | `HTMLAttributeReferrerPolicy \| undefined` | No | `-` | - |
+| `rel` | `string \| undefined` | No | `-` | - |
+| `resource` | `string \| undefined` | No | `-` | - |
+| `results` | `number \| undefined` | No | `-` | - |
+| `rev` | `string \| undefined` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `role` | `AriaRole \| undefined` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `security` | `string \| undefined` | No | `-` | - |
+| `slot` | `string \| undefined` | No | `-` | - |
+| `spellCheck` | `Booleanish \| undefined` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `suppressContentEditableWarning` | `boolean \| undefined` | No | `-` | - |
+| `suppressHydrationWarning` | `boolean \| undefined` | No | `-` | - |
+| `tabIndex` | `number \| undefined` | No | `-` | - |
+| `target` | `HTMLAttributeAnchorTarget \| undefined` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `title` | `string \| undefined` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `translate` | `yes \| no \| undefined` | No | `-` | - |
+| `transparentWhileInactive` | `boolean` | No | `-` | Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc). Must be used in conjunction with the pressed prop |
+| `transparentWhilePressed` | `boolean` | No | `-` | Mark the background and border as transparent even while element is interacted with (elevation underlay issue). Must be used in conjunction with the pressed prop |
+| `type` | `string \| undefined` | No | `-` | - |
+| `typeof` | `string \| undefined` | No | `-` | - |
+| `underline` | `boolean` | No | `-` | Set text decoration to underline. |
+| `unselectable` | `off \| on \| undefined` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `vocab` | `string \| undefined` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+

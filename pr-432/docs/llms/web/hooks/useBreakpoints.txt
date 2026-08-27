@@ -1,0 +1,62 @@
+# useBreakpoints
+
+Returns an object with a boolean for each breakpoint of the window. Useful for conditionally rendering components or component trees based on the current window breakpoint.
+
+## Import
+
+```tsx
+import { useBreakpoints } from '@coinbase/cds-web/hooks/useBreakpoints'
+```
+
+## API
+
+import { media } from '@coinbase/cds-web/styles/media';
+
+### Parameters
+
+The `useBreakpoints` hook does not accept any parameters. It must be used within a MediaQueryProvider component.
+
+### Returns
+
+Returns an object with a boolean for each breakpoint of the window.
+
+- `isPhone`: {media.phone}
+- `isPhonePortrait`: {media.phonePortrait}
+- `isPhoneLandscape`: {media.phoneLandscape}
+- `isTablet`: {media.tablet}
+- `isTabletPortrait`: {media.tabletPortrait}
+- `isTabletLandscape`: {media.tabletLandscape}
+- `isDesktop`: {media.desktop}
+- `isDesktopSmall`: {media.desktopSmall}
+- `isDesktopLarge`: {media.desktopLarge}
+- `isExtraWide`: {media.extraWide}
+
+[See how breakpoints are defined in the `media` object &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/styles/media.ts)
+
+:::tip
+Multiple breakpoint values can be true at the same time.
+:::
+
+## Examples
+
+### Basic usage
+
+Use the `useBreakpoints` hook to conditionally render components or component trees based on the current window breakpoint.
+
+[See how breakpoints are defined in the `media` object &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/styles/media.ts)
+
+:::warning
+Do not use `useBreakpoints` for responsive styles. Use CSS media queries or [the `StyleProps` API](/getting-started/styling#responsive-styles) for responsive styles.
+:::
+
+```tsx live
+() => {
+  const breakpoints = useBreakpoints();
+  return (
+    <pre style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
+      {JSON.stringify(breakpoints, null, 2)}
+    </pre>
+  );
+};
+```
+

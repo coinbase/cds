@@ -1,0 +1,599 @@
+# Point
+
+Visual markers that highlight specific data values on a chart. Points can be customized with different colors, sizes, and interactivity.
+
+## Import
+
+```tsx
+import { Point } from '@coinbase/cds-web-visualization'
+```
+
+## Examples
+
+### Basics
+
+Points are visual markers that highlight specific data values on a chart. They can be used to emphasize important data points, show discrete values, or provide interactive elements.
+
+You can add points using `points` on Line or [LineChart](/components/graphs/LineChart).
+
+```jsx live
+<LineChart
+  enableScrubbing
+  showArea
+  showYAxis
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  points
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  xAxis={{
+    /* This prevents points close to the right edge from awkward cutoff when scrubbing */
+    range: ({ min, max }) => ({ min, max: max - 8 }),
+  }}
+  yAxis={{
+    showGrid: true,
+  }}
+>
+  <Scrubber />
+</LineChart>
+```
+
+You can also add Points directly to a chart.
+
+```jsx live
+function MyChart() {
+  const prices = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  return (
+    <CartesianChart
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      series={[
+        {
+          id: 'prices',
+          data: prices,
+        },
+      ]}
+      inset={{
+        // Overriding the right offset gives us more space to place this
+        right: 32,
+      }}
+    >
+      <YAxis showGrid position="left" tickLabelFormatter={(value) => `$${value}`} />
+      {prices.map((price, index) => (
+        <Point key={index} dataX={index} dataY={price} label={`$${price}`} labelPosition="right" />
+      ))}
+    </CartesianChart>
+  );
+}
+```
+
+#### Conditional
+
+You can conditionally render points to highlight specific values in your data, such as maximum/minimum values or outliers.
+
+```jsx live
+function AssetPriceWithMinMax() {
+  const data = sparklineInteractiveData.hour.map((d) => d.value);
+
+  const minPrice = Math.min(...data);
+  const maxPrice = Math.max(...data);
+
+  const formatPrice = useCallback((price) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(price);
+  }, []);
+
+  return (
+    <LineChart
+      showArea
+      areaType="dotted"
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      points={({ dataX, dataY }) => {
+        const isMin = dataY === minPrice;
+        const isMax = dataY === maxPrice;
+
+        if (isMin) {
+          return { label: formatPrice(dataY), labelPosition: 'bottom' };
+        }
+
+        if (isMax) {
+          return { label: formatPrice(dataY), labelPosition: 'top' };
+        }
+      }}
+      series={[
+        {
+          id: 'btc',
+          data: data,
+          color: assets.btc.color,
+        },
+      ]}
+      style={{ outlineColor: assets.btc.color }}
+    />
+  );
+}
+```
+
+### Interaction
+
+Points can be made interactive by adding click handlers, allowing users to explore data in more detail.
+
+```jsx live
+<LineChart
+  showArea
+  showYAxis
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  points={({ dataX, dataY }) => {
+    const months = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ];
+    return {
+      radius: 4,
+      onClick: () => alert(`${months[dataX]}: ${dataY} units sold`),
+      accessibilityLabel: `${months[dataX]} sales: ${dataY} units`,
+    };
+  }}
+  series={[
+    {
+      id: 'sales',
+      data: [120, 132, 101, 134, 90, 230, 210, 120, 180, 190, 210, 176],
+    },
+  ]}
+  yAxis={{
+    showGrid: true,
+    label: 'Sales (units)',
+  }}
+/>
+```
+
+### Styling
+
+Points support customization through various properties including colors, sizes, and labels.
+
+```jsx live
+<LineChart
+  showArea
+  showYAxis
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  points={({ dataX, dataY }) => {
+    const isHighPerformance = dataY >= 90;
+    const isLowPerformance = dataY < 75;
+
+    return {
+      fill: isHighPerformance
+        ? 'var(--color-bgPositive)'
+        : isLowPerformance
+          ? 'var(--color-bgNegative)'
+          : 'var(--color-fgPrimary)',
+      radius: isHighPerformance ? 6 : 4,
+      strokeWidth: 2,
+      stroke: 'var(--color-bg)',
+      label: isHighPerformance || isLowPerformance ? `${dataY}%` : undefined,
+      labelPosition: isHighPerformance ? 'top' : 'bottom',
+    };
+  }}
+  series={[
+    {
+      id: 'performance',
+      data: [65, 70, 72, 85, 88, 92, 78, 82, 90, 95, 91, 94],
+    },
+  ]}
+  xAxis={{
+    range: ({ min, max }) => ({ min, max: max - 8 }),
+  }}
+  yAxis={{
+    showGrid: true,
+    label: 'Performance Score',
+  }}
+/>
+```
+
+#### Labels
+
+You can use `labelPosition`, `labelOffset`, and `labelFont` to adjust Point's label.
+
+```jsx live
+function Scatterplot() {
+  const dataPoints = [
+    { x: 20, y: 30, label: 'A' },
+    { x: 40, y: 65, label: 'B' },
+    { x: 60, y: 45, label: 'C' },
+    { x: 75, y: 80, label: 'D' },
+  ];
+
+  return (
+    <CartesianChart
+      height={250}
+      xAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+      yAxis={{
+        domain: { min: 0, max: 100 },
+      }}
+    >
+      <XAxis showLine showTickMarks showGrid />
+      <YAxis position="left" showLine showTickMarks showGrid />
+      {dataPoints.map((point, index) => (
+        <Point
+          key={index}
+          dataX={point.x}
+          dataY={point.y}
+          label={point.label}
+          labelPosition="top"
+          labelOffset={6}
+          labelFont="title3"
+        />
+      ))}
+    </CartesianChart>
+  );
+}
+```
+
+#### Custom Label Position
+
+You can also use `LabelComponent` to create custom label components.
+
+```jsx live
+function ScatterplotWithCustomLabels() {
+  const dataPoints = [
+    { x: 12, y: 34, label: 'A', color: 'var(--color-fgAccent)' },
+    { x: 28, y: 67, label: 'B', color: 'var(--color-fgAccent)' },
+    { x: 45, y: 23, label: 'C', color: 'var(--color-fgAccent)' },
+    { x: 67, y: 89, label: 'D', color: 'var(--color-bgPositive)' },
+    { x: 82, y: 76, label: 'E', color: 'var(--color-bgPositive)' },
+    { x: 34, y: 91, label: 'F', color: 'var(--color-bgPositive)' },
+    { x: 56, y: 45, label: 'G', color: 'var(--color-bgPositive)' },
+    { x: 19, y: 12, label: 'H', color: 'var(--color-fgWarning)' },
+    { x: 73, y: 28, label: 'I', color: 'var(--color-fgWarning)' },
+    { x: 91, y: 54, label: 'J', color: 'var(--color-fgWarning)' },
+    { x: 15, y: 58, label: 'K', color: 'var(--color-fgPrimary)' },
+    { x: 39, y: 72, label: 'L', color: 'var(--color-fgPrimary)' },
+    { x: 88, y: 15, label: 'M', color: 'var(--color-fgPrimary)' },
+    { x: 52, y: 82, label: 'N', color: 'var(--color-fgPrimary)' },
+  ];
+
+  // Calculate domain based on data
+  const xValues = dataPoints.map((p) => p.x);
+  const yValues = dataPoints.map((p) => p.y);
+  const xMin = Math.min(...xValues);
+  const xMax = Math.max(...xValues);
+  const yMin = Math.min(...yValues);
+  const yMax = Math.max(...yValues);
+
+  // Custom label component that places labels to the top-right
+  const TopRightPointLabel = ({ x, y, offset = 0, children }) => {
+    return (
+      <ChartText
+        horizontalAlignment="left"
+        verticalAlignment="bottom"
+        x={x + offset}
+        y={y - offset}
+        font="label1"
+      >
+        {children}
+      </ChartText>
+    );
+  };
+
+  return (
+    <CartesianChart
+      height={300}
+      xAxis={{
+        domain: { min: xMin, max: xMax },
+        domainLimit: 'nice',
+      }}
+      yAxis={{
+        domain: { min: yMin, max: yMax },
+        domainLimit: 'nice',
+      }}
+    >
+      <XAxis showLine showTickMarks showGrid />
+      <YAxis position="left" showLine showTickMarks showGrid />
+      {dataPoints.map((point, index) => (
+        <Point
+          key={index}
+          dataX={point.x}
+          dataY={point.y}
+          label={point.label}
+          labelOffset={8}
+          fill={point.color}
+          radius={5}
+          LabelComponent={TopRightPointLabel}
+        />
+      ))}
+    </CartesianChart>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `dataX` | `number` | Yes | `-` | X coordinate in data space (not pixel coordinates). |
+| `dataY` | `number` | Yes | `-` | Y coordinate in data space (not pixel coordinates). |
+| `LabelComponent` | `ComponentClass<PointLabelProps, any> \| FunctionComponent<PointLabelProps>` | No | `DefaultPointLabel` | Custom component to render the label. |
+| `accentHeight` | `string \| number` | No | `-` | - |
+| `accessibilityLabel` | `string` | No | `-` | Accessibility label for screen readers to describe the point. If not provided, a default label will be generated using the data coordinates. |
+| `accumulate` | `none \| sum` | No | `-` | - |
+| `additive` | `replace \| sum` | No | `-` | - |
+| `alignmentBaseline` | `inherit \| auto \| baseline \| middle \| after-edge \| alphabetic \| before-edge \| central \| hanging \| ideographic \| mathematical \| text-after-edge \| text-before-edge` | No | `-` | - |
+| `allowReorder` | `yes \| no` | No | `-` | - |
+| `alphabetic` | `string \| number` | No | `-` | - |
+| `amplitude` | `string \| number` | No | `-` | - |
+| `animate` | `boolean` | No | `-` | When set, overrides the charts animation setting for this specific point. |
+| `arabicForm` | `initial \| medial \| terminal \| isolated` | No | `-` | - |
+| `ascent` | `string \| number` | No | `-` | - |
+| `attributeName` | `string` | No | `-` | - |
+| `attributeType` | `string` | No | `-` | - |
+| `autoReverse` | `false \| true \| true \| false` | No | `-` | - |
+| `azimuth` | `string \| number` | No | `-` | - |
+| `baseFrequency` | `string \| number` | No | `-` | - |
+| `baseProfile` | `string \| number` | No | `-` | - |
+| `baselineShift` | `string \| number` | No | `-` | - |
+| `bbox` | `string \| number` | No | `-` | - |
+| `begin` | `string \| number` | No | `-` | - |
+| `bias` | `string \| number` | No | `-` | - |
+| `by` | `string \| number` | No | `-` | - |
+| `calcMode` | `string \| number` | No | `-` | - |
+| `capHeight` | `string \| number` | No | `-` | - |
+| `className` | `string` | No | `-` | Custom class name for the point. |
+| `classNames` | `{ root?: string; point?: string \| undefined; } \| undefined` | No | `-` | Custom class names for the component. |
+| `clip` | `string \| number` | No | `-` | - |
+| `clipPath` | `string` | No | `-` | - |
+| `clipPathUnits` | `string \| number` | No | `-` | - |
+| `clipRule` | `string \| number` | No | `-` | - |
+| `color` | `string` | No | `-` | - |
+| `colorInterpolation` | `string \| number` | No | `-` | - |
+| `colorInterpolationFilters` | `inherit \| auto \| linearRGB \| sRGB` | No | `-` | - |
+| `colorProfile` | `string \| number` | No | `-` | - |
+| `colorRendering` | `string \| number` | No | `-` | - |
+| `contentScriptType` | `string \| number` | No | `-` | - |
+| `contentStyleType` | `string \| number` | No | `-` | - |
+| `crossOrigin` | ` \| anonymous \| use-credentials` | No | `-` | - |
+| `cursor` | `string \| number` | No | `-` | - |
+| `d` | `string` | No | `-` | - |
+| `decelerate` | `string \| number` | No | `-` | - |
+| `descent` | `string \| number` | No | `-` | - |
+| `diffuseConstant` | `string \| number` | No | `-` | - |
+| `direction` | `string \| number` | No | `-` | - |
+| `display` | `string \| number` | No | `-` | - |
+| `divisor` | `string \| number` | No | `-` | - |
+| `dominantBaseline` | `string \| number` | No | `-` | - |
+| `dur` | `string \| number` | No | `-` | - |
+| `dx` | `string \| number` | No | `-` | - |
+| `dy` | `string \| number` | No | `-` | - |
+| `edgeMode` | `string \| number` | No | `-` | - |
+| `elevation` | `string \| number` | No | `-` | - |
+| `enableBackground` | `string \| number` | No | `-` | - |
+| `end` | `string \| number` | No | `-` | - |
+| `exponent` | `string \| number` | No | `-` | - |
+| `externalResourcesRequired` | `false \| true \| true \| false` | No | `-` | - |
+| `fill` | `string` | No | `'var(--color-fgPrimary)'` | The fill color of the point. |
+| `fillOpacity` | `string \| number` | No | `-` | - |
+| `fillRule` | `inherit \| evenodd \| nonzero` | No | `-` | - |
+| `filter` | `string` | No | `-` | - |
+| `filterRes` | `string \| number` | No | `-` | - |
+| `filterUnits` | `string \| number` | No | `-` | - |
+| `floodColor` | `string \| number` | No | `-` | - |
+| `floodOpacity` | `string \| number` | No | `-` | - |
+| `focusable` | `auto \| Booleanish` | No | `-` | - |
+| `fontFamily` | `string` | No | `-` | - |
+| `fontSize` | `string \| number` | No | `-` | - |
+| `fontSizeAdjust` | `string \| number` | No | `-` | - |
+| `fontStretch` | `string \| number` | No | `-` | - |
+| `fontStyle` | `string \| number` | No | `-` | - |
+| `fontVariant` | `string \| number` | No | `-` | - |
+| `fontWeight` | `string \| number` | No | `-` | - |
+| `format` | `string \| number` | No | `-` | - |
+| `fr` | `string \| number` | No | `-` | - |
+| `from` | `string \| number` | No | `-` | - |
+| `fx` | `string \| number` | No | `-` | - |
+| `fy` | `string \| number` | No | `-` | - |
+| `g1` | `string \| number` | No | `-` | - |
+| `g2` | `string \| number` | No | `-` | - |
+| `glyphName` | `string \| number` | No | `-` | - |
+| `glyphOrientationHorizontal` | `string \| number` | No | `-` | - |
+| `glyphOrientationVertical` | `string \| number` | No | `-` | - |
+| `glyphRef` | `string \| number` | No | `-` | - |
+| `gradientTransform` | `string` | No | `-` | - |
+| `gradientUnits` | `string` | No | `-` | - |
+| `hanging` | `string \| number` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `horizAdvX` | `string \| number` | No | `-` | - |
+| `horizOriginX` | `string \| number` | No | `-` | - |
+| `href` | `string` | No | `-` | - |
+| `ideographic` | `string \| number` | No | `-` | - |
+| `imageRendering` | `string \| number` | No | `-` | - |
+| `in` | `string` | No | `-` | - |
+| `in2` | `string \| number` | No | `-` | - |
+| `intercept` | `string \| number` | No | `-` | - |
+| `k` | `string \| number` | No | `-` | - |
+| `k1` | `string \| number` | No | `-` | - |
+| `k2` | `string \| number` | No | `-` | - |
+| `k3` | `string \| number` | No | `-` | - |
+| `k4` | `string \| number` | No | `-` | - |
+| `kernelMatrix` | `string \| number` | No | `-` | - |
+| `kernelUnitLength` | `string \| number` | No | `-` | - |
+| `kerning` | `string \| number` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `keyPoints` | `string \| number` | No | `-` | - |
+| `keySplines` | `string \| number` | No | `-` | - |
+| `keyTimes` | `string \| number` | No | `-` | - |
+| `label` | `string \| SkParagraph \| { value: string \| SkParagraph; }` | No | `-` | Simple text label to display at the point position. If provided, a label component will be automatically rendered. |
+| `labelFont` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | Font style for the label text. |
+| `labelOffset` | `number` | No | `2 * radius` | Distance in pixels to offset the label from the point. |
+| `labelPosition` | `top \| bottom \| left \| right \| center` | No | `'center'` | Position of the label relative to the point. |
+| `lengthAdjust` | `string \| number` | No | `-` | - |
+| `letterSpacing` | `string \| number` | No | `-` | - |
+| `lightingColor` | `string \| number` | No | `-` | - |
+| `limitingConeAngle` | `string \| number` | No | `-` | - |
+| `local` | `string \| number` | No | `-` | - |
+| `markerEnd` | `string` | No | `-` | - |
+| `markerHeight` | `string \| number` | No | `-` | - |
+| `markerMid` | `string` | No | `-` | - |
+| `markerStart` | `string` | No | `-` | - |
+| `markerUnits` | `string \| number` | No | `-` | - |
+| `markerWidth` | `string \| number` | No | `-` | - |
+| `mask` | `string` | No | `-` | - |
+| `maskContentUnits` | `string \| number` | No | `-` | - |
+| `maskUnits` | `string \| number` | No | `-` | - |
+| `mathematical` | `string \| number` | No | `-` | - |
+| `max` | `string \| number` | No | `-` | - |
+| `media` | `string` | No | `-` | - |
+| `method` | `string` | No | `-` | - |
+| `min` | `string \| number` | No | `-` | - |
+| `mode` | `string \| number` | No | `-` | - |
+| `name` | `string` | No | `-` | - |
+| `numOctaves` | `string \| number` | No | `-` | - |
+| `offset` | `string \| number` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `onClick` | `((event: MouseEvent<Element, MouseEvent>, point: { x: number; y: number; dataX: number; dataY: number; }) => void)` | No | `-` | Handler for when the point is clicked. |
+| `opacity` | `number` | No | `-` | Opacity of the point. |
+| `operator` | `string \| number` | No | `-` | - |
+| `order` | `string \| number` | No | `-` | - |
+| `orient` | `string \| number` | No | `-` | - |
+| `orientation` | `string \| number` | No | `-` | - |
+| `origin` | `string \| number` | No | `-` | - |
+| `overflow` | `string \| number` | No | `-` | - |
+| `overlinePosition` | `string \| number` | No | `-` | - |
+| `overlineThickness` | `string \| number` | No | `-` | - |
+| `paintOrder` | `string \| number` | No | `-` | - |
+| `panose1` | `string \| number` | No | `-` | - |
+| `path` | `string` | No | `-` | - |
+| `pathLength` | `string \| number` | No | `-` | - |
+| `patternContentUnits` | `string` | No | `-` | - |
+| `patternTransform` | `string \| number` | No | `-` | - |
+| `patternUnits` | `string` | No | `-` | - |
+| `pointerEvents` | `string \| number` | No | `-` | - |
+| `points` | `string` | No | `-` | - |
+| `pointsAtX` | `string \| number` | No | `-` | - |
+| `pointsAtY` | `string \| number` | No | `-` | - |
+| `pointsAtZ` | `string \| number` | No | `-` | - |
+| `preserveAlpha` | `false \| true \| true \| false` | No | `-` | - |
+| `preserveAspectRatio` | `string` | No | `-` | - |
+| `primitiveUnits` | `string \| number` | No | `-` | - |
+| `radius` | `number` | No | `5` | Radius of the point. |
+| `ref` | `null \| string \| (instance: SVGCircleElement \| null) => void \| RefObject<SVGCircleElement>` | No | `-` | Allows getting a ref to the component instance. Once the component unmounts, React will set ref.current to null (or call the ref with null if you passed a callback ref). |
+| `refX` | `string \| number` | No | `-` | - |
+| `refY` | `string \| number` | No | `-` | - |
+| `renderingIntent` | `string \| number` | No | `-` | - |
+| `repeatCount` | `string \| number` | No | `-` | - |
+| `repeatDur` | `string \| number` | No | `-` | - |
+| `requiredExtensions` | `string \| number` | No | `-` | - |
+| `requiredFeatures` | `string \| number` | No | `-` | - |
+| `restart` | `string \| number` | No | `-` | - |
+| `result` | `string` | No | `-` | - |
+| `rotate` | `string \| number` | No | `-` | - |
+| `rx` | `string \| number` | No | `-` | - |
+| `ry` | `string \| number` | No | `-` | - |
+| `scale` | `string \| number` | No | `-` | - |
+| `seed` | `string \| number` | No | `-` | - |
+| `shapeRendering` | `string \| number` | No | `-` | - |
+| `slope` | `string \| number` | No | `-` | - |
+| `spacing` | `string \| number` | No | `-` | - |
+| `specularConstant` | `string \| number` | No | `-` | - |
+| `specularExponent` | `string \| number` | No | `-` | - |
+| `speed` | `string \| number` | No | `-` | - |
+| `spreadMethod` | `string` | No | `-` | - |
+| `startOffset` | `string \| number` | No | `-` | - |
+| `stdDeviation` | `string \| number` | No | `-` | - |
+| `stemh` | `string \| number` | No | `-` | - |
+| `stemv` | `string \| number` | No | `-` | - |
+| `stitchTiles` | `string \| number` | No | `-` | - |
+| `stopColor` | `string` | No | `-` | - |
+| `stopOpacity` | `string \| number` | No | `-` | - |
+| `strikethroughPosition` | `string \| number` | No | `-` | - |
+| `strikethroughThickness` | `string \| number` | No | `-` | - |
+| `string` | `string \| number` | No | `-` | - |
+| `stroke` | `string` | No | `'var(--color-bg)'` | Color of the outer stroke around the point. |
+| `strokeDasharray` | `string \| number` | No | `-` | - |
+| `strokeDashoffset` | `string \| number` | No | `-` | - |
+| `strokeLinecap` | `inherit \| round \| butt \| square` | No | `-` | - |
+| `strokeLinejoin` | `inherit \| round \| bevel \| miter` | No | `-` | - |
+| `strokeMiterlimit` | `string \| number` | No | `-` | - |
+| `strokeOpacity` | `string \| number` | No | `-` | - |
+| `strokeWidth` | `number` | No | `2` | Outer stroke width of the point. Set to  0 to remove the stroke. |
+| `style` | `CSSProperties` | No | `-` | Custom styles for the point. |
+| `styles` | `{ root?: CSSProperties; point?: CSSProperties \| undefined; } \| undefined` | No | `-` | Custom styles for the component. |
+| `surfaceScale` | `string \| number` | No | `-` | - |
+| `systemLanguage` | `string \| number` | No | `-` | - |
+| `tableValues` | `string \| number` | No | `-` | - |
+| `target` | `string` | No | `-` | - |
+| `targetX` | `string \| number` | No | `-` | - |
+| `targetY` | `string \| number` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAnchor` | `string` | No | `-` | - |
+| `textDecoration` | `string \| number` | No | `-` | - |
+| `textLength` | `string \| number` | No | `-` | - |
+| `textRendering` | `string \| number` | No | `-` | - |
+| `to` | `string \| number` | No | `-` | - |
+| `transform` | `string` | No | `-` | - |
+| `transition` | `Orchestration & Repeat & Tween \| Orchestration & Repeat & Spring \| Orchestration & Repeat & Keyframes \| Orchestration & Repeat & Inertia \| Orchestration & Repeat & Just \| Orchestration & Repeat & None \| Orchestration & Repeat & PermissiveTransitionDefinition \| Orchestration & Repeat & Tween & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & Spring & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & Keyframes & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & Inertia & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & Just & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & None & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & PermissiveTransitionDefinition & { [key: string]: TransitionDefinition; }` | No | `defaultTransition` | Transition configuration for animation. |
+| `type` | `string` | No | `-` | - |
+| `u1` | `string \| number` | No | `-` | - |
+| `u2` | `string \| number` | No | `-` | - |
+| `underlinePosition` | `string \| number` | No | `-` | - |
+| `underlineThickness` | `string \| number` | No | `-` | - |
+| `unicode` | `string \| number` | No | `-` | - |
+| `unicodeBidi` | `string \| number` | No | `-` | - |
+| `unicodeRange` | `string \| number` | No | `-` | - |
+| `unitsPerEm` | `string \| number` | No | `-` | - |
+| `vAlphabetic` | `string \| number` | No | `-` | - |
+| `vHanging` | `string \| number` | No | `-` | - |
+| `vIdeographic` | `string \| number` | No | `-` | - |
+| `vMathematical` | `string \| number` | No | `-` | - |
+| `values` | `string` | No | `-` | - |
+| `vectorEffect` | `string \| number` | No | `-` | - |
+| `version` | `string` | No | `-` | - |
+| `vertAdvY` | `string \| number` | No | `-` | - |
+| `vertOriginX` | `string \| number` | No | `-` | - |
+| `vertOriginY` | `string \| number` | No | `-` | - |
+| `viewBox` | `string` | No | `-` | - |
+| `viewTarget` | `string \| number` | No | `-` | - |
+| `visibility` | `string \| number` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `widths` | `string \| number` | No | `-` | - |
+| `wordSpacing` | `string \| number` | No | `-` | - |
+| `writingMode` | `string \| number` | No | `-` | - |
+| `x` | `string \| number` | No | `-` | - |
+| `x1` | `string \| number` | No | `-` | - |
+| `x2` | `string \| number` | No | `-` | - |
+| `xChannelSelector` | `string` | No | `-` | - |
+| `xHeight` | `string \| number` | No | `-` | - |
+| `xlinkActuate` | `string` | No | `-` | - |
+| `xlinkArcrole` | `string` | No | `-` | - |
+| `xlinkHref` | `string` | No | `-` | - |
+| `xlinkRole` | `string` | No | `-` | - |
+| `xlinkShow` | `string` | No | `-` | - |
+| `xlinkTitle` | `string` | No | `-` | - |
+| `xlinkType` | `string` | No | `-` | - |
+| `xmlBase` | `string` | No | `-` | - |
+| `xmlLang` | `string` | No | `-` | - |
+| `xmlSpace` | `string` | No | `-` | - |
+| `xmlns` | `string` | No | `-` | - |
+| `xmlnsXlink` | `string` | No | `-` | - |
+| `y` | `string \| number` | No | `-` | - |
+| `y1` | `string \| number` | No | `-` | - |
+| `y2` | `string \| number` | No | `-` | - |
+| `yAxisId` | `string` | No | `first y-axis defined in chart props.` | Optional Y-axis id to specify which axis to plot along. |
+| `yChannelSelector` | `string` | No | `-` | - |
+| `z` | `string \| number` | No | `-` | - |
+| `zoomAndPan` | `string` | No | `-` | - |
+
+

@@ -1,0 +1,99 @@
+# Tooltip
+
+A component that displays additional information on press.
+
+## Import
+
+```tsx
+import { Tooltip } from '@coinbase/cds-mobile/overlays/Tooltip'
+```
+
+## Examples
+
+### Placement
+
+```jsx
+function DefaultSelect() {
+  const content = 'This is the tooltip Content';
+  return (
+    <HStack spacingHorizontal={2} gap={2} justifyContent="space-around">
+      <Tooltip content={content}>
+        <Button>Default</Button>
+      </Tooltip>
+      <Tooltip content={content} placement="top">
+        <Button>Top</Button>
+      </Tooltip>
+      <Tooltip content={content} placement="left">
+        <Button>Left</Button>
+      </Tooltip>
+      <Tooltip content={content} placement="right">
+        <Button>Right</Button>
+      </Tooltip>
+      <Tooltip content={content} placement="bottom">
+        <Button>Bottom</Button>
+      </Tooltip>
+    </HStack>
+  );
+}
+```
+
+### Opt out of color inversion
+
+Tooltips invert the current color scheme by default. Pass `invertColorScheme={false}` to keep the tooltip aligned with the surrounding surface and supply your preferred elevation/background tokens.
+
+```jsx
+function TooltipColorSchemeOptOut() {
+  return (
+    <Box justifyContent="center">
+      <Tooltip content="Matches the surrounding surface" invertColorScheme={false}>
+        <Button>Keep current theme</Button>
+      </Tooltip>
+    </Box>
+  );
+}
+```
+
+### Visibility delay (press)
+
+Use `openDelay` and `closeDelay` to slow down activation/dismissal when users tap through dense surfaces.
+
+```jsx
+function TooltipVisibilityDelay() {
+  return (
+    <HStack spacingHorizontal={2} gap={2} justifyContent="space-around">
+      <Tooltip content="Opens after 400ms" openDelay={400}>
+        <Button>Open delay 400ms</Button>
+      </Tooltip>
+      <Tooltip content="Closes after 150ms" closeDelay={150}>
+        <Button>Close delay 150ms</Button>
+      </Tooltip>
+      <Tooltip content="Open 400 / Close 150" openDelay={400} closeDelay={150}>
+        <Button>Open 400 / Close 150</Button>
+      </Tooltip>
+    </HStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `content` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | The content to render within the tooltip. |
+| `accessibilityHint` | `string` | No | `-` | If the children of the trigger is not a string, then you have to set your own accessibilityHint to ensure that the tooltip is read correctly for voice-overs. |
+| `accessibilityHintForContent` | `string` | No | `-` | The accessibilityHint for the content of the tooltip. If content is a string, this is not required as accessibilityHint would be set to the content. Otherwise, this is required |
+| `accessibilityLabel` | `string` | No | `-` | If the children of the trigger is not a string, then you have to set your own accessibilityLabel to ensure that the tooltip is read correctly for voice-overs. |
+| `accessibilityLabelForContent` | `string` | No | `-` | The accessibilityLabel for the content of the tooltip. If content is a string, this is not required as accessibilityHint would be set to the content. Otherwise, this is required |
+| `closeDelay` | `number` | No | `-` | Delay (in ms) before hiding the tooltip after dismiss. |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines a components shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `1` | This value corresponds to how big the gap between the subject and the tooltip is. We do not encourage usage of this prop. But it is enabled for special cases as an escape hatch. |
+| `invertColorScheme` | `boolean` | No | `true` | Invert the themes activeColorScheme for this component |
+| `onCloseTooltip` | `(() => void)` | No | `-` | This callback executes when the tooltip is closed; either by press outside the toolip or on back button press for android. |
+| `onOpenTooltip` | `(() => void)` | No | `-` | This callback executes when the tooltip is opened |
+| `openDelay` | `number` | No | `-` | Delay (in ms) before showing the tooltip after press. |
+| `placement` | `top \| bottom` | No | `-` | Position of tooltip in relation to the subject. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `visible` | `boolean` | No | `true` | Control whether the tooltip is shown or hidden. |
+| `yShiftByStatusBarHeight` | `boolean` | No | `false` | - |
+
+

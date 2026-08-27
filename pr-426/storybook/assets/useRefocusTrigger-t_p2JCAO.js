@@ -1,0 +1,1 @@
+import{r as s,b as o}from"./iframe-BXWLBCkp.js";import{a as c}from"./FocusTrap-90tMQkIg.js";const u=t=>{const e=s.useRef(null);return s.useEffect(()=>{if(t&&o()&&e.current){const r=e.current.parentNode?.querySelectorAll(c);r?.length&&r[0]&&r[0].focus()}},[t,e]),e};export{u};

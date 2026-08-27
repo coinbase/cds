@@ -1,0 +1,120 @@
+# useEventHandler
+
+Creates event handlers for components based on the EventHandlerProvider configuration. It enables centralized event handling and analytics tracking by mapping component actions to configured handlers.
+
+## Import
+
+```tsx
+import { useEventHandler } from '@coinbase/cds-common/hooks/useEventHandler'
+```
+
+## API
+
+:::warning
+Must be used within an EventHandlerProvider. The provider's configuration determines which events are handled and how they are processed. The provider config should include:
+
+- `actionMapping?: Record<string, string>` - Optional mapping of CDS actions to handler actions
+- `handlers?: Record<EventHandlerComponent, Record<string, (eventData: EventCallbackProps) => void>>` - Event handlers for components
+
+:::
+
+### Parameters
+
+```tsx
+type EventDataEntryTypes = string | number | boolean | null | undefined;
+type EventDataEntry = EventDataEntryTypes | EventDataEntryTypes[];
+type RecursiveMapType<T> = T | Record<string, T>;
+
+type EventHandlerComponent = 'Button';
+type EventHandlerAction = string;
+type EventCustomData = Record<string, RecursiveMapType<EventDataEntry>>;
+
+type EventHandlerCustomConfig = {
+  componentName: string;
+  actions: EventHandlerAction[];
+  data?: EventCustomData;
+};
+
+function useEventHandler(
+  component: EventHandlerComponent,
+  action: EventHandlerAction,
+  eventConfig?: EventHandlerCustomConfig,
+  analyticsId?: string,
+): () => void;
+```
+
+- `component`: The component type to handle events for (currently supports 'Button')
+- `action`: The action type to handle (e.g., 'onClick', 'onHover'). This is a string type that can be mapped to custom handler actions.
+- `eventConfig` (optional): Configuration object for the event:
+  - `componentName`: Name of the component for tracking purposes
+  - `actions`: List of actions to track
+  - `data`: Additional data to pass to the handler
+- `analyticsId` (optional): A unique identifier for analytics tracking that takes precedence over eventConfig
+
+### Returns
+
+```tsx
+type EventCallbackProps = {
+  componentName?: string;
+  analyticsId?: string;
+  data?: EventCustomData;
+};
+
+type Return = () => void;
+```
+
+Returns a callback function that when invoked will trigger the event handling. The function:
+
+- Executes the configured handler for the component and action when called
+- Maps CDS actions to custom handler actions if `actionMapping` is provided in the EventHandlerProvider
+- Returns a no-op function if:
+  - No handlers are configured
+  - No eventConfig actions are provided and no analyticsId is set
+  - The handler for the component doesn't exist
+  - The action is not listed in eventConfig actions (when using eventConfig)
+  - The params object is empty
+
+## Examples
+
+### Usage
+
+```tsx live
+function ExampleWithProvider() {
+  const { show: showToast } = useToast();
+
+  // Example provider configuration with action mapping
+  const config = {
+    actionMapping: {
+      onClick: 'click', // Maps CDS onClick to custom 'click' handler
+    },
+    handlers: {
+      Button: {
+        click: ({ componentName, data }) => {
+          showToast(`Button ${componentName} clicked with data: ${JSON.stringify(data)}`);
+        },
+      },
+    },
+  };
+
+  function ButtonExample() {
+    const eventConfig = {
+      actions: ['click'], // Use mapped action name
+      componentName: 'mapped_button',
+      data: {
+        source: 'action_mapping_example',
+      },
+    };
+
+    const handleButtonClick = useEventHandler('Button', 'onClick', eventConfig);
+
+    return <Button onClick={handleButtonClick}>Click for Mapped Action</Button>;
+  }
+
+  return (
+    <EventHandlerProvider config={config}>
+      <ButtonExample />
+    </EventHandlerProvider>
+  );
+}
+```
+

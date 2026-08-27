@@ -1,0 +1,1 @@
+const s=t=>new Date(t.getFullYear(),t.getMonth(),t.getDate()),r=t=>t.flatMap(a=>{if(a instanceof Date)return s(a).getTime();const[D,g]=a,o=s(D),i=s(g),n=[];for(let e=o;e<=i;e.setDate(e.getDate()+1))n.push(e.getTime());return n});export{r as a,s as g};

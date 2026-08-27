@@ -1,0 +1,11 @@
+import{r as n,j as e}from"./iframe-BXWLBCkp.js";import{T as d}from"./Text-Ch_dBU4v.js";import{u as o}from"./useMotionProps-CS-LE6l8.js";import{m as i}from"./motion-minimal-SVRWJYUW.js";import{V as f}from"./VStack-CnEfMFeL.js";import{S as u}from"./Spacer-BI_0XOyg.js";import"./preload-helper-D9Z9MdNV.js";import"./utils-CwomCnHN.js";import"./tokens-BwScSksM.js";const h="circleCss-c1zh1on",r=n.memo(({size:a,color:s,testID:p})=>{const l=o({animate:{rotate:[0,360]},transition:{easing:"linear",duration:"slow4",repeat:1/0}}),c=o({initial:{strokeDashoffset:0},animate:{rotate:[0,135,360],strokeDashoffset:[180,45,180]},transition:{easing:"global",duration:"slow4",repeat:1/0,times:[0,.5,1]}}),m=n.useMemo(()=>({stroke:`var(--color-${s})`}),[s]);return e.jsx(i.svg,{"data-testid":p,height:`${a}px`,style:m,viewBox:"0 0 66 66",xmlns:"http://www.w3.org/2000/svg",...l,children:e.jsx(i.circle,{cx:"33",cy:"33",fill:"none",r:"30",strokeLinecap:"round",strokeWidth:"6",...c,className:h})})});r.displayName="MaterialSpinner";r.__docgenInfo={description:"@deprecated Use Spinner component instead",methods:[],displayName:"MaterialSpinner",props:{size:{required:!0,tsType:{name:"number"},description:"Size of the spinner"},color:{required:!0,tsType:{name:"ThemeVars.Color"},description:"Color of the spinner"},testID:{required:!1,tsType:{name:"string"},description:`Used to locate this element in unit and end-to-end tests.
+Under the hood, testID translates to data-testid on Web. On Mobile, testID
+stays the same - testID`}}};const j={component:r,title:"Components/Loaders/MaterialSpinner"},t=()=>e.jsxs(f,{alignItems:"flex-start",children:[e.jsx(d,{as:"h1",display:"block",font:"title1",children:"Material Spinner"}),e.jsx(u,{}),e.jsx(r,{color:"bgPrimary",size:30})]});t.__docgenInfo={description:"",methods:[],displayName:"MaterialSpinnerDefault"};t.parameters={...t.parameters,docs:{...t.parameters?.docs,source:{originalSource:`() => {
+  return <VStack alignItems="flex-start">
+      <Text as="h1" display="block" font="title1">
+        Material Spinner
+      </Text>
+      <Spacer />
+      <MaterialSpinner color="bgPrimary" size={30} />
+    </VStack>;
+}`,...t.parameters?.docs?.source}}};const T=["MaterialSpinnerDefault"];export{t as MaterialSpinnerDefault,T as __namedExportsOrder,j as default};

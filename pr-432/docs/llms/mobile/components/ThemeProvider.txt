@@ -1,0 +1,132 @@
+# ThemeProvider
+
+Provides the theme context to all child components.
+
+## Import
+
+```tsx
+import { ThemeProvider } from '@coinbase/cds-mobile'
+```
+
+## Examples
+
+### ThemeProvider component
+
+The ThemeProvider provides the theme context to all child components.
+
+You must pass the `theme` prop to configure the theme, and the `activeColorScheme` prop to set light or dark mode.
+
+```tsx
+import { ThemeProvider } from '@coinbase/cds-mobile/system/ThemeProvider';
+import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+
+const App = () => (
+  <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+    {/* Your app components */}
+  </ThemeProvider>
+);
+```
+
+:::tip
+Changing the `activeColorScheme` automatically updates the values returned from the `useTheme` hook.
+:::
+
+### `useTheme` hook
+
+The `useTheme` hook provides access to the current `theme` and `activeColorScheme`.
+
+The `color` and `spectrum` objects automatically change based on the `activeColorScheme`.
+
+[See the `useTheme` docs here &rarr;](/hooks/useTheme)
+
+```jsx
+const theme = useTheme();
+theme.activeColorScheme; // "light" or "dark"
+theme.spectrum; // Resolves to lightSpectrum or darkSpectrum, depends on activeColorScheme
+theme.color; // Resolves to lightColor or darkColor, depends on activeColorScheme
+theme.color.bgPrimary; // "rgb(0,82,255)" or "rgb(87,139,250)", depends on activeColorScheme
+theme.space[2]; // 16
+theme.borderRadius[200]; // 8
+theme.fontSize.display3; // 40
+```
+
+### Nested themes
+
+ThemeProviders can be nested to create theme overrides for specific sections.
+
+```jsx
+<ThemeProvider theme={defaultTheme} activeColorScheme="light">
+  {/* Default theme in light color scheme */}
+
+  <ThemeProvider theme={customTheme} activeColorScheme="dark">
+    {/* Custom theme in dark color scheme */}
+  </ThemeProvider>
+</ThemeProvider>
+```
+
+When nesting, you may want to override specific color values from the current theme. Overrides must be conditionally applied because we don't enforce that a theme has both light and dark colors defined.
+
+```jsx
+// Override parts of the parent theme
+const theme = useTheme();
+const customTheme = {
+  ...theme,
+  ...(theme.lightColor &&
+    theme.lightSpectrum && {
+      lightColor: {
+        ...theme.lightColor,
+        bg: `rgb(${theme.lightSpectrum.orange50})`,
+        bgPrimary: `rgb(${theme.lightSpectrum.red20})`,
+        bgSecondary: `rgb(${theme.lightSpectrum.blue50})`,
+      },
+    }),
+  ...(theme.darkColor &&
+    theme.darkSpectrum && {
+      darkColor: {
+        ...theme.darkColor,
+        bg: `rgb(${theme.darkSpectrum.orange50})`,
+        bgPrimary: `rgb(${theme.darkSpectrum.red20})`,
+        bgSecondary: `rgb(${theme.darkSpectrum.blue50})`,
+      },
+    }),
+} as const satisfies Theme;
+```
+
+### Theme inheritence
+
+Nested ThemeProviders do not automatically inherit the theme from their parent provider. You can manually inherit the theme with the `useTheme` hook.
+
+```jsx
+const Example = () => {
+  // Pass the parent theme down to another ThemeProvider
+  const theme = useTheme();
+  return (
+    <ThemeProvider theme={theme} activeColorScheme={theme.activeColorScheme}>
+      {children}
+    </ThemeProvider>
+  );
+};
+```
+
+### InvertedThemeProvider component
+
+The InvertedThemeProvider automatically inherits from its parent theme and flips the `activeColorScheme` to the opposite value.
+
+```jsx
+<ThemeProvider theme={defaultTheme} activeColorScheme="light">
+  {/* Default theme in light color scheme */}
+
+  <InvertedThemeProvider>
+    {/* Default theme in inverse (dark) color scheme */}
+  </InvertedThemeProvider>
+</ThemeProvider>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `activeColorScheme` | `light \| dark` | Yes | `-` | - |
+| `theme` | `ThemeConfig` | Yes | `-` | - |
+
+

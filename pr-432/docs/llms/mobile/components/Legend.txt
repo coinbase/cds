@@ -1,0 +1,727 @@
+# Legend
+
+A legend component for displaying series information in charts. Supports customizable shapes, layouts, and custom item components.
+
+## Import
+
+```tsx
+import { Legend } from '@coinbase/cds-mobile-visualization'
+```
+
+## Examples
+
+Legend displays series information for charts, showing labels and color indicators for each data series. It can be positioned around the chart and supports custom shapes and item components.
+
+### Basics
+
+Use the `legend` prop on chart components to enable a default legend, or pass a `Legend` component for customization. Legend's `flexDirection` is automatically set to `row` for top/bottom `legendPosition` and `column` otherwise.
+
+```jsx
+function BasicLegend() {
+  const theme = useTheme();
+  const pages = useMemo(
+    () => ['Page A', 'Page B', 'Page C', 'Page D', 'Page E', 'Page F', 'Page G'],
+    [],
+  );
+  const pageViews = useMemo(() => [2400, 1398, 9800, 3908, 4800, 3800, 4300], []);
+  const uniqueVisitors = useMemo(() => [4000, 3000, 2000, 2780, 1890, 2390, 3490], []);
+
+  return (
+    <VStack gap={2}>
+      <LineChart
+        legend
+        showArea
+        height={200}
+        legendPosition="bottom"
+        series={[
+          {
+            id: 'pageViews',
+            data: pageViews,
+            color: `rgb(${theme.spectrum.green40})`,
+            label: 'Page Views',
+          },
+          {
+            id: 'uniqueVisitors',
+            data: uniqueVisitors,
+            color: `rgb(${theme.spectrum.purple40})`,
+            label: 'Unique Visitors',
+          },
+        ]}
+        width="100%"
+        xAxis={{
+          data: pages,
+        }}
+      />
+    </VStack>
+  );
+}
+```
+
+#### Position
+
+Use `legendPosition` to place the legend at different positions around the chart. You can also customize alignment using the `justifyContent` prop on Legend.
+
+```jsx
+function LegendPosition() {
+  const theme = useTheme();
+
+  return (
+    <CartesianChart
+      height={200}
+      inset={{ bottom: 8, left: 0, right: 0, top: 8 }}
+      legend={<Legend justifyContent="flex-end" />}
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue',
+          data: [455, 520, 380, 455, 285, 235],
+          yAxisId: 'revenue',
+          color: `rgb(${theme.spectrum.yellow40})`,
+          legendShape: 'squircle',
+        },
+        {
+          id: 'profitMargin',
+          label: 'Profit Margin',
+          data: [23, 20, 16, 38, 12, 9],
+          yAxisId: 'profitMargin',
+          color: theme.color.fgPositive,
+          legendShape: 'squircle',
+        },
+      ]}
+      width="100%"
+      xAxis={{
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        scaleType: 'band',
+      }}
+      yAxis={[
+        {
+          id: 'revenue',
+          domain: { min: 0 },
+        },
+        {
+          id: 'profitMargin',
+          domain: { max: 100, min: 0 },
+        },
+      ]}
+    >
+      <XAxis showLine showTickMarks />
+      <YAxis
+        showGrid
+        showLine
+        showTickMarks
+        axisId="revenue"
+        position="left"
+        requestedTickCount={5}
+        tickLabelFormatter={(value) => `$${value}k`}
+        width={60}
+      />
+      <YAxis
+        showLine
+        showTickMarks
+        axisId="profitMargin"
+        position="right"
+        requestedTickCount={5}
+        tickLabelFormatter={(value) => `${value}%`}
+      />
+      <BarPlot />
+    </CartesianChart>
+  );
+}
+```
+
+#### Shape Variants
+
+Legend supports different shape variants: `pill`, `circle`, `square`, and `squircle`. Set the shape on each series using `legendShape`.
+
+```jsx
+function ShapeVariants() {
+  const theme = useTheme();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  return (
+    <VStack gap={2}>
+      <LineChart
+        showArea
+        height={200}
+        legend={<Legend flexDirection="column" />}
+        legendPosition="bottom"
+        series={[
+          {
+            id: 'pill',
+            label: 'Pill',
+            data: [120, 150, 130, 170, 160, 190],
+            color: `rgb(${theme.spectrum.blue40})`,
+            legendShape: 'pill',
+          },
+          {
+            id: 'circle',
+            label: 'Circle',
+            data: [80, 110, 95, 125, 115, 140],
+            color: `rgb(${theme.spectrum.green40})`,
+            legendShape: 'circle',
+          },
+          {
+            id: 'square',
+            label: 'Square',
+            data: [60, 85, 70, 100, 90, 115],
+            color: `rgb(${theme.spectrum.orange40})`,
+            legendShape: 'square',
+          },
+          {
+            id: 'squircle',
+            label: 'Squircle',
+            data: [40, 60, 50, 75, 65, 85],
+            color: `rgb(${theme.spectrum.purple40})`,
+            legendShape: 'squircle',
+          },
+        ]}
+        width="100%"
+        xAxis={{ data: months }}
+      />
+    </VStack>
+  );
+}
+```
+
+### Styling
+
+#### Custom Shape
+
+You can pass a custom ReactNode as `legendShape` for fully custom indicators. On mobile, this uses React Native Skia for rendering dotted patterns.
+
+```jsx
+function CustomLegendShapes() {
+  const theme = useTheme();
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  // Actual revenue (first 9 months)
+  const actualRevenue = [320, 380, 420, 390, 450, 480, 520, 490, 540, null, null, null];
+
+  // Forecasted revenue (last 3 months)
+  const forecastRevenue = [null, null, null, null, null, null, null, null, null, 580, 620, 680];
+
+  const numberFormatter = useCallback(
+    (value) => `$${new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value)}k`,
+    [],
+  );
+
+  // Pattern settings for dotted fill
+  const patternSize = 4;
+  const dotSize = 1;
+
+  // Custom legend indicator that matches the dotted bar pattern
+  const DottedLegendIndicator = useMemo(() => {
+    const indicatorSize = 10;
+    const legendPatternSize = patternSize / 2;
+    const legendDotSize = dotSize / 2;
+    const dottedPath = getDottedAreaPath(
+      { x: 1, y: 1, width: indicatorSize - 2, height: indicatorSize - 2 },
+      legendPatternSize,
+      legendDotSize,
+    );
+    const skiaPath = Skia.Path.MakeFromSVGString(dottedPath);
+    const squirclePath = Skia.Path.Make();
+    squirclePath.addRRect(Skia.RRectXY(Skia.XYWHRect(1, 1, 8, 8), 2, 2));
+
+    return (
+      <Canvas style={{ width: indicatorSize, height: indicatorSize }}>
+        <Group clip={squirclePath}>
+          {skiaPath && <SkiaPath color={theme.color.fgPositive} path={skiaPath} style="fill" />}
+        </Group>
+        <SkiaPath
+          color={theme.color.fgPositive}
+          path={squirclePath}
+          strokeWidth={2}
+          style="stroke"
+        />
+      </Canvas>
+    );
+  }, [theme.color.fgPositive]);
+
+  // Custom bar component that renders bars with dotted pattern fill
+  const DottedBarComponent = useMemo(() => {
+    return memo(function DottedBar(props) {
+      const { x, y, width, height, fill, d } = props;
+
+      const dottedPath = useMemo(() => {
+        return getDottedAreaPath({ x, y, width, height }, patternSize, dotSize);
+      }, [x, y, width, height]);
+
+      const barClipPath = useMemo(() => {
+        return d ? (Skia.Path.MakeFromSVGString(d) ?? undefined) : undefined;
+      }, [d]);
+
+      const dotsSkiaPath = useMemo(() => {
+        return Skia.Path.MakeFromSVGString(dottedPath) ?? undefined;
+      }, [dottedPath]);
+
+      return (
+        <>
+          <Group clip={barClipPath}>
+            {dotsSkiaPath && <SkiaPath color={fill} path={dotsSkiaPath} style="fill" />}
+          </Group>
+          <DefaultBar {...props} fill={undefined} stroke={fill} strokeWidth={2} />
+        </>
+      );
+    });
+  }, []);
+
+  return (
+    <BarChart
+      legend
+      showXAxis
+      showYAxis
+      height={250}
+      inset={0}
+      legendPosition="top"
+      series={[
+        {
+          id: 'actual',
+          label: 'Historical',
+          data: actualRevenue,
+          color: theme.color.fgPositive,
+          legendShape: 'squircle',
+          stackId: 'revenue',
+        },
+        {
+          id: 'forecast',
+          label: 'Forecasted',
+          data: forecastRevenue,
+          color: theme.color.fgPositive,
+          legendShape: DottedLegendIndicator,
+          stackId: 'revenue',
+          BarComponent: DottedBarComponent,
+        },
+      ]}
+      xAxis={{
+        data: months,
+        scaleType: 'band',
+        showLine: true,
+        showTickMarks: true,
+      }}
+      yAxis={{
+        domain: { min: 0 },
+        showGrid: true,
+        showLine: true,
+        showTickMarks: true,
+        position: 'left',
+        tickLabelFormatter: numberFormatter,
+        width: 60,
+      }}
+    />
+  );
+}
+```
+
+### Accessibility
+
+Use `legendAccessibilityLabel` on chart components to provide a descriptive label for the legend group. This helps screen reader users understand what the legend represents.
+
+```jsx
+function AccessibleLegend() {
+  const theme = useTheme();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  return (
+    <LineChart
+      legend
+      showArea
+      height={200}
+      legendAccessibilityLabel="Financial performance chart, legend"
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue',
+          data: [120, 150, 180, 165, 190, 210],
+          color: `rgb(${theme.spectrum.green40})`,
+        },
+        {
+          id: 'expenses',
+          label: 'Expenses',
+          data: [80, 95, 110, 105, 120, 130],
+          color: `rgb(${theme.spectrum.orange40})`,
+        },
+      ]}
+      width="100%"
+      xAxis={{ data: months }}
+      yAxis={{ domain: { min: 0 }, showGrid: true }}
+    />
+  );
+}
+```
+
+You can also set `accessibilityLabel` directly on the `Legend` component for more control:
+
+```jsx
+function CustomAccessibleLegend() {
+  const theme = useTheme();
+  const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'];
+
+  return (
+    <LineChart
+      showArea
+      height={200}
+      legend={
+        <Legend
+          accessibilityLabel="Sales comparison, legend: Online sales shown in blue, In-store sales shown in purple"
+          justifyContent="center"
+        />
+      }
+      legendPosition="top"
+      series={[
+        {
+          id: 'online',
+          label: 'Online Sales',
+          data: [45, 52, 48, 61, 55, 67],
+          color: `rgb(${theme.spectrum.blue40})`,
+        },
+        {
+          id: 'instore',
+          label: 'In-Store Sales',
+          data: [38, 41, 44, 39, 47, 51],
+          color: `rgb(${theme.spectrum.purple40})`,
+        },
+      ]}
+      width="100%"
+      xAxis={{ data: months }}
+      yAxis={{ domain: { min: 0 }, showGrid: true }}
+    />
+  );
+}
+```
+
+### Composed Examples
+
+#### Dynamic Label
+
+You can use `EntryComponent` to display a label that updates as a user interacts with the chart.
+
+```jsx
+function DynamicLabel() {
+  const theme = useTheme();
+  const [scrubberPosition, setScrubberPosition] = useState();
+
+  const timeLabels = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  const seriesConfig = useMemo(
+    () => [
+      {
+        id: 'candidate-a',
+        label: 'Candidate A',
+        data: [48, 47, 46, 45, 44, 43, 42, 41, 40, 39, 38, 38],
+        color: `rgb(${theme.spectrum.blue40})`,
+        legendShape: 'circle',
+      },
+      {
+        id: 'candidate-b',
+        label: 'Candidate B',
+        data: [null, null, null, 6, 10, 14, 18, 22, 26, 29, 32, 35],
+        color: `rgb(${theme.spectrum.orange40})`,
+        legendShape: 'circle',
+      },
+      {
+        id: 'candidate-c',
+        label: 'Candidate C',
+        data: [52, 53, 54, 49, 46, 43, 40, 37, 34, 32, 30, 27],
+        color: `rgb(${theme.spectrum.gray40})`,
+        legendShape: 'circle',
+      },
+    ],
+    [theme.spectrum.blue40, theme.spectrum.gray40, theme.spectrum.orange40],
+  );
+
+  const dataLength = seriesConfig[0].data?.length ?? 0;
+  const dataIndex = scrubberPosition ?? dataLength - 1;
+
+  const ValueLegendEntry = useCallback(
+    ({ seriesId, label, color, shape }) => {
+      const seriesData = seriesConfig.find((s) => s.id === seriesId);
+      const rawValue = seriesData?.data?.[dataIndex];
+
+      const formattedValue =
+        rawValue === null || rawValue === undefined ? '--' : `${Math.round(rawValue)}%`;
+
+      return (
+        <HStack gap={1} style={{ alignItems: 'center' }}>
+          <DefaultLegendShape color={color} shape={shape} />
+          <TextLabel2>{label}</TextLabel2>
+          <TextLabel1>{formattedValue}</TextLabel1>
+        </HStack>
+      );
+    },
+    [seriesConfig, dataIndex],
+  );
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      height={250}
+      legend={<Legend EntryComponent={ValueLegendEntry} justifyContent="flex-start" paddingX={2} />}
+      legendPosition="top"
+      onScrubberPositionChange={setScrubberPosition}
+      series={seriesConfig}
+      width="100%"
+      xAxis={{
+        data: timeLabels,
+      }}
+      yAxis={{
+        domain: { max: 100, min: 0 },
+        showGrid: true,
+        tickLabelFormatter: (value) => `${value}%`,
+      }}
+    >
+      <Scrubber />
+    </LineChart>
+  );
+}
+```
+
+#### Interactive Legend
+
+You can create an interactive legend that the user can use to toggle to emphasize a specific series.
+
+```jsx
+function InteractiveLegend() {
+  const theme = useTheme();
+  const [emphasizedId, setEmphasizedId] = useState(null);
+
+  const months = [
+    'Jan',
+    'Feb',
+    'Mar',
+    'Apr',
+    'May',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Oct',
+    'Nov',
+    'Dec',
+  ];
+
+  const seriesConfig = useMemo(
+    () => [
+      {
+        id: 'revenue',
+        label: 'Revenue',
+        data: [120, 150, 180, 165, 190, 210, 240, 220, 260, 280, 310, 350],
+        baseColor: 'blue',
+      },
+      {
+        id: 'expenses',
+        label: 'Expenses',
+        data: [80, 95, 110, 105, 120, 130, 145, 140, 155, 165, 180, 195],
+        baseColor: 'orange',
+      },
+      {
+        id: 'profit',
+        label: 'Profit',
+        data: [40, 55, 70, 60, 70, 80, 95, 80, 105, 115, 130, 155],
+        baseColor: 'green',
+      },
+    ],
+    [],
+  );
+
+  const handleToggle = useCallback((seriesId) => {
+    setEmphasizedId((prev) => (prev === seriesId ? null : seriesId));
+  }, []);
+
+  const ChipLegendEntry = memo(function ChipLegendEntry({ seriesId, label }) {
+    const isEmphasized = emphasizedId === seriesId;
+    const config = seriesConfig.find((s) => s.id === seriesId);
+    const baseColor = config?.baseColor ?? 'gray';
+
+    const color10 = theme.spectrum[`${baseColor}10`];
+    const color50 = theme.spectrum[`${baseColor}50`];
+    const color90 = theme.spectrum[`${baseColor}90`];
+
+    return (
+      <Chip
+        compact
+        accessibilityLabel={`${isEmphasized ? 'Remove emphasis from' : 'Emphasize'} ${label} series`}
+        background="transparent"
+        onPress={() => handleToggle(seriesId)}
+        style={{
+          backgroundColor: `rgb(${isEmphasized ? color90 : color10})`,
+          borderWidth: 0,
+          borderRadius: theme.borderRadius[1000],
+        }}
+      >
+        <HStack gap={1} style={{ alignItems: 'center' }}>
+          <DefaultLegendShape color={`rgb(${color50})`} />
+          <TextLabel2 color={isEmphasized ? 'bg' : 'fg'}>{label}</TextLabel2>
+        </HStack>
+      </Chip>
+    );
+  });
+
+  const series = useMemo(() => {
+    return seriesConfig.map((config) => {
+      const isEmphasized = emphasizedId === config.id;
+      const isDimmed = emphasizedId !== null && !isEmphasized;
+
+      return {
+        id: config.id,
+        label: config.label,
+        data: config.data,
+        color: `rgb(${theme.spectrum[`${config.baseColor}40`]})`,
+        opacity: isDimmed ? 0.3 : 1,
+      };
+    });
+  }, [emphasizedId, seriesConfig, theme.spectrum]);
+
+  return (
+    <LineChart
+      showArea
+      height={300}
+      legend={<Legend EntryComponent={ChipLegendEntry} gap={1} paddingTop={1} />}
+      legendPosition="top"
+      series={series}
+      width="100%"
+      xAxis={{
+        data: months,
+      }}
+      yAxis={{
+        domain: { min: 0 },
+        showGrid: true,
+        tickLabelFormatter: (value) => `$${value}k`,
+      }}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `EntryComponent` | `LegendEntryComponent` | No | `DefaultLegendEntry` | Custom component to render each legend entry. |
+| `ShapeComponent` | `LegendShapeComponent` | No | `DefaultLegendShape` | Custom component to render the legend shape within each entry. Only used when EntryComponent is not provided or is DefaultLegendEntry. |
+| `alignContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly \| stretch` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `animated` | `boolean` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `none \| flex` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `FontSize \| inherit` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `seriesIds` | `string[]` | No | `-` | Array of series IDs to display in the legend. By default, all series will be displayed. |
+| `style` | `false \| RegisteredStyle<ViewStyle> \| WithAnimatedObject<ViewStyle> \| Value \| AnimatedInterpolation<string \| number> \| WithAnimatedArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>> \| readonly (ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>)[]> \| null` | No | `-` | - |
+| `styles` | `{ root?: StyleProp<ViewStyle>; entry?: StyleProp<ViewStyle>; entryShape?: StyleProp<ViewStyle>; entryLabel?: StyleProp<ViewStyle>; }` | No | `-` | Custom styles for the component parts. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| double \| dotted \| dashed` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ perspective: AnimatableNumericValue; } & { rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleX: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `userSelect` | `none \| auto \| text \| contain \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `zIndex` | `number` | No | `-` | - |
+
+

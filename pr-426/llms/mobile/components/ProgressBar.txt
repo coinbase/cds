@@ -1,0 +1,151 @@
+# ProgressBar
+
+A visual indicator of completion progress.
+
+## Import
+
+```tsx
+import { ProgressBar } from '@coinbase/cds-mobile/visualizations/ProgressBar'
+```
+
+## Examples
+
+#### Default
+
+```tsx
+<VStack gap={2}>
+  <ProgressBar progress={0} />
+  <ProgressBar progress={0.5} />
+  <ProgressBar progress={1} />
+</VStack>
+```
+
+#### Weights
+
+```tsx
+<VStack gap={2}>
+  <ProgressBar weight="thin" progress={0.3} />
+  <ProgressBar weight="normal" progress={0.5} />
+  <ProgressBar weight="semiheavy" progress={0.7} />
+  <ProgressBar weight="heavy" progress={0.9} />
+</VStack>
+```
+
+#### Disabled
+
+```tsx
+<VStack gap={2}>
+  <ProgressBar disabled progress={0} />
+  <ProgressBar disabled progress={0.5} />
+  <ProgressBar disabled progress={1} />
+</VStack>
+```
+
+#### Colors
+
+```tsx
+<VStack gap={2}>
+  <ProgressBar color="bgPositive" progress={0.5} />
+  <ProgressBar color="bgNegative" progress={0.5} />
+  <ProgressBar color="bgPrimary" progress={0.5} />
+  <ProgressBar color="bgWarning" progress={0.5} />
+  <ProgressBar color="fg" progress={0.5} />
+  <ProgressBar disabled color="fg" progress={0.5} />
+</VStack>
+```
+
+#### Custom Styles
+
+You can customize the appearance of the progress bar using the `styles` prop. The `root` style controls the container, and `progress` controls the fill bar.
+
+```tsx
+<ProgressContainerWithButtons>
+  {({ calculateProgress }) => (
+    <VStack gap={2}>
+      <ProgressBar
+        progress={calculateProgress(0.6)}
+        styles={{
+          progress: { backgroundColor: 'orange' },
+        }}
+      />
+      <ProgressBar
+        progress={calculateProgress(0.3)}
+        styles={{
+          root: { height: 32, borderRadius: 16 },
+          progress: { borderRadius: 16 },
+        }}
+      />
+    </VStack>
+  )}
+</ProgressContainerWithButtons>
+```
+
+### Animation
+
+By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
+
+```tsx
+<VStack gap={2}>
+  <Text variant="label2">Normal animation</Text>
+  <ProgressBar progress={0.5} />
+
+  <Text variant="label2">Disable animation on mount</Text>
+  <ProgressBar disableAnimateOnMount progress={0.5} />
+</VStack>
+```
+
+#### Callbacks
+
+You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
+
+```jsx
+function Example() {
+  const [animationStatus, setAnimationStatus] = React.useState('Ready');
+
+  const handleAnimationStart = useCallback(() => {
+    setAnimationStatus('Animating...');
+  }, []);
+
+  const handleAnimationEnd = useCallback(() => {
+    setAnimationStatus('Animation Ended');
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <Text>Animation Status: {animationStatus}</Text>
+      <ProgressBar
+        onAnimationEnd={handleAnimationEnd}
+        onAnimationStart={handleAnimationStart}
+        progress={0.2}
+      />
+    </VStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `progress` | `number` | Yes | `-` | Number between 0-1 representing the progress percentage |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `primary` | Custom progress color. |
+| `disableAnimateOnMount` | `boolean` | No | `false` | Disable animation on component mount |
+| `disabled` | `boolean` | No | `-` | Toggle used to show a disabled progress visualization |
+| `key` | `Key \| null` | No | `-` | - |
+| `onAnimationEnd` | `(() => void)` | No | `-` | Callback fired when the progress animation ends. |
+| `onAnimationStart` | `(() => void)` | No | `-` | Callback fired when the progress animation starts. |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `style` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | - |
+| `styles` | `{ root?: StyleProp<ViewStyle>; progress?: StyleProp<ViewStyle>; }` | No | `-` | Custom styles for individual elements of the ProgressBar component |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `weight` | `normal \| heavy \| thin \| semiheavy` | No | `normal` | Toggle used to change thickness of progress visualization |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Root element |
+| `progress` | `-` | Progress fill element |
+
+

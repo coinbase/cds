@@ -1,0 +1,25 @@
+# NavigationTitle
+
+Navigation Title is used to display the current page or section title in the Navigation Bar.
+
+## Import
+
+```tsx
+import { NavigationTitle } from '@coinbase/cds-web/navigation/NavigationTitle'
+```
+
+## Examples
+
+### Basic Example
+
+```jsx live
+<NavigationTitle>Personal Portfolio</NavigationTitle>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `ref` | `any` | No | `-` | - |
+
+

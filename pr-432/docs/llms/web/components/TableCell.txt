@@ -1,0 +1,165 @@
+# TableCell
+
+Defines individual cells within a Table.
+
+## Import
+
+```tsx
+import { TableCell } from '@coinbase/cds-web/tables/TableCell'
+```
+
+## Examples
+
+### Basic usage
+
+```tsx live
+<Table variant="ruled" bordered>
+  <TableHeader>
+    <TableRow backgroundColor="bgAlternate">
+      <TableCell title="First Header" />
+      <TableCell>
+        <Text as="p" font="headline" color="currentColor">
+          Second Header
+        </Text>
+      </TableCell>
+      <TableCell title="Third Header" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell
+        overflow="truncate"
+        start={
+          <Box spacingEnd={1}>
+            <Avatar
+              name="John Doe"
+              src="https://avatars.slack-edge.com/2019-12-09/865473396980_e8c83b072b452e4d03f7_192.jpg"
+            />
+          </Box>
+        }
+        title="Bitcoin"
+        subtitle="BTC and I'm like please please truncate me"
+      />
+      <TableCell
+        overflow="truncate"
+        alignItems="flex-start"
+        title="$2,475.68"
+        subtitle="0.11882557"
+      />
+      <TableCell>
+        <Text as="h2" font="headline" color="currentColor">
+          $2,221.01
+        </Text>
+        <Text as="p" font="label2" color="foregroundMuted">
+          0.1519581 BTC
+        </Text>
+      </TableCell>
+    </TableRow>
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell title="First Item (footer)" />
+      <TableCell title="Second Item (footer)" />
+      <TableCell title="Third Item (footer)" />
+    </TableRow>
+  </TableFooter>
+</Table>
+```
+
+### Custom Cell Spacing
+
+```tsx live
+<Table
+  variant="ruled"
+  bordered
+  cellSpacing={{
+    outer: { spacingHorizontal: 2, spacingVertical: 2 },
+    inner: { spacingHorizontal: 2, spacingVertical: 2 },
+  }}
+>
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Name" />
+      <TableCell title="Email" />
+      <TableCell title="Role" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell
+        innerSpacing={{ spacingHorizontal: 2, spacingVertical: 0 }}
+        outerSpacing={{ spacingHorizontal: 2, spacingVertical: 0 }}
+        start={<Avatar name="Bob Smith" />}
+        title="Bob Smith"
+        subtitle="Junior Developer"
+      />
+      <TableCell title="example@example.com" />
+      <TableCell title="Engineering" subtitle="Full-time" />
+    </TableRow>
+    <TableRow>
+      <TableCell
+        innerSpacing={{ spacingHorizontal: 5, spacingVertical: 5 }}
+        outerSpacing={{ spacingHorizontal: 5, spacingVertical: 5 }}
+        start={<Avatar name="Alice Smith" />}
+        title="Alice Smith"
+        subtitle="Senior Developer"
+      />
+      <TableCell title="example@example.com" />
+      <TableCell title="Engineering" subtitle="Full-time" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Accessibility Example - Multiple Headers
+
+```tsx live
+<Table maxHeight={300} bordered variant="ruled">
+  <TableHeader sticky>
+    <TableRow backgroundColor="bgAlternate">
+      <TableCell title="Currency" />
+      <TableCell title="Balance" />
+      <TableCell title="Status" alignItems="flex-end" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="BTC" as="th" scope="row" />
+      <TableCell title="$100" />
+      <TableCell title="Pending" alignItems="flex-end" />
+    </TableRow>
+    <TableRow>
+      <TableCell title="ETH" as="th" scope="row" />
+      <TableCell title="$200" />
+      <TableCell title="Complete" alignItems="flex-end" />
+    </TableRow>
+    <TableRow>
+      <TableCell title="APE" as="th" scope="row" />
+      <TableCell title="$300" />
+      <TableCell title="Complete" alignItems="flex-end" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `'center'` | This prop us useful for aligning the last item to the right, or top-aligning cells |
+| `as` | `td \| th` | No | ``th` when rendered inside a TableHeader, `td` when rendered inside a TableBody or TableFooter` | Use as=th to mark this cell as a header for screen readers |
+| `dangerouslySetHtmlWidth` | `string \| number` | No | `undefined` | - |
+| `direction` | `horizontal \| vertical` | No | `vertical` | Direction provides content flow control. Use vertical to inherit a VStask, horizontal for an HStack |
+| `end` | `ReactElement` | No | `undefined` | Element (icon, asset, image, etc) to display at the end of the cell |
+| `innerSpacing` | `CellSpacing` | No | `{ spacingHorizontal: 0 }` | The spacing to use on the inner content of Cell |
+| `justifyContent` | `space-evenly \| FlexAxisValue \| FlexSpaceCommon` | No | `'flex-start'` | This prop us useful for right-aligning the last column |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `outerSpacing` | `CellSpacing` | No | `-` | The spacing to use on the parent wrapper of Cell |
+| `overflow` | `clip \| wrap \| truncate \| break` | No | `false` | Should the title/subtitle text truncate |
+| `start` | `ReactElement` | No | `undefined` | Element (icon, asset, image, etc) to display at the start of the cell |
+| `subtitle` | `string` | No | `undefined` | A subtitle will appear below the title with font=label2. |
+| `subtitleColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `titleColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+
+

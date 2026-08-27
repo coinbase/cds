@@ -1,0 +1,97 @@
+# TableCellFallback
+
+Shows a loading state for Table cells.
+
+## Import
+
+```tsx
+import { TableCellFallback } from '@coinbase/cds-web/tables/TableCellFallback'
+```
+
+## Examples
+
+### Basic usage
+
+```tsx live
+<Table bordered variant="graph">
+  <TableHeader>
+    <TableRow>
+      <TableCellFallback title />
+      <TableCellFallback title subtitle />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCellFallback title subtitle start="image" />
+      <TableCellFallback title subtitle end="image" />
+    </TableRow>
+    <TableRow>
+      <TableCellFallback title subtitle start="asset" />
+      <TableCellFallback title subtitle end="asset" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Media Types
+
+```tsx live
+<Table bordered variant="graph">
+  <TableBody>
+    <TableRow>
+      <TableCellFallback title subtitle start="avatar" />
+      <TableCellFallback title subtitle start="icon" />
+    </TableRow>
+    <TableRow>
+      <TableCellFallback title subtitle start="pictogram" />
+      <TableCellFallback title subtitle start="image" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Custom Rectangle Widths
+
+:::tip Rectangular fallback widths
+
+This component contains rectangular fallbacks, the widths for which are randomized within a predetermined threshold by default (e.g. to add some variety when mulitple fallbacks are presented together). If this behavior is undesirable (e.g. in server-side rendered web apps), randomization can be disabled with the `disableRandomRectWidth` prop.
+
+<br />
+
+Alternatively, you may create a variant with different rectangle widths by setting a number value on the `rectWidthVariant` prop. Variants map to a predetermined set of width values, which are cycled through repeatedly when the set is exhausted. Therefore, it's still possible to achieve some variety in your fallbacks, but in a deterministic manner (i.e. safe for server-side rendering). Here's an example:
+
+<br />
+:::
+<br />
+
+```tsx live
+<Table bordered variant="graph">
+  <TableBody>
+    <TableRow>
+      <TableCellFallback title subtitle start="image" rectWidthVariant={0} disableRandomRectWidth />
+      <TableCellFallback title subtitle end="image" rectWidthVariant={1} disableRandomRectWidth />
+    </TableRow>
+    <TableRow>
+      <TableCellFallback title subtitle start="asset" rectWidthVariant={2} disableRandomRectWidth />
+      <TableCellFallback title subtitle end="asset" rectWidthVariant={3} disableRandomRectWidth />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `as` | `td \| th` | No | ``th` when rendered inside a TableHeader, `td` when rendered inside a TableBody or TableFooter` | Use as=th to mark this cell as a header for screen readers |
+| `disableRandomRectWidth` | `boolean` | No | `-` | Disables randomization of rectangle fallback width. |
+| `end` | `avatar \| image \| icon \| pictogram \| asset` | No | `-` | Display end shimmer with a shape according to type. |
+| `innerSpacing` | `CellSpacing` | No | `{ spacingHorizontal: 0 }` | The spacing to use on the inner content of Cell |
+| `outerSpacing` | `CellSpacing` | No | `-` | The spacing to use on the parent wrapper of Cell |
+| `rectWidthVariant` | `number` | No | `-` | Creates a variant that contains rectangle fallbacks of deterministic width. Variants map to a predetermined set of width values, which are cycled through repeatedly when the set is exhausted. |
+| `start` | `avatar \| image \| icon \| pictogram \| asset` | No | `-` | Display start shimmer with a shape according to type. |
+| `subtitle` | `boolean` | No | `-` | Display subtitle shimmer. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `title` | `boolean` | No | `-` | Display title shimmer. |
+
+

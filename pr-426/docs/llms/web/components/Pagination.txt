@@ -1,0 +1,523 @@
+# Pagination
+
+Pagination is used to navigate through a list of items.
+
+## Import
+
+```tsx
+import { Pagination } from '@coinbase/cds-web/pagination/Pagination'
+```
+
+## Examples
+
+### Basic Pagination
+
+A simple example showing basic pagination with 10 total pages.
+
+```jsx live
+function BasicPaginationExample() {
+  const [activePage, setActivePage] = useState(1);
+  const totalPages = 10;
+
+  return <Pagination totalPages={totalPages} activePage={activePage} onChange={setActivePage} />;
+}
+```
+
+### Pagination with First/Last Buttons
+
+Shows pagination with the optional First and Last page navigation buttons enabled.
+
+```jsx live
+function FirstLastButtonsPaginationExample() {
+  const [activePage, setActivePage] = useState(5);
+  const totalPages = 15;
+
+  return (
+    <Pagination
+      totalPages={totalPages}
+      activePage={activePage}
+      onChange={setActivePage}
+      showFirstLastButtons
+    />
+  );
+}
+```
+
+### Custom First/Last Button Labels
+
+Demonstrates customizing the text labels for the first and last page buttons using `firstPageButtonLabel` and `lastPageButtonLabel` props.
+
+```jsx live
+function CustomButtonLabelsPaginationExample() {
+  const [activePage, setActivePage] = useState(5);
+  const totalPages = 15;
+
+  return (
+    <Pagination
+      totalPages={totalPages}
+      activePage={activePage}
+      onChange={setActivePage}
+      showFirstLastButtons
+      firstPageButtonLabel="Start"
+      lastPageButtonLabel="End"
+    />
+  );
+}
+```
+
+### Pagination with Custom Counts
+
+Demonstrates using `siblingCount` and `boundaryCount` to adjust the number of pages displayed around the current page and at the boundaries, useful for larger page ranges.
+
+```jsx live
+function CustomCountsPaginationExample() {
+  const [activePage, setActivePage] = useState(10);
+  const totalPages = 20;
+
+  return (
+    <Pagination
+      totalPages={totalPages}
+      activePage={activePage}
+      onChange={setActivePage}
+      showFirstLastButtons
+      siblingCount={2} // Show 2 pages on each side of the current page
+      boundaryCount={1} // Show 1 page at the start and end
+    />
+  );
+}
+```
+
+### Controlled Pagination
+
+This example explicitly manages the current page state, which might be necessary if the page change triggers other actions like fetching data.
+
+```jsx live
+function ControlledPaginationExample() {
+  const [activePage, setActivePage] = useState(3);
+  const totalPages = 10;
+
+  const handlePageChange = (newPage) => {
+    console.log(`Navigating to page: ${newPage}`);
+    // Here you might fetch data for the new page
+    setActivePage(newPage);
+  };
+
+  return (
+    <Pagination
+      totalPages={totalPages}
+      activePage={activePage}
+      onChange={handlePageChange}
+      showFirstLastButtons
+      tooltipLabels={{
+        first: 'Jump to first page',
+        previous: 'Go back one page',
+        next: 'Go forward one page',
+        last: 'Jump to last page',
+      }}
+    />
+  );
+}
+```
+
+### Using the `usePagination` Hook
+
+This example shows how to use the headless `usePagination` hook to build a custom pagination interface. The hook provides the logic, and you render the UI.
+
+```jsx live
+function UsePaginationHookExample() {
+  const [activePage, setActivePage] = useState(5);
+  const totalPages = 12;
+
+  const { items, goNextPage, goPrevPage, updateActivePage, isFirstPage, isLastPage } =
+    usePagination({
+      totalPages,
+      activePage,
+      onChange: setActivePage,
+      siblingCount: 1,
+      boundaryCount: 1,
+    });
+
+  return (
+    <HStack gap={0.5} alignItems="center" justifyContent="center">
+      <IconButton
+        name="caretLeft"
+        onClick={goPrevPage}
+        disabled={isFirstPage}
+        accessibilityLabel="Previous page"
+        compact
+        variant="secondary"
+        transparent
+      />
+      {items.map((item, index) => {
+        if (item.type === 'ellipsis') {
+          // Render ellipsis as simple text
+          return (
+            <Text
+              key={`ellipsis-${index}`}
+              aria-hidden="true"
+              color="fgMuted"
+              paddingX={1}
+              noWrap
+              testID={`pagination-ellipsis-${index}`}
+            >
+              ...
+            </Text>
+          );
+        }
+        // Render page buttons
+        return (
+          <Button
+            key={item.page}
+            onClick={() => updateActivePage(item.page)}
+            variant={item.selected ? 'primary' : 'secondary'}
+            compact
+            transparent={!item.selected}
+            aria-current={item.selected ? 'page' : undefined}
+            accessibilityLabel={`Page ${item.page}`}
+          >
+            {item.page}
+          </Button>
+        );
+      })}
+      <IconButton
+        name="caretRight"
+        onClick={goNextPage}
+        disabled={isLastPage}
+        accessibilityLabel="Next page"
+        compact
+        variant="secondary"
+        transparent
+      />
+    </HStack>
+  );
+}
+```
+
+### Customized Components
+
+This example demonstrates how to customize the appearance of pagination by providing custom components for page buttons, navigation buttons, and ellipsis.
+
+```jsx live
+function CustomizedPaginationExample() {
+  const [activePage, setActivePage] = useState(5);
+  const totalPages = 20;
+
+  // Custom page button component
+  const CustomPageButton = forwardRef(
+    ({ page, isCurrentPage, onClick, accessibilityLabel }, ref) => (
+      <Box
+        ref={ref}
+        as="button"
+        aria-current={isCurrentPage ? 'page' : undefined}
+        aria-label={accessibilityLabel}
+        background={isCurrentPage ? 'bgSecondary' : 'bg'}
+        borderRadius={100}
+        color={isCurrentPage ? 'fgPrimary' : 'fgMuted'}
+        margin={0}
+        minWidth={8}
+        onClick={() => onClick(page)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onClick(page);
+          }
+        }}
+        padding={1}
+        role="button"
+        tabIndex={0}
+        style={{ cursor: 'pointer' }}
+      >
+        <Text font="body">{page}</Text>
+      </Box>
+    ),
+  );
+
+  // Custom navigation button component
+  const CustomNavButton = forwardRef(
+    ({ direction, disabled, onClick, accessibilityLabel }, ref) => {
+      // Direction-specific arrows
+      const getArrow = () => {
+        switch (direction) {
+          case 'first':
+            return '««';
+          case 'previous':
+            return '«';
+          case 'next':
+            return '»';
+          case 'last':
+            return '»»';
+          default:
+            return '';
+        }
+      };
+
+      return (
+        <Box
+          ref={ref}
+          aria-disabled={disabled}
+          aria-label={accessibilityLabel}
+          as="button"
+          background="bgSecondary"
+          borderRadius={100}
+          color={disabled ? 'fgMuted' : 'fgPrimary'}
+          disabled={disabled}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          margin={0}
+          minWidth={8}
+          onClick={disabled ? undefined : onClick}
+          onKeyDown={(e) => {
+            if (!disabled && (e.key === 'Enter' || e.key === ' ')) {
+              e.preventDefault();
+              onClick();
+            }
+          }}
+          opacity={disabled ? 0.7 : 1}
+          padding={1}
+          role="button"
+          tabIndex={disabled ? -1 : 0}
+          style={{ cursor: disabled ? 'not-allowed' : 'pointer' }}
+        >
+          {getArrow()}
+        </Box>
+      );
+    },
+  );
+
+  // Custom ellipsis component
+  const CustomEllipsis = ({ content = '•••', testID }) => (
+    <Box
+      alignItems="center"
+      aria-hidden="true"
+      color="fgMuted"
+      display="flex"
+      margin={0}
+      padding={1}
+      testID={testID}
+    >
+      <Text font="body" noWrap>
+        {content}
+      </Text>
+    </Box>
+  );
+
+  return (
+    <Pagination
+      activePage={activePage}
+      onChange={setActivePage}
+      totalPages={totalPages}
+      showFirstLastButtons
+      PaginationPageButtonComponent={CustomPageButton}
+      PaginationNavigationButtonComponent={CustomNavButton}
+      PaginationEllipsisComponent={CustomEllipsis}
+    />
+  );
+}
+```
+
+### Pagination with Table
+
+This example demonstrates integrating the Pagination component with a Table, a common use case for pagination.
+
+```jsx live
+function TablePaginationExample() {
+  const totalResults = accounts.length;
+  const PAGE_SIZE = 5;
+  const [activePage, setActivePage] = useState(1);
+  const [isFixed, setIsFixed] = useState(false);
+
+  // Calculate pagination indexes
+  const startIdx = (activePage - 1) * PAGE_SIZE;
+  const endIdx = Math.min(startIdx + PAGE_SIZE, totalResults);
+  const paginatedAccounts = accounts.slice(startIdx, endIdx);
+  const totalPages = Math.ceil(totalResults / PAGE_SIZE);
+
+  const toggleFixed = () => setIsFixed(!isFixed);
+
+  return (
+    <VStack gap={4}>
+      <HStack justifyContent="flex-end">
+        <Switch onChange={toggleFixed} checked={isFixed}>
+          Fixed Layout
+        </Switch>
+      </HStack>
+
+      <Table bordered variant="ruled" tableLayout={isFixed ? 'fixed' : 'auto'}>
+        <TableCaption>Cryptocurrency Accounts</TableCaption>
+        <TableHeader>
+          <TableRow>
+            <TableCell title="Asset" width="30%" />
+            <TableCell title="Balance" width="40%" />
+            <TableCell title="Primary" alignItems="flex-end" width="30%" />
+          </TableRow>
+        </TableHeader>
+
+        <TableBody>
+          {paginatedAccounts.map((account) => (
+            <TableRow key={account.id}>
+              <TableCell
+                start={
+                  <Icon name="currencies" size="m" color={account.currency?.color || 'fgMuted'} />
+                }
+                title={account.name}
+                subtitle={account.currency?.code}
+              />
+              <TableCell title={account.balance?.amount} subtitle={account.balance?.currency} />
+              <TableCell direction="horizontal" justifyContent="flex-end">
+                <Icon
+                  name={account.primary ? 'circleCheckmark' : 'circleCross'}
+                  size="m"
+                  color={account.primary ? 'fgPositive' : 'fgNegative'}
+                />
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+
+        <TableFooter>
+          <TableRow fullWidth>
+            <TableCell colSpan={3} direction="horizontal">
+              <HStack gap={2} alignItems="center">
+                <Text color="fgMuted" font="body">
+                  Page {startIdx + 1}-{endIdx}
+                </Text>
+                <Pagination
+                  activePage={activePage}
+                  onChange={setActivePage}
+                  totalPages={totalPages}
+                  showFirstLastButtons
+                  tooltipLabels={{
+                    first: 'First page of accounts',
+                    previous: 'Previous page of accounts',
+                    next: 'Next page of accounts',
+                    last: 'Last page of accounts',
+                  }}
+                />
+              </HStack>
+            </TableCell>
+          </TableRow>
+        </TableFooter>
+      </Table>
+    </VStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `activePage` | `number` | Yes | `-` | React state for the currently active page. Current active page number (1-based) |
+| `onChange` | `(activePage: number) => void` | Yes | `-` | Callback that is fired when the active page changes. Use this callback to update the activePage state. |
+| `totalPages` | `number` | Yes | `-` | Total number of pages. |
+| `PaginationEllipsisComponent` | `PaginationEllipsisComponent` | No | `({ content = '...', testID }: PaginationEllipsisProps) => (   <Text noWrap aria-hidden="true" color="fgMuted" font="headline" testID={testID}>     {content}   </Text> )` | Custom component for rendering ellipsis |
+| `PaginationNavigationButtonComponent` | `PaginationNavigationButtonComponent` | No | `forwardRef(   (     { direction, onClick, disabled, accessibilityLabel, testID }: PaginationNavigationButtonProps,     ref: React.ForwardedRef<HTMLButtonElement>,   ) => {     return (       <IconButton         ref={ref}         compact         transparent         accessibilityLabel={accessibilityLabel}         disabled={disabled}         name={iconMap[direction]}         onClick={onClick}         testID={testID}         variant="secondary"       />     );   }, )` | Custom component for rendering navigation buttons. Must use forwardRef to properly receive and forward the ref to a focusable DOM element for focus management to work correctly. |
+| `PaginationPageButtonComponent` | `PaginationPageButtonComponent` | No | `forwardRef(   (     {       page,       onClick,       isCurrentPage,       disabled,       accessibilityLabel,       testID,       ...props     }: PaginationPageButtonProps,     ref: React.ForwardedRef<HTMLButtonElement>,   ) => {     const handleClick = useCallback(() => onClick(page), [onClick, page]);     const isSingleDigit = page < 10;      return (       <Button         ref={ref}         compact         accessibilityLabel={accessibilityLabel}         aria-current={isCurrentPage ? 'page' : undefined}         className={cx(isSingleDigit && circularButtonCss)}         disabled={disabled}         onClick={handleClick}         testID={testID}         transparent={!isCurrentPage}         variant={isCurrentPage ? 'primary' : 'secondary'}         {...props}       >         {page}       </Button>     );   }, )` | Custom component for rendering page buttons. Must use forwardRef to properly receive and forward the ref to a focusable DOM element for focus management to work correctly. |
+| `accessibilityLabel` | `string` | No | `Pagination` | - |
+| `accessibilityLabels` | `{ next?: string; previous?: string \| undefined; first?: string \| undefined; last?: string \| undefined; page?: ((page: number) => string) \| undefined; } \| undefined` | No | `-` | Custom accessibility labels for navigation buttons |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `as` | `div` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `boundaryCount` | `number` | No | `1` | Number of pages to show at the beginning and end of pagination. |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `disabled` | `boolean` | No | `-` | - |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `firstPageButtonLabel` | `string` | No | `First` | Custom label for the first page button |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `lastPageButtonLabel` | `string` | No | `Last` | Custom label for the last page button |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `ref` | `RefObject<HTMLDivElement> \| ((instance: HTMLDivElement \| null) => void) \| null` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `showFirstLastButtons` | `boolean` | No | `-` | Whether to show first and last page navigation buttons |
+| `siblingCount` | `number` | No | `1` | Number of pages to show on each side of current page. |
+| `style` | `CSSProperties` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `testIDMap` | `{ nav?: string; nextButton?: string \| undefined; prevButton?: string \| undefined; firstButton?: string \| undefined; lastButton?: string \| undefined; } \| undefined` | No | `-` | Custom test IDs for specific elements within pagination |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+

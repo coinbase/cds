@@ -1,0 +1,673 @@
+# PeriodSelector
+
+A selector component for choosing time periods in charts.
+
+## Import
+
+```tsx
+import { PeriodSelector } from '@coinbase/cds-web-visualization'
+```
+
+## Examples
+
+### Basic Example
+
+```jsx live
+function BasicExample() {
+  const tabs = [
+    { id: '1H', label: '1H' },
+    { id: '1D', label: '1D' },
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: '1Y', label: '1Y' },
+    { id: 'YTD', label: 'YTD' },
+    { id: 'All', label: 'All' },
+  ];
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  return (
+    <Box overflow="hidden" maxWidth="100%">
+      <PeriodSelector activeTab={activeTab} onChange={setActiveTab} tabs={tabs} />
+    </Box>
+  );
+}
+```
+
+### Minimum Width
+
+You can set the `width` prop to `fit-content` to make the period selector as small as possible.
+
+```jsx live
+function MinimumWidthExample() {
+  const tabs = [
+    { id: '1W', label: '1W' },
+    { id: '1M', label: '1M' },
+    { id: 'YTD', label: 'YTD' },
+  ];
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+
+  return (
+    <PeriodSelector
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      tabs={tabs}
+      width="fit-content"
+      gap={2}
+    />
+  );
+}
+```
+
+### Many Periods with Overflow
+
+```jsx live
+function ManyPeriodsExample() {
+  const tabs = useMemo(
+    () => [
+      { id: '1H', label: '1H' },
+      { id: '1D', label: '1D' },
+      { id: '1W', label: '1W' },
+      { id: '1M', label: '1M' },
+      { id: 'YTD', label: 'YTD' },
+      { id: '1Y', label: '1Y' },
+      { id: '5Y', label: '5Y' },
+      { id: 'All', label: 'All' },
+    ],
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+  return (
+    <HStack
+      alignItems="center"
+      justifyContent="space-between"
+      maxWidth="100%"
+      overflow="hidden"
+      width="100%"
+    >
+      <Box flexGrow={1} overflow="hidden" position="relative">
+        <style>{`
+          .scrollContainer {
+            scrollbar-width: none;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-x;
+
+            &::-webkit-scrollbar {
+              display: none;
+            }
+          }
+        `}</style>
+        <Box className="scrollContainer" paddingEnd={2}>
+          <PeriodSelector
+            activeTab={activeTab}
+            gap={1}
+            justifyContent="flex-start"
+            onChange={setActiveTab}
+            tabs={tabs}
+            width="fit-content"
+          />
+        </Box>
+        <Box
+          position="absolute"
+          style={{
+            background: 'linear-gradient(to left, var(--color-bg), transparent 100%)',
+            right: 0,
+            bottom: 0,
+            top: 0,
+            width: 'var(--space-4)',
+            pointerEvents: 'none',
+          }}
+        />
+      </Box>
+      <IconButton
+        compact
+        accessibilityLabel="Configure chart"
+        flexShrink={0}
+        height={36}
+        name="filter"
+        variant="secondary"
+      />
+    </HStack>
+  );
+}
+```
+
+### Live Indicator
+
+```jsx live
+function LiveExample() {
+  const tabs = useMemo(
+    () => [
+      // LiveTabLabel is exported from PeriodSelector
+      { id: '1H', label: <LiveTabLabel /> },
+      { id: '1D', label: '1D' },
+      { id: '1W', label: '1W' },
+      { id: '1M', label: '1M' },
+      { id: '1Y', label: '1Y' },
+      { id: 'All', label: 'All' },
+    ],
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const isLive = useMemo(() => activeTab?.id === '1H', [activeTab]);
+
+  const activeBackground = useMemo(() => (isLive ? 'bgNegativeWash' : 'bgPrimaryWash'), [isLive]);
+
+  return (
+    <Box overflow="hidden" maxWidth="100%">
+      <PeriodSelector
+        activeBackground={activeBackground}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        tabs={tabs}
+      />
+    </Box>
+  );
+}
+```
+
+### Customization
+
+#### Custom Colors
+
+```jsx live
+function LiveExample() {
+  const tabs = useMemo(
+    () => [
+      { id: '1H', label: '1H' },
+      { id: '1D', label: '1D' },
+      { id: '1W', label: '1W' },
+      { id: '1M', label: '1M' },
+      { id: '1Y', label: '1Y' },
+      { id: 'All', label: 'All' },
+    ],
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const isLive = useMemo(() => activeTab?.id === 'live', [activeTab]);
+
+  const activeBackground = useMemo(() => (isLive ? 'bgNegativeWash' : 'bgPrimaryWash'), [isLive]);
+
+  return (
+    <Box overflow="hidden" maxWidth="100%">
+      <PeriodSelector
+        activeBackground={activeBackground}
+        activeTab={activeTab}
+        onChange={setActiveTab}
+        tabs={tabs}
+      />
+    </Box>
+  );
+}
+```
+
+#### Color Shifting
+
+```jsx live
+function ColorShiftingExample() {
+  const TabLabel = memo(({ label }) => (
+    <Text font="label1" style={{ color: 'var(--chartActiveColor)' }}>
+      {label}
+    </Text>
+  ));
+
+  const tabs = useMemo(
+    () => [
+      {
+        id: '1H',
+        label: <TabLabel label="1H" />,
+      },
+      {
+        id: '1D',
+        label: <TabLabel label="1D" />,
+      },
+      {
+        id: '1W',
+        label: <TabLabel label="1W" />,
+      },
+      {
+        id: '1M',
+        label: <TabLabel label="1M" />,
+      },
+      {
+        id: '1Y',
+        label: <TabLabel label="1Y" />,
+      },
+      {
+        id: 'All',
+        label: <TabLabel label="All" />,
+      },
+    ],
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [chartActiveColor, setChartActiveColor] = useState('positive');
+
+  const toggleColor = useCallback(() => {
+    setChartActiveColor((activeColor) => (activeColor === 'positive' ? 'negative' : 'positive'));
+  }, []);
+
+  const activeForegroundColor = useMemo(() => {
+    return chartActiveColor === 'positive' ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+  }, [chartActiveColor]);
+
+  const activeBackground = useMemo(() => {
+    return chartActiveColor === 'positive' ? 'bgPositiveWash' : 'bgNegativeWash';
+  }, [chartActiveColor]);
+
+  return (
+    <VStack gap={2}>
+      <m.div
+        animate={{ '--chartActiveColor': activeForegroundColor }}
+        style={{ '--chartActiveColor': activeForegroundColor }}
+        transition={{ duration: 0.3 }}
+        width="100%"
+        overflow="hidden"
+      >
+        <PeriodSelector
+          activeBackground={activeBackground}
+          activeTab={activeTab}
+          onChange={setActiveTab}
+          tabs={tabs}
+        />
+      </m.div>
+      <Button onClick={toggleColor}>Toggle Color</Button>
+    </VStack>
+  );
+}
+```
+
+#### Asset Price Chart
+
+You can use a PeriodSelector to control the time period of a LineChart, with a settings icon to enable extra customization for users.
+
+```jsx live
+function CustomizableAssetPriceExample() {
+  const tabs = [
+    { id: 'hour', label: '1H' },
+    { id: 'day', label: '1D' },
+    { id: 'week', label: '1W' },
+    { id: 'month', label: '1M' },
+    { id: 'year', label: '1Y' },
+    { id: 'all', label: 'All' },
+  ];
+
+  const PeriodSelectorWrapper = memo(({ activeTab, setActiveTab, tabs, onClickSettings }) => (
+    <HStack
+      alignItems="center"
+      justifyContent="space-between"
+      maxWidth="100%"
+      overflow="hidden"
+      width="100%"
+    >
+      <Box flexGrow={1} overflow="hidden" position="relative">
+        <style>{`
+          .scrollContainer {
+            scrollbar-width: none;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            touch-action: pan-x;
+
+            &::-webkit-scrollbar {
+              display: none;
+            }
+          }
+        `}</style>
+        <Box className="scrollContainer" paddingEnd={2}>
+          <PeriodSelector
+            activeTab={activeTab}
+            gap={1}
+            justifyContent="flex-start"
+            onChange={setActiveTab}
+            tabs={tabs}
+            width="fit-content"
+          />
+        </Box>
+        <Box
+          position="absolute"
+          style={{
+            background: 'linear-gradient(to left, var(--color-bg), transparent 100%)',
+            right: 0,
+            bottom: 0,
+            top: 0,
+            width: 'var(--space-4)',
+            pointerEvents: 'none',
+          }}
+        />
+      </Box>
+      <IconButton
+        compact
+        accessibilityLabel="Chart settings"
+        flexShrink={0}
+        height={36}
+        name="settings"
+        variant="secondary"
+        onClick={onClickSettings}
+      />
+    </HStack>
+  ));
+
+  const AssetPriceChart = memo(() => {
+    const [activeTab, setActiveTab] = useState(tabs[0]);
+    const [showSettings, setShowSettings] = useState(false);
+    const [showYAxis, setShowYAxis] = useState(true);
+    const [showXAxis, setShowXAxis] = useState(true);
+    const [scrubIndex, setScrubIndex] = useState();
+    const breakpoints = useBreakpoints();
+
+    const formatPrice = useCallback((price) => {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(price);
+    }, []);
+
+    const formatYAxisPrice = useCallback(
+      (price) => {
+        if (breakpoints.isPhone) {
+          // Compact format for mobile: $45k, $1.2M, etc.
+          if (price >= 1000000) {
+            return `$${(price / 1000000).toFixed(1)}M`;
+          } else if (price >= 1000) {
+            return `$${(price / 1000).toFixed(0)}k`;
+          }
+          return `$${price.toFixed(0)}`;
+        }
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }).format(price);
+      },
+      [breakpoints.isPhone],
+    );
+    const toggleShowYAxis = useCallback(() => setShowYAxis((show) => !show), []);
+    const toggleShowXAxis = useCallback(() => setShowXAxis((show) => !show), []);
+
+    const data = useMemo(() => sparklineInteractiveData[activeTab.id], [activeTab.id]);
+    const currentPrice = useMemo(
+      () => sparklineInteractiveData.hour[sparklineInteractiveData.hour.length - 1].value,
+      [],
+    );
+    const currentTimePrice = useMemo(() => {
+      if (scrubIndex !== undefined) {
+        return data[scrubIndex].value;
+      }
+      return currentPrice;
+    }, [data, scrubIndex, currentPrice]);
+
+    const formatDate = useCallback((date) => {
+      const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'short' });
+      const monthDay = date.toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+      const time = date.toLocaleTimeString('en-US', {
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      });
+      return `${dayOfWeek}, ${monthDay}, ${time}`;
+    }, []);
+
+    const scrubberLabel = useMemo(() => {
+      if (scrubIndex === undefined) return;
+      return formatDate(data[scrubIndex].date);
+    }, [scrubIndex, data, formatDate]);
+
+    const accessibilityLabel = useMemo(() => {
+      if (scrubIndex === undefined) return;
+      const price = new Intl.NumberFormat('en-US', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(data[scrubIndex].value);
+      const date = formatDate(data[scrubIndex].date);
+      return `Asset price: ${price} USD on ${date}`;
+    }, [scrubIndex, data, formatDate]);
+
+    const onClickSettings = useCallback(() => setShowSettings(!showSettings), [showSettings]);
+
+    const seriesData = useMemo(() => [{ id: 'price', data: data.map((d) => d.value) }], [data]);
+
+    const getFormattingConfigForPeriod = useCallback((period) => {
+      switch (period) {
+        case 'hour':
+        case 'day':
+          return {
+            hour: 'numeric',
+            minute: 'numeric',
+          };
+
+        case 'week':
+        case 'month':
+          return {
+            month: 'numeric',
+            day: 'numeric',
+          };
+
+        case 'year':
+        case 'all':
+          return {
+            month: 'numeric',
+            year: 'numeric',
+          };
+      }
+    }, []);
+
+    const formatXAxisDate = useCallback(
+      (index) => {
+        if (!data[index]) return '';
+        const date = data[index].date;
+        const formatConfig = getFormattingConfigForPeriod(activeTab.id);
+
+        if (activeTab.id === 'hour' || activeTab.id === 'day') {
+          return date.toLocaleTimeString('en-US', formatConfig);
+        } else {
+          return date.toLocaleDateString('en-US', formatConfig);
+        }
+      },
+      [data, activeTab.id, getFormattingConfigForPeriod],
+    );
+
+    const isMobile = breakpoints.isPhone || breakpoints.isTabletPortrait;
+
+    return (
+      <VStack gap={2}>
+        <SectionHeader
+          padding={0}
+          title={<Text font="label1">Asset Price</Text>}
+          balance={
+            <RollingNumber
+              format={{ style: 'currency', currency: 'USD' }}
+              font="display3"
+              color="fgMuted"
+              value={currentTimePrice}
+            />
+          }
+          end={
+            isMobile ? undefined : (
+              <HStack alignItems="center">
+                <PeriodSelectorWrapper
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  tabs={tabs}
+                  onClickSettings={onClickSettings}
+                />
+              </HStack>
+            )
+          }
+        />
+        <LineChart
+          enableScrubbing
+          height={{ base: 200, tablet: 250, desktop: 300 }}
+          onScrubberPositionChange={setScrubIndex}
+          series={seriesData}
+          yAxis={{
+            domainLimit: 'strict',
+            showGrid: true,
+            tickLabelFormatter: formatYAxisPrice,
+            width: breakpoints.isPhone ? 50 : 80,
+          }}
+          xAxis={{
+            tickLabelFormatter: formatXAxisDate,
+          }}
+          showYAxis={showYAxis}
+          showXAxis={showXAxis}
+          accessibilityLabel={accessibilityLabel}
+        >
+          <Scrubber label={scrubberLabel} />
+        </LineChart>
+        {isMobile && (
+          <HStack alignItems="center">
+            <PeriodSelectorWrapper
+              activeTab={activeTab}
+              setActiveTab={setActiveTab}
+              tabs={tabs}
+              onClickSettings={onClickSettings}
+            />
+          </HStack>
+        )}
+        {showSettings && (
+          <Tray title="Chart Settings" onCloseComplete={() => setShowSettings(false)}>
+            {({ handleClose }) => (
+              <VStack gap={2} paddingX={3} paddingBottom={3}>
+                <HStack justifyContent="space-between" alignItems="center">
+                  <Text font="label1">Show Y-Axis</Text>
+                  <Switch checked={showYAxis} onChange={toggleShowYAxis} />
+                </HStack>
+
+                <HStack justifyContent="space-between" alignItems="center">
+                  <Text font="label1">Show X-Axis</Text>
+                  <Switch checked={showXAxis} onChange={toggleShowXAxis} />
+                </HStack>
+              </VStack>
+            )}
+          </Tray>
+        )}
+      </VStack>
+    );
+  }, []);
+
+  return <AssetPriceChart />;
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `activeTab` | `TabValue<string> \| null` | Yes | `-` | React state for the currently active tab. Setting it to null results in no active tab. |
+| `onChange` | `(activeTab: TabValue<string> \| null) => void` | Yes | `-` | Callback that is fired when the active tab changes. Use this callback to update the activeTab state. |
+| `tabs` | `(TabValue<string> & { Component?: TabComponent<string> \| undefined; })[]` | Yes | `-` | The array of tabs data. Each tab may optionally define a custom Component to render. |
+| `TabComponent` | `TabComponent<string>` | No | `-` | The default Component to render each tab. |
+| `TabsActiveIndicatorComponent` | `TabsActiveIndicatorComponent` | No | `-` | The default Component to render the tabs active indicator. |
+| `activeBackground` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color passed to the TabsActiveIndicatorComponent. |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| space-between \| space-around \| space-evenly \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| self-start \| self-end>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| auto \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| self-start \| self-end>` | No | `-` | - |
+| `as` | `div` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `disabled` | `boolean` | No | `-` | Disable interactions on all the tabs. |
+| `display` | `ResponsiveProp<grid \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| revert \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<row \| row-reverse \| column \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<inherit \| FontSize>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<inherit \| FontWeight>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| space-between \| space-around \| space-evenly \| stretch>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<inherit \| LineHeight>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `onActiveTabElementChange` | `((element: HTMLElement \| null) => void)` | No | `-` | Optional callback to receive the active tab element. |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<static \| relative \| absolute \| fixed \| sticky>` | No | `-` | - |
+| `ref` | `((instance: HTMLElement \| null) => void) \| RefObject<HTMLElement> \| null` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<none \| uppercase \| lowercase \| capitalize>` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| all \| auto>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+

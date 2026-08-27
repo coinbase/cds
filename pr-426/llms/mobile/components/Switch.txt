@@ -1,0 +1,114 @@
+# Switch
+
+A control for toggling between on and off.
+
+## Import
+
+```tsx
+import { Switch } from '@coinbase/cds-mobile/controls/Switch'
+```
+
+## Examples
+
+```jsx
+function SwitchDemo() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Switch onChange={() => setChecked((s) => !s)} checked={checked}>
+      Dark Mode
+    </Switch>
+  );
+}
+```
+
+### Customizing Colors
+
+Like other control components (i.e. Radio, Checkbox), you can customize the color of the Switch by setting the `controlColor` prop.
+
+```jsx
+function CustomColors() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Switch controlColor="accentBoldGreen" onChange={() => setChecked((s) => !s)} checked={checked}>
+      Custom control color
+    </Switch>
+  );
+}
+```
+
+For more advanced color customization, you can use additional style props like `background`, `borderColor`, `borderWidth`, and `color`:
+
+```jsx
+function AdvancedCustomColors() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Switch
+      background={checked ? 'accentBoldPurple' : 'bgNegative'}
+      borderColor={checked ? 'bgPositive' : 'bgPrimary'}
+      borderWidth={200}
+      checked={checked}
+      color="bgPrimary"
+      controlColor="bgPositive"
+      onChange={() => setChecked((s) => !s)}
+    >
+      Advanced styling
+    </Switch>
+  );
+}
+```
+
+### Elevation
+
+You can add a drop shadow to the Switch thumb using the `elevation` prop. By default, the Switch has no elevation.
+
+```jsx
+function ElevationSwitchDemo() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Switch elevation={1} onChange={() => setChecked((s) => !s)} checked={checked}>
+      With drop shadow
+    </Switch>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `checked ? 'bgPrimary' : 'bgTertiary'` | Background color of the overlay (element being interacted with). |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `1000` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `0` | - |
+| `checked` | `boolean` | No | `-` | Set the control to selected/on. |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Label for the control option. |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `controlColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `bgPrimary` | Sets the checked/active color of the control. |
+| `disabled` | `boolean` | No | `-` | Disable user interaction. |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Sets the elevation/drop shadow of the control. |
+| `indeterminate` | `boolean` | No | `-` | Enable indeterminate state. Useful when you want to indicate that sub-items of a control are partially filled. |
+| `key` | `Key \| null` | No | `-` | - |
+| `onChange` | `((value: string, checked?: boolean \| undefined) => void) \| undefined` | No | `-` | Toggle control selected state. |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | Called when a single tap gesture is detected. |
+| `readOnly` | `boolean` | No | `-` | Set the control to ready-only. Similar effect as disabled. |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this view in end-to-end tests. |
+| `value` | `string` | No | `-` | Value of the option. Useful for multiple choice. |
+
+

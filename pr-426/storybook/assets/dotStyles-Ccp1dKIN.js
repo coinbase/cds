@@ -1,0 +1,1 @@
+const c=(t,e)=>{if(t===void 0)return{};const r=t.split("-");if(r.length!==2)return{};const[o,n]=r,l=n==="start"?"left":"right",a=o==="bottom"?1:-1,i=n==="end"?1:-1,s=e==="circular"?"14%":0;return{position:"absolute",[l]:s,[o]:s,transform:`translate(${i*50}%, ${a*50}%)`,translateX:`${i*50}%`,translateY:`${a*50}%`}};export{c as g};

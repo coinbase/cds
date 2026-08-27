@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([["7006"],{28466:function(e){e.exports=JSON.parse('{"metadata":{"permalink":"/cds/pr-426/blog","page":1,"postsPerPage":10,"totalPages":1,"totalCount":1,"blogDescription":"Coinbase Design System Blog","blogTitle":"CDS Blog"}}')}}]);

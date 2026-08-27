@@ -1,0 +1,310 @@
+# Combobox
+
+A flexible combobox component for both single and multi-selection, built for mobile applications with comprehensive accessibility support.
+
+## Import
+
+```tsx
+import { Combobox } from '@coinbase/cds-mobile/alpha/combobox'
+```
+
+## Examples
+
+### A note on search logic
+
+We use [fuse.js](https://www.fusejs.io/) to power the fuzzy search logic for Combobox. You can override this search logic with your own using the `filterFunction` prop.
+
+### Multi-Select
+
+Basic multi-selection combobox with search.
+
+```jsx
+function MultiSelect() {
+  const multiSelectOptions = [
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+    { value: '4', label: 'Option 4' },
+    { value: '5', label: 'Option 5' },
+    { value: '6', label: 'Option 6' },
+    { value: '7', label: 'Option 7' },
+    { value: '8', label: 'Option 8' },
+    { value: '9', label: 'Option 9' },
+    { value: '10', label: 'Option 10' },
+  ];
+  const { value, onChange } = useMultiSelect({ initialValue: ['1'] });
+
+  return (
+    <Combobox
+      label="Multi Select"
+      onChange={onChange}
+      options={multiSelectOptions}
+      placeholder="Search..."
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### Single Select
+
+Single selection combobox with an option to clear the current choice.
+
+```jsx
+function SingleSelect() {
+  const singleSelectOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: '1', label: 'Option 1' },
+    { value: '2', label: 'Option 2' },
+    { value: '3', label: 'Option 3' },
+  ];
+  const [value, setValue] = useState(null);
+
+  return (
+    <Combobox
+      label="Single Select"
+      onChange={setValue}
+      options={singleSelectOptions}
+      placeholder="Search..."
+      value={value}
+    />
+  );
+}
+```
+
+### Controlled Search
+
+Manage the search text externally while letting the combobox stay in sync.
+
+```jsx
+function ControlledSearch() {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+  const [searchText, setSearchText] = useState('');
+
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+  ];
+
+  return (
+    <Combobox
+      label="Controlled search"
+      onChange={onChange}
+      onSearch={setSearchText}
+      options={fruitOptions}
+      placeholder="Type to search..."
+      searchText={searchText}
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### Helper Text
+
+Use helper text to guide how many selections a user should make.
+
+```jsx
+function HelperTextExample() {
+  const { value, onChange } = useMultiSelect({ initialValue: [] });
+
+  const teamOptions = [
+    { value: 'john', label: 'John Smith', description: 'Engineering' },
+    { value: 'jane', label: 'Jane Doe', description: 'Design' },
+    { value: 'bob', label: 'Bob Johnson', description: 'Product' },
+    { value: 'alice', label: 'Alice Williams', description: 'Engineering' },
+  ];
+
+  return (
+    <Combobox
+      helperText="Select up to 4 team members"
+      label="Team members"
+      onChange={onChange}
+      options={teamOptions}
+      placeholder="Search team members..."
+      type="multi"
+      value={value}
+    />
+  );
+}
+```
+
+### Alignment
+
+The alignment of the selected value(s) can be adjusted using the `align` prop.
+
+::::note
+Left / right alignment is preferred for styling.
+::::
+
+```jsx
+function AlignmentExample() {
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+    { value: 'elderberry', label: 'Elderberry' },
+  ];
+
+  const { value, onChange } = useMultiSelect({ initialValue: ['apple', 'banana', 'cherry'] });
+
+  return (
+    <VStack gap={2}>
+      <Combobox
+        label="Default align - start"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+      <Combobox
+        align="end"
+        label="End align"
+        onChange={onChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={value}
+      />
+    </VStack>
+  );
+}
+```
+
+### Borderless
+
+You can remove the border from the combobox control by setting `bordered` to `false`.
+
+```jsx
+function BorderlessExample() {
+  const singleSelectOptions = [
+    { value: null, label: 'Remove selection' },
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+  ];
+
+  const fruitOptions = [
+    { value: 'apple', label: 'Apple' },
+    { value: 'banana', label: 'Banana' },
+    { value: 'cherry', label: 'Cherry' },
+    { value: 'date', label: 'Date' },
+    { value: 'elderberry', label: 'Elderberry' },
+  ];
+
+  const [singleValue, setSingleValue] = useState('apple');
+  const { value: multiValue, onChange: multiOnChange } = useMultiSelect({
+    initialValue: ['apple'],
+  });
+
+  return (
+    <VStack gap={4}>
+      <Combobox
+        bordered={false}
+        label="Borderless single select"
+        onChange={setSingleValue}
+        options={singleSelectOptions}
+        placeholder="Search fruits..."
+        value={singleValue}
+      />
+      <Combobox
+        bordered={false}
+        label="Borderless multi select"
+        onChange={multiOnChange}
+        options={fruitOptions}
+        placeholder="Search fruits..."
+        type="multi"
+        value={multiValue}
+      />
+    </VStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `onChange` | `(value: Type extends multi ? SelectOptionValue \| SelectOptionValue[] \| null : SelectOptionValue \| null) => void` | Yes | `-` | - |
+| `options` | `SelectOptionList<Type, SelectOptionValue>` | Yes | `-` | Array of options to display in the select dropdown. Can be individual options or groups with label and options |
+| `value` | `string \| SelectOptionValue[] \| null` | Yes | `-` | - |
+| `ComboboxControlComponent` | `ComboboxControlComponent` | No | `-` | - |
+| `ComboboxDropdownComponent` | `SelectDropdownComponent` | No | `-` | - |
+| `SelectAllOptionComponent` | `SelectOptionComponent<Type, SelectOptionValue>` | No | `-` | Custom component to render the Select All option |
+| `SelectControlComponent` | `SelectControlComponent<Type, SelectOptionValue>` | No | `-` | Custom component to render the select control |
+| `SelectDropdownComponent` | `SelectDropdownComponent<Type, SelectOptionValue>` | No | `-` | Custom component to render the dropdown container |
+| `SelectEmptyDropdownContentsComponent` | `SelectEmptyDropdownContentComponent` | No | `-` | Custom component to render when no options are available |
+| `SelectOptionComponent` | `SelectOptionComponent<Type, SelectOptionValue>` | No | `-` | Custom component to render individual options |
+| `SelectOptionGroupComponent` | `SelectOptionGroupComponent<Type, SelectOptionValue>` | No | `-` | Custom component to render group headers |
+| `accessibilityRoles` | `{ option?: AccessibilityRole; } \| undefined` | No | `-` | Accessibility roles for dropdown elements |
+| `accessory` | `ReactElement<CellAccessoryProps, string \| JSXElementConstructor<any>>` | No | `-` | - |
+| `align` | `end \| start \| center` | No | `'start'` | Alignment of the value node. |
+| `bordered` | `boolean` | No | `true` | Add a border around all sides of the box. Determines if the control should have a default border. |
+| `clearAllLabel` | `string` | No | `-` | Label for the Clear All option in multi-select mode |
+| `closeButtonLabel` | `string` | No | `-` | Label for close button when combobox is open (mobile only) |
+| `compact` | `boolean` | No | `-` | Whether to use compact styling for the select |
+| `defaultOpen` | `boolean` | No | `-` | Initial open state when component mounts (uncontrolled mode) |
+| `defaultSearchText` | `string` | No | `-` | Default search text value for uncontrolled mode |
+| `disableClickOutsideClose` | `boolean` | No | `-` | Whether clicking outside the dropdown should close it |
+| `disabled` | `boolean` | No | `false` | Toggles input interactability and opacity |
+| `emptyOptionsLabel` | `string` | No | `-` | Label displayed when there are no options available |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | End-aligned content (e.g., value, status). Replaces the deprecated detail prop. |
+| `endNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the end of the inner input. Refer to diagram for location of endNode in InputStack component |
+| `filterFunction` | `((options: SelectOptionList<Type, SelectOptionValue>, searchText: string) => SelectOption<SelectOptionValue>[])` | No | `-` | Custom filter function for searching options |
+| `helperText` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Helper text displayed below the select |
+| `hiddenSelectedOptionsLabel` | `string` | No | `-` | Label to show for showcasing count of hidden selected options |
+| `hideSearchInput` | `boolean` | No | `-` | Hide the search input |
+| `hideSelectAll` | `boolean` | No | `-` | Whether to hide the Select All option in multi-select mode |
+| `label` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Label displayed above the control |
+| `labelVariant` | `inside \| outside` | No | `'outside'` | The variant of the label. Only used when compact is not true. |
+| `maxSelectedOptionsToShow` | `number` | No | `-` | Maximum number of selected options to show before truncating |
+| `media` | `ReactElement` | No | `-` | Media rendered at the start of the cell (icon, avatar, image, etc). |
+| `onSearch` | `((searchText: string) => void)` | No | `-` | Search text change handler |
+| `open` | `boolean` | No | `-` | Controlled open state of the dropdown |
+| `placeholder` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Placeholder text displayed when no option is selected |
+| `ref` | `null \| (instance: SelectRef \| null) => void \| RefObject<SelectRef>` | No | `-` | - |
+| `removeSelectedOptionAccessibilityLabel` | `string` | No | `-` | Accessibility label for each chip in a multi-select |
+| `searchText` | `string` | No | `-` | Controlled search text value |
+| `selectAllLabel` | `string` | No | `-` | Label for the Select All option in multi-select mode |
+| `setOpen` | `((open: boolean \| ((open: boolean) => boolean)) => void)` | No | `-` | Callback to update the open state |
+| `startNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the start of the inner input. Refer to diagram for location of startNode in InputStack component |
+| `style` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | Inline styles for the root element |
+| `styles` | `{ root?: StyleProp<ViewStyle>; control?: StyleProp<ViewStyle>; controlStartNode?: StyleProp<ViewStyle>; controlInputNode?: StyleProp<ViewStyle>; controlValueNode?: StyleProp<ViewStyle>; controlLabelNode?: StyleProp<ViewStyle>; controlHelperTextNode?: StyleProp<ViewStyle>; controlEndNode?: StyleProp<ViewStyle>; controlBlendStyles?: InteractableBlendStyles; dropdown?: StyleProp<ViewStyle>; option?: StyleProp<ViewStyle>; optionCell?: StyleProp<ViewStyle>; optionContent?: StyleProp<ViewStyle>; optionLabel?: StyleProp<ViewStyle>; optionDescription?: StyleProp<ViewStyle>; optionBlendStyles?: InteractableBlendStyles \| undefined; selectAllDivider?: StyleProp<ViewStyle>; emptyContentsContainer?: StyleProp<ViewStyle>; emptyContentsText?: StyleProp<ViewStyle>; optionGroup?: StyleProp<ViewStyle>; } \| undefined` | No | `-` | Custom styles for individual elements of the Select component |
+| `testID` | `string` | No | `-` | Test ID for the root element |
+| `type` | `multi \| single` | No | `-` | Whether the select allows single or multiple selections |
+| `variant` | `primary \| secondary \| positive \| negative \| foregroundMuted \| foreground` | No | `-` | Determines the sentiment of the input. Because we allow startContent and endContent to be custom ReactNode, the content placed inside these slots will not change colors according to the variant. You will have to add that yourself |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Root element |
+| `control` | `-` | Control element |
+| `controlStartNode` | `-` | Start node element |
+| `controlInputNode` | `-` | Input node element |
+| `controlValueNode` | `-` | Value node element |
+| `controlLabelNode` | `-` | Label node element |
+| `controlHelperTextNode` | `-` | Helper text node element |
+| `controlEndNode` | `-` | End node element |
+| `controlBlendStyles` | `-` | Blend styles for control interactivity |
+| `dropdown` | `-` | Dropdown container element |
+| `option` | `-` | Option element |
+| `optionCell` | `-` | Option cell element |
+| `optionContent` | `-` | Option content wrapper |
+| `optionLabel` | `-` | Option label element |
+| `optionDescription` | `-` | Option description element |
+| `optionBlendStyles` | `-` | Option blend styles for interactivity |
+| `selectAllDivider` | `-` | Select all divider element |
+| `emptyContentsContainer` | `-` | Empty contents container element |
+| `emptyContentsText` | `-` | Empty contents text element |
+| `optionGroup` | `-` | Option group element |
+
+

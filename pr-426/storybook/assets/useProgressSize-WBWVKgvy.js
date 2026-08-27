@@ -1,0 +1,1 @@
+import{r}from"./iframe-CYDANtMt.js";const a={easing:"global",duration:"slow3"},t=e=>r.useMemo(()=>{switch(e){case"semiheavy":return 8;case"heavy":return 12;case"thin":return 2;default:return 4}},[e]);export{a,t as u};

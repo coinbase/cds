@@ -1,0 +1,831 @@
+# Stepper
+
+A component that visualizes states within a multi-step process.
+
+## Import
+
+```tsx
+import { Stepper } from '@coinbase/cds-web/stepper/Stepper'
+```
+
+## Examples
+
+### Basic Usage
+
+The stepper can be used in two directions: horizontal and vertical.
+Each direction has its own unique default design in order to support different use cases.
+
+#### Direction: Horizontal
+
+```tsx live
+function StepperHorizontalBasicExample() {
+  const steps = [
+    { id: '1', label: 'Account Details' },
+    { id: '2', label: 'Personal Information' },
+    { id: '3', label: 'Payment Method' },
+    { id: '4', label: 'Review & Submit' },
+  ];
+
+  const [stepperState, stepperApi] = useStepper({ steps });
+  const [complete, setComplete] = useState(false);
+
+  const handleNext = () => {
+    if (stepperState.activeStepId === '4') {
+      setComplete(true);
+    } else {
+      stepperApi.goNextStep();
+    }
+  };
+
+  const handlePrevious = () => {
+    setComplete(false);
+    stepperApi.goPreviousStep();
+  };
+
+  const handleReset = () => {
+    setComplete(false);
+    stepperApi.reset();
+  };
+
+  return (
+    <VStack gap={2}>
+      <Stepper
+        direction="horizontal"
+        activeStepId={stepperState.activeStepId}
+        steps={steps}
+        complete={complete}
+      />
+      <HStack gap={1}>
+        <Button
+          variant="secondary"
+          onClick={handlePrevious}
+          disabled={stepperState.activeStepId === '1'}
+        >
+          Previous
+        </Button>
+        <Button onClick={handleNext} disabled={complete}>
+          {stepperState.activeStepId === '4' ? 'Complete' : 'Next'}
+        </Button>
+        {complete && <Button onClick={handleReset}>Reset</Button>}
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+#### Direction: Vertical
+
+```tsx live
+function StepperVerticalBasicExample() {
+  const steps = [
+    { id: '1', label: 'Account Details' },
+    { id: '2', label: 'Personal Information' },
+    { id: '3', label: 'Payment Method' },
+    { id: '4', label: 'Review & Submit' },
+  ];
+
+  const [stepperState, stepperApi] = useStepper({ steps });
+  const [complete, setComplete] = useState(false);
+
+  const handleNext = () => {
+    if (stepperState.activeStepId === '4') {
+      setComplete(true);
+    } else {
+      stepperApi.goNextStep();
+    }
+  };
+
+  const handlePrevious = () => {
+    setComplete(false);
+    stepperApi.goPreviousStep();
+  };
+
+  const handleReset = () => {
+    setComplete(false);
+    stepperApi.reset();
+  };
+
+  return (
+    <VStack gap={2}>
+      <Stepper
+        direction="vertical"
+        activeStepId={stepperState.activeStepId}
+        steps={steps}
+        complete={complete}
+      />
+      <HStack gap={1}>
+        <Button
+          variant="secondary"
+          onClick={handlePrevious}
+          disabled={stepperState.activeStepId === '1'}
+        >
+          Previous
+        </Button>
+        <Button onClick={handleNext} disabled={complete}>
+          {stepperState.activeStepId === '4' ? 'Complete' : 'Next'}
+        </Button>
+        {complete && <Button onClick={handleReset}>Reset</Button>}
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+### Step Config
+
+The Stepper is ultimately a visual representation of an array of step objects (i.e. `StepperValue[]`).
+These should be defined outside of the component or memoized prior to rendering a Stepper.
+
+Commonly used or required **StepperValue** properties:
+
+- `id` - A required, unique identifier for the step.
+- `label` - The label of the step. Optionally exclude this property to hide the label text.
+- `subSteps` - An optional array of sub-steps to nest under the step.
+- `metadata` - An optional object that can be used to store additional data about the step. This is useful when providing your own custom Step components.
+
+### useStepper hook
+
+Call the `useStepper` hook to initialize stepper state, access the current state and perform state mutations with its API.
+
+The hook returns a tuple where the first member is the current stepper state containing the `activeStepId`.
+
+```tsx
+const [stepperState, stepperApi] = useStepper({ steps });
+
+<Stepper direction="horizontal" activeStepId={stepperState.activeStepId} steps={steps} />;
+```
+
+The second member is an API for manipulating the stepper state and includes the following methods:
+
+```tsx
+type StepperApi = {
+  /** Update the currently active step to the step with `id`. */
+  goToStep: (id: string) => void;
+  /** Update the currently active step to the next enabled step in the steps array. Does nothing if the last step is already active. */
+  goNextStep: () => void;
+  /** Update the currently active step to the previous enabled step in the steps array. Does nothing if the first step is already active. */
+  goPreviousStep: () => void;
+  /** Reset the active step to the original default active step. */
+  reset: () => void;
+};
+```
+
+### Common Patterns & Use Cases
+
+#### Sub-steps
+
+A common use-case for the vertical stepper is to visualize long and complex workflows with nested/grouped steps.
+A StepperValue object optionally accepts a `subSteps` property, which is also an array of StepperValue objects.
+
+:::danger Avoid Deep Nesting
+Steps can be nested arbritrarily deep, however CDS does not advise nesting deeper than one level.
+:::
+
+```tsx live
+function StepperVerticalSubStepsExample() {
+  const steps: StepperValue[] = [
+    {
+      id: 'first-step',
+      label: 'First step',
+    },
+    {
+      id: 'second-step',
+      label: 'Second step',
+      subSteps: [
+        {
+          id: 'second-step-substep-one',
+          label: 'Substep one',
+        },
+        {
+          id: 'second-step-substep-two',
+          label: 'Substep two',
+        },
+        {
+          id: 'second-step-substep-three',
+          label: 'Substep three',
+        },
+      ],
+    },
+    {
+      id: 'final-step',
+      label: 'Final step',
+    },
+  ];
+
+  const [stepperState, stepperApi] = useStepper({ steps });
+  const [complete, setComplete] = useState(false);
+
+  const handleNext = () => {
+    if (stepperState.activeStepId === 'final-step') {
+      setComplete(true);
+    } else {
+      stepperApi.goNextStep();
+    }
+  };
+
+  const handlePrevious = () => {
+    setComplete(false);
+    stepperApi.goPreviousStep();
+  };
+
+  const handleReset = () => {
+    setComplete(false);
+    stepperApi.reset();
+  };
+
+  return (
+    <VStack gap={2}>
+      <Stepper
+        direction="vertical"
+        activeStepId={stepperState.activeStepId}
+        steps={steps}
+        complete={complete}
+        accessibilityLabel="Example Stepper"
+      />
+      <HStack gap={1}>
+        <Button
+          variant="secondary"
+          onClick={handlePrevious}
+          disabled={stepperState.activeStepId === 'first-step'}
+        >
+          Previous
+        </Button>
+        <Button onClick={handleNext} disabled={complete}>
+          {stepperState.activeStepId === 'final-step' ? 'Complete' : 'Next'}
+        </Button>
+        {complete && <Button onClick={handleReset}>Reset</Button>}
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+### Customization Options
+
+#### 1. Custom Components
+
+Stepper is highly customizable. Use the _Component_ props to customize Stepper with your own React components.
+Components can be set on the Stepper or individually on each step. Custom components set on a specific step will override the same component set on the Stepper.
+
+##### Customizable subcomponents
+
+- **StepperHeaderComponent**: Rendered above the entire stepper, helpful to display an overall title or label.
+- **StepperIconComponent**: Useful for showing a small visual with the step to convey state or the intent of the step.
+- **StepperProgressComponent**: Can be used to show an animated marker of progress with each step.
+- **StepperLabelComponent**: A component responsible for rendering the label text or main content associated with the step.
+- **StepperSubstepContainerComponent**: Responsible for rendering the recursive sub-steps of a step.
+
+Below are some basic diagrams to help visualize the Stepper anatomy in its two orientations.
+
+```text
+direction: horizontal
+  ┌─────────────────────────────────┐
+  │        Step (VStack)            │
+  │  ┌───────────────────────────┐  │
+  │  │         HStack            │  │
+  │  │ ┌──────┐ ┌──────────────┐ │  │
+  │  │ │ Icon │ │  Progress    │ │  │
+  │  │ │      │ │              │ │  │
+  │  │ └──────┘ └──────────────┘ │  │
+  │  └───────────────────────────┘  │
+  │  ┌───────────────────────────┐  │
+  │  │          Label            │  │
+  │  └───────────────────────────┘  │
+  │  ┌───────────────────────────┐  │
+  │  │    SubstepContainer       │  │
+  │  │       (recursive)         │  │
+  │  └───────────────────────────┘  │
+  └─────────────────────────────────┘
+```
+
+```text
+direction: vertical
+  ┌─────────────────────────────────────────────────┐
+  │                  Step (VStack)                  │
+  │  ┌───────────────────────────────────────────┐  │
+  │  │              HStack                       │  │
+  │  │  ┌─────────────┐  ┌───────────────────┐   │  │
+  │  │  │   VStack    │  │      VStack       │   │  │
+  │  │  │ ┌─────────┐ │  │ ┌───────────────┐ │   │  │
+  │  │  │ │  Icon   │ │  │ │     Label     │ │   │  │
+  │  │  │ └─────────┘ │  │ └───────────────┘ │   │  │
+  │  │  │ ┌─────────┐ │  │ ┌───────────────┐ │   │  │
+  │  │  │ │Progress │ │  │ │ Substeps      │ │   │  │
+  │  │  │ └─────────┘ │  │ │  (recursive)  │ │   │  │
+  │  │  └─────────────┘  │ └───────────────┘ │   │  │
+  │  └───────────────────────────────────────────┘  │
+  └─────────────────────────────────────────────────┘
+```
+
+Each custom component receives a specific set of props that provide access to step data and state.
+When writing your own components, make sure you're getting the most out of Stepper by importing our custom component types like so:
+
+```tsx
+import type { StepperLabelProps } from '@coinbase/cds-web/stepper/Stepper';
+
+const TravelBookingLabel = ({
+  step,
+  active,
+  depth,
+}: StepperLabelProps) => {
+  const { label, metadata, id } = step;
+  const subtitle = metadata?.subtitle as string;
+
+  if (depth === 0 && metadata) {
+    return (
+      <ListCell
+        description={metadata.name as string}
+        detail={metadata.date as string}
+        innerSpacing={{ paddingTop: 0, paddingBottom: 0 }}
+        maxWidth={350}
+        minHeight={undefined}
+        outerSpacing={{ paddingTop: 0, paddingBottom: 3, paddingStart: 0, paddingEnd: 0 }}
+        subdetail={metadata.time as string}
+        title={label}
+      />
+    );
+  }
+```
+
+:::tip Using Default Components
+In many cases, it may be helpful to compose the default Stepper Components within your own. For example, you may want to make the default label pressable.
+All of the default components used by Stepper are exported and available for you to use.
+
+```tsx
+import { DefaultStepperLabelHorizontal } from '@coinbase/cds-web/stepper';
+
+<Stepper
+  direction="horizontal"
+  StepperLabelComponent={(props) => (
+    <Pressable onClick={handleStepClick}>
+      <DefaultStepperLabelHorizontal {...props} />
+    </Pressable>
+  )}
+/>;
+```
+
+:::
+
+##### Null Components
+
+Pass null to any of the component props to completely disable its functionality and hide it from the user.
+
+```tsx live
+function StepperNullComponentsExample() {
+  const steps = [
+    { id: '1', label: 'Account Details' },
+    { id: '2', label: 'Personal Information' },
+    { id: '3', label: 'Payment Method' },
+    { id: '4', label: 'Review & Submit' },
+  ];
+
+  const [stepperState, stepperApi] = useStepper({ steps });
+  const [complete, setComplete] = useState(false);
+
+  const handleNext = () => {
+    if (stepperState.activeStepId === '4') {
+      setComplete(true);
+    } else {
+      stepperApi.goNextStep();
+    }
+  };
+
+  const handlePrevious = () => {
+    setComplete(false);
+    stepperApi.goPreviousStep();
+  };
+
+  return (
+    <VStack gap={2}>
+      <Stepper
+        direction="horizontal"
+        StepperLabelComponent={null}
+        activeStepId={stepperState.activeStepId}
+        steps={steps}
+        complete={complete}
+      />
+      <HStack gap={1}>
+        <Button
+          variant="secondary"
+          onClick={handlePrevious}
+          disabled={stepperState.activeStepId === '1'}
+        >
+          Previous
+        </Button>
+        <Button onClick={handleNext} disabled={complete}>
+          {stepperState.activeStepId === '4' ? 'Complete' : 'Next'}
+        </Button>
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+##### Custom Metadata for Rich Step Data
+
+The `metadata` property on each step allows you to store additional data that can be used
+by custom components to create rich, interactive experiences. This is particularly useful
+for complex workflows where each step needs to display contextual information.
+
+```tsx live
+function StepperCustomMetadataExample() {
+  const CustomBookingLabel = ({ step, active }) => {
+    const { label, metadata } = step;
+
+    return (
+      <ListCell
+        title={label}
+        description={metadata.name}
+        detail={metadata.date}
+        subdetail={metadata.time}
+        maxWidth={350}
+        innerSpacing={{ paddingTop: 0, paddingBottom: 0 }}
+        outerSpacing={{ paddingTop: 0, paddingBottom: 3, paddingStart: 0, paddingEnd: 0 }}
+        minHeight={undefined}
+      />
+    );
+  };
+
+  const bookingSteps: StepperValue<{
+    name: string;
+    date: string;
+    time: string;
+  }>[] = [
+    {
+      id: 'book-hotel',
+      label: 'Book Hotel',
+      metadata: {
+        name: 'Marriott Downtown',
+        date: '2025-06-13',
+        time: '3:00 PM Check-in',
+      },
+    },
+    {
+      id: 'book-flight',
+      label: 'Book Flight',
+      metadata: {
+        name: 'Delta Airlines',
+        date: '2025-06-13',
+        time: '11:03 AM Departure',
+      },
+    },
+    {
+      id: 'rental-car',
+      label: 'Reserve Rental Car',
+      metadata: {
+        name: 'Enterprise Rent-A-Car',
+        date: '2025-06-14',
+        time: '2:24 PM Pickup',
+      },
+    },
+  ];
+
+  const [stepperState, stepperApi] = useStepper({
+    steps: bookingSteps,
+  });
+
+  return (
+    <Stepper
+      direction="vertical"
+      activeStepId={stepperState.activeStepId}
+      steps={bookingSteps}
+      complete={true}
+      StepperLabelComponent={CustomBookingLabel}
+      accessibilityLabel="Travel Booking Stepper"
+    />
+  );
+}
+```
+
+##### Custom Step with Error State
+
+You can create custom icon, label, and progress components for individual steps to show special states like errors.
+In this example, the "Payment Method" step uses metadata to indicate an error condition. The custom components check this metadata and the completion state to dynamically render an error indicator, falling back to default components otherwise.
+
+```jsx live
+function StepperErrorStepExample() {
+  const ErrorStepperIcon = useMemo(
+    () =>
+      memo(function ErrorStepperIcon(props) {
+        const { step, visited, complete } = props;
+        const showError = step.metadata?.isError && (visited || complete);
+
+        if (!showError) {
+          return <DefaultStepperIconVertical {...props} />;
+        }
+
+        return (
+          <DefaultStepperIconVertical
+            {...props}
+            activeColor="bgNegative"
+            completeName="circleCross"
+            completeColor="bgNegative"
+            visitedName="circleCross"
+            visitedColor="bgNegative"
+          />
+        );
+      }),
+    [],
+  );
+
+  const ErrorStepperLabel = useMemo(
+    () =>
+      memo(function ErrorStepperLabel(props) {
+        const { step, visited, complete } = props;
+        const showError = step.metadata?.isError && (visited || complete);
+
+        if (!showError) {
+          return <DefaultStepperLabelVertical {...props} />;
+        }
+
+        return (
+          <DefaultStepperLabelVertical
+            {...props}
+            activeColor="fgNegative"
+            completeColor="fgNegative"
+            visitedColor="fgNegative"
+          />
+        );
+      }),
+    [],
+  );
+
+  const ErrorStepperProgress = useMemo(
+    () =>
+      memo(function ErrorStepperProgress(props) {
+        const { step, visited, complete } = props;
+        const showError = step.metadata?.isError && (visited || complete);
+
+        if (!showError) {
+          return <DefaultStepperProgressVertical {...props} />;
+        }
+
+        return (
+          <DefaultStepperProgressVertical
+            {...props}
+            completeFill="bgNegative"
+            visitedFill="bgNegative"
+          />
+        );
+      }),
+    [],
+  );
+
+  const steps = [
+    { id: '1', label: 'Account Details' },
+    { id: '2', label: 'Personal Information' },
+    {
+      id: '3',
+      label: 'Payment Method',
+      metadata: { isError: true },
+    },
+    { id: '4', label: 'Review & Submit' },
+  ];
+
+  const [stepperState, stepperApi] = useStepper({ steps });
+  const [complete, setComplete] = useState(false);
+
+  const handleNext = () => {
+    if (stepperState.activeStepId === '4') {
+      setComplete(true);
+    } else {
+      stepperApi.goNextStep();
+    }
+  };
+
+  const handlePrevious = () => {
+    setComplete(false);
+    stepperApi.goPreviousStep();
+  };
+
+  const handleReset = () => {
+    setComplete(false);
+    stepperApi.reset();
+  };
+
+  return (
+    <VStack gap={2}>
+      <Stepper
+        direction="vertical"
+        activeStepId={stepperState.activeStepId}
+        steps={steps}
+        complete={complete}
+        StepperIconComponent={ErrorStepperIcon}
+        StepperLabelComponent={ErrorStepperLabel}
+        StepperProgressComponent={ErrorStepperProgress}
+      />
+      <HStack gap={1}>
+        <Button
+          variant="secondary"
+          onClick={handlePrevious}
+          disabled={stepperState.activeStepId === '1'}
+        >
+          Previous
+        </Button>
+        <Button onClick={handleNext} disabled={complete}>
+          {stepperState.activeStepId === '4' ? 'Complete' : 'Next'}
+        </Button>
+        {complete && <Button onClick={handleReset}>Reset</Button>}
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+#### 2. style and className APIs
+
+The Stepper component provides flexible styling options through the `classNames` and `styles` props.
+Through these props, you can apply CSS classes and inline styles to specific subcomponents of the Stepper; the same components which you can override with the `Component` props.
+
+##### classNames
+
+The `classNames` prop allows you to apply CSS classes to specific child elements.
+It accepts an object with the following optional keys:
+
+- `header` - Applied to the header component
+- `step` - Applied to each individual step element
+- `substepContainer` - Applied to each substep container element
+- `progress` - Applied to each step progress bar element
+- `label` - Applied to each step label element
+- `icon` - Applied to each step icon element
+
+```tsx
+<Stepper
+  classNames={{
+    step: 'custom-step',
+    label: 'custom-label',
+    progress: 'custom-marker',
+  }}
+  // ... other props
+/>
+```
+
+:::tip data-attributes
+Each step element, automatically receives data attributes that reflect its step's current state, making it easy to style different step states with CSS.
+
+- `data-step-active=(true|false)` - Indicates when the step is the current, active step:
+- `data-step-complete=(true|false)` - Indicates when the stepper has been completed
+- `data-step-visited=(true|false)` - Indicates when the position of the active step is greater than or equal to the step's position in the stepper
+- `data-step-descendent-active=(true|false)` - Indicates when the active step has a descendent sub-step that is active
+
+```css
+/* Style active step labels */
+[data-step-active='true'] {
+  color: var(--color-fgPrimary);
+  font-weight: bold;
+}
+```
+
+:::
+
+##### styles
+
+The `styles` prop allows you to apply inline styles to specific child elements.
+It follows the same structure as `classNames`:
+
+```tsx
+<Stepper
+  direction="horizontal"
+  styles={{
+    step: { ... },
+    substepContainer: { ... },
+    label: { ... },
+    progress: { ... },
+  }}
+  // ... other props
+/>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `activeStepId` | `string \| null` | Yes | `-` | The id of the current/active step. Set this to null to visualize a completely unfilled/incomplete Stepper. |
+| `direction` | `horizontal \| vertical` | Yes | `-` | The orientation of the stepper. |
+| `steps` | `StepperValue<Metadata>[]` | Yes | `-` | An array of steps to render. |
+| `StepperHeaderComponent` | `StepperHeaderComponent<Metadata> \| null` | No | `-` | An optional component to render in place of the default Header subcomponent. Set to null to render nothing in this slot. |
+| `StepperIconComponent` | `StepperIconComponent<Metadata> \| null` | No | `-` | An optional component to render in place of the default Icon subcomponent. Set to null to render nothing in this slot. |
+| `StepperLabelComponent` | `StepperLabelComponent<Metadata> \| null` | No | `-` | An optional component to render in place of the default Label subcomponent. Set to null to render nothing in this slot. |
+| `StepperProgressComponent` | `StepperProgressComponent<Metadata> \| null` | No | `-` | An optional component to render in place of the default Progress subcomponent. Set to null to render nothing in this slot. |
+| `StepperStepComponent` | `StepperStepComponent<Metadata>` | No | `-` | An optional component to render in place of the default Step subcomponent. |
+| `StepperSubstepContainerComponent` | `StepperSubstepContainerComponent<Metadata> \| null` | No | `-` | An optional component to render in place of the default SubstepContainer subcomponent. |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `animate` | `boolean` | No | `true` | Whether to animate the progress spring. |
+| `as` | `div` | No | `div` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | - |
+| `classNames` | `{ root?: string; step?: string \| undefined; substepContainer?: string \| undefined; label?: string \| undefined; progress?: string \| undefined; icon?: string \| undefined; header?: string \| undefined; } \| undefined` | No | `-` | Custom class names for individual elements of the Stepper component |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `complete` | `boolean` | No | `-` | Set this to true to visualize a completely filled/complete Stepper |
+| `completedStepAccessibilityLabel` | `string` | No | `"Complete"` | An optional accessibility label used to announce a step as complete/visited. Useful for providing an internationalized label for this state. |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `disableAnimateOnMount` | `boolean` | No | `-` | Whether to disable the animation on mount. |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `progressSpringConfig` | `Partial<AnimationConfig>` | No | `-` | The spring config to use for the progress spring. |
+| `ref` | `RefObject<HTMLDivElement> \| ((instance: HTMLDivElement \| null) => void) \| null` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `styles` | `{ root?: CSSProperties; step?: CSSProperties \| undefined; substepContainer?: CSSProperties \| undefined; label?: CSSProperties \| undefined; progress?: CSSProperties \| undefined; icon?: CSSProperties \| undefined; header?: CSSProperties \| undefined; } \| undefined` | No | `-` | Custom styles for individual elements of the Stepper component |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Root Stepper container element |
+| `step` | `-` | Step subcomponent element |
+| `substepContainer` | `-` | Substep container element |
+| `label` | `-` | Label subcomponent element |
+| `progress` | `-` | Progress subcomponent element |
+| `icon` | `-` | Icon subcomponent element |
+| `header` | `-` | Header subcomponent element |
+
+

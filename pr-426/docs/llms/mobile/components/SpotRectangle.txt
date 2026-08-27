@@ -1,0 +1,47 @@
+# SpotRectangle
+
+A rectangular illustration component for displaying spot graphics.
+
+## Import
+
+```tsx
+import { SpotRectangle } from '@coinbase/cds-mobile/illustratations/SpotRectangle'
+```
+
+## Examples
+
+### Basic example
+
+```jsx
+<SpotRectangle name="creditCardExcitement" />
+```
+
+### `scaleMultiplier` prop
+
+If no predefined dimensions fit your use case, you can use the `scaleMultiplier` prop to scale the illustration.
+
+Use `scaleMultiplier` sparingly and with caution. We have predefined dimensions to ensure that illustrations scale elegantly.
+
+```jsx
+<SpotRectangle name="creditCardExcitement" scaleMultiplier={1.5} />
+```
+
+### Scaling with dimension
+
+If `dimension` and `scaleMultiplier` are both provided the component will scale based on the provided dimension.
+
+```jsx
+<SpotRectangle name="creditCardExcitement" dimension="240x120" scaleMultiplier={1.5} />
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `name` | `margin \| blockchain \| bridging \| calendar \| coinbaseOneLogo \| concierge \| diamond \| earn \| login \| nft \| securityShield \| staking \| tokenSales \| cb1BankTransfers \| ethStakingRewards \| futures \| globalTransactions \| governance \| lightningNetworkSend \| startToday \| usdcLoan \| wrapEth \| phoneNumber \| accessToAdvancedCharts \| addPhoneNumber \| advancedTrading \| advancedTradingChartsIndicatorsCandles \| advancedTradingUi \| appTrackingTransparency \| automaticPayments \| backedByUsDollar \| basedInUsa \| bigBtc \| borrowWallet \| browserExtension \| cardBoosted \| cbbtc \| coinbaseCardLock \| coinbaseCardPocket \| coinbaseFees \| coinbaseOneDiscountedAmount \| coinbaseOnePhoneLightning \| coinbaseOneRewards \| coinbaseOneSavingFunds \| collectingNfts \| commerceAccounting \| commerceInvoices \| completeAQuiz \| congratulationsOnEarningCrypto \| contactsListWarning \| crossBorderPayments \| cryptoAndMore \| cryptoApps \| cryptoAssets \| cryptoEconomy \| cryptoForBeginners \| cryptoPortfolio \| cryptoWallet \| decentralization \| decentralizedWebWeb3 \| defiDecentralizedBorrowingLending \| defiDecentralizedTradingExchange \| defiEarn \| defiHow \| defiRisk \| didDecentralizedIdentity \| digitalCollectibles \| documentCertified \| documentSuccess \| earnInterest \| earnToLearn \| encryptedEverything \| estimatedAmount \| exploreDecentralizedApps \| fileYourCryptoTaxes \| fileYourCryptoTaxesCheck \| focusLimitOrders \| freeBtc \| gainsAndLosses \| gasFeesNetworkFees \| getStartedInMinutes \| graphChartTrading \| hardwareWallets \| holdCrypto \| holdingCrypto \| insuranceProtection \| invest \| layeredNetworks \| leverage \| linkingYourWalletToYourCoinbaseAccount \| liquidationBufferGreen \| liquidationBufferRed \| liquidationBufferYellow \| marginWarning \| mining \| moneyDecentralized \| multicoinSupport \| multiPlatformMobileAppBrowserExtension \| multipleAccountsWalletsForOneUser \| noFees \| notificationsAlt \| onTheList \| openEmail \| optInPushNotificationsEmail \| p2pPayments \| portfolioPerformance \| poweredByEthereum \| primeDeFi \| primeEarn \| primeStaking \| quickAndSimple \| readyToTrade \| referralsBitcoin \| referralsCoinbaseOne \| referralsGenericCoin \| retailUSDCRewards \| secureAndTrusted \| secureGlobalTransactions \| secureStorage \| selfCustody \| semiCustodial \| sendCryptoFaster \| shareOnSocialMedia \| sidechain \| stableValue \| stayInControlSelfHostedWalletsStorage \| stressTestedColdStorage \| switchAdvancedToSimpleTrading \| taxesDetails \| tradeImmediately \| trendingHotAssets \| verifyEmail \| verifyInfo \| walletNotifications \| walletSecurity \| watchVideos \| addBank \| advancedTradeCharts \| apiKey \| appUpdate \| borrowLoan \| browserHistory \| cardWaitlist \| cbEth \| clawMachinePig \| coinGateway \| connectWalletTutorial \| creditCardExcitement \| creditCardExcitementCoinbaseOne \| cryptoEconomyCoin \| cryptoEconomyEurc \| cryptoEconomyUSDC \| currency \| derivativesLoop \| downloadCoinbaseWalletArrow \| downloadingStatement \| emptyNfts \| emptyTrading \| eth2SellSend \| eth2SendSell \| eth2SendSellTwo \| ethAddress \| ethStakeOrWrap \| ethStakeOrWrapTwo \| ethStakingMovement \| ethTrading \| ethTradingTwo \| ethWrappedStakingRewards \| faceId \| fiatInterest \| giftBoxRewards \| highFees \| leadingProtocol \| leadingProtocolMorpho \| ledgerFailed \| ledgerSignatureRejected \| lendGraph \| linkCoinbaseWallet \| loanValue \| noTransactions \| portfolioOverview \| portfolioOverviewRelaunch \| primeOrderConfirmation \| primePriceLadder \| primeTradePreferences \| protectedNotes \| ratDashboard \| ratFoundWallet \| ratMigration \| ratMigrationerror \| referralsBonus \| scanCode \| secureAccount \| sendingCrypto \| trade \| transferCoins \| transferEth \| transferFunds \| trustedContacts \| unauthorizedTransfers \| uob \| update \| uploadDocument \| usdcLoanEth \| walletReconnect \| walletReconnectSuccess \| wrapEthTwo \| yieldHolding` | Yes | `-` | Name of illustration as defined in Figma |
+| `dimension` | `240x120` | No | `-` | HeroSquare Default:  240x240 SpotSquare Default: 96x96 Pictogram Default: 48x48 SpotRectangle Default: 240x120 |
+| `fallback` | `ReactElement<any, string \| JSXElementConstructor<any>> \| null` | No | `null` | Fallback element to render if unable to find an illustration with the matching name |
+| `scaleMultiplier` | `number` | No | `-` | Multiply the width & height while maintaining aspect ratio |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

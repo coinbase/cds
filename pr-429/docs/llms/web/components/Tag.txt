@@ -1,0 +1,356 @@
+# Tag
+
+A small label for categorizing or labeling content.
+
+## Import
+
+```tsx
+import { Tag } from '@coinbase/cds-web/tag/Tag'
+```
+
+## Examples
+
+### Basics
+
+Informational tags (default) are used to note a characteristic or state of an object. Promotional tags for editorial, ephemeral communication.
+
+```jsx live
+<VStack gap={2}>
+  <HStack gap={2} wrap>
+    <Tag intent="informational" colorScheme="green">
+      Green
+    </Tag>
+    <Tag intent="informational" colorScheme="blue">
+      Blue
+    </Tag>
+    <Tag intent="informational" colorScheme="yellow">
+      Yellow
+    </Tag>
+    <Tag intent="informational" colorScheme="purple">
+      Purple
+    </Tag>
+    <Tag intent="informational" colorScheme="red">
+      Red
+    </Tag>
+    <Tag intent="informational" colorScheme="gray">
+      Gray
+    </Tag>
+  </HStack>
+  <HStack gap={2} wrap>
+    <Tag intent="promotional" colorScheme="green">
+      Green
+    </Tag>
+    <Tag intent="promotional" colorScheme="blue">
+      Blue
+    </Tag>
+    <Tag intent="promotional" colorScheme="yellow">
+      Yellow
+    </Tag>
+    <Tag intent="promotional" colorScheme="purple">
+      Purple
+    </Tag>
+    <Tag intent="promotional" colorScheme="red">
+      Red
+    </Tag>
+    <Tag intent="promotional" colorScheme="gray">
+      Gray
+    </Tag>
+  </HStack>
+</VStack>
+```
+
+### Emphasis
+
+You can control the visual prominence of the Tag using the `emphasis` prop. By default, informational tags are low emphasis and promotional tags are high emphasis.
+
+```jsx live
+<VStack gap={2}>
+  <HStack gap={2} wrap>
+    <Tag emphasis="high" colorScheme="green">
+      High Green
+    </Tag>
+    <Tag emphasis="high" colorScheme="blue">
+      High Blue
+    </Tag>
+    <Tag emphasis="high" colorScheme="yellow">
+      High Yellow
+    </Tag>
+    <Tag intent="promotional" colorScheme="purple">
+      High Purple
+    </Tag>
+    <Tag intent="promotional" colorScheme="red">
+      High Red
+    </Tag>
+    <Tag intent="promotional" colorScheme="gray">
+      High Gray
+    </Tag>
+  </HStack>
+  <HStack gap={2} wrap>
+    <Tag colorScheme="green">Low Green</Tag>
+    <Tag colorScheme="blue">Low Blue</Tag>
+    <Tag colorScheme="yellow">Low Yellow</Tag>
+    <Tag intent="promotional" emphasis="low" colorScheme="purple">
+      Low Purple
+    </Tag>
+    <Tag intent="promotional" emphasis="low" colorScheme="red">
+      Low Red
+    </Tag>
+    <Tag intent="promotional" emphasis="low" colorScheme="gray">
+      Low Gray
+    </Tag>
+  </HStack>
+</VStack>
+```
+
+### Composed Examples
+
+#### Account Status
+
+```jsx live
+<HStack justifyContent="space-between" gap="2" alignItems="center">
+  <VStack gap={0.5}>
+    <HStack gap={1}>
+      <Text as="p" font="headline">
+        Tax account status
+      </Text>
+      <Tag colorScheme="red">Not verified</Tag>
+    </HStack>
+    <Text as="p" font="body">
+      Verify your info for tax reporting purposes.
+    </Text>
+  </VStack>
+  <Button>Get started</Button>
+</HStack>
+```
+
+#### Margin Ratio
+
+```jsx live
+function MarginExample() {
+  const renderStartLabelNum = useCallback((num, disabled) => {
+    return (
+      <Text disabled={disabled} as="span" font="title3">
+        ${num.toLocaleString()} (10%)
+      </Text>
+    );
+  }, []);
+
+  const renderEndLabelNumStr = useCallback((num) => {
+    return `$${num.toLocaleString()}`;
+  }, []);
+
+  return (
+    <HStack gap={3}>
+      <VStack
+        justifyContent="space-between"
+        gap="2"
+        padding={2}
+        bordered
+        borderRadius={300}
+        maxWidth="50%"
+        background
+        elevation={1}
+      >
+        <VStack gap={0.5}>
+          <HStack gap={1}>
+            <Text as="p" font="headline">
+              Margin ratio
+            </Text>
+            <Tag colorScheme="green">Low</Tag>
+          </HStack>
+          <Text as="p" font="body">
+            The portion of your balance being held on margin is low. No action is required.
+          </Text>
+        </VStack>
+        <ProgressBarWithFixedLabels
+          startLabel={{ value: 400, render: renderStartLabelNum }}
+          endLabel={{ value: 40000, render: renderEndLabelNumStr }}
+          labelPlacement="above"
+        >
+          <ProgressBar progress={0.1} color="bgPositive" />
+        </ProgressBarWithFixedLabels>
+      </VStack>
+      <VStack
+        justifyContent="space-between"
+        gap="2"
+        padding={2}
+        bordered
+        borderRadius={300}
+        maxWidth="50%"
+        background
+        elevation={1}
+      >
+        <VStack gap={0.5}>
+          <HStack gap={1}>
+            <Text as="p" font="headline">
+              Margin ratio
+            </Text>
+            <Tag colorScheme="red">high</Tag>
+          </HStack>
+          <Text as="p" font="body">
+            Margin usage is high. Deposit funds to avoid liquidation
+          </Text>
+        </VStack>
+        <ProgressBarWithFixedLabels
+          startLabel={{ value: 60000, render: renderStartLabelNum }}
+          endLabel={{ value: 90000, render: renderEndLabelNumStr }}
+          labelPlacement="above"
+        >
+          <ProgressBar progress={0.65} color="bgNegative" />
+        </ProgressBarWithFixedLabels>
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+#### List Cell Integration
+
+```jsx live
+<Box justifyContent="center">
+  <Group divider={Divider} width="420px" bordered borderRadius={300} background elevation={1}>
+    <ListCell
+      title={
+        <HStack gap={0.5}>
+          Bank account
+          <Tag colorScheme="green">No fees</Tag>
+        </HStack>
+      }
+      description={
+        <VStack gap={1} alignItems="flex-start">
+          Use a bank account to buy crypto and deposit or withdraw cash
+          <Tag intent="promotional">Recommended</Tag>
+        </VStack>
+      }
+      accessory="arrow"
+      onClick={console.log}
+      multiline
+      media={<IconButton name="bank" color="primary" />}
+    />
+    <ListCell
+      title="Paypal"
+      description="Use a Paypal account to buy crypto and deposit or withdraw funds"
+      accessory="arrow"
+      onClick={console.log}
+      multiline
+      media={<IconButton name="paypal" color="primary" />}
+    />
+    <ListCell
+      title="Debit card"
+      description="Use any Visa or Mastercard debit cart to make small investments"
+      accessory="arrow"
+      onClick={console.log}
+      multiline
+      media={<IconButton name="card" color="primary" />}
+    />
+  </Group>
+</Box>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | Children to render within the Tag. |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `as` | `div` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `blue0 \| blue100 \| blue5 \| blue10 \| blue15 \| blue20 \| blue30 \| blue40 \| blue50 \| blue60 \| blue70 \| blue80 \| blue90 \| green0 \| green100 \| green5 \| green10 \| green15 \| green20 \| green30 \| green40 \| green50 \| green60 \| green70 \| green80 \| green90 \| orange0 \| orange100 \| orange5 \| orange10 \| orange15 \| orange20 \| orange30 \| orange40 \| orange50 \| orange60 \| orange70 \| orange80 \| orange90 \| yellow0 \| yellow100 \| yellow5 \| yellow10 \| yellow15 \| yellow20 \| yellow30 \| yellow40 \| yellow50 \| yellow60 \| yellow70 \| yellow80 \| yellow90 \| gray0 \| gray100 \| gray5 \| gray10 \| gray15 \| gray20 \| gray30 \| gray40 \| gray50 \| gray60 \| gray70 \| gray80 \| gray90 \| indigo0 \| indigo100 \| indigo5 \| indigo10 \| indigo15 \| indigo20 \| indigo30 \| indigo40 \| indigo50 \| indigo60 \| indigo70 \| indigo80 \| indigo90 \| pink0 \| pink100 \| pink5 \| pink10 \| pink15 \| pink20 \| pink30 \| pink40 \| pink50 \| pink60 \| pink70 \| pink80 \| pink90 \| purple0 \| purple100 \| purple5 \| purple10 \| purple15 \| purple20 \| purple30 \| purple40 \| purple50 \| purple60 \| purple70 \| purple80 \| purple90 \| red0 \| red100 \| red5 \| red10 \| red15 \| red20 \| red30 \| red40 \| red50 \| red60 \| red70 \| red80 \| red90 \| teal0 \| teal100 \| teal5 \| teal10 \| teal15 \| teal20 \| teal30 \| teal40 \| teal50 \| teal60 \| teal70 \| teal80 \| teal90 \| chartreuse0 \| chartreuse100 \| chartreuse5 \| chartreuse10 \| chartreuse15 \| chartreuse20 \| chartreuse30 \| chartreuse40 \| chartreuse50 \| chartreuse60 \| chartreuse70 \| chartreuse80 \| chartreuse90` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `color` | `blue0 \| blue100 \| blue5 \| blue10 \| blue15 \| blue20 \| blue30 \| blue40 \| blue50 \| blue60 \| blue70 \| blue80 \| blue90 \| green0 \| green100 \| green5 \| green10 \| green15 \| green20 \| green30 \| green40 \| green50 \| green60 \| green70 \| green80 \| green90 \| orange0 \| orange100 \| orange5 \| orange10 \| orange15 \| orange20 \| orange30 \| orange40 \| orange50 \| orange60 \| orange70 \| orange80 \| orange90 \| yellow0 \| yellow100 \| yellow5 \| yellow10 \| yellow15 \| yellow20 \| yellow30 \| yellow40 \| yellow50 \| yellow60 \| yellow70 \| yellow80 \| yellow90 \| gray0 \| gray100 \| gray5 \| gray10 \| gray15 \| gray20 \| gray30 \| gray40 \| gray50 \| gray60 \| gray70 \| gray80 \| gray90 \| indigo0 \| indigo100 \| indigo5 \| indigo10 \| indigo15 \| indigo20 \| indigo30 \| indigo40 \| indigo50 \| indigo60 \| indigo70 \| indigo80 \| indigo90 \| pink0 \| pink100 \| pink5 \| pink10 \| pink15 \| pink20 \| pink30 \| pink40 \| pink50 \| pink60 \| pink70 \| pink80 \| pink90 \| purple0 \| purple100 \| purple5 \| purple10 \| purple15 \| purple20 \| purple30 \| purple40 \| purple50 \| purple60 \| purple70 \| purple80 \| purple90 \| red0 \| red100 \| red5 \| red10 \| red15 \| red20 \| red30 \| red40 \| red50 \| red60 \| red70 \| red80 \| red90 \| teal0 \| teal100 \| teal5 \| teal10 \| teal15 \| teal20 \| teal30 \| teal40 \| teal50 \| teal60 \| teal70 \| teal80 \| teal90 \| chartreuse0 \| chartreuse100 \| chartreuse5 \| chartreuse10 \| chartreuse15 \| chartreuse20 \| chartreuse30 \| chartreuse40 \| chartreuse50 \| chartreuse60 \| chartreuse70 \| chartreuse80 \| chartreuse90` | No | `-` | - |
+| `colorScheme` | `blue \| green \| yellow \| gray \| purple \| red` | No | `blue` | Specify the colorScheme of the Tag |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `emphasis` | `low \| high` | No | `'low' when informational intent, 'high' when promotional intent` | Specify the emphasis of the Tag. |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `intent` | `promotional \| informational` | No | `informational` | Specify the intent of the Tag |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | Setting a custom max width for this tag will enable text truncation |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `ref` | `RefObject<HTMLDivElement> \| ((instance: HTMLDivElement \| null) => void) \| null` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+

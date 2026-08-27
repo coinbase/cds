@@ -1,0 +1,89 @@
+# NudgeCard
+
+A card component designed to encourage users to take essential actions.
+
+## Import
+
+```tsx
+import { NudgeCard } from '@coinbase/cds-mobile/cards/NudgeCard'
+```
+
+## Examples
+
+### with Transparent Button
+
+Use if the nudge card's purpose is to provide a gentle reminder or a secondary option. Transparent buttons are less intrusive and blends more seamlessly with the rest of the page.
+
+```jsx
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Earn more crypto',
+      description: 'You’ve got unstaked crypto. Stake it now to earn more.',
+      pictogram: 'key',
+      action: 'Start earning',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <NudgeCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```
+
+### Compact
+
+Use when space is limited.
+
+```jsx
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Derivatives Trading',
+      description: 'Derivative Exchange is available for all users',
+      pictogram: 'derivativesNavigation',
+      onActionPress: NoopFn,
+      compact: true,
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <NudgeCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `action` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or ReactNode to display as the call to action |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `bgAlternate` | Background color for the card. |
+| `description` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or ReactNode to be displayed below the title in a TextBody |
+| `media` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Pass any node to be rendered to the right of the text content |
+| `mediaPosition` | `left \| right` | No | `right` | Set the media position for the pictogram or media. |
+| `minHeight` | `string \| number` | No | `160` | - |
+| `numberOfLines` | `number` | No | `3` | Maximum number of lines shown for the title and description text. Text that exceeds will be truncated. |
+| `onActionPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | - |
+| `onDismissPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | - |
+| `onPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | - |
+| `pictogram` | `key \| done \| loop \| cardSuccess \| warning \| error \| add \| arrowsUpDown \| browser \| calculator \| calendar \| checkmark \| clock \| coinbaseOneLogo \| crystalBallInsight \| derivativesProduct \| email \| gasFees \| identityCard \| instantUnstakingClock \| laptop \| learningRewardsProduct \| lock \| passport \| paypal \| phone \| pieChartData \| planet \| robot \| safe \| securityKey \| settings \| shield \| support \| taxes \| tokenSales \| trading \| verifiedPools \| wallet \| 2fa \| accountsNavigation \| accreditedInvestor \| addCard \| addPayment \| addPhone \| addressBook \| addToWatchlist \| addWallet \| advancedTradingDesktop \| advancedTradingNavigation \| advancedTradingRebates \| agent \| alerts \| alertsCoinbaseOne \| analyticsNavigation \| apartOfDropsNft \| applyForHigherLimits \| apyInterest \| assetEncryption \| assetHubNavigation \| assetManagement \| assetManagementNavigation \| assetMeasurements \| assetMovement \| authenticationApp \| authenticator \| authenticatorAlt \| authenticatorProgress \| avatarAa \| avatarAb \| avatarAc \| avatarAd \| avatarAe \| avatarAf \| avatarAg \| avatarAh \| avatarAi \| avatarAj \| avatarBa \| avatarBb \| avatarBc \| avatarBd \| avatarBe \| avatarBf \| avatarBg \| avatarBh \| avatarBi \| avatarBj \| avatarCa \| avatarCb \| avatarCc \| avatarCd \| avatarCe \| avatarCf \| avatarCg \| avatarCh \| avatarCi \| avatarCj \| avatarDa \| avatarDb \| avatarDc \| avatarDd \| avatarDe \| avatarDf \| avatarDg \| avatarDh \| avatarDi \| avatarDj \| avatarEa \| avatarEb \| avatarEc \| avatarEd \| avatarEe \| avatarEf \| avatarEg \| avatarEh \| avatarEi \| avatarEj \| avatarFa \| avatarFb \| avatarFc \| avatarFd \| avatarFe \| avatarFf \| avatarFg \| avatarFh \| avatarFi \| avatarFj \| avatarGa \| avatarGb \| avatarGc \| avatarGd \| avatarGe \| avatarGf \| avatarGg \| avatarGh \| avatarGi \| avatarGj \| avatarHa \| avatarHb \| avatarHc \| avatarHd \| avatarHe \| avatarHf \| avatarHg \| avatarHh \| avatarHi \| avatarHj \| avatarIa \| avatarIb \| avatarIc \| avatarId \| avatarIe \| avatarIf \| avatarIg \| avatarIh \| avatarIi \| avatarIj \| avatarJa \| avatarJb \| avatarJc \| avatarJd \| avatarJe \| avatarJf \| avatarJg \| avatarJh \| avatarJi \| avatarJj \| barChart \| baseAscend \| baseCertificateStar \| baseChartSmall \| baseChatBubbleHeart \| baseCheckSmall \| baseCoinCryptoSmall \| baseCoinNetworkSmall \| baseCoinStack \| baseCoinStar \| baseComet \| baseComputer \| baseConfetti \| baseConnectApps \| baseConnectSmall \| baseCreatorCoin \| baseDecentralizationSmall \| baseDiamondSmall \| baseDiamondTrophy \| baseDoor \| baseEarnedBadge \| baseEmptySmall \| baseErrorButterflySmall \| baseErrorSmall \| baseExchange \| baseFire \| baseGem \| baseGlobe \| baseHandStar \| baseLayout \| baseLightningbolt \| baseLoadingSmall \| baseLocationSmall \| baseLogo \| baseLogoNavigation \| baseMedal \| baseMessaging \| baseMintNftSmall \| baseNetworkSmall \| baseNftSmall \| basePaycoinSmall \| basePeopleSmall \| basePiechartSmall \| basePlant \| basePower \| baseRibbon \| baseRocket \| baseRockon \| baseSaved \| baseSecuritySmall \| baseSendSmall \| baseSignin \| baseSmile \| baseStack \| baseStar \| baseTargetSmall \| baseTile \| bigBtcSend \| bitcoin \| bitcoinPizza \| bitcoinRewards \| bitcoinWhitePaper \| blockchainConnection \| bonusFivePercent \| bonusTwoPercent \| borrowCoins \| borrowingLending \| borrowNavigation \| browserMultiPlatform \| browserTransaction \| btcOneHundred \| bundle \| businessProduct \| calendarCaution \| calendarHighlight \| candleSticksGraph \| cardBlocked \| cardDeclined \| cardNavigation \| cb1BankTransfers \| chart \| chat \| cloudNavigation \| coinbaseLogoAdvancedBrand \| coinbaseLogoNavigation \| coinbaseOneAuthenticator \| coinbaseOneChat \| coinbaseOneEarn \| coinbaseOneEarnCoins \| coinbaseOneEarnCoinsLogo \| coinbaseOneFiat \| coinbaseOneProductIcon \| coinbaseOneProductInvestWeekly \| coinbaseOneRefreshed \| coinbaseOneShield \| coinbaseOneTrade \| coinbaseOneTrusted \| coinbaseOneUnlimitedRewards \| coinbaseUnlockOffers \| coinbaseWalletApp \| coinFocus \| coinShare \| coldStorageCheck \| collectionOfAssets \| commerceCheckout \| commerceInvoice \| commerceNavigation \| commodities \| completeQuiz \| complianceNavigation \| congratulations \| connectNavigation \| contactInfo \| controlWalletStorage \| creative \| creditCard \| crypto101 \| cryptoCard \| cryptoCoins \| cryptoFolder \| custodialJourney \| custodyNavigation \| dataMarketplaceNavigation \| decentralizationEverything \| decentralizedExchange \| decentralizedIdentity \| decentralizedWeb3 \| defiEarnMoment \| delegate \| delegateNavigation \| derivativesNavigation \| developerPlatformNavigation \| developerSDKNavigation \| directDepositNavigation \| dollarShowcase \| driversLicense \| driversLicenseWheel \| earnCoins \| earnGraph \| earnNavigation \| easyToUse \| economyGlobal \| emailAndMessages \| enableVoting \| envelope \| ethereumFocus \| ethRewards \| ethStaking \| ethStakingChart \| ethStakingRewards \| ethToken \| exchangeNavigation \| explore \| fast \| faucetNavigation \| feesRestriction \| fiat \| finance \| findYourSelection \| formDownload \| futures \| futuresCoinbaseOne \| gem \| genericCountryIDCard \| getStarted \| giftbox \| globalConnections \| globalPayments \| globalTransactions \| googleAuthenticator \| governance \| hardwareWallet \| helpCenterNavigation \| higherLimits \| holdingCoin \| idBlock \| idError \| idVerification \| increaseLimits \| institutionalNavigation \| institutions \| internationalExchangeNavigation \| internet \| investGraph \| laptopCharts \| laptopVideo \| layerNetworks \| leadGraph \| learn \| learningRewardsNavigation \| lightbulbLearn \| lightningNetworkSend \| linkYourAccount \| listingFees \| locationUsa \| lowFees \| manageWeb3SignersAcct \| miningCoins \| mintedNft \| mobileCharts \| mobileError \| mobileNotifcation \| mobileSuccess \| mobileWarning \| moneyCrypto \| moneyEarn \| moneySwift \| monitoringPerformance \| moreThanBitcoin \| multiAccountsAndCards \| multiPlatform \| multipleAssets \| musicAndSounds \| myNumberCard \| newUserChecklistBuyCrypto \| newUserChecklistCompleteAccount \| newUserChecklistVerifyId \| nftAvatar \| nftLibrary \| nftNavigation \| noAnnualFee \| noNftFound \| notificationHubAnalysis \| notificationHubNews \| notificationHubPortfolio \| notificationHubSocial \| notifications \| noVisibility \| noWiFi \| orders \| outage \| partialCoins \| participateNavigation \| passwordWalletLocked \| payNavigation \| peerToPeer \| pieChart \| pizza \| pluginBrowser \| podium \| positiveReviews \| predictionMarkets \| premiumInvestor \| priceTracking \| primeMobileApp \| primeNavigation \| privateClientNavigation \| proNavigation \| protectionPlan \| queryTransactNavigation \| receipt \| recurringPurchases \| restaking \| reviewAndAdd \| rewardsNavigation \| riskStaking \| rosettaNavigation \| securedAssets \| security \| securityCoinShield \| seedPhrase \| selectAddNft \| selfCustodyWallet \| selfServe \| sellSendAnytime \| sendPaymentToOthers \| settled \| sideChainSide \| signInNavigation \| smsAuthenticate \| sparkleCoinbaseOne \| ssnCard \| stableCoinMetaphor \| stacking \| stakingGraph \| standWithCryptoLogoNavigation \| startToday \| strongInfo \| strongWarning \| successPhone \| supportChat \| takeQuiz \| target \| taxBeta \| taxCenterNavigation \| taxesArrangement \| taxSeason \| timingCheck \| tokenBaskets \| transferSend \| transistor \| trendingAssets \| trusted \| tryAgainLater \| twoBonus \| typeScript \| ubiKey \| usaProduct \| usdcEarn \| usdcInterest \| usdcLoan \| usdcLogo \| usdcRewards \| usdcRewardsRibbon \| usdcToken \| venturesNavigation \| videoCalendar \| videoContent \| waiting \| waitingForConsensus \| walletAsServiceNavigation \| walletDeposit \| walletError \| walletExchange \| walletLinkNavigation \| walletLogoNavigation \| walletNavigation \| walletPassword \| walletSuccess \| walletWarning \| winBTC \| worldwide \| wrapEth` | No | `-` | If you pass a Pictogram name it will render a Pictogram to the right of the text content |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `title` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or ReactNode to be displayed above the description in a TextHeadline |
+| `width` | `string \| number` | No | `327` | - |
+
+

@@ -1,0 +1,815 @@
+# Sidebar
+
+A composable and customizable vertical navigation component with support for multiple variants, collapsible states, and custom content areas.
+
+## Import
+
+```tsx
+import { Sidebar } from '@coinbase/cds-web/navigation/Sidebar'
+```
+
+## Examples
+
+Sidebar is a vertical navigation component for accessing different sections of an application. It supports multiple variants, collapsible states, and custom content areas.
+
+### Basics
+
+A Sidebar is composed of the following parts:
+
+- `Sidebar` - The main container with logo and navigation items
+- `SidebarItem` - Individual navigation items with icon and title
+- `SidebarMoreMenu` - Overflow menu for additional navigation options
+
+```jsx live
+function BasicSidebar() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar logo={<LogoMark />}>
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### Variants
+
+#### Default
+
+Use the Default variant on standard consumer-facing surfaces like Retail where maximum navigation and content space is desired. This variant shows full labels alongside icons.
+
+```jsx live
+function DefaultVariant() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Pay', icon: 'pay' },
+    { title: 'For you', icon: 'newsFeed' },
+    { title: 'Earn', icon: 'giftBox' },
+    { title: 'Borrow', icon: 'cash' },
+    { title: 'DeFi', icon: 'defi' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+  const navItems = items.slice(0, 8);
+  const moreMenuOptions = items.slice(4);
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex =
+      moreMenuOptions.findIndex((option) => option.title === newValue) + navItems.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+  const handleItemPress = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+  const renderEnd = () => {
+    return (
+      <Pressable
+        as="button"
+        background="bgPrimaryWash"
+        borderRadius={1000}
+        transparentWhileInactive
+        width="100%"
+        onClick={() => console.log}
+      >
+        <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+          <Icon name="documentation" />
+          <Text as="span" font="headline" color="foreground">
+            End item
+          </Text>
+        </HStack>
+      </Pressable>
+    );
+  };
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar
+        logo={
+          <Box height={32}>
+            <SubBrandLogoMark type="commerce" />
+          </Box>
+        }
+        renderEnd={renderEnd}
+        styles={{
+          end: {
+            width: '100%',
+          },
+        }}
+      >
+        {navItems.map((item, index) => (
+          <SidebarItem
+            key={`sidebar-item--${item.title}`}
+            active={index === activeIndex}
+            onClick={() => handleItemPress(index)}
+            tooltipContent={item.title}
+            {...item}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= navItems.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreMenuOptions.map((item) => (
+            <SelectOption
+              key={`sidebar-more-menu-item--${item.title}`}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+#### Condensed
+
+Use in specialized workflows with complex data displays, such as Exchange and Advanced Trade, where navigation space is minimized to focus on core tasks. This variant displays icons with small labels below.
+
+```jsx live
+function CondensedVariant() {
+  const items = [
+    { title: 'Spot', icon: 'chartCandles' },
+    { title: 'Futures', icon: 'chartBar' },
+    { title: 'Portfolio', icon: 'chartPie' },
+    { title: 'Orders', icon: 'documentation' },
+    { title: 'For you', icon: 'newsFeed' },
+    { title: 'Earn', icon: 'giftBox' },
+    { title: 'Borrow', icon: 'cash' },
+    { title: 'DeFi', icon: 'defi' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+  const navItems = items.slice(0, 4);
+  const moreMenuOptions = items.slice(4);
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex =
+      moreMenuOptions.findIndex((option) => option.title === newValue) + navItems.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+  const handleItemClick = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar logo={<LogoMark foreground />} variant="condensed">
+        {navItems.map((item, index) => (
+          <SidebarItem
+            key={`sidebar-item--${item.title}`}
+            active={index === activeIndex}
+            onClick={() => handleItemClick(index)}
+            tooltipContent={item.title}
+            {...item}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= navItems.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreMenuOptions.map((item) => (
+            <SelectOption
+              key={`sidebar-more-menu-item--${item.title}`}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### Collapsed State
+
+#### Controlled Collapse
+
+Use the `collapsed` prop to control the sidebar's collapsed state. When collapsed, only icons are shown with tooltips for labels.
+
+```jsx live
+function ControlledCollapse() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Pay', icon: 'pay' },
+    { title: 'For you', icon: 'newsFeed' },
+    { title: 'Earn', icon: 'giftBox' },
+    { title: 'Borrow', icon: 'cash' },
+    { title: 'DeFi', icon: 'defi' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+  const [collapsed, setCollapsed] = useState(true);
+  const moreMenuOptions = items.slice(4);
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex =
+      moreMenuOptions.findIndex((option) => option.title === newValue) + items.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+  const handleItemPress = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+  const renderEnd = () => (
+    <IconButton
+      name={collapsed ? 'caretRight' : 'caretLeft'}
+      onClick={() => setCollapsed(!collapsed)}
+      width="48px"
+      height="48px"
+    />
+  );
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar collapsed={collapsed} logo={<LogoMark />} renderEnd={renderEnd}>
+        {items.map((item, index) => (
+          <SidebarItem
+            key={`sidebar-item--${item.title}`}
+            active={index === activeIndex}
+            onClick={() => handleItemPress(index)}
+            tooltipContent={item.title}
+            {...item}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= items.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreMenuOptions.map((item) => (
+            <SelectOption
+              key={`sidebar-more-menu-item--${item.title}`}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+#### Auto Collapse
+
+Use the `autoCollapse` prop to automatically collapse the sidebar at or below the tablet breakpoint (768px). This is useful for responsive layouts where the sidebar should adapt to screen size.
+
+```jsx live
+function AutoCollapse() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar autoCollapse logo={<LogoMark />}>
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+      <VStack flexGrow={1} padding={3}>
+        <Text color="fgMuted" font="label1">
+          Resize the browser window to see the sidebar auto-collapse at the tablet breakpoint.
+        </Text>
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+### Custom Content
+
+#### Logo
+
+The `logo` prop accepts either a React element or a render function that receives the collapsed state. Use the render function when you need different logos for collapsed and expanded states.
+
+```jsx live
+function CustomLogo() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [collapsed, setCollapsed] = useState(false);
+
+  const renderLogo = (isCollapsed) =>
+    isCollapsed ? (
+      <LogoMark />
+    ) : (
+      <Box height={32}>
+        <SubBrandLogoMark type="commerce" />
+      </Box>
+    );
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar
+        collapsed={collapsed}
+        logo={renderLogo}
+        renderEnd={() => (
+          <IconButton
+            name={collapsed ? 'caretRight' : 'caretLeft'}
+            onClick={() => setCollapsed(!collapsed)}
+          />
+        )}
+      >
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+#### Render End
+
+The `renderEnd` prop places content at the bottom of the sidebar. It receives the collapsed state as a parameter, allowing you to adapt the content based on the sidebar's state.
+
+```jsx live
+function RenderEndExample() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const renderEnd = (isCollapsed) => (
+    <Pressable
+      as="button"
+      background="bgPrimaryWash"
+      borderRadius={1000}
+      transparentWhileInactive
+      width="100%"
+      onClick={() => alert('Help clicked!')}
+    >
+      <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+        <Icon name="questionCircle" />
+        {!isCollapsed && (
+          <TextHeadline as="span" color="foreground">
+            Help & Support
+          </TextHeadline>
+        )}
+      </HStack>
+    </Pressable>
+  );
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar
+        logo={<LogoMark />}
+        renderEnd={renderEnd}
+        styles={{
+          end: {
+            width: '100%',
+          },
+        }}
+      >
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### Styling
+
+Use the `styles` prop to customize specific parts of the sidebar.
+
+```jsx live
+function CustomStyles() {
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar
+        logo={<LogoMark />}
+        renderEnd={() => (
+          <Pressable
+            as="button"
+            background="bgPrimaryWash"
+            borderRadius={1000}
+            transparentWhileInactive
+            width="100%"
+          >
+            <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+              <Icon name="questionCircle" />
+              <TextHeadline as="span">Help</TextHeadline>
+            </HStack>
+          </Pressable>
+        )}
+        styles={{
+          root: {
+            background:
+              'linear-gradient(180deg, var(--color-bg) 0%, var(--color-bgAlternate) 100%)',
+          },
+          logo: { paddingBottom: 32 },
+          end: { width: '100%' },
+        }}
+      >
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+You can also use custom class names on the various subcomponents in Sidebar using the `classNames` prop.
+
+```jsx
+const customLogoStyles = css`
+  padding-bottom: var(--spacing-6);
+`;
+
+function CustomClassNamesExample() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const items = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+
+  return (
+    <Sidebar
+      logo={<LogoMark />}
+      classNames={{
+        logo: customLogoStyles,
+      }}
+    >
+      {items.map((item, index) => (
+        <SidebarItem
+          key={item.title}
+          active={index === activeIndex}
+          icon={item.icon}
+          onClick={() => setActiveIndex(index)}
+          title={item.title}
+          tooltipContent={item.title}
+        />
+      ))}
+    </Sidebar>
+  );
+}
+```
+
+### Composed Examples
+
+#### Application Shell
+
+A complete application layout with sidebar navigation, main content area, and responsive behavior.
+
+```jsx live
+function ApplicationShell() {
+  const items = [
+    { title: 'Dashboard', icon: 'home' },
+    { title: 'Analytics', icon: 'chartPie' },
+    { title: 'Transactions', icon: 'trading' },
+    { title: 'Payments', icon: 'pay' },
+    { title: 'News Feed', icon: 'newsFeed' },
+    { title: 'Rewards', icon: 'giftBox' },
+    { title: 'Lending', icon: 'cash' },
+    { title: 'DeFi', icon: 'defi' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+  const navItems = items.slice(0, 5);
+  const moreMenuOptions = items.slice(5);
+
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex =
+      moreMenuOptions.findIndex((option) => option.title === newValue) + navItems.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+
+  const handleItemPress = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+
+  const currentPage = items[activeIndex]?.title || 'Dashboard';
+
+  return (
+    <HStack alignItems="stretch" height={400} overflow="hidden">
+      <Sidebar
+        autoCollapse
+        logo={<LogoMark />}
+        renderEnd={(isCollapsed) => (
+          <VStack gap={1}>
+            <Pressable
+              as="button"
+              background="bgPrimaryWash"
+              borderRadius={1000}
+              transparentWhileInactive
+              width="100%"
+            >
+              <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+                <Icon name="cog" />
+                {!isCollapsed && <TextHeadline as="span">Settings</TextHeadline>}
+              </HStack>
+            </Pressable>
+            <Pressable
+              as="button"
+              background="bgPrimaryWash"
+              borderRadius={1000}
+              transparentWhileInactive
+              width="100%"
+            >
+              <HStack alignItems="center" gap={2} paddingX={2} paddingY={2}>
+                <Avatar size="s" />
+                {!isCollapsed && <TextHeadline as="span">Profile</TextHeadline>}
+              </HStack>
+            </Pressable>
+          </VStack>
+        )}
+      >
+        {navItems.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => handleItemPress(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= navItems.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreMenuOptions.map((item) => (
+            <SelectOption
+              key={item.title}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+      <VStack background="bgAlternate" flexGrow={1} padding={3}>
+        <Text as="h1" font="title2">
+          {currentPage}
+        </Text>
+        <Text color="fgMuted" font="body">
+          Welcome to the {currentPage.toLowerCase()} page. This is a sample application shell
+          demonstrating the Sidebar component with responsive behavior.
+        </Text>
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+#### Condensed Trading Interface
+
+A condensed sidebar optimized for professional trading interfaces with minimal visual footprint.
+
+```jsx live
+function TradingInterface() {
+  const items = [
+    { title: 'Spot', icon: 'chartCandles' },
+    { title: 'Futures', icon: 'chartBar' },
+    { title: 'Portfolio', icon: 'chartPie' },
+    { title: 'Orders', icon: 'documentation' },
+  ];
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  return (
+    <HStack>
+      <Sidebar logo={<LogoMark foreground />} variant="condensed">
+        {items.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => setActiveIndex(index)}
+            title={item.title}
+          />
+        ))}
+      </Sidebar>
+      <VStack background="bgAlternate" flexGrow={1} gap={2} padding={3}>
+        <HStack justifyContent="space-between">
+          <Text font="title3">BTC/USD</Text>
+          <Text color="fgPositive" font="title3">
+            $67,432.50
+          </Text>
+        </HStack>
+        <Box
+          background="bg"
+          borderRadius={200}
+          flexGrow={1}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Text color="fgMuted" font="label1">
+            {items[activeIndex].title} Chart Area
+          </Text>
+        </Box>
+      </VStack>
+    </HStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `ReactNode[]` | Yes | `undefined` | Children are expected to be an array of SidebarItems |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `as` | `nav` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `autoCollapse` | `boolean` | No | `false` | When set, the sidebar will auto collapse at or below the tablet breakpoint (currently 768px) |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `classNames` | `{ root?: string; logo?: string \| undefined; content?: string \| undefined; end?: string \| undefined; } \| undefined` | No | `-` | Custom class names for individual elements of the Sidebar component |
+| `collapsed` | `boolean` | No | `false` | Use collapsed to show only the logo |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `logo` | `ReactElement<any, string \| JSXElementConstructor<any>> \| ((isCollapsed: boolean) => ReactNode)` | No | `undefined` | The logo to display |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `ref` | `((instance: HTMLElement \| null) => void) \| RefObject<HTMLElement> \| null` | No | `-` | - |
+| `renderEnd` | `((isCollapsed: boolean) => ReactNode)` | No | `undefined` | This node will be fixed to the bottom of the sidebar This is a render prop, and will provide the collapsed state |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `styles` | `{ root?: CSSProperties; logo?: CSSProperties \| undefined; content?: CSSProperties \| undefined; end?: CSSProperties \| undefined; } \| undefined` | No | `-` | Custom styles for individual elements of the Sidebar component |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `variant` | `default \| condensed` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Root sidebar container element |
+| `logo` | `-` | Logo container element |
+| `content` | `-` | Content container element (children list) |
+| `end` | `-` | End container element (renderEnd) |
+
+

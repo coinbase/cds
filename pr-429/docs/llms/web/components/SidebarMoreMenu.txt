@@ -1,0 +1,371 @@
+# SidebarMoreMenu
+
+SidebarMoreMenu provides a dropdown menu for additional navigation options in the Sidebar. Use it when you have more navigation items than can comfortably fit in the visible sidebar area.
+
+## Import
+
+```tsx
+import { SidebarMoreMenu } from '@coinbase/cds-web/navigation/SidebarMoreMenu'
+```
+
+## Examples
+
+SidebarMoreMenu wraps a [Dropdown](/components/layout/Dropdown) to provide an overflow menu for additional navigation items in a [Sidebar](/components/navigation/Sidebar). Use it when you have more navigation items than can fit in the visible sidebar area.
+
+### Basics
+
+Place `SidebarMoreMenu` inside a `Sidebar` component. Pass `SelectOption` components as children to define the menu items. Use the `onChange` callback to handle selection and `value` to control the selected item.
+
+```jsx live
+function BasicSidebarMoreMenu() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+
+  const mainItems = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+    { title: 'Trade', icon: 'trading' },
+  ];
+
+  const moreItems = [
+    { title: 'Rewards', icon: 'giftBox' },
+    { title: 'Lending', icon: 'cash' },
+    { title: 'DeFi', icon: 'defi' },
+  ];
+
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex = moreItems.findIndex((item) => item.title === newValue) + mainItems.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+
+  const handleItemClick = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar logo={<LogoMark />}>
+        {mainItems.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => handleItemClick(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= mainItems.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreItems.map((item) => (
+            <SelectOption
+              key={item.title}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### Trigger Title
+
+Use `triggerTitle` to customize the label shown on the menu trigger. This is useful for localization.
+
+```jsx live
+function TriggerTitleExample() {
+  const [moreMenuValue, setMoreMenuValue] = useState();
+
+  const moreItems = [
+    { title: 'Settings', icon: 'cog' },
+    { title: 'Help', icon: 'questionCircle' },
+  ];
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar logo={<LogoMark />}>
+        <SidebarItem icon="home" title="Home" tooltipContent="Home" />
+        <SidebarMoreMenu
+          onChange={setMoreMenuValue}
+          tooltipContent="Additional options"
+          triggerTitle="Options"
+          value={moreMenuValue}
+        >
+          {moreItems.map((item) => (
+            <SelectOption
+              key={item.title}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### With Collapsed Sidebar
+
+When the sidebar is collapsed, the `tooltipContent` prop displays a tooltip on hover to identify the menu trigger.
+
+```jsx live
+function CollapsedSidebarExample() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+  const [collapsed, setCollapsed] = useState(true);
+
+  const mainItems = [
+    { title: 'Home', icon: 'home' },
+    { title: 'Assets', icon: 'chartPie' },
+  ];
+
+  const moreItems = [
+    { title: 'Rewards', icon: 'giftBox' },
+    { title: 'Settings', icon: 'cog' },
+  ];
+
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex = moreItems.findIndex((item) => item.title === newValue) + mainItems.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+
+  const handleItemClick = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar
+        collapsed={collapsed}
+        logo={<LogoMark />}
+        renderEnd={() => (
+          <IconButton
+            accessibilityLabel={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+            name={collapsed ? 'caretRight' : 'caretLeft'}
+            onClick={() => setCollapsed(!collapsed)}
+          />
+        )}
+      >
+        {mainItems.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => handleItemClick(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= mainItems.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More options"
+          value={moreMenuValue}
+        >
+          {moreItems.map((item) => (
+            <SelectOption
+              key={item.title}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### Condensed Variant
+
+`SidebarMoreMenu` adapts automatically to the sidebar's `condensed` variant.
+
+```jsx live
+function CondensedVariantExample() {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [moreMenuValue, setMoreMenuValue] = useState();
+
+  const mainItems = [
+    { title: 'Spot', icon: 'chartCandles' },
+    { title: 'Futures', icon: 'chartBar' },
+  ];
+
+  const moreItems = [
+    { title: 'Portfolio', icon: 'chartPie' },
+    { title: 'Orders', icon: 'documentation' },
+    { title: 'History', icon: 'orderHistory' },
+  ];
+
+  const handleMoreMenuChange = (newValue) => {
+    const moreIndex = moreItems.findIndex((item) => item.title === newValue) + mainItems.length;
+    setActiveIndex(moreIndex);
+    setMoreMenuValue(newValue);
+  };
+
+  const handleItemClick = (index) => {
+    setActiveIndex(index);
+    setMoreMenuValue(undefined);
+  };
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar logo={<LogoMark foreground />} variant="condensed">
+        {mainItems.map((item, index) => (
+          <SidebarItem
+            key={item.title}
+            active={index === activeIndex}
+            icon={item.icon}
+            onClick={() => handleItemClick(index)}
+            title={item.title}
+            tooltipContent={item.title}
+          />
+        ))}
+        <SidebarMoreMenu
+          active={activeIndex >= mainItems.length}
+          onChange={handleMoreMenuChange}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreItems.map((item) => (
+            <SelectOption
+              key={item.title}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### Styling
+
+#### Border Radius
+
+Use the `borderRadius` prop to customize the trigger's corner radius.
+
+```jsx live
+function BorderRadiusExample() {
+  const [moreMenuValue, setMoreMenuValue] = useState();
+
+  const moreItems = [
+    { title: 'Settings', icon: 'cog' },
+    { title: 'Help', icon: 'questionCircle' },
+  ];
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden" gap={4}>
+      <Sidebar logo={<LogoMark />}>
+        <SidebarItem icon="home" title="Home" tooltipContent="Home" />
+        <SidebarMoreMenu
+          borderRadius={100}
+          onChange={setMoreMenuValue}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreItems.map((item) => (
+            <SelectOption
+              key={item.title}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+      <Sidebar logo={<LogoMark />}>
+        <SidebarItem icon="home" title="Home" tooltipContent="Home" />
+        <SidebarMoreMenu
+          borderRadius={1000}
+          onChange={setMoreMenuValue}
+          tooltipContent="More"
+          value={moreMenuValue}
+        >
+          {moreItems.map((item) => (
+            <SelectOption
+              key={item.title}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+### Accessibility
+
+`SidebarMoreMenu` automatically handles ARIA attributes for the dropdown menu pattern. Set `tooltipContent` to provide context when the sidebar is collapsed, ensuring users can identify the trigger via tooltip.
+
+```jsx live
+function AccessibilityExample() {
+  const [moreMenuValue, setMoreMenuValue] = useState();
+
+  const moreItems = [
+    { title: 'Account Settings', icon: 'cog' },
+    { title: 'Help Center', icon: 'questionCircle' },
+    { title: 'Log Out', icon: 'logout' },
+  ];
+
+  return (
+    <HStack alignItems="flex-start" justifyContent="center" overflow="hidden">
+      <Sidebar collapsed logo={<LogoMark />}>
+        <SidebarItem icon="home" title="Home" tooltipContent="Navigate to Home" />
+        <SidebarMoreMenu
+          onChange={setMoreMenuValue}
+          tooltipContent="Open additional navigation options"
+          triggerTitle="More navigation options"
+          value={moreMenuValue}
+        >
+          {moreItems.map((item) => (
+            <SelectOption
+              key={item.title}
+              description={item.title}
+              media={<Icon name={item.icon} />}
+              value={item.title}
+            />
+          ))}
+        </SidebarMoreMenu>
+      </Sidebar>
+    </HStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `Component` | `symbol \| object \| style \| title \| div \| a \| abbr \| address \| area \| article \| aside \| audio \| b \| base \| bdi \| bdo \| big \| blockquote \| body \| br \| button \| canvas \| caption \| center \| cite \| code \| col \| colgroup \| data \| datalist \| dd \| del \| details \| dfn \| dialog \| dl \| dt \| em \| embed \| fieldset \| figcaption \| figure \| footer \| form \| h1 \| h2 \| h3 \| h4 \| h5 \| h6 \| head \| header \| hgroup \| hr \| html \| i \| iframe \| img \| input \| ins \| kbd \| keygen \| label \| legend \| li \| link \| main \| map \| mark \| menu \| menuitem \| meta \| meter \| nav \| noindex \| noscript \| ol \| optgroup \| option \| output \| p \| param \| picture \| pre \| progress \| q \| rp \| rt \| ruby \| s \| samp \| search \| slot \| script \| section \| select \| small \| source \| span \| strong \| sub \| summary \| sup \| table \| template \| tbody \| td \| textarea \| tfoot \| th \| thead \| time \| tr \| track \| u \| ul \| var \| video \| wbr \| webview \| svg \| animate \| animateMotion \| animateTransform \| circle \| clipPath \| defs \| desc \| ellipse \| feBlend \| feColorMatrix \| feComponentTransfer \| feComposite \| feConvolveMatrix \| feDiffuseLighting \| feDisplacementMap \| feDistantLight \| feDropShadow \| feFlood \| feFuncA \| feFuncB \| feFuncG \| feFuncR \| feGaussianBlur \| feImage \| feMerge \| feMergeNode \| feMorphology \| feOffset \| fePointLight \| feSpecularLighting \| feSpotLight \| feTile \| feTurbulence \| filter \| foreignObject \| g \| image \| line \| linearGradient \| marker \| mask \| metadata \| mpath \| path \| pattern \| polygon \| polyline \| radialGradient \| rect \| set \| stop \| switch \| text \| textPath \| tspan \| use \| view \| ComponentClass<CustomSidebarItemProps, any> \| FunctionComponent<CustomSidebarItemProps>` | No | `-` | Optional presentational component to render for the SidebarItem. By default, the SidebarItem will render as a row with an Icon and Headline Text element  The component must implement the CustomSidebarItemProps props interface |
+| `active` | `boolean` | No | `false` | Use the active prop to identify the current page |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `disablePortal` | `boolean` | No | `-` | Does not render the Dropdown inside of a portal (react-dom createPortal). Portal is automatically disabled for SSR |
+| `onBlur` | `(() => void)` | No | `-` | Callback that fires when Dropdown or trigger are blurred |
+| `onChange` | `Dispatch<SetStateAction<string>> \| ((newValue: string) => void)` | No | `-` | Callback that is fired whenever an option is selected |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `tooltipContent` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Label or content to display when Sidebar is collapsed and sidebar more menu is hovered |
+| `triggerTitle` | `string` | No | `More` | Title of the menu trigger. Use this prop to localize the trigger title. |
+| `value` | `string` | No | `-` | Default selected value, or preselected value |
+
+

@@ -1,0 +1,458 @@
+# SlideButton
+
+A button that slides to confirm an action.
+
+## Import
+
+```tsx
+import { SlideButton } from '@coinbase/cds-mobile/buttons/SlideButton'
+```
+
+## Examples
+
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+### Basics
+
+Use the `onChange` callback to update the `checked` state. This is the primary callback that controls both the visual and accessible state of the component.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/default.gif'),
+    dark: useBaseUrl('/img/docs/slideButton/default_dark.gif'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Slide button"
+/>
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+    />
+  );
+}
+```
+
+### Variants
+
+Use the `variant` prop to change the color of the button. The default variant is `primary`. Available variants are `negative` and `positive`.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/negative_variant.jpg'),
+    dark: useBaseUrl('/img/docs/slideButton/negative_variant_dark.jpg'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Negative variant slide button"
+/>
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      variant="negative"
+    />
+  );
+}
+```
+
+### Compact
+
+Use the `compact` prop to reduce the height, border-radius and padding of the button:
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      compact
+    />
+  );
+}
+```
+
+### Disabled
+
+Use the `disabled` prop to prevent interaction. This works for both unchecked and checked states.
+
+```jsx
+function Example() {
+  return (
+    <VStack gap={2}>
+      <SlideButton
+        checked={false}
+        disabled
+        uncheckedLabel="Swipe to confirm"
+        checkedLabel="Confirming..."
+      />
+      <SlideButton checked disabled uncheckedLabel="Swipe to confirm" checkedLabel="Confirmed" />
+    </VStack>
+  );
+}
+```
+
+### Auto Complete on Threshold
+
+By default, the user must release the handle past the threshold to complete. Set `autoCompleteSlideOnThresholdMet` to automatically complete as soon as the threshold is reached, without requiring release.
+
+You can also adjust the threshold via `checkThreshold` (a value from 0 to 1, defaulting to 0.7).
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      autoCompleteSlideOnThresholdMet
+    />
+  );
+}
+```
+
+### Callback Lifecycle
+
+SlideButton fires callbacks in a specific order during the slide gesture:
+
+1. `onSlideStart` -- when the gesture begins
+2. `onChange` -- when the slide completes past the threshold (sets `checked` to `true`)
+3. `onSlideComplete` -- immediately after `onChange`
+4. `onSlideEnd` -- always fires last
+
+If the user releases before the threshold, `onSlideCancel` fires instead, followed by `onSlideEnd`.
+
+**Important:** Always use `onChange` to manage the `checked` state. The `checked` prop drives the component's `accessibilityLabel` (switching between `uncheckedLabel` and `checkedLabel`), so failing to update it means screen readers won't announce the state change. Use `onSlideComplete` only for supplementary side effects (e.g. analytics, haptic feedback) that don't affect accessible state.
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      onSlideStart={() => console.log('Started')}
+      onSlideComplete={() => console.log('Completed')}
+      onSlideCancel={() => console.log('Cancelled')}
+      onSlideEnd={() => console.log('Ended')}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+    />
+  );
+}
+```
+
+### Custom Nodes
+
+Use `startUncheckedNode` and `endCheckedNode` to replace the default arrow icon and loading indicator on the handle.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/custom_nodes.jpg'),
+    dark: useBaseUrl('/img/docs/slideButton/custom_nodes_dark.jpg'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Slide button with custom bell icons on the handle"
+/>
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to enable notifications"
+      checkedLabel="Enabling..."
+      startUncheckedNode={<Icon color="fgInverse" name="bell" size="m" />}
+      endCheckedNode={<Icon color="fgInverse" name="bellCheck" size="m" />}
+    />
+  );
+}
+```
+
+### Labels as Nodes
+
+The `uncheckedLabel` and `checkedLabel` props accept `ReactNode`, so you can pass custom styled text or other components. When using non-string labels, the component uses `accessibilityLabelledBy` to associate the handle with the container element, so ensure your label nodes contain meaningful text content.
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel={<Text font="label2">Swipe to confirm</Text>}
+      checkedLabel={
+        <Text color="fgInverse" font="label2">
+          Confirming...
+        </Text>
+      }
+    />
+  );
+}
+```
+
+### Custom Background and Handle Components
+
+You can fully customize the background and handle by providing your own components via `SlideButtonBackgroundComponent` and `SlideButtonHandleComponent`. Your components receive typed props (`SlideButtonBackgroundProps` and `SlideButtonHandleProps`) including a `progress` spring value and the current `checked` state.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/custom_components.jpg'),
+    dark: useBaseUrl('/img/docs/slideButton/custom_components_dark.jpg'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Slide button with custom green/red background and handle"
+/>
+
+```tsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  const CustomHandle = ({ checked, ...props }: SlideButtonHandleProps) => (
+    <Pressable
+      {...props}
+      accessibilityLabel="Demo button"
+      accessibilityRole="button"
+      background={checked ? 'bgPositive' : 'bgNegative'}
+      borderRadius={300}
+      width="100%"
+    >
+      <HStack alignItems="center" height="100%" justifyContent="center" width="100%">
+        <HStack height="100%" pin="right" alignItems="center" padding={2}>
+          <Text font="label1">➡️</Text>
+        </HStack>
+      </HStack>
+    </Pressable>
+  );
+
+  const CustomBackground = ({ checked, ...props }: SlideButtonBackgroundProps) => (
+    <HStack
+      {...props}
+      bordered
+      alignItems="center"
+      background="bgSecondary"
+      borderColor={checked ? 'fgPositive' : 'fgNegative'}
+      borderRadius={300}
+      height="100%"
+      justifyContent="center"
+      width="100%"
+    >
+      <Text font="headline">Slide me</Text>
+    </HStack>
+  );
+
+  return (
+    <SlideButton
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      checked={checked}
+      onChange={setChecked}
+      SlideButtonBackgroundComponent={CustomBackground}
+      SlideButtonHandleComponent={CustomHandle}
+      height={50}
+    />
+  );
+}
+```
+
+### Accessibility
+
+SlideButton has built-in accessibility support. The component automatically derives its `accessibilityLabel` from the `checked` state -- displaying `uncheckedLabel` when unchecked and `checkedLabel` when checked. It also registers an `activate` accessibility action so screen readers can trigger the slide without performing a gesture.
+
+**Use `onChange` as your primary callback.** The `onChange` callback updates the `checked` prop, which controls the accessible label. Placing critical logic in `onSlideComplete` without updating `checked` via `onChange` will leave the accessible state stale, meaning screen readers won't announce the confirmation.
+
+When providing a custom `SlideButtonHandleComponent`, always spread the incoming props to preserve the built-in `accessibilityActions` and `onAccessibilityAction` handlers, and set `accessibilityLabel` and `accessibilityRole="button"` on the handle element.
+
+When using `ReactNode` labels instead of strings, the component uses `accessibilityLabelledBy` to link to the container element, so ensure your custom label nodes contain meaningful text.
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to send payment"
+      checkedLabel="Sending payment..."
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `checked` | `boolean` | Yes | `-` | Control whether the button is in a checked state. |
+| `SlideButtonBackgroundComponent` | `SlideButtonBackgroundComponent` | No | `DefaultSlideButtonBackground` | Custom component to render as the container behind the sliding handle. |
+| `SlideButtonHandleComponent` | `SlideButtonHandleComponent` | No | `DefaultSlideButtonHandle` | Custom component to render as the sliding handle. |
+| `alignContent` | `flex-start \| flex-end \| center \| stretch \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `autoCompleteSlideOnThresholdMet` | `boolean` | No | `-` | If true, the slide button will automatically complete the slide when the threshold is met. If false, the user must release to complete the action. |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color of the overlay (element being interacted with). |
+| `blendStyles` | `InteractableBlendStyles` | No | `-` | - |
+| `block` | `boolean` | No | `-` | Set element to block and expand to 100% width. |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `checkThreshold` | `number` | No | `0.7` | Threshold (as a percentage from 0 to 1) at which a slide gesture will complete. A value of 0.7 means the user must slide 70% of the way across to trigger completion. |
+| `checkedLabel` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Label or content shown when button is in checked state. |
+| `children` | `((string \| number \| boolean \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal) & (string \| number \| boolean \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal \| ((state: PressableStateCallbackType) => ReactNode))) \| null` | No | `-` | Either children or a render prop that receives a boolean reflecting whether the component is currently pressed. |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `compact` | `boolean` | No | `-` | Reduces the height, borderRadius and inner padding within the button. |
+| `contentStyle` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | Apply animated styles to the inner container. |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `debounceTime` | `number` | No | `500` | The amount of time to wait (in milliseconds) before invoking the debounced function. This prop is used in conjunction with the disableDebounce prop. The debounce function is configured to be invoked as soon as its called, but subsequent calls within the debounceTime period will be ignored. |
+| `disableDebounce` | `boolean` | No | `-` | React Native is historically trash at debouncing touch events. This can cause a lot of unwanted behavior such as double navigations where we push a screen onto the stack 2 times. Debouncing the event 500 miliseconds, but taking the leading event prevents this effect and the accidental double-tap. |
+| `disabled` | `boolean` | No | `-` | Is the element currently disabled. Whether the press behavior is disabled. Disables user interaction with the slide button. When true, prevents gesture events from firing. |
+| `display` | `flex \| none` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. Is the element elevated. |
+| `endCheckedNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Custom end node to render for the checked state of the handle, to replace the default loading indicator. |
+| `feedback` | `none \| light \| normal \| heavy` | No | `none` | Haptic feedback to trigger when being pressed. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `number` | No | `-` | Height of the entire button component (background and handle). If you pass a custom SlideButtonBackgroundComponent or SlideButtonHandleComponent, this property will be applied to both. |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `noScaleOnPress` | `boolean` | No | `-` | Dont scale element on press. |
+| `onChange` | `((checked: boolean) => void)` | No | `-` | Callback function fired when slide button state changes. Will always be called after onSlideComplete and before onSlideEnd. |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | Called when a single tap gesture is detected. |
+| `onPressIn` | `(((event: GestureResponderEvent) => void) & ((event: GestureResponderEvent) => void))` | No | `-` | Callback fired before onPress when button is pressed. Called when a touch is engaged before onPress. |
+| `onPressOut` | `(((event: GestureResponderEvent) => void) & ((event: GestureResponderEvent) => void))` | No | `-` | Callback fired before onPress when button is released. Called when a touch is released before onPress. |
+| `onSlideCancel` | `(() => void)` | No | `-` | Callback function fired when the slide gesture is cancelled. This occurs when a user slides less than the threshold required to complete the action. Will always be called before onSlideEnd. |
+| `onSlideComplete` | `(() => void)` | No | `-` | Callback function fired when the slide gesture ends successfully. This is called when the user has slid past the threshold to complete the action. Will always be called before onSlideEnd and after onChange. |
+| `onSlideEnd` | `(() => void)` | No | `-` | Callback function fired when the slide gesture ends. Will always be called last in the slide sequence. |
+| `onSlideStart` | `(() => void)` | No | `-` | Callback function fired when the slide gesture begins. |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `startUncheckedNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Custom start node to render for the unchecked state of the handle, to replace the default arrow icon. |
+| `styles` | `{ container?: StyleProp<ViewStyle>; background?: StyleProp<ViewStyle>; handle?: StyleProp<ViewStyle>; }` | No | `-` | Custom styles for individual elements of the SlideButton component |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `transparentWhileInactive` | `boolean` | No | `-` | Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc). Must be used in conjunction with the pressed prop |
+| `transparentWhilePressed` | `boolean` | No | `-` | Mark the background and border as transparent even while element is interacted with (elevation underlay issue). Must be used in conjunction with the pressed prop |
+| `uncheckedLabel` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Label or content shown when button is in unchecked state. |
+| `userSelect` | `none \| auto \| contain \| text \| all` | No | `-` | - |
+| `variant` | `primary \| positive \| negative` | No | `'primary'` | Toggle design and visual variants of the slide button. |
+| `width` | `string \| number` | No | `-` | - |
+| `wrapperStyles` | `{ base?: StyleProp<ViewStyle>; pressed?: StyleProp<ViewStyle>; disabled?: StyleProp<ViewStyle>; }` | No | `-` | Apply styles to the outer container. |
+| `zIndex` | `number` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `container` | `-` | Container element |
+| `background` | `-` | Background element |
+| `handle` | `-` | Handle element |
+
+

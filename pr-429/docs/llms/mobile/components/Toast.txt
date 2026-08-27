@@ -1,0 +1,460 @@
+# Toast
+
+A temporary notification that appears at the bottom of the screen.
+
+## Import
+
+```tsx
+import { Toast } from '@coinbase/cds-mobile/overlays/Toast'
+```
+
+## Examples
+
+Use the `useToast` hook to show toasts. Call `toast.show()` with a message to display a temporary notification. On mobile, toasts can also be swiped away.
+
+```jsx
+function BasicToastExample() {
+  const toast = useToast();
+
+  return <Button onPress={() => toast.show('Copied to clipboard')}>Show Toast</Button>;
+}
+```
+
+### Actions
+
+Add an action button to the toast for quick user actions like "Undo" or "View".
+
+```jsx
+function ToastWithActionExample() {
+  const toast = useToast();
+
+  const handleAction = useCallback(() => {
+    toast.show('Message sent', {
+      action: {
+        label: 'Undo',
+        onPress: () => console.log('Undo pressed'),
+      },
+    });
+  }, [toast]);
+
+  return <Button onPress={handleAction}>Send Message</Button>;
+}
+```
+
+### Duration
+
+Toast duration is automatically calculated based on content length:
+
+- Base duration: 5 seconds
+- With action: +2 seconds
+- Long text (>50 characters): +0.3s per 10 additional characters
+
+You can override the automatic calculation by providing a custom `duration` in milliseconds.
+
+```jsx
+function CustomDurationExample() {
+  const toast = useToast();
+
+  return (
+    <HStack gap={2}>
+      <Button onPress={() => toast.show('Quick message', { duration: 2000 })}>Short (2s)</Button>
+      <Button onPress={() => toast.show('This message stays longer', { duration: 10000 })}>
+        Long (10s)
+      </Button>
+    </HStack>
+  );
+}
+```
+
+### Positioning
+
+Use `bottomOffset` to adjust the vertical position of the toast. This is useful when you have bottom navigation or tab bars.
+
+```jsx
+function BottomOffsetExample() {
+  const toast = useToast();
+
+  return (
+    <HStack gap={2}>
+      <Button onPress={() => toast.show('Default position')}>Default</Button>
+      <Button onPress={() => toast.show('Higher position', { bottomOffset: 100 })}>
+        With Offset (100px)
+      </Button>
+    </HStack>
+  );
+}
+```
+
+### Styling
+
+#### Variants
+
+Use the `variant` prop to change the color surge effect on the toast background. This helps communicate the nature of the notification.
+
+```jsx
+function VariantExample() {
+  const toast = useToast();
+
+  return (
+    <VStack gap={2}>
+      <Button onPress={() => toast.show('Default toast')}>Default</Button>
+      <Button onPress={() => toast.show('Success!', { variant: 'bgPositive' })}>Positive</Button>
+      <Button onPress={() => toast.show('Error occurred', { variant: 'bgNegative' })}>
+        Negative
+      </Button>
+      <Button onPress={() => toast.show('Warning', { variant: 'bgWarning' })}>Warning</Button>
+    </VStack>
+  );
+}
+```
+
+### Lifecycle Callbacks
+
+Use `onWillHide` and `onDidHide` to respond to toast dismissal. This is useful for cleanup or triggering subsequent actions.
+
+```jsx
+function LifecycleCallbacksExample() {
+  const toast = useToast();
+  const [status, setStatus] = useState('Ready');
+
+  const handleShow = useCallback(() => {
+    setStatus('Toast visible');
+    toast.show('Saving changes...', {
+      onWillHide: () => setStatus('Toast hiding...'),
+      onDidHide: () => setStatus('Toast hidden'),
+    });
+  }, [toast]);
+
+  return (
+    <VStack gap={2}>
+      <Text font="label2">Status: {status}</Text>
+      <Button onPress={handleShow}>Show Toast</Button>
+    </VStack>
+  );
+}
+```
+
+### Programmatic Control
+
+#### Hiding Toasts
+
+Use `toast.hide()` to programmatically dismiss the current toast.
+
+```jsx
+function HideToastExample() {
+  const toast = useToast();
+
+  const showLongToast = useCallback(() => {
+    toast.show('This toast will stay until dismissed', { duration: 30000 });
+  }, [toast]);
+
+  return (
+    <HStack gap={2}>
+      <Button onPress={showLongToast}>Show Long Toast</Button>
+      <Button variant="secondary" onPress={() => toast.hide()}>
+        Hide Toast
+      </Button>
+    </HStack>
+  );
+}
+```
+
+#### Clearing the Queue
+
+When multiple toasts are triggered, they queue up. Use `toast.clearQueue()` to remove all pending toasts.
+
+```jsx
+function ClearQueueExample() {
+  const toast = useToast();
+
+  const showMultiple = useCallback(() => {
+    toast.show('First toast');
+    toast.show('Second toast');
+    toast.show('Third toast');
+  }, [toast]);
+
+  return (
+    <HStack gap={2}>
+      <Button onPress={showMultiple}>Queue 3 Toasts</Button>
+      <Button variant="secondary" onPress={() => toast.clearQueue()}>
+        Clear Queue
+      </Button>
+    </HStack>
+  );
+}
+```
+
+### Accessibility
+
+Toast announces its content to screen readers using `accessibilityRole="alert"`. The announcement includes both the message text and any action label.
+
+You can customize the accessibility announcement with `accessibilityLabel`:
+
+```jsx
+function AccessibilityExample() {
+  const toast = useToast();
+
+  const handleShow = useCallback(() => {
+    toast.show('Settings saved', {
+      accessibilityLabel: 'Your settings have been saved successfully. Tap undo to revert changes.',
+      action: {
+        label: 'Undo',
+        onPress: () => console.log('Undo'),
+      },
+    });
+  }, [toast]);
+
+  return <Button onPress={handleShow}>Save Settings</Button>;
+}
+```
+
+### Composed Examples
+
+#### Form Submission Feedback
+
+A common pattern is showing toast feedback after form actions.
+
+```jsx
+function FormSubmissionExample() {
+  const toast = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = useCallback(async () => {
+    setIsSubmitting(true);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    setIsSubmitting(false);
+    toast.show('Profile updated successfully', {
+      variant: 'bgPositive',
+      action: {
+        label: 'View',
+        onPress: () => console.log('Navigate to profile'),
+      },
+    });
+  }, [toast]);
+
+  return (
+    <VStack gap={3}>
+      <TextInput label="Display name" placeholder="Enter your name" />
+      <Button onPress={handleSubmit} disabled={isSubmitting}>
+        {isSubmitting ? 'Saving...' : 'Save Changes'}
+      </Button>
+    </VStack>
+  );
+}
+```
+
+#### Clipboard Copy
+
+Provide feedback when copying content to the clipboard.
+
+```jsx
+import * as Clipboard from 'expo-clipboard';
+
+function ClipboardCopyExample() {
+  const toast = useToast();
+  const walletAddress = '0x1234...5678';
+
+  const handleCopy = useCallback(async () => {
+    try {
+      await Clipboard.setStringAsync('0x1234567890abcdef1234567890abcdef12345678');
+      toast.show('Address copied to clipboard');
+    } catch (err) {
+      toast.show('Failed to copy', { variant: 'bgNegative' });
+    }
+  }, [toast]);
+
+  return (
+    <HStack gap={2} alignItems="center">
+      <Text font="mono">{walletAddress}</Text>
+      <Button compact onPress={handleCopy}>
+        Copy
+      </Button>
+    </HStack>
+  );
+}
+```
+
+#### Undo Delete Action
+
+Implement an undo pattern for destructive actions.
+
+```jsx
+function UndoDeleteExample() {
+  const toast = useToast();
+  const [items, setItems] = useState(['Item 1', 'Item 2', 'Item 3']);
+  const deletedItemRef = useRef(null);
+
+  const handleDelete = useCallback(
+    (index) => {
+      const deletedItem = items[index];
+      deletedItemRef.current = { item: deletedItem, index };
+
+      setItems((prev) => prev.filter((_, i) => i !== index));
+
+      toast.show(`"${deletedItem}" deleted`, {
+        variant: 'bgNegative',
+        action: {
+          label: 'Undo',
+          onPress: () => {
+            if (deletedItemRef.current) {
+              setItems((prev) => {
+                const newItems = [...prev];
+                newItems.splice(deletedItemRef.current.index, 0, deletedItemRef.current.item);
+                return newItems;
+              });
+              deletedItemRef.current = null;
+            }
+          },
+        },
+      });
+    },
+    [items, toast],
+  );
+
+  return (
+    <VStack gap={2}>
+      {items.map((item, index) => (
+        <HStack key={item} gap={2} alignItems="center">
+          <Text font="body">{item}</Text>
+          <Button compact variant="secondary" onPress={() => handleDelete(index)}>
+            Delete
+          </Button>
+        </HStack>
+      ))}
+      {items.length === 0 && (
+        <Text font="body" color="foregroundMuted">
+          No items
+        </Text>
+      )}
+    </VStack>
+  );
+}
+```
+
+#### Swipe to Dismiss
+
+On mobile, toasts can be dismissed by swiping. This interaction is built-in and requires no additional configuration.
+
+```jsx
+function SwipeToDismissExample() {
+  const toast = useToast();
+
+  return (
+    <VStack gap={2}>
+      <Text font="body" color="foregroundMuted">
+        Try swiping the toast away after it appears
+      </Text>
+      <Button onPress={() => toast.show('Swipe me away!')}>Show Toast</Button>
+    </VStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `text` | `string` | Yes | `-` | The message to be displayed in the toast |
+| `action` | `ToastAction` | No | `-` | Optional toast action i.e. a CTA button |
+| `alignContent` | `flex-start \| flex-end \| center \| stretch \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `animated` | `boolean` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `bottomOffset` | `string \| number` | No | `-` | The vertical offset from the bottom of the screen |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `flex \| none` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `onDidHide` | `(() => void)` | No | `-` | Callback fired after the component is hidden. |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onWillHide` | `(() => void)` | No | `-` | Callback fired before the component hides. |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `ref` | `((instance: ToastRefHandle \| null) => void) \| RefObject<ToastRefHandle> \| null` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `false \| RegisteredStyle<ViewStyle> \| Value \| AnimatedInterpolation<string \| number> \| WithAnimatedObject<ViewStyle> \| WithAnimatedArray<Falsy \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<Falsy \| ViewStyle \| RegisteredStyle<ViewStyle>> \| readonly (Falsy \| ViewStyle \| RegisteredStyle<ViewStyle>)[]> \| null` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `userSelect` | `auto \| none \| text \| contain \| all` | No | `-` | - |
+| `variant` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `primary` | Controls color surge of the Toast background |
+| `width` | `string \| number` | No | `-` | - |
+| `zIndex` | `number` | No | `-` | - |
+
+

@@ -1,0 +1,98 @@
+---
+id: introduction
+title: Introduction
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+import { GettingStartedBanner } from '@site/src/components/page/ComponentBanner/GettingStartedBanner';
+
+<VStack gap={5}>
+<ContentHeader
+  title="Introduction"
+  description="Coinbase Design System is a cross-platform component library for React and React Native. CDS has high adoption in every product at Coinbase, accelerating development and ensuring a consistent user experience across all platforms."
+  banner={<GettingStartedBanner />}
+/>
+
+<MDXSection>
+<MDXArticle>
+## Key features
+
+- **Cross-platform** - CDS provides components for both React DOM and React Native. We go to great lengths to ensure that the source code is as identical as possible across React and React Native without compromising on platform-specific features.
+
+- **Powerful theming** - The ThemeProvider can be used to define a custom theme for your application supporting light and dark mode.
+
+- **Rich styling capabilities** - Components are designed to integrate with third-party libraries like styled-components, and to be customizable via theming, props, StyleProps, classnames, and inline styles.
+
+- **Subcomponent composition** - Components are built using smaller subcomponents that can be fully customized or replaced via props.
+
+- **Accessibility** - Components are accessible out of the box, and can be customized to different accessibility standards.
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Web-only features
+
+- **Atomic static CSS** - CSS is compiled to atomic static classnames at library build time.
+
+- **Responsive styles** - Components support responsive styles out of the box. Use the responsive syntax to adjust layouts and styles based on device breakpoints without writing custom media queries.
+
+- **CSS layers** - All CSS is added to the `cds` layer. This allows you to easily override CDS styles with your own styles.
+
+- **Polymorphic components** - Components can be rendered as different HTML elements or as other components.
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Developer experience
+
+CDS is designed to make your development workflow as smooth as possible.
+
+- **TypeScript first** - Full type safety with excellent IDE autocomplete for props, theme values, and style props. Most mistakes are caught at compile time.
+
+- **Flexible styling** - Use the StyleProps API for rapid development with theme-aware values, or drop down to className and style props for full control. Mix and match approaches as needed.
+
+- **Component composition** - Build complex UIs by composing simple primitives. Most components expose subcomponents that can be customized or replaced entirely.
+
+- **Performance optimized** - All web components use atomic CSS with zero runtime overhead. CSS is generated at build time and styles are applied via static classnames.
+
+- **Extensive documentation** - Every component includes Storybook stories, interactive examples, detailed prop tables, and usage guidelines.
+
+```jsx
+import { ThemeProvider } from '@coinbase/cds-web/system';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { Button } from '@coinbase/cds-web/buttons';
+
+const App = () => (
+  <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+    <VStack gap={2} padding={4} background="bgSecondary" borderRadius={200}>
+      <Text font="title1">Welcome to CDS</Text>
+      <Button variant="positive">Get started</Button>
+    </VStack>
+  </ThemeProvider>
+);
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Next steps
+
+Learn how to install and use CDS.
+
+[See the installation docs here →](/getting-started/installation)
+
+</MDXArticle>
+</MDXSection>
+</VStack>

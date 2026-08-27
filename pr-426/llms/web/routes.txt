@@ -1,0 +1,174 @@
+
+# CDS Routes
+
+## Getting Started
+
+- [theming](web/getting-started/theming.txt): The theme contains design tokens like colors, fonts, spacing, and more. The ThemeProvider provides access to these values via CSS Variables for web, and React Context for both web and React Native.
+- [templates](web/getting-started/templates.txt): Get started quickly with pre-built templates for common app architectures. Choose from Next.js, Vite, or Webpack templates, all configured with CDS components and best practices.
+- [styling](web/getting-started/styling.txt): CDS includes powerful and flexible APIs for styling components. Easily access values from the theme, or go rogue with full customization.
+- [playground](web/getting-started/playground.txt)
+- [introduction](web/getting-started/introduction.txt)
+- [installation](web/getting-started/installation.txt): This guide will help you get started with installing CDS in your React project. Follow the instructions below to set up CDS and start building with our cross-platform components.
+- [ai-overview](web/getting-started/ai-overview.txt)
+
+## Components
+
+- [Text](web/components/Text.txt): A generic text element.
+- [Tag](web/components/Tag.txt): A small label for categorizing or labeling content.
+- [Link](web/components/Link.txt): A pressable Text component.
+- [Tray](web/components/Tray.txt): An elevated overlay container that slides in from any edge of the screen.
+- [Tooltip](web/components/Tooltip.txt): A component that displays additional information on hover.
+- [Toast](web/components/Toast.txt): A temporary notification that appears at the bottom of the screen.
+- [PortalProvider](web/components/PortalProvider.txt): A component that manages the rendering of portals for overlay components.
+- [Overlay](web/components/Overlay.txt): A semi-transparent layer that covers content.
+- [ModalHeader](web/components/ModalHeader.txt): A component that provides a consistent header section for Modal.
+- [ModalFooter](web/components/ModalFooter.txt): A footer component for Modal.
+- [ModalBody](web/components/ModalBody.txt): A main content area component for Modal.
+- [Modal](web/components/Modal.txt): A component that displays content in a window that requires user interaction.
+- [FullscreenModalLayout](web/components/FullscreenModalLayout.txt): Provides the layout structure, overlay, focus trapping, and animations for fullscreen modals. Intended for internal use within Modal component variants.
+- [FullscreenModal](web/components/FullscreenModal.txt): FullscreenModal is a component that displays content in a full-screen overlay, typically used for immersive experiences or complex interactions.
+- [FullscreenAlert](web/components/FullscreenAlert.txt): A fullscreen alert component for displaying important messages that require user attention.
+- [FocusTrap](web/components/FocusTrap.txt): FocusTrap is a component that traps focus within its children.
+- [Alert](web/components/Alert.txt): A dialog that communicates critical information and blocks user interaction.
+- [ThemeProvider](web/components/ThemeProvider.txt): Provides the theme context to all child components, and automatically generates CSS Variables for dynamic theming.
+- [MediaQueryProvider](web/components/MediaQueryProvider.txt): Manages window.matchMedia subscriptions with SSR support.
+- [DotSymbol](web/components/DotSymbol.txt): Dots are component adornments, typically used to communicate a numerical value or indicate the status or identity of a component to the end-user.
+- [DotStatusColor](web/components/DotStatusColor.txt): Dots are component adornments, typically used to communicate a numerical value or indicate the status or identity of a component to the end-user.
+- [DotCount](web/components/DotCount.txt): Dots are component adornments, typically used to communicate a numerical value or indicate the status or identity of a component to the end-user.
+- [DatePicker](web/components/DatePicker.txt): Date Picker allows our global users to input past, present, future and important dates into our interface in a simple and intuitive manner. Date Picker offers both manual and calendar entry options - accommodating both internationalization and accessibility needs while being adaptable across screen platforms.
+- [DateInput](web/components/DateInput.txt): DateInput is a text input field for entering dates by typing. The input automatically formats dates based on the user's locale.
+- [Calendar](web/components/Calendar.txt): Calendar is a flexible, accessible date grid component for selecting dates, supporting keyboard navigation, disabled/highlighted dates, and custom rendering.
+- [RollingNumber](web/components/RollingNumber.txt): A numeric display that animates value changes with rolling digits.
+- [Tour](web/components/Tour.txt): Creates guided tours of a user interface.
+- [Tabs](web/components/Tabs.txt): Tabs is a flexible, accessible tab navigation component for switching between content sections. It supports custom tab components, animated active indicators, and full keyboard navigation.
+- [TabbedChipsAlpha](web/components/TabbedChipsAlpha.txt): A chip component commonly used in filter context to refine a date source
+- [TabbedChips](web/components/TabbedChips.txt): Tab chips are to be used in a filter setting where the user is given the ability to refine the data source they are accessing.
+- [TabNavigation](web/components/TabNavigation.txt): Organizes content across different screens or data sets.
+- [TabLabel](web/components/TabLabel.txt): A text label component used within tab navigation.
+- [TabIndicator](web/components/TabIndicator.txt): A visual indicator that shows the active tab position.
+- [Stepper](web/components/Stepper.txt): A component that visualizes states within a multi-step process.
+- [SidebarMoreMenu](web/components/SidebarMoreMenu.txt): SidebarMoreMenu provides a dropdown menu for additional navigation options in the Sidebar. Use it when you have more navigation items than can comfortably fit in the visible sidebar area.
+- [SidebarItem](web/components/SidebarItem.txt): A navigation item component designed to work within a Sidebar.
+- [Sidebar](web/components/Sidebar.txt): A composable and customizable vertical navigation component with support for multiple variants, collapsible states, and custom content areas.
+- [SegmentedTabs](web/components/SegmentedTabs.txt): Switches between different views of content.
+- [SectionHeader](web/components/SectionHeader.txt): A header component used to organize and label sections of content, with support for icons, descriptions, and additional content.
+- [Pagination](web/components/Pagination.txt): Pagination is used to navigate through a list of items.
+- [PageHeader](web/components/PageHeader.txt): A flexible header component for pages.
+- [PageFooter](web/components/PageFooter.txt): PageFooter is a layout component that provides a consistent footer area for pages, with responsive padding and justification, typically used for action buttons or navigation elements.
+- [NavigationTitleSelect](web/components/NavigationTitleSelect.txt): A select component styled as a navigation title, allowing users to switch between different views or contexts from the header. It uses a Dropdown to display options.
+- [NavigationTitle](web/components/NavigationTitle.txt): Navigation Title is used to display the current page or section title in the Navigation Bar.
+- [NavigationBar](web/components/NavigationBar.txt): A universal header component for navigation and wayfinding.
+- [Coachmark](web/components/Coachmark.txt): Coachmark is a flexible, accessible overlay component for onboarding, feature tours, and contextual help. It supports custom content, actions, and media.
+- [SubBrandLogoWordMark](web/components/SubBrandLogoWordMark.txt): Coinbase sub-brand logo wordmarks for specialized branding.
+- [SubBrandLogoMark](web/components/SubBrandLogoMark.txt): Coinbase sub-brand logo marks for specialized branding.
+- [SpotSquare](web/components/SpotSquare.txt): A square-shaped illustration component for displaying spot graphics.
+- [SpotRectangle](web/components/SpotRectangle.txt): A rectangular illustration component for displaying spot graphics.
+- [SpotIcon](web/components/SpotIcon.txt): An icon-sized illustration component for displaying spot graphics.
+- [RemoteImageGroup](web/components/RemoteImageGroup.txt): A component to display a group of RemoteImage components in a stack.
+- [RemoteImage](web/components/RemoteImage.txt): A React component for displaying different types of images, including network images, static resources, temporary local images, and images from local disk, such as the camera roll.
+- [Pictogram](web/components/Pictogram.txt): Displays elevated product icons.
+- [LogoWordMark](web/components/LogoWordMark.txt): The full Coinbase logo with text for branding.
+- [LogoMark](web/components/LogoMark.txt): The Coinbase logo mark for branding.
+- [Icon](web/components/Icon.txt): Displays icons from the icon font.
+- [HeroSquare](web/components/HeroSquare.txt): Displays a square-shaped hero illustration.
+- [CellMedia](web/components/CellMedia.txt): Displays media within cells.
+- [Avatar](web/components/Avatar.txt): Avatar is a visual representation of a user, company, or entity.
+- [VStack](web/components/VStack.txt): A Box with flexDirection="column" set by default.
+- [Spacer](web/components/Spacer.txt): Creates space between elements.
+- [MultiContentModule](web/components/MultiContentModule.txt): A versatile container designed to streamline user experiences across Critical User Journeys. Accommodates a range of content including an illustration, input fields (text inputs, list cells, etc.), and an action button.
+- [HStack](web/components/HStack.txt): A Box with flexDirection="row" set by default.
+- [GridColumn](web/components/GridColumn.txt): Place children of a Grid between specific grid lines.
+- [Grid](web/components/Grid.txt): A Box with extra props to make it easier to use the CSS grid API.
+- [Dropdown](web/components/Dropdown.txt): An overlay that opens and closes.
+- [Divider](web/components/Divider.txt): Separates content into sections.
+- [Collapsible](web/components/Collapsible.txt): A container that can be expanded or collapsed.
+- [Carousel](web/components/Carousel.txt): A flexible carousel component for displaying sequences of content with navigation and pagination options.
+- [ButtonGroup](web/components/ButtonGroup.txt): Groups buttons with consistent spacing.
+- [Box](web/components/Box.txt): A generic container, like a supercharged div.
+- [AccordionItem](web/components/AccordionItem.txt): An individual collapsible item within an Accordion.
+- [Accordion](web/components/Accordion.txt): A collapsible component for displaying auxiliary content.
+- [TileButton](web/components/TileButton.txt): A pressable tile component that displays a pictogram or custom content with a title and optional count. Used for grid-based navigation and quick actions.
+- [TextInput](web/components/TextInput.txt): A control for entering text.
+- [Switch](web/components/Switch.txt): A control for toggling between on and off.
+- [SelectOption](web/components/SelectOption.txt): A single option of a Select component.
+- [SelectChipAlpha](web/components/SelectChipAlpha.txt): A chip-styled Select control built on top of the Alpha Select component. Supports both single and multi selection.
+- [SelectChip](web/components/SelectChip.txt): A Chip and Select control for selecting from a list of options.
+- [SelectAlpha](web/components/SelectAlpha.txt): A flexible select component for both single and multi-selection, built for web applications with comprehensive accessibility support.
+- [Select](web/components/Select.txt): A Dropdown control for selecting from a list of options.
+- [SearchInput](web/components/SearchInput.txt): A control for searching a dataset.
+- [RadioGroup](web/components/RadioGroup.txt): Radio is a control component that allows users to select one option from a set.
+- [RadioCell](web/components/RadioCell.txt): A selectable cell that pairs a radio button with a title and description for single-choice selections.
+- [Radio](web/components/Radio.txt): Radio is a control component that allows users to select one option from a set of mutually exclusive options.
+- [Pressable](web/components/Pressable.txt): Extends the Interactable component to add accessibility support for press interactions.
+- [MediaChip](web/components/MediaChip.txt): A chip with spacing optimized for displaying circular asset media and CTA accessories. Automatically adjusts padding based on content configuration.
+- [Interactable](web/components/Interactable.txt): A generic component for creating interactable elements. Provides dynamic styling for hovered, pressed, and disabled states.
+- [InputChip](web/components/InputChip.txt): A Chip used for removable selections.
+- [IconButton](web/components/IconButton.txt): A Button with an Icon for content.
+- [ControlGroup](web/components/ControlGroup.txt): A layout component that arranges and manages a group of related controls, such as radio buttons, switches, or checkboxes.
+- [Combobox](web/components/Combobox.txt): A flexible combobox component for both single and multi-selection, built for web applications with comprehensive accessibility support.
+- [Chip](web/components/Chip.txt): A compact, interactive content element.
+- [CheckboxGroup](web/components/CheckboxGroup.txt): CheckboxGroup is a control component that allows users to select multiple options from a set of choices. It manages the state and layout of multiple checkbox inputs as a cohesive group.
+- [CheckboxCell](web/components/CheckboxCell.txt): A selectable cell that pairs a checkbox with a title and description for multi-choice selections.
+- [Checkbox](web/components/Checkbox.txt): Checkbox is a type of control component that allows user to select one or more options from a set. They can also be used alone to switch between on and off.
+- [Button](web/components/Button.txt): A pressable button element.
+- [AvatarButton](web/components/AvatarButton.txt): A pressable Avatar.
+- [YAxis](web/components/YAxis.txt): A vertical axis component for CartesianChart. Displays tick marks, labels, gridlines, and supports custom formatting, positioning, and data domains.
+- [XAxis](web/components/XAxis.txt): A horizontal axis component for CartesianChart. Displays tick marks, labels, gridlines, and supports custom formatting and data domains.
+- [SparklineInteractiveHeader](web/components/SparklineInteractiveHeader.txt): The SparklineInteractiveHeader is used to display chart information that changes over time
+- [SparklineInteractive](web/components/SparklineInteractive.txt): The SparklineInteractive is used to display a Sparkline that has multiple time periods
+- [SparklineGradient](web/components/SparklineGradient.txt): A small line chart component with gradient fill below the line.
+- [Sparkline](web/components/Sparkline.txt): A small line chart component for displaying data trends.
+- [Scrubber](web/components/Scrubber.txt): An interactive scrubber component for exploring individual data points in charts. Displays values on hover or drag and supports custom labels and formatting.
+- [ReferenceLine](web/components/ReferenceLine.txt): A horizontal or vertical reference line to mark important values on a chart, such as targets, thresholds, or baseline values.
+- [Point](web/components/Point.txt): Visual markers that highlight specific data values on a chart. Points can be customized with different colors, sizes, and interactivity.
+- [PeriodSelector](web/components/PeriodSelector.txt): A selector component for choosing time periods in charts.
+- [LineChart](web/components/LineChart.txt): A flexible line chart component for displaying data trends over time. Supports multiple series, custom curves, areas, scrubbing, and interactive data exploration.
+- [Legend](web/components/Legend.txt): A legend component for displaying series information in charts. Supports customizable shapes, layouts, and custom item components.
+- [CartesianChart](web/components/CartesianChart.txt): A flexible, low-level chart component for displaying data in an x/y coordinate space. Provides a foundation for building custom chart visualizations with full control over rendering.
+- [BarChart](web/components/BarChart.txt): A bar chart component for comparing values across categories. Supports horizontal and vertical orientations, stacked bars, and grouped series.
+- [AreaChart](web/components/AreaChart.txt): A chart component that displays data as filled areas beneath lines. Ideal for showing cumulative values, stacked data, or emphasizing volume over time.
+- [Spinner](web/components/Spinner.txt): A loading indicator that displays a rotating animation to communicate that content is loading or a background process is in progress.
+- [ProgressCircle](web/components/ProgressCircle.txt): A circular visual indicator of completion progress.
+- [ProgressBarWithFloatLabel](web/components/ProgressBarWithFloatLabel.txt): A ProgressBar with a floating label that moves with progress.
+- [ProgressBarWithFixedLabels](web/components/ProgressBarWithFixedLabels.txt): A ProgressBar with fixed labels at defined positions.
+- [ProgressBar](web/components/ProgressBar.txt): A visual indicator of completion progress.
+- [Fallback](web/components/Fallback.txt): A component that displays a fallback animation.
+- [Banner](web/components/Banner.txt): Displays important messages and actions to users.
+- [TableRow](web/components/TableRow.txt): Defines rows within a Table.
+- [TableHeader](web/components/TableHeader.txt): Defines the header section of Table.
+- [TableFooter](web/components/TableFooter.txt): Defines the footer section of Table.
+- [TableCellFallback](web/components/TableCellFallback.txt): Shows a loading state for Table cells.
+- [TableCell](web/components/TableCell.txt): Defines individual cells within a Table.
+- [TableCaption](web/components/TableCaption.txt): Sets an accessible title or caption for Table.
+- [TableBody](web/components/TableBody.txt): Defines the body section of Table.
+- [Table](web/components/Table.txt): Displays data in rows and columns.
+- [ListCell](web/components/ListCell.txt): A versatile cell component used for displaying content in a list format, supporting various layouts and interactions.
+- [ContentCell](web/components/ContentCell.txt): A versatile cell component for displaying content with optional metadata.
+- [UpsellCard](web/components/UpsellCard.txt): A card component for promoting new features, products, or actions.
+- [NudgeCard](web/components/NudgeCard.txt): A card component designed to encourage users to take essential actions.
+- [MessagingCard](web/components/MessagingCard.txt): MessagingCard displays promotional or informational content with two variants: 'upsell' for promoting features with a primary background, and 'nudge' for encouraging actions with an alternate background. It replaces the deprecated NudgeCard and UpsellCard components.
+- [MediaCard](web/components/MediaCard.txt): MediaCard displays content with optional media in a contained card layout. Use it to showcase assets, products, or content with a thumbnail, title, subtitle, description, and optional media placement. MediaCard replaces the deprecated FloatingAssetCard and ContainedAssetCard components.
+- [FloatingAssetCard](web/components/FloatingAssetCard.txt): A card component for displaying and managing asset holdings.
+- [DataCard](web/components/DataCard.txt): A flexible card component for displaying data with visualizations like progress bars and circles. It supports horizontal and vertical layouts with customizable thumbnails and title accessories.
+- [ContentCardHeader](web/components/ContentCardHeader.txt): A header component for ContentCard.
+- [ContentCardFooter](web/components/ContentCardFooter.txt): A footer component for ContentCard.
+- [ContentCardBody](web/components/ContentCardBody.txt): A main content area component for ContentCard.
+- [ContentCard](web/components/ContentCard.txt): A flexible card component for displaying content.
+- [ContainedAssetCard](web/components/ContainedAssetCard.txt): A card component for displaying and managing asset holdings.
+- [LottieStatusAnimation](web/components/LottieStatusAnimation.txt): A specialized component for displaying trade status animations.
+- [Lottie](web/components/Lottie.txt): Renders After Effects animations as vectors.
+
+## Hooks
+
+- [useTheme](web/hooks/useTheme.txt): Returns the currently active theme including color schemes, spacing, typography, and other design tokens.
+- [useScrollBlocker](web/hooks/useScrollBlocker.txt): Block and unblock page scrolling.
+- [useRefMap](web/hooks/useRefMap.txt): Manages a collection of refs using a key-value map structure, allowing dynamic registration and retrieval of refs by their unique identifiers. Commonly used in components that need to track multiple DOM elements, such as tabs, tours, or complex navigation systems.
+- [usePreviousValue](web/hooks/usePreviousValue.txt): Returns the previous value of a given variable, useful for comparing current and previous states in effects or for tracking changes over time.
+- [useOverlayContentContext](web/hooks/useOverlayContentContext.txt): A React context and hook for detecting if components are rendered inside overlay containers like modals, drawers, tours, and trays.
+- [useMergeRefs](web/hooks/useMergeRefs.txt): Combines multiple refs into a single ref callback, allowing a component to work with multiple ref instances simultaneously. Useful when you need to combine refs from different sources, such as forwarded refs and internal component state.
+- [useMediaQuery](web/hooks/useMediaQuery.txt): Subscribes to window.matchMedia changes with SSR support.
+- [useIsoEffect](web/hooks/useIsoEffect.txt): A safe way of calling useLayoutEffect only on the client. Does nothing on the server.
+- [useHasMounted](web/hooks/useHasMounted.txt): Returns a boolean indicating if the component has mounted.
+- [useEventHandler](web/hooks/useEventHandler.txt): Creates event handlers for components based on the EventHandlerProvider configuration. It enables centralized event handling and analytics tracking by mapping component actions to configured handlers.
+- [useDimensions](web/hooks/useDimensions.txt): Measures an element's dimensions using ResizeObserver.
+- [useBreakpoints](web/hooks/useBreakpoints.txt): Returns an object with a boolean for each breakpoint of the window. Useful for conditionally rendering components or component trees based on the current window breakpoint.

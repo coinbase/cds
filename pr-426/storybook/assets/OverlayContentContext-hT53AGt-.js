@@ -1,0 +1,1 @@
+import{r as e}from"./iframe-BXWLBCkp.js";const r=e.createContext({}),s=()=>{const t=e.useContext(r),o=e.useMemo(()=>({...t,isOverlay:t.isModal||t.isDrawer||t.isTour}),[t]);return t?.isOverlay===void 0?o:t};export{r as O,s as u};

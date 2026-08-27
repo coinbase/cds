@@ -1,0 +1,1 @@
+import{r as i}from"./iframe-BXWLBCkp.js";import{c,a as e}from"./utils-CwomCnHN.js";const u=(r,t)=>{if(!r&&!t)return;const a={};return r&&(a.enter=e(r)),t&&(a.exit=e(t)),a},m=({enterConfigs:r,exitConfigs:t,initial:a="exit",animate:n="enter",transition:o,...s})=>({variants:u(r,t),initial:a,animate:n,transition:o&&c(o),...s}),M=r=>i.useMemo(()=>m(r),[r]);export{m as g,M as u};

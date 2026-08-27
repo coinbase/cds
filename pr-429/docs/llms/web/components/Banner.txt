@@ -1,0 +1,287 @@
+# Banner
+
+Displays important messages and actions to users.
+
+## Import
+
+```tsx
+import { Banner } from '@coinbase/cds-web/banner/Banner'
+```
+
+## Examples
+
+### Global Warning Banner
+
+The global warning banner is used to communicate important alerts or warnings to users across the entire platform, ensuring universal visibility and building trust.
+
+```tsx live
+<Banner
+  showDismiss
+  label="Message last updated today at 3:33pm"
+  startIcon="warning"
+  startIconActive
+  styleVariant="global"
+  title="Some features are temporarily unavailable"
+  variant="warning"
+  primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+  secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+>
+  <Text as="p" font="label2">
+    Your funds are safe. We’re looking into it and expect our usual service to return soon.
+    <Link to="https://www.coinbase.com">Learn more</Link>
+  </Text>
+</Banner>
+```
+
+### In-line Error Banner
+
+The In-line Error Banner is used to display specific error messages directly beneath the relevant section headers. Use in-line banners to help users identify exactly where the error or outage is located.
+
+```tsx live
+<Banner
+  startIcon="info"
+  startIconActive
+  styleVariant="inline"
+  title="Some features are temporarily unavailable"
+  variant="error"
+  primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+  secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+>
+  <Text as="p" font="label2">
+    Your funds are safe. We’re looking into it and expect our usual service to return soon.
+    <Link to="https://www.coinbase.com">Learn more</Link>
+  </Text>
+</Banner>
+```
+
+### Contextual Promotional Banner
+
+The Contextual Promotional Banner is used to highlight special offers, promotions, or announcements within a specific context or section of the platform. It is used to increase user engagement and drive conversions.
+
+```tsx live
+<Banner
+  startIcon="info"
+  startIconActive
+  styleVariant="contextual"
+  title="Some features are temporarily unavailable"
+  variant="promotional"
+>
+  <Text as="p" font="label2">
+    Your funds are safe. We’re looking into it and expect our usual service to return soon.
+    <Link to="https://www.coinbase.com">Learn more</Link>
+  </Text>
+</Banner>
+```
+
+### In-line Informational Banner
+
+The in-line Informational Banner is used to provide users with additional information or helpful tips directly within the content or interface, providing relevant guidance.
+
+```tsx live
+<VStack gap={2}>
+  <Banner
+    startIcon="info"
+    startIconActive
+    styleVariant="inline"
+    title="Some features are temporarily unavailable"
+    variant="informational"
+    primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+    secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+  >
+    <Text as="p" font="label2">
+      Your funds are safe. We’re looking into it and expect our usual service to return soon.
+      <Link to="https://www.coinbase.com">Learn more</Link>
+    </Text>
+  </Banner>
+  <Banner
+    startIcon="warning"
+    startIconActive
+    styleVariant="inline"
+    title="Some features are temporarily unavailable"
+    variant="warning"
+  >
+    <Text as="p" font="label2">
+      <Link to="https://www.coinbase.com">Retry</Link>
+    </Text>
+  </Banner>
+</VStack>
+```
+
+### Rounded Corner Banners
+
+You can customize `borderRadius` to soften contextual and in-line banners.
+
+```tsx live
+<VStack gap={2}>
+  <Banner
+    borderRadius={200}
+    startIcon="info"
+    startIconActive
+    styleVariant="contextual"
+    title="Rounded contextual banner"
+    variant="informational"
+  >
+    <Text as="p" font="label2">
+      Rounded corners help align with softer surface treatments within a page section.
+    </Text>
+  </Banner>
+  <Banner
+    borderRadius={400}
+    primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+    secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+    startIcon="info"
+    startIconActive
+    styleVariant="inline"
+    title="Rounded inline banner"
+    variant="promotional"
+  >
+    <Text as="p" font="label2">
+      You can incrementally increase the radius to match surrounding cards or panels.
+    </Text>
+  </Banner>
+</VStack>
+```
+
+:::tip
+Avoid setting `borderRadius` for `styleVariant="global"` so the vertical status bar remains aligned.
+:::
+
+### Bleed with Margin Props
+
+When using negative `margin*` props to create a bleed effect, explicitly set `width` so the Banner expands beyond its container.
+
+```tsx live
+<VStack height={150} background="bgPositiveWash">
+  <Banner
+    marginX={-2}
+    startIcon="info"
+    startIconActive
+    styleVariant="contextual"
+    title="Bleeding banner"
+    variant="informational"
+    width="auto"
+  >
+    <Text as="p" font="label2">
+      Use with prop to override the default 100% width
+    </Text>
+  </Banner>
+</VStack>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `startIcon` | `key \| search \| pin \| warning \| error \| account \| activity \| add \| addPeople \| advancedMarketSelector \| advancedTradeProduct \| affiliates \| airdrop \| airdropAlt \| airdropCoins \| airdropParachute \| alien \| allTimeHigh \| allocation \| annotation \| api \| apiPlug \| apothecary \| appSwitcher \| apple \| appleLogo \| application \| arrowDown \| arrowLeft \| arrowRight \| arrowUp \| arrowsHorizontal \| arrowsUpDown \| arrowsVertical \| artwork \| assetHubProduct \| assetManagementProduct \| astronautHelmet \| atSign \| atomScience \| auto \| autoCar \| avatar \| average \| backArrow \| ballot \| ballotbox \| bandage \| bank \| barChartSimple \| barChartWindow \| base \| baseApps \| baseFeed \| baseNotification \| baseQuickBuy \| baseSquare \| baseTransact \| baseVerification \| baseWallet \| baseball \| basketball \| beaker \| beginningArrow \| bell \| bellCheck \| bellPlus \| birthcertificate \| block \| blockchain \| blog \| book \| bookmark \| borrowProduct \| boxing \| bridging \| briefcase \| briefcaseAlt \| browser \| bug \| building \| calculator \| calendar \| calendarBlank \| calendarDates \| calendarEmpty \| calendarHeart \| calendarMoney \| calendarStar \| camera \| candlesticks \| car \| card \| caret \| caretDown \| caretLeft \| caretRight \| caretUp \| cash \| cashAustralianDollar \| cashBrazilianReal \| cashBrazillianReal \| cashCanadianDollar \| cashCoins \| cashEUR \| cashGBP \| cashIndonesianRupiah \| cashJPY \| cashPhilippinePeso \| cashPolishZloty \| cashRupee \| cashSingaporeDollar \| cashSwissFranc \| cashThaiBaht \| cashTurkishLira \| cashUSD \| cashUaeDirham \| cashVietnameseDong \| chainLink \| chartBar \| chartCandles \| chartLine \| chartPie \| chartPieCircle \| chartVolume \| chatBotAgent \| chatBubble \| chatRequests \| checkboxChecked \| checkboxEmpty \| checkmark \| chess \| circleCheckmark \| circleCross \| circulatingSupply \| city \| clipboard \| clock \| clockOutline \| close \| closeCaption \| clothing \| cloud \| cloudPartial \| cloudProduct \| cluster \| coinbase \| coinbaseCardProduct \| coinbaseOne \| coinbaseOneCard \| coinbaseOneLogo \| coinbaseRewards \| coinsCrypto \| collapse \| collectibles \| collection \| comment \| commentPlus \| commerceProduct \| compass \| complianceProduct \| compose \| computerChip \| concierge \| conciergeBell \| config \| continuous \| convert \| copy \| corporation \| creatorCoin \| cricket \| cross \| crossTrade \| crypto \| cryptobasics \| crystalBall \| crystalBallInsight \| currencies \| custodyProduct \| dashboard \| dataMarketplaceProduct \| dataStack \| defi \| delegateProduct \| deposit \| derivatives \| derivativesProduct \| derivativesProductNew \| developerAPIProduct \| developerPlatformProduct \| dex \| diagonalDownArrow \| diagonalRightArrow \| diagonalUpArrow \| diamond \| diamondIncentives \| dinnerPlate \| directDeposit \| directDepositIcon \| disabledPhone \| discordLogo \| distribution \| document \| documentation \| dot \| doubleChevronRight \| downArrow \| download \| drag \| drops \| earn \| earnProduct \| earnRewards \| earthquake \| educationBook \| educationPencil \| email \| endArrow \| entertainment \| ethereum \| eventContracts \| exchangeProduct \| exclamationMark \| expand \| expandAddress \| expandAll \| externalLink \| eye \| faceScan \| faces \| factory \| faucet \| fib \| filmStrip \| filter \| fingerprint \| flame \| folder \| folderArrow \| folderOpen \| followAdd \| following \| football \| fork \| forwardArrow \| fscsProtection \| gab \| games \| gaming \| gasFees \| gasFeesAlt \| gauge \| gaugeEmpty \| gaugeHigh \| gaugeHighLow \| gaugeHighMid \| gaugeLow \| gaugeLowHigh \| gaugeLowMid \| gaugeMedium \| gavel \| gear \| generalCharacter \| ghost \| gif \| giftBox \| giftCard \| gitHubLogo \| globe \| golf \| googleLogo \| greenEnergy \| grid \| group \| hamburger \| hammer \| heart \| helpCenterProduct \| helpCenterQuestionMark \| hiddenEye \| hockey \| home \| horizontalLine \| hospital \| hospitalCross \| hurricane \| ideal \| identityCard \| image \| info \| initiator \| instagramLogo \| instantUnstakingClock \| institute \| institutionalProduct \| interest \| invisible \| invoice \| keyboard \| laptop \| leadChart \| leadCoin \| learningRewardsProduct \| light \| lightbulb \| lightning \| lightningBolt \| lineChartCrypto \| list \| location \| lock \| login \| logout \| loop \| magnifyingGlass \| marketCap \| medal \| megaphone \| menu \| metaverse \| microphone \| microphoneCordless \| microscope \| mint \| minus \| mma \| moneyCardCoin \| moon \| more \| moreVertical \| motorsport \| music \| musicArticles \| needle \| newsFeed \| newsletter \| nft \| nftBuy \| nftOffer \| nftProduct \| nftSale \| noRocket \| noWifi \| nodeProduct \| oil \| options \| orderBook \| orderHistory \| outline \| pFPS \| paperAirplane \| paperclip \| participate \| participateProduct \| passKey \| passport \| pause \| pay \| payProduct \| paymentCard \| payments \| payouts \| paypal \| pencil \| peopleGroup \| peopleStar \| percentage \| perpetualSwap \| phone \| pieChartData \| pillBottle \| pillCapsule \| plane \| planet \| play \| playbutton \| plusMinus \| podiumStar \| politicsBuilding \| politicsCandidate \| politicsFlag \| politicsGavel \| politicsPodium \| politicsStar \| powerTool \| priceAlerts \| priceAlertsCheck \| primePoduct \| privateClientProduct \| proProduct \| profile \| protection \| pulse \| pyramid \| qrCode \| qrCodeAlt \| queryTransact \| questionMark \| quotation \| rain \| ratingsCheck \| ratingsChecks \| ratingsStar \| reCenter \| rectangle \| recurring \| refresh \| regulated \| regulatedFutures \| report \| rewardsProduct \| ribbon \| robot \| rocket \| rocketShip \| rollingSpot \| rosettaProduct \| rottenTomato \| royalty \| safe \| save \| savingsBank \| scanQrCode \| scienceAtom \| scienceBeaker \| scienceMoon \| securityKey \| securityShield \| seen \| sendReceive \| setPinCode \| settings \| share \| shield \| shieldOutline \| shoe \| shoppingCart \| signinProduct \| singleCoin \| singleNote \| singlecloud \| smartContract \| snow \| soccer \| socialChat \| socialReshare \| socialShare \| sofort \| sortDoubleArrow \| sortDown \| sortDownCenter \| sortUp \| sortUpCenter \| soundOff \| soundOn \| sparkle \| speaker \| speechBubble \| stableCoin \| stablecoinStack \| staggeredList \| stake \| staking \| star \| starAward \| starBubble \| starTrophy \| statusDot \| step0 \| step1 \| step2 \| step3 \| step4 \| step5 \| step6 \| step7 \| step8 \| step9 \| strategy \| sun \| support \| tag \| taxes \| taxesReceipt \| telephone \| tennis \| test \| thermometer \| thumbsDown \| thumbsDownOutline \| thumbsUp \| thumbsUpOutline \| tokenLaunchCoin \| tokenLaunchRocket \| tokenSales \| tornado \| trading \| transactions \| trashCan \| trophy \| trophyCup \| tshirt \| tv \| tvStand \| twitterLogo \| ultility \| umbrella \| undo \| unfollowPeople \| unknown \| unlock \| upArrow \| upload \| venturesProduct \| verifiedBadge \| verifiedPools \| verticalLine \| virus \| visible \| waasProduct \| wallet \| walletLogo \| walletProduct \| webhooks \| wellness \| wifi \| wind \| wireTransfer \| withdraw \| wrapToken \| xLogo` | Yes | `-` | Name of icon to be shown in the banner |
+| `variant` | `warning \| promotional \| informational \| error` | Yes | `-` | Sets the variant of the banner - which is responsible for foreground and background color assignment |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `as` | `div` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `(BorderRadius & (BorderRadius \| { base?: BorderRadius; phone?: BorderRadius \| undefined; tablet?: BorderRadius \| undefined; desktop?: BorderRadius \| undefined; })) \| undefined` | No | `400 for contextual, undefined for global and inline` | Determines banners border radius |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `true` | Determines whether banner has a border or not Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Message of banner |
+| `closeAccessibilityLabel` | `string` | No | `'close'` | Accessibility label for close button on the banner |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `label` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Use for supplemental data |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `numberOfLines` | `number` | No | `-` | Indicates the max number of lines after which body text will be truncated |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `onClose` | `(() => void)` | No | `-` | A callback fired when banner is dismissed |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `primaryAction` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Provide a CDS Link component to be used as a primary action. It will inherit colors depending on the provided variant |
+| `ref` | `RefObject<HTMLDivElement> \| ((instance: HTMLDivElement \| null) => void) \| null` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `secondaryAction` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Provide a CDS Link component to be used as a secondary action. It will inherit colors depending on the provided tone |
+| `showDismiss` | `boolean` | No | `true` | Determines whether banner can be dismissed or not. Banner is not dismisable when styleVariant is set to global. |
+| `startIconAccessibilityLabel` | `string` | No | `-` | Accessibility label for start icon on the banner |
+| `startIconActive` | `boolean` | No | `-` | Whether the start icon is active |
+| `style` | `CSSProperties` | No | `-` | - |
+| `styleVariant` | `inline \| global \| contextual` | No | `'contextual'` | Determines the banner style and indicates the suggested positioning for the banner |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `title` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Title of banner. Indicates the intent of this banner |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+

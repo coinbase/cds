@@ -1,0 +1,1044 @@
+# MessagingCard
+
+MessagingCard displays promotional or informational content with two variants: 'upsell' for promoting features with a primary background, and 'nudge' for encouraging actions with an alternate background. It replaces the deprecated NudgeCard and UpsellCard components.
+
+## Import
+
+```tsx
+import { MessagingCard } from '@coinbase/cds-mobile/cards/MessagingCard'
+```
+
+## Examples
+
+MessagingCard provides two card types for promotional and informational content.
+
+:::info Migrating from NudgeCard or UpsellCard?
+See the [Migration Guide](#migration-from-deprecated-components) at the end of this page.
+:::
+
+### Basic Types
+
+Use `type` to set the card variant:
+
+- `upsell`: Primary background, used for promoting features or products. Use `variant="secondary"` buttons.
+- `nudge`: Alternate background, used for encouraging user actions. Use `variant="tertiary"` (transparent) buttons for a less intrusive appearance.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="upsell"
+    title="Upsell Card"
+    description="This is an upsell card with primary background"
+    width={320}
+    action="Get started"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    media={
+      <RemoteImage
+        accessibilityLabel="Feature promotional image"
+        height={160}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/feature.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Nudge Card"
+    description="This is a nudge card with alternate background"
+    width={320}
+    action="Learn more"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    media={<Pictogram dimension="64x64" name="addToWatchlist" />}
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+:::tip Nudge Button Style
+Use transparent buttons (`variant="tertiary"` or `transparent` prop) for nudge cards. They provide a gentle reminder without being intrusive, blending more seamlessly with the card's alternate background.
+:::
+
+### Media Placement
+
+Use `mediaPlacement` to control the position of media content.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="nudge"
+    title="Media End"
+    description="Media placed at the end (right)"
+    width={320}
+    media={<Pictogram dimension="48x48" name="addToWatchlist" />}
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Media Start"
+    description="Media placed at the start (left)"
+    width={320}
+    media={<Pictogram dimension="48x48" name="addToWatchlist" />}
+    mediaPlacement="start"
+  />
+</VStack>
+```
+
+### Upsell Card Styles
+
+MessagingCard with `type="upsell"` supports various background colors to match different promotional purposes. Use the `background` prop for semantic tokens.
+
+For **custom background colors**, use the recommended approach:
+
+- **Non-interactive cards** (`renderAsPressable={false}` or omitted): set the background via `styles.root` (e.g. `styles={{ root: { backgroundColor: 'rgb(...)' } }}`).
+- **Interactive cards** (`renderAsPressable` with `onPress`): set the background via `blendStyles.background` (e.g. `blendStyles={{ background: 'rgb(...)' }}`) so press states are handled correctly.
+
+#### General Upsell
+
+Utilize the default background for general information and non-urgent promotions. Its versatile design is perfect for a broad range of content, providing a subtle yet effective approach to engage users. It's also the most suitable style for Pictogram illustrations.
+
+```jsx
+<MessagingCard
+  type="upsell"
+  background="bgPrimaryWash"
+  title={
+    <Text color="fg" font="headline">
+      Recurring Buy
+    </Text>
+  }
+  description={
+    <Text color="fg" font="label2">
+      Want to add funds to your card every week or month?
+    </Text>
+  }
+  width={360}
+  action={
+    <Button compact variant="secondary">
+      Get started
+    </Button>
+  }
+  media={
+    <Box paddingEnd={3}>
+      <Pictogram name="recurringPurchases" dimension="64x64" />
+    </Box>
+  }
+  mediaPlacement="end"
+  onDismissButtonPress={() => {}}
+  dismissButtonAccessibilityLabel="Dismiss"
+/>
+```
+
+#### Feature Upsell
+
+Ideal for highlighting Coinbase tools, innovative features, and unique functionalities. Choose from our palette of distinct colors to make your Feature Upsell stand out. Each color is carefully selected to grab attention while aligning with the specific nature of the feature being promoted.
+
+```jsx
+function FeatureUpsell() {
+  const { spectrum } = useTheme();
+  const image = (
+    <RemoteImage
+      accessibilityLabel="Feature illustration"
+      height={160}
+      resizeMode="cover"
+      shape="rectangle"
+      source={{ uri: 'https://cds.coinbase.com/img/feature.png' }}
+    />
+  );
+  const cards = [
+    { bg: `rgb(${spectrum.purple70})` },
+    { bg: `rgb(${spectrum.teal50})` },
+    { bg: `rgb(${spectrum.blue80})` },
+    { bg: `rgb(${spectrum.indigo70})` },
+  ];
+  return (
+    <VStack gap={2}>
+      {cards.map((card, i) => (
+        <MessagingCard
+          key={i}
+          type="upsell"
+          styles={{ root: { backgroundColor: card.bg } }}
+          title={
+            <Text color="fgInverse" font="headline">
+              Up to 3.29% APR on ETH
+            </Text>
+          }
+          description={
+            <Text font="label2" numberOfLines={3} color="fgInverse">
+              Earn staking rewards on ETH by holding it on Coinbase
+            </Text>
+          }
+          width={360}
+          action="Start earning"
+          onActionButtonPress={() => console.log('Action pressed!')}
+          media={image}
+          mediaPlacement="end"
+          onDismissButtonPress={() => {}}
+          dismissButtonAccessibilityLabel="Dismiss"
+        />
+      ))}
+    </VStack>
+  );
+}
+```
+
+#### Community Upsell
+
+Designed for community-focused messaging. Vibrant colors spark enthusiasm and encourage active participation, fostering a sense of community engagement.
+
+```jsx
+function CommunityUpsell() {
+  const { spectrum } = useTheme();
+  const cards = [
+    { bg: `rgb(${spectrum.teal70})`, image: 'https://cds.coinbase.com/img/community.png' },
+    { bg: `rgb(${spectrum.purple70})`, image: 'https://cds.coinbase.com/img/radial.png' },
+  ];
+  return (
+    <VStack gap={2}>
+      {cards.map((card, i) => (
+        <MessagingCard
+          key={i}
+          type="upsell"
+          styles={{ root: { backgroundColor: card.bg } }}
+          title={
+            <Text color="fgInverse" font="headline">
+              Join the community
+            </Text>
+          }
+          description={
+            <Text font="label2" numberOfLines={3} color="fgInverse">
+              Chat with other devs in our Discord community
+            </Text>
+          }
+          width={360}
+          action="Join now"
+          onActionButtonPress={() => console.log('Action pressed!')}
+          media={
+            <RemoteImage
+              accessibilityLabel="Community illustration"
+              height={160}
+              resizeMode="cover"
+              shape="rectangle"
+              source={{ uri: card.image }}
+            />
+          }
+          mediaPlacement="end"
+          onDismissButtonPress={() => {}}
+          dismissButtonAccessibilityLabel="Dismiss"
+        />
+      ))}
+    </VStack>
+  );
+}
+```
+
+#### Product Upsell
+
+Optimal for business products, security features, and functionalities that emphasize trust and reliability, such as Coinbase One and Coinbase Card. Blue and dark backgrounds symbolize stability, trustworthiness, and professionalism.
+
+```jsx
+function ProductUpsell() {
+  const { spectrum } = useTheme();
+  const cards = [
+    {
+      title: 'Coinbase One offer',
+      description: 'Use code NOV60 when you sign up for Coinbase One',
+      action: 'Get 60 days free',
+      bg: `rgb(${spectrum.blue80})`,
+      image: 'https://cds.coinbase.com/img/marketing.png',
+    },
+    {
+      title: 'Coinbase Card',
+      description: 'Spend USDC to get rewards with our Visa® debit card',
+      action: 'Get started',
+      bg: `rgb(${spectrum.gray100})`,
+      image: 'https://cds.coinbase.com/img/object.png',
+    },
+  ];
+  return (
+    <VStack gap={2}>
+      {cards.map((card) => (
+        <MessagingCard
+          key={card.title}
+          type="upsell"
+          styles={{ root: { backgroundColor: card.bg } }}
+          title={
+            <Text color="fgInverse" font="headline">
+              {card.title}
+            </Text>
+          }
+          description={
+            <Text font="label2" numberOfLines={3} color="fgInverse">
+              {card.description}
+            </Text>
+          }
+          width={360}
+          action={card.action}
+          onActionButtonPress={() => console.log('Action pressed!')}
+          media={
+            <RemoteImage
+              accessibilityLabel="Product illustration"
+              height={160}
+              resizeMode="cover"
+              shape="rectangle"
+              source={{ uri: card.image }}
+            />
+          }
+          mediaPlacement="end"
+          onDismissButtonPress={() => {}}
+          dismissButtonAccessibilityLabel="Dismiss"
+        />
+      ))}
+    </VStack>
+  );
+}
+```
+
+#### News Upsell
+
+Specifically tailored for company announcements and policy updates. Its design ensures that important information is conveyed clearly and prominently, ensuring users stay well-informed about the latest developments.
+
+```jsx
+function NewsUpsell() {
+  const { spectrum } = useTheme();
+  const cards = [{ bg: `rgb(${spectrum.gray100})` }, { bg: `rgb(${spectrum.indigo70})` }];
+  return (
+    <VStack gap={2}>
+      {cards.map((card, i) => (
+        <MessagingCard
+          key={i}
+          type="upsell"
+          styles={{ root: { backgroundColor: card.bg } }}
+          title={
+            <Text color="fgInverse" font="headline">
+              Help defend crypto in America
+            </Text>
+          }
+          description={
+            <Text font="label2" numberOfLines={3} color="fgInverse">
+              Help us keep crypto in America with a single click
+            </Text>
+          }
+          width={360}
+          action="Join the fight"
+          onActionButtonPress={() => console.log('Action pressed!')}
+          media={
+            <RemoteImage
+              accessibilityLabel="Place illustration"
+              height={160}
+              resizeMode="cover"
+              shape="rectangle"
+              source={{ uri: 'https://cds.coinbase.com/img/place.png' }}
+            />
+          }
+          mediaPlacement="end"
+          onDismissButtonPress={() => {}}
+          dismissButtonAccessibilityLabel="Dismiss"
+        />
+      ))}
+    </VStack>
+  );
+}
+```
+
+### Nudge Card Style
+
+Use `type="nudge"` for gentle reminders or secondary options. Nudge cards use the alternate background and blend more seamlessly with the page. Pair them with Pictogram illustrations and transparent buttons.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="nudge"
+    title="Earn more crypto"
+    description="You've got unstaked crypto. Stake it now to earn more."
+    width={360}
+    action="Start earning"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    media={<Pictogram dimension="64x64" name="key" />}
+    mediaPlacement="end"
+    onDismissButtonPress={() => {}}
+    dismissButtonAccessibilityLabel="Dismiss"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Derivatives Trading"
+    description="Derivative Exchange is available for all users"
+    width={360}
+    media={<Pictogram dimension="48x48" name="derivativesNavigation" />}
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+### Features
+
+#### Dismissible Cards
+
+Use `onDismissButtonPress` to add a dismiss button.
+
+```jsx
+function DismissibleCards() {
+  const { spectrum } = useTheme();
+  return (
+    <VStack gap={2}>
+      <MessagingCard
+        type="upsell"
+        styles={{ root: { backgroundColor: `rgb(${spectrum.teal70})` } }}
+        title="Dismissible Upsell"
+        description="Upsell card with dismiss button"
+        width={320}
+        media={
+          <RemoteImage
+            accessibilityLabel="Community illustration"
+            height={160}
+            resizeMode="cover"
+            shape="rectangle"
+            source={{ uri: 'https://cds.coinbase.com/img/community.png' }}
+          />
+        }
+        mediaPlacement="end"
+        onDismissButtonPress={() => console.log('Card dismissed!')}
+        dismissButtonAccessibilityLabel="Close card"
+      />
+      <MessagingCard
+        type="nudge"
+        title="Dismissible Nudge"
+        description="Nudge card with dismiss button"
+        width={320}
+        media={<Pictogram dimension="48x48" name="baseStar" />}
+        mediaPlacement="end"
+        onDismissButtonPress={() => console.log('Card dismissed!')}
+        dismissButtonAccessibilityLabel="Close card"
+      />
+    </VStack>
+  );
+}
+```
+
+#### Tags
+
+Use `tag` to add a label badge.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="upsell"
+    title="Tagged Upsell"
+    description="Upsell card with a tag"
+    width={320}
+    tag="New"
+    media={
+      <RemoteImage
+        accessibilityLabel="Place illustration"
+        height={160}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/place.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Tagged Nudge"
+    description="Nudge card with a tag"
+    width={320}
+    tag="New"
+    media={<Pictogram dimension="48x48" name="key" />}
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+#### Actions
+
+Use the `action` prop to add an action button. Pass a string to render a default button with `onActionButtonPress`, or pass a custom React element.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="upsell"
+    title="Upsell with Action"
+    description="Upsell card with action button"
+    width={320}
+    action="Action"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    media={
+      <RemoteImage
+        accessibilityLabel="Feature illustration"
+        height={160}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/feature.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Nudge with Action"
+    description="Nudge card with action button"
+    width={320}
+    action="Learn More"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    media={<Pictogram dimension="64x64" name="wallet" />}
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+#### Complete Example
+
+Combine all features in a complete card.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="upsell"
+    title="Complete Upsell Card"
+    description="Complete upsell card with all features"
+    width={360}
+    tag="New"
+    action="Get Started"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    onDismissButtonPress={() => console.log('Dismissed')}
+    dismissButtonAccessibilityLabel="Dismiss"
+    media={
+      <RemoteImage
+        accessibilityLabel="Marketing illustration"
+        height={184}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/marketing.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="nudge"
+    title="Complete Nudge Card"
+    description="Complete nudge card with all features"
+    width={360}
+    tag="New"
+    action="Learn More"
+    onActionButtonPress={() => console.log('Action pressed!')}
+    onDismissButtonPress={() => console.log('Dismissed')}
+    dismissButtonAccessibilityLabel="Dismiss"
+    media={<Pictogram dimension="64x64" name="giftbox" />}
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+### Interactive Dismissible List
+
+This example shows a list of cards that can be dismissed interactively. Press the dismiss button to remove cards from the list.
+
+```jsx
+function DismissibleCardsList() {
+  const { spectrum } = useTheme();
+  const cards = [
+    {
+      id: '1',
+      title: 'Welcome to Coinbase',
+      description: 'Get started with your crypto journey',
+      type: 'upsell',
+    },
+    {
+      id: '2',
+      title: 'Complete your profile',
+      description: 'Add your details to unlock more features',
+      type: 'nudge',
+    },
+    {
+      id: '3',
+      title: 'Enable notifications',
+      description: 'Stay updated on market movements',
+      type: 'upsell',
+    },
+    {
+      id: '4',
+      title: 'Invite friends',
+      description: 'Earn rewards when friends join',
+      type: 'nudge',
+    },
+  ];
+
+  const [dismissedIds, setDismissedIds] = useState(new Set());
+
+  const handleDismiss = (id) => {
+    setDismissedIds((prev) => new Set(prev).add(id));
+  };
+
+  const handleReset = () => {
+    setDismissedIds(new Set());
+  };
+
+  const visibleCards = cards.filter((card) => !dismissedIds.has(card.id));
+
+  return (
+    <VStack gap={2}>
+      <VStack gap={2}>
+        {visibleCards.map((card) => (
+          <MessagingCard
+            key={card.id}
+            type={card.type}
+            styles={
+              card.type === 'upsell'
+                ? { root: { backgroundColor: `rgb(${spectrum.gray100})` } }
+                : undefined
+            }
+            title={card.title}
+            description={card.description}
+            media={
+              card.type === 'upsell' ? (
+                <RemoteImage
+                  accessibilityLabel="Promotional illustration"
+                  height={160}
+                  resizeMode="cover"
+                  shape="rectangle"
+                  source={{ uri: 'https://cds.coinbase.com/img/object.png' }}
+                  width={80}
+                />
+              ) : (
+                <Pictogram dimension="48x48" name="addToWatchlist" />
+              )
+            }
+            mediaPlacement="end"
+            onDismissButtonPress={() => handleDismiss(card.id)}
+            dismissButtonAccessibilityLabel={`Dismiss ${card.title}`}
+          />
+        ))}
+        {visibleCards.length === 0 && (
+          <Text color="fgNegative" font="label1">
+            All cards dismissed!
+          </Text>
+        )}
+      </VStack>
+      <Button onPress={handleReset} variant="tertiary">
+        Reset Cards
+      </Button>
+    </VStack>
+  );
+}
+```
+
+### Interactive Cards
+
+Use `renderAsPressable` with `onPress` for interactive cards.
+
+```jsx
+function InteractiveCards() {
+  const { spectrum } = useTheme();
+  return (
+    <VStack gap={2}>
+      <MessagingCard
+        renderAsPressable
+        onPress={() => console.log('Card pressed!')}
+        type="upsell"
+        blendStyles={{ background: `rgb(${spectrum.teal70})` }}
+        title="Interactive Upsell"
+        description="Tap to interact"
+        width={320}
+        media={
+          <RemoteImage
+            accessibilityLabel="Community illustration"
+            height={160}
+            resizeMode="cover"
+            shape="rectangle"
+            source={{ uri: 'https://cds.coinbase.com/img/community.png' }}
+          />
+        }
+        mediaPlacement="end"
+      />
+      <MessagingCard
+        renderAsPressable
+        onPress={() => console.log('Card pressed!')}
+        type="nudge"
+        title="Interactive Nudge"
+        description="Tap to interact"
+        width={320}
+        media={<Pictogram dimension="48x48" name="baseRocket" />}
+        mediaPlacement="end"
+      />
+    </VStack>
+  );
+}
+```
+
+### Custom Content
+
+Use React nodes for custom styled content.
+
+```jsx
+<VStack gap={2}>
+  <MessagingCard
+    type="upsell"
+    title="This is a very long title text that demonstrates text wrapping"
+    description="This is a very long description text that demonstrates how the card handles longer content and wraps appropriately within the card layout"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Place illustration"
+        height={160}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/place.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+  <MessagingCard
+    type="upsell"
+    width={320}
+    title={
+      <Text color="fgInverse" font="title3">
+        Custom Title
+      </Text>
+    }
+    tag={
+      <Text color="fgInverse" font="label2">
+        Custom Tag
+      </Text>
+    }
+    description={
+      <Text color="fgInverse" font="label2">
+        Custom description with styled text
+      </Text>
+    }
+    media={
+      <RemoteImage
+        accessibilityLabel="Collection illustration"
+        height={160}
+        resizeMode="cover"
+        shape="rectangle"
+        source={{ uri: 'https://cds.coinbase.com/img/collection.png' }}
+      />
+    }
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+### Multiple Cards
+
+Display multiple cards in a carousel.
+
+```jsx
+function MultipleCards() {
+  const { spectrum } = useTheme();
+  return (
+    <Carousel styles={{ carousel: { gap: 16 } }}>
+      <CarouselItem id="card1">
+        <MessagingCard
+          type="upsell"
+          title="Card 1"
+          description="Non-interactive card"
+          width={320}
+          media={
+            <RemoteImage
+              accessibilityLabel="Marketing illustration"
+              height={160}
+              resizeMode="cover"
+              shape="rectangle"
+              source={{ uri: 'https://cds.coinbase.com/img/marketing.png' }}
+            />
+          }
+          mediaPlacement="end"
+        />
+      </CarouselItem>
+      <CarouselItem id="card2">
+        <MessagingCard
+          renderAsPressable
+          onPress={() => {}}
+          type="nudge"
+          title="Card 2"
+          description="Interactive card"
+          tag="Tap"
+          media={<Pictogram dimension="64x64" name="addToWatchlist" />}
+          mediaPlacement="end"
+        />
+      </CarouselItem>
+      <CarouselItem id="card3">
+        <MessagingCard
+          renderAsPressable
+          onPress={() => console.log('clicked')}
+          type="upsell"
+          blendStyles={{ background: `rgb(${spectrum.purple70})` }}
+          title="Card 3"
+          description="Card with onPress handler"
+          tag="Action"
+          media={
+            <RemoteImage
+              accessibilityLabel="Radial design"
+              height={160}
+              resizeMode="cover"
+              shape="rectangle"
+              source={{ uri: 'https://cds.coinbase.com/img/radial.png' }}
+            />
+          }
+          mediaPlacement="end"
+        />
+      </CarouselItem>
+    </Carousel>
+  );
+}
+```
+
+### Accessibility
+
+#### Interactive Cards with Dismiss Button
+
+When you need both `onDismissButtonPress` and want the entire card to be pressable, you should handle accessibility carefully to avoid nested interactive elements.
+
+**The Problem**: If you use `renderAsPressable` with `onPress` and also have `onDismissButtonPress`, the card becomes a pressable containing another pressable (the dismiss button). This creates accessibility issues for screen reader users.
+
+**The Solution**: Mark the card as non-accessible and add a separate action button inside the card with the same action. This allows:
+
+- Regular users to tap anywhere on the card
+- Screen reader users to focus on individual interactive elements (action button + dismiss button)
+
+```jsx
+<MessagingCard
+  renderAsPressable
+  accessible={false}
+  onPress={() => console.log('Card pressed - navigating...')}
+  type="upsell"
+  title="Accessible Interactive Card"
+  description="Card with both dismiss and card-level action"
+  action={
+    <Button
+      compact
+      variant="secondary"
+      onPress={() => console.log('Button pressed - navigating...')}
+    >
+      Learn More
+    </Button>
+  }
+  onDismissButtonPress={() => console.log('Dismissed')}
+  dismissButtonAccessibilityLabel="Dismiss promotion"
+  media={
+    <RemoteImage
+      accessibilityLabel="Feature illustration"
+      height={160}
+      resizeMode="cover"
+      shape="rectangle"
+      source={{ uri: 'https://cds.coinbase.com/img/feature.png' }}
+      width={100}
+    />
+  }
+  mediaPlacement="end"
+/>
+```
+
+**Key points:**
+
+- Set `accessible={false}` to remove the card from the accessibility tree
+- Add a `Button` in `actionButton` with the same `onPress` handler for screen reader users
+- Use `actionButtonAccessibilityLabel` and `dismissButtonAccessibilityLabel` to add or override the accessibility label for the action and dismiss buttons
+
+#### Color Contrast
+
+MessagingCard supports custom backgrounds via the `background` prop and, for custom colors, `styles.root` (non-interactive) or `blendStyles.background` (interactive). When using custom background colors, ensure sufficient color contrast between text and background:
+
+- Use `fgInverse` text color with dark backgrounds (e.g., `accentBoldPurple`, `bgInverse`)
+- Use `fg` text color with light backgrounds (e.g., `bgPrimaryWash`, `bgAlternate`)
+- Verify your color combinations meet WCAG AA guidelines (4.5:1 for normal text)
+
+### Migration from Deprecated Components
+
+#### Migrating from NudgeCard
+
+Replace `NudgeCard` with `MessagingCard` using `type="nudge"`.
+
+```jsx
+// Before
+<NudgeCard
+  title="Title"
+  description="Description"
+  pictogram="addToWatchlist"
+  action="Learn more"
+  onActionPress={handleAction}
+  onDismissPress={handleDismiss}
+/>
+
+// After
+<MessagingCard
+  type="nudge"
+  title="Title"
+  description="Description"
+  media={<Pictogram dimension="64x64" name="addToWatchlist" />}
+  action="Learn more"
+  onActionButtonPress={handleAction}
+  onDismissButtonPress={handleDismiss}
+  mediaPlacement="end"
+/>
+```
+
+#### Migrating from UpsellCard
+
+Replace `UpsellCard` with `MessagingCard` using `type="upsell"`.
+
+```jsx
+// Before
+<UpsellCard
+  title="Title"
+  description="Description"
+  media={<RemoteImage ... />}
+  action="Get Started"
+  onActionPress={handleAction}
+  onDismissPress={handleDismiss}
+/>
+
+// After
+<MessagingCard
+  type="upsell"
+  title="Title"
+  description="Description"
+  media={<RemoteImage ... />}
+  action="Get Started"
+  onActionButtonPress={handleAction}
+  onDismissButtonPress={handleDismiss}
+  mediaPlacement="end"
+/>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `mediaPlacement` | `end \| start` | Yes | `'end'` | Placement of the media content relative to the text content. |
+| `type` | `upsell \| nudge` | Yes | `-` | Type of messaging card. Determines background color and text color. |
+| `action` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Action element to display. Can be a string (renders as default button) or a custom ReactNode. When a string is provided, use onActionButtonPress to handle presses. |
+| `actionButtonAccessibilityLabel` | `string` | No | `action value (when action is a string)` | Accessibility label for the action button. Only used when action is a string. |
+| `alignContent` | `flex-start \| flex-end \| center \| stretch \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color of the overlay (element being interacted with). |
+| `blendStyles` | `InteractableBlendStyles` | No | `-` | - |
+| `block` | `boolean` | No | `-` | Set element to block and expand to 100% width. |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `contentStyle` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | Apply animated styles to the inner container. |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `debounceTime` | `number` | No | `500` | The amount of time to wait (in milliseconds) before invoking the debounced function. This prop is used in conjunction with the disableDebounce prop. The debounce function is configured to be invoked as soon as its called, but subsequent calls within the debounceTime period will be ignored. |
+| `description` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React node to display as the card description. Use a Text component to override default color and font. |
+| `disableDebounce` | `boolean` | No | `-` | React Native is historically trash at debouncing touch events. This can cause a lot of unwanted behavior such as double navigations where we push a screen onto the stack 2 times. Debouncing the event 500 miliseconds, but taking the leading event prevents this effect and the accidental double-tap. |
+| `disabled` | `boolean` | No | `-` | Is the element currently disabled. Whether the press behavior is disabled. |
+| `dismissButton` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to display as the dismiss button. When provided, this will be rendered instead of the default dismiss button. |
+| `dismissButtonAccessibilityLabel` | `string` | No | `'Dismiss {title}' when title is a string, otherwise 'Dismiss card'` | Accessibility label for the dismiss button. |
+| `display` | `flex \| none` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. Is the element elevated. |
+| `feedback` | `none \| light \| normal \| heavy` | No | `none` | Haptic feedback to trigger when being pressed. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `loading` | `boolean` | No | `-` | Is the element currenty loading. When set to true, will disable element from press and keyboard events Is the element currenty loading. |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `media` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to display as the main media content. When provided, it will be rendered in an HStack container. |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `noScaleOnPress` | `boolean` | No | `-` | Dont scale element on press. |
+| `onActionButtonPress` | `((event: GestureResponderEvent) => void)` | No | `-` | Callback fired when the action button is pressed. Only used when action is a string. |
+| `onDismissButtonPress` | `((event: GestureResponderEvent) => void)` | No | `-` | Callback fired when the dismiss button is pressed. When provided, a default dismiss button will be rendered in the top-right corner. |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | Called when a single tap gesture is detected. |
+| `onPressIn` | `(((event: GestureResponderEvent) => void) & ((event: GestureResponderEvent) => void))` | No | `-` | Callback fired before onPress when button is pressed. Called when a touch is engaged before onPress. |
+| `onPressOut` | `(((event: GestureResponderEvent) => void) & ((event: GestureResponderEvent) => void))` | No | `-` | Callback fired before onPress when button is released. Called when a touch is released before onPress. |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `renderAsPressable` | `boolean` | No | `false` | If true, the CardRoot will be rendered as a Pressable component. When false, renders as an HStack for layout purposes. |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | - |
+| `styles` | `({ layoutContainer?: StyleProp<ViewStyle>; contentContainer?: StyleProp<ViewStyle>; textContainer?: StyleProp<ViewStyle>; mediaContainer?: StyleProp<ViewStyle>; dismissButtonContainer?: StyleProp<ViewStyle>; } & { root?: StyleProp<ViewStyle>; })` | No | `-` | - |
+| `tag` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React node to display as a tag. When a string is provided, it will be rendered in a Tag component. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `title` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React node to display as the card title. Use a Text component to override default color and font. |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `transparentWhileInactive` | `boolean` | No | `-` | Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc). Must be used in conjunction with the pressed prop |
+| `transparentWhilePressed` | `boolean` | No | `-` | Mark the background and border as transparent even while element is interacted with (elevation underlay issue). Must be used in conjunction with the pressed prop |
+| `userSelect` | `none \| auto \| contain \| text \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `wrapperStyles` | `{ base?: StyleProp<ViewStyle>; pressed?: StyleProp<ViewStyle>; disabled?: StyleProp<ViewStyle>; }` | No | `-` | Apply styles to the outer container. |
+| `zIndex` | `number` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `layoutContainer` | `-` | Layout container element |
+| `contentContainer` | `-` | Content container element |
+| `textContainer` | `-` | Text container element |
+| `mediaContainer` | `-` | Media container element |
+| `dismissButtonContainer` | `-` | Dismiss button container element |
+| `root` | `-` | Root element |
+
+

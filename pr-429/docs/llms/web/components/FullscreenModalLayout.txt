@@ -1,0 +1,385 @@
+# FullscreenModalLayout
+
+Provides the layout structure, overlay, focus trapping, and animations for fullscreen modals. Intended for internal use within Modal component variants.
+
+## Import
+
+```tsx
+import { FullscreenModalLayout } from '@coinbase/cds-web/overlays/modal/FullscreenModalLayout'
+```
+
+## Examples
+
+### Basic usage
+
+This component is primarily used internally by the `Modal` component to provide the animated layout for fullscreen modals. It wraps your modal content and manages the overlay, animations, and focus trapping.
+
+```tsx live
+function Example() {
+  const [visible, setVisible] = useState(false);
+  const triggerRef = useRef(null);
+
+  const toggleOn = useCallback(() => setVisible(true), []);
+  const toggleOff = useCallback(() => setVisible(false), []);
+
+  const headerContent = (
+    <HStack borderedBottom alignItems="center" paddingX={4} paddingY={2}>
+      <Box paddingEnd={3} width={80}>
+        <LogoMark size={32} />
+      </Box>
+      <Box flexGrow={1}>
+        <Text as="h1" display="block" font="title1">
+          Modal
+        </Text>
+      </Box>
+      <Box>
+        <IconButton transparent aria-label="Close modal" name="close" onClick={toggleOff} />
+      </Box>
+    </HStack>
+  );
+
+  const mainContent = (
+    <VStack flexGrow={1} overflow="auto" padding={4}>
+      <Text as="p" display="block" font="body">
+        {loremIpsum}
+      </Text>
+    </VStack>
+  );
+
+  return (
+    <PortalProvider>
+      <Button onClick={toggleOn} ref={triggerRef}>
+        Open Fullscreen Modal
+      </Button>
+
+      <FullscreenModalLayout
+        visible={visible}
+        onRequestClose={toggleOff}
+        accessibilityLabel="Example Fullscreen Modal"
+      >
+        <VStack background="bg" height="100%" width="100%">
+          {headerContent}
+          {mainContent}
+        </VStack>
+      </FullscreenModalLayout>
+    </PortalProvider>
+  );
+}
+```
+
+### Three-column layout with FullscreenModalHeader and PageFooter
+
+This example demonstrates a three-column layout structure with a FullscreenModalHeader at the top and PageFooter at the bottom, matching the tertiary + secondary + primary column pattern. The layout includes vertical dividers between columns and demonstrates how to structure complex modal content.
+
+```tsx live
+function ThreeColumnExample() {
+  const [visible, setVisible] = useState(false);
+  const triggerRef = useRef(null);
+
+  const toggleOn = useCallback(() => setVisible(true), []);
+  const toggleOff = useCallback(() => setVisible(false), []);
+
+  const listCellProps = {
+    spacingVariant: 'compact' as const,
+    outerSpacing: { paddingX: 0, paddingY: 0 },
+    innerSpacing: { paddingX: 0, paddingY: 0 },
+  };
+
+  const smallButtonProps = {
+    size: 'small' as const,
+    compact: true,
+  };
+
+  return (
+    <PortalProvider>
+      <Button onClick={toggleOn} ref={triggerRef}>
+        Open Three-Column Modal
+      </Button>
+
+      <FullscreenModalLayout
+        visible={visible}
+        onRequestClose={toggleOff}
+        accessibilityLabel="Three-Column Fullscreen Modal"
+      >
+        <VStack background="bg" height="100%" width="100%">
+          <PageHeader
+            start={<LogoMark size={32} />}
+            title="Account Settings"
+            borderedBottom
+            flexShrink={0}
+            end={
+              <HStack alignItems="center" gap={2}>
+                <Link font="headline" color="fgPrimary">
+                  Help
+                </Link>
+                <HStack gap={1}>
+                  <IconButton
+                    transparent
+                    accessibilityLabel="Share"
+                    name="externalLink"
+                    testID="header-external-link-button"
+                  />
+                  <IconButton
+                    transparent
+                    accessibilityLabel="Close"
+                    name="close"
+                    onClick={toggleOff}
+                    testID="header-close-button"
+                  />
+                </HStack>
+              </HStack>
+            }
+          />
+          <HStack flexGrow={1} overflow="hidden" alignItems="stretch">
+            <Sidebar height="100%" variant="default" borderedEnd={false}>
+              <SidebarItem icon="account" title="Profile" onClick={() => {}} />
+              <SidebarItem icon="lock" title="Security" active onClick={() => {}} />
+              <SidebarItem icon="bell" title="Notifications" onClick={() => {}} />
+              <SidebarItem icon="eye" title="Privacy" onClick={() => {}} />
+            </Sidebar>
+            <Divider direction="vertical" />
+            <VStack flexGrow={1} height="100%" overflow="auto" padding={4} gap={3}>
+              <VStack gap={2}>
+                <Text as="h2" font="title2">
+                  Security Settings
+                </Text>
+                <Text as="p" font="body" color="fgSecondary">
+                  Manage your account security preferences and authentication methods.
+                </Text>
+              </VStack>
+              <VStack gap={2}>
+                <Text as="h3" font="title3">
+                  Email and Password
+                </Text>
+                <ListCell
+                  {...listCellProps}
+                  title="Email address"
+                  description="user@example.com"
+                  action={
+                    <Button variant="tertiary" {...smallButtonProps} disabled>
+                      Change
+                    </Button>
+                  }
+                />
+                <ListCell
+                  {...listCellProps}
+                  title="Password"
+                  description="Last changed 3 months ago"
+                  media={<Icon name="lock" />}
+                  action={
+                    <Button variant="tertiary" {...smallButtonProps}>
+                      Change
+                    </Button>
+                  }
+                />
+              </VStack>
+              <VStack gap={2}>
+                <Text as="h3" font="title3">
+                  Two-Factor Authentication
+                </Text>
+                <ListCell
+                  {...listCellProps}
+                  title="SMS Authentication"
+                  description="Receive codes via text message"
+                  end={
+                    <Button variant="secondary" {...smallButtonProps}>
+                      Enable
+                    </Button>
+                  }
+                />
+                <ListCell
+                  {...listCellProps}
+                  title="Authenticator App"
+                  description="Use an app like Google Authenticator"
+                  end={
+                    <Button variant="secondary" {...smallButtonProps}>
+                      Enable
+                    </Button>
+                  }
+                />
+              </VStack>
+              <VStack gap={2}>
+                <Text as="h3" font="title3">
+                  Active Sessions
+                </Text>
+                <ListCell
+                  {...listCellProps}
+                  title="Chrome on Mac"
+                  description="San Francisco, CA • Last active 2 hours ago"
+                  end={
+                    <Button variant="tertiary" {...smallButtonProps}>
+                      Revoke
+                    </Button>
+                  }
+                />
+                <ListCell
+                  {...listCellProps}
+                  title="Safari on iPhone"
+                  description="San Francisco, CA • Last active 1 day ago"
+                  end={
+                    <Button variant="tertiary" {...smallButtonProps}>
+                      Revoke
+                    </Button>
+                  }
+                />
+                <ListCell
+                  {...listCellProps}
+                  title="Firefox on Windows"
+                  description="New York, NY • Last active 5 days ago"
+                  end={
+                    <Button variant="tertiary" {...smallButtonProps}>
+                      Revoke
+                    </Button>
+                  }
+                />
+              </VStack>
+              <VStack gap={2}>
+                <Text as="h3" font="title3">
+                  Security Alerts
+                </Text>
+                <ListCell
+                  {...listCellProps}
+                  title="Email notifications"
+                  description="Get notified when there's suspicious activity"
+                  end={
+                    <Button variant="secondary" {...smallButtonProps}>
+                      Configure
+                    </Button>
+                  }
+                />
+                <ListCell
+                  {...listCellProps}
+                  title="SMS alerts"
+                  description="Receive text messages for critical security events"
+                  end={
+                    <Button variant="secondary" {...smallButtonProps}>
+                      Configure
+                    </Button>
+                  }
+                />
+              </VStack>
+              <VStack gap={2}>
+                <Text as="h3" font="title3">
+                  Backup Codes
+                </Text>
+                <Text as="p" font="body" color="fgSecondary">
+                  Save these codes in a safe place. You can use them to access your account if you
+                  lose access to your two-factor authentication device.
+                </Text>
+                <Button variant="secondary" block>
+                  Generate New Backup Codes
+                </Button>
+              </VStack>
+              <VStack gap={2}>
+                <Text as="h3" font="title3">
+                  API Keys
+                </Text>
+                <Text as="p" font="body" color="fgSecondary">
+                  Manage API keys for programmatic access to your account. Keep them secure and
+                  never share them publicly.
+                </Text>
+                <Button variant="secondary" block>
+                  Manage API Keys
+                </Button>
+              </VStack>
+              <VStack gap={2}>
+                <Text as="h3" font="title3">
+                  Account Recovery
+                </Text>
+                <Text as="p" font="body" color="fgSecondary">
+                  Set up recovery options to help you regain access to your account if you're locked
+                  out.
+                </Text>
+                <ListCell
+                  {...listCellProps}
+                  title="Recovery email"
+                  description="user@example.com"
+                  end={
+                    <Button variant="tertiary" {...smallButtonProps}>
+                      Change
+                    </Button>
+                  }
+                />
+                <ListCell
+                  {...listCellProps}
+                  title="Recovery phone"
+                  description="+1 (555) 123-4567"
+                  end={
+                    <Button variant="tertiary" {...smallButtonProps}>
+                      Change
+                    </Button>
+                  }
+                />
+              </VStack>
+            </VStack>
+            <Divider direction="vertical" />
+            <VStack height="100%" overflow="auto" padding={4} gap={3} width={320}>
+              <VStack gap={1}>
+                <Text as="h3" font="title3">
+                  Security Tips
+                </Text>
+                <Text as="ul" font="body">
+                  <li>Use a unique password that you don't use elsewhere</li>
+                  <li>Enable two-factor authentication for added security</li>
+                  <li>Regularly review your active sessions and devices</li>
+                </Text>
+              </VStack>
+              <VStack gap={2}>
+                <VStack gap={1}>
+                  <Text as="h3" font="title3">
+                    Need Help?
+                  </Text>
+                  <Text as="p" font="body">
+                    If you're having trouble accessing your account, visit our{' '}
+                    <Link font="body" color="fgPrimary">
+                      support center
+                    </Link>{' '}
+                    or contact support.
+                  </Text>
+                </VStack>
+                <Button variant="secondary" block endIcon="chatBotAgent" compact>
+                  Chat with Support
+                </Button>
+              </VStack>
+            </VStack>
+          </HStack>
+          <PageFooter
+            borderedTop
+            flexShrink={0}
+            action={
+              <ButtonGroup direction="horizontal">
+                <Button variant="secondary" onClick={toggleOff}>
+                  Cancel
+                </Button>
+                <Button variant="primary" onClick={toggleOff}>
+                  Save
+                </Button>
+              </ButtonGroup>
+            }
+          />
+        </VStack>
+      </FullscreenModalLayout>
+    </PortalProvider>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `onRequestClose` | `() => void` | Yes | `-` | Callback function fired when modal is closed. |
+| `visible` | `boolean` | Yes | `false false` | Controls visibility of the Modal |
+| `accessibilityLabelledBy` | `string` | No | `-` | On web, maps to aria-labelledby and lists the id(s) of the element(s) that label the element on which the attribute is set. On mobile (Android only), a reference to another element nativeID used to build complex forms. |
+| `disableFocusTrap` | `boolean` | No | `false` | Set disableFocusTrap to disable keyboard listeners responsible for focus trap behavior This can be useful for scenarios like Yubikey 2fa Disables the focus trap to allow normal keyboard navigation. |
+| `disablePortal` | `boolean` | No | `-` | Disable React portal integration |
+| `focusTabIndexElements` | `boolean` | No | `false false` | Allow any element with tabIndex attribute to be focusable in FocusTrap, rather than only focusing specific interactive element types like button. This can be useful when having long content in a Modal. If true, the focus trap will include all elements with tabIndex values in the list of focusable elements. |
+| `key` | `Key \| null` | No | `-` | - |
+| `onDidClose` | `((() => void) & (() => void))` | No | `-` | Callback fired after the component is closed. |
+| `ref` | `RefObject<HTMLDivElement> \| ((instance: HTMLDivElement \| null) => void) \| null` | No | `-` | - |
+| `restoreFocusOnUnmount` | `boolean` | No | `true` | If true, the focus trap will restore focus to the previously focused element when it unmounts.  WARNING: If you disable this, you need to ensure that focus is restored properly so it doesnt end up on the body |
+| `role` | `dialog \| alertdialog` | No | `-` | WAI-ARIA Roles |
+| `shouldCloseOnEscPress` | `boolean` | No | `true` | If pressing the esc key should close the modal |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

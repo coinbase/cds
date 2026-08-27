@@ -1,0 +1,4 @@
+import{r as o,j as n}from"./iframe-CYDANtMt.js";import{c as r}from"./TableRow-DKEQPqcp.js";const e=o.memo(({children:t,testID:a,...s})=>n.jsx(r,{as:"tfoot","data-testid":a,...s,children:t}));e.displayName="TableFooter";e.__docgenInfo={description:"",methods:[],displayName:"TableFooter",props:{testID:{required:!1,tsType:{name:"string"},description:`Used to locate this element in unit and end-to-end tests.
+Under the hood, testID translates to data-testid on Web. On Mobile, testID
+stays the same - testID`},children:{required:!1,tsType:{name:"ReactReactNode",raw:"React.ReactNode"},description:""},as:{required:!1,tsType:{name:"union",raw:"'thead' | 'tbody' | 'tfoot' | 'div'",elements:[{name:"literal",value:"'thead'"},{name:"literal",value:"'tbody'"},{name:"literal",value:"'tfoot'"},{name:"literal",value:"'div'"}]},description:`Internal only
+@default undefined`},className:{required:!1,tsType:{name:"string"},description:""}}};export{e as T};

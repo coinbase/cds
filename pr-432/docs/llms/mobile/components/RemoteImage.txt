@@ -1,0 +1,105 @@
+# RemoteImage
+
+A React component for displaying different types of images, including network images, static resources, temporary local images, and images from local disk, such as the camera roll.
+
+## Import
+
+```tsx
+import { RemoteImage } from '@coinbase/cds-mobile/media/RemoteImage'
+```
+
+## Examples
+
+### Border Color
+
+Adjust the borderColor of RemoteImages
+
+```jsx
+<RemoteImage source={assets.eth.imageUrl} shape="circle" size="xxxl" borderColor="secondary" />
+```
+
+### size
+
+Adjust size of RemoteImage using AvatarSizes
+
+```jsx
+<HStack gap={1}>
+  <RemoteImage source={assets.ada.imageUrl} size="m" shape="circle" />
+  <RemoteImage source={assets.eth.imageUrl} size="l" shape="circle" />
+  <RemoteImage source={assets.ltc.imageUrl} size="xl" shape="circle" />
+  <RemoteImage source={assets.sushi.imageUrl} size="xxl" shape="circle" />
+  <RemoteImage source={assets.uni.imageUrl} size="xxxl" shape="circle" />
+</HStack>
+```
+
+### Shape
+
+```jsx
+<VStack gap={2}>
+  <RemoteImage source={assets.ada.imageUrl} size="xxxl" shape="circle" />
+  <RemoteImage source={squareAssets.human1} size="xxxl" shape="squircle" />
+  <RemoteImage source={squareAssets.human2} size="xxxl" shape="square" />
+  <RemoteImage source={squareAssets.human3} width={40} height={60} shape="rectangle" />
+</VStack>
+```
+
+### Default fallback
+
+If no images are shown, RemoteImage will show a default Fallback. Be aware that a rectangular fallback will truncate content from the fallback to fit the rectangle.
+
+```jsx
+<VStack gap={2}>
+  <RemoteImage size="m" shape="squircle" />
+  <RemoteImage size="l" shape="circle" />
+  <RemoteImage size="xl" shape="square" />
+  <RemoteImage width={50} height={80} shape="rectangle" />
+</VStack>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `alt` | `string` | No | `-` | The text thats read by the screen reader when the user interacts with the image.  See https://reactnative.dev/docs/image#alt |
+| `aspectRatio` | `[number, number] \| readonly [number, number] \| ([number, number] & readonly [number, number]) \| (readonly [number, number] & [number, number])` | No | `-` | Scale image based on this aspect-ratio |
+| `blurRadius` | `number` | No | `-` | blurRadius: the blur radius of the blur filter added to the image |
+| `borderBottomLeftRadius` | `number` | No | `-` | - |
+| `borderBottomRightRadius` | `number` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Adds a custom border color |
+| `borderRadius` | `number` | No | `-` | - |
+| `borderTopLeftRadius` | `number` | No | `-` | - |
+| `borderTopRightRadius` | `number` | No | `-` | - |
+| `capInsets` | `Insets` | No | `-` | When the image is resized, the corners of the size specified by capInsets will stay a fixed size, but the center content and borders of the image will be stretched. This is useful for creating resizable rounded buttons, shadows, and other resizable assets. More info on Apple documentation |
+| `crossOrigin` | `anonymous \| use-credentials` | No | `-` | Adds the CORS related header to the request. Similar to crossorigin from HTML.  See https://reactnative.dev/docs/image#crossorigin |
+| `darkModeEnhancementsApplied` | `boolean` | No | `-` | Fill in transparent background with inverted background color and add border. This solves issue of transparent, stamped out asset icons not being visible on dark backgrounds. |
+| `defaultSource` | `number \| ImageURISource` | No | `-` | A static image to display while downloading the final image off the network. |
+| `fadeDuration` | `number` | No | `-` | Duration of fade in animation in ms. Defaults to 300 |
+| `fallbackAccessibilityHint` | `string` | No | `-` | - |
+| `fallbackAccessibilityLabel` | `string` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | Height of RemoteImage. Height takes precedence over size |
+| `id` | `string` | No | `-` | Used to reference react managed images from native code. |
+| `loadingIndicatorSource` | `ImageURISource` | No | `-` | similarly to source, this property represents the resource used to render the loading indicator for the image, displayed until image is ready to be displayed, typically after when it got downloaded from network. |
+| `nativeID` | `string` | No | `-` | Used to reference react managed images from native code. |
+| `onError` | `((error: NativeSyntheticEvent<ImageErrorEventData>) => void)` | No | `-` | Invoked on load error with {nativeEvent: {error}} |
+| `onLayout` | `((event: LayoutChangeEvent) => void)` | No | `-` | onLayout function  Invoked on mount and layout changes with  {nativeEvent: { layout: {x, y, width, height} }}. |
+| `onLoad` | `((event: NativeSyntheticEvent<ImageLoadEventData>) => void)` | No | `-` | Invoked when load completes successfully { source: { uri, height, width } }. |
+| `onLoadEnd` | `(() => void)` | No | `-` | Invoked when load either succeeds or fails |
+| `onLoadStart` | `(() => void)` | No | `-` | Invoked on load start |
+| `onPartialLoad` | `(() => void)` | No | `-` | Invoked when a partial load of the image is complete. The definition of what constitutes a partial load is loader specific though this is meant for progressive JPEG loads. |
+| `onProgress` | `((event: NativeSyntheticEvent<ImageProgressEventDataIOS>) => void)` | No | `-` | Invoked on download progress with {nativeEvent: {loaded, total}} |
+| `progressiveRenderingEnabled` | `boolean` | No | `-` | - |
+| `referrerPolicy` | `no-referrer \| no-referrer-when-downgrade \| origin \| origin-when-cross-origin \| same-origin \| strict-origin \| strict-origin-when-cross-origin \| unsafe-url` | No | `-` | A string indicating which referrer to use when fetching the resource. Similar to referrerpolicy from HTML.  See https://reactnative.dev/docs/image#referrerpolicy |
+| `resizeMethod` | `auto \| scale \| resize` | No | `-` | The mechanism that should be used to resize the image when the images dimensions differ from the image views dimensions. Defaults to auto.  - auto: Use heuristics to pick between resize and scale.  - resize: A software operation which changes the encoded image in memory before it gets decoded. This should be used instead of scale when the image is much larger than the view.  - scale: The image gets drawn downscaled or upscaled. Compared to resize, scale is faster (usually hardware accelerated) and produces higher quality images. This should be used if the image is smaller than the view. It should also be used if the image is slightly bigger than the view.  More details about resize and scale can be found at http://frescolib.org/docs/resizing-rotating.html. |
+| `resizeMode` | `repeat \| center \| stretch \| cover \| contain` | No | `-` | Determines how to resize the image when the frame doesnt match the raw image dimensions.  cover: Scale the image uniformly (maintain the images aspect ratio) so that both dimensions (width and height) of the image will be equal to or larger than the corresponding dimension of the view (minus padding).  contain: Scale the image uniformly (maintain the images aspect ratio) so that both dimensions (width and height) of the image will be equal to or less than the corresponding dimension of the view (minus padding).  stretch: Scale width and height independently, This may change the aspect ratio of the src.  repeat: Repeat the image to cover the frame of the view. The image will keep its size and aspect ratio. (iOS only)  center: Scale the image down so that it is completely visible, if bigger than the area of the view. The image will not be scaled up. |
+| `shape` | `rectangle \| circle \| squircle \| square \| hexagon` | No | `square` | Shape of RemoteImage |
+| `shouldApplyDarkModeEnhacements` | `boolean` | No | `-` | - |
+| `size` | `s \| l \| m \| xl \| xxl \| xxxl` | No | `m` | Size for a given RemoteImage. If width or height is not defined, it will set size = m as default |
+| `source` | `string \| number \| ImageURISource \| ImageURISource[]` | No | `-` | - |
+| `src` | `string` | No | `-` | A string representing the resource identifier for the image. Similar to src from HTML.  See https://reactnative.dev/docs/image#src |
+| `srcSet` | `string` | No | `-` | Similar to srcset from HTML.  See https://reactnative.dev/docs/image#srcset |
+| `style` | `null \| false \| ImageStyle \| RegisteredStyle<ImageStyle> \| RecursiveArray<Falsy \| ImageStyle \| RegisteredStyle<ImageStyle>>` | No | `-` | - |
+| `testID` | `string` | No | `-` | A unique identifier for this element to be used in UI Automation testing scripts. |
+| `tintColor` | `string \| OpaqueColorValue` | No | `-` | Changes the color of all the non-transparent pixels to the tintColor.  See https://reactnative.dev/docs/image#tintcolor |
+| `width` | `string \| number` | No | `-` | Width of RemoteImage. Width takes precedence over size |
+
+

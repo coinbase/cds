@@ -1,0 +1,79 @@
+# useHasMounted
+
+Returns a boolean indicating if the component has mounted.
+
+## Import
+
+```tsx
+import { useHasMounted } from '@coinbase/cds-web/hooks/useHasMounted'
+```
+
+## API
+
+### Parameters
+
+The `useHasMounted` hook does not accept any parameters.
+
+### Returns
+
+```tsx
+type Return = boolean;
+```
+
+Returns a boolean:
+
+- `true`: Component has mounted and is running in a browser environment
+- `false`: Component hasn't mounted yet or is running in a non-browser environment (e.g., server-side rendering)
+
+:::tip
+This hook is useful for preventing hydration mismatches and ensuring code only runs in the browser environment.
+:::
+
+## Examples
+
+`useHasMounted` should be used when conditionally rendering components or styles in SSR or SSG environments.
+
+We recommend using `useHasMounted` whenever you use [useBreakpoints](/hooks/useBreakpoints) or any other hooks that rely on the window object to conditionally render content. This combination can be used to prevent cumulative layout shifts (CLS). This is called two pass rendering and ensures that the component has been mounted and the window object is present before painting the DOM.
+
+```jsx
+const { isPhone } = useBreakpoints();
+const hasMounted = useHasMounted();
+
+// in component render
+{
+  hasMounted && isPhone && (
+    <Text as="h3" font="headline">
+      Welcome {username}!
+    </Text>
+  );
+}
+```
+
+### Basic usage
+
+```tsx live
+function Example() {
+  const hasMounted = useHasMounted();
+
+  return <Text font="headline">Component has {hasMounted ? 'mounted' : 'not mounted'}</Text>;
+}
+```
+
+### Preventing Hydration Mismatch
+
+```tsx live
+function Example() {
+  const hasMounted = useHasMounted();
+  const [currentTime, setCurrentTime] = useState('');
+
+  useEffect(() => {
+    // Only run client-side code after mounting
+    if (hasMounted) {
+      setCurrentTime(new Date().toLocaleTimeString());
+    }
+  }, [hasMounted]);
+
+  return <Text font="headline">{hasMounted ? `Current time: ${currentTime}` : 'Loading...'}</Text>;
+}
+```
+

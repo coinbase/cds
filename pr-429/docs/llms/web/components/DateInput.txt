@@ -1,0 +1,468 @@
+# DateInput
+
+DateInput is a text input field for entering dates by typing. The input automatically formats dates based on the user's locale.
+
+## Import
+
+```tsx
+import { DateInput } from '@coinbase/cds-web/dates/DateInput'
+```
+
+## Examples
+
+DateInput uses [TextInput](/components/inputs/TextInput/) for entering dates by typing. Check out [DatePicker](/components/other/DatePicker/) if you would like [Calendar](/components/other/Calendar/) to be shown in a popup as well.
+
+### Basics
+
+DateInput requires controlled state for both the date value and error state. The component automatically formats dates based on the user's locale and validates input on blur.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DateInput
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      requiredError="This field is required"
+      disabledDateError="Date unavailable"
+    />
+  );
+}
+```
+
+#### Validation
+
+##### Minimum and maximum dates
+
+Use `minDate` and `maxDate` props to restrict the date range. Provide the `disabledDateError` prop to show an error when users enter a date outside the allowed range.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const oneYearAgo = new Date(today.getFullYear() - 1, today.getMonth(), today.getDate());
+  const oneYearLater = new Date(today.getFullYear() + 1, today.getMonth(), today.getDate());
+
+  return (
+    <DateInput
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      minDate={oneYearAgo}
+      maxDate={oneYearLater}
+      label="Date within range"
+      helperText="Date must be within one year of today"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="Date must be within one year of today"
+    />
+  );
+}
+```
+
+##### Disabled dates
+
+The `disabledDates` prop accepts an array of `Date` objects or `[Date, Date]` tuples to disable specific dates or ranges.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const oneWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+  const twoDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
+  const oneWeekLater = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+  const disabledDates = [[oneWeekAgo, twoDaysAgo], oneWeekLater];
+
+  return (
+    <DateInput
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      disabledDates={disabledDates}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="Date unavailable"
+    />
+  );
+}
+```
+
+##### Custom validation
+
+Use the `DateInputValidationError` class to create custom error states for application-specific validation rules.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleChangeDate = (newDate) => {
+    setDate(newDate);
+    if (newDate && newDate <= new Date()) {
+      setError(new DateInputValidationError('custom', 'Date must be in the future'));
+    } else {
+      setError(null);
+    }
+  };
+
+  return (
+    <DateInput
+      date={date}
+      error={error}
+      onChangeDate={handleChangeDate}
+      onErrorDate={setError}
+      label="Future date only"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Accessibility
+
+DateInput inherits accessibility props from TextInput. If no `accessibilityLabel` is passed, it will use the `label` as the `accessibilityLabel`. If you want an `accessibilityLabel` that differs from the label, you can set this prop.
+
+Here, since no `accessibilityLabel` is passed, the `accessibilityLabel` will be "Birthdate".
+
+```jsx
+<DateInput label="Birthdate" />
+```
+
+Example of passing an `accessibilityLabel`. For web, this will set `aria-label="Enter your date of birth"` under the hood.
+
+```jsx
+<DateInput accessibilityLabel="Enter your date of birth" label="Birthdate" />
+```
+
+:::tip Accessibility tip
+
+Like any component system, much of the responsibility for building accessible UIs is in your hands as the consumer to properly implement the component composition. We'll do our best to provide sane fallbacks, but here are the biggest gotchas for `DateInput`s you can watch out for.
+
+<br />
+
+##### Error message format
+
+It's advised you always format error messages with `Error: ${errorMessage}`. We'd do that for you, but _i18n_ isn't baked into CDS. DateInput automatically switches to `variant="negative"` when an error is present.
+
+:::
+
+### Localization
+
+The date format automatically adjusts based on the `LocaleContext` provided by `LocaleProvider`.
+
+```jsx live
+function Example() {
+  const [usDate, setUsDate] = useState(null);
+  const [usError, setUsError] = useState(null);
+  const [esDate, setEsDate] = useState(null);
+  const [esError, setEsError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <VStack>
+        <Text font="label2" color="fgMuted">
+          English (US) - MM/DD/YYYY
+        </Text>
+        <DateInput
+          date={usDate}
+          error={usError}
+          onChangeDate={setUsDate}
+          onErrorDate={setUsError}
+          label="Date"
+          invalidDateError="Please enter a valid date"
+        />
+      </VStack>
+      <LocaleProvider locale="es-ES">
+        <VStack>
+          <Text font="label2" color="fgMuted">
+            Spanish - DD/MM/YYYY
+          </Text>
+          <DateInput
+            date={esDate}
+            error={esError}
+            onChangeDate={setEsDate}
+            onErrorDate={setEsError}
+            label="Fecha"
+            invalidDateError="Ingrese una fecha válida"
+          />
+        </VStack>
+      </LocaleProvider>
+    </VStack>
+  );
+}
+```
+
+### Styling
+
+DateInput supports the same styling functionality as [TextInput](/components/inputs/TextInput/).
+
+#### Compact
+
+Use the `compact` prop for a smaller input size.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DateInput
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Default size"
+        invalidDateError="Please enter a valid date"
+      />
+      <DateInput
+        compact
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Compact size"
+        invalidDateError="Please enter a valid date"
+      />
+    </VStack>
+  );
+}
+```
+
+#### Disabled
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(new Date());
+  const [error, setError] = useState(null);
+
+  return (
+    <DateInput
+      disabled
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Disabled input"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+#### Helper text
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DateInput
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Start date"
+      helperText="Select when you'd like to begin"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+#### Label
+
+You can pass a ReactNode to `labelNode` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DateInput
+      accessibilityLabel="Birthdate"
+      date={date}
+      error={error}
+      id="birthdate-tooltip"
+      invalidDateError="Please enter a valid date"
+      labelNode={
+        <HStack alignItems="center">
+          <InputLabel htmlFor="birthdate-tooltip">Birthdate</InputLabel>
+          {/* Add padding to ensure 24x24 tooltip tap target for a11y compliance */}
+          <Tooltip content="This will be visible to other users.">
+            <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
+          </Tooltip>
+        </HStack>
+      }
+      onChangeDate={setDate}
+      onErrorDate={setError}
+    />
+  );
+}
+```
+
+#### Required
+
+Use the `required` prop to indicate that the field is mandatory. Provide `requiredError` to display a message if the user blurs the input without a date after typing.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DateInput
+      required
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      requiredError="This field is required"
+    />
+  );
+}
+```
+
+#### Variants
+
+Use the `variant` prop to change the visual style of the input.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DateInput
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Default variant"
+        invalidDateError="Please enter a valid date"
+      />
+      <DateInput
+        variant="secondary"
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Secondary variant"
+        invalidDateError="Please enter a valid date"
+      />
+    </VStack>
+  );
+}
+```
+
+#### Separator
+
+Customize the date format separator using the `separator` prop. Defaults to `/`.
+
+```jsx live
+function Example() {
+  const [date1, setDate1] = useState(null);
+  const [error1, setError1] = useState(null);
+  const [date2, setDate2] = useState(null);
+  const [error2, setError2] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DateInput
+        date={date1}
+        error={error1}
+        onChangeDate={setDate1}
+        onErrorDate={setError1}
+        separator="/"
+        label="Slash separator"
+        invalidDateError="Please enter a valid date"
+      />
+      <DateInput
+        date={date2}
+        error={error2}
+        onChangeDate={setDate2}
+        onErrorDate={setError2}
+        separator="-"
+        label="Dash separator"
+        invalidDateError="Please enter a valid date"
+      />
+    </VStack>
+  );
+}
+```
+
+### Event Lifecycle
+
+The DateInput fires events in a specific order:
+
+- Typing a date in a blank DateInput:
+
+  `onChange -> onChange -> ... -> onChangeDate -> onErrorDate`
+
+- Typing a date in a DateInput that already had a date:
+
+  `onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate`
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `date` | `Date \| null` | Yes | `-` | Control the date value of the DateInput. |
+| `error` | `DateInputValidationError \| null` | Yes | `-` | Control the error value of the DateInput. |
+| `onChangeDate` | `(date: Date \| null) => void` | Yes | `-` | Callback function fired when the date changes, e.g. when a valid date is selected or unselected. |
+| `onErrorDate` | `(error: DateInputValidationError \| null) => void` | Yes | `-` | Callback function fired when validation finds an error, e.g. required input fields and impossible or disabled dates. Will always be called after onChangeDate. |
+| `align` | `center \| start \| end \| justify` | No | `start` | Aligns text inside input and helperText |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `200` | Leverage one of the borderRadius styles we offer to round the corners of the input. |
+| `bordered` | `boolean` | No | `true` | Adds border to input |
+| `className` | `string` | No | `-` | - |
+| `compact` | `boolean` | No | `false` | Enables compact variation |
+| `disabled` | `boolean` | No | `false` | Toggles input interactability and opacity |
+| `disabledDateError` | `string` | No | `'Date unavailable'` | Error text to display when a disabled date is selected, including dates before the minDate or after the maxDate. However if the selected date is more than 100 years before the minDate or more than 100 years after the maxDate, the invalidDateError will be displayed instead. |
+| `disabledDates` | `(Date \| [Date, Date])[]` | No | `-` | Array of disabled dates, and date tuples for date ranges. Make sure to set disabledDateError as well. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. |
+| `enableColorSurge` | `boolean` | No | `-` | Enable Color Surge motion |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the end of the inner input. Refer to diagram for location of endNode in InputStack component |
+| `height` | `((Height<string \| number> \| { base?: Height<string \| number>; phone?: Height<string \| number> \| undefined; tablet?: Height<string \| number> \| undefined; desktop?: Height<string \| number> \| undefined; }) & (string \| number)) \| undefined` | No | `-` | Height of input |
+| `helperText` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | For cases where label is not enough information to describe what the text input is for. Can also be used for showing positive/negative messages |
+| `helperTextErrorIconAccessibilityLabel` | `string` | No | `'error'` | Accessibility label for helper text error icon when variant=negative |
+| `inputBackground` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `'bg'` | Background color of the input. |
+| `invalidDateError` | `string` | No | `'Please enter a valid date'` | Error text to display when an impossible date is selected, e.g. 99/99/2000. This should always be defined for accessibility. Also displays when a date is selected that is more than 100 years before the minDate, or more than 100 years after the maxDate. |
+| `key` | `Key \| null` | No | `-` | - |
+| `label` | `string` | No | `-` | Short messageArea indicating purpose of input |
+| `labelNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to render label. Takes precedence over label. |
+| `labelVariant` | `inside \| outside` | No | `'outside'` | The variant of the label. Only used when compact is not true. |
+| `maxDate` | `Date` | No | `-` | Maximum date allowed to be selected, inclusive. Dates after the maxDate are disabled. Make sure to set disabledDateError as well. |
+| `minDate` | `Date` | No | `-` | Minimum date allowed to be selected, inclusive. Dates before the minDate are disabled. Make sure to set disabledDateError as well. |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `onClick` | `(MouseEventHandler<Element> & MouseEventHandler<HTMLInputElement>)` | No | `-` | Callback fired when pressed/clicked |
+| `placeholder` | `string` | No | `-` | Placeholder text displayed inside of the input. Will be replaced if there is a value. |
+| `ref` | `((instance: HTMLInputElement \| null) => void) \| RefObject<HTMLInputElement> \| null` | No | `-` | - |
+| `required` | `boolean` | No | `-` | If required, the requiredError will be displayed if a user blurs the input, without a date selected, after having typed into it. |
+| `requiredError` | `string` | No | `'This field is required'` | Error text to display when required is true and a user blurs the input without a date selected, after having typed into it. |
+| `separator` | `string` | No | `-` | Date format separator character, e.g. the / in MM/DD/YYYY. Defaults to forward slash (/). |
+| `start` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the start of the inner input. Refer to diagram for location of startNode in InputStack component |
+| `style` | `CSSProperties` | No | `-` | - |
+| `suffix` | `string` | No | `-` | Adds suffix text to the end of input |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `testIDMap` | `{ start?: string; end?: string \| undefined; label?: string \| undefined; helperText?: string \| undefined; } \| undefined` | No | `-` | Add ability to test individual parts of the input |
+| `type` | `button \| reset \| submit` | No | `-` | - |
+| `variant` | `primary \| secondary \| positive \| negative \| foregroundMuted \| foreground` | No | `foregroundMuted` | Determines the sentiment of the input. Because we allow startContent and endContent to be custom ReactNode, the content placed inside these slots will not change colors according to the variant. You will have to add that yourself |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `100%` | Width of input as a percentage string. |
+
+

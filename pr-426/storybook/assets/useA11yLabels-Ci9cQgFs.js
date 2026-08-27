@@ -1,0 +1,1 @@
+import{r as u}from"./iframe-CYDANtMt.js";const e=({accessibilityLabelledBy:o,accessibilityLabel:r}={})=>{const n=u.useId(),d=o??r?void 0:n;return u.useMemo(()=>({labelledBySource:d,labelledBy:o??d,label:o?void 0:r}),[d,o,r])};export{e as u};

@@ -1,0 +1,1 @@
+import{r as s}from"./iframe-CsG_6vZR.js";const f=({initialRefMap:n={}}={})=>{const e=s.useRef(n),t=s.useCallback(r=>r in e.current?e.current[r]:null,[]),c=s.useCallback((r,u)=>{e.current[r]=u},[]);return s.useMemo(()=>({refs:e.current,getRef:t,registerRef:c}),[e,t,c])};export{f as u};

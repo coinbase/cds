@@ -1,0 +1,79 @@
+# ButtonGroup
+
+Groups buttons with consistent spacing.
+
+## Import
+
+```tsx
+import { ButtonGroup } from '@coinbase/cds-mobile/buttons/ButtonGroup'
+```
+
+## Examples
+
+### Basic Button Group
+
+Uniformly group buttons with consistent spacing between each.
+
+```jsx
+<ButtonGroup accessibilityLabel="Group" direction="vertical">
+  <Button>Save</Button>
+  <Button variant="secondary">Cancel</Button>
+  <Button variant="negative">Delete</Button>
+</ButtonGroup>
+```
+
+The group is rather easy to use, just render a list of buttons. However, there is a hard requirement that direct children _must_ be a `Button` or `IconButton` component. Do _not_ provide your own markup.
+
+```jsx
+<ButtonGroup accessibilityLabel="Group">
+  <Button>Save</Button>
+  <Button transparent>Cancel</Button>
+</ButtonGroup>
+```
+
+### Block Button Group
+
+If you would like the buttons to expand and fill all available space, pass a `block` prop to the `ButtonGroup`.
+
+```jsx
+<ButtonGroup block accessibilityLabel="Group">
+  <Button>Save</Button>
+  <Button variant="secondary">Cancel</Button>
+</ButtonGroup>
+```
+
+> If you are using a component that composes around a button component, be sure to pass props from the group down correctly, like `block`.
+
+### Icon buttons
+
+Icon buttons are unique in that their shape is a circle, not a rectangle. Because of this, icon buttons do _not_ support the `block` prop.
+
+```jsx
+<ButtonGroup accessibilityLabel="Group">
+  <IconButton name="arrowLeft" />
+  <IconButton name="arrowRight" />
+</ButtonGroup>
+```
+
+### A11y
+
+All button groups _require_ an accessibility label describing the group's contents.
+
+```jsx
+<ButtonGroup accessibilityLabel="Asset actions">
+  <Button>Buy</Button>
+  <Button>Sell</Button>
+  <Button variant="secondary">Add to watchlist</Button>
+</ButtonGroup>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `undefined \| null \| false \| ReactElement<ButtonBaseProps, string \| JSXElementConstructor<any>> \| OptionalElement<ButtonBaseProps>[]` | Yes | `-` | Buttons to render as a group. |
+| `block` | `boolean` | No | `-` | Expand buttons to fill available space within the group. |
+| `direction` | `horizontal \| vertical` | No | `horizontal Stack buttons vertically or horizontally.` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

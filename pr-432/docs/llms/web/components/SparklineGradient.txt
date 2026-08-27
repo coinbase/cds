@@ -1,0 +1,108 @@
+# SparklineGradient
+
+A small line chart component with gradient fill below the line.
+
+## Import
+
+```tsx
+import { SparklineGradient } from '@coinbase/cds-web-visualization'
+```
+
+## Examples
+
+Expands upon the [Sparkline](/components/graphs/Sparkline) component to provide a gradient stroke. However, for dark mode we disable the gradient effect. These are typically used at a larger size for portfolio charts or on detail Asset pages.
+
+### Dynamic path colors
+
+```jsx live
+function Example() {
+  const dimensions = { width: 400, height: 200 };
+  const path = useSparklinePath({ ...dimensions, data: prices });
+  return (
+    <VStack gap={2}>
+      {assetColors.map((color) => (
+        <SparklineGradient key={color} {...dimensions} path={path} color={color} />
+      ))}
+    </VStack>
+  );
+}
+```
+
+### Dynamic background colors
+
+```jsx live
+function Example() {
+  const dimensions = { width: 400, height: 200 };
+  const path = useSparklinePath({ ...dimensions, data: prices });
+  return (
+    <VStack gap={2}>
+      {assetColors.map((background) => (
+        <VStack key={background} dangerouslySetBackground={background}>
+          <SparklineGradient {...dimensions} path={path} background={background} color="auto" />
+        </VStack>
+      ))}
+    </VStack>
+  );
+}
+```
+
+### y axis scaling
+
+```jsx live
+function Example() {
+  const yAxisScalingFactor = 0.2;
+  const dimensions = { width: 400, height: 200 };
+  const path = useSparklinePath({ ...dimensions, data: prices, yAxisScalingFactor });
+  return (
+    <VStack gap={2}>
+      <Text as="p" font="label1">
+        Scale {yAxisScalingFactor}
+      </Text>
+      <SparklineGradient
+        {...dimensions}
+        path={path}
+        color="auto"
+        yAxisScalingFactor={yAxisScalingFactor}
+      />
+    </VStack>
+  );
+}
+```
+
+### Sparkline fill
+
+```jsx live
+function Example() {
+  const dimensions = { width: 400, height: 200 };
+  const path = useSparklinePath({ ...dimensions, data: prices });
+  const area = useSparklineArea({ ...dimensions, data: prices });
+  return (
+    <VStack gap={2}>
+      {assetColors.map((color) => (
+        <SparklineGradient key={color} {...dimensions} path={path} color={color}>
+          <SparklineArea area={area} />
+        </SparklineGradient>
+      ))}
+    </VStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `color` | `string` | Yes | `-` | The color of the Sparkline graphs line. Accepts any raw color value (hex, rgba, hsl, etc) or auto. Using auto dynamically selects black or white for optimal accessibility. Does not work with CDS theme color names like fgPrimary or CSS variables. |
+| `height` | `number` | Yes | `-` | Height of the Sparkline |
+| `width` | `number` | Yes | `-` | Width of the Sparkline |
+| `background` | `string` | No | `-` | - |
+| `children` | `null \| false \| ReactElement<SparklineAreaBaseProps, string \| JSXElementConstructor<any>> \| OptionalElement<SparklineAreaBaseProps>[]` | No | `-` | an optional SparklineArea that can be used to fill in the Sparkline |
+| `fillType` | `dotted \| gradient \| gradientDotted` | No | `'dotted'` | Type of fill to use for the area |
+| `key` | `Key \| null` | No | `-` | - |
+| `path` | `string` | No | `-` | Svg path as string. CDS offers a useSparklinePath which is useful to generate this string. This is accessible via import { useSparklinePath } from @coinbase/cds-common/visualizations/useSparklinePath;. Alternatively, you can use product tailored tooling to generate the SVG path. This component only requires a valid path string is provided. |
+| `ref` | `((instance: SparklinePathRef) => void) \| RefObject<SparklinePathRef> \| null` | No | `-` | - |
+| `strokeType` | `solid \| gradient` | No | `'solid'` | Type of stroke to use for the line |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `yAxisScalingFactor` | `number` | No | `-` | Scales the sparkline to show more or less variance. Use a number less than 1 for less variance and a number greater than 1 for more variance. If you use a number greater than 1 it may clip the boundaries of the sparkline. |
+
+

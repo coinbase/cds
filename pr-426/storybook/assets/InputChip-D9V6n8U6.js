@@ -1,0 +1,18 @@
+import{r as n,j as o}from"./iframe-CsG_6vZR.js";import{I as d}from"./Icon-DTs0crZh.js";import{M as c}from"./MediaChip-WBZG74Sv.js";const l=n.memo(n.forwardRef(function({value:a,children:e=a,accessibilityLabel:r=typeof e=="string"?`Remove ${e}`:"Remove option",invertColorScheme:i=!0,testID:t="input-chip",...s},p){return o.jsx(c,{ref:p,accessibilityLabel:r,end:o.jsx(d,{active:!0,color:"fg",name:"close",size:"xs",testID:t?`${t}-close-icon`:"input-chip-close-icon"}),invertColorScheme:i,...s,children:e})}));l.__docgenInfo={description:"",methods:[],displayName:"InputChip",props:{testID:{required:!1,tsType:{name:"string"},description:`Used to locate this element in unit and end-to-end tests.
+Under the hood, testID translates to data-testid on Web. On Mobile, testID
+stays the same - testID`,defaultValue:{value:"'input-chip'",computed:!1}},children:{required:!1,tsType:{name:"ReactReactNode",raw:"React.ReactNode"},description:"ReactNode placed in the center of the Chip",defaultValue:{value:"value",computed:!1}},start:{required:!1,tsType:{name:"ReactReactNode",raw:"React.ReactNode"},description:"ReactNode placed before the value"},end:{required:!1,tsType:{name:"ReactReactNode",raw:"React.ReactNode"},description:"ReactNode placed after the value"},maxWidth:{required:!1,tsType:{name:"Polymorphic.ExtendableProps['maxWidth']",raw:"PressableBaseProps['maxWidth']"},description:`If text content overflows, it will get truncated with an ellipsis.
+@default 200`},inverted:{required:!1,tsType:{name:"boolean"},description:`Invert the foreground and background colors to emphasize the Chip.
+Depending on your theme, it may be dangerous to use this prop in conjunction with \`transparentWhileInactive\`.
+@default false
+@deprecated Use the invertColorScheme prop instead`},invertColorScheme:{required:!1,tsType:{name:"boolean"},description:"Invert the foreground and background colors to emphasize the Chip.\nDepending on your theme, it may be dangerous to use this prop in conjunction with `transparentWhileInactive`.\n@default false",defaultValue:{value:"true",computed:!1}},compact:{required:!1,tsType:{name:"boolean"},description:"Reduces spacing around Chip content"},numberOfLines:{required:!1,tsType:{name:"number"},description:`How many lines the text in the chip will be broken into.
+@default 1`},contentStyle:{required:!1,tsType:{name:"ReactCSSProperties",raw:"React.CSSProperties"},description:"@deprecated Use `styles.content` instead.\nApply styles to Chip content."},styles:{required:!1,tsType:{name:"signature",type:"object",raw:`{
+  /** Root element */
+  root?: React.CSSProperties;
+  /** Content element */
+  content?: React.CSSProperties;
+}`,signature:{properties:[{key:"root",value:{name:"ReactCSSProperties",raw:"React.CSSProperties",required:!1},description:"Root element"},{key:"content",value:{name:"ReactCSSProperties",raw:"React.CSSProperties",required:!1},description:"Content element"}]}},description:"Custom styles for individual elements of the Chip component"},classNames:{required:!1,tsType:{name:"signature",type:"object",raw:`{
+  /** Root element */
+  root?: string;
+  /** Content element */
+  content?: string;
+}`,signature:{properties:[{key:"root",value:{name:"string",required:!1},description:"Root element"},{key:"content",value:{name:"string",required:!1},description:"Content element"}]}},description:"Custom class names for individual elements of the Chip component"},value:{required:!1,tsType:{name:"string"},description:"Value indicates what is currently selected\n@deprecated Use the `children` prop instead"},accessibilityLabel:{defaultValue:{value:"typeof children === 'string' ? `Remove ${children}` : 'Remove option'",computed:!1},required:!1}}};export{l as I};

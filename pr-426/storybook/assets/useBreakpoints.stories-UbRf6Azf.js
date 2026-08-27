@@ -1,0 +1,7 @@
+import{j as a,bv as d}from"./iframe-CYDANtMt.js";import{V as o}from"./VStack-iXgNewwv.js";import{T as c}from"./Text-0g3rWpAf.js";import{u as l}from"./useBreakpoints-Bxk0TUW-.js";import"./preload-helper-D9Z9MdNV.js";const i={isPhone:"a phone",isPhonePortrait:"a phone in portrait",isPhoneLandscape:"a phone in landscape",isTablet:"a tablet",isTabletPortrait:"a tablet in portrait",isTabletLandscape:"a tablet in landscape",isDesktop:"a desktop",isDesktopSmall:"a small desktop",isDesktopLarge:"a large desktop",isExtraWide:"an extra wide desktop"},n=()=>{const t=l(),r=[],p=()=>{for(const s in t)s in i&&t[s]&&r.push(i[s]);return r.length===1?r[0]:r.length?r.join(" and "):"no device breakpoints"};return a.jsxs(o,{background:"bgAlternate",borderColor:"bgLine",borderRadius:200,gap:2,padding:3,children:[a.jsxs(c,{as:"h3",display:"block",font:"headline",children:["I am as wide as ",p()]}),a.jsx(o,{as:"pre",color:"fg",children:JSON.stringify(t,null,2)})]})},e=()=>a.jsx(d,{children:a.jsx(o,{gap:2,children:a.jsx(n,{})})});e.parameters={percy:{enableJavaScript:!0}};const b={title:"Hooks/useBreakpoints",component:n};e.__docgenInfo={description:"",methods:[],displayName:"DefaultToDevice"};e.parameters={...e.parameters,docs:{...e.parameters?.docs,source:{originalSource:`() => {
+  return <MediaQueryProvider>
+      <VStack gap={2}>
+        <Example />
+      </VStack>
+    </MediaQueryProvider>;
+}`,...e.parameters?.docs?.source}}};const g=["DefaultToDevice"];export{e as DefaultToDevice,g as __namedExportsOrder,b as default};

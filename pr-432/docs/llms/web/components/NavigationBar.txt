@@ -1,0 +1,328 @@
+# NavigationBar
+
+A universal header component for navigation and wayfinding.
+
+## Import
+
+```tsx
+import { NavigationBar } from '@coinbase/cds-web/navigation/NavigationBar'
+```
+
+## Examples
+
+NavigationBar is a horizontal navigation component that provides a consistent header for application navigation and wayfinding. It supports flexible content areas, theming, and custom styling.
+
+### Basics
+
+```jsx live
+<NavigationBar
+  start={<IconButton name="backArrow" accessibilityLabel="Back" />}
+  end={
+    <HStack gap={1} alignItems="center">
+      <IconButton name="bell" accessibilityLabel="Notifications" />
+      <Avatar size="xl" />
+    </HStack>
+  }
+>
+  <NavigationTitle>Dashboard</NavigationTitle>
+</NavigationBar>
+```
+
+#### With Tab Navigation
+
+Use the `bottom` prop to add tab navigation below the main content.
+
+```jsx live
+function NavigationWithTabs() {
+  const tabs = [
+    { id: 'all', label: 'All' },
+    { id: 'watchlist', label: 'Watchlist' },
+    { id: 'tradable', label: 'Tradable' },
+    { id: 'gainers', label: 'Gainers' },
+  ];
+  const [value, setValue] = useState(tabs[0].id);
+
+  return (
+    <NavigationBar
+      end={
+        <HStack gap={1} alignItems="center">
+          <IconButton name="bell" accessibilityLabel="Notifications" />
+          <Avatar size="xl" />
+        </HStack>
+      }
+      bottom={<TabNavigation tabs={tabs} value={value} onChange={setValue} />}
+    >
+      <NavigationTitle>Portfolio</NavigationTitle>
+    </NavigationBar>
+  );
+}
+```
+
+#### With Search
+
+```jsx live
+function NavigationWithSearch() {
+  const [search, setSearch] = useState('');
+
+  return (
+    <NavigationBar
+      start={<IconButton name="backArrow" accessibilityLabel="Back" />}
+      end={<IconButton name="settings" accessibilityLabel="Settings" />}
+    >
+      <SearchInput
+        compact
+        accessibilityLabel="Search"
+        onChangeText={setSearch}
+        placeholder="Search assets..."
+        value={search}
+      />
+    </NavigationBar>
+  );
+}
+```
+
+### Accessibility
+
+Use `accessibilityLabel` to provide context for screen readers. The default label is "main navigation".
+
+```jsx live
+<NavigationBar
+  accessibilityLabel="Primary site navigation"
+  start={<IconButton name="backArrow" accessibilityLabel="Go back to previous page" />}
+  end={<IconButton name="bell" accessibilityLabel="View notifications, 3 unread" />}
+>
+  <NavigationTitle>Account Settings</NavigationTitle>
+</NavigationBar>
+```
+
+When using interactive elements in the navigation bar, ensure each has appropriate accessibility labels describing their action.
+
+### Composed Examples
+
+#### Full Navigation with Back Button
+
+A complete navigation example with dynamic back button visibility and tab navigation.
+
+```jsx live
+function FullNavigation() {
+  const tabs = [
+    { id: 'all', label: 'All' },
+    { id: 'watchlist', label: 'Watchlist' },
+    { id: 'tradable', label: 'Tradable' },
+    { id: 'gainers', label: 'Gainers' },
+    { id: 'losers', label: 'Losers' },
+  ];
+  const [search, setSearch] = useState('');
+  const [value, setValue] = useState(tabs[1].id);
+  const showBackButton = useMemo(() => value !== tabs[0].id, [value]);
+
+  const handleBackPress = useCallback(() => {
+    setValue(tabs[0].id);
+  }, []);
+
+  return (
+    <NavigationBar
+      start={
+        showBackButton && (
+          <IconButton name="backArrow" onClick={handleBackPress} accessibilityLabel="Back" />
+        )
+      }
+      end={
+        <HStack gap={1} alignItems="center">
+          <IconButton accessibilityLabel="Language" name="globe" />
+          <IconButton accessibilityLabel="Notifications" active name="bell" />
+        </HStack>
+      }
+      bottom={<TabNavigation tabs={tabs} value={value} onChange={setValue} />}
+    >
+      <SearchInput
+        compact
+        accessibilityLabel="Search"
+        onChangeText={setSearch}
+        placeholder="Search"
+        value={search}
+      />
+    </NavigationBar>
+  );
+}
+```
+
+#### Responsive Navigation
+
+A responsive navigation bar that adapts to screen size. On mobile, the search input collapses to an icon button.
+
+```jsx live
+function ResponsiveNavigation() {
+  const [search, setSearch] = useState('');
+  const [searchOpen, setSearchOpen] = useState(false);
+  const { isMobile } = useBreakpoints();
+
+  const handleSearchToggle = useCallback(() => {
+    setSearchOpen((prev) => !prev);
+    if (searchOpen) {
+      setSearch('');
+    }
+  }, [searchOpen]);
+
+  return (
+    <NavigationBar
+      background="bgSecondary"
+      start={<IconButton name="backArrow" accessibilityLabel="Back" />}
+      end={
+        <HStack gap={1} alignItems="center">
+          {isMobile && (
+            <IconButton
+              name="search"
+              accessibilityLabel="Search"
+              onClick={handleSearchToggle}
+              active={searchOpen}
+            />
+          )}
+          <IconButton name="bell" accessibilityLabel="Notifications" />
+          <Avatar size="xl" />
+        </HStack>
+      }
+    >
+      {isMobile ? (
+        searchOpen && (
+          <SearchInput
+            compact
+            accessibilityLabel="Search"
+            onChangeText={setSearch}
+            placeholder="Search..."
+            value={search}
+          />
+        )
+      ) : (
+        <SearchInput
+          compact
+          accessibilityLabel="Search"
+          onChangeText={setSearch}
+          placeholder="Search assets..."
+          value={search}
+        />
+      )}
+      {!isMobile && !searchOpen && <NavigationTitle>Trading</NavigationTitle>}
+    </NavigationBar>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `as` | `nav` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `((Bottom<string \| number> \| { base?: Bottom<string \| number>; phone?: Bottom<string \| number> \| undefined; tablet?: Bottom<string \| number> \| undefined; desktop?: Bottom<string \| number> \| undefined; }) & (string \| number \| boolean \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal \| null)) \| undefined` | No | `-` | The  bottom content. Use to render tabs |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | The middle content. Use the children to render the page title |
+| `classNames` | `{ readonly root?: string; readonly start?: string \| undefined; readonly content?: string \| undefined; } \| undefined` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `((Space \| { base?: Space; phone?: Space \| undefined; tablet?: Space \| undefined; desktop?: Space \| undefined; }) & ResponsiveProp<Space>) \| undefined` | No | `2` | Space between the start, children, and end of the nav bar |
+| `dangerouslyDisableOverflowHidden` | `boolean` | No | `-` | Disable the overflow: hidden style from being injected to the child Col |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Node (icons, avatar, etc) to display at the end of the nav bar |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `((Space \| { base?: Space; phone?: Space \| undefined; tablet?: Space \| undefined; desktop?: Space \| undefined; }) & Space) \| undefined` | No | `2 if bottom is not provided` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `((Space \| { base?: Space; phone?: Space \| undefined; tablet?: Space \| undefined; desktop?: Space \| undefined; }) & Space) \| undefined` | No | `2` | - |
+| `paddingX` | `((Space \| { base?: Space; phone?: Space \| undefined; tablet?: Space \| undefined; desktop?: Space \| undefined; }) & Space) \| undefined` | No | `2` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `ref` | `((instance: HTMLElement \| null) => void) \| RefObject<HTMLElement> \| null` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `((Space \| { base?: Space; phone?: Space \| undefined; tablet?: Space \| undefined; desktop?: Space \| undefined; }) & ResponsiveProp<Space>) \| undefined` | No | `2` | Space between bottom of the nav bar and the rest of its content |
+| `start` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Node (ie Back button) to display at the start of the nav bar |
+| `style` | `CSSProperties` | No | `-` | - |
+| `styles` | `{ readonly root?: CSSProperties; readonly start?: CSSProperties \| undefined; readonly content?: CSSProperties \| undefined; } \| undefined` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `cds-NavigationBar` | Root nav element containing the entire navigation bar |
+| `start` | `cds-NavigationBar-start` | Container for the start slot (e.g., back button) |
+| `content` | `cds-NavigationBar-content` | Container for the main children content (e.g., title) |
+
+

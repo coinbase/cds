@@ -1,0 +1,48 @@
+# TabIndicator
+
+A visual indicator that shows the active tab position.
+
+## Import
+
+```tsx
+import { TabIndicator } from '@coinbase/cds-web/tabs/TabIndicator'
+```
+
+## Examples
+
+### Basic Example
+
+```jsx live
+function TabIndicatorExample() {
+  const getRandomNumber = () => Math.random() * 100 + 100;
+  const [width, setWidth] = useState(120);
+  const [x, setX] = useState(120);
+
+  const handlePress = () => {
+    setWidth(getRandomNumber());
+    setX(getRandomNumber());
+  };
+
+  return (
+    <VStack padding={4} gap={2} background="bg">
+      <Button onClick={handlePress} block>
+        Randomize
+      </Button>
+      <TabIndicator width={width} x={x} />
+    </VStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `width` | `number` | Yes | `-` | The width of the active TabLabel. |
+| `x` | `number` | Yes | `-` | The xPosition of the active TabLabel. |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `: 'bg'` | This should always match the background color of the parent container |
+| `key` | `Key \| null` | No | `-` | - |
+| `ref` | `RefObject<HTMLDivElement> \| ((instance: HTMLDivElement \| null) => void) \| null` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

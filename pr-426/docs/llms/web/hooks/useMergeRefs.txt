@@ -1,0 +1,116 @@
+# useMergeRefs
+
+Combines multiple refs into a single ref callback, allowing a component to work with multiple ref instances simultaneously. Useful when you need to combine refs from different sources, such as forwarded refs and internal component state.
+
+## Import
+
+```tsx
+import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs'
+```
+
+## API
+
+### Parameters
+
+The `useMergeRefs` hook accepts a spread of refs as its parameter:
+
+- `...refs: (React.MutableRefObject<T> | React.LegacyRef<T> | undefined | null)[]` - An array of refs to merge. Can include:
+  - `MutableRefObject` - Object-based refs created with `useRef`
+  - `LegacyRef` - Function-based refs or string refs (legacy)
+  - `undefined` or `null` - Optional refs that might not be provided
+
+### Returns
+
+Returns a `React.RefCallback<T>` function that can be used as a ref:
+
+- The returned callback handles updating all provided refs when the referenced element changes
+- Properly handles both object-based and function-based refs
+- Safely handles undefined or null refs by ignoring them
+
+:::tip
+This hook is particularly useful when working with components that need to combine multiple refs, such as when using both forwarded refs and internal state refs, or when composing components that each require their own ref.
+:::
+
+## Examples
+
+### Basic usage
+
+```tsx live
+function Example() {
+  // Create an internal ref for component logic
+  const internalRef = useRef<HTMLDivElement>(null);
+
+  // Simulating a forwarded ref from parent
+  const Component = forwardRef((props, forwardedRef) => {
+    // Merge the internal ref with the forwarded ref
+    const refs = useMergeRefs(forwardedRef, internalRef);
+
+    return (
+      <Box ref={refs} padding={3} background="bgAlternate" borderRadius={300}>
+        <Text font="body">This box uses a merged ref</Text>
+      </Box>
+    );
+  });
+
+  return <Component />;
+}
+```
+
+### With Multiple Refs
+
+```tsx live
+function Example() {
+  const firstRef = useRef<HTMLDivElement>(null);
+  const secondRef = useRef<HTMLDivElement>(null);
+  const thirdRef = useRef<HTMLDivElement>(null);
+
+  // Function to check if all refs are properly set
+  const checkRefs = () => {
+    const allRefsSet = firstRef.current && secondRef.current && thirdRef.current;
+    alert(`All refs are ${allRefsSet ? 'set' : 'not set'}`);
+  };
+
+  // Merge all three refs
+  const mergedRefs = useMergeRefs(firstRef, secondRef, thirdRef);
+
+  return (
+    <VStack gap={2}>
+      <Box ref={mergedRefs} padding={3} background="bgAlternate" borderRadius={300}>
+        <Text font="body">This element is referenced by three refs</Text>
+      </Box>
+      <Button onClick={checkRefs}>Check Refs</Button>
+    </VStack>
+  );
+}
+```
+
+### With Function Ref
+
+```tsx live
+function Example() {
+  const [elementWidth, setElementWidth] = useState<number>(0);
+
+  // Create a function ref that measures the element
+  const functionRef = (element: HTMLDivElement | null) => {
+    if (element) {
+      setElementWidth(element.offsetWidth);
+    }
+  };
+
+  // Create an object ref for other purposes
+  const objectRef = useRef<HTMLDivElement>(null);
+
+  // Merge both types of refs
+  const refs = useMergeRefs(functionRef, objectRef);
+
+  return (
+    <VStack gap={2}>
+      <Box ref={refs} padding={3} background="bgAlternate" borderRadius={300} width="100%">
+        <Text font="body">This box uses both function and object refs</Text>
+      </Box>
+      <Text font="body">Box width: {elementWidth}px</Text>
+    </VStack>
+  );
+}
+```
+

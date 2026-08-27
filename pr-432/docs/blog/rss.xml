@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Coinbase Design System Blog</title>
+        <link>https://cds.coinbase.com/cds/pr-432/docs/blog</link>
+        <description>Coinbase Design System Blog</description>
+        <lastBuildDate>Tue, 24 Feb 2026 22:45:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <item>
+            <title><![CDATA[Introducing CDS]]></title>
+            <link>https://cds.coinbase.com/cds/pr-432/docs/blog/introducing-cds</link>
+            <guid>https://cds.coinbase.com/cds/pr-432/docs/blog/introducing-cds</guid>
+            <pubDate>Tue, 24 Feb 2026 22:45:00 GMT</pubDate>
+            <description><![CDATA[We're thrilled to announce the public release of Coinbase Design System!]]></description>
+            <content:encoded><![CDATA[<article class="flex-ff5rfy6"><strong>We're thrilled to announce the public release of Coinbase Design System!</strong></article>
+]]></content:encoded>
+        </item>
+    </channel>
+</rss>

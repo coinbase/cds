@@ -1,0 +1,715 @@
+# DatePicker
+
+Date Picker allows our global users to input past, present, future and important dates into our interface in a simple and intuitive manner. Date Picker offers both manual and calendar entry options - accommodating both internationalization and accessibility needs while being adaptable across screen platforms.
+
+## Import
+
+```tsx
+import { DatePicker } from '@coinbase/cds-web/dates/DatePicker'
+```
+
+## Examples
+
+DatePicker combines [DateInput](/components/other/DateInput/) with [Calendar](/components/other/Calendar/) for date selection.
+
+### Basics
+
+A basic DatePicker with the minimum props necessary for correct UX.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      calendarIconButtonAccessibilityLabel="Birthdate calendar"
+      nextArrowAccessibilityLabel="Next month"
+      previousArrowAccessibilityLabel="Previous month"
+      helperTextErrorIconAccessibilityLabel="Error"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+#### Validation
+
+##### Invalid dates
+
+Always provide the `invalidDateError` prop for when users type an impossible date like 99/99/2000.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+##### Minimum and maximum dates
+
+Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props. Navigation to dates before the `minDate` and after the `maxDate` is disabled.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const lastMonth15th = new Date(today.getFullYear(), today.getMonth() - 1, 15);
+  const nextMonth15th = new Date(today.getFullYear(), today.getMonth() + 1, 15);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      minDate={lastMonth15th}
+      maxDate={nextMonth15th}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="Date unavailable"
+    />
+  );
+}
+```
+
+##### Disabled dates
+
+The `disabledDates` prop is an array of Dates and Date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
+
+The `disabledDates` prop is only available on web because the mobile DatePicker uses react-native-date-picker instead of a Calendar component.
+
+Make sure to provide the `disabledDateError` prop when providing `minDate`, `maxDate`, or `disabledDates` props.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const oneWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+  const twoDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
+  const oneWeekLater = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+  const disabledDates = [[oneWeekAgo, twoDaysAgo], oneWeekLater];
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      disabledDates={disabledDates}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="Date unavailable"
+    />
+  );
+}
+```
+
+##### Required field
+
+Make sure to provide the `requiredError` prop when setting the `required` prop to true. The `requiredError` will be displayed if a user blurs the input, without a date selected, after having typed into it.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      required
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+      requiredError="This field is required"
+    />
+  );
+}
+```
+
+##### Custom validation
+
+The DatePicker handles common error states internally, and calls `onErrorDate` when the validity / error state changes.
+
+You can use the `DateInputValidationError` class to create custom error states.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    setError(new DateInputValidationError('custom', 'Hello world!'));
+  }, []);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Accessibility
+
+Always provide the accessibility label props and all necessary error props. See the Accessibility section under the Guidelines tab at the top of the page for more info.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      required
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      disabledDates={[new Date()]}
+      label="Birthdate"
+      calendarIconButtonAccessibilityLabel="Birthdate calendar"
+      nextArrowAccessibilityLabel="Next month"
+      previousArrowAccessibilityLabel="Previous month"
+      helperTextErrorIconAccessibilityLabel="Error"
+      invalidDateError="Please enter a valid date"
+      disabledDateError="Date unavailable"
+      requiredError="This field is required"
+    />
+  );
+}
+```
+
+### Localization
+
+The date format is automatically adjusted to the `LocaleContext`. Check `LocaleProvider` usage below.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <LocaleProvider locale="es-ES">
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Birthdate"
+        invalidDateError="Please enter a valid date"
+      />
+    </LocaleProvider>
+  );
+}
+```
+
+### Styling
+
+DatePicker supports the same styling functionality as [DateInput](/components/other/DateInput/).
+
+#### Compact
+
+Use the `compact` prop for a smaller input size.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Default size"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        compact
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Compact size"
+        invalidDateError="Please enter a valid date"
+      />
+    </VStack>
+  );
+}
+```
+
+#### Disabled
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(new Date());
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      disabled
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Disabled picker"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+#### Helper text
+
+Use the `helperText` prop to provide additional context below the input.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      label="Start date"
+      helperText="Select when you'd like to begin"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+#### Label
+
+You can pass a ReactNode to `labelNode` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={2}>
+      <DatePicker
+        accessibilityLabel="Birthdate"
+        calendarIconButtonAccessibilityLabel="Birthdate calendar"
+        date={date}
+        error={error}
+        helperTextErrorIconAccessibilityLabel="Error"
+        id="birthdate-tooltip"
+        invalidDateError="Please enter a valid date"
+        labelNode={
+          <HStack alignItems="center">
+            <InputLabel htmlFor="birthdate-tooltip">Birthdate</InputLabel>
+            {/* Add padding to ensure 24x24 tooltip tap target for a11y compliance */}
+            <Tooltip content="This will be visible to other users.">
+              <Icon active color="fg" name="info" padding={0.75} size="xs" tabIndex={0} />
+            </Tooltip>
+          </HStack>
+        }
+        nextArrowAccessibilityLabel="Next month"
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        previousArrowAccessibilityLabel="Previous month"
+      />
+      <DatePicker
+        required
+        accessibilityLabel="Event date"
+        date={date}
+        error={error}
+        invalidDateError="Please enter a valid date"
+        labelNode={
+          <InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              Event date
+              <Text color="fgNegative" font="label1">
+                *
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        requiredError="This field is required"
+      />
+    </VStack>
+  );
+}
+```
+
+##### Label Variant
+
+Use the `labelVariant` prop to position the label inside the input.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  return (
+    <VStack gap={3}>
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Default label"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Inside label"
+        labelVariant="inside"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        compact
+        date={date}
+        error={error}
+        onChangeDate={setDate}
+        onErrorDate={setError}
+        label="Compact inside label"
+        labelVariant="inside"
+        invalidDateError="Please enter a valid date"
+      />
+      <DatePicker
+        accessibilityLabel="Event date"
+        date={date}
+        error={error}
+        id="event-date-inside"
+        invalidDateError="Please enter a valid date"
+        labelVariant="inside"
+        labelNode={
+          <InputLabel htmlFor="event-date-inside" paddingY={0}>
+            <HStack alignItems="center" gap={1}>
+              Event date
+              <Text color="fgMuted" font="legal">
+                (optional)
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        onChangeDate={setDate}
+        onErrorDate={setError}
+      />
+    </VStack>
+  );
+}
+```
+
+#### Seeding the date
+
+Defaults to today when undefined.
+
+On web the `seedDate` prop is used to generate the Calendar month when there is no selected date value.
+
+On mobile the `seedDate` prop is the default date that the react-native-date-picker keyboard control will open to when there is no selected date value.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const seedDate = new Date('11/16/1991');
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      seedDate={seedDate}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+#### Highlighted dates
+
+The `highlightedDates` prop is an array of Dates and Date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
+
+The `highlightedDates` prop is only available on web because the mobile DatePicker uses react-native-date-picker instead of a Calendar component.
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const oneWeekAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 7);
+  const twoDaysAgo = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 2);
+  const oneWeekLater = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+  const highlightedDates = [[oneWeekAgo, twoDaysAgo], oneWeekLater];
+
+  return (
+    <DatePicker
+      date={date}
+      error={error}
+      onChangeDate={setDate}
+      onErrorDate={setError}
+      highlightedDates={highlightedDates}
+      label="Birthdate"
+      invalidDateError="Please enter a valid date"
+    />
+  );
+}
+```
+
+### Composed Examples
+
+#### Date range selector
+
+This is a complex example using many different props. We use multiple DatePickers together to allow a user to select a date range.
+
+We enforce that the time between the start date and end date must be at least 5 days but less than 14 days long, that the end date comes after the start date, and that all days are within the current month. We use the `onChange` prop to automatically suggest an end date of 1 week after the start date, or the last of the month - whichever is sooner. We also explicitly disable 1 week at the beginning of the month.
+
+```jsx live
+function Example() {
+  const [startDate, setStartDate] = useState(null);
+  const [startError, setStartError] = useState(null);
+  const [endDate, setEndDate] = useState(null);
+  const [endError, setEndError] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const firstDayThisMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const seventhDayThisMonth = new Date(today.getFullYear(), today.getMonth(), 7);
+  const lastDayThisMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+  const disabledDates = [[firstDayThisMonth, seventhDayThisMonth]];
+
+  const updateEndDate = (endDate, startDate) => {
+    setEndDate(endDate);
+    setEndError(null);
+    if (!endDate) return;
+    // The time from startDate to endDate must be at least 5 days and less than 14 days
+    const endDateMin = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth(),
+      startDate.getDate() + 4,
+    );
+    const endDateMax = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth(),
+      startDate.getDate() + 13,
+    );
+
+    let errorMessage;
+    if (endDate < startDate) errorMessage = 'Must come after start date';
+    else if (endDate < endDateMin) errorMessage = 'Must select at least 5 days';
+    else if (endDate > endDateMax) errorMessage = 'Cannot select more than 14 days';
+
+    if (errorMessage) setEndError(new DateInputValidationError('custom', errorMessage));
+  };
+
+  const handleChangeDateStart = (date) => {
+    setStartDate(date);
+    if (!date) return;
+    // Suggest an end date based on the new start date
+    const suggestedEndDate = new Date(date.getFullYear(), date.getMonth(), date.getDate() + 7);
+    const newEndDate = new Date(Math.min(suggestedEndDate.getTime(), lastDayThisMonth.getTime()));
+    updateEndDate(newEndDate, date);
+  };
+
+  const handleChangeDateEnd = (date) => {
+    if (startDate) updateEndDate(date, startDate);
+  };
+
+  return (
+    <Box gap={2} flexDirection={{ base: 'column', tablet: 'column', desktop: 'row' }}>
+      <DatePicker
+        required
+        date={startDate}
+        disabledDateError="Date unavailable"
+        disabledDates={disabledDates}
+        error={startError}
+        highlightedDates={startDate && endDate ? [[startDate, endDate]] : undefined}
+        invalidDateError="Please enter a valid date"
+        label="Start date"
+        maxDate={lastDayThisMonth}
+        minDate={firstDayThisMonth}
+        onChangeDate={handleChangeDateStart}
+        onErrorDate={setStartError}
+        requiredError="This field is required"
+        style={{ width: '100%' }}
+      />
+      <DatePicker
+        required
+        date={endDate}
+        disabled={!startDate}
+        disabledDateError="Date unavailable"
+        disabledDates={startDate ? [...disabledDates, startDate] : disabledDates}
+        error={endError}
+        highlightedDates={
+          startDate && endDate && startDate < endDate
+            ? [[startDate, endDate]]
+            : startDate
+              ? [startDate]
+              : undefined
+        }
+        invalidDateError="Please enter a valid date"
+        label="End date"
+        maxDate={lastDayThisMonth}
+        minDate={firstDayThisMonth}
+        onChangeDate={handleChangeDateEnd}
+        onErrorDate={setEndError}
+        requiredError="This field is required"
+        variant={endError ? 'negative' : undefined}
+        style={{ width: '100%' }}
+      />
+    </Box>
+  );
+}
+```
+
+### Event Lifecycle
+
+- Selecting a date with the native picker (mobile) or Calendar (web):
+
+  `onOpen -> onConfirm -> onChangeDate -> onErrorDate -> onClose`
+
+- Closing the native picker (mobile) or Calendar (web) without selecting a date:
+
+  `onOpen -> onCancel -> onClose`
+
+- Typing a date in a blank DateInput:
+
+  `onChange -> onChange -> ... -> onChangeDate -> onErrorDate`
+
+- Typing a date in a DateInput that already had a date:
+
+  `onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate`
+
+```jsx live
+function Example() {
+  const [date, setDate] = useState(null);
+  const [error, setError] = useState(null);
+
+  const handleChangeDate = (date) => {
+    console.log('onChangeDate', date);
+    setDate(date);
+  };
+
+  const handleErrorDate = (error) => {
+    console.log('onErrorDate', error);
+    setError(error);
+  };
+
+  return (
+    <DatePicker
+      required
+      date={date}
+      invalidDateError="Please enter a valid date"
+      label="Birthdate"
+      onChange={(event) => console.log('onChange', event)}
+      onChangeDate={handleChangeDate}
+      onConfirm={() => console.log('onConfirm')}
+      onCancel={() => console.log('onCancel')}
+      onErrorDate={handleErrorDate}
+      onOpen={() => console.log('onOpen')}
+      onClose={() => console.log('onClose')}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `date` | `Date \| null` | Yes | `-` | Control the date value of the DatePicker. |
+| `error` | `DateInputValidationError \| null` | Yes | `-` | Control the error value of the DatePicker. Control the error value of the DateInput. |
+| `onChangeDate` | `(selectedDate: Date \| null) => void` | Yes | `-` | Callback function fired when the date changes, e.g. when a valid date is selected or unselected. |
+| `onErrorDate` | `((error: DateInputValidationError \| null) => void) & ((error: DateInputValidationError \| null) => void)` | Yes | `-` | Callback function fired when validation finds an error, e.g. required input fields and impossible or disabled dates. Will always be called after onChangeDate. |
+| `align` | `center \| start \| end \| justify` | No | `start` | Aligns text inside input and helperText |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `200` | Leverage one of the borderRadius styles we offer to round the corners of the input. |
+| `bordered` | `boolean` | No | `true` | Adds border to input |
+| `calendarClassName` | `string` | No | `-` | - |
+| `calendarIconButtonAccessibilityLabel` | `string` | No | `'Open calendar' / 'Close calendar'` | Accessibility label describing the calendar IconButton, which opens the calendar when pressed. |
+| `calendarStyle` | `CSSProperties` | No | `-` | - |
+| `className` | `string` | No | `-` | - |
+| `compact` | `boolean` | No | `false` | Enables compact variation |
+| `dateInputClassName` | `string` | No | `-` | - |
+| `dateInputStyle` | `CSSProperties` | No | `-` | - |
+| `defaultOpen` | `boolean` | No | `-` | Control the default open state of the Calendar popover. |
+| `disabled` | `boolean` | No | `false` | Disables user interaction. Toggles input interactability and opacity |
+| `disabledDateError` | `string` | No | `'Date unavailable'` | Error text to display when a disabled date is selected with the DateInput, including dates before the minDate or after the maxDate. Also used as the tooltip content shown when hovering or focusing a disabled date on the Calendar. |
+| `disabledDates` | `(Date \| [Date, Date])[]` | No | `-` | Array of disabled dates, and date tuples for date ranges. Make sure to set disabledDateError as well. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. |
+| `enableColorSurge` | `boolean` | No | `-` | Enable Color Surge motion |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the end of the inner input. Refer to diagram for location of endNode in InputStack component |
+| `height` | `((Height<string \| number> \| { base?: Height<string \| number>; phone?: Height<string \| number> \| undefined; tablet?: Height<string \| number> \| undefined; desktop?: Height<string \| number> \| undefined; }) & (string \| number)) \| undefined` | No | `-` | Height of input |
+| `helperText` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | For cases where label is not enough information to describe what the text input is for. Can also be used for showing positive/negative messages |
+| `helperTextErrorIconAccessibilityLabel` | `string` | No | `'error'` | Accessibility label for helper text error icon when variant=negative |
+| `highlightedDates` | `(Date \| [Date, Date])[]` | No | `-` | Array of highlighted dates, and date tuples for date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges. |
+| `inputBackground` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `'bg'` | Background color of the input. |
+| `invalidDateError` | `string` | No | `'Please enter a valid date'` | Error text to display when an impossible date is selected, e.g. 99/99/2000. This should always be defined for accessibility. Also displays when a date is selected that is more than 100 years before the minDate, or more than 100 years after the maxDate. |
+| `key` | `Key \| null` | No | `-` | - |
+| `label` | `string` | No | `-` | Short messageArea indicating purpose of input |
+| `labelNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to render label. Takes precedence over label. |
+| `labelVariant` | `inside \| outside` | No | `'outside'` | The variant of the label. Only used when compact is not true. |
+| `maxDate` | `Date` | No | `-` | Maximum date allowed to be selected, inclusive. Dates after the maxDate are disabled. All navigation to months after the maxDate is disabled. |
+| `minDate` | `Date` | No | `-` | Minimum date allowed to be selected, inclusive. Dates before the minDate are disabled. All navigation to months before the minDate is disabled. |
+| `nextArrowAccessibilityLabel` | `string` | No | `'Go to next month'` | Accessibility label describing the Calendar next month arrow. |
+| `onCancel` | `(() => void)` | No | `-` | Callback function fired when the user closes the Calendar popover without selecting a date. Interacting with the DateInput does not fire this callback. Will always be called before onClose. |
+| `onChange` | `(((event: ChangeEvent<HTMLInputElement>) => void) & ChangeEventHandler<HTMLInputElement>)` | No | `-` | Callback function fired when the DateInput text value changes. Prefer to use onChangeDate instead. Will always be called before onChangeDate. This prop should only be used for edge cases, such as custom error handling. |
+| `onClick` | `(MouseEventHandler<Element> & MouseEventHandler<HTMLInputElement>)` | No | `-` | Callback fired when pressed/clicked |
+| `onClose` | `(() => void)` | No | `-` | Callback function fired when the Calendar popover is closed. Will always be called after onCancel, onConfirm, and onChangeDate. |
+| `onConfirm` | `(() => void)` | No | `-` | Callback function fired when the user selects a date using the Calendar popover. Interacting with the DateInput does not fire this callback. Will always be called before onClose. |
+| `onOpen` | `(() => void)` | No | `-` | Callback function fired when the Calendar popover is opened. |
+| `placeholder` | `string` | No | `-` | Placeholder text displayed inside of the input. Will be replaced if there is a value. |
+| `previousArrowAccessibilityLabel` | `string` | No | `'Go to previous month'` | Accessibility label describing the Calendar previous month arrow. |
+| `ref` | `RefObject<HTMLDivElement> \| ((instance: HTMLDivElement \| null) => void) \| null` | No | `-` | - |
+| `required` | `boolean` | No | `-` | If required, the requiredError will be displayed if a user blurs the input, without a date selected, after having typed into it. |
+| `requiredError` | `string` | No | `'This field is required'` | Error text to display when required is true and a user blurs the input without a date selected, after having typed into it. |
+| `restoreFocusOnUnmount` | `boolean` | No | `true` | If true, the focus trap will restore focus to the previously focused element when it unmounts.  WARNING: If you disable this, you need to ensure that focus is restored properly so it doesnt end up on the body |
+| `seedDate` | `Date` | No | `-` | Date used to generate the Calendar month when there is no value for the selectedDate prop, defaults to today. |
+| `showOverlay` | `boolean` | No | `false` | Display an overlay over all content below the Popover menu |
+| `start` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the start of the inner input. Refer to diagram for location of startNode in InputStack component |
+| `style` | `CSSProperties` | No | `-` | - |
+| `suffix` | `string` | No | `-` | Adds suffix text to the end of input |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `testIDMap` | `{ start?: string; end?: string \| undefined; label?: string \| undefined; helperText?: string \| undefined; } \| undefined` | No | `-` | Add ability to test individual parts of the input |
+| `type` | `button \| reset \| submit` | No | `-` | - |
+| `variant` | `primary \| secondary \| positive \| negative \| foregroundMuted \| foreground` | No | `foregroundMuted` | Determines the sentiment of the input. Because we allow startContent and endContent to be custom ReactNode, the content placed inside these slots will not change colors according to the variant. You will have to add that yourself |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `100%` | Width of input as a percentage string. |
+
+

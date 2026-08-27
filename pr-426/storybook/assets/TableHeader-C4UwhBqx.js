@@ -1,0 +1,6 @@
+import{r as i,j as r,c as o}from"./iframe-CYDANtMt.js";import{c as l}from"./TableRow-DKEQPqcp.js";const d="cds-table-header",c="tableStickyCss-t3uyw4b",e=i.memo(({children:t,sticky:a,testID:s,...n})=>r.jsx(l,{as:"thead",className:o(d,a&&c),"data-testid":s,...n,children:t}));e.displayName="TableHeader";e.__docgenInfo={description:"",methods:[],displayName:"TableHeader",props:{testID:{required:!1,tsType:{name:"string"},description:`Used to locate this element in unit and end-to-end tests.
+Under the hood, testID translates to data-testid on Web. On Mobile, testID
+stays the same - testID`},children:{required:!1,tsType:{name:"ReactReactNode",raw:"React.ReactNode"},description:""},as:{required:!1,tsType:{name:"union",raw:"'thead' | 'tbody' | 'tfoot' | 'div'",elements:[{name:"literal",value:"'thead'"},{name:"literal",value:"'tbody'"},{name:"literal",value:"'tfoot'"},{name:"literal",value:"'div'"}]},description:`Internal only
+@default undefined`},className:{required:!1,tsType:{name:"string"},description:""},sticky:{required:!1,tsType:{name:"boolean"},description:`Use to make a header stick to the top of the table when scrolled
+This will require setting a height or maxHeight on the Table or its parent
+@default false`}}};export{e as T};

@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([["7627"],{47548:function(s){s.exports=JSON.parse('{"blogBasePath":"/cds/pr-432/docs/blog","blogTitle":"CDS Blog","authorsListPath":"/cds/pr-432/docs/blog/authors"}')}}]);

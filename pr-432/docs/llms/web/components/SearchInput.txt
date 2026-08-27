@@ -1,0 +1,117 @@
+# SearchInput
+
+A control for searching a dataset.
+
+## Import
+
+```tsx
+import { SearchInput } from '@coinbase/cds-web/controls/SearchInput'
+```
+
+## Examples
+
+### Basic usage
+
+```tsx live
+function BasicSearchInput() {
+  const [value, setValue] = useState('');
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        value={value}
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        onSearch={(searchTerm) => console.log('Searching for:', searchTerm)}
+        placeholder="Search..."
+      />
+      <Text color="foregroundMuted" font="caption">
+        Press Enter to trigger search
+      </Text>
+    </VStack>
+  );
+}
+```
+
+### Variants
+
+```tsx live
+function SearchInputVariants() {
+  const [value1, setValue1] = useState('');
+  const [value2, setValue2] = useState('');
+  const [value3, setValue3] = useState('');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        value={value1}
+        onChangeText={setValue1}
+        onClear={() => setValue1('')}
+        placeholder="Compact search..."
+        compact
+      />
+      <SearchInput
+        value={value2}
+        onChangeText={setValue2}
+        onClear={() => setValue2('')}
+        placeholder="Borderless search..."
+        bordered={false}
+      />
+      <SearchInput
+        value={value3}
+        onChangeText={setValue3}
+        onClear={() => setValue3('')}
+        placeholder="No icons..."
+        hideStartIcon
+        hideEndIcon
+      />
+    </VStack>
+  );
+}
+```
+
+### With Custom End Element
+
+```tsx live
+function CustomEndSearchInput() {
+  const [value, setValue] = useState('');
+  return (
+    <SearchInput
+      value={value}
+      onChangeText={setValue}
+      onClear={() => setValue('')}
+      placeholder="Custom end element..."
+      end={<InputIconButton name="filter" onClick={() => console.log('Filter clicked')} />}
+    />
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `onChangeText` | `(text: string) => void` | Yes | `-` | - |
+| `bordered` | `boolean` | No | `true` | Adds border to input |
+| `clearIconAccessibilityLabel` | `string` | No | `-` | Set the a11y label for the clear icon |
+| `compact` | `boolean` | No | `false` | Enables compact variation |
+| `disabled` | `boolean` | No | `false` | Toggles input interactability and opacity |
+| `enableColorSurge` | `boolean` | No | `-` | Enable Color Surge motion |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `undefined` | Set the end node |
+| `helperTextErrorIconAccessibilityLabel` | `string` | No | `'error'` | Accessibility label for helper text error icon when variant=negative |
+| `hideEndIcon` | `boolean` | No | `undefined` | hide the end icon |
+| `hideStartIcon` | `boolean` | No | `false` | hide the start icon |
+| `key` | `Key \| null` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `onClear` | `MouseEventHandler<Element>` | No | `-` | - |
+| `onSearch` | `((str: string) => void)` | No | `-` | Callback is fired when a user hits enter on the keyboard. Can obtain the query through str parameter |
+| `placeholder` | `string` | No | `-` | Placeholder text displayed inside of the input. Will be replaced if there is a value. |
+| `ref` | `((instance: HTMLInputElement \| null) => void) \| RefObject<HTMLInputElement> \| null` | No | `-` | - |
+| `startIcon` | `search \| backArrow` | No | `search` | Set the start icon. You can only set it to search \| backArrow icon. If you set this, the icon would not toggle between search and backArrow depending on the focus state |
+| `startIconAccessibilityLabel` | `string` | No | `-` | Set the a11y label for the start icon |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `testIDMap` | `{ start?: string; end?: string \| undefined; label?: string \| undefined; helperText?: string \| undefined; } \| undefined` | No | `-` | Add ability to test individual parts of the input |
+| `type` | `button \| reset \| submit` | No | `-` | - |
+| `value` | `string \| (readonly string[] & string)` | No | `-` | The **value** property of the HTMLInputElement interface represents the current value of the input element as a string.  [MDN Reference](https://developer.mozilla.org/docs/Web/API/HTMLInputElement/value) |
+| `width` | `((Width<string \| number> \| { base?: Width<string \| number>; phone?: Width<string \| number> \| undefined; tablet?: Width<string \| number> \| undefined; desktop?: Width<string \| number> \| undefined; }) & (string \| number)) \| undefined` | No | `100%` | Width of input as a percentage string. |
+
+

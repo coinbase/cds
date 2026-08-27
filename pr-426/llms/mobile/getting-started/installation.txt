@@ -1,0 +1,61 @@
+# installation
+
+This guide will help you get started with installing CDS in your React Native project. Follow the instructions below to set up CDS and start building with our cross-platform components.
+
+### Installation
+
+:::tip Starting a new project?
+Check out our [templates](/getting-started/templates) for pre-configured starter apps with CDS already set up.
+:::
+
+To install the CDS library for React Native applications, run the following command:
+
+```bash
+npm install @coinbase/cds-mobile
+```
+
+Alternatively, if you are using Yarn:
+
+```bash
+yarn add @coinbase/cds-mobile
+```
+
+:::tip
+For React Native projects, ensure you have set up your environment for React Native development. Refer to the [React Native Environment Setup Guide](https://reactnative.dev/docs/environment-setup) if needed.
+:::
+
+### Getting started
+#### 1. Render a ThemeProvider
+
+Render a ThemeProvider at the root of your application, and pass the `theme` and `activeColorScheme`.
+
+```tsx
+import { ThemeProvider } from '@coinbase/cds-mobile/system';
+import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+import App from './App';
+
+const Index = () => (
+  <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+    <App />
+  </ThemeProvider>
+);
+
+export default Index;
+```
+
+#### 2. Verify the installation
+
+Try importing and rendering a simple CDS component.
+
+```tsx
+import { Button } from '@coinbase/cds-mobile/buttons';
+
+const Test = () => <Button>Click Me</Button>;
+```
+
+### Next steps
+
+Learn how to customize CDS's appearance.
+
+[See the theming docs here &rarr;](/getting-started/theming)
+

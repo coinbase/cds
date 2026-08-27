@@ -1,0 +1,137 @@
+# DotSymbol
+
+Dots are component adornments, typically used to communicate a numerical value or indicate the status or identity of a component to the end-user.
+
+## Import
+
+```tsx
+import { DotSymbol } from '@coinbase/cds-web/dots/DotSymbol'
+```
+
+## Examples
+
+### Placements
+
+```jsx live
+function Placements() {
+  const PIN_DIRECTIONS = ['top-start', 'top-end', 'bottom-start', 'bottom-end'];
+  return (
+    <VStack gap={4}>
+      {PIN_DIRECTIONS.map((pinDirection) => (
+        <VStack gap={4} padding={1} key={`dotsymbol-placement-${pinDirection}`} paddingBottom={4}>
+          <DotSymbol size="m" pin={pinDirection} source={assets.btc.imageUrl}>
+            <VStack bordered padding={1}>
+              Child
+            </VStack>
+          </DotSymbol>
+          <DotSymbol size="m" pin={pinDirection} source={assets.btc.imageUrl}>
+            <Icon name="airdrop" shape="square" size="l" />
+          </DotSymbol>
+        </VStack>
+      ))}
+    </ResponsiveExample>
+  );
+}
+```
+
+### Sizes
+
+```jsx live
+function Sizes() {
+  const SIZES = ['xs', 's', 'm', 'l'];
+  return (
+    <VStack gap={2}>
+      {SIZES.map((size) => (
+        <VStack gap={1} key={`dotsymbol-size-${size}`}>
+          <DotSymbol source={assets.btc.imageUrl} size={size} />
+        </VStack>
+      ))}
+    </ResponsiveExample>
+  );
+}
+```
+
+### Dotting relative to shape of child
+
+You can use the overlap prop to place the dot relative to the corner of the wrapped element.
+
+```jsx live
+function DottingRelativeToShapeOfChild() {
+  return (
+    <VStack gap={2}>
+      <HStack gap={2}>
+        <DotSymbol source={assets.eth.imageUrl} overlap="circular" pin="bottom-end" size="m">
+          <Avatar src={assets.btc.imageUrl} size="xxxl" />
+        </DotSymbol>
+        <DotSymbol source={assets.eth.imageUrl} overlap="circular" pin="bottom-end" size="l">
+          <Avatar src={assets.btc.imageUrl} size="xxxl" />
+        </DotSymbol>
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+### Use DotSymbol paired with Icon
+
+```jsx live
+function UseDotSymbolPairedWithIcon() {
+  return (
+    <VStack gap={1}>
+      <DotSymbol
+        overlap="circular"
+        active
+        iconName="lightningBolt"
+        pin="bottom-end"
+        size={avatarIconSizeMap['xxxl']}
+      >
+        <Avatar source={assets.dai.imageUrl} size="xxxl" />
+      </DotSymbol>
+    </VStack>
+  );
+}
+```
+
+### Use DotSymbol paired with another Asset
+
+```jsx live
+function UseDotSymbolPairedWithAnotherAsset() {
+  return (
+    <VStack>
+      <DotSymbol
+        overlap="circular"
+        pin="bottom-end"
+        source={assets.polygon.imageUrl}
+        size={avatarDotSizeMap['xxxl']}
+      >
+        <Avatar source={assets.dai.imageUrl} size="xxxl" />
+      </DotSymbol>
+    </ResponsiveExample>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `active` | `boolean` | No | `-` | Whether the icon is active |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | The element that the dot will anchor to |
+| `className` | `string` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | The color of the icon |
+| `iconClassName` | `string` | No | `-` | - |
+| `iconName` | `key \| search \| pin \| filter \| visible \| continuous \| auto \| loop \| warning \| error \| account \| activity \| add \| addPeople \| advancedMarketSelector \| advancedTradeProduct \| affiliates \| airdrop \| airdropAlt \| airdropCoins \| airdropParachute \| alien \| allTimeHigh \| allocation \| annotation \| api \| apiPlug \| apothecary \| appSwitcher \| apple \| appleLogo \| application \| arrowDown \| arrowLeft \| arrowRight \| arrowUp \| arrowsHorizontal \| arrowsUpDown \| arrowsVertical \| artwork \| assetHubProduct \| assetManagementProduct \| astronautHelmet \| atSign \| atomScience \| autoCar \| avatar \| average \| backArrow \| ballot \| ballotbox \| bandage \| bank \| barChartSimple \| barChartWindow \| base \| baseApps \| baseFeed \| baseNotification \| baseQuickBuy \| baseSquare \| baseTransact \| baseVerification \| baseWallet \| baseball \| basketball \| beaker \| beginningArrow \| bell \| bellCheck \| bellPlus \| birthcertificate \| block \| blockchain \| blog \| book \| bookmark \| borrowProduct \| boxing \| bridging \| briefcase \| briefcaseAlt \| browser \| bug \| building \| calculator \| calendar \| calendarBlank \| calendarDates \| calendarEmpty \| calendarHeart \| calendarMoney \| calendarStar \| camera \| candlesticks \| car \| card \| caret \| caretDown \| caretLeft \| caretRight \| caretUp \| cash \| cashAustralianDollar \| cashBrazilianReal \| cashBrazillianReal \| cashCanadianDollar \| cashCoins \| cashEUR \| cashGBP \| cashIndonesianRupiah \| cashJPY \| cashPhilippinePeso \| cashPolishZloty \| cashRupee \| cashSingaporeDollar \| cashSwissFranc \| cashThaiBaht \| cashTurkishLira \| cashUSD \| cashUaeDirham \| cashVietnameseDong \| chainLink \| chartBar \| chartCandles \| chartLine \| chartPie \| chartPieCircle \| chartVolume \| chatBotAgent \| chatBubble \| chatRequests \| checkboxChecked \| checkboxEmpty \| checkmark \| chess \| circleCheckmark \| circleCross \| circulatingSupply \| city \| clipboard \| clock \| clockOutline \| close \| closeCaption \| clothing \| cloud \| cloudPartial \| cloudProduct \| cluster \| coinbase \| coinbaseCardProduct \| coinbaseOne \| coinbaseOneCard \| coinbaseOneLogo \| coinbaseRewards \| coinsCrypto \| collapse \| collectibles \| collection \| comment \| commentPlus \| commerceProduct \| compass \| complianceProduct \| compose \| computerChip \| concierge \| conciergeBell \| config \| convert \| copy \| corporation \| creatorCoin \| cricket \| cross \| crossTrade \| crypto \| cryptobasics \| crystalBall \| crystalBallInsight \| currencies \| custodyProduct \| dashboard \| dataMarketplaceProduct \| dataStack \| defi \| delegateProduct \| deposit \| derivatives \| derivativesProduct \| derivativesProductNew \| developerAPIProduct \| developerPlatformProduct \| dex \| diagonalDownArrow \| diagonalRightArrow \| diagonalUpArrow \| diamond \| diamondIncentives \| dinnerPlate \| directDeposit \| directDepositIcon \| disabledPhone \| discordLogo \| distribution \| document \| documentation \| dot \| doubleChevronRight \| downArrow \| download \| drag \| drops \| earn \| earnProduct \| earnRewards \| earthquake \| educationBook \| educationPencil \| email \| endArrow \| entertainment \| ethereum \| eventContracts \| exchangeProduct \| exclamationMark \| expand \| expandAddress \| expandAll \| externalLink \| eye \| faceScan \| faces \| factory \| faucet \| fib \| filmStrip \| fingerprint \| flame \| folder \| folderArrow \| folderOpen \| followAdd \| following \| football \| fork \| forwardArrow \| fscsProtection \| gab \| games \| gaming \| gasFees \| gasFeesAlt \| gauge \| gaugeEmpty \| gaugeHigh \| gaugeHighLow \| gaugeHighMid \| gaugeLow \| gaugeLowHigh \| gaugeLowMid \| gaugeMedium \| gavel \| gear \| generalCharacter \| ghost \| gif \| giftBox \| giftCard \| gitHubLogo \| globe \| golf \| googleLogo \| greenEnergy \| grid \| group \| hamburger \| hammer \| heart \| helpCenterProduct \| helpCenterQuestionMark \| hiddenEye \| hockey \| home \| horizontalLine \| hospital \| hospitalCross \| hurricane \| ideal \| identityCard \| image \| info \| initiator \| instagramLogo \| instantUnstakingClock \| institute \| institutionalProduct \| interest \| invisible \| invoice \| keyboard \| laptop \| leadChart \| leadCoin \| learningRewardsProduct \| light \| lightbulb \| lightning \| lightningBolt \| lineChartCrypto \| list \| location \| lock \| login \| logout \| magnifyingGlass \| marketCap \| medal \| megaphone \| menu \| metaverse \| microphone \| microphoneCordless \| microscope \| mint \| minus \| mma \| moneyCardCoin \| moon \| more \| moreVertical \| motorsport \| music \| musicArticles \| needle \| newsFeed \| newsletter \| nft \| nftBuy \| nftOffer \| nftProduct \| nftSale \| noRocket \| noWifi \| nodeProduct \| oil \| options \| orderBook \| orderHistory \| outline \| pFPS \| paperAirplane \| paperclip \| participate \| participateProduct \| passKey \| passport \| pause \| pay \| payProduct \| paymentCard \| payments \| payouts \| paypal \| pencil \| peopleGroup \| peopleStar \| percentage \| perpetualSwap \| phone \| pieChartData \| pillBottle \| pillCapsule \| plane \| planet \| play \| playbutton \| plusMinus \| podiumStar \| politicsBuilding \| politicsCandidate \| politicsFlag \| politicsGavel \| politicsPodium \| politicsStar \| powerTool \| priceAlerts \| priceAlertsCheck \| primePoduct \| privateClientProduct \| proProduct \| profile \| protection \| pulse \| pyramid \| qrCode \| qrCodeAlt \| queryTransact \| questionMark \| quotation \| rain \| ratingsCheck \| ratingsChecks \| ratingsStar \| reCenter \| rectangle \| recurring \| refresh \| regulated \| regulatedFutures \| report \| rewardsProduct \| ribbon \| robot \| rocket \| rocketShip \| rollingSpot \| rosettaProduct \| rottenTomato \| royalty \| safe \| save \| savingsBank \| scanQrCode \| scienceAtom \| scienceBeaker \| scienceMoon \| securityKey \| securityShield \| seen \| sendReceive \| setPinCode \| settings \| share \| shield \| shieldOutline \| shoe \| shoppingCart \| signinProduct \| singleCoin \| singleNote \| singlecloud \| smartContract \| snow \| soccer \| socialChat \| socialReshare \| socialShare \| sofort \| sortDoubleArrow \| sortDown \| sortDownCenter \| sortUp \| sortUpCenter \| soundOff \| soundOn \| sparkle \| speaker \| speechBubble \| stableCoin \| stablecoinStack \| staggeredList \| stake \| staking \| star \| starAward \| starBubble \| starTrophy \| statusDot \| step0 \| step1 \| step2 \| step3 \| step4 \| step5 \| step6 \| step7 \| step8 \| step9 \| strategy \| sun \| support \| tag \| taxes \| taxesReceipt \| telephone \| tennis \| test \| thermometer \| thumbsDown \| thumbsDownOutline \| thumbsUp \| thumbsUpOutline \| tokenLaunchCoin \| tokenLaunchRocket \| tokenSales \| tornado \| trading \| transactions \| trashCan \| trophy \| trophyCup \| tshirt \| tv \| tvStand \| twitterLogo \| ultility \| umbrella \| undo \| unfollowPeople \| unknown \| unlock \| upArrow \| upload \| venturesProduct \| verifiedBadge \| verifiedPools \| verticalLine \| virus \| waasProduct \| wallet \| walletLogo \| walletProduct \| webhooks \| wellness \| wifi \| wind \| wireTransfer \| withdraw \| wrapToken \| xLogo` | No | `-` | Icon name to add to the dot. |
+| `iconStyle` | `CSSProperties` | No | `-` | - |
+| `imageClassName` | `string` | No | `-` | - |
+| `imageStyle` | `CSSProperties` | No | `-` | - |
+| `overlap` | `circular` | No | `-` | Indicates what shape dot is overlapping |
+| `pin` | `top-start \| top-end \| bottom-start \| bottom-end` | No | `-` | Position of the dot |
+| `size` | `s \| l \| xs \| m` | No | `-` | Size of the dot |
+| `source` | `string` | No | `-` | Image source path |
+| `style` | `CSSProperties` | No | `-` | - |
+| `symbol` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Add an arbitrary ReactNode to the dot instead of an icon. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

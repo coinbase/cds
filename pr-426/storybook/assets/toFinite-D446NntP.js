@@ -1,0 +1,1 @@
+import{r as N}from"./toNumber-CMOupoY4.js";var i,n;function m(){if(n)return i;n=1;var o=N(),t=1/0,e=17976931348623157e292;function f(r){if(!r)return r===0?r:0;if(r=o(r),r===t||r===-t){var F=r<0?-1:1;return F*e}return r===r?r:0}return i=f,i}export{m as r};

@@ -1,0 +1,413 @@
+# ContentCard
+
+A flexible, composable card component for displaying rich content with customizable header, body, and footer sections. Use with ContentCardHeader, ContentCardBody, and ContentCardFooter sub-components.
+
+## Import
+
+```tsx
+import { ContentCard } from '@coinbase/cds-mobile/cards/ContentCard'
+```
+
+## Examples
+
+ContentCard is a flexible, composable card component built with `ContentCardHeader`, `ContentCardBody`, and `ContentCardFooter` sub-components. It can display various content layouts including text, media, and interactive elements.
+
+### Basic Examples
+
+ContentCard uses sub-components for flexible layout. Combine `ContentCardHeader`, `ContentCardBody`, and `ContentCardFooter` to create your card structure.
+
+```jsx
+function Example() {
+  return (
+    <VStack gap={2}>
+      <ContentCard>
+        <ContentCardHeader
+          thumbnail={assets.eth.imageUrl}
+          title="CoinDesk"
+          subtitle="News"
+          actions={
+            <HStack gap={0}>
+              <IconButton
+                transparent
+                accessibilityLabel="favorite"
+                name="star"
+                variant="secondary"
+              />
+              <IconButton
+                transparent
+                accessibilityLabel="More options"
+                name="more"
+                variant="secondary"
+              />
+            </HStack>
+          }
+        />
+        <ContentCardBody
+          title="Ethereum Network Shatters Records With Hashrate Climbing to 464 EH/s"
+          description="This is a description of the record-breaking hashrate milestone."
+          label={
+            <HStack alignItems="flex-end" flexWrap="wrap" gap={0.5}>
+              <Text color="fgMuted" font="label2" numberOfLines={1}>
+                $3,081.01
+              </Text>
+              <Text color="fgPositive" font="label2">
+                ↗ 6.37%
+              </Text>
+            </HStack>
+          }
+        />
+        <ContentCardFooter>
+          <RemoteImageGroup shape="circle" size={32}>
+            <RemoteImage source={{ uri: assets.eth.imageUrl }} />
+            <RemoteImage source={{ uri: assets.polygon.imageUrl }} />
+          </RemoteImageGroup>
+          <Button compact variant="secondary">
+            Share
+          </Button>
+        </ContentCardFooter>
+      </ContentCard>
+    </VStack>
+  );
+}
+```
+
+### Media Placement
+
+Use the `mediaPlacement` prop on `ContentCardBody` to control where media is positioned relative to the content.
+
+```jsx
+function Example() {
+  const exampleMedia = (
+    <RemoteImage
+      accessibilityLabel="Ethereum background"
+      source={{ uri: ethBackground }}
+      style={{ borderRadius: 24 }}
+      width="100%"
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline">mediaPlacement: top (default)</Text>
+      <ContentCard>
+        <ContentCardHeader thumbnail={assets.eth.imageUrl} title="CoinDesk" subtitle="News" />
+        <ContentCardBody
+          title="Media at top"
+          description="The media appears above the text content."
+          media={exampleMedia}
+          mediaPlacement="top"
+        />
+      </ContentCard>
+
+      <Text font="headline">mediaPlacement: bottom</Text>
+      <ContentCard>
+        <ContentCardHeader thumbnail={assets.eth.imageUrl} title="CoinDesk" subtitle="News" />
+        <ContentCardBody
+          title="Media at bottom"
+          description="The media appears below the text content."
+          media={exampleMedia}
+          mediaPlacement="bottom"
+        />
+      </ContentCard>
+
+      <Text font="headline">mediaPlacement: end</Text>
+      <ContentCard>
+        <ContentCardHeader thumbnail={assets.eth.imageUrl} title="CoinDesk" subtitle="News" />
+        <ContentCardBody
+          title="Media at end"
+          description="The media appears to the right of the text content."
+          media={exampleMedia}
+          mediaPlacement="end"
+        />
+      </ContentCard>
+
+      <Text font="headline">mediaPlacement: start</Text>
+      <ContentCard>
+        <ContentCardHeader thumbnail={assets.eth.imageUrl} title="CoinDesk" subtitle="News" />
+        <ContentCardBody
+          title="Media at start"
+          description="The media appears to the left of the text content."
+          media={exampleMedia}
+          mediaPlacement="start"
+        />
+      </ContentCard>
+    </VStack>
+  );
+}
+```
+
+### With Background
+
+Apply a background color to the card using the `background` prop. When using a background, consider using `variant="tertiary"` on buttons.
+
+```jsx
+function Example() {
+  const exampleMedia = (
+    <RemoteImage
+      accessibilityLabel="Ethereum background"
+      source={{ uri: ethBackground }}
+      style={{ borderRadius: 24 }}
+      width="100%"
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <ContentCard background="bgAlternate">
+        <ContentCardHeader thumbnail={assets.eth.imageUrl} title="CoinDesk" subtitle="News" />
+        <ContentCardBody
+          title="Card with Background"
+          description="This card has an alternate background color."
+          media={exampleMedia}
+        />
+        <ContentCardFooter>
+          <RemoteImageGroup shape="circle" size={32}>
+            <RemoteImage source={{ uri: assets.eth.imageUrl }} />
+            <RemoteImage source={{ uri: assets.polygon.imageUrl }} />
+          </RemoteImageGroup>
+          <Button compact variant="tertiary">
+            Share
+          </Button>
+        </ContentCardFooter>
+      </ContentCard>
+
+      <ContentCard background="bgAlternate">
+        <ContentCardHeader thumbnail={assets.eth.imageUrl} title="CoinDesk" subtitle="News" />
+        <ContentCardBody
+          title="No Media with Background"
+          description="This card has no media element."
+        />
+        <ContentCardFooter>
+          <HStack gap={4} justifyContent="space-between" paddingTop={0.5}>
+            <IconCounterButton accessibilityLabel="like, 99 likes" count={99} icon="heart" />
+            <IconCounterButton
+              accessibilityLabel="comment, 4200 comments"
+              count={4200}
+              icon="comment"
+            />
+            <IconCounterButton
+              accessibilityLabel="share, 32 shares"
+              count={32}
+              icon="arrowsHorizontal"
+            />
+          </HStack>
+        </ContentCardFooter>
+      </ContentCard>
+    </VStack>
+  );
+}
+```
+
+### Rewards Card Example
+
+Example showing a rewards-style content card with claim button.
+
+```jsx
+function Example() {
+  return (
+    <VStack gap={2}>
+      <ContentCard gap={3}>
+        <ContentCardBody
+          title={
+            <Text font="body" style={{ paddingTop: 4 }}>
+              Bitcoin Network Shatters Records With Hashrate Climbing to 464 EH/s
+            </Text>
+          }
+          label={
+            <HStack alignItems="flex-end" flexWrap="wrap" gap={0.5}>
+              <Text color="fgMuted" font="label2" numberOfLines={1}>
+                BTC
+              </Text>
+              <Text color="fgPositive" font="label2">
+                ↗ 5.12%
+              </Text>
+            </HStack>
+          }
+          media={
+            <RemoteImage
+              accessibilityLabel="Rewards banner"
+              source={{ uri: ethBackground }}
+              style={{ borderRadius: 24 }}
+              width="100%"
+            />
+          }
+        />
+        <ContentCardFooter>
+          <HStack alignItems="center" gap={1}>
+            <Avatar src={assets.op.imageUrl} size="xl" />
+            <VStack>
+              <Text color="fgMuted" font="legal">
+                Reward
+              </Text>
+              <Text font="headline">+$15 ACS</Text>
+            </VStack>
+          </HStack>
+          <Button compact accessibilityLabel="Claim now" variant="secondary">
+            Claim Now
+          </Button>
+        </ContentCardFooter>
+      </ContentCard>
+    </VStack>
+  );
+}
+```
+
+### Accessibility
+
+#### Interactive Cards
+
+When making ContentCard interactive, wrap it in a `Pressable` component and handle accessibility carefully to avoid nested interactive elements.
+
+**The Problem**: If you wrap ContentCard in a `Pressable` and also have interactive elements inside (like buttons), the card becomes a pressable container with nested interactive elements. This creates accessibility issues for VoiceOver users.
+
+**The Solution**: Use `accessible={false}` on the Pressable wrapper and add a separate action button inside the card. This allows:
+
+- Regular users to tap anywhere on the card
+- VoiceOver users to navigate through card content and focus on individual interactive elements
+- Switch Control users to activate the action button
+
+```jsx
+function AccessibleCard() {
+  return (
+    <Pressable
+      accessible={false}
+      background="bgAlternate"
+      borderRadius={500}
+      onPress={() => console.log('Card pressed - navigating...')}
+    >
+      <ContentCard maxWidth={375}>
+        <ContentCardHeader subtitle="News" thumbnail={ethBackground} title="CoinDesk" />
+        <ContentCardBody
+          title="Accessible Interactive Card"
+          description="Card with both card-level press and internal action button"
+        />
+        <ContentCardFooter alignItems="center">
+          <Text color="fgMuted" font="legal">
+            2 hours ago
+          </Text>
+          <Button
+            compact
+            variant="tertiary"
+            onPress={() => console.log('Button pressed - navigating...')}
+          >
+            View Details
+          </Button>
+        </ContentCardFooter>
+      </ContentCard>
+    </Pressable>
+  );
+}
+```
+
+**Key points:**
+
+- Use `accessible={false}` on the Pressable to remove it from the accessibility tree, allowing VoiceOver to focus on child elements individually
+- Add a `Button` in the footer that performs the same action as the card press for VoiceOver users
+
+:::warning Avoid Nested Interactive Elements
+When ContentCard is wrapped in an interactive Pressable, avoid placing too many interactive elements inside the card. Each interactive element should have a clear, distinct purpose. If the card has many actions, consider using a non-interactive card layout instead.
+:::
+
+#### Color Contrast
+
+When customizing card backgrounds, ensure sufficient color contrast between text and background colors. WCAG AA requires a minimum contrast ratio of 4.5:1 for normal text.
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `alignContent` | `flex-start \| flex-end \| center \| stretch \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `animated` | `boolean` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `flex \| none` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `false \| RegisteredStyle<ViewStyle> \| Value \| AnimatedInterpolation<string \| number> \| WithAnimatedObject<ViewStyle> \| WithAnimatedArray<Falsy \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<Falsy \| ViewStyle \| RegisteredStyle<ViewStyle>> \| readonly (Falsy \| ViewStyle \| RegisteredStyle<ViewStyle>)[]> \| null` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `userSelect` | `auto \| none \| text \| contain \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `zIndex` | `number` | No | `-` | - |
+
+

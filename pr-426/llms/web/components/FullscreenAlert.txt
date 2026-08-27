@@ -1,0 +1,69 @@
+# FullscreenAlert
+
+A fullscreen alert component for displaying important messages that require user attention.
+
+## Import
+
+```tsx
+import { FullscreenAlert } from '@coinbase/cds-web/overlays/alert/FullscreenAlert'
+```
+
+## Examples
+
+`FullscreenAlert` is built on top of `FullscreenModal` with an API that is similar to `Alert`.
+
+:::tip Accessibility tip (Web only)
+
+Alerts require an accessibility label, which we set to `title` by default. However, if there's other text that gives the user better context to the alert, then you can pass an element id to `accessibilityLabelledBy`. Alternatively, you may directly provide a contextual label to `accessibilityLabel`.
+
+:::
+
+### Basic example
+
+```jsx live
+function DefaultAlert() {
+  const [visible, setVisible] = useState(false);
+
+  const handleOpen = () => setVisible(true);
+  const handleClose = () => setVisible(false);
+
+  return (
+    <PortalProvider>
+      <Button onClick={handleOpen}>Open Alert</Button>
+      <FullscreenAlert
+        visible={visible}
+        onRequestClose={handleClose}
+        title="Connection trouble"
+        body="We're unable to connect to our card partner. Apologies for the inconvenience. Please try again later today or tomorrow."
+        heroSquare="errorApp500"
+        preferredActionLabel="Try again"
+        onPreferredActionPress={handleClose}
+        dismissActionLabel="Cancel"
+        onDismissActionPress={handleClose}
+        closeAccessibilityLabel="Close"
+      />
+    </PortalProvider>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `body` | `string` | Yes | `-` | Alert body/description |
+| `onRequestClose` | `() => void` | Yes | `-` | Callback function fired when modal is closed. |
+| `preferredActionLabel` | `string` | Yes | `-` | Label of the main call to action button |
+| `title` | `string` | Yes | `-` | Alert title |
+| `visible` | `boolean` | Yes | `false false` | Controls visibility of the Modal |
+| `accessibilityLabelledBy` | `string` | No | `-` | On web, maps to aria-labelledby and lists the id(s) of the element(s) that label the element on which the attribute is set. On mobile (Android only), a reference to another element nativeID used to build complex forms. |
+| `closeAccessibilityLabel` | `string` | No | `-` | Sets an accessible label for the close button. On web, maps to aria-label and defines a string value that labels an interactive element. On mobile, VoiceOver will read this string when a user selects the associated element. |
+| `disablePortal` | `boolean` | No | `-` | Disable React portal integration |
+| `dismissActionLabel` | `string` | No | `-` | Label of the dismiss button |
+| `heroSquare` | `margin \| success \| pending \| airdrop \| blockchain \| camera \| cloud \| coinbaseOneLogo \| earn \| instantUnstakingClock \| options \| refresh \| rocket \| securityShield \| smartContract \| staking \| test \| baseCreatorCoin \| borrowCoins \| coinbaseOneEarn \| ethStakingRewards \| fiat \| futures \| globalTransactions \| governance \| lightningNetworkSend \| outage \| startToday \| walletWarning \| phoneNumber \| exchange \| accessToAdvancedCharts \| accountUnderReview \| add2Fa \| addBankAccount \| addCreditCard \| addMoreCrypto \| addPhoneNumber \| advancedTrading \| advancedTradingChartsIndicatorsCandles \| advancedTradingUi \| alienDonutSystemError \| anonymous \| appTrackingTransparency \| artFrameEmptyState \| automaticPayments \| backedByUsDollar \| baseChartLarge \| baseCheck \| baseCoinCryptoLarge \| baseCoinNetworkLarge \| baseConnectLarge \| baseCreatorCoinEmpty \| baseDecentralizationLarge \| basedInUsa \| baseEmptyLarge \| baseErrorButterfly \| baseErrorLarge \| baseLoadingLarge \| baseLocationLarge \| baseMintNftLarge \| baseNetworkLarge \| baseNftLarge \| basePaycoinLarge \| basePeopleLarge \| basePiechartLarge \| baseRewardsCalmLarge \| baseSecurityLarge \| baseSendLarge \| baseSocial \| baseTargetLarge \| bigBtc \| bigError \| bigWarning \| bitcoinAndOtherCrypto \| bitcoinGlobe \| borrow \| borrowCoinsBtc \| borrowWallet \| brdGift \| bridge \| browseDecentralizedApps \| browserExtension \| buy \| buyFirstCrypto \| cardAndPhone \| cardBoosted \| cardError \| cardErrorCB1 \| cardReloadFunds \| cashExcitement \| catHoldingWalletEmptyState \| catLostSystemError \| cbada \| cbbtc \| cbdoge \| cbltc \| cbxrp \| chickenFishSystemError \| claimCryptoUsername \| cloudBacking \| coinbaseCard \| coinbaseCardIssue \| coinbaseCardLock \| coinbaseCardPocket \| coinbaseCardSpend \| coinbaseCardSpendCrypto \| coinbaseFees \| coinbaseIsDown \| coinbaseIsDownMobile \| coinbaseOneAirdrop \| coinbaseOneCardWarning \| coinbaseOneDiscountedAmount \| coinbaseOneDocWarning \| coinbaseOneInsufficientWallet \| coinbaseOnePercentOff \| coinbaseOnePhoneLightning \| coinbaseOneProtectedCrypto \| coinbaseOneRewards \| coinbaseOneSavingFunds \| coinbaseOneTokenRewards \| coinbaseOneUSDCBig \| coinbaseOneUSDCIncentives \| coinbaseOneWaitlist \| coinbaseOneWalletWarning \| coinbaseOneWelcome \| coinbaseOneZeroPortal \| coinbaseOneZeroPromotion \| coinbaseRedesigned \| coinbaseWalletToTrade \| coinCheckmark \| coinFifty \| coinsInWallet \| collectableNfts \| collectingNfts \| commerceAccounting \| commerceInvoices \| communication \| completeAQuiz \| congratulationsOnEarningCrypto \| connectPeople \| contactsListWarning \| crossBorderPayments \| cryptoAndMore \| cryptoApps \| cryptoAppsWallet \| cryptoAssets \| cryptoEconomy \| cryptoForBeginners \| cryptoPortfolio \| cryptoWallet \| currencyPairs \| dappsArts \| dappsFinance \| dappsGaming \| dappsGeneral \| dappsL2Support \| dappsMusic \| decentralization \| decentralizedWebWeb3 \| defiDecentralizedBorrowingLending \| defiDecentralizedTradingExchange \| defiEarn \| defiEnrollBoost \| defiHow \| defiRisk \| desktopAuthorized \| desktopUnknown \| developer \| diamondHands \| didDecentralizedIdentity \| digitalCollectibles \| digitalGold \| directDepositPhone \| discardAssets \| docError \| documentCertified \| documentSuccess \| downloadCoinbaseWallet \| earnCryptoCard \| earnCryptoInterest \| earnGlobe \| earnGrowth \| earnIdVerification \| earnInterest \| earnMore \| earnNuxHome \| earnSuccess \| earnToLearn \| emailNotification \| emptyCollection \| emptyStateCheckBackLater \| emptyStateNft404Page \| emptyStateNftSoldOut \| enableBiometrics \| encryptedEverything \| engagement \| ensProfilePic \| error400 \| errorApp500 \| errorMoblie \| errorRefresh \| errorRefreshWeb \| errorWeb \| errorWeb400 \| errorWeb404 \| errorWeb404Mobile \| errorWeb500 \| estimatedAmount \| ethereumToWallet \| ethStakingUpsell \| exchangeEmptyState \| exploreDecentralizedApps \| faceMatchReal \| feeScale \| fileYourCryptoTaxes \| fileYourCryptoTaxesCheck \| focusLimitOrders \| freeBtc \| futuresAndPerps \| futuresExpire \| futuresVsPerps \| gainsAndLosses \| gamer \| gasFeesNetworkFees \| generative \| getStartedInMinutes \| governanceMallet \| graphChartTrading \| hardwareWallets \| hiddenCollection \| holdCrypto \| holdingCrypto \| iceCreamMeltingSystemError \| idAngles \| idBack \| idCard \| idFront \| idIssue \| idVerificationSecure \| indexer \| innovation \| insufficientBalance \| insuranceProtection \| invest \| invite \| japanVerifyId \| keyGeneration \| layeredNetworks \| layerOne \| layerThree \| layerTwo \| ledgerAccess \| ledgerPlugin \| lend \| leverage \| lightningNetwork \| lightningNetworkInvoice \| lightningNetworkTransfer \| limitOrders \| linkingYourWalletToYourCoinbaseAccount \| liquidationBufferGreen \| liquidationBufferRed \| liquidationBufferRedClose \| liquidationBufferYellow \| lowCost \| marginWarning \| mic \| mining \| minting \| moneyDecentralized \| moreGains \| multicoinSupport \| multiPlatformMobileAppBrowserExtension \| multipleAccountsWalletsForOneUser \| multiplePortfolios \| myNameIsSatoshi \| namePortfolio \| networkWarning \| noFees \| noFeesMotion \| noLongAddresses \| notificationsAlt \| notificationsAndUpdates \| offChain \| oilAndGold \| onChain \| onTheList \| openEmail \| optInPushNotificationsEmail \| oracle \| orderBooks \| p2pGifting \| p2pPayments \| paperHands \| payUpFront \| performance \| phoneUnknown \| platform \| polling \| portfolioPerformance \| poweredByEthereum \| powerOfCrypto \| predictionsMarkets \| primeDeFi \| primeEarn \| primeStaking \| private \| privateKey \| processing \| protocol \| public \| quest \| quickAndSimple \| quickBuy \| ratingsAndReviews \| readyToTrade \| realToUSDC \| receivedCard \| receiveGift \| recommendInvest \| recurringReward \| referralsAvatars \| referralsBitcoin \| referralsCoinbaseOne \| referralsGenericCoin \| referralsWalletPhones \| remittances \| requestSent \| restrictedCountry \| retailUSDCRewards \| reviewInfo \| rotatingRewards \| routingAccount \| scalable \| secureAndTrusted \| secureGlobalTransactions \| secureStorage \| selectCorrectCrypto \| selectReward \| selfCustody \| selfCustodyCrypto \| semiCustodial \| sendCryptoFaster \| sendToUsername \| serverCatSystemError \| settlement \| shareOnSocialMedia \| sidechain \| slippageTolerance \| spacedOutSystemError \| squidEmptyState \| stablecoin \| stableValue \| stakingMissedReturns \| stakingMissedReturnsUsdc \| stayInControlSelfHostedWalletsStorage \| stopLimitOrder \| stopLimitOrderDown \| storage \| stressTestedColdStorage \| supportAndMore \| sustainable \| switchAdvancedToSimpleTrading \| taxesDetails \| tools \| tradeGeneral \| tradeHistory \| tradeImmediately \| tradingWithLeverage \| transactionLimit \| trendingHotAssets \| twoIdVerify \| unlockKey \| usdAndUsdc \| usdtToUSDC \| verifyBankTransactions \| verifyCardTransactions \| verifyEmail \| verifyIdDetails \| verifyInfo \| videoRequest \| videoReview \| videoUpload \| vipBadge \| vote \| walletAsset \| walletConfirmation \| walletFlyEmptyState \| walletLoading \| walletNotifications \| walletSecurity \| walletUi \| watchVideos \| web3ActivityError \| web3ActivitySigned \| web3MobileSetupStart \| web3MobileSetupSuccess \| webRAT \| whyNotBoth \| yourContacts` | No | `-` | Name of the illustration that is rendered in the alert |
+| `onDismissActionPress` | `(() => void)` | No | `-` | Callback function fired when the dismiss button is pressed |
+| `onPreferredActionPress` | `(() => void)` | No | `-` | Callback function fired when the main call to action button is pressed |
+| `preferredActionVariant` | `primary \| negative` | No | `primary` | Variant of the main call to action button |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

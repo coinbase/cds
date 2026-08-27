@@ -1,0 +1,279 @@
+# useOverlayContentContext
+
+A React context and hook for detecting if components are rendered inside overlay containers like modals, drawers, tours, and trays.
+
+## Import
+
+```tsx
+import { OverlayContentContext, useOverlayContentContext } from '@coinbase/cds-common/overlays/OverlayContentContext'
+```
+
+## API
+
+### Parameters
+
+The `useOverlayContentContext` hook accepts no parameters.
+
+### Returns
+
+Returns an `OverlayContentContextValue` object with overlay state information:
+
+- `isOverlay?: boolean` - True if inside any overlay component (automatically derived from other values if not explicitly set)
+- `isModal?: boolean` - True if inside a Modal component
+- `isDrawer?: boolean` - True if inside a Drawer or Tray component
+- `isTour?: boolean` - True if inside a Tour component
+
+All properties are optional and will be `undefined` when outside of overlay contexts.
+
+:::tip
+This hook is safe to use anywhere in your component tree - it does not throw an error when used outside a provider. When `isOverlay` is not explicitly provided, it will be automatically derived as `true` if any of the other overlay type flags are `true`.
+:::
+
+### OverlayContentContext
+
+The React context that provides overlay state information. Can be used directly with `React.useContext` or through the `useOverlayContentContext` hook.
+
+#### Context Value Type
+
+```typescript
+type OverlayContentContextValue = {
+  isOverlay?: boolean;
+  isModal?: boolean;
+  isDrawer?: boolean;
+  isTour?: boolean;
+};
+```
+
+### Provider Usage
+
+```tsx
+import { OverlayContentContext } from '@coinbase/cds-common/overlays/OverlayContentContext';
+
+function MyOverlayComponent() {
+  const contextValue = {
+    isModal: true,
+    isDrawer: false,
+    isTour: false,
+    // isOverlay will be automatically derived as true
+  };
+
+  return (
+    <OverlayContentContext.Provider value={contextValue}>
+      {/* Your overlay content */}
+    </OverlayContentContext.Provider>
+  );
+}
+```
+
+### Automatic Derivation
+
+If `isOverlay` is not explicitly provided in the context value, it will be automatically derived as `true` when any of `isModal`, `isDrawer`, or `isTour` is `true`. This ensures consistent behavior across the system.
+
+**Important**: When adding new overlay types to the `OverlayContentContextValue` type, remember to update the derivation logic in the `useOverlayContentContext` hook.
+
+## Examples
+
+The `useOverlayContentContext` hook provides information about whether a component is rendered inside various types of overlay containers. This is useful for conditional rendering and styling based on the overlay context.
+
+### Basic usage
+
+```tsx live
+function ExampleComponent() {
+  const { isOverlay, isModal, isDrawer, isTour } = useOverlayContentContext();
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline">Overlay Context Information</Text>
+      <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
+      <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
+      <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
+      <Text>Is inside tour: {isTour ? 'Yes' : 'No'}</Text>
+    </VStack>
+  );
+}
+```
+
+### Real Modal Example
+
+Click the button below to open a modal and see how the hook behaves inside vs outside:
+
+```tsx live
+function ModalExample() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const ExampleComponent = () => {
+    const { isOverlay, isModal, isDrawer, isTour } = useOverlayContentContext();
+
+    return (
+      <VStack gap={2}>
+        <Text font="headline">Overlay Context Information</Text>
+        <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
+        <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
+        <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
+        <Text>Is inside tour: {isTour ? 'Yes' : 'No'}</Text>
+      </VStack>
+    );
+  };
+
+  return (
+    <VStack gap={3}>
+      <VStack gap={2} padding={3} background="bgSecondary" borderRadius={400}>
+        <Text font="headline">Outside Modal</Text>
+        <ExampleComponent />
+      </VStack>
+
+      <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
+
+      <Modal visible={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
+        <ModalHeader closeAccessibilityLabel="Close" title="Modal with Context Hook" />
+        <ModalBody>
+          <VStack gap={3}>
+            <Text>
+              This content is rendered inside a modal. Notice how the context values change:
+            </Text>
+            <VStack gap={2} padding={3} background="bgAlternate" borderRadius={400}>
+              <ExampleComponent />
+            </VStack>
+            <Text color="fgMuted" font="caption">
+              The hook automatically detects it's inside a modal context!
+            </Text>
+          </VStack>
+        </ModalBody>
+      </Modal>
+    </VStack>
+  );
+}
+```
+
+### Using the Context Provider
+
+You can also use the `OverlayContentContext` directly to provide context values:
+
+```tsx live
+function ContextProviderExample() {
+  const ExampleComponent = () => {
+    const { isOverlay, isModal, isDrawer, isTour } = useOverlayContentContext();
+
+    return (
+      <VStack gap={2}>
+        <Text font="headline">Overlay Context Information</Text>
+        <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
+        <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
+        <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
+        <Text>Is inside tour: {isTour ? 'Yes' : 'No'}</Text>
+      </VStack>
+    );
+  };
+
+  const contextValue = {
+    isModal: true,
+    isDrawer: false,
+    isTour: false,
+  };
+
+  return (
+    <OverlayContentContext.Provider value={contextValue}>
+      <VStack gap={2} padding={3} background="bgSecondary" borderRadius={400}>
+        <Text font="headline">Inside Context Provider</Text>
+        <ExampleComponent />
+      </VStack>
+    </OverlayContentContext.Provider>
+  );
+}
+```
+
+### Conditional Rendering
+
+Use the hook to conditionally render content based on overlay context:
+
+```tsx live
+function ConditionalRenderingExample() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const ConditionalContent = () => {
+    const { isOverlay, isModal } = useOverlayContentContext();
+
+    return (
+      <VStack gap={2}>
+        <Text font="headline">Conditional Content</Text>
+        {isOverlay ? (
+          <VStack gap={1}>
+            <Text color="fgPositive">✓ This content shows when inside an overlay</Text>
+            {isModal && <Text color="fgPrimary">🎯 Specifically inside a modal!</Text>}
+          </VStack>
+        ) : (
+          <Text color="fgMuted">This content shows when not in an overlay</Text>
+        )}
+      </VStack>
+    );
+  };
+
+  return (
+    <VStack gap={3}>
+      <VStack gap={2} padding={3} background="bgSecondary" borderRadius={400}>
+        <Text font="headline">Outside Modal</Text>
+        <ConditionalContent />
+      </VStack>
+
+      <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
+
+      <Modal visible={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
+        <ModalHeader closeAccessibilityLabel="Close" title="Conditional Content Demo" />
+        <ModalBody>
+          <ConditionalContent />
+        </ModalBody>
+      </Modal>
+    </VStack>
+  );
+}
+```
+
+### Styling Based on Context
+
+```tsx live
+function StylingExample() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const StyledContent = () => {
+    const { isModal, isDrawer } = useOverlayContentContext();
+
+    const getBackgroundColor = () => {
+      if (isModal) return 'bgPrimaryWash';
+      if (isDrawer) return 'bgSecondaryWash';
+      return 'bgAlternate';
+    };
+
+    const getStatusText = () => {
+      if (isModal) return 'Modal styling applied! 🎉';
+      if (isDrawer) return 'Drawer styling applied!';
+      return 'Default styling';
+    };
+
+    return (
+      <VStack padding={3} background={getBackgroundColor()} borderRadius={400} gap={2}>
+        <Text font="headline">Dynamic Styling</Text>
+        <Text>{getStatusText()}</Text>
+        <Text color="fgMuted" font="caption">
+          Background color: {getBackgroundColor()}
+        </Text>
+      </VStack>
+    );
+  };
+
+  return (
+    <VStack gap={3}>
+      <StyledContent />
+
+      <Button onClick={() => setIsModalOpen(true)}>Open Modal</Button>
+
+      <Modal visible={isModalOpen} onRequestClose={() => setIsModalOpen(false)}>
+        <ModalHeader closeAccessibilityLabel="Close" title="Dynamic Styling Demo" />
+        <ModalBody>
+          <StyledContent />
+        </ModalBody>
+      </Modal>
+    </VStack>
+  );
+}
+```
+

@@ -1,0 +1,1 @@
+import{r as e}from"./iframe-CYDANtMt.js";import{M as r,u as n,l as i}from"./motion-minimal-B1h7XI-_.js";function x({children:a,isValidProp:o,...t}){o&&i(o),t={...e.useContext(r),...t},t.isStatic=n(()=>t.isStatic);const s=e.useMemo(()=>t,[JSON.stringify(t.transition),t.transformPagePoint,t.reducedMotion]);return e.createElement(r.Provider,{value:s},a)}export{x as M};

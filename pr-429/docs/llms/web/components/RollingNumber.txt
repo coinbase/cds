@@ -1,0 +1,1407 @@
+# RollingNumber
+
+A numeric display that animates value changes with rolling digits.
+
+## Import
+
+```tsx
+import { RollingNumber } from '@coinbase/cds-web/numbers/RollingNumber'
+```
+
+## Examples
+
+### Basic Example
+
+RollingNumber displays changing numeric values with a smooth per-digit roll animation and optional color pulse. It supports full `Intl.NumberFormat` options, custom typography, ReactNode prefixes/suffixes, and accessibility.
+
+Pass a number in the `value` prop. Use the `format` prop for Intl formatting (currency, percent, grouping, compact) instead of pre-formatting the string yourself.
+
+```tsx live
+function Example() {
+  const values = [12345.67, 123340.011, 1220340.0123];
+  const [valIdx, setValIdx] = useState(0);
+
+  return (
+    <VStack gap={3}>
+      <RollingNumber value={values[valIdx]} font="display3" />
+      <Button
+        onClick={() => {
+          setValIdx((prev) => (prev + 1) % values.length);
+        }}
+        alignSelf="flex-start"
+      >
+        Next
+      </Button>
+    </VStack>
+  );
+}
+```
+
+### Example Use Case
+
+```tsx live
+function Examples() {
+  const [price, setPrice] = useState<number>(12345.67);
+  const [difference, setDifference] = useState<number>(0);
+  const onNext = () =>
+    setPrice((p) => {
+      const delta = (Math.random() - 0.5) * 200; // +/- 100
+      const next = Math.max(0, p + delta);
+      const newPrice = Math.round(next * 100) / 100;
+      setDifference(newPrice - p);
+      return newPrice;
+    });
+
+  const trendColor = difference >= 0 ? 'fgPositive' : 'fgNegative';
+
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Portfolio Balance</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <HStack alignItems="center">
+        <RollingNumber
+          accessibilityLabelPrefix={difference > 0 ? 'up ' : difference < 0 ? 'down ' : ''}
+          color={trendColor}
+          font="body"
+          format={{
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }}
+          prefix={
+            difference >= 0 ? (
+              <Icon color={trendColor} name="diagonalUpArrow" size="xs" />
+            ) : (
+              <Icon color={trendColor} name="diagonalDownArrow" size="xs" />
+            )
+          }
+          styles={{
+            prefix: {
+              paddingRight: 'var(--space-1)',
+            },
+          }}
+          suffix={`(${((Math.abs(difference) / price) * 100).toFixed(2)}%)`}
+          value={Math.abs(difference)}
+        />
+      </HStack>
+      <Text font="label1">BTC Conversion</Text>
+      <HStack alignItems="center" gap={1}>
+        <Icon color="fgPrimary" name="arrowsVertical" size="xs" testID="swap-icon" />
+        <RollingNumber
+          color="fgPrimary"
+          fontFamily="body"
+          fontSize="body"
+          fontWeight="body"
+          format={{ minimumFractionDigits: 8, maximumFractionDigits: 8 }}
+          value={price / 150_000}
+        />
+      </HStack>
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
+    </VStack>
+  );
+}
+```
+
+### Formatting
+
+Use `format` prop for currency, percent, grouping, and compact notation formatting. The `format` prop takes in `Intl.NumberFormat` [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options).
+
+```tsx live
+function Example() {
+  const [value, setValue] = React.useState(92345.67);
+  const onNext = () => setValue((v) => v * 13.5);
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Compact number with currency sign
+      </Text>
+      <h1>
+        <RollingNumber
+          font="display1"
+          format={{
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+            notation: 'compact',
+          }}
+          value={value}
+        />
+      </h1>
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
+      <Text as="p" display="block" font="label1">
+        Number without grouping
+      </Text>
+      <RollingNumber
+        font="display1"
+        format={{
+          useGrouping: false,
+        }}
+        value={92345.67}
+      />
+    </VStack>
+  );
+}
+```
+
+### Typography
+
+RollingNumber forwards all Text props, but only character-level typographic props (e.g., `font`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `tabularNumbers`, `color`) are meaningful for its per-digit rendering. Layout/container props may have no effect—use them judiciously.
+
+```tsx live
+function Example() {
+  const [price, setPrice] = React.useState(9876.54);
+  const onNext = () =>
+    setPrice((p) => Math.max(0, Math.round((p + (Math.random() - 0.5) * 100) * 100) / 100));
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Font sizes, weights, and line heights
+      </Text>
+      <RollingNumber
+        fontSize="display3"
+        fontWeight="title3"
+        value={price}
+        format={{ style: 'currency', currency: 'USD' }}
+      />
+      <RollingNumber
+        fontSize="title3"
+        fontWeight="headline"
+        value={price}
+        format={{ style: 'currency', currency: 'USD' }}
+      />
+      <RollingNumber
+        fontSize="body"
+        fontWeight="body"
+        lineHeight="display3"
+        value={price}
+        format={{ style: 'currency', currency: 'USD' }}
+      />
+      <Text as="p" display="block" font="label1">
+        Responsive font (phone, tablet, desktop)
+      </Text>
+      <RollingNumber
+        font={{ phone: 'body', tablet: 'title3', desktop: 'display3' }}
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <Text as="p" display="block" font="label1">
+        Tabular numbers vs non-tabular
+      </Text>
+      <RollingNumber
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <RollingNumber
+        tabularNumbers={false}
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
+    </VStack>
+  );
+}
+```
+
+::::tip Alignment
+Keep `tabularNumbers` enabled (default) to avoid horizontal width shifting as digits change.
+::::
+
+### Color and Transition
+
+Customize color and motion. Configure `y` to control the digit roll, and `color` for the pulse.
+
+##### `transition` prop
+
+- Type: `{ y?: Transition; color?: Transition }` (framer-motion `Transition`)
+- Optional `type`: `'tween' | 'spring' | 'inertia'`; defaults to `'tween'` if not provided
+- Default: `{ y: { duration: durations.moderate3 / 1000, ease: curves.global }, color: { duration: durations.slow4 / 1000, ease: curves.global } }`
+
+```tsx live
+function Example() {
+  const [price, setPrice] = React.useState(555.55);
+  const onNext = () =>
+    setPrice((p) => Math.max(0, Math.round((p + (Math.random() - 0.5) * 50) * 100) / 100));
+
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Color pulse and custom transition
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        transition={{
+          color: { duration: 0.3, ease: 'easeInOut' },
+          opacity: { duration: 0.3, ease: 'easeInOut' },
+          y: { duration: 0.3, ease: 'easeIn' },
+        }}
+        value={price}
+      />
+
+      <RollingNumber
+        colorPulseOnUpdate
+        color="accentBoldBlue"
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        transition={{
+          color: { duration: 1.2, ease: 'easeInOut' },
+          opacity: { duration: 1.2, ease: 'easeInOut' },
+          y: { duration: 1.2, ease: 'easeIn' },
+        }}
+        value={price}
+      />
+
+      <Text as="p" display="block" font="label1">
+        Customize positive and negative change colors
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        negativePulseColor="bgWarning"
+        positivePulseColor="fgPrimary"
+        value={price}
+      />
+
+      <Text as="p" display="block" font="label1">
+        Fast digits, slow color
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        transition={{
+          color: { duration: 1.2, ease: 'easeInOut' },
+          opacity: { duration: 0.1, ease: 'easeInOut' },
+          y: { duration: 0.1, ease: 'easeIn' },
+        }}
+        value={price}
+      />
+
+      <Text as="p" display="block" font="label1">
+        Springy digits
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        transition={{
+          opacity: { duration: 2, ease: 'easeInOut' },
+          y: {
+            type: 'spring',
+            stiffness: 1000,
+            damping: 24,
+            mass: 3,
+          },
+        }}
+        value={price}
+      />
+
+      <Text as="p" display="block" font="label1">
+        Custom easings
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        transition={{
+          color: { duration: 0.5, ease: 'easeInOut' },
+          opacity: { duration: 0.5, ease: 'easeInOut' },
+          y: { duration: 0.25, ease: 'easeOut' },
+        }}
+        value={price}
+      />
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
+    </VStack>
+  );
+}
+```
+
+### Digit Transition Variants
+
+RollingNumber supports two digit transition styles via the `digitTransitionVariant` prop:
+
+- **`'every'`** (default): Rolls through every intermediate digit (e.g., 1→2→3→...→9).
+- **`'single'`**: Rolls directly to the new digit without showing intermediates. Direction (up/down) is based on the total value change.
+
+```tsx live
+function Example() {
+  const [price, setPrice] = React.useState(12345.67);
+  const [variant, setVariant] = React.useState<'every' | 'single'>('single');
+
+  const onIncrease = () => setPrice((p) => Math.round((p + Math.random() * 500 + 100) * 100) / 100);
+  const onDecrease = () =>
+    setPrice((p) => Math.max(0, Math.round((p - Math.random() * 500 - 100) * 100) / 100));
+  const onRandom = () =>
+    setPrice((p) => {
+      const delta = (Math.random() - 0.5) * 1000;
+      return Math.max(0, Math.round((p + delta) * 100) / 100);
+    });
+
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Digit transition variant: <strong>{variant}</strong>
+      </Text>
+      <RollingNumber
+        digitTransitionVariant={variant}
+        font="display1"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <HStack gap={2}>
+        <Button onClick={onIncrease}>Increase</Button>
+        <Button onClick={onDecrease}>Decrease</Button>
+        <Button onClick={onRandom}>Random</Button>
+      </HStack>
+      <HStack gap={2}>
+        <Button
+          variant={variant === 'every' ? 'primary' : 'secondary'}
+          onClick={() => setVariant('every')}
+        >
+          Every
+        </Button>
+        <Button
+          variant={variant === 'single' ? 'primary' : 'secondary'}
+          onClick={() => setVariant('single')}
+        >
+          Single
+        </Button>
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+#### Variant comparison
+
+```tsx live
+function Example() {
+  const [price, setPrice] = React.useState(98765.43);
+
+  const onNext = () =>
+    setPrice((p) => {
+      const delta = (Math.random() - 0.5) * 2000;
+      return Math.max(0, Math.round((p + delta) * 100) / 100);
+    });
+
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Every variant (default)
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="every"
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <Text as="p" display="block" font="label1">
+        Single variant
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="single"
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Random Change
+      </Button>
+    </VStack>
+  );
+}
+```
+
+::::tip Direction-aware animation
+The single variant determines scroll direction based on the **total value change**, not individual digit changes. When the value increases, digits roll up (new digits enter from below). When the value decreases, digits roll down (new digits enter from above). This matches the behavior of the color pulse feature.
+::::
+
+### Prefix and Suffix
+
+Attach text or React nodes before/after the number to create rich compositions. If the prefix/suffix is a string, it will pulse color together with the main number.
+
+```tsx live
+function Example() {
+  const values = [98345.67, 91345.67, 123450.123, 1234512.88];
+  const textPrefixes = ['+', '-', ''];
+  const textSuffixes = [' BTC', ' ETH', ''];
+  const iconPrefixes = [
+    <Icon key="arrowUp" name="arrowUp" size="l" />,
+    <Icon key="arrowDown" name="arrowDown" size="l" />,
+    null,
+  ];
+  const iconSuffixes = [
+    <Icon key="arrowDown" name="arrowDown" size="l" />,
+    <Icon key="arrowUp" name="arrowUp" size="l" />,
+    null,
+  ];
+  const [idx, setIdx] = React.useState(0);
+  const onNext = () => setIdx((i) => (i + 1) % values.length);
+  const value = values[idx];
+  const format = {
+    style: 'currency' as const,
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 5,
+  };
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Simple text prefix and suffix
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display1"
+        format={format}
+        prefix={textPrefixes[idx]}
+        suffix={textSuffixes[idx]}
+        value={value}
+      />
+
+      <Text as="p" display="block" font="label1">
+        ReactNode prefix and suffix
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display1"
+        format={format}
+        prefix={iconPrefixes[idx]}
+        suffix={iconSuffixes[idx]}
+        value={value}
+      />
+
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
+    </VStack>
+  );
+}
+```
+
+```tsx live
+function SubscriptionPriceExample() {
+  const [yearly, setYearly] = React.useState(false);
+  const price = yearly ? 199 : 19;
+  const suffix = yearly ? '/yr' : '/mo';
+  return (
+    <VStack gap={1}>
+      <RollingNumber
+        colorPulseOnUpdate
+        accessibilityLabel={`$${price} ${suffix === '/yr' ? 'yearly' : 'monthly'}`}
+        font="display1"
+        format={{
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 0,
+        }}
+        styles={{
+          suffix: {
+            position: 'relative',
+            top: 'var(--space-1_5)',
+            color: 'var(--color-fgMuted)',
+            fontSize: 'var(--fontSize-title1)',
+          },
+        }}
+        suffix={suffix}
+        transition={{
+          y: { type: 'spring', stiffness: 80, damping: 24, mass: 3 },
+        }}
+        value={price}
+      />
+      <Button alignSelf="flex-start" onClick={() => setYearly((v) => !v)}>
+        {yearly ? 'Switch to monthly' : 'Switch to yearly'}
+      </Button>
+    </VStack>
+  );
+}
+```
+
+::::tip Accessibility
+When using React nodes for `prefix`/`suffix`, provide an `accessibilityLabel` or use `accessibilityLabelPrefix`/`accessibilityLabelSuffix` so screen readers announce a descriptive string.
+::::
+
+### Style Overrides
+
+Customize the look of each logical section (`i18nPrefix`, `integer`, `fraction`, `i18nSuffix`, `prefix`, `suffix`).
+
+```tsx live
+function Example() {
+  const [price, setPrice] = React.useState(12345.67);
+  const onNext = () => {
+    setPrice((p) => Math.max(0, Math.round((p + (Math.random() - 0.5) * 200) * 100) / 100));
+  };
+  return (
+    <VStack gap={2}>
+      <Text as="p" display="block" font="label1">
+        Customize per-section styles
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display1"
+        format={{
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2,
+          notation: 'compact',
+        }}
+        prefix="-"
+        styles={{
+          root: {
+            border: '1px dashed var(--color-bgLine)',
+            padding: '4px 8px',
+            borderRadius: 8,
+            background: 'var(--color-bgSecondaryWash)',
+          },
+          i18nPrefix: { color: 'var(--color-accentBoldBlue)' },
+          prefix: { color: 'var(--color-accentBoldPurple)' },
+          integer: { letterSpacing: '-1px' },
+          fraction: { opacity: 0.2, letterSpacing: '10px' },
+          i18nSuffix: { color: 'var(--color-fgMuted)' },
+          suffix: { color: 'var(--color-accentBoldYellow)', marginLeft: 10 },
+        }}
+        suffix="BTC"
+        value={price}
+      />
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
+    </VStack>
+  );
+}
+```
+
+### Subscript Notation for Tiny Decimals
+
+Enable `enableSubscriptNotation` to compactly represent leading zeros in the fractional part.
+
+```tsx live
+function Example() {
+  const values = [0.0000000001, 0.00009, 0.000012, 0.0000001, 0.000000000000000000000011];
+  const [idx, setIdx] = React.useState(0);
+  const value = values[idx];
+  const format = { minimumFractionDigits: 2, maximumFractionDigits: 25 };
+  return (
+    <VStack gap={1}>
+      <Text as="p" display="block" font="label1">
+        Subscript examples
+      </Text>
+      <Text as="span" display="block" font="label2">
+        Default:
+      </Text>
+      <RollingNumber font="display3" format={format} value={value} />
+      <Text as="span" display="block" font="label2">
+        With subscript:
+      </Text>
+      {(['display1', 'title3', 'body'] as const).map((fontKey) => (
+        <RollingNumber
+          key={fontKey}
+          enableSubscriptNotation
+          font={fontKey}
+          format={format}
+          value={value}
+        />
+      ))}
+      <Button alignSelf="flex-start" onClick={() => setIdx((i) => (i + 1) % values.length)}>
+        Next
+      </Button>
+    </VStack>
+  );
+}
+```
+
+### User-Provided Formatted Value
+
+You can also provide `formattedValue`, and the component will render `formattedValue` directly instead of using the internal formatter. The numeric `value` is still required to drive animations and color pulse.
+
+```tsx live
+function Example() {
+  const btcPrices = [
+    { value: 98765.43, formattedValue: '¥98,765.43 BTC' },
+    { value: 931.42, formattedValue: '$931.42 BTC' },
+    { value: 100890.56, formattedValue: '¥100,890.56 BTC' },
+    { value: 149432.12, formattedValue: '¥149,432.12 BTC' },
+    { value: 150321.23, formattedValue: '¥150,321.23 BTC' },
+  ];
+  const subscripts = [
+    { value: 0.0000000001, formattedValue: '€0,0₉1', accessibilityLabel: '€0.0000000001' },
+    { value: 0.00009, formattedValue: '€0,0₄9', accessibilityLabel: '€0.00009' },
+    { value: 0.000012, formattedValue: '€0,0₄12', accessibilityLabel: '€0.000012' },
+    { value: 0.0000001, formattedValue: '€0,0₆1', accessibilityLabel: '€0.0000001' },
+    {
+      value: 0.000000000000000000000011,
+      formattedValue: '€0,0₂₂11',
+      accessibilityLabel: '€0.000000000000000000000011',
+    },
+  ];
+  const [idx, setIdx] = React.useState(0);
+  const onNext = () => setIdx((i) => (i + 1) % 5);
+  return (
+    <VStack gap={1}>
+      <Text as="p" display="block" font="label1">
+        User-provided formatted value
+      </Text>
+      <Text as="p" display="block" font="label2">
+        BTC prices
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display3"
+        formattedValue={btcPrices[idx].formattedValue}
+        prefix={<Icon name="crypto" size="l" />}
+        value={btcPrices[idx].value}
+      />
+      <Text as="p" display="block" font="label2">
+        Subscripts with a comma as the decimal separator
+      </Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        accessibilityLabel={subscripts[idx].accessibilityLabel}
+        font="display3"
+        formattedValue={subscripts[idx].formattedValue}
+        value={subscripts[idx].value}
+      />
+      <Button alignSelf="flex-start" onClick={onNext}>
+        Next
+      </Button>
+    </VStack>
+  );
+}
+```
+
+::::tip Accessibility and formattedValue
+When you provide `formattedValue`, the `accessibilityLabel` will default to your `formattedValue`. However, what’s rendered on screen is not always ideal for accessibility. For example, the subscript notation '0₉' may be announced as '09'. Provide your own `accessibilityLabel` as needed.
+::::
+
+### Patterns & Recipes
+
+Practical demos combining formatting, animation, and interactivity.
+
+#### Counter
+
+```tsx live
+function CounterExample() {
+  const [count, setCount] = React.useState(0);
+  return (
+    <VStack gap={1}>
+      <HStack alignItems="center" gap={2}>
+        <IconButton name="minus" onClick={() => setCount((c) => Math.max(0, c - 1))} />
+        <RollingNumber
+          colorPulseOnUpdate
+          font="display1"
+          format={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
+          value={count}
+        />
+        <IconButton name="add" onClick={() => setCount((c) => c + 1)} />
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+#### Countdown
+
+```tsx live
+function CountDownExample() {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const totalSeconds = 5 * 60;
+  const [seconds, setSeconds] = React.useState(totalSeconds);
+  const [running, setRunning] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => {
+      setSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(id);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [running]);
+
+  const minutes = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  const formatted = `${pad(minutes)}:${pad(secs)}`;
+
+  const onReset = () => setSeconds(totalSeconds);
+  const progress = Math.max(0, Math.min(1, (totalSeconds - seconds) / totalSeconds));
+
+  return (
+    <VStack gap={1}>
+      <RollingNumber font="display3" formattedValue={formatted} value={seconds} ariaLive="off" />
+      <HStack gap={2}>
+        <Button onClick={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Start'}</Button>
+        <Button onClick={onReset}>Reset</Button>
+      </HStack>
+
+      <Text font="label1">Countdown with percent</Text>
+      <VStack gap={1}>
+        <ProgressBar progress={progress} />
+        <RollingNumber
+          font="body"
+          format={{ style: 'percent', maximumFractionDigits: 0 }}
+          prefix="Elapsed: "
+          value={progress}
+          ariaLive="off"
+        />
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+#### Live Auction
+
+```tsx live
+function LiveBiddingExample() {
+  const [currentBid, setCurrentBid] = useState(45000);
+  const [bidCount, setBidCount] = useState(23);
+  const [timeLeft, setTimeLeft] = useState(180);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((t) => Math.max(0, t - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const placeBid = (increment: number) => {
+    setCurrentBid((b) => b + increment);
+    setBidCount((c) => c + 1);
+  };
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+
+  return (
+    <VStack gap={2}>
+      <VStack gap={1}>
+        <Text color="fgMuted" font="caption">
+          Current Bid
+        </Text>
+        <RollingNumber
+          colorPulseOnUpdate
+          font="display2"
+          format={{ style: 'currency', currency: 'USD', minimumFractionDigits: 0 }}
+          positivePulseColor="accentBoldRed"
+          transition={{
+            y: { type: 'spring', stiffness: 200, damping: 20 },
+          }}
+          value={currentBid}
+        />
+        <HStack gap={1}>
+          <RollingNumber font="body" format={{ minimumFractionDigits: 0 }} value={bidCount} />
+          <Text font="body">bids placed</Text>
+          <Text color="fgMuted" font="body">
+            •
+          </Text>
+          <RollingNumber
+            color={timeLeft < 30 ? 'fgNegative' : 'fg'}
+            font="body"
+            formattedValue={`${minutes}:${String(seconds).padStart(2, '0')}`}
+            value={timeLeft}
+            ariaLive="off"
+          />
+          <Text font="body">remaining</Text>
+        </HStack>
+      </VStack>
+      <HStack gap={1}>
+        <Button onClick={() => placeBid(100)}>+$100</Button>
+        <Button onClick={() => placeBid(500)}>+$500</Button>
+        <Button onClick={() => placeBid(1000)}>+$1000</Button>
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+#### Social Media Statistics
+
+```tsx live
+function StatisticsExample() {
+  const [views, setViews] = useState(1234567);
+  const [likes, setLikes] = useState(89432);
+  const [shares, setShares] = useState(12789);
+  const [downloads, setDownloads] = useState(567890);
+
+  const simulateActivity = () => {
+    setViews((v) => v + Math.floor(Math.random() * 1000));
+    setLikes((l) => l + Math.floor(Math.random() * 200));
+    setShares((s) => s + Math.floor(Math.random() * 100));
+    setDownloads((d) => d + Math.floor(Math.random() * 500));
+  };
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={4}>
+        <VStack alignItems="center" gap={0.5}>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+            positivePulseColor="accentBoldBlue"
+            value={views}
+          />
+          <Text color="fgMuted" font="caption">
+            Views
+          </Text>
+        </VStack>
+        <VStack alignItems="center" gap={0.5}>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+            positivePulseColor="accentBoldRed"
+            prefix={<Icon color="accentBoldRed" name="heart" />}
+            styles={{ prefix: { paddingRight: 'var(--space-0_5)' } }}
+            value={likes}
+          />
+          <Text color="fgMuted" font="caption">
+            Likes
+          </Text>
+        </VStack>
+        <VStack alignItems="center" gap={0.5}>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+            positivePulseColor="accentBoldGreen"
+            value={shares}
+          />
+          <Text color="fgMuted" font="caption">
+            Shares
+          </Text>
+        </VStack>
+        <VStack alignItems="center" gap={0.5}>
+          <RollingNumber
+            colorPulseOnUpdate
+            font="title1"
+            format={{ notation: 'compact', maximumFractionDigits: 1, minimumFractionDigits: 1 }}
+            positivePulseColor="accentBoldPurple"
+            value={downloads}
+          />
+          <Text color="fgMuted" font="caption">
+            Downloads
+          </Text>
+        </VStack>
+      </HStack>
+      <Button alignSelf="flex-start" onClick={simulateActivity}>
+        Simulate Activity
+      </Button>
+    </VStack>
+  );
+}
+```
+
+### Anatomy & Customization
+
+RollingNumber is composed of small, swappable subcomponents and exposes granular className/style hooks for each section of the number. Use these to customize structure and styling or to plug in your own components.
+
+#### Subcomponents
+
+- **RollingNumberMaskComponent**: Component used to mask the animated digit content.
+- **RollingNumberAffixSectionComponent**: Component used to render ReactNode `prefix` / `suffix` props.
+- **RollingNumberValueSectionComponent**: Component used to render the four `Intl.NumberFormat` sections (`i18nPrefix`, `integer`, `fraction`, `i18nSuffix`).
+- **RollingNumberDigitComponent**: Component used to render the per-digit roll animation.
+- **RollingNumberSymbolComponent**: Component used to render non-digit symbols (group separators, decimal, literals, etc.).
+
+You can replace any of these with your own components via props:
+
+```tsx
+<RollingNumber
+  RollingNumberMaskComponent={MyMask}
+  RollingNumberAffixSectionComponent={MyAffixSection}
+  RollingNumberValueSectionComponent={MyValueSection}
+  RollingNumberDigitComponent={MyDigit}
+  RollingNumberSymbolComponent={MySymbol}
+  value={1234.56}
+  format={{ style: 'currency', currency: 'USD' }}
+/>
+```
+
+#### Class name overrides
+
+Use `classNames` to target specific parts for CSS styling (Linaria or your own classes):
+
+- **root**: Outer container (`Text` root)
+- **visibleContent**: Motion-wrapped span containing the visible number (color animation lives here)
+- **formattedValueSection**: Container around the four i18n sections
+- **i18nPrefix**: Section generated by `Intl.NumberFormat` before the number
+- **integer**: Integer part of the number
+- **fraction**: Fractional part of the number
+- **i18nSuffix**: Section generated by `Intl.NumberFormat` after the number
+- **prefix**: Wrapper around your `prefix` prop
+- **suffix**: Wrapper around your `suffix` prop
+- **text**: `Text` element used for digits, separators, prefix, and suffix
+
+#### Style overrides
+
+Use `styles` to inline style specific parts:
+
+- **root**, **visibleContent**, **formattedValueSection**, **i18nPrefix**, **integer**, **fraction**, **i18nSuffix**, **prefix**, **suffix**, **text**
+
+`styles.text` applies to the shared `Text` component that renders digits, symbols, prefix, and suffix.
+
+#### Structure diagrams
+
+High-level anatomy of RollingNumber and its sections:
+
+```text
+RollingNumber (root: Text)
+  ├── screenReaderOnly <span aria-live>  (hidden a11y text)
+  └── <m.span> (visibleContent)
+       ├── AffixSection (prefix)               ← your ReactNode prefix
+       ├── HStack (formattedValueSection)
+       │    ├── ValueSection (i18nPrefix)
+       │    ├── ValueSection (integer)
+       │    ├── ValueSection (fraction)
+       │    └── ValueSection (i18nSuffix)
+       └── AffixSection (suffix)               ← your ReactNode suffix
+```
+
+Per-digit rendering inside a ValueSection:
+
+```text
+ValueSection
+  ├── Symbol(s)     (e.g., currency, group, decimal)
+  └── Digit(s)
+       └── Mask
+            └── DigitContainer (animated)
+                 ├── non-active digits above (positioned)
+                 ├── active digit (centered)
+                 └── non-active digits below (positioned)
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `value` | `number` | Yes | `-` | Number to display. |
+| `RollingNumberAffixSectionComponent` | `RollingNumberAffixSectionComponent` | No | `-` | Component used to render prefix and suffix sections. |
+| `RollingNumberDigitComponent` | `RollingNumberDigitComponent` | No | `-` | Component used to render individual digits. |
+| `RollingNumberMaskComponent` | `RollingNumberMaskComponent` | No | `-` | Component used to render the mask container. |
+| `RollingNumberSymbolComponent` | `RollingNumberSymbolComponent` | No | `-` | Component used to render separators and other symbols. |
+| `RollingNumberValueSectionComponent` | `RollingNumberValueSectionComponent` | No | `-` | Component used to render the numeric sections. |
+| `about` | `string \| undefined` | No | `-` | - |
+| `accessKey` | `string \| undefined` | No | `-` | - |
+| `accessibilityLabelPrefix` | `string` | No | `-` | Accessibility label prefix announced before the value. |
+| `accessibilityLabelSuffix` | `string` | No | `-` | Accessibility label suffix announced after the value. |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `aria-activedescendant` | `string \| undefined` | No | `-` | Identifies the currently active element when DOM focus is on a composite widget, textbox, group, or application. |
+| `aria-atomic` | `Booleanish \| undefined` | No | `-` | Indicates whether assistive technologies will present all, or only parts of, the changed region based on the change notifications defined by the aria-relevant attribute. |
+| `aria-autocomplete` | `none \| inline \| list \| both \| undefined` | No | `-` | Indicates whether inputting text could trigger display of one or more predictions of the users intended value for an input and specifies how predictions would be presented if they are made. |
+| `aria-braillelabel` | `string \| undefined` | No | `-` | Defines a string value that labels the current element, which is intended to be converted into Braille. |
+| `aria-brailleroledescription` | `string \| undefined` | No | `-` | Defines a human-readable, author-localized abbreviated description for the role of an element, which is intended to be converted into Braille. |
+| `aria-busy` | `Booleanish \| undefined` | No | `-` | - |
+| `aria-checked` | `boolean \| true \| false \| mixed \| undefined` | No | `-` | Indicates the current checked state of checkboxes, radio buttons, and other widgets. |
+| `aria-colcount` | `number \| undefined` | No | `-` | Defines the total number of columns in a table, grid, or treegrid. |
+| `aria-colindex` | `number \| undefined` | No | `-` | Defines an elements column index or position with respect to the total number of columns within a table, grid, or treegrid. |
+| `aria-colindextext` | `string \| undefined` | No | `-` | Defines a human readable text alternative of aria-colindex. |
+| `aria-colspan` | `number \| undefined` | No | `-` | Defines the number of columns spanned by a cell or gridcell within a table, grid, or treegrid. |
+| `aria-controls` | `string \| undefined` | No | `-` | Identifies the element (or elements) whose contents or presence are controlled by the current element. |
+| `aria-current` | `boolean \| time \| location \| true \| false \| page \| step \| date \| undefined` | No | `-` | Indicates the element that represents the current item within a container or set of related elements. |
+| `aria-describedby` | `string \| undefined` | No | `-` | Identifies the element (or elements) that describes the object. |
+| `aria-description` | `string \| undefined` | No | `-` | Defines a string value that describes or annotates the current element. |
+| `aria-details` | `string \| undefined` | No | `-` | Identifies the element that provides a detailed, extended description for the object. |
+| `aria-disabled` | `Booleanish \| undefined` | No | `-` | Indicates that the element is perceivable but disabled, so it is not editable or otherwise operable. |
+| `aria-dropeffect` | `link \| none \| copy \| execute \| move \| popup \| undefined` | No | `-` | Indicates what functions can be performed when a dragged object is released on the drop target. |
+| `aria-errormessage` | `string \| undefined` | No | `-` | Identifies the element that provides an error message for the object. |
+| `aria-expanded` | `Booleanish \| undefined` | No | `-` | Indicates whether the element, or another grouping element it controls, is currently expanded or collapsed. |
+| `aria-flowto` | `string \| undefined` | No | `-` | Identifies the next element (or elements) in an alternate reading order of content which, at the users discretion, allows assistive technology to override the general default of reading in document source order. |
+| `aria-grabbed` | `Booleanish \| undefined` | No | `-` | Indicates an elements grabbed state in a drag-and-drop operation. |
+| `aria-haspopup` | `boolean \| grid \| dialog \| menu \| true \| false \| listbox \| tree \| undefined` | No | `-` | Indicates the availability and type of interactive popup element, such as menu or dialog, that can be triggered by an element. |
+| `aria-hidden` | `Booleanish \| undefined` | No | `-` | Indicates whether the element is exposed to an accessibility API. |
+| `aria-invalid` | `boolean \| true \| false \| grammar \| spelling \| undefined` | No | `-` | Indicates the entered value does not conform to the format expected by the application. |
+| `aria-keyshortcuts` | `string \| undefined` | No | `-` | Indicates keyboard shortcuts that an author has implemented to activate or give focus to an element. |
+| `aria-label` | `string \| undefined` | No | `-` | Defines a string value that labels the current element. |
+| `aria-labelledby` | `string \| undefined` | No | `-` | Identifies the element (or elements) that labels the current element. |
+| `aria-level` | `number \| undefined` | No | `-` | Defines the hierarchical level of an element within a structure. |
+| `aria-live` | `off \| assertive \| polite \| undefined` | No | `-` | Indicates that an element will be updated, and describes the types of updates the user agents, assistive technologies, and user can expect from the live region. |
+| `aria-modal` | `Booleanish \| undefined` | No | `-` | Indicates whether an element is modal when displayed. |
+| `aria-multiline` | `Booleanish \| undefined` | No | `-` | Indicates whether a text box accepts multiple lines of input or only a single line. |
+| `aria-multiselectable` | `Booleanish \| undefined` | No | `-` | Indicates that the user may select more than one item from the current selectable descendants. |
+| `aria-orientation` | `horizontal \| vertical \| undefined` | No | `-` | Indicates whether the elements orientation is horizontal, vertical, or unknown/ambiguous. |
+| `aria-owns` | `string \| undefined` | No | `-` | Identifies an element (or elements) in order to define a visual, functional, or contextual parent/child relationship between DOM elements where the DOM hierarchy cannot be used to represent the relationship. |
+| `aria-placeholder` | `string \| undefined` | No | `-` | Defines a short hint (a word or short phrase) intended to aid the user with data entry when the control has no value. A hint could be a sample value or a brief description of the expected format. |
+| `aria-posinset` | `number \| undefined` | No | `-` | Defines an elements number or position in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM. |
+| `aria-pressed` | `boolean \| true \| false \| mixed \| undefined` | No | `-` | Indicates the current pressed state of toggle buttons. |
+| `aria-readonly` | `Booleanish \| undefined` | No | `-` | Indicates that the element is not editable, but is otherwise operable. |
+| `aria-relevant` | `text \| all \| additions \| additions removals \| additions text \| removals \| removals additions \| removals text \| text additions \| text removals \| undefined` | No | `-` | Indicates what notifications the user agent will trigger when the accessibility tree within a live region is modified. |
+| `aria-required` | `Booleanish \| undefined` | No | `-` | Indicates that user input is required on the element before a form may be submitted. |
+| `aria-roledescription` | `string \| undefined` | No | `-` | Defines a human-readable, author-localized description for the role of an element. |
+| `aria-rowcount` | `number \| undefined` | No | `-` | Defines the total number of rows in a table, grid, or treegrid. |
+| `aria-rowindex` | `number \| undefined` | No | `-` | Defines an elements row index or position with respect to the total number of rows within a table, grid, or treegrid. |
+| `aria-rowindextext` | `string \| undefined` | No | `-` | Defines a human readable text alternative of aria-rowindex. |
+| `aria-rowspan` | `number \| undefined` | No | `-` | Defines the number of rows spanned by a cell or gridcell within a table, grid, or treegrid. |
+| `aria-selected` | `Booleanish \| undefined` | No | `-` | Indicates the current selected state of various widgets. |
+| `aria-setsize` | `number \| undefined` | No | `-` | Defines the number of items in the current set of listitems or treeitems. Not required if all elements in the set are present in the DOM. |
+| `aria-sort` | `none \| ascending \| descending \| other \| undefined` | No | `-` | Indicates if items in a table or grid are sorted in ascending or descending order. |
+| `aria-valuemax` | `number \| undefined` | No | `-` | Defines the maximum allowed value for a range widget. |
+| `aria-valuemin` | `number \| undefined` | No | `-` | Defines the minimum allowed value for a range widget. |
+| `aria-valuenow` | `number \| undefined` | No | `-` | Defines the current value for a range widget. |
+| `aria-valuetext` | `string \| undefined` | No | `-` | Defines the human readable text alternative of aria-valuenow for a range widget. |
+| `ariaLive` | `off \| assertive \| polite` | No | `'polite'` | aria-live politeness level. |
+| `as` | `symbol \| object \| style \| div \| a \| abbr \| address \| area \| article \| aside \| audio \| b \| base \| bdi \| bdo \| big \| blockquote \| body \| br \| button \| canvas \| caption \| center \| cite \| code \| col \| colgroup \| data \| datalist \| dd \| del \| details \| dfn \| dialog \| dl \| dt \| em \| embed \| fieldset \| figcaption \| figure \| footer \| form \| h1 \| h2 \| h3 \| h4 \| h5 \| h6 \| head \| header \| hgroup \| hr \| html \| i \| iframe \| img \| input \| ins \| kbd \| keygen \| label \| legend \| li \| link \| main \| map \| mark \| menu \| menuitem \| meta \| meter \| nav \| noindex \| noscript \| ol \| optgroup \| option \| output \| p \| param \| picture \| pre \| progress \| q \| rp \| rt \| ruby \| s \| samp \| search \| slot \| script \| section \| select \| small \| source \| span \| strong \| sub \| summary \| sup \| table \| template \| tbody \| td \| textarea \| tfoot \| th \| thead \| time \| title \| tr \| track \| u \| ul \| var \| video \| wbr \| webview \| svg \| animate \| animateMotion \| animateTransform \| circle \| clipPath \| defs \| desc \| ellipse \| feBlend \| feColorMatrix \| feComponentTransfer \| feComposite \| feConvolveMatrix \| feDiffuseLighting \| feDisplacementMap \| feDistantLight \| feDropShadow \| feFlood \| feFuncA \| feFuncB \| feFuncG \| feFuncR \| feGaussianBlur \| feImage \| feMerge \| feMergeNode \| feMorphology \| feOffset \| fePointLight \| feSpecularLighting \| feSpotLight \| feTile \| feTurbulence \| filter \| foreignObject \| g \| image \| line \| linearGradient \| marker \| mask \| metadata \| mpath \| path \| pattern \| polygon \| polyline \| radialGradient \| rect \| set \| stop \| switch \| text \| textPath \| tspan \| use \| view \| ComponentClass<any, any> \| FunctionComponent<any>` | No | `span` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `autoCapitalize` | `(string & {}) \| none \| off \| on \| sentences \| words \| characters \| undefined` | No | `-` | - |
+| `autoCorrect` | `string \| undefined` | No | `-` | - |
+| `autoFocus` | `boolean \| undefined` | No | `-` | - |
+| `autoSave` | `string \| undefined` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | - |
+| `className` | `string \| undefined` | No | `-` | - |
+| `classNames` | `{ root?: string; visibleContent?: string \| undefined; formattedValueSection?: string \| undefined; prefix?: string \| undefined; suffix?: string \| undefined; i18nPrefix?: string \| undefined; i18nSuffix?: string \| undefined; integer?: string \| undefined; fraction?: string \| undefined; text?: string \| undefined; } \| undefined` | No | `-` | Custom class names for individual elements of the RollingNumber component |
+| `color` | `((Color \| { base?: Color; phone?: Color \| undefined; tablet?: Color \| undefined; desktop?: Color \| undefined; }) & Color) \| undefined` | No | `'fg'` | Base text color token. When {@link colorPulseOnUpdate } is true, the color briefly pulses to a positive or negative mid color before returning to this base color. |
+| `colorPulseOnUpdate` | `boolean` | No | `-` | Enables color pulsing on positive or negative changes. |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `content` | `string \| undefined` | No | `-` | - |
+| `contentEditable` | `inherit \| Booleanish \| plaintext-only \| undefined` | No | `-` | - |
+| `contextMenu` | `string \| undefined` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `dangerouslySetColor` | `string` | No | `-` | - |
+| `dangerouslySetInnerHTML` | `{ __html: string \| TrustedHTML; } \| undefined` | No | `-` | - |
+| `datatype` | `string \| undefined` | No | `-` | - |
+| `defaultChecked` | `boolean \| undefined` | No | `-` | - |
+| `defaultValue` | `string \| number \| readonly string[] \| undefined` | No | `-` | - |
+| `digitTransitionVariant` | `every \| single` | No | `'every'` | Style of digit transition animation. - every: Rolls through every intermediate digit (e.g., 1→2→3→...→9). - single: Rolls directly to the new digit without showing intermediates (e.g., 1→9). |
+| `dir` | `string \| undefined` | No | `-` | - |
+| `disabled` | `boolean` | No | `-` | - |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `draggable` | `Booleanish \| undefined` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `enableSubscriptNotation` | `boolean` | No | `-` | Enables subscript notation for leading zeros in the fractional part (for example, {@code 0.00009 => 0.0₄9}). |
+| `enterKeyHint` | `search \| enter \| done \| go \| next \| previous \| send \| undefined` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `format` | `(Omit<NumberFormatOptions, notation> & { notation?: compact \| standard; }) \| undefined` | No | `-` | Intl.NumberFormat options applied when formatting the value. Scientific and engineering notation are not supported. |
+| `formattedValue` | `string` | No | `-` | Preformatted value rendered instead of formatting {@link value }. {@link value } is still used to determine numeric deltas. |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `hidden` | `boolean \| undefined` | No | `-` | - |
+| `id` | `string \| undefined` | No | `-` | - |
+| `inlist` | `any` | No | `-` | - |
+| `inputMode` | `search \| text \| none \| email \| tel \| url \| numeric \| decimal \| undefined` | No | `-` | Hints at the type of data that might be entered by the user while editing the element or its contents |
+| `is` | `string \| undefined` | No | `-` | Specify that a standard HTML element should behave like a defined custom built-in element |
+| `itemID` | `string \| undefined` | No | `-` | - |
+| `itemProp` | `string \| undefined` | No | `-` | - |
+| `itemRef` | `string \| undefined` | No | `-` | - |
+| `itemScope` | `boolean \| undefined` | No | `-` | - |
+| `itemType` | `string \| undefined` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null \| undefined` | No | `-` | - |
+| `lang` | `string \| undefined` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `locale` | `string \| Locale \| readonly (string \| Locale)[]` | No | `-` | Locale used for formatting. Defaults to the locale from {@link LocaleProvider }. |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `mono` | `boolean` | No | `-` | Use monospace font family. |
+| `negativePulseColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `'fgNegative'` | Color token used for negative numeric changes. |
+| `noWrap` | `boolean` | No | `false` | Set text to be in a single line. |
+| `nonce` | `string \| undefined` | No | `-` | - |
+| `numberOfLines` | `number` | No | `-` | - |
+| `onAbort` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onAbortCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onAnimationEnd` | `AnimationEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onAnimationEndCapture` | `AnimationEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onAnimationIteration` | `AnimationEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onAnimationIterationCapture` | `AnimationEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onAnimationStart` | `AnimationEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onAnimationStartCapture` | `AnimationEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onAuxClick` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onAuxClickCapture` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onBeforeInput` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onBeforeInputCapture` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onBlur` | `FocusEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onBlurCapture` | `FocusEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCanPlay` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCanPlayCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCanPlayThrough` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCanPlayThroughCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onChangeCapture` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onClick` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onClickCapture` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCompositionEnd` | `CompositionEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCompositionEndCapture` | `CompositionEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCompositionStart` | `CompositionEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCompositionStartCapture` | `CompositionEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCompositionUpdate` | `CompositionEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCompositionUpdateCapture` | `CompositionEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onContextMenu` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onContextMenuCapture` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCopy` | `ClipboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCopyCapture` | `ClipboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCut` | `ClipboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onCutCapture` | `ClipboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDoubleClick` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDoubleClickCapture` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDrag` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragCapture` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragEnd` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragEndCapture` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragEnter` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragEnterCapture` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragExit` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragExitCapture` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragLeave` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragLeaveCapture` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragOver` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragOverCapture` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragStart` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDragStartCapture` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDrop` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDropCapture` | `DragEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDurationChange` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onDurationChangeCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onEmptied` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onEmptiedCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onEncrypted` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onEncryptedCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onEnded` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onEndedCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onError` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onErrorCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onFocus` | `FocusEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onFocusCapture` | `FocusEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onGotPointerCapture` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onGotPointerCaptureCapture` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onInput` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onInputCapture` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onInvalid` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onInvalidCapture` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onKeyDown` | `KeyboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onKeyDownCapture` | `KeyboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onKeyPress` | `KeyboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onKeyPressCapture` | `KeyboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onKeyUp` | `KeyboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onKeyUpCapture` | `KeyboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onLoad` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onLoadCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onLoadStart` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onLoadStartCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onLoadedData` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onLoadedDataCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onLoadedMetadata` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onLoadedMetadataCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onLostPointerCapture` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onLostPointerCaptureCapture` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseDown` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseDownCapture` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseEnter` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseLeave` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseMove` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseMoveCapture` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseOut` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseOutCapture` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseOver` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseOverCapture` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseUp` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onMouseUpCapture` | `MouseEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPaste` | `ClipboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPasteCapture` | `ClipboardEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPause` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPauseCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPlay` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPlayCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPlaying` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPlayingCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerCancel` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerCancelCapture` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerDown` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerDownCapture` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerEnter` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerLeave` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerMove` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerMoveCapture` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerOut` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerOutCapture` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerOver` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerOverCapture` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerUp` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onPointerUpCapture` | `PointerEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onProgress` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onProgressCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onRateChange` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onRateChangeCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onReset` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onResetCapture` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onResize` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onResizeCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onScroll` | `UIEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onScrollCapture` | `UIEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onSeeked` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onSeekedCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onSeeking` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onSeekingCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onSelect` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onSelectCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onStalled` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onStalledCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onSubmit` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onSubmitCapture` | `FormEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onSuspend` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onSuspendCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTimeUpdate` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTimeUpdateCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTouchCancel` | `TouchEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTouchCancelCapture` | `TouchEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTouchEnd` | `TouchEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTouchEndCapture` | `TouchEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTouchMove` | `TouchEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTouchMoveCapture` | `TouchEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTouchStart` | `TouchEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTouchStartCapture` | `TouchEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTransitionEnd` | `TransitionEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onTransitionEndCapture` | `TransitionEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onVolumeChange` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onVolumeChangeCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onWaiting` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onWaitingCapture` | `ReactEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onWheel` | `WheelEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `onWheelCapture` | `WheelEventHandler<HTMLSpanElement> \| undefined` | No | `-` | - |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `clip \| wrap \| truncate \| break` | No | `-` | Set overflow behavior. |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `positivePulseColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `'fgPositive'` | Color token used for positive numeric changes. |
+| `prefix` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Content rendered before the formatted value. |
+| `property` | `string \| undefined` | No | `-` | - |
+| `radioGroup` | `string \| undefined` | No | `-` | - |
+| `ref` | `any` | No | `-` | - |
+| `rel` | `string \| undefined` | No | `-` | - |
+| `renderEmptyNode` | `boolean` | No | `-` | - |
+| `resource` | `string \| undefined` | No | `-` | - |
+| `results` | `number \| undefined` | No | `-` | - |
+| `rev` | `string \| undefined` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `role` | `AriaRole \| undefined` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `security` | `string \| undefined` | No | `-` | - |
+| `slashedZero` | `boolean` | No | `false` | Use character for number zero with a slash through it to differentiate it from the letter O. |
+| `slot` | `string \| undefined` | No | `-` | - |
+| `spellCheck` | `Booleanish \| undefined` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `styles` | `{ root?: CSSProperties; visibleContent?: CSSProperties \| undefined; formattedValueSection?: CSSProperties \| undefined; prefix?: CSSProperties \| undefined; suffix?: CSSProperties \| undefined; i18nPrefix?: CSSProperties \| undefined; i18nSuffix?: CSSProperties \| undefined; integer?: CSSProperties \| undefined; fraction?: CSSProperties \| undefined; text?: CSSProperties \| undefined; } \| undefined` | No | `-` | Custom styles for individual elements of the RollingNumber component |
+| `suffix` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Content rendered after the formatted value. |
+| `suppressContentEditableWarning` | `boolean \| undefined` | No | `-` | - |
+| `suppressHydrationWarning` | `boolean \| undefined` | No | `-` | - |
+| `tabIndex` | `number \| undefined` | No | `-` | - |
+| `tabularNumbers` | `boolean` | No | `false true` | Activates the set of figures where numbers are all of the same size, allowing them to be easily aligned. Enables tabular figures on the underlying {@link Text}. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `title` | `string \| undefined` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `transition` | `RollingNumberTransitionConfig` | No | `-` | Framer Motion transition overrides. Supports per-property overrides for {@code y} and {@code color} only. |
+| `translate` | `yes \| no \| undefined` | No | `-` | - |
+| `typeof` | `string \| undefined` | No | `-` | - |
+| `underline` | `boolean` | No | `false` | Set text decoration to underline. |
+| `unselectable` | `off \| on \| undefined` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `vocab` | `string \| undefined` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Outer container element |
+| `visibleContent` | `-` | Animated visible content wrapper |
+| `formattedValueSection` | `-` | Formatted numeric value wrapper |
+| `prefix` | `-` | Prefix section (from props) |
+| `suffix` | `-` | Suffix section (from props) |
+| `i18nPrefix` | `-` | Prefix from Intl.NumberFormat (e.g. $ in $1,000) |
+| `i18nSuffix` | `-` | Suffix from Intl.NumberFormat (e.g. K in 100K) |
+| `integer` | `-` | Integer portion of formatted value |
+| `fraction` | `-` | Fractional portion of formatted value |
+| `text` | `-` | Text element for digits and symbols |
+
+

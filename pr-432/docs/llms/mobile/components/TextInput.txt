@@ -1,0 +1,773 @@
+# TextInput
+
+A control for entering text.
+
+## Import
+
+```tsx
+import { TextInput } from '@coinbase/cds-mobile/controls/TextInput'
+```
+
+## Examples
+
+**Note** TextField extends props from [HTMLInputElement](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attributes) on web. On mobile, it extends [TextInputProps](https://reactnative.dev/docs/textinput#props) from react-native.
+
+#### Input Label
+
+Default composition of Inputs.
+
+```jsx
+<VStack gap={3}>
+  <TextInput
+    label="API Access Token"
+    placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+    end={
+      <Box paddingX={2}>
+        <Link variant="caption" color="primary" to="">
+          COPY
+        </Link>
+      </Box>
+    }
+  />
+
+  <VStack>
+    <Text as="p">Use the compact variant when space is tight.</Text>
+    <TextInput
+      compact
+      type="number"
+      step="0.01"
+      label="Amount"
+      placeholder="8293323.23"
+      suffix="USD"
+    />
+  </VStack>
+</VStack>
+```
+
+#### Accessible Text Inputs
+
+TextInput comes with an accessibilityLabel prop. If no accessibilityLabel is passed, it will use the label as the accessibilityLabel. If you want an accessibilityLabel that differs from the Label, you can set this prop.
+
+Here, since no accessibilityLabel is passed, the accessibilityLabel will be "Email".
+
+```jsx
+<TextInput label="Email" />
+```
+
+Example of passing an accessibilityLabel. For web, this will set aria-label="Enter a Coinbase Email" under the hood
+
+```jsx
+<TextInput accessibilityLabel="Enter a Coinbase Email" label="Email" />
+```
+
+:::tip Accessibility tip
+
+Like any component system, much of the responsibility for building accessible UIs is in your hands as the consumer to properly implement the component composition. We'll do our best to provide sane fallbacks, but here are the biggest gotchas for `TextInput`s you can watch out for.
+
+<br />
+
+##### `aria-*` attr overrides
+
+Any time you use `variant='negative'`, we assume you're showing an error state. If for some reason this is _not_ the case, you will want to use `aria-invalid={false}` to override the default configuration.
+
+<br />
+
+##### Message format
+
+It's also advised you always format `helperText` with `Error: ${errorMessage}`. We'd do that for you, but _i18n_ isn't baked into CDS. Take a look at the example below:
+
+:::
+
+```jsx
+<VStack gap={4}>
+  <TextInput
+    label="Text Input rendered in an errored state"
+    placeholder="Enter a color"
+    helperText="Error: Your favorite color is not orange"
+    variant="negative"
+  />
+  <TextInput
+    label="Text Input that's red but not in an errored state"
+    placeholder="Enter a color"
+    helperText="You like red?"
+    variant="negative"
+    // Override the default behavior when variant="negative"
+    aria-invalid={false}
+  />
+</VStack>
+```
+
+#### Placeholder Text
+
+```jsx
+<TextInput label="Label" placeholder="Placeholder" />
+```
+
+#### Borderless
+
+:::warning
+You should not use a borderless TextInput alone. It should be used with a TypeAhead component.
+:::
+
+```jsx
+<HStack padding={2}>
+  <TextInput
+    label="Borderless TextInput"
+    placeholder="placeholder"
+    helperText="helperText"
+    bordered={false}
+  />
+</HStack>
+```
+
+#### Helper Text
+
+##### Default Sentiment
+
+```jsx
+<VStack gap={3}>
+  <VStack>
+    <Text as="p" font="headline">
+      Default sentiment
+    </Text>
+    <TextInput
+      label="Campaign title"
+      placeholder="Title"
+      helperText="This won't be displayed to user"
+    />
+  </VStack>
+
+  <VStack>
+    <Text as="p" font="headline">
+      Positive sentiment
+    </Text>
+    <TextInput
+      label="Address"
+      helperText="Valid BTC address"
+      variant="positive"
+      placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+      end={<InputIcon active color="fgPositive" name="visible" />}
+    />
+  </VStack>
+
+  <VStack>
+    <Text as="p" font="headline">
+      Negative Sentiment
+    </Text>
+    <TextInput
+      label="Address"
+      helperText="Invalid BTC address"
+      variant="negative"
+      placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+      end={<InputIcon active color="fgNegative" name="visible" />}
+    />
+  </VStack>
+</VStack>
+```
+
+#### Color Surge Enabled
+
+```jsx
+<VStack gap={3}>
+  <TextInput
+    label="Default Color Surge"
+    placeholder="Focus me"
+    helperText="This won't be displayed to user"
+    enableColorSurge
+  />
+
+  <TextInput
+    label="Positive Color Surge"
+    placeholder="Focus me"
+    helperText="Valid BTC address"
+    variant="positive"
+    enableColorSurge
+  />
+
+  <TextInput
+    label="Negative Color Surge"
+    placeholder="Focus me"
+    helperText="Invalid BTC address"
+    variant="negative"
+    enableColorSurge
+  />
+</VStack>
+```
+
+#### Content Alignment
+
+```jsx
+<VStack gap={3}>
+  <VStack>
+    <Text as="p">
+      <strong>Left aligned: </strong>This is the default setting.
+    </Text>
+    <TextInput label="City/town" placeholder="Oakland" />
+  </VStack>
+
+  <VStack>
+    <Text as="p">Right aligned Used with compact</Text>
+    <TextInput
+      label="Limit price"
+      compact
+      align="end"
+      type="number"
+      step="0.01"
+      placeholder="29.3"
+      suffix="USD"
+    />
+  </VStack>
+</VStack>
+```
+
+#### StartContent & EndContent
+
+##### Examples of Input Objects placed at the Start
+
+```jsx
+function StartContentExamples() {
+  return (
+    <VStack gap={3}>
+      <VStack>
+        <Text as="p">
+          <strong>Asset</strong>: Asset objects are not interactive
+        </Text>
+        <TextInput
+          label="Address"
+          start={
+            <Box paddingX={2}>
+              <Avatar
+                size="l"
+                src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+                alt="address"
+              />
+            </Box>
+          }
+          placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+        />
+      </VStack>
+
+      <VStack>
+        <Text as="p">
+          <strong>Icon</strong>: Icon objects are not interactive.
+        </Text>
+        <TextInput label="Amount" start={<InputIcon name="cashUSD" />} placeholder="1234" />
+      </VStack>
+
+      <VStack>
+        <Text as="p">
+          <strong>IconButton</strong>: The most common use case for Icon Button at the start of a
+          Text Field is search.
+        </Text>
+        <TextInput
+          label="Search"
+          start={<InputIconButton name="search" />}
+          placeholder="Search for anything"
+        />
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+#### Read only
+
+```jsx
+<VStack gap={3}>
+  <TextInput label="Read Only Input" readOnly value="This value cannot be edited" />
+  <TextInput label="Read Only with Suffix" readOnly value="1234.56" suffix="USD" />
+  <TextInput
+    label="Read Only with Start Content"
+    readOnly
+    value="BTC Address"
+    start={<InputIconButton name="search" />}
+  />
+</VStack>
+```
+
+#### Label Variants
+
+TextInput supports two label variants: `outside` (default) and `inside`. Note that the `compact` prop, when set to true, will override label variant preference.
+
+:::warning
+
+When using the `inside` label variant, you should always include a `placeholder` prop.
+
+:::
+
+##### Outside label (default)
+
+```jsx
+<TextInput label="Email Address" placeholder="Enter your email" />
+```
+
+##### Inside label
+
+```jsx
+<TextInput label="Email Address" labelVariant="inside" placeholder="Enter your email" />
+```
+
+##### Inside label (with start content)
+
+```jsx
+<TextInput
+  label="Search"
+  labelVariant="inside"
+  start={<InputIconButton name="search" />}
+  placeholder="Search for anything"
+/>
+```
+
+##### Inside label (with end content)
+
+```jsx
+<TextInput
+  label="Password"
+  labelVariant="inside"
+  secureTextEntry
+  end={<InputIconButton name="visible" />}
+  placeholder="Enter your password"
+/>
+```
+
+#### Custom Label
+
+You can pass a ReactNode to `labelNode` to render a custom label. If you want to include a tooltip, ensure the touch target is at least 24x24 for accessibility compliance.
+
+```jsx
+<VStack gap={2}>
+  <TextInput
+    accessibilityLabel="Display name"
+    labelNode={
+      <HStack alignItems="center">
+        <InputLabel>Display name</InputLabel>
+        {/* Add padding to ensure 24x24 tooltip tap target for a11y compliance */}
+        <Tooltip content="This will be visible to other users.">
+          <Icon active color="fg" name="info" padding={0.75} size="xs" />
+        </Tooltip>
+      </HStack>
+    }
+    placeholder="Satoshi Nakamoto"
+  />
+  <TextInput
+    accessibilityLabel="Amount"
+    compact
+    labelNode={
+      <HStack alignItems="center" gap={0.5}>
+        <InputLabel>Amount</InputLabel>
+        <Text color="fgNegative" font="label1">
+          *
+        </Text>
+      </HStack>
+    }
+    placeholder="0.00"
+    suffix="USD"
+  />
+  <TextInput
+    accessibilityLabel="Bio"
+    labelVariant="inside"
+    labelNode={
+      <HStack alignItems="center" gap={1}>
+        <InputLabel paddingY={0}>Bio</InputLabel>
+        <Text color="fgMuted" font="legal">
+          (optional)
+        </Text>
+      </HStack>
+    }
+    placeholder="Tell us about yourself"
+  />
+  <TextInput
+    accessibilityLabel="Notes"
+    labelVariant="inside"
+    labelNode={<InputLabel paddingY={0}>Notes</InputLabel>}
+    placeholder="Add a note"
+    start={<InputIcon name="pencil" />}
+  />
+</VStack>
+```
+
+### Example of Input Objects placed at the End
+
+Here are some examples and best practices when using end content in a TextField.
+
+```jsx
+<VStack gap={3}>
+  <VStack>
+    <Text as="p">
+      <strong>Icon</strong>: Icon objects are not interactive.
+    </Text>
+    <TextInput
+      label="Address"
+      placeholder="1234 Abc Way"
+      end={<InputIcon name="checkmark" color="fgPositive" />}
+    />
+  </VStack>
+
+  <VStack>
+    <Text as="p">
+      The most common use case for placing a text object at the end of an input is currency. This
+      object is not interactive.
+    </Text>
+    <TextInput
+      label="Amount"
+      type="number"
+      step="0.01"
+      compact
+      placeholder="98329.23"
+      suffix="USD"
+    />
+  </VStack>
+
+  <VStack>
+    <Text as="p">
+      You can add a Text Button object at the end of an Input. "Copy" is a great example of this.
+    </Text>
+    <TextInput
+      label="API Access Token"
+      placeholder="HaeJiWplJohn6W42eCq0Qqft0"
+      end={
+        <Box spacingEnd={2}>
+          <Link variant="caption" color="primary" to="">
+            COPY
+          </Link>
+        </Box>
+      }
+    />
+  </VStack>
+</VStack>
+```
+
+#### Password input
+
+Password Input - Use Icon Buttons at the end for actions like showing a password or clearing text from an input.
+
+> a11y tip: Always provide an `accessibilityLabel` to start/end nodes to clearly communicate state/actions
+
+```jsx
+function PasswordInput() {
+  const [isVisible, setIsVisible] = useState(false);
+  const type = useMemo(() => (isVisible ? 'text' : 'password'), [isVisible]);
+  const iconName = useMemo(() => (isVisible ? 'visible' : 'invisible'), [isVisible]);
+
+  return (
+    <TextInput
+      label="Password"
+      type={type}
+      end={
+        <InputIconButton
+          name={iconName}
+          onPress={() => setIsVisible((isVisible) => !isVisible)}
+          accessibilityLabel={isVisible ? 'Hide password' : 'Show password'}
+        />
+      }
+    />
+  );
+}
+```
+
+#### Link + Icon Button
+
+If needed, you can add a Link + Icon Button like this example here. Use this sparingly and only at the End of an Input.
+
+```jsx
+function CopyTextField() {
+  const [copied, setCopied] = useState(false);
+  const [variant, setVariant] = useState('foregroundMuted');
+  const [helperText, setHelperText] = useState('');
+
+  useEffect(() => {
+    if (copied) {
+      setVariant('positive');
+      setHelperText('Your token has been copied!');
+    } else {
+      setVariant('foregroundMuted');
+      setHelperText('');
+    }
+  }, [copied]);
+
+  const handleOnChange = useCallback(() => {
+    setVariant('foregroundMuted');
+    setCopied(false);
+    setHelperText('');
+  }, []);
+
+  return (
+    <TextInput
+      end={
+        <HStack>
+          <Link onPress={() => setCopied(true)} variant="caption" color={variant}>
+            {copied ? 'copied' : 'copy'}
+          </Link>
+          <InputIcon active color="primary" name="visible" />
+        </HStack>
+      }
+      onChange={handleOnChange}
+      variant={variant}
+      helperText={helperText}
+      label="API Access Token"
+    />
+  );
+}
+```
+
+#### Disabled
+
+```jsx
+<VStack gap={3}>
+  <TextInput label="Label" disabled />
+  <TextInput label="Label" compact disabled />
+</VStack>
+```
+
+#### TextArea Example (mobile)
+
+On mobile, TextInput is versatile enough to support
+a "TextArea" as well. You just need to add multiline prop.
+Here is an example
+
+```jsx
+const [text, onChangeText] = useState('');
+
+<MockTextInput
+  onChangeText={onChangeText}
+  value={text}
+  label="Textarea"
+  helperText="Write about yourself"
+  variant="foregroundMuted"
+  multiline
+  value="
+      A really really really really
+      long piece 
+      of text
+      displayed. A really really really really
+      long piece 
+      of text
+      displayed. 
+      A really really really really
+      long piece 
+      of text
+      displayed
+    "
+/>;
+```
+
+#### Example of a Form
+
+We recommend that you use spacing 3 when building stacked forms.
+
+```jsx
+function FormExample() {
+  const gap = 3;
+
+  const onSubmit = useCallback((e) => {
+    e.preventDefault();
+    console.log(e.currentTarget.nodeValue);
+    alert('Submitted');
+  }, []);
+
+  return (
+    <form onSubmit={onSubmit} action={undefined}>
+      <VStack gap={gap}>
+        <TextInput
+          label="Street address"
+          placeholder="4321 Jade Palace"
+          helperText="Please enter your primary address."
+        />
+        <TextInput label="Unit #" aria-required="true" />
+        <HStack gap={gap}>
+          <TextInput label="City/town" width="70%" />
+          <TextInput label="State" width="30%" />
+        </HStack>
+        <HStack gap={gap}>
+          <TextInput label="Postal code" width="40%" />
+          <TextInput label="Country" width="60%" />
+        </HStack>
+        <ButtonGroup>
+          <Button type="submit">Save</Button>
+        </ButtonGroup>
+      </VStack>
+    </form>
+  );
+}
+```
+
+#### Example of a Sign Up Form
+
+```jsx
+<HStack gap={2} alignItems="center">
+  <TextInput
+    label="Email"
+    placeholder="satoshi@nakamoto.com"
+    helperText="Please enter a valid email address"
+  />
+  <Box spacingTop={0.5}>
+    <Button variant="primary">Submit</Button>
+  </Box>
+</HStack>
+```
+
+### Testing
+
+#### Testing different parts of the input
+
+You can also use the testIDMap to test different parts
+of the TextInput. If you use testID, it will add the testID to the root
+of the TextInput.
+
+```jsx
+function testExample() {
+  const testIDMap = useMemo(() => {
+    return {
+      input: 'input-id',
+      helperText: 'helperText-id',
+      label: 'label-id',
+      start: 'start-id',
+      end: 'end-id',
+    };
+  }, []);
+  return (
+    <TextInput
+      label="Email"
+      placeholder="satoshi@nakamoto.com"
+      helperText="Please enter a valid email address"
+      testIDMap={testIDMap}
+      start={
+        <Box paddingX={2}>
+          <Avatar
+            size="l"
+            src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+            alt="address"
+          />
+        </Box>
+      }
+      end={<InputIcon active color="primary" name="visible" />}
+    />
+  );
+}
+```
+
+### TextInput While Keyboard Is Open (mobile)
+
+If you have the keyboard open, then closing the keyboard and interacting with the text input requires 2 taps, which isn't a great user experience.
+
+To fix this issue, you can wrap the TextInput in a ScrollView, and set keyboardShouldPersistTaps="always".
+
+```jsx
+function TextInputKeyboardExample() {
+  return (
+    <ScrollView style={{ height: '100%' }} keyboardShouldPersistTaps="always">
+      <TextInput label="Amount" type="number" compact placeholder="98329.23" suffix="USD" />
+    </ScrollView>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `align` | `end \| start \| center \| justify` | No | `start` | Aligns text inside input and helperText |
+| `allowFontScaling` | `boolean` | No | `-` | Specifies whether fonts should scale to respect Text Size accessibility settings. The default is true. |
+| `autoCapitalize` | `none \| sentences \| words \| characters` | No | `-` | Can tell TextInput to automatically capitalize certain characters.      characters: all characters,      words: first letter of each word      sentences: first letter of each sentence (default)      none: dont auto capitalize anything  https://reactnative.dev/docs/textinput#autocapitalize |
+| `autoComplete` | `email \| off \| name \| additional-name \| address-line1 \| address-line2 \| birthdate-day \| birthdate-full \| birthdate-month \| birthdate-year \| cc-csc \| cc-exp \| cc-exp-day \| cc-exp-month \| cc-exp-year \| cc-number \| cc-name \| cc-given-name \| cc-middle-name \| cc-family-name \| cc-type \| country \| current-password \| family-name \| gender \| given-name \| honorific-prefix \| honorific-suffix \| name-family \| name-given \| name-middle \| name-middle-initial \| name-prefix \| name-suffix \| new-password \| nickname \| one-time-code \| organization \| organization-title \| password \| password-new \| postal-address \| postal-address-country \| postal-address-extended \| postal-address-extended-postal-code \| postal-address-locality \| postal-address-region \| postal-code \| street-address \| sms-otp \| tel \| tel-country-code \| tel-national \| tel-device \| url \| username \| username-new` | No | `-` | Specifies autocomplete hints for the system, so it can provide autofill. On Android, the system will always attempt to offer autofill by using heuristics to identify the type of content. To disable autocomplete, set autoComplete to off.  The following values work across platforms:  - additional-name - address-line1 - address-line2 - cc-number - country - current-password - email - family-name - given-name - honorific-prefix - honorific-suffix - name - new-password - off - one-time-code - postal-code - street-address - tel - username  The following values work on iOS only:  - nickname - organization - organization-title - url  The following values work on Android only:  - birthdate-day - birthdate-full - birthdate-month - birthdate-year - cc-csc - cc-exp - cc-exp-day - cc-exp-month - cc-exp-year - gender - name-family - name-given - name-middle - name-middle-initial - name-prefix - name-suffix - password - password-new - postal-address - postal-address-country - postal-address-extended - postal-address-extended-postal-code - postal-address-locality - postal-address-region - sms-otp - tel-country-code - tel-national - tel-device - username-new |
+| `autoCorrect` | `boolean` | No | `-` | If false, disables auto-correct. The default value is true. |
+| `autoFocus` | `boolean` | No | `-` | If true, focuses the input on componentDidMount. The default value is false. |
+| `blurOnSubmit` | `boolean` | No | `-` | If true, the text field will blur when submitted. The default value is true. |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `200` | Leverage one of the borderRadius styles we offer to round the corners of the input. |
+| `bordered` | `boolean` | No | `true` | Determines if the input should have a border |
+| `caretHidden` | `boolean` | No | `-` | If true, caret is hidden. The default value is false. |
+| `clearButtonMode` | `never \| while-editing \| unless-editing \| always` | No | `-` | enum(never, while-editing, unless-editing, always) When the clear button should appear on the right side of the text view |
+| `clearTextOnFocus` | `boolean` | No | `-` | If true, clears the text field automatically when editing begins |
+| `compact` | `boolean` | No | `false` | Enables compact variation |
+| `contextMenuHidden` | `boolean` | No | `-` | If true, context menu is hidden. The default value is false. |
+| `cursorColor` | `ColorValue \| null` | No | `-` | When provided it will set the color of the cursor (or caret) in the component. Unlike the behavior of selectionColor the cursor color will be set independently from the color of the text selection box. |
+| `dataDetectorTypes` | `DataDetectorTypes \| DataDetectorTypes[]` | No | `-` | Determines the types of data converted to clickable URLs in the text input. Only valid if multiline={true} and editable={false}. By default no data types are detected.  You can provide one type or an array of many types.  Possible values for dataDetectorTypes are:  - phoneNumber - link - address - calendarEvent - none - all |
+| `defaultValue` | `string` | No | `-` | Provides an initial value that will change when the user starts typing. Useful for simple use-cases where you dont want to deal with listening to events and updating the value prop to keep the controlled state in sync. |
+| `disableFullscreenUI` | `boolean` | No | `-` | When false, if there is a small amount of space available around a text input (e.g. landscape orientation on a phone),   the OS may choose to have the user edit the text inside of a full screen text input mode. When true, this feature is disabled and users will always edit the text directly inside of the text input. Defaults to false. |
+| `disabled` | `boolean` | No | `false` | Toggles input interactability and opacity |
+| `editable` | `boolean` | No | `-` | If false, text is not editable. The default value is true. |
+| `enableColorSurge` | `boolean` | No | `-` | Enable Color Surge motion |
+| `enablesReturnKeyAutomatically` | `boolean` | No | `-` | If true, the keyboard disables the return key when there is no text and automatically enables it when there is text. The default value is false. |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the end of the inner input. Refer to diagram for location of endNode in InputStack component |
+| `enterKeyHint` | `search \| done \| go \| next \| send \| previous \| enter` | No | `-` | Determines what text should be shown to the return key on virtual keyboards. Has precedence over the returnKeyType prop. |
+| `height` | `string \| number` | No | `-` | Height of input |
+| `helperText` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | For cases where label is not enough information to describe what the text input is for. Can also be used for showing positive/negative messages |
+| `helperTextErrorIconAccessibilityLabel` | `string` | No | `'error'` | Accessibility label for helper text error icon when variant=negative |
+| `importantForAutofill` | `auto \| yes \| no \| noExcludeDescendants \| yesExcludeDescendants` | No | `-` | Determines whether the individual fields in your app should be included in a view structure for autofill purposes on Android API Level 26+. Defaults to auto. To disable auto complete, use off.  *Android Only*  The following values work on Android only:  - auto - let Android decide - no - not important for autofill - noExcludeDescendants - this view and its children arent important for autofill - yes - is important for autofill - yesExcludeDescendants - this view is important for autofill but its children arent |
+| `inlineImageLeft` | `string` | No | `-` | If defined, the provided image resource will be rendered on the left. |
+| `inlineImagePadding` | `number` | No | `-` | Padding between the inline image, if any, and the text input itself. |
+| `inputAccessoryViewID` | `string` | No | `-` | Used to connect to an InputAccessoryView. Not part of react-natives documentation, but present in examples and code. See https://reactnative.dev/docs/inputaccessoryview for more information. |
+| `inputBackground` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `'bg'` | Background color of the input |
+| `inputMode` | `search \| none \| text \| email \| tel \| url \| numeric \| decimal` | No | `-` | Works like the inputmode attribute in HTML, it determines which keyboard to open, e.g. numeric and has precedence over keyboardType. |
+| `key` | `Key \| null` | No | `-` | - |
+| `keyboardAppearance` | `light \| default \| dark` | No | `-` | Determines the color of the keyboard. |
+| `keyboardType` | `default \| url \| number-pad \| decimal-pad \| numeric \| email-address \| phone-pad \| visible-password \| ascii-capable \| numbers-and-punctuation \| name-phone-pad \| twitter \| web-search` | No | `-` | enum(default, numeric, email-address, ascii-capable, numbers-and-punctuation, url, number-pad, phone-pad, name-phone-pad, decimal-pad, twitter, web-search, visible-password) Determines which keyboard to open, e.g.numeric. The following values work across platforms: - default - numeric - email-address - phone-pad The following values work on iOS: - ascii-capable - numbers-and-punctuation - url - number-pad - name-phone-pad - decimal-pad - twitter - web-search The following values work on Android: - visible-password |
+| `label` | `string` | No | `-` | Short messageArea indicating purpose of input |
+| `labelNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to render label. Takes precedence over label. |
+| `labelVariant` | `inside \| outside` | No | `'outside'` | The variant of the label. Only used when compact is not true. |
+| `lineBreakStrategyIOS` | `none \| standard \| hangul-word \| push-out` | No | `-` | Set line break strategy on iOS. |
+| `maxFontSizeMultiplier` | `number \| null` | No | `-` | Specifies largest possible scale a font can reach when allowFontScaling is enabled. Possible values: - null/undefined (default): inherit from the parent node or the global default (0) - 0: no max, ignore parent/global default - >= 1: sets the maxFontSizeMultiplier of this node to this value |
+| `maxLength` | `number` | No | `-` | Limits the maximum number of characters that can be entered. Use this instead of implementing the logic in JS to avoid flicker. |
+| `minHeight` | `string \| number` | No | `auto` | minimum height of input |
+| `multiline` | `boolean` | No | `-` | If true, the text input can be multiple lines. The default value is false. |
+| `numberOfLines` | `number` | No | `-` | Sets the number of lines for a TextInput. Use it with multiline set to true to be able to fill the lines. |
+| `onBlur` | `((e: NativeSyntheticEvent<TextInputFocusEventData>) => void)` | No | `-` | Callback that is called when the text input is blurred |
+| `onChange` | `((e: NativeSyntheticEvent<TextInputChangeEventData>) => void)` | No | `-` | - |
+| `onChangeText` | `((text: string) => void)` | No | `-` | - |
+| `onContentSizeChange` | `((e: NativeSyntheticEvent<TextInputContentSizeChangeEventData>) => void)` | No | `-` | Callback that is called when the text inputs content size changes. This will be called with { nativeEvent: { contentSize: { width, height } } }.  Only called for multiline text inputs. |
+| `onEndEditing` | `((e: NativeSyntheticEvent<TextInputEndEditingEventData>) => void)` | No | `-` | Callback that is called when text input ends. |
+| `onFocus` | `((e: NativeSyntheticEvent<TextInputFocusEventData>) => void)` | No | `-` | Callback that is called when the text input is focused |
+| `onKeyPress` | `((e: NativeSyntheticEvent<TextInputKeyPressEventData>) => void)` | No | `-` | Callback that is called when a key is pressed. This will be called with  { nativeEvent: { key: keyValue } } where keyValue is Enter or Backspace for respective keys and the typed-in character otherwise including   for space.  Fires before onChange callbacks. Note: on Android only the inputs from soft keyboard are handled, not the hardware keyboard inputs. |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPress` | `((e: NativeSyntheticEvent<NativeTouchEvent>) => void)` | No | `-` | Called when a single tap gesture is detected. |
+| `onPressIn` | `((e: NativeSyntheticEvent<NativeTouchEvent>) => void)` | No | `-` | Callback that is called when a touch is engaged. |
+| `onPressOut` | `((e: NativeSyntheticEvent<NativeTouchEvent>) => void)` | No | `-` | Callback that is called when a touch is released. |
+| `onScroll` | `((e: NativeSyntheticEvent<TextInputScrollEventData>) => void)` | No | `-` | Invoked on content scroll with  { nativeEvent: { contentOffset: { x, y } } }.  May also contain other properties from ScrollEvent but on Android contentSize is not provided for performance reasons. |
+| `onSelectionChange` | `((e: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => void)` | No | `-` | Callback that is called when the text input selection is changed. |
+| `onSubmitEditing` | `((e: NativeSyntheticEvent<TextInputSubmitEditingEventData>) => void)` | No | `-` | Callback that is called when the text inputs submit button is pressed. |
+| `onTextInput` | `((e: NativeSyntheticEvent<TextInputTextInputEventData>) => void)` | No | `-` | Callback that is called on new text input with the argument  { nativeEvent: { text, previousText, range: { start, end } } }.  This prop requires multiline={true} to be set. |
+| `passwordRules` | `string \| null` | No | `-` | Provide rules for your password. For example, say you want to require a password with at least eight characters consisting of a mix of uppercase and lowercase letters, at least one number, and at most two consecutive characters. required: upper; required: lower; required: digit; max-consecutive: 2; minlength: 8; |
+| `placeholder` | `string` | No | `-` | Placeholder text displayed inside of the input. Will be replaced if there is a value. The string that will be rendered before text input has been entered |
+| `placeholderTextColor` | `string \| OpaqueColorValue` | No | `-` | The text color of the placeholder string |
+| `readOnly` | `boolean` | No | `-` | If true, text is not editable. The default value is false. |
+| `ref` | `((instance: TextInput \| null) => void) \| RefObject<TextInput> \| null` | No | `-` | - |
+| `rejectResponderTermination` | `boolean \| null` | No | `-` | If true, allows TextInput to pass touch events to the parent component. This allows components to be swipeable from the TextInput on iOS, as is the case on Android by default. If false, TextInput always asks to handle the input (except when disabled). |
+| `returnKeyLabel` | `string` | No | `-` | Sets the return key to the label. Use it instead of returnKeyType. |
+| `returnKeyType` | `search \| join \| done \| none \| default \| go \| next \| send \| previous \| google \| route \| yahoo \| emergency-call` | No | `-` | enum(default, go, google, join, next, route, search, send, yahoo, done, emergency-call) Determines how the return key should look. |
+| `scrollEnabled` | `boolean` | No | `-` | If false, scrolling of the text view will be disabled. The default value is true. Only works with multiline={true} |
+| `secureTextEntry` | `boolean` | No | `-` | If true, the text input obscures the text entered so that sensitive text like passwords stay secure. The default value is false. |
+| `selectTextOnFocus` | `boolean` | No | `-` | If true, all text will automatically be selected on focus |
+| `selection` | `{ start: number; end?: number; } \| undefined` | No | `-` | The start and end of the text inputs selection. Set start and end to the same value to position the cursor. |
+| `selectionColor` | `string \| OpaqueColorValue` | No | `-` | The highlight (and cursor on ios) color of the text input |
+| `selectionHandleColor` | `ColorValue \| null` | No | `-` | When provided it will set the color of the selection handles when highlighting text. Unlike the behavior of selectionColor the handle color will be set independently from the color of the text selection box. |
+| `selectionState` | `DocumentSelectionState` | No | `-` | See DocumentSelectionState.js, some state that is responsible for maintaining selection information for a document |
+| `showSoftInputOnFocus` | `boolean` | No | `-` | When false, it will prevent the soft keyboard from showing when the field is focused. The default value is true |
+| `smartInsertDelete` | `boolean` | No | `-` | If false, the iOS system will not insert an extra space after a paste operation neither delete one or two spaces after a cut or delete operation.  The default value is true. |
+| `spellCheck` | `boolean` | No | `-` | If false, disables spell-check style (i.e. red underlines). The default value is inherited from autoCorrect |
+| `start` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content to the start of the inner input. Refer to diagram for location of startNode in InputStack component |
+| `style` | `null \| false \| TextStyle \| RegisteredStyle<TextStyle> \| RecursiveArray<Falsy \| TextStyle \| RegisteredStyle<TextStyle>>` | No | `-` | Styles |
+| `suffix` | `string` | No | `-` | Adds suffix text to the end of input |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID Used to locate this view in end-to-end tests |
+| `testIDMap` | `{ start?: string; end?: string \| undefined; label?: string \| undefined; helperText?: string \| undefined; } \| undefined` | No | `-` | Add ability to test individual parts of the input |
+| `textAlign` | `left \| right \| center \| unset` | No | `-` | Native TextInput textAlign with the extra unset option to remove the textAlign style. Use this to workaround the issue where long text does not ellipsis in TextInput |
+| `textAlignVertical` | `top \| bottom \| auto \| center` | No | `-` | Vertically align text when multiline is set to true |
+| `textBreakStrategy` | `simple \| highQuality \| balanced` | No | `-` | Set text break strategy on Android API Level 23+, possible values are simple, highQuality, balanced The default value is simple. |
+| `textContentType` | `none \| location \| name \| nickname \| password \| username \| URL \| addressCity \| addressCityAndState \| addressState \| countryName \| creditCardNumber \| creditCardExpiration \| creditCardExpirationMonth \| creditCardExpirationYear \| creditCardSecurityCode \| creditCardType \| creditCardName \| creditCardGivenName \| creditCardMiddleName \| creditCardFamilyName \| emailAddress \| familyName \| fullStreetAddress \| givenName \| jobTitle \| middleName \| namePrefix \| nameSuffix \| organizationName \| postalCode \| streetAddressLine1 \| streetAddressLine2 \| sublocality \| telephoneNumber \| newPassword \| oneTimeCode \| birthdate \| birthdateDay \| birthdateMonth \| birthdateYear` | No | `-` | Give the keyboard and the system information about the expected semantic meaning for the content that users enter.  To disable autofill, set textContentType to none.  Possible values for textContentType are:   - none  - URL  - addressCity  - addressCityAndState  - addressState  - countryName  - creditCardNumber  - creditCardExpiration (iOS 17+)  - creditCardExpirationMonth (iOS 17+)  - creditCardExpirationYear (iOS 17+)  - creditCardSecurityCode (iOS 17+)  - creditCardType (iOS 17+)  - creditCardName (iOS 17+)  - creditCardGivenName (iOS 17+)  - creditCardMiddleName (iOS 17+)  - creditCardFamilyName (iOS 17+)  - emailAddress  - familyName  - fullStreetAddress  - givenName  - jobTitle  - location  - middleName  - name  - namePrefix  - nameSuffix  - nickname  - organizationName  - postalCode  - streetAddressLine1  - streetAddressLine2  - sublocality  - telephoneNumber  - username  - password  - newPassword  - oneTimeCode  - birthdate (iOS 17+)  - birthdateDay (iOS 17+)  - birthdateMonth (iOS 17+)  - birthdateYear (iOS 17+) |
+| `underlineColorAndroid` | `string \| OpaqueColorValue` | No | `-` | The color of the textInput underline. |
+| `value` | `string` | No | `-` | - |
+| `variant` | `primary \| secondary \| positive \| negative \| foregroundMuted \| foreground` | No | `-` | Determines the sentiment of the input. Because we allow startContent and endContent to be custom ReactNode, the content placed inside these slots will not change colors according to the variant. You will have to add that yourself |
+| `verticalAlign` | `top \| bottom \| auto \| middle` | No | `-` | Vertically align text when multiline is set to true |
+| `width` | `string \| number` | No | `100%` | Width of input as a percentage string. |
+
+

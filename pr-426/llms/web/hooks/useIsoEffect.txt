@@ -1,0 +1,58 @@
+# useIsoEffect
+
+A safe way of calling useLayoutEffect only on the client. Does nothing on the server.
+
+## Import
+
+```tsx
+import { useIsoEffect } from '@coinbase/cds-web/hooks/useIsoEffect'
+```
+
+## API
+
+### Parameters
+
+The `useIsoEffect` hook accepts the same parameters as React's `useEffect` and `useLayoutEffect`:
+
+- `effect: () => (void | (() => void))` - The effect function to run
+- `deps?: any[]` - Optional array of dependencies
+
+### Returns
+
+Returns nothing (void).
+
+:::tip
+This hook automatically uses `useLayoutEffect` when running in the browser and falls back to `useEffect` during server-side rendering. This prevents warnings and ensures proper timing of effects across different environments.
+:::
+
+## Examples
+
+### Usage
+
+```tsx live
+function Example() {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  useIsoEffect(() => {
+    const updatePosition = (e: MouseEvent) => {
+      setPosition({ x: e.clientX, y: e.clientY });
+    };
+
+    window.addEventListener('mousemove', updatePosition);
+
+    // Cleanup function to remove event listener
+    return () => {
+      window.removeEventListener('mousemove', updatePosition);
+    };
+  }, []); // Empty deps array means this effect runs once on mount
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline">Mouse Position</Text>
+      <Text>X: {position.x}</Text>
+      <Text>Y: {position.y}</Text>
+    </VStack>
+  );
+}
+```
+

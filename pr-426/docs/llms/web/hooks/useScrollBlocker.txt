@@ -1,0 +1,82 @@
+# useScrollBlocker
+
+Block and unblock page scrolling.
+
+## Import
+
+```tsx
+import { useScrollBlocker } from '@coinbase/cds-web/hooks/useScrollBlocker'
+```
+
+## API
+
+### Parameters
+
+The `useScrollBlocker` hook does not accept any parameters.
+
+### Returns
+
+```tsx
+type Return = (shouldBlock: boolean) => void;
+```
+
+Returns a function that takes a boolean parameter to control scroll blocking:
+
+- `shouldBlock`: When `true`, blocks page scrolling. When `false`, re-enables scrolling.
+
+:::tip
+This hook is useful for temporarily disabling page scrolling, such as when displaying modals or overlays. It automatically handles scroll bar width compensation to prevent layout shifts.
+:::
+
+## Examples
+
+### Basic usage
+
+```tsx live
+function Example() {
+  const blockScroll = useScrollBlocker();
+  const [isBlocked, setIsBlocked] = useState(false);
+
+  const toggleScroll = () => {
+    setIsBlocked(!isBlocked);
+    blockScroll(!isBlocked);
+  };
+
+  return (
+    <VStack gap={3} alignItems="start">
+      <Text font="headline">Scroll is currently {isBlocked ? 'blocked' : 'enabled'}</Text>
+      <Button onClick={toggleScroll}>{isBlocked ? 'Enable Scroll' : 'Block Scroll'}</Button>
+    </VStack>
+  );
+}
+```
+
+### With Overlay
+
+```tsx live
+function Example() {
+  const blockScroll = useScrollBlocker();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const openModal = () => {
+    setIsOpen(true);
+    blockScroll(true);
+  };
+
+  const closeModal = () => {
+    setIsOpen(false);
+    blockScroll(false);
+  };
+
+  return (
+    <VStack gap={3} alignItems="start">
+      <Button onClick={openModal}>Open Overlay</Button>
+      <Modal visible={isOpen} onRequestClose={closeModal}>
+        <ModalHeader title="Modal Title" />
+        <ModalBody>Modal Content</ModalBody>
+      </Modal>
+    </VStack>
+  );
+}
+```
+

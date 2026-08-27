@@ -1,0 +1,119 @@
+# Collapsible
+
+A container that can be expanded or collapsed.
+
+## Import
+
+```tsx
+import { Collapsible } from '@coinbase/cds-web/collapsible/Collapsible'
+```
+
+## Examples
+
+### Basic Collapsible
+
+:::tip Accessibility tip (web)
+
+In order to ensure Collapsible components are accessible on the web, we need to set up the trigger and Collapsible to reference each other correctly. The `useA11yControlledVisibility` is ideal for this, but you can also wire up each `aria-*` attr manually following the [aria-expanded](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-expanded) spec.
+
+:::
+
+```jsx live
+function BasicCollapsible() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  // Web only a11y configuration
+  const { triggerAccessibilityProps, controlledElementAccessibilityProps } =
+    useA11yControlledVisibility(!collapsed, {
+      accessibilityLabel: 'cds-collapsible',
+      hasPopupType: 'true',
+    });
+
+  return (
+    <VStack gap={3}>
+      <Button onClick={() => setCollapsed(!collapsed)} {...triggerAccessibilityProps}>
+        Click me!
+      </Button>
+      <Collapsible collapsed={collapsed} padding={3} {...controlledElementAccessibilityProps}>
+        <VStack>Send a crypto gift! Share the gift of crypto this holiday season.</VStack>
+      </Collapsible>
+    </VStack>
+  );
+}
+```
+
+### Expand Top
+
+Place `Collapsible` above the trigger to expand top.
+
+```jsx live
+function ExpandTop() {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <VStack gap={3}>
+      <Collapsible collapsed={collapsed}>
+        <VStack>Send a crypto gift! Share the gift of crypto this holiday season.</VStack>
+      </Collapsible>
+      <Button onClick={() => setCollapsed(!collapsed)}>Click me!</Button>
+    </VStack>
+  );
+}
+```
+
+### Scroll Content
+
+Enable scroll by setting `maxHeight`.
+
+```jsx live
+function Scroll() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <VStack gap={3}>
+      <Button onClick={() => setCollapsed(!collapsed)}>Click me!</Button>
+      <Collapsible collapsed={collapsed} maxHeight={400}>
+        <Text font="body" as="p">
+          {loremIpsum.repeat(50)}
+        </Text>
+      </Collapsible>
+    </VStack>
+  );
+}
+```
+
+### Horizontal (Experimental)
+
+Set `direction="horizontal"` for horizontal expand/collapse.
+
+```jsx live
+function Horizontal() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <HStack gap={2} alignItems="center">
+      <Button onClick={() => setCollapsed(!collapsed)}>Click me!</Button>
+      <Collapsible collapsed={collapsed} direction="horizontal">
+        <DotCount count={100} />
+        <DotCount count={1} />
+        <DotCount count={99} />
+      </Collapsible>
+    </HStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | Collapsible content |
+| `collapsed` | `boolean` | Yes | `true` | Expand/collapse state of the content. |
+| `dangerouslyDisableOverflowHidden` | `boolean` | No | `-` | This option may break animation. Only use this if your container has fixed height or width. |
+| `direction` | `horizontal \| vertical` | No | `vertical` | Direction the content should expand/collapse to |
+| `key` | `Key \| null` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | Max height of the content. Overflow content will be scrollable. |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | Max width of the content. Overflow content will be scrollable. |
+| `ref` | `RefObject<HTMLDivElement> \| ((instance: HTMLDivElement \| null) => void) \| null` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

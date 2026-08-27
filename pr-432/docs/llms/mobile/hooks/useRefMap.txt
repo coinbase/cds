@@ -1,0 +1,178 @@
+# useRefMap
+
+Manages a collection of refs using a key-value map structure, allowing dynamic registration and retrieval of refs by their unique identifiers. Commonly used in components that need to track multiple DOM elements, such as tabs, tours, or complex navigation systems.
+
+## Import
+
+```tsx
+import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap'
+```
+
+## API
+
+### Parameters
+
+The `useRefMap` hook accepts an optional configuration object:
+
+- `options?: RefMapOptions<RefValue>` - Configuration options for the ref map
+  - `initialRefMap?: Record<string, RefValue>` - Optional initial map of refs
+
+The generic type `RefValue` represents the type of values stored in the ref map (typically `HTMLElement` or a specific element type).
+
+### Returns
+
+Returns a `RefMapApi<RefValue>` object with the following properties:
+
+- `refs: Record<string, RefValue>` - The current map of all registered refs
+- `getRef: (id: string) => RefValue | null` - Function to retrieve a ref by its ID
+- `registerRef: (id: string, ref: RefValue) => void` - Function to register a new ref with an ID
+
+:::tip
+This hook is particularly useful when working with components that need to manage multiple refs, such as in tour guides where elements need to be highlighted, or in tab systems where tab panels need to be referenced. The hook maintains a stable reference to the ref map and its utility functions across renders.
+:::
+
+## Examples
+
+### Basic usage
+
+```tsx live
+function Example() {
+  const { registerRef, getRef } = useRefMap<HTMLDivElement>();
+  const toast = useToast();
+
+  const handleClick = () => {
+    // Get the element by its ID and log its dimensions
+    const element = getRef('box1');
+    if (element) {
+      toast.show(`Box dimensions: ${element.offsetWidth}x${element.offsetHeight}`);
+    }
+  };
+
+  return (
+    <VStack gap={2}>
+      <Box
+        ref={(el) => el && registerRef('box1', el)}
+        padding={3}
+        background="bgAlternate"
+        borderRadius={300}
+      >
+        <Text font="body">This box is registered with ID 'box1'</Text>
+      </Box>
+      <Button onClick={handleClick}>Get Box Dimensions</Button>
+    </VStack>
+  );
+}
+```
+
+### With Multiple Elements
+
+```tsx live
+function Example() {
+  const { registerRef, getRef } = useRefMap<HTMLDivElement>();
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const highlightElement = (id: string) => {
+    // Reset previous highlight
+    if (activeId) {
+      const prevElement = getRef(activeId);
+      if (prevElement) {
+        prevElement.style.outline = 'none';
+      }
+    }
+
+    // Highlight new element
+    const element = getRef(id);
+    if (element) {
+      element.style.outline = '2px solid var(--color-fgPrimary)';
+      setActiveId(id);
+    }
+  };
+
+  return (
+    <VStack gap={3}>
+      <HStack gap={2}>
+        <Button onClick={() => highlightElement('box1')}>Highlight Box 1</Button>
+        <Button onClick={() => highlightElement('box2')}>Highlight Box 2</Button>
+        <Button onClick={() => highlightElement('box3')}>Highlight Box 3</Button>
+      </HStack>
+
+      <VStack gap={2}>
+        <Box
+          ref={(el) => el && registerRef('box1', el)}
+          padding={3}
+          background="bgAlternate"
+          borderRadius={300}
+        >
+          <Text font="body">Box 1</Text>
+        </Box>
+
+        <Box
+          ref={(el) => el && registerRef('box2', el)}
+          padding={3}
+          background="bgAlternate"
+          borderRadius={300}
+        >
+          <Text font="body">Box 2</Text>
+        </Box>
+
+        <Box
+          ref={(el) => el && registerRef('box3', el)}
+          padding={3}
+          background="bgAlternate"
+          borderRadius={300}
+        >
+          <Text font="body">Box 3</Text>
+        </Box>
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+### With Initial Refs
+
+```tsx live
+function Example() {
+  // Create initial refs map
+  const box1Ref = useRef<HTMLDivElement>(null);
+  const box2Ref = useRef<HTMLDivElement>(null);
+
+  const initialRefs = {
+    box1: box1Ref.current,
+    box2: box2Ref.current,
+  };
+
+  const { refs, registerRef } = useRefMap<HTMLDivElement>({
+    initialRefMap: initialRefs,
+  });
+
+  const logRefs = () => {
+    console.log('Current refs:', refs);
+  };
+
+  return (
+    <VStack gap={2}>
+      <Box
+        ref={(el) => el && registerRef('box1', el)}
+        padding={3}
+        background="bgAlternate"
+        borderRadius={300}
+      >
+        <Text font="body">Box 1</Text>
+      </Box>
+
+      <Box
+        ref={(el) => el && registerRef('box2', el)}
+        padding={3}
+        background="bgAlternate"
+        borderRadius={300}
+      >
+        <Text font="body">Box 2</Text>
+      </Box>
+
+      <Button onClick={logRefs}>Log Refs</Button>
+    </VStack>
+  );
+}
+```
+

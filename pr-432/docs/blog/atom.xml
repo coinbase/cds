@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://cds.coinbase.com/cds/pr-432/docs/blog</id>
+    <title>Coinbase Design System Blog</title>
+    <updated>2026-02-24T22:45:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://cds.coinbase.com/cds/pr-432/docs/blog"/>
+    <subtitle>Coinbase Design System Blog</subtitle>
+    <icon>https://cds.coinbase.com/cds/pr-432/docs/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Introducing CDS]]></title>
+        <id>https://cds.coinbase.com/cds/pr-432/docs/blog/introducing-cds</id>
+        <link href="https://cds.coinbase.com/cds/pr-432/docs/blog/introducing-cds"/>
+        <updated>2026-02-24T22:45:00.000Z</updated>
+        <summary type="html"><![CDATA[We're thrilled to announce the public release of Coinbase Design System!]]></summary>
+        <content type="html"><![CDATA[<article class="flex-ff5rfy6"><strong>We're thrilled to announce the public release of Coinbase Design System!</strong></article>
+]]></content>
+        <author>
+            <name>Cody Nova</name>
+            <uri>https://github.com/codynova</uri>
+        </author>
+    </entry>
+</feed>

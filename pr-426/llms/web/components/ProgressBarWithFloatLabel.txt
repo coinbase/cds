@@ -1,0 +1,261 @@
+# ProgressBarWithFloatLabel
+
+A ProgressBar with a floating label that moves with progress.
+
+## Import
+
+```tsx
+import { ProgressBarWithFloatLabel } from '@coinbase/cds-web/visualizations/ProgressBarWithFloatLabel'
+```
+
+## Examples
+
+### Label Above
+
+```jsx live
+<VStack gap={2}>
+  <ProgressBarWithFloatLabel label={0} progress={0} labelPlacement="above">
+    <ProgressBar progress={0} />
+  </ProgressBarWithFloatLabel>
+  <ProgressBarWithFloatLabel label={20} progress={0.2} labelPlacement="above">
+    <ProgressBar progress={0.2} />
+  </ProgressBarWithFloatLabel>
+</VStack>
+```
+
+### Label Below
+
+```jsx live
+<VStack gap={2}>
+  <ProgressBarWithFloatLabel label={0} progress={0} labelPlacement="below">
+    <ProgressBar progress={0} />
+  </ProgressBarWithFloatLabel>
+  <ProgressBarWithFloatLabel label={20} progress={0.2} labelPlacement="below">
+    <ProgressBar progress={0.2} />
+  </ProgressBarWithFloatLabel>
+</VStack>
+```
+
+### Disabled
+
+```jsx live
+<VStack gap={2}>
+  <ProgressBarWithFloatLabel label={70} progress={0.7} disabled>
+    <ProgressBar progress={0.7} disabled />
+  </ProgressBarWithFloatLabel>
+</VStack>
+```
+
+### Custom Labels
+
+```jsx live
+function Example() {
+  const renderLabelNumStr = useCallback((num) => {
+    return `$${num.toLocaleString()}`;
+  }, []);
+
+  const renderLabelNum = useCallback((num, disabled) => {
+    return (
+      <Text as="span" font="title3" disabled={disabled}>
+        ${num.toLocaleString()}
+      </Text>
+    );
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <ProgressBarWithFloatLabel
+        progress={0.6}
+        label={{ value: 12500, render: renderLabelNumStr }}
+        labelPlacement="above"
+      >
+        <ProgressBar progress={0.6} />
+      </ProgressBarWithFloatLabel>
+      <ProgressBarWithFloatLabel
+        progress={0.6}
+        label={{ value: 12500, render: renderLabelNum }}
+        labelPlacement="above"
+      >
+        <ProgressBar progress={0.6} />
+      </ProgressBarWithFloatLabel>
+      <ProgressBarWithFloatLabel
+        progress={0.6}
+        label={{ value: 12500, render: renderLabelNumStr }}
+        labelPlacement="above"
+        disabled
+      >
+        <ProgressBar disabled progress={0.6} />
+      </ProgressBarWithFloatLabel>
+      <ProgressBarWithFloatLabel
+        progress={0.6}
+        label={{ value: 12500, render: renderLabelNum }}
+        labelPlacement="above"
+        disabled
+      >
+        <ProgressBar disabled progress={0.6} />
+      </ProgressBarWithFloatLabel>
+    </VStack>
+  );
+}
+```
+
+### Custom Styles
+
+You can customize the appearance of the progress bar and float label using the `styles` prop.
+
+```tsx live
+<ProgressContainerWithButtons>
+  {({ calculateProgress }) => (
+    <VStack gap={2}>
+      <ProgressBarWithFloatLabel
+        label={Math.round(calculateProgress(0.4) * 100)}
+        labelPlacement="above"
+        progress={calculateProgress(0.4)}
+        styles={{
+          label: {
+            color: 'var(--color-bgPrimary)',
+            fontWeight: 'bold',
+          },
+        }}
+      >
+        <ProgressBar
+          color="bgPrimary"
+          progress={calculateProgress(0.4)}
+          styles={{
+            container: {
+              height: 'var(--space-8)',
+              borderRadius: 'var(--borderRadius-1000)',
+            },
+            progress: {
+              borderRadius: 'var(--borderRadius-1000)',
+            },
+          }}
+        />
+      </ProgressBarWithFloatLabel>
+    </VStack>
+  )}
+</ProgressContainerWithButtons>
+```
+
+### Interactive Demo
+
+This is for demo purposes. ProgressContainerWithButtons isn't designed for production usage.
+
+```jsx live
+<ProgressContainerWithButtons>
+  {({ calculateProgress }) => (
+    <VStack gap={2}>
+      <ProgressBarWithFloatLabel
+        label={Math.round(calculateProgress(0) * 100)}
+        progress={calculateProgress(0)}
+        labelPlacement="above"
+      >
+        <ProgressBar progress={calculateProgress(0)} />
+      </ProgressBarWithFloatLabel>
+      <ProgressBarWithFloatLabel
+        label={Math.round(calculateProgress(0.2) * 100)}
+        progress={calculateProgress(0.2)}
+        labelPlacement="above"
+      >
+        <ProgressBar progress={calculateProgress(0.2)} />
+      </ProgressBarWithFloatLabel>
+    </VStack>
+  )}
+</ProgressContainerWithButtons>
+```
+
+### Animation
+
+By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
+
+```tsx live
+<ProgressContainerWithButtons>
+  {({ calculateProgress }) => (
+    <VStack gap={2}>
+      <Text variant="label2">Normal animation</Text>
+      <ProgressBarWithFloatLabel
+        label={Math.round(calculateProgress(0) * 100)}
+        progress={calculateProgress(0)}
+        labelPlacement="above"
+      >
+        <ProgressBar progress={calculateProgress(0)} />
+      </ProgressBarWithFloatLabel>
+
+      <Text variant="label2">Disable animation on mount</Text>
+      <ProgressBarWithFloatLabel
+        disableAnimateOnMount
+        label={Math.round(calculateProgress(0.3) * 100)}
+        progress={calculateProgress(0.3)}
+        labelPlacement="above"
+      >
+        <ProgressBar disableAnimateOnMount progress={calculateProgress(0.3)} />
+      </ProgressBarWithFloatLabel>
+    </VStack>
+  )}
+</ProgressContainerWithButtons>
+```
+
+#### Callbacks
+
+You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
+
+```jsx live
+function Example() {
+  const [animationStatus, setAnimationStatus] = React.useState('Ready');
+
+  const handleAnimationStart = useCallback(() => {
+    setAnimationStatus('Animating...');
+  }, []);
+
+  const handleAnimationEnd = useCallback(() => {
+    setAnimationStatus('Animation Ended');
+  }, []);
+
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={2}>
+          <Text>Animation Status: {animationStatus}</Text>
+          <ProgressBarWithFloatLabel
+            label={Math.round(calculateProgress(0.2) * 100)}
+            progress={calculateProgress(0.2)}
+            labelPlacement="above"
+          >
+            <ProgressBar
+              onAnimationEnd={handleAnimationEnd}
+              onAnimationStart={handleAnimationStart}
+              progress={calculateProgress(0.2)}
+            />
+          </ProgressBarWithFloatLabel>
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `label` | `number \| { value: number; render: (num: number, disabled?: boolean \| undefined) => ReactNode; }` | Yes | `-` | Label that is floated at the end of the filled in bar. If a number is used then it will format it as a percentage. |
+| `progress` | `number` | Yes | `-` | Number between 0-1 representing the progress percentage |
+| `className` | `string` | No | `-` | - |
+| `classNames` | `{ root?: string; labelContainer?: string \| undefined; label?: string \| undefined; } \| undefined` | No | `-` | Custom class names for individual elements of the ProgressBarWithFloatLabel component |
+| `disableAnimateOnMount` | `boolean` | No | `false` | Disable animation on component mount |
+| `disabled` | `boolean` | No | `-` | Toggle used to show a disabled progress visualization |
+| `labelPlacement` | `above \| below` | No | `above` | Position of label relative to the bar |
+| `style` | `CSSProperties` | No | `-` | - |
+| `styles` | `{ root?: CSSProperties; labelContainer?: CSSProperties \| undefined; label?: CSSProperties \| undefined; } \| undefined` | No | `-` | Custom styles for individual elements of the ProgressBarWithFloatLabel component |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Root element |
+| `labelContainer` | `-` | Label container element |
+| `label` | `-` | Label element |
+
+

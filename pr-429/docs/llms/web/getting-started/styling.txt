@@ -1,0 +1,184 @@
+# styling
+
+CDS includes powerful and flexible APIs for styling components. Easily access values from the theme, or go rogue with full customization.
+
+import { media } from '@coinbase/cds-web/styles/media';
+### `StyleProps` API
+
+Most components support the StyleProps API. StyleProps automatically have access to the values in the theme, and some StyleProps are limited to only the theme values.
+
+[See the full list of StyleProps here &rarr;](/components/layout/Box/?platform=web&tab=props)
+
+```jsx
+// ✅ The `bgNegative` token will automatically update with the theme!
+<Box background="bgNegative" width={100} />
+
+// ❌ Error: Type '"#0000ff"' is not assignable to type 'Color | undefined'.
+<Box background="#0000ff" width={100} />
+```
+
+:::tip
+The docs page of every component has a props table listing all the available props!
+:::
+
+:::note
+The StyleProps API applies static atomic classnames under the hood. These classnames reference CSS Variables set by the ThemeProvider to enable dynamic theming.
+:::
+
+#### Responsive styles
+
+On web, all StyleProps support an optional responsive syntax for device-specific styles.
+
+```jsx
+<Box
+  width={{ base: 200, tablet: 200, desktop: 400 }}
+  background={{ base: 'bgPrimary', phone: 'bgSecondary' }}
+/>
+```
+
+- **base:** no media query
+- **phone:** <code>{media.phone}</code>
+- **tablet:** <code>{media.tablet}</code>
+- **desktop:** <code>{media.desktop}</code>
+
+It is not possible to customize the breakpoint values unless you compile CDS from the source code.
+
+Import the `media` object to use CDS breakpoints and media queries in your own custom styles.
+
+[See how breakpoints are defined in the `media` object &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/styles/media.ts)
+
+```jsx
+import styled from 'styled-components';
+import { media } from '@coinbase/cds-web/styles/media';
+
+const MyCustomThing = styled.div`
+  ${media.phone} {
+    width: 100px;
+  }
+`;
+```
+
+### Selectors
+
+Some complex components have multiple internal elements that can be styled individually. CDS provides several ways to target these elements using **selectors**. The same selector keys (like `root`, `content`, etc.) are reused across `styles`, `classNames`, and static class names, giving you flexibility in how you apply custom styles.
+
+:::tip
+Components that support selectors have a **Styles** tab in their documentation listing all available selectors. Check out [NavigationBar](/components/navigation/NavigationBar/?platform=web&tab=styles) for an example.
+:::
+
+#### `style` and `styles` props
+
+Most components support the native `style` prop for inline styles.
+
+```jsx
+<Box style={{ backgroundColor: '#0000ff' }} />
+```
+
+Some complex components support passing inline styles to subcomponents with the `styles` prop. The keys correspond to the component's internal selectors.
+
+```jsx
+<ProgressCircle
+  styles={{
+    circle: {
+      stroke: 'transparent',
+    },
+    progress: {
+      strokeLinecap: 'square',
+    },
+  }}
+  color="fgPositive"
+  progress={0.75}
+  size={100}
+/>
+```
+
+Styles are merged together as objects in order of specificity.
+
+```jsx
+<PageHeader style={{ backgroundColor: 'red' }} styles={{ root: { backgroundColor: 'blue' } }} />
+```
+
+In the example above, `backgroundColor` will be blue.
+
+#### `className` and `classNames` props
+
+Most components support the native `className` prop for adding custom class names.
+
+```jsx
+<Box className="my-custom-box" />
+```
+
+Some complex components support passing class names to subcomponents with the `classNames` prop. The keys correspond to the component's internal selectors.
+
+```jsx
+<ProgressCircle
+  classNames={{
+    circle: 'my-custom-circle',
+    progress: 'my-custom-progress',
+  }}
+  color="fgPositive"
+  progress={0.75}
+  size={100}
+/>
+```
+
+#### Static class names
+
+Components also expose static CSS class names for their internal elements, allowing you to target them directly with CSS selectors without using props. These class names follow the pattern `cds-{ComponentName}` for the root element and `cds-{ComponentName}-{part}` for sub-elements.
+
+```css
+/* Target the NavigationBar root */
+.cds-NavigationBar {
+  background-color: #f5f5f5;
+}
+
+/* Target a specific part */
+.cds-NavigationBar-start {
+  padding-left: 16px;
+}
+```
+
+Static class names are useful when you need to:
+
+- Apply styles from a global stylesheet or CSS file
+- Target elements in CSS-in-JS solutions like styled-components
+- Override styles in specific contexts (e.g., when a component is inside another component)
+- Apply styles that aren't available through StyleProps
+
+### Component specific props
+
+Many components have their own specific props that can affect styling.
+
+```jsx
+<Button compact variant="primary">
+  Click me
+</Button>
+```
+
+### Combining techniques
+
+Mix and match these styling techniques for complete customization!
+
+```jsx
+<Button variant="primary" borderColor="accentBoldPurple" style={{ fontFamily: 'Times' }}>
+  Click me
+</Button>
+```
+
+### Global CSS reset
+
+CDS web global styles include a CSS reset which override the browser default styles for some elements. This ensures that polymorphic components render correctly, regardless of their HTML element.
+
+[See the global CSS reset here &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/styles/global.ts)
+
+### Polymorphic components
+
+Many CDS web components have the polymorphic `as` prop, which allows you to change what component or element is being rendered under the hood.
+
+Using the polymorphic `as` prop will change the component's type to allow the relevant native props.
+
+```jsx
+<Button as="a" href="google.com" />
+<Link as="button" type="submit" />
+```
+

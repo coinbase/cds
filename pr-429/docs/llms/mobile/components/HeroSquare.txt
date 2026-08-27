@@ -1,0 +1,47 @@
+# HeroSquare
+
+Displays a square-shaped hero illustration.
+
+## Import
+
+```tsx
+import { HeroSquare } from '@coinbase/cds-mobile/illustrations/HeroSquare'
+```
+
+## Examples
+
+### Basic example
+
+```jsx
+<HeroSquare name="accessToAdvancedCharts" />
+```
+
+### `scaleMultiplier` prop
+
+If no predefined dimensions fit your use case, you can use the `scaleMultiplier` prop to scale the illustration.
+
+Use `scaleMultiplier` sparingly and with caution. We have predefined dimensions to ensure that illustrations scale elegantly.
+
+```jsx
+<HeroSquare name="accessToAdvancedCharts" scaleMultiplier={1.5} />
+```
+
+### Scaling with dimension
+
+If `dimension` and `scaleMultiplier` are both provided the component will scale based on the provided dimension.
+
+```jsx
+<HeroSquare name="accessToAdvancedCharts" dimension="200x200" scaleMultiplier={1.5} />
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `name` | `margin \| airdrop \| blockchain \| camera \| cloud \| coinbaseOneLogo \| earn \| instantUnstakingClock \| options \| refresh \| rocket \| securityShield \| smartContract \| staking \| test \| success \| pending \| baseCreatorCoin \| borrowCoins \| coinbaseOneEarn \| ethStakingRewards \| fiat \| futures \| globalTransactions \| governance \| lightningNetworkSend \| outage \| startToday \| walletWarning \| phoneNumber \| exchange \| accessToAdvancedCharts \| accountUnderReview \| add2Fa \| addBankAccount \| addCreditCard \| addMoreCrypto \| addPhoneNumber \| advancedTrading \| advancedTradingChartsIndicatorsCandles \| advancedTradingUi \| alienDonutSystemError \| anonymous \| appTrackingTransparency \| artFrameEmptyState \| automaticPayments \| backedByUsDollar \| baseChartLarge \| baseCheck \| baseCoinCryptoLarge \| baseCoinNetworkLarge \| baseConnectLarge \| baseCreatorCoinEmpty \| baseDecentralizationLarge \| basedInUsa \| baseEmptyLarge \| baseErrorButterfly \| baseErrorLarge \| baseLoadingLarge \| baseLocationLarge \| baseMintNftLarge \| baseNetworkLarge \| baseNftLarge \| basePaycoinLarge \| basePeopleLarge \| basePiechartLarge \| baseRewardsCalmLarge \| baseSecurityLarge \| baseSendLarge \| baseSocial \| baseTargetLarge \| bigBtc \| bigError \| bigWarning \| bitcoinAndOtherCrypto \| bitcoinGlobe \| borrow \| borrowCoinsBtc \| borrowWallet \| brdGift \| bridge \| browseDecentralizedApps \| browserExtension \| buy \| buyFirstCrypto \| cardAndPhone \| cardBoosted \| cardError \| cardErrorCB1 \| cardReloadFunds \| cashExcitement \| catHoldingWalletEmptyState \| catLostSystemError \| cbada \| cbbtc \| cbdoge \| cbltc \| cbxrp \| chickenFishSystemError \| claimCryptoUsername \| cloudBacking \| coinbaseCard \| coinbaseCardIssue \| coinbaseCardLock \| coinbaseCardPocket \| coinbaseCardSpend \| coinbaseCardSpendCrypto \| coinbaseFees \| coinbaseIsDown \| coinbaseIsDownMobile \| coinbaseOneAirdrop \| coinbaseOneCardWarning \| coinbaseOneDiscountedAmount \| coinbaseOneDocWarning \| coinbaseOneInsufficientWallet \| coinbaseOnePercentOff \| coinbaseOnePhoneLightning \| coinbaseOneProtectedCrypto \| coinbaseOneRewards \| coinbaseOneSavingFunds \| coinbaseOneTokenRewards \| coinbaseOneUSDCBig \| coinbaseOneUSDCIncentives \| coinbaseOneWaitlist \| coinbaseOneWalletWarning \| coinbaseOneWelcome \| coinbaseOneZeroPortal \| coinbaseOneZeroPromotion \| coinbaseRedesigned \| coinbaseWalletToTrade \| coinCheckmark \| coinFifty \| coinsInWallet \| collectableNfts \| collectingNfts \| commerceAccounting \| commerceInvoices \| communication \| completeAQuiz \| congratulationsOnEarningCrypto \| connectPeople \| contactsListWarning \| crossBorderPayments \| cryptoAndMore \| cryptoApps \| cryptoAppsWallet \| cryptoAssets \| cryptoEconomy \| cryptoForBeginners \| cryptoPortfolio \| cryptoWallet \| currencyPairs \| dappsArts \| dappsFinance \| dappsGaming \| dappsGeneral \| dappsL2Support \| dappsMusic \| decentralization \| decentralizedWebWeb3 \| defiDecentralizedBorrowingLending \| defiDecentralizedTradingExchange \| defiEarn \| defiEnrollBoost \| defiHow \| defiRisk \| desktopAuthorized \| desktopUnknown \| developer \| diamondHands \| didDecentralizedIdentity \| digitalCollectibles \| digitalGold \| directDepositPhone \| discardAssets \| docError \| documentCertified \| documentSuccess \| downloadCoinbaseWallet \| earnCryptoCard \| earnCryptoInterest \| earnGlobe \| earnGrowth \| earnIdVerification \| earnInterest \| earnMore \| earnNuxHome \| earnSuccess \| earnToLearn \| emailNotification \| emptyCollection \| emptyStateCheckBackLater \| emptyStateNft404Page \| emptyStateNftSoldOut \| enableBiometrics \| encryptedEverything \| engagement \| ensProfilePic \| error400 \| errorApp500 \| errorMoblie \| errorRefresh \| errorRefreshWeb \| errorWeb \| errorWeb400 \| errorWeb404 \| errorWeb404Mobile \| errorWeb500 \| estimatedAmount \| ethereumToWallet \| ethStakingUpsell \| exchangeEmptyState \| exploreDecentralizedApps \| faceMatchReal \| feeScale \| fileYourCryptoTaxes \| fileYourCryptoTaxesCheck \| focusLimitOrders \| freeBtc \| futuresAndPerps \| futuresExpire \| futuresVsPerps \| gainsAndLosses \| gamer \| gasFeesNetworkFees \| generative \| getStartedInMinutes \| governanceMallet \| graphChartTrading \| hardwareWallets \| hiddenCollection \| holdCrypto \| holdingCrypto \| iceCreamMeltingSystemError \| idAngles \| idBack \| idCard \| idFront \| idIssue \| idVerificationSecure \| indexer \| innovation \| insufficientBalance \| insuranceProtection \| invest \| invite \| japanVerifyId \| keyGeneration \| layeredNetworks \| layerOne \| layerThree \| layerTwo \| ledgerAccess \| ledgerPlugin \| lend \| leverage \| lightningNetwork \| lightningNetworkInvoice \| lightningNetworkTransfer \| limitOrders \| linkingYourWalletToYourCoinbaseAccount \| liquidationBufferGreen \| liquidationBufferRed \| liquidationBufferRedClose \| liquidationBufferYellow \| lowCost \| marginWarning \| mic \| mining \| minting \| moneyDecentralized \| moreGains \| multicoinSupport \| multiPlatformMobileAppBrowserExtension \| multipleAccountsWalletsForOneUser \| multiplePortfolios \| myNameIsSatoshi \| namePortfolio \| networkWarning \| noFees \| noFeesMotion \| noLongAddresses \| notificationsAlt \| notificationsAndUpdates \| offChain \| oilAndGold \| onChain \| onTheList \| openEmail \| optInPushNotificationsEmail \| oracle \| orderBooks \| p2pGifting \| p2pPayments \| paperHands \| payUpFront \| performance \| phoneUnknown \| platform \| polling \| portfolioPerformance \| poweredByEthereum \| powerOfCrypto \| predictionsMarkets \| primeDeFi \| primeEarn \| primeStaking \| private \| privateKey \| processing \| protocol \| public \| quest \| quickAndSimple \| quickBuy \| ratingsAndReviews \| readyToTrade \| realToUSDC \| receivedCard \| receiveGift \| recommendInvest \| recurringReward \| referralsAvatars \| referralsBitcoin \| referralsCoinbaseOne \| referralsGenericCoin \| referralsWalletPhones \| remittances \| requestSent \| restrictedCountry \| retailUSDCRewards \| reviewInfo \| rotatingRewards \| routingAccount \| scalable \| secureAndTrusted \| secureGlobalTransactions \| secureStorage \| selectCorrectCrypto \| selectReward \| selfCustody \| selfCustodyCrypto \| semiCustodial \| sendCryptoFaster \| sendToUsername \| serverCatSystemError \| settlement \| shareOnSocialMedia \| sidechain \| slippageTolerance \| spacedOutSystemError \| squidEmptyState \| stablecoin \| stableValue \| stakingMissedReturns \| stakingMissedReturnsUsdc \| stayInControlSelfHostedWalletsStorage \| stopLimitOrder \| stopLimitOrderDown \| storage \| stressTestedColdStorage \| supportAndMore \| sustainable \| switchAdvancedToSimpleTrading \| taxesDetails \| tools \| tradeGeneral \| tradeHistory \| tradeImmediately \| tradingWithLeverage \| transactionLimit \| trendingHotAssets \| twoIdVerify \| unlockKey \| usdAndUsdc \| usdtToUSDC \| verifyBankTransactions \| verifyCardTransactions \| verifyEmail \| verifyIdDetails \| verifyInfo \| videoRequest \| videoReview \| videoUpload \| vipBadge \| vote \| walletAsset \| walletConfirmation \| walletFlyEmptyState \| walletLoading \| walletNotifications \| walletSecurity \| walletUi \| watchVideos \| web3ActivityError \| web3ActivitySigned \| web3MobileSetupStart \| web3MobileSetupSuccess \| webRAT \| whyNotBoth \| yourContacts` | Yes | `-` | Name of illustration as defined in Figma |
+| `dimension` | `240x240 \| 200x200` | No | `-` | HeroSquare Default:  240x240 SpotSquare Default: 96x96 Pictogram Default: 48x48 SpotRectangle Default: 240x120 |
+| `fallback` | `ReactElement<any, string \| JSXElementConstructor<any>> \| null` | No | `null` | Fallback element to render if unable to find an illustration with the matching name |
+| `scaleMultiplier` | `number` | No | `-` | Multiply the width & height while maintaining aspect ratio |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

@@ -1,0 +1,65 @@
+# Icon
+
+Displays icons from the icon font.
+
+## Import
+
+```tsx
+import { Icon } from '@coinbase/cds-mobile/icons/Icon'
+```
+
+## Examples
+
+:::tip Rebuild Required After Icon Updates
+
+Mobile apps cache font files in the native build, so you must rebuild your app after updating `@coinbase/cds-icons` to see changes.
+
+:::
+
+### Basic example
+
+```jsx
+<VStack gap={2}>
+  <HStack gap={1}>
+    <Icon name="account" size="xs" />
+    <Icon name="account" size="xs" active />
+  </HStack>
+  <HStack gap={1}>
+    <Icon name="account" size="s" />
+    <Icon name="account" size="s" active />
+  </HStack>
+  <HStack gap={1}>
+    <Icon name="account" size="m" />
+    <Icon name="account" size="m" active />
+  </HStack>
+  <HStack gap={1}>
+    <Icon name="account" size="l" />
+    <Icon name="account" size="l" active />
+  </HStack>
+</VStack>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `name` | `key \| search \| pin \| warning \| error \| account \| activity \| add \| addPeople \| advancedMarketSelector \| advancedTradeProduct \| affiliates \| airdrop \| airdropAlt \| airdropCoins \| airdropParachute \| alien \| allTimeHigh \| allocation \| annotation \| api \| apiPlug \| apothecary \| appSwitcher \| apple \| appleLogo \| application \| arrowDown \| arrowLeft \| arrowRight \| arrowUp \| arrowsHorizontal \| arrowsUpDown \| arrowsVertical \| artwork \| assetHubProduct \| assetManagementProduct \| astronautHelmet \| atSign \| atomScience \| auto \| autoCar \| avatar \| average \| backArrow \| ballot \| ballotbox \| bandage \| bank \| barChartSimple \| barChartWindow \| base \| baseApps \| baseFeed \| baseNotification \| baseQuickBuy \| baseSquare \| baseTransact \| baseVerification \| baseWallet \| baseball \| basketball \| beaker \| beginningArrow \| bell \| bellCheck \| bellPlus \| birthcertificate \| block \| blockchain \| blog \| book \| bookmark \| borrowProduct \| boxing \| bridging \| briefcase \| briefcaseAlt \| browser \| bug \| building \| calculator \| calendar \| calendarBlank \| calendarDates \| calendarEmpty \| calendarHeart \| calendarMoney \| calendarStar \| camera \| candlesticks \| car \| card \| caret \| caretDown \| caretLeft \| caretRight \| caretUp \| cash \| cashAustralianDollar \| cashBrazilianReal \| cashBrazillianReal \| cashCanadianDollar \| cashCoins \| cashEUR \| cashGBP \| cashIndonesianRupiah \| cashJPY \| cashPhilippinePeso \| cashPolishZloty \| cashRupee \| cashSingaporeDollar \| cashSwissFranc \| cashThaiBaht \| cashTurkishLira \| cashUSD \| cashUaeDirham \| cashVietnameseDong \| chainLink \| chartBar \| chartCandles \| chartLine \| chartPie \| chartPieCircle \| chartVolume \| chatBotAgent \| chatBubble \| chatRequests \| checkboxChecked \| checkboxEmpty \| checkmark \| chess \| circleCheckmark \| circleCross \| circulatingSupply \| city \| clipboard \| clock \| clockOutline \| close \| closeCaption \| clothing \| cloud \| cloudPartial \| cloudProduct \| cluster \| coinbase \| coinbaseCardProduct \| coinbaseOne \| coinbaseOneCard \| coinbaseOneLogo \| coinbaseRewards \| coinsCrypto \| collapse \| collectibles \| collection \| comment \| commentPlus \| commerceProduct \| compass \| complianceProduct \| compose \| computerChip \| concierge \| conciergeBell \| config \| continuous \| convert \| copy \| corporation \| creatorCoin \| cricket \| cross \| crossTrade \| crypto \| cryptobasics \| crystalBall \| crystalBallInsight \| currencies \| custodyProduct \| dashboard \| dataMarketplaceProduct \| dataStack \| defi \| delegateProduct \| deposit \| derivatives \| derivativesProduct \| derivativesProductNew \| developerAPIProduct \| developerPlatformProduct \| dex \| diagonalDownArrow \| diagonalRightArrow \| diagonalUpArrow \| diamond \| diamondIncentives \| dinnerPlate \| directDeposit \| directDepositIcon \| disabledPhone \| discordLogo \| distribution \| document \| documentation \| dot \| doubleChevronRight \| downArrow \| download \| drag \| drops \| earn \| earnProduct \| earnRewards \| earthquake \| educationBook \| educationPencil \| email \| endArrow \| entertainment \| ethereum \| eventContracts \| exchangeProduct \| exclamationMark \| expand \| expandAddress \| expandAll \| externalLink \| eye \| faceScan \| faces \| factory \| faucet \| fib \| filmStrip \| filter \| fingerprint \| flame \| folder \| folderArrow \| folderOpen \| followAdd \| following \| football \| fork \| forwardArrow \| fscsProtection \| gab \| games \| gaming \| gasFees \| gasFeesAlt \| gauge \| gaugeEmpty \| gaugeHigh \| gaugeHighLow \| gaugeHighMid \| gaugeLow \| gaugeLowHigh \| gaugeLowMid \| gaugeMedium \| gavel \| gear \| generalCharacter \| ghost \| gif \| giftBox \| giftCard \| gitHubLogo \| globe \| golf \| googleLogo \| greenEnergy \| grid \| group \| hamburger \| hammer \| heart \| helpCenterProduct \| helpCenterQuestionMark \| hiddenEye \| hockey \| home \| horizontalLine \| hospital \| hospitalCross \| hurricane \| ideal \| identityCard \| image \| info \| initiator \| instagramLogo \| instantUnstakingClock \| institute \| institutionalProduct \| interest \| invisible \| invoice \| keyboard \| laptop \| leadChart \| leadCoin \| learningRewardsProduct \| light \| lightbulb \| lightning \| lightningBolt \| lineChartCrypto \| list \| location \| lock \| login \| logout \| loop \| magnifyingGlass \| marketCap \| medal \| megaphone \| menu \| metaverse \| microphone \| microphoneCordless \| microscope \| mint \| minus \| mma \| moneyCardCoin \| moon \| more \| moreVertical \| motorsport \| music \| musicArticles \| needle \| newsFeed \| newsletter \| nft \| nftBuy \| nftOffer \| nftProduct \| nftSale \| noRocket \| noWifi \| nodeProduct \| oil \| options \| orderBook \| orderHistory \| outline \| pFPS \| paperAirplane \| paperclip \| participate \| participateProduct \| passKey \| passport \| pause \| pay \| payProduct \| paymentCard \| payments \| payouts \| paypal \| pencil \| peopleGroup \| peopleStar \| percentage \| perpetualSwap \| phone \| pieChartData \| pillBottle \| pillCapsule \| plane \| planet \| play \| playbutton \| plusMinus \| podiumStar \| politicsBuilding \| politicsCandidate \| politicsFlag \| politicsGavel \| politicsPodium \| politicsStar \| powerTool \| priceAlerts \| priceAlertsCheck \| primePoduct \| privateClientProduct \| proProduct \| profile \| protection \| pulse \| pyramid \| qrCode \| qrCodeAlt \| queryTransact \| questionMark \| quotation \| rain \| ratingsCheck \| ratingsChecks \| ratingsStar \| reCenter \| rectangle \| recurring \| refresh \| regulated \| regulatedFutures \| report \| rewardsProduct \| ribbon \| robot \| rocket \| rocketShip \| rollingSpot \| rosettaProduct \| rottenTomato \| royalty \| safe \| save \| savingsBank \| scanQrCode \| scienceAtom \| scienceBeaker \| scienceMoon \| securityKey \| securityShield \| seen \| sendReceive \| setPinCode \| settings \| share \| shield \| shieldOutline \| shoe \| shoppingCart \| signinProduct \| singleCoin \| singleNote \| singlecloud \| smartContract \| snow \| soccer \| socialChat \| socialReshare \| socialShare \| sofort \| sortDoubleArrow \| sortDown \| sortDownCenter \| sortUp \| sortUpCenter \| soundOff \| soundOn \| sparkle \| speaker \| speechBubble \| stableCoin \| stablecoinStack \| staggeredList \| stake \| staking \| star \| starAward \| starBubble \| starTrophy \| statusDot \| step0 \| step1 \| step2 \| step3 \| step4 \| step5 \| step6 \| step7 \| step8 \| step9 \| strategy \| sun \| support \| tag \| taxes \| taxesReceipt \| telephone \| tennis \| test \| thermometer \| thumbsDown \| thumbsDownOutline \| thumbsUp \| thumbsUpOutline \| tokenLaunchCoin \| tokenLaunchRocket \| tokenSales \| tornado \| trading \| transactions \| trashCan \| trophy \| trophyCup \| tshirt \| tv \| tvStand \| twitterLogo \| ultility \| umbrella \| undo \| unfollowPeople \| unknown \| unlock \| upArrow \| upload \| venturesProduct \| verifiedBadge \| verifiedPools \| verticalLine \| virus \| visible \| waasProduct \| wallet \| walletLogo \| walletProduct \| webhooks \| wellness \| wifi \| wind \| wireTransfer \| withdraw \| wrapToken \| xLogo` | Yes | `-` | Name of the icon, as defined in Figma. |
+| `active` | `boolean` | No | `false` | Toggles the active and inactive state of the navigation icon |
+| `animated` | `boolean` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `primary` | Color of the icon when used as a foreground. |
+| `dangerouslySetColor` | `string \| AnimatedInterpolation<string>` | No | `-` | - |
+| `fallback` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `null` | Fallback element to render if unable to find an icon with matching name |
+| `size` | `s \| l \| xs \| m` | No | `m` | Size for a given icon. |
+| `style` | `false \| Value \| AnimatedInterpolation<string \| number> \| RegisteredStyle<TextStyle> \| WithAnimatedObject<TextStyle> \| WithAnimatedArray<Falsy \| TextStyle \| RegisteredStyle<TextStyle> \| RecursiveArray<Falsy \| TextStyle \| RegisteredStyle<TextStyle>> \| readonly (Falsy \| TextStyle \| RegisteredStyle<TextStyle>)[]> \| null` | No | `-` | - |
+| `styles` | `{ root?: StyleProp<ViewStyle>; icon?: StyleProp<TextStyle>; }` | No | `-` | Custom styles for individual elements of the Icon component |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Outer Box wrapper element |
+| `icon` | `-` | Inner icon glyph Text element |
+
+

@@ -1,0 +1,119 @@
+# SparklineInteractiveHeader
+
+The SparklineInteractiveHeader is used to display chart information that changes over time
+
+## Import
+
+```tsx
+import { SparklineInteractiveHeader } from '@coinbase/cds-mobile-visualization'
+```
+
+## Examples
+
+### Default usage
+
+```jsx
+<Box padding={3} width="100%">
+  <SparklineInteractive
+    data={sparklineInteractiveData}
+    defaultPeriod="day"
+    formatDate={formatDate}
+    headerNode={<SparklineInteractiveHeader ref={headerRef} defaultLabel="Bitcoin Price" ... />}
+    onPeriodChanged={handlePeriodChanged}
+    onScrub={handleScrub}
+    onScrubEnd={handleScrubEnd}
+    periods={periods}
+    strokeColor="#F7931A"
+  />
+</Box>
+```
+
+### Fill
+
+The fill will be added by default
+
+```jsx
+<Box padding={3} width="100%">
+  <SparklineInteractive
+    fill
+    data={sparklineInteractiveData}
+    defaultPeriod="day"
+    formatDate={formatDate}
+    headerNode={<SparklineInteractiveHeader ref={headerRef} defaultLabel="Bitcoin Price" ... />}
+    onPeriodChanged={handlePeriodChanged}
+    onScrub={handleScrub}
+    onScrubEnd={handleScrubEnd}
+    periods={periods}
+    strokeColor="#F7931A"
+  />
+</Box>
+```
+
+### Compact
+
+```jsx
+<Box padding={3} width="100%">
+  <SparklineInteractive
+    compact
+    fill
+    data={sparklineInteractiveData}
+    defaultPeriod="day"
+    formatDate={formatDate}
+    headerNode={<SparklineInteractiveHeader ref={headerRef} compact defaultLabel="Bitcoin Price" ... />}
+    onPeriodChanged={handlePeriodChanged}
+    onScrub={handleScrub}
+    onScrubEnd={handleScrubEnd}
+    periods={periods}
+    strokeColor="#F7931A"
+  />
+</Box>
+```
+
+### Custom Label
+
+```jsx
+<Box padding={3} width="100%">
+  <SparklineInteractive
+    data={sparklineInteractiveData}
+    defaultPeriod="day"
+    formatDate={formatDate}
+    headerNode={
+      <SparklineInteractiveHeader
+        ref={headerRef}
+        defaultLabel="CustomHeader"
+        defaultSubHead={generateSubHead(lastPoint, currentPeriod)}
+        defaultTitle={`$${formatPrice(lastPoint.value)}`}
+        labelNode={
+          <HStack gap={1} alignItems="center" paddingBottom={0}>
+            <Icon active name="wallet" size="s" />
+            <Text as="span" font="title3">
+              CustomHeader
+            </Text>
+          </HStack>
+        }
+      />
+    }
+    onPeriodChanged={handlePeriodChanged}
+    onScrub={handleScrub}
+    onScrubEnd={handleScrubEnd}
+    periods={periods}
+    strokeColor="#F7931A"
+  />
+</Box>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `defaultTitle` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | Default title, changing this prop has no effect once the default is rendered. If you use a ReactNode that is not a string, then you cannot use the text based label that supports updates. |
+| `compact` | `boolean` | No | `-` | Reduce the font size used for the header itself. |
+| `defaultLabel` | `string` | No | `-` | Default label, changing this prop has no effect once the default is rendered. |
+| `defaultSubHead` | `SparklineInteractiveSubHead` | No | `-` | Default SubHead, changing this prop has no effect once the default is rendered. |
+| `key` | `Key \| null` | No | `-` | - |
+| `labelNode` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds a label node that allows React components. If you use this node then you cannot use the text based label that supports updates. |
+| `ref` | `((instance: SparklineInteractiveHeaderRef \| null) => void) \| RefObject<SparklineInteractiveHeaderRef> \| null` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `trailing` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Adds content next to the header. This is useful for interactive buttons |
+
+

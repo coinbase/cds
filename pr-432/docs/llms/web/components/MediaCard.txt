@@ -1,0 +1,571 @@
+# MediaCard
+
+MediaCard displays content with optional media in a contained card layout. Use it to showcase assets, products, or content with a thumbnail, title, subtitle, description, and optional media placement. MediaCard replaces the deprecated FloatingAssetCard and ContainedAssetCard components.
+
+## Import
+
+```tsx
+import { MediaCard } from '@coinbase/cds-web/cards/MediaCard'
+```
+
+## Examples
+
+MediaCard provides a contained card layout with optional media, ideal for showcasing assets, products, or promotional content.
+
+:::info Migrating from FloatingAssetCard or ContainedAssetCard?
+See the [Migration Guide](#migration-from-deprecated-components) at the end of this page.
+:::
+
+### Basic
+
+At minimum, provide a `thumbnail` to display visual content and a `title` for the card heading.
+
+```jsx live
+<VStack gap={2}>
+  <MediaCard
+    thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+  />
+  <MediaCard
+    thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        alt="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        src={ethBackground}
+        width="100%"
+      />
+    }
+  />
+</VStack>
+```
+
+### Media Placement
+
+Use the `media` prop to display larger visual content. Control its position with `mediaPlacement`:
+
+- `start`: Media on the left
+- `end` (default): Media on the right
+
+```jsx live
+<VStack gap={2}>
+  <MediaCard
+    thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        alt="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        src={ethBackground}
+        width="100%"
+      />
+    }
+    mediaPlacement="start"
+  />
+  <MediaCard
+    thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        alt="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        src={ethBackground}
+        width="100%"
+      />
+    }
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+### Polymorphic and Interactive
+
+MediaCard supports polymorphic rendering and can be made interactive with `renderAsPressable`. Use `as` to change the underlying element.
+
+```jsx live
+<VStack gap={2}>
+  <MediaCard
+    as="article"
+    thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+    title="Article Card"
+    subtitle="article element"
+    description="This card renders as an article element"
+    width={320}
+    media={
+      <RemoteImage
+        alt="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        src={ethBackground}
+        width="100%"
+      />
+    }
+  />
+  <MediaCard
+    renderAsPressable
+    accessibilityLabel="View Ethereum details on Coinbase"
+    as="a"
+    href="https://www.coinbase.com"
+    thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+    title="Interactive Card"
+    subtitle="Link"
+    description="Clickable card with href"
+    width={320}
+    media={
+      <RemoteImage
+        alt="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        src={ethBackground}
+        width="100%"
+      />
+    }
+  />
+  <MediaCard
+    renderAsPressable
+    accessibilityLabel="View Ethereum details"
+    as="button"
+    onClick={() => alert('Card clicked!')}
+    thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+    title="Interactive Card"
+    subtitle="Button"
+    description="Clickable card with onClick handler"
+    width={320}
+    media={
+      <RemoteImage
+        alt="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        src={ethBackground}
+        width="100%"
+      />
+    }
+  />
+</VStack>
+```
+
+### Text Content
+
+#### Long Text
+
+The card handles long text content with truncation.
+
+```jsx live
+<MediaCard
+  renderAsPressable
+  accessibilityLabel="View card with long text content"
+  as="button"
+  thumbnail={
+    <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" source={ethBackground} />
+  }
+  title="This is a very long title text that will get truncated"
+  subtitle="This is a very long subtitle text that will get truncated"
+  description="This is a very long description text that demonstrates how the card handles longer content"
+  width={320}
+  media={
+    <RemoteImage
+      alt="Ethereum background"
+      height="100%"
+      resizeMode="cover"
+      shape="rectangle"
+      src={ethBackground}
+      width="100%"
+    />
+  }
+/>
+```
+
+#### Custom Content
+
+Use React nodes for custom styled text content.
+
+```jsx live
+<MediaCard
+  thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+  title={
+    <Text as="p" font="title3">
+      Custom Title
+    </Text>
+  }
+  subtitle={
+    <Text as="p" font="headline" color="fgPositive">
+      Custom Subtitle
+    </Text>
+  }
+  description={
+    <Text as="p" font="label2">
+      Custom description with <strong>bold text</strong> and <em>italic text</em>
+    </Text>
+  }
+  width={320}
+  media={
+    <RemoteImage
+      alt="Media"
+      height="100%"
+      resizeMode="cover"
+      shape="rectangle"
+      src={ethBackground}
+      width="100%"
+    />
+  }
+/>
+```
+
+### Styling
+
+Use `styles` and `classNames` props to customize specific parts of the card.
+
+```jsx live
+<VStack gap={2}>
+  <MediaCard
+    thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        alt="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        src={ethBackground}
+        width="100%"
+      />
+    }
+    styles={{
+      layoutContainer: { gap: 3 },
+      contentContainer: { padding: 3, gap: 2 },
+      textContainer: { gap: 1 },
+      headerContainer: { gap: 1 },
+      mediaContainer: { borderRadius: 300 },
+    }}
+  />
+  <MediaCard
+    thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        alt="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        src={ethBackground}
+        width="100%"
+      />
+    }
+    styles={{
+      root: { borderWidth: 2, borderColor: 'blue' },
+    }}
+  />
+</VStack>
+```
+
+### Multiple Cards
+
+Display multiple cards in a carousel.
+
+```jsx live
+<Carousel styles={{ carousel: { gap: 16 } }}>
+  <CarouselItem id="card1">
+    <MediaCard
+      as="article"
+      thumbnail={<RemoteImage alt="Ethereum" shape="circle" size="l" source={ethBackground} />}
+      title="Title"
+      subtitle="Subtitle"
+      description="Description"
+      width={320}
+      media={
+        <RemoteImage
+          alt="Media"
+          height="100%"
+          resizeMode="cover"
+          shape="rectangle"
+          src={ethBackground}
+          width="100%"
+        />
+      }
+    />
+  </CarouselItem>
+  <CarouselItem id="card2">
+    <MediaCard
+      renderAsPressable
+      accessibilityLabel="View Bitcoin details on Coinbase"
+      as="a"
+      href="https://www.coinbase.com"
+      thumbnail={
+        <RemoteImage alt="Bitcoin thumbnail" shape="circle" size="l" source={assets.btc.imageUrl} />
+      }
+      title="Bitcoin"
+      subtitle="BTC"
+      description="Another card with different content"
+      width={320}
+      media={
+        <RemoteImage
+          alt="Ethereum background"
+          height="100%"
+          resizeMode="cover"
+          shape="rectangle"
+          src={ethBackground}
+          width="100%"
+        />
+      }
+    />
+  </CarouselItem>
+  <CarouselItem id="card3">
+    <MediaCard
+      renderAsPressable
+      accessibilityLabel="View Ethereum details"
+      as="button"
+      onClick={() => console.log('clicked')}
+      thumbnail={
+        <RemoteImage alt="Ethereum thumbnail" shape="circle" size="l" source={ethBackground} />
+      }
+      title="Ethereum"
+      subtitle="ETH"
+      description="Card with onClick handler"
+      width={320}
+    />
+  </CarouselItem>
+</Carousel>
+```
+
+### Accessibility
+
+#### Interactive Cards
+
+When making MediaCard interactive with `renderAsPressable`:
+
+- If `as` is set to `"button"` or `"a"`, `renderAsPressable` defaults to `true` automatically. Add an `accessibilityLabel` to summarize the card's action for screen reader users (e.g., `accessibilityLabel="View Ethereum details"`)
+
+:::warning Avoid Nested Interactive Elements
+Don't place buttons or links inside an interactive card, as this creates accessibility issues for screen reader users and can cause unexpected behavior when clicking.
+:::
+
+#### Heading Semantics
+
+By default, the `title` prop renders as a `<div>`. If you need the title to be a proper heading element for document structure, pass a custom `Text` node with the `as` prop:
+
+```jsx
+<MediaCard
+  title={
+    <Text as="h3" font="headline">
+      Card Title
+    </Text>
+  }
+  // ...other props
+/>
+```
+
+#### Color Contrast
+
+When customizing card backgrounds, ensure sufficient color contrast between text and background colors. Use tools like the [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/) to verify your color combinations meet WCAG guidelines.
+
+### Migration from Deprecated Components
+
+#### Migrating from ContainedAssetCard
+
+Replace `ContainedAssetCard` with `MediaCard`:
+
+```jsx
+// Before
+<ContainedAssetCard
+  header={<RemoteImage source={assets.btc.imageUrl} width="32px" height="32px" />}
+  title="$309.43"
+  subtitle="Bitcoin"
+  description={<Text color="fgPositive">&#x2197;3.37%</Text>}
+  size="l"
+>
+  <RemoteImage source={ethBackground} ... />
+</ContainedAssetCard>
+
+// After
+<MediaCard
+  thumbnail={<RemoteImage source={assets.btc.imageUrl} shape="circle" size="l" />}
+  title="$309.43"
+  subtitle="Bitcoin"
+  description={<Text color="fgPositive">&#x2197;3.37%</Text>}
+  media={<RemoteImage src={ethBackground} height="100%" width="100%" resizeMode="cover" />}
+  mediaPlacement="end"
+/>
+```
+
+#### Migrating from FloatingAssetCard
+
+Replace `FloatingAssetCard` with `MediaCard`. Note that the floating variation (media outside the card container) is no longer supported:
+
+```jsx
+// Before
+<FloatingAssetCard
+  title="Balancing the Air"
+  subtitle="Amber V's Artwork"
+  description="0.5 ETH"
+  media={<RemoteImage source="/img/nft.png" ... />}
+/>
+
+// After
+<MediaCard
+  thumbnail={<RemoteImage source="/img/nft.png" shape="circle" size="l" />}
+  title="Balancing the Air"
+  subtitle="Amber V's Artwork"
+  description="0.5 ETH"
+/>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `thumbnail` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | React node to display as a thumbnail in the content area. |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `as` | `symbol \| object \| style \| div \| a \| abbr \| address \| area \| article \| aside \| audio \| b \| base \| bdi \| bdo \| big \| blockquote \| body \| br \| button \| canvas \| caption \| center \| cite \| code \| col \| colgroup \| data \| datalist \| dd \| del \| details \| dfn \| dialog \| dl \| dt \| em \| embed \| fieldset \| figcaption \| figure \| footer \| form \| h1 \| h2 \| h3 \| h4 \| h5 \| h6 \| head \| header \| hgroup \| hr \| html \| i \| iframe \| img \| input \| ins \| kbd \| keygen \| label \| legend \| li \| link \| main \| map \| mark \| menu \| menuitem \| meta \| meter \| nav \| noindex \| noscript \| ol \| optgroup \| option \| output \| p \| param \| picture \| pre \| progress \| q \| rp \| rt \| ruby \| s \| samp \| search \| slot \| script \| section \| select \| small \| source \| span \| strong \| sub \| summary \| sup \| table \| template \| tbody \| td \| textarea \| tfoot \| th \| thead \| time \| title \| tr \| track \| u \| ul \| var \| video \| wbr \| webview \| svg \| animate \| animateMotion \| animateTransform \| circle \| clipPath \| defs \| desc \| ellipse \| feBlend \| feColorMatrix \| feComponentTransfer \| feComposite \| feConvolveMatrix \| feDiffuseLighting \| feDisplacementMap \| feDistantLight \| feDropShadow \| feFlood \| feFuncA \| feFuncB \| feFuncG \| feFuncR \| feGaussianBlur \| feImage \| feMerge \| feMergeNode \| feMorphology \| feOffset \| fePointLight \| feSpecularLighting \| feSpotLight \| feTile \| feTurbulence \| filter \| foreignObject \| g \| image \| line \| linearGradient \| marker \| mask \| metadata \| mpath \| path \| pattern \| polygon \| polyline \| radialGradient \| rect \| set \| stop \| switch \| text \| textPath \| tspan \| use \| view \| ComponentClass<any, any> \| FunctionComponent<any>` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color of the overlay (element being interacted with). |
+| `blendStyles` | `InteractableBlendStyles` | No | `-` | - |
+| `block` | `boolean` | No | `-` | Set element to block and expand to 100% width. |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Border color of the element. |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `className` | `string` | No | `-` | Apply class names to the outer container. |
+| `classNames` | `({ layoutContainer?: string; contentContainer?: string \| undefined; textContainer?: string \| undefined; headerContainer?: string \| undefined; mediaContainer?: string \| undefined; } & { root?: string \| undefined; }) \| undefined` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `description` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React node to display as the card description. Use a Text component to override default color and font. |
+| `disabled` | `boolean` | No | `-` | Is the element currently disabled. |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `focusable` | `boolean` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `loading` | `boolean` | No | `-` | Is the element currenty loading. When set to true, will disable element from press and keyboard events |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `media` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to display as the main media content. When provided, it will be rendered in a Box container taking up 50% of the card width. |
+| `mediaPlacement` | `start \| end` | No | `'end'` | The position of the media within the card. |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `noScaleOnPress` | `boolean` | No | `-` | Dont scale element on press. |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `pressed` | `boolean` | No | `-` | Is the element being pressed. Primarily a mobile feature, but can be used on the web. |
+| `ref` | `any` | No | `-` | - |
+| `renderAsPressable` | `boolean` | No | `true if `as` is 'button' or 'a', otherwise false` | If true, the CardRoot will be rendered as a Pressable component. When false, renders as an HStack for layout purposes. |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `styles` | `({ layoutContainer?: CSSProperties; contentContainer?: CSSProperties \| undefined; textContainer?: CSSProperties \| undefined; headerContainer?: CSSProperties \| undefined; mediaContainer?: CSSProperties \| undefined; } & { root?: CSSProperties \| undefined; }) \| undefined` | No | `-` | - |
+| `subtitle` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React node to display as the card subtitle. Use a Text component to override default color and font. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `title` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React node to display as the card title. Use a Text component to override default color and font. |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `transparentWhileInactive` | `boolean` | No | `-` | Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc). Must be used in conjunction with the pressed prop |
+| `transparentWhilePressed` | `boolean` | No | `-` | Mark the background and border as transparent even while element is interacted with (elevation underlay issue). Must be used in conjunction with the pressed prop |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `layoutContainer` | `-` | Layout container element |
+| `contentContainer` | `-` | Content container element |
+| `textContainer` | `-` | Text container element |
+| `headerContainer` | `-` | Header container element |
+| `mediaContainer` | `-` | Media container element |
+| `root` | `-` | Root element |
+
+

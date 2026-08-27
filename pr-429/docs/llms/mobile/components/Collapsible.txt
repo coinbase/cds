@@ -1,0 +1,104 @@
+# Collapsible
+
+A container that can be expanded or collapsed.
+
+## Import
+
+```tsx
+import { Collapsible } from '@coinbase/cds-mobile/layout/Collapsible'
+```
+
+## Examples
+
+### Basic Collapsible
+
+```jsx
+function BasicCollapsible() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <VStack gap={3}>
+      <Button onPress={() => setCollapsed(!collapsed)}>Click me!</Button>
+      <Collapsible collapsed={collapsed} padding={3}>
+        <VStack>Send a crypto gift! Share the gift of crypto this holiday season.</VStack>
+      </Collapsible>
+    </VStack>
+  );
+}
+```
+
+### Expand Top
+
+Place `Collapsible` above the trigger to expand top.
+
+```jsx
+function ExpandTop() {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <VStack gap={3}>
+      <Collapsible collapsed={collapsed}>
+        <VStack>Send a crypto gift! Share the gift of crypto this holiday season.</VStack>
+      </Collapsible>
+      <Button onPress={() => setCollapsed(!collapsed)}>Click me!</Button>
+    </VStack>
+  );
+}
+```
+
+### Scroll Content
+
+Enable scroll by setting `maxHeight`.
+
+```jsx
+function Scroll() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <VStack gap={3}>
+      <Button onPress={() => setCollapsed(!collapsed)}>Click me!</Button>
+      <Collapsible collapsed={collapsed} maxHeight={400}>
+        <Text font="body" as="p">
+          {loremIpsum.repeat(50)}
+        </Text>
+      </Collapsible>
+    </VStack>
+  );
+}
+```
+
+### Horizontal (Experimental)
+
+Set `direction="horizontal"` for horizontal expand/collapse.
+
+```jsx
+function Horizontal() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <HStack gap={2} alignItems="center">
+      <Button onPress={() => setCollapsed(!collapsed)}>Click me!</Button>
+      <Collapsible collapsed={collapsed} direction="horizontal">
+        <DotCount count={100} />
+        <DotCount count={1} />
+        <DotCount count={99} />
+      </Collapsible>
+    </HStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | Collapsible content |
+| `collapsed` | `boolean` | Yes | `true` | Expand/collapse state of the content. |
+| `direction` | `horizontal \| vertical` | No | `vertical` | Direction the content should expand/collapse to |
+| `key` | `Key \| null` | No | `-` | - |
+| `maxHeight` | `number` | No | `-` | Max height of the content. Overflow content will be scrollable. |
+| `maxWidth` | `number` | No | `-` | Max width of the content. Overflow content will be scrollable. |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `scrollViewProps` | `ScrollViewProps` | No | `-` | RN ScrollView props. Use with caution as it might break default settings. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

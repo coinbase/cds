@@ -1,0 +1,218 @@
+# CheckboxGroup
+
+CheckboxGroup is a control component that allows users to select multiple options from a set of choices. It manages the state and layout of multiple checkbox inputs as a cohesive group.
+
+## Import
+
+```tsx
+import { CheckboxGroup } from '@coinbase/cds-web/controls/CheckboxGroup'
+```
+
+## Examples
+
+### Deprecation Notice
+
+:::danger Deprecated Component
+
+**CheckboxGroup is deprecated and will be removed in a future version.**
+
+Use **[ControlGroup](/components/inputs/ControlGroup)** with `role="group"` instead for better accessibility, consistency, and maintainability.
+
+:::
+
+### Migration Guide
+
+#### ✅ Recommended: Using ControlGroup
+
+The new recommended approach provides better accessibility, cleaner API, and consistent behavior across the design system.
+
+```jsx live
+function RecommendedCheckboxGroup() {
+  const options = [
+    { value: 'email', children: 'Email notifications' },
+    { value: 'sms', children: 'SMS notifications' },
+    { value: 'push', children: 'Push notifications' },
+    { value: 'newsletter', children: 'Newsletter subscription' },
+  ];
+
+  const [selectedValues, setSelectedValues] = useState(['email', 'push']);
+
+  const handleChange = (e) => {
+    const { value, checked } = e.target;
+    setSelectedValues((prev) => (checked ? [...prev, value] : prev.filter((v) => v !== value)));
+  };
+
+  return (
+    <VStack gap={2}>
+      <ControlGroup
+        role="group"
+        ControlComponent={Checkbox}
+        label="Notification Preferences"
+        options={options}
+        value={selectedValues}
+        onChange={handleChange}
+        name="notifications"
+      />
+      <Text font="caption" color="fgMuted">
+        Selected: {selectedValues.join(', ') || 'None'}
+      </Text>
+    </VStack>
+  );
+}
+```
+
+#### Migration Steps
+
+1. **Replace CheckboxGroup with [ControlGroup](/components/inputs/ControlGroup)**:
+
+   ```jsx
+   // Old (deprecated)
+   <CheckboxGroup selectedValues={new Set(values)} onChange={onChange}>
+     <Checkbox value="option1">Option 1</Checkbox>
+     <Checkbox value="option2">Option 2</Checkbox>
+   </CheckboxGroup>
+
+   // New (recommended)
+   <ControlGroup
+     role="group"
+     ControlComponent={Checkbox}
+     options={[
+       { value: 'option1', children: 'Option 1' },
+       { value: 'option2', children: 'Option 2' }
+     ]}
+     value={values}
+     onChange={onChange}
+   />
+   ```
+
+2. **Update state management**:
+
+   ```jsx
+   // Old: Used Set<string>
+   const [selectedValues, setSelectedValues] = useState(new Set(['value1']));
+
+   // New: Use Array<string>
+   const [selectedValues, setSelectedValues] = useState(['value1']);
+   ```
+
+3. **Update onChange handler**:
+
+   ```jsx
+   // Old: Toggle logic handled manually
+   const oldOnChange = (e) => {
+     const { value, checked } = e.target;
+     setSelectedValues((prev) => {
+       const newSet = new Set(prev);
+       if (checked) {
+         newSet.add(value);
+       } else {
+         newSet.delete(value);
+       }
+       return newSet;
+     });
+   };
+
+   // New: Simplified toggle logic
+   const newOnChange = (e) => {
+     const { value, checked } = e.target;
+     setSelectedValues((prev) => (checked ? [...prev, value] : prev.filter((v) => v !== value)));
+   };
+   ```
+
+### Legacy Usage (Deprecated)
+
+:::warning Legacy Example
+
+The following examples show the **deprecated** CheckboxGroup usage. **Do not use this in new code.** Use [ControlGroup](/components/inputs/ControlGroup) instead.
+
+:::
+
+#### Basic CheckboxGroup (Legacy)
+
+```jsx live
+function LegacyCheckboxGroup() {
+  const [selectedValues, setSelectedValues] = useState(new Set(['feature1']));
+
+  const handleToggle = (e) => {
+    const { value, checked } = e.target;
+    setSelectedValues((prev) => {
+      const newSet = new Set(prev);
+      if (checked) {
+        newSet.add(value);
+      } else {
+        newSet.delete(value);
+      }
+      return newSet;
+    });
+  };
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline">Features (Legacy CheckboxGroup)</Text>
+      <CheckboxGroup
+        aria-labelledby="features-label"
+        selectedValues={selectedValues}
+        onChange={handleToggle}
+        name="features"
+      >
+        <Checkbox value="feature1">Dark mode</Checkbox>
+        <Checkbox value="feature2">Two-factor authentication</Checkbox>
+        <Checkbox value="feature3">Email notifications</Checkbox>
+        <Checkbox value="feature4">Auto-save</Checkbox>
+      </CheckboxGroup>
+      <Text font="caption" color="fgMuted">
+        Selected: {Array.from(selectedValues).join(', ') || 'None'}
+      </Text>
+    </VStack>
+  );
+}
+```
+
+#### With Custom Label (Legacy)
+
+```jsx live
+function LegacyCheckboxGroupWithLabel() {
+  const [permissions, setPermissions] = useState(new Set(['read']));
+
+  const handlePermissionChange = (e) => {
+    const { value, checked } = e.target;
+    setPermissions((prev) => {
+      const newSet = new Set(prev);
+      if (checked) {
+        newSet.add(value);
+      } else {
+        newSet.delete(value);
+      }
+      return newSet;
+    });
+  };
+
+  return (
+    <CheckboxGroup
+      label={<Text font="headline">User Permissions</Text>}
+      selectedValues={permissions}
+      onChange={handlePermissionChange}
+      name="permissions"
+    >
+      <Checkbox value="read">Read access</Checkbox>
+      <Checkbox value="write">Write access</Checkbox>
+      <Checkbox value="admin">Admin access</Checkbox>
+    </CheckboxGroup>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `ReactElement<any, string \| JSXElementConstructor<any>>[]` | Yes | `-` | Checkbox elements that are part of the checkbox group. |
+| `selectedValues` | `Set<CheckboxValue>` | Yes | `-` | Checkbox options that are checked. |
+| `className` | `string` | No | `-` | - |
+| `label` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Set a label summary for the group of checkboxes. |
+| `onChange` | `ChangeEventHandler<HTMLInputElement>` | No | `-` | Handle change event when pressing on a checkbox option. |
+| `ref` | `null \| (instance: HTMLFieldSetElement \| null) => void \| RefObject<HTMLFieldSetElement>` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

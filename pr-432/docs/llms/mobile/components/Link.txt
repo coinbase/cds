@@ -1,0 +1,303 @@
+# Link
+
+A pressable Text component.
+
+## Import
+
+```tsx
+import { Link } from '@coinbase/cds-mobile/typography/Link'
+```
+
+## Examples
+
+### Default
+
+Default Link text will inherit parent text styles.
+
+```jsx
+<Link>Default is inherited text</Link>
+```
+
+### Styling your link
+
+To style a `<Link />` component, simply wrap the `Link` node in the desired `Text` component, using the `as` prop for your usecase (for example, `p` for body text, `h1`/`h2`/`h3` for titles, etc). However, there may be times when a rendering a span is exactly what you want. In those cases, providing a font prop makes sense.
+
+Wrapping your Link in the appropriate Text element
+
+```jsx
+<VStack alignItems="flex-start" gap={3}>
+  <Text font="body" as="p">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      body link
+    </Link>
+  </Text>
+  <Text font="caption" as="span">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      caption link
+    </Link>
+  </Text>
+  <Text font="label1" as="label">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      label1 link
+    </Link>
+  </Text>
+  <Text font="label2" as="label">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      label2 link
+    </Link>
+  </Text>
+  <Text font="legal" as="span">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      legal link
+    </Link>
+  </Text>
+  <Text font="title1" as="h1">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      title1 link
+    </Link>
+  </Text>
+  <Text font="title2" as="h2">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      title2 link
+    </Link>
+  </Text>
+  <Text font="title3" as="h3">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      title3 link
+    </Link>
+  </Text>
+</VStack>
+```
+
+### Using the font prop
+
+If you find yourself in a situation where you simply need to style a link as a Text component without wrapping it in the semantically appropriate text element, reach for the `font` prop.
+
+```jsx
+<VStack alignItems="flex-start" gap={3}>
+  {['body', 'caption', 'label1', 'label2', 'legal', 'title1', 'title2', 'title3'].map((font) => (
+    <Link font={font} to="https://www.coinbase.com/" openInNewWindow>
+      {`${font} link`}
+    </Link>
+  ))}
+</VStack>
+```
+
+### Color override
+
+```jsx
+<Link to="https://www.coinbase.com/" color="fgNegative">
+  With color override
+</Link>
+```
+
+### openInNewWindow and rel props
+
+```jsx
+<VStack alignItems="flex-start" gap={3}>
+  <Link font="title1" to="https://www.coinbase.com/" openInNewWindow>
+    Open window in existing tab
+  </Link>
+  <Link font="title2" to="https://www.coinbase.com/" rel="noreferrer">
+    Sets rel to noreferrer
+  </Link>
+  <Link font="title3" to="https://www.coinbase.com/" rel="noopener">
+    Sets rel to noopener
+  </Link>
+</VStack>
+```
+
+### Handling onPress
+
+```jsx
+<Link font="headline" to="#tagname" onPress={() => console.log('pressed link')} rel="noopener">
+  Handles onPress
+</Link>
+```
+
+### Accessibility
+
+:::tip Accessibility tip
+
+[WCAG 2.0](https://webaim.org/standards/wcag/checklist) has 2 requirements for body text links that are not underlined by default:
+
+<br />
+
+_The link text must have a 3:1 contrast ratio from the surrounding non-link text. The link must present a "non-color designator" (typically the introduction of the underline) on both mouse hover and keyboard focus. These two requirements help ensure that all users can differentiate links from non-link text, even if they have low vision, color deficiency, or have overridden page colors._
+
+:::
+
+### A11y for nested link in text
+
+React Native will flatten the nested Text into a string and therefore not able to focus internal link for a11y purpose. You can read more about it in the [official documentation](https://reactnative.dev/docs/text#nested-text).
+For better accessibility, we recommend this pattern in mobile.
+
+```jsx
+import { AccessibilityInfo, Linking } from 'react-native';
+
+<TextLegal
+  suppressHighlighting
+  accessibilityLabel="Consider a case where you have a block of text with an inline link. Like so. You may want to write your code like this. Tap to go to coinbase.com."
+  accessibilityRole="link"
+  onPress={async () => {
+    try {
+      const screenReaderEnabled = await AccessibilityInfo.isScreenReaderEnabled();
+      if (screenReaderEnabled) {
+        await openURL('https://www.coinbase.com/');
+      }
+    } catch (error) {
+      // Handle or log the error appropriately
+      console.error('Error in onPress handler:', error);
+    }
+  }}
+>
+  Consider a case where you have a block of text with an inline link.{' '}
+  <Link to="https://www.coinbase.com/">Like so.</Link> You may want to write your code like this.
+</TextLegal>;
+```
+
+### A11y for multiple nested links
+
+It is an design anti-pattern to have multiple nested links in a single block of text in
+react native, since it's bad for accessibility. Consider pattern like this if more than
+one link is necessary in one paragraph.
+
+```jsx
+function MultipleLinksA11yExample() {
+  return (
+    <>
+      <Text>
+        Terms & conditions last updated August 2025. Privacy policy last updated June 2025.
+      </Text>
+      <Link to="https://www.coinbase.com/">Tap here to view our terms & conditions</Link>
+      <Link to="https://www.coinbase.com/">Tap here to view our privacy policy</Link>
+    </>
+  );
+}
+```
+
+### With padding
+
+When applying padding to a `Text` component that contains instances of `Link`, wrap in a `Box` to prevent the hitbox from being misaligned.
+
+```jsx
+<Box paddingTop={2}>
+  <Text font="legal" color="fgMuted">
+    By continuing, you agree to the <Link to="/terms">Terms of Service</Link>.
+  </Text>
+</Box>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `adjustsFontSizeToFit` | `boolean` | No | `-` | Specifies whether font should be scaled down automatically to fit given style constraints. |
+| `align` | `end \| start \| center \| justify` | No | `start` | Specifies text alignment. On mobile, the value justify is only supported on iOS and fallbacks to start on Android. |
+| `alignContent` | `flex-start \| flex-end \| center \| stretch \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `allowFontScaling` | `boolean` | No | `-` | Specifies whether fonts should scale to respect Text Size accessibility settings. The default is true. |
+| `android_hyphenationFrequency` | `none \| normal \| full` | No | `-` | Hyphenation strategy |
+| `animated` | `boolean` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string \| OpaqueColorValue` | No | `-` | - |
+| `dangerouslySetColor` | `string \| OpaqueColorValue` | No | `-` | - |
+| `dataDetectorType` | `link \| none \| all \| email \| phoneNumber \| null` | No | `-` | Determines the types of data converted to clickable URLs in the text element. By default no data types are detected. |
+| `disabled` | `boolean` | No | `-` | Add disabled opacity style to text Specifies the disabled state of the text view for testing purposes. |
+| `display` | `flex \| none` | No | `-` | - |
+| `dynamicTypeRamp` | `title1 \| title2 \| title3 \| headline \| body \| caption2 \| caption1 \| footnote \| subheadline \| callout \| largeTitle` | No | `-` | The Dynamic Type scale ramp to apply to this element on iOS. |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `ellipsize` | `middle \| head \| tail \| clip` | No | `-` | Choose ellipsize mode. |
+| `ellipsizeMode` | `middle \| head \| tail \| clip` | No | `-` | This can be one of the following values:  - head - The line is displayed so that the end fits in the container and the missing text at the beginning of the line is indicated by an ellipsis glyph. e.g., ...wxyz - middle - The line is displayed so that the beginning and end fit in the container and the missing text in the middle is indicated by an ellipsis glyph. ab...yz - tail - The line is displayed so that the beginning fits in the container and the missing text at the end of the line is indicated by an ellipsis glyph. e.g., abcd... - clip - Lines are not drawn past the edge of the text container.  The default is tail.  numberOfLines must be set in conjunction with this prop.  > clip is working only for iOS |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `body` | Set text font family. |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `forceOpenOutsideApp` | `boolean` | No | `false` | Toggles whether the link should be opened outside or within app |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `id` | `string` | No | `-` | Used to reference react managed views from native code. |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineBreakMode` | `middle \| head \| tail \| clip` | No | `-` | Line Break mode. Works only with numberOfLines. clip is working only for iOS |
+| `lineBreakStrategyIOS` | `none \| standard \| hangul-word \| push-out` | No | `-` | Set line break strategy on iOS. |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxFontSizeMultiplier` | `number \| null` | No | `-` | Specifies largest possible scale a font can reach when allowFontScaling is enabled. Possible values: - null/undefined (default): inherit from the parent node or the global default (0) - 0: no max, ignore parent/global default - >= 1: sets the maxFontSizeMultiplier of this node to this value |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `minimumFontScale` | `number` | No | `-` | Specifies smallest possible scale a font can reach when adjustsFontSizeToFit is enabled. (values 0.01-1.0). |
+| `mono` | `boolean` | No | `-` | Use monospace font family. |
+| `nativeID` | `string` | No | `-` | Used to reference react managed views from native code. |
+| `noWrap` | `boolean` | No | `false` | Set text to be in a single line. |
+| `numberOfLines` | `number` | No | `-` | Truncates text after wrapping to a defined number of lines. Used to truncate the text with an ellipsis after computing the text layout, including line wrapping, such that the total number of lines does not exceed this number.  This prop is commonly used with ellipsizeMode. |
+| `onLayout` | `((event: LayoutChangeEvent) => void)` | No | `-` | Invoked on mount and layout changes with  {nativeEvent: { layout: {x, y, width, height}}}. |
+| `onLongPress` | `((event: GestureResponderEvent) => void)` | No | `-` | This function is called on long press. e.g., onLongPress={this.increaseSize}> |
+| `onPress` | `(((event: GestureResponderEvent) => void) & ((event: GestureResponderEvent) => void))` | No | `-` | Callback to fire when pressed This function is called on press. Text intrinsically supports press handling with a default highlight state (which can be disabled with suppressHighlighting). |
+| `onPressIn` | `((event: GestureResponderEvent) => void)` | No | `-` | - |
+| `onPressOut` | `((event: GestureResponderEvent) => void)` | No | `-` | - |
+| `onTextLayout` | `((event: NativeSyntheticEvent<TextLayoutEventData>) => void)` | No | `-` | Invoked on Text layout |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `preventRedirectionIntoApp` | `boolean` | No | `false` | Toggles whether we allow users to go back to app when they are in an external browser |
+| `readerMode` | `boolean` | No | `false` | Toggles readerMode flag for web browser. Note: readerMode is only available on ios |
+| `renderEmptyNode` | `boolean` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `selectable` | `boolean` | No | `-` | Lets the user select text, to use the native copy and paste functionality. |
+| `selectionColor` | `string \| OpaqueColorValue` | No | `-` | The highlight color of the text. |
+| `style` | `false \| Value \| AnimatedInterpolation<string \| number> \| RegisteredStyle<TextStyle> \| WithAnimatedObject<TextStyle> \| WithAnimatedArray<Falsy \| TextStyle \| RegisteredStyle<TextStyle> \| RecursiveArray<Falsy \| TextStyle \| RegisteredStyle<TextStyle>> \| readonly (Falsy \| TextStyle \| RegisteredStyle<TextStyle>)[]> \| null` | No | `-` | - |
+| `suppressHighlighting` | `boolean` | No | `-` | When true, no visual change is made when text is pressed down. By default, a gray oval highlights the text on press down. |
+| `tabularNumbers` | `boolean` | No | `false` | Activates the set of figures where numbers are all of the same size, allowing them to be easily aligned. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textBreakStrategy` | `simple \| highQuality \| balanced` | No | `-` | Set text break strategy on Android API Level 23+ default is highQuality. |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `to` | `string` | No | `-` | URL that this link goes to when pressed. |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `underline` | `boolean` | No | `false false (unless nested inside a paragraph tag)` | Set text decoration to underline. |
+| `userSelect` | `none \| auto \| contain \| text \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `zIndex` | `number` | No | `-` | - |
+
+

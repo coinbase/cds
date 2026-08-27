@@ -1,0 +1,734 @@
+# DataCard
+
+A flexible card component for displaying data with visualizations like progress bars and circles. It supports horizontal and vertical layouts with customizable thumbnails and title accessories.
+
+## Import
+
+```tsx
+import { DataCard } from '@coinbase/cds-mobile/alpha/data-card'
+```
+
+## Examples
+
+DataCard is a flexible card component for displaying data with visualizations. It provides a structured layout for thumbnails, titles, subtitles, and visualization content. Pass any visualization component as children, such as `ProgressBar`, `ProgressCircle`, or custom content.
+
+:::info Migrating from Legacy DataCard?
+See the [Migration Guide](#migration-from-legacy-datacard) at the end of this page.
+:::
+
+### Basic Examples
+
+DataCard supports two layouts: `vertical` (stacked) and `horizontal` (side-by-side). Pass visualization components as children.
+
+```jsx
+function Example() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Progress indicator"
+        thumbnail={exampleThumbnail}
+        title="Progress Bar Card"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 25.25%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 45,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="Circular progress"
+        thumbnail={exampleThumbnail}
+        title="Progress Circle Card"
+        titleAccessory={
+          <Text color="fgNegative" font="label1">
+            ↘ 3.12%
+          </Text>
+        }
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="60% complete"
+            progress={0.6}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+### Layout Variations
+
+Use `layout="vertical"` for stacked layouts (thumbnail on left, visualization below) or `layout="horizontal"` for side-by-side layouts (header on left, visualization on right).
+
+```jsx
+function Example() {
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Vertical layout stacks content"
+        thumbnail={exampleThumbnail}
+        title="Vertical Layout"
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 75,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="75% complete" progress={0.75} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="Horizontal layout places content side by side"
+        thumbnail={exampleThumbnail}
+        title="Horizontal Layout"
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="75% complete"
+            progress={0.75}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+### Title Accessory
+
+Use `titleAccessory` to display supplementary information inline with the title, such as trends, percentages, or status indicators.
+
+```jsx
+function Example() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="With positive trend"
+        thumbnail={exampleThumbnail}
+        title="Positive Trend"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 8.5%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 90,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="90% complete" progress={0.9} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="With negative trend"
+        thumbnail={exampleThumbnail}
+        title="Negative Trend"
+        titleAccessory={
+          <Text color="fgNegative" font="label1">
+            ↘ 4.2%
+          </Text>
+        }
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="70% complete"
+            progress={0.7}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+### Interactive Cards
+
+Use `renderAsPressable` to make the card interactive with `onPress` handler.
+
+```jsx
+function Example() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        renderAsPressable
+        accessibilityLabel="View progress details"
+        layout="vertical"
+        onPress={() => Alert.alert('Progress bar card pressed!')}
+        subtitle="Clickable progress card"
+        thumbnail={exampleThumbnail}
+        title="Tap to View Details"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 8.5%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 75,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="75% complete" progress={0.75} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        renderAsPressable
+        accessibilityLabel="View circle progress details"
+        layout="horizontal"
+        onPress={() => Alert.alert('Circle card pressed!')}
+        subtitle="Tap for more info"
+        thumbnail={exampleThumbnail}
+        title="Interactive Circle"
+        titleAccessory={
+          <Text color="fgMuted" font="label1">
+            Details
+          </Text>
+        }
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="85% complete"
+            progress={0.85}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+### Style Customization
+
+Use `styles` prop to customize specific parts of the card layout.
+
+```jsx
+function Example() {
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        styles={{
+          root: { borderWidth: 2, borderColor: '#0066FF' },
+        }}
+        subtitle="Custom border"
+        thumbnail={exampleThumbnail}
+        title="Custom Root Styles"
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 50,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="50% complete" progress={0.5} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        styles={{
+          root: { backgroundColor: '#F5F5F5' },
+          headerContainer: { paddingLeft: 16 },
+        }}
+        subtitle="Custom background and padding"
+        thumbnail={exampleThumbnail}
+        title="Custom Layout Styles"
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="70% complete"
+            progress={0.7}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+### Multiple Cards
+
+DataCards work well in lists or dashboards to display multiple data points.
+
+```jsx
+function Example() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Daily goal progress"
+        thumbnail={exampleThumbnail}
+        title="Steps Today"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            6,500 / 10,000
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 65,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar accessibilityLabel="65% complete" progress={0.65} weight="semiheavy" />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+      <DataCard
+        layout="horizontal"
+        subtitle="Below target this week"
+        thumbnail={exampleThumbnail}
+        title="Workout Goal"
+        titleAccessory={
+          <Text color="fgNegative" font="label1">
+            2 / 7 days
+          </Text>
+        }
+      >
+        <HStack alignItems="center" height="100%">
+          <ProgressCircle
+            accessibilityLabel="29% complete"
+            progress={0.29}
+            size={100}
+            weight="heavy"
+          />
+        </HStack>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+### Accessibility
+
+Ensure all visualization components have appropriate `accessibilityLabel` props to convey the progress information to screen readers.
+
+#### Interactive Cards
+
+When making DataCard interactive with `renderAsPressable`:
+
+- Add an `accessibilityLabel` to summarize the card's content for VoiceOver users, ensuring all visual text of the card is included in the label (e.g., `accessibilityLabel="ETH Holdings, 45% progress, View details"`)
+
+```jsx
+<DataCard
+  renderAsPressable
+  accessibilityLabel="ETH Holdings, 45% progress, View details"
+  onPress={() => handlePress()}
+  title="ETH Holdings"
+  subtitle="45% progress"
+>
+  <Box paddingTop={6}>
+    <ProgressBarWithFixedLabels
+      labelPlacement="below"
+      startLabel={{
+        value: 45,
+        render: (num) => (
+          <Text color="fgMuted" font="legal">
+            {num}%
+          </Text>
+        ),
+      }}
+    >
+      <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+    </ProgressBarWithFixedLabels>
+  </Box>
+</DataCard>
+```
+
+:::warning Avoid Nested Interactive Elements
+Don't place buttons or pressables inside an interactive card, as this creates accessibility issues for VoiceOver users and can cause unexpected behavior when tapping.
+:::
+
+#### Color Contrast for Gain/Loss Text
+
+When displaying gain or loss percentages in DataCard, be aware of color contrast differences between light and dark modes.
+
+**Why this matters:** DataCard uses `bgAlternate` as its background color. In **light mode**, the semantic `fgPositive` token does not meet WCAG AA contrast requirements:
+
+| Mode  | Color                    | Background               | Contrast Ratio | WCAG AA (4.5:1) |
+| ----- | ------------------------ | ------------------------ | -------------- | --------------- |
+| Light | `fgPositive` (`green60`) | `bgAlternate` (`gray10`) | ~3.6:1         | ❌ Fails        |
+| Light | `green70`                | `bgAlternate` (`gray10`) | ~4.8:1         | ✅ Passes       |
+| Dark  | `fgPositive` (`green60`) | `bgAlternate` (`gray5`)  | ~6.2:1         | ✅ Passes       |
+
+**Recommendation:**
+
+- **Light mode**: Use `green70` for positive values instead of `fgPositive`
+- **Dark mode**: `fgPositive` meets WCAG AA requirements and can be used as-is
+- **Both modes**: `fgNegative` meets WCAG AA requirements
+
+**On mobile**, access the theme spectrum via `useTheme()` hook for light mode compatibility:
+
+```jsx
+const { spectrum } = useTheme();
+
+{
+  /* Gain text */
+}
+<Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+  ↗ 12.5%
+</Text>;
+
+{
+  /* Loss text */
+}
+<Text color="fgNegative" font="label1">
+  ↘ 3.2%
+</Text>;
+```
+
+```jsx
+function Example() {
+  const { spectrum } = useTheme();
+  const exampleThumbnail = (
+    <RemoteImage
+      accessibilityLabel="Ethereum logo"
+      shape="circle"
+      size="l"
+      source={{ uri: ethBackground }}
+    />
+  );
+
+  return (
+    <VStack gap={2}>
+      <DataCard
+        layout="vertical"
+        subtitle="Portfolio allocation"
+        thumbnail={exampleThumbnail}
+        title="ETH Holdings"
+        titleAccessory={
+          <Text dangerouslySetColor={`rgb(${spectrum.green70})`} font="label1">
+            ↗ 12.5%
+          </Text>
+        }
+      >
+        <Box paddingTop={6}>
+          <ProgressBarWithFixedLabels
+            labelPlacement="below"
+            startLabel={{
+              value: 80,
+              render: (num) => (
+                <Text color="fgMuted" font="legal">
+                  {num}%
+                </Text>
+              ),
+            }}
+          >
+            <ProgressBar
+              accessibilityLabel="ETH holdings at 80% of target, currently $4,000 of $5,000 goal"
+              progress={0.8}
+              weight="semiheavy"
+            />
+          </ProgressBarWithFixedLabels>
+        </Box>
+      </DataCard>
+    </VStack>
+  );
+}
+```
+
+### Migration from Legacy DataCard
+
+The new `DataCard` from `@coinbase/cds-mobile/alpha/data-card` replaces the legacy `DataCard`. The new version provides more flexibility with custom layouts and visualization components.
+
+**Before:**
+
+```jsx
+import { DataCard } from '@coinbase/cds-mobile/cards/DataCard';
+
+<DataCard
+  title="Progress"
+  description="45% complete"
+  progress={0.45}
+  progressVariant="bar"
+  startLabel={45}
+/>;
+```
+
+**After:**
+
+```jsx
+import { DataCard } from '@coinbase/cds-mobile/alpha/data-card';
+
+<DataCard
+  title="Progress"
+  subtitle="45% complete"
+  layout="vertical"
+  thumbnail={<RemoteImage source={{ uri: assetUrl }} shape="circle" size="l" />}
+>
+  <ProgressBarWithFixedLabels
+    startLabel={{
+      value: 45,
+      render: (num) => (
+        <Text color="fgMuted" font="legal">
+          {num}%
+        </Text>
+      ),
+    }}
+    labelPlacement="below"
+  >
+    <ProgressBar accessibilityLabel="45% complete" progress={0.45} weight="semiheavy" />
+  </ProgressBarWithFixedLabels>
+</DataCard>;
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `layout` | `horizontal \| vertical` | Yes | `'vertical'` | Layout orientation of the card. Horizontal places header and visualization side by side, vertical stacks them. |
+| `title` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | Text or React node to display as the card title. Use a Text component to override default color and font. |
+| `alignContent` | `flex-start \| flex-end \| center \| stretch \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Background color of the overlay (element being interacted with). |
+| `blendStyles` | `InteractableBlendStyles` | No | `-` | - |
+| `block` | `boolean` | No | `-` | Set element to block and expand to 100% width. |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Child node to display as the visualization (e.g., ProgressBar or ProgressCircle). |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `contentStyle` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | Apply animated styles to the inner container. |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `debounceTime` | `number` | No | `500` | The amount of time to wait (in milliseconds) before invoking the debounced function. This prop is used in conjunction with the disableDebounce prop. The debounce function is configured to be invoked as soon as its called, but subsequent calls within the debounceTime period will be ignored. |
+| `disableDebounce` | `boolean` | No | `-` | React Native is historically trash at debouncing touch events. This can cause a lot of unwanted behavior such as double navigations where we push a screen onto the stack 2 times. Debouncing the event 500 miliseconds, but taking the leading event prevents this effect and the accidental double-tap. |
+| `disabled` | `boolean` | No | `-` | Is the element currently disabled. Whether the press behavior is disabled. |
+| `display` | `flex \| none` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. Is the element elevated. |
+| `feedback` | `none \| light \| normal \| heavy` | No | `none` | Haptic feedback to trigger when being pressed. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `loading` | `boolean` | No | `-` | Is the element currenty loading. When set to true, will disable element from press and keyboard events Is the element currenty loading. |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `noScaleOnPress` | `boolean` | No | `-` | Dont scale element on press. |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPress` | `((event: GestureResponderEvent) => void) \| null` | No | `-` | Called when a single tap gesture is detected. |
+| `onPressIn` | `(((event: GestureResponderEvent) => void) & ((event: GestureResponderEvent) => void))` | No | `-` | Callback fired before onPress when button is pressed. Called when a touch is engaged before onPress. |
+| `onPressOut` | `(((event: GestureResponderEvent) => void) & ((event: GestureResponderEvent) => void))` | No | `-` | Callback fired before onPress when button is released. Called when a touch is released before onPress. |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `renderAsPressable` | `boolean` | No | `false` | If true, the CardRoot will be rendered as a Pressable component. When false, renders as an HStack for layout purposes. |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `null \| false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>` | No | `-` | - |
+| `styles` | `({ layoutContainer?: StyleProp<ViewStyle>; headerContainer?: StyleProp<ViewStyle>; textContainer?: StyleProp<ViewStyle>; titleContainer?: StyleProp<ViewStyle>; } & { root?: StyleProp<ViewStyle>; })` | No | `-` | - |
+| `subtitle` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React node to display as the card subtitle. Use a Text component to override default color and font. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `thumbnail` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to display as a thumbnail in the header area. |
+| `titleAccessory` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | React node to display as a title accessory. |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `transparentWhileInactive` | `boolean` | No | `-` | Mark the background and border as transparent until the element is interacted with (hovered, pressed, etc). Must be used in conjunction with the pressed prop |
+| `transparentWhilePressed` | `boolean` | No | `-` | Mark the background and border as transparent even while element is interacted with (elevation underlay issue). Must be used in conjunction with the pressed prop |
+| `userSelect` | `none \| auto \| contain \| text \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `wrapperStyles` | `{ base?: StyleProp<ViewStyle>; pressed?: StyleProp<ViewStyle>; disabled?: StyleProp<ViewStyle>; }` | No | `-` | Apply styles to the outer container. |
+| `zIndex` | `number` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `layoutContainer` | `-` | Layout container element |
+| `headerContainer` | `-` | Header container element |
+| `textContainer` | `-` | Text container element |
+| `titleContainer` | `-` | Title container element |
+| `root` | `-` | Root element |
+
+

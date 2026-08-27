@@ -1,0 +1,119 @@
+# Dropdown
+
+An overlay that opens and closes.
+
+## Import
+
+```tsx
+import { Dropdown } from '@coinbase/cds-web/dropdown/Dropdown'
+```
+
+## Examples
+
+### Usage
+
+A Dropdown wraps a subject which when interacted with will toggle the visibility of an elevated surface called a menu.
+
+:::warning
+The `width` must be at least as large as the `content` prop's width, or the Dropdown may have issues in Safari.
+:::
+
+#### Mobile
+
+Dropdown is a web only component. If you like to use a “Dropdown” like feature on Mobile, please use Tray instead.
+
+#### Basic Dropdown
+
+Dropdown menus can show an scrim below the menu, overlaying all other content on the screen when passed `showOverlay`.
+
+Dropdown can render as a Modal on mobile web if passed `enableMobileModal`.
+
+```jsx live
+function Example() {
+  const [value, setValue] = useState(undefined);
+  const [showMobileModal, setShowMobileModal] = useState(false);
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  const options = ['Option 1', 'Option 2', 'Option 3', 'Option 4', 'Option 5', 'Option 6'];
+
+  const content = useMemo(
+    () => (
+      <>
+        <HStack paddingX={2} paddingY={2}>
+          <Text font="caption" as="h2" color="foregroundMuted">
+            Section Heading
+          </Text>
+        </HStack>
+        {options.map((option) => (
+          <SelectOption value={option} title={option} />
+        ))}
+      </>
+    ),
+    [],
+  );
+
+  return (
+    <PortalProvider>
+      <VStack padding={4}>
+        <VStack width="100%" paddingTop={5} gap={3}>
+          <VStack gap={2}>
+            <Switch checked={showMobileModal} onChange={() => setShowMobileModal((v) => !v)}>
+              Enable Mobile Modal
+            </Switch>
+            <Switch checked={showOverlay} onChange={() => setShowOverlay((v) => !v)}>
+              Show Overlay
+            </Switch>
+          </VStack>
+          <Dropdown
+            value={value}
+            onChange={setValue}
+            content={content}
+            enableMobileModal={showMobileModal}
+            showOverlay={showOverlay}
+          >
+            <Button compact endIcon="caretDown">
+              Open Menu
+            </Button>
+          </Dropdown>
+        </VStack>
+      </VStack>
+    </PortalProvider>
+  );
+}
+```
+
+#### Control a Dropdown Programmatically
+
+You can control the visibility of a Dropdown menu programmatically using the exposed `openMenu` and `closeMenu` methods on a Dropdown's `ref`.
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | Subject of the Popover that when interacted with will toggle the visibility of the content |
+| `content` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | Yes | `-` | - |
+| `block` | `boolean` | No | `false` | Makes the Popover Subject fill the width of the parent container |
+| `contentPosition` | `PopoverContentPositionConfig` | No | `-` | Override content positioning defaults |
+| `controlledElementAccessibilityProps` | `{ id: string; accessibilityLabel?: string; } \| undefined` | No | `-` | - |
+| `disableCloseOnOptionChange` | `boolean` | No | `-` | Prevent menu from closing when an option is selected |
+| `disablePortal` | `boolean` | No | `-` | Does not render the Dropdown inside of a portal (react-dom createPortal). Portal is automatically disabled for SSR |
+| `disableTypeFocus` | `boolean` | No | `-` | Use for editable Search Input components to ensure focus is correctly applied |
+| `disabled` | `boolean` | No | `-` | Prevents the Dropdown menu from opening. Youll need to surface disabled state on the trigger manually. |
+| `enableMobileModal` | `boolean` | No | `-` | Enable to have Dropdown render its content inside a Modal as opposed to a relatively positioned Popover Ideal for mobile or smaller devices. |
+| `key` | `Key \| null` | No | `-` | - |
+| `maxHeight` | `MaxHeight<string \| number>` | No | `300` | Can optionally pass a maxHeight. |
+| `maxWidth` | `MaxWidth<string \| number>` | No | `-` | Maximum width of input as a percentage string or number converted to pixels. |
+| `minWidth` | `MinWidth<string \| number>` | No | `-` | Minimum width of input as a percentage string or number converted to pixels. |
+| `onBlur` | `(() => void)` | No | `-` | Callback that fires when Dropdown or trigger are blurred |
+| `onChange` | `Dispatch<SetStateAction<string>> \| ((newValue: string) => void)` | No | `-` | Callback that is fired whenever an option is selected |
+| `onCloseMenu` | `(() => void)` | No | `-` | Callback that fires when Dropdown is closed |
+| `onOpenMenu` | `(() => void)` | No | `-` | Callback that fires when Dropdown is opened |
+| `ref` | `((instance: DropdownRef \| null) => void) \| RefObject<DropdownRef> \| null` | No | `-` | - |
+| `respectNegativeTabIndex` | `boolean` | No | `false` | If true, the focus trap will respect negative tabIndex values, removing them from the list of focusable elements. |
+| `restoreFocusOnUnmount` | `boolean` | No | `true` | If true, the focus trap will restore focus to the previously focused element when it unmounts.  WARNING: If you disable this, you need to ensure that focus is restored properly so it doesnt end up on the body |
+| `showOverlay` | `boolean` | No | `false` | Display an overlay over all content below the Popover menu |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `value` | `string` | No | `-` | Default selected value, or preselected value |
+| `width` | `Width<string \| number>` | No | `100%` | Width of input as a percentage string or number converted to pixels. |
+
+

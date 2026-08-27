@@ -1,0 +1,102 @@
+# TableCaption
+
+Sets an accessible title or caption for Table.
+
+## Import
+
+```tsx
+import { TableCaption } from '@coinbase/cds-web/tables/TableCaption'
+```
+
+## Examples
+
+### Basic usage
+
+```tsx live
+<Table bordered>
+  <TableCaption>Simple Table Caption</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Name" />
+      <TableCell title="Role" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="John Doe" />
+      <TableCell title="Developer" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Custom Content
+
+```tsx live
+<Table bordered>
+  <TableCaption>
+    <VStack gap={1}>
+      <Text as="h2" font="title2" color="primary">
+        Project Team
+      </Text>
+      <Text as="p" color="foregroundMuted">
+        Updated as of March 2024
+      </Text>
+    </VStack>
+  </TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Name" />
+      <TableCell title="Role" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="John Doe" />
+      <TableCell title="Developer" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Styling Options
+
+```tsx live
+<Table bordered>
+  <TableCaption
+    align="center"
+    color="fgPrimary"
+    backgroundColor="bgAlternate"
+    innerSpacing={{ spacingHorizontal: 2, spacingVertical: 1 }}
+    outerSpacing={{ spacingHorizontal: 0, spacingVertical: 1 }}
+  >
+    Quarterly Revenue Report
+  </TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableCell title="Quarter" />
+      <TableCell title="Revenue" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="Q1 2024" />
+      <TableCell title="$1.2M" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `align` | `center \| start \| end \| justify` | No | `'start'` | Specify text alignment. Only applicable when children is a string. |
+| `as` | `div \| abbr \| code \| dd \| del \| dl \| dt \| h1 \| h2 \| h3 \| h4 \| ins \| kbd \| label \| li \| output \| p \| pre \| q \| s \| span \| strong \| sub \| sup \| time` | No | `'span'` | A semantic HTML element or a React component to be rendered. Only applicable when children is a string. |
+| `backgroundColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | Set the background color to a CDS palette background color name. |
+| `innerSpacing` | `CellSpacing` | No | `-` | The spacing to use on the inner content of the caption. Overrides table cell spacing defaults. |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `outerSpacing` | `CellSpacing` | No | `-` | The spacing to use on the parent wrapper of the caption. Overrides table cell spacing defaults. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

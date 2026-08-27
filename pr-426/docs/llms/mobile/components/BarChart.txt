@@ -1,0 +1,802 @@
+# BarChart
+
+A bar chart component for comparing values across categories. Supports horizontal and vertical orientations, stacked bars, and grouped series.
+
+## Import
+
+```tsx
+import { BarChart } from '@coinbase/cds-mobile-visualization'
+```
+
+## Examples
+
+### Basic Example
+
+Bar charts are a useful component for comparing discrete categories of data.
+They are helpful for highlighting trends to users or allowing them to compare proportions at a glance.
+
+To start, pass in a series of data to the chart.
+
+```jsx
+<BarChart
+  height={150}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+### Multiple Series
+
+You can also provide multiple series of data to the chart. Series will have their bars for each data point rendered side by side.
+
+```tsx
+function MonthlyGainsByAsset() {
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const tickFormatter = useCallback(
+    (amount) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(amount),
+    [],
+  );
+
+  return (
+    <BarChart
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'btc',
+          data: [
+            345.82, 510.63, 280.19, 720.5, 655.37, 410.23, 580.96, 815.44, 740.18, 910.71, 975.02,
+            620.57,
+          ],
+          color: assets.btc.color,
+        },
+        {
+          id: 'eth',
+          data: [
+            270.49, 425.21, 190.75, 680.91, 610.88, 350.67, 440.11, 780.08, 705.83, 840.26, 920.65,
+            550.93,
+          ],
+          color: assets.eth.color,
+        },
+      ]}
+      showYAxis
+      yAxis={{
+        showGrid: true,
+        GridLineComponent: ThinSolidLine,
+        tickLabelFormatter: tickFormatter,
+        width: 70,
+      }}
+    />
+  );
+}
+```
+
+### Series Stacking
+
+You can also configure stacking for your chart using the `stacked` prop.
+
+```tsx
+function MonthlyGainsByAsset() {
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const tickFormatter = useCallback(
+    (amount) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(amount),
+    [],
+  );
+
+  return (
+    <BarChart
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'xrp',
+          data: [
+            170.22, 340.34, 305.98, 225.39, 250.76, 130.53, 115.81, 195.04, 210.28, 60.42, 120.94,
+            85.12,
+          ],
+          color: assets.xrp.color,
+        },
+        {
+          id: 'ltc',
+          data: [
+            450.77, 615.33, 355.68, 880.15, 810.99, 520.46, 590.29, 960.52, 910.07, 1020.41, 851.89,
+            750.61,
+          ],
+          color: assets.ltc.color,
+        },
+        {
+          id: 'eth',
+          data: [
+            270.49, 425.21, 190.75, 680.91, 610.88, 350.67, 440.11, 780.08, 705.83, 840.26, 920.65,
+            550.93,
+          ],
+          color: assets.eth.color,
+        },
+        {
+          id: 'btc',
+          data: [
+            345.82, 510.63, 280.19, 720.5, 655.37, 410.23, 580.96, 815.44, 740.18, 910.71, 975.02,
+            620.57,
+          ],
+          color: assets.btc.color,
+        },
+      ]}
+      stacked
+      showYAxis
+      yAxis={{
+        showGrid: true,
+        GridLineComponent: ThinSolidLine,
+        tickLabelFormatter: tickFormatter,
+        width: 70,
+      }}
+    />
+  );
+}
+```
+
+You can also configure multiple stacks by setting the `stackId` prop on each series.
+
+```tsx
+function MonthlyGainsMultipleStacks() {
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const tickFormatter = useCallback(
+    (amount) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(amount),
+    [],
+  );
+
+  return (
+    <BarChart
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'xrp',
+          data: [
+            170.22, 340.34, 305.98, 225.39, 250.76, 130.53, 115.81, 195.04, 210.28, 60.42, 120.94,
+            85.12,
+          ],
+          color: assets.xrp.color,
+          stackId: 'shortTerm',
+        },
+        {
+          id: 'ltc',
+          data: [
+            450.77, 615.33, 355.68, 880.15, 810.99, 520.46, 590.29, 960.52, 910.07, 1020.41, 851.89,
+            750.61,
+          ],
+          color: assets.ltc.color,
+          stackId: 'shortTerm',
+        },
+        {
+          id: 'eth',
+          data: [
+            270.49, 425.21, 190.75, 680.91, 610.88, 350.67, 440.11, 780.08, 705.83, 840.26, 920.65,
+            550.93,
+          ],
+          color: assets.eth.color,
+          stackId: 'longTerm',
+        },
+        {
+          id: 'btc',
+          data: [
+            345.82, 510.63, 280.19, 720.5, 655.37, 410.23, 580.96, 815.44, 740.18, 910.71, 975.02,
+            620.57,
+          ],
+          color: assets.btc.color,
+          stackId: 'longTerm',
+        },
+      ]}
+      stacked
+      showYAxis
+      yAxis={{
+        showGrid: true,
+        GridLineComponent: ThinSolidLine,
+        tickLabelFormatter: tickFormatter,
+        width: 70,
+      }}
+    />
+  );
+}
+```
+
+#### Stack Gap
+
+```tsx
+function MonthlyGainsByAsset() {
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const tickFormatter = useCallback(
+    (amount) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+      }).format(amount),
+    [],
+  );
+
+  return (
+    <BarChart
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={[
+        {
+          id: 'xrp',
+          data: [
+            170.22, 340.34, 305.98, 225.39, 250.76, 130.53, 115.81, 195.04, 210.28, 60.42, 120.94,
+            500,
+          ],
+          color: assets.xrp.color,
+        },
+        {
+          id: 'ltc',
+          data: [
+            450.77, 615.33, 355.68, 880.15, 810.99, 520.46, 590.29, 960.52, 910.07, 1020.41, 851.89,
+            500,
+          ],
+          color: assets.ltc.color,
+        },
+        {
+          id: 'eth',
+          data: [
+            270.49, 425.21, 190.75, 680.91, 610.88, 350.67, 440.11, 780.08, 705.83, 840.26, 920.65,
+            500,
+          ],
+          color: assets.eth.color,
+        },
+        {
+          id: 'btc',
+          data: [
+            345.82, 510.63, 280.19, 720.5, 655.37, 410.23, 580.96, 815.44, 740.18, 910.71, 975.02,
+            500,
+          ],
+          color: assets.btc.color,
+        },
+      ]}
+      stackGap={4}
+      stacked
+      showYAxis
+      yAxis={{
+        showGrid: true,
+        GridLineComponent: ThinSolidLine,
+        tickLabelFormatter: tickFormatter,
+        width: 70,
+        domainLimit: 'strict',
+      }}
+    />
+  );
+}
+```
+
+### Border Radius
+
+Bars have a default border radius of `100`. You can change this by setting the `borderRadius` prop on the chart.
+
+Stacks will only round the top corners of touching bars.
+
+```jsx
+<BarChart
+  stacked
+  borderRadius={1000}
+  height={300}
+  maxWidth={400}
+  padding={0}
+  series={[
+    { id: 'purple', data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4], color: '#b399ff' },
+    { id: 'blue', data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18], color: '#4f7cff' },
+    { id: 'cyan', data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9], color: '#00c2df' },
+    {
+      id: 'green',
+      data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
+      color: '#33c481',
+    },
+  ]}
+  showXAxis
+  xAxis={{
+    data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+    tickLabelFormatter: (value) => {
+      if (value === 'D') {
+        return <Tspan style={{ fontWeight: 'bold' }}>{value}</TSpan>;
+      }
+      return value;
+    },
+  }}
+  style={{ margin: '0 auto' }}
+/>
+```
+
+#### Round Baseline
+
+You can also round the baseline of the bars by setting the `roundBaseline` prop on the chart.
+
+```jsx
+<BarChart
+  roundBaseline
+  stacked
+  borderRadius={1000}
+  height={300}
+  maxWidth={400}
+  padding={0}
+  series={[
+    { id: 'purple', data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4], color: '#b399ff' },
+    { id: 'blue', data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18], color: '#4f7cff' },
+    { id: 'cyan', data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9], color: '#00c2df' },
+    {
+      id: 'green',
+      data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
+      color: '#33c481',
+    },
+  ]}
+  showXAxis
+  xAxis={{
+    data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+    tickLabelFormatter: (value) => {
+      if (value === 'D') {
+        return <TSpan style={{ fontWeight: 'bold' }}>{value}</TSpan>;
+      }
+      return value;
+    },
+  }}
+  style={{ margin: '0 auto' }}
+/>
+```
+
+### Negative Data
+
+```tsx
+function PositiveAndNegativeCashFlow() {
+  const ThinSolidLine = memo((props: SolidLineProps) => <SolidLine {...props} strokeWidth={1} />);
+
+  const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
+  const gains = [
+    5, 0, 6, 18, 0, 5, 12, 0, 12, 22, 28, 18, 0, 12, 6, 0, 0, 24, 0, 0, 4, 0, 18, 0, 0, 14, 10, 16,
+    0, 0, 0,
+  ];
+
+  const losses = [
+    -4, 0, -8, -12, -6, 0, 0, 0, -18, 0, -12, 0, -9, -6, 0, 0, 0, 0, -22, -8, 0, 0, -10, -14, 0, 0,
+    0, 0, 0, -12, -10,
+  ];
+  const series = [
+    { id: 'gains', data: gains, color: 'var(--color-fgPositive)' },
+    { id: 'losses', data: losses, color: 'var(--color-fgNegative)' },
+  ];
+
+  return (
+    <BarChart
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={series}
+      xAxis={{ data: categories }}
+      stacked
+      showXAxis
+      showYAxis
+      yAxis={{
+        showGrid: true,
+        GridLineComponent: ThinSolidLine,
+        tickLabelFormatter: (value) => `$${value}M`,
+      }}
+    />
+  );
+}
+```
+
+### Missing Bars
+
+You can pass in `null` or `0` values to not render a bar for that data point.
+
+```jsx
+<BarChart
+  showXAxis
+  showYAxis
+  height={150}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'weekly-data',
+      data: [45, null, 38, 0, 19, null, 32],
+    },
+  ]}
+  xAxis={{
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    showTickMarks: true,
+    showLine: true,
+  }}
+  yAxis={{
+    requestedTickCount: 5,
+    tickLabelFormatter: (value) => `$${value}k`,
+    showGrid: true,
+    showTickMarks: true,
+    showLine: true,
+    tickMarkSize: 1.5,
+    domain: { max: 50 },
+  }}
+/>
+```
+
+You can also use the `BarStackComponent` prop to render an empty circle for zero values.
+
+```tsx
+function MonthlyRewards() {
+  const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  const currentMonth = 7;
+  const purple = [null, 6, 8, 10, 7, 6, 6, 8, null, null, null, null];
+  const blue = [null, 10, 12, 11, 10, 9, 10, 11, null, null, null, null];
+  const cyan = [null, 7, 10, 12, 11, 10, 8, 11, null, null, null, null];
+  const green = [10, null, null, null, 1, null, null, 6, null, null, null, null];
+
+  const series = [
+    { id: 'purple', data: purple, color: '#b399ff' },
+    { id: 'blue', data: blue, color: '#4f7cff' },
+    { id: 'cyan', data: cyan, color: '#00c2df' },
+    { id: 'green', data: green, color: '#33c481' },
+  ];
+
+  const CustomBarStackComponent = ({ children, ...props }: BarStackComponentProps) => {
+    if (props.height === 0) {
+      const diameter = props.width;
+      return (
+        <Bar
+          roundBottom
+          roundTop
+          borderRadius={1000}
+          fill="var(--color-bgTertiary)"
+          height={diameter}
+          width={diameter}
+          x={props.x}
+          y={props.y - diameter}
+        />
+      );
+    }
+
+    return <DefaultBarStack {...props}>{children}</DefaultBarStack>;
+  };
+
+  return (
+    <BarChart
+      roundBaseline
+      showXAxis
+      stacked
+      BarStackComponent={CustomBarStackComponent}
+      borderRadius={1000}
+      height={300}
+      inset={0}
+      series={series}
+      showYAxis={false}
+      stackMinSize={3}
+      width={403}
+      xAxis={{
+        tickLabelFormatter: (index) => {
+          if (index == currentMonth) {
+            return <TSpan style={{ fontWeight: 'bold' }}>{months[index]}</TSpan>;
+          }
+          return months[index];
+        },
+        categoryPadding: 0.27,
+      }}
+    />
+  );
+}
+```
+
+### Customization
+
+#### Bar Spacing
+
+There are two ways to control the spacing between bars. You can set the `barPadding` prop to control the spacing between bars within a series. You can also set the `categoryPadding` prop to control the spacing between stacks of bars.
+
+```jsx
+<BarChart
+  height={150}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'pageViews',
+      data: [24, 13, 98, 39, 48, 38, 43],
+      color: 'var(--color-fgPositive)',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [12, 15, 18, 21, 24, 27, 30],
+      color: 'var(--color-fgNegative)',
+    },
+  ]}
+  borderRadius={0}
+  barPadding={0}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+  xAxis={{
+    categoryPadding: 0.2,
+  }}
+/>
+```
+
+#### Minimum Size
+
+To better emphasize small values, you can set the `stackMinSize` or `barMinSize` prop to control the minimum size for entire stacks or individual bar.
+It is recommended to only use `stackMinSize` for stacked charts and `barMinSize` for non-stacked charts.
+
+##### Minimum Stack Size
+
+You can set the `stackMinSize` prop to control the minimum size for entire stacks. This will only apply to stacks that have a value that is not `null` or `0`. It will proportionally scale the values of each bar in the stack to reach the minimum size.
+
+```jsx
+<BarChart
+  height={150}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'pageViews',
+      data: [24, 3, 98, null, 48, null, 43],
+      color: 'var(--color-fgPositive)',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [12, 1, 18, null, 24, 1, 30],
+      color: 'var(--color-fgNegative)',
+    },
+  ]}
+  stackMinSize={2}
+  stacked
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+##### Minimum Bar Size
+
+You can also set the `barMinSize` prop to control the minimum size for individual bars. This will only apply to bars that have a value that is not `null` or `0`.
+
+```jsx
+<BarChart
+  showXAxis
+  showYAxis
+  height={150}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'weekly-data',
+      data: [45, 52, 0, 45, null, 1, 32],
+    },
+  ]}
+  xAxis={{
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    showTickMarks: true,
+    showLine: true,
+  }}
+  yAxis={{
+    requestedTickCount: 5,
+    tickLabelFormatter: (value) => `$${value}k`,
+    showGrid: true,
+    showTickMarks: true,
+    showLine: true,
+    tickMarkSize: 1.5,
+    domain: { max: 50 },
+  }}
+  barMinSize={4}
+/>
+```
+
+#### Multiple Y Axes
+
+You can render bars from separate y axes in one `BarPlot`, however they aren't able to be stacked.
+
+```jsx
+function MultipleYAxes() {
+  const theme = useTheme();
+
+  return (
+    <CartesianChart
+      legend
+      height={150}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      legendPosition="bottom"
+      series={[
+        {
+          id: 'revenue',
+          label: 'Revenue ($)',
+          data: [455, 520, 380, 455, 285, 235],
+          yAxisId: 'revenue',
+          color: theme.color.accentBoldYellow,
+        },
+        {
+          id: 'profitMargin',
+          label: 'Profit Margin (%)',
+          data: [23, 20, 16, 38, 12, 9],
+          yAxisId: 'profitMargin',
+          color: theme.color.fgPositive,
+        },
+      ]}
+      xAxis={{
+        data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        scaleType: 'band',
+      }}
+      yAxis={[
+        {
+          id: 'revenue',
+          domain: { min: 0 },
+        },
+        {
+          id: 'profitMargin',
+          domain: { min: 0, max: 100 },
+        },
+      ]}
+    >
+      <XAxis showLine showTickMarks />
+      <YAxis
+        showGrid
+        showLine
+        showTickMarks
+        axisId="revenue"
+        position="left"
+        requestedTickCount={5}
+        width={60}
+        tickLabelFormatter={(value) => `$${value}k`}
+      />
+      <YAxis
+        showLine
+        showTickMarks
+        axisId="profitMargin"
+        position="right"
+        requestedTickCount={5}
+        tickLabelFormatter={(value) => `${value}%`}
+      />
+      <BarPlot />
+    </CartesianChart>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `BarComponent` | `BarComponent` | No | `-` | Component to render the bar. |
+| `BarStackComponent` | `BarStackComponent` | No | `DefaultBarStack` | Custom component to render the stack container. Can be used to add clip paths, outlines, or other custom styling. |
+| `alignContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly \| stretch` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `allowOverflowGestures` | `boolean` | No | `-` | Allows continuous gestures on the chart to continue outside the bounds of the chart element. |
+| `animate` | `boolean` | No | `true` | Whether to animate the chart. |
+| `animated` | `boolean` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `barMinSize` | `number` | No | `-` | Minimum size for individual bars in the stack. |
+| `barPadding` | `number` | No | `0.1` | Padding between bar groups (0-1). |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `4` | Border radius for the bar. |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `none \| flex` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. |
+| `enableScrubbing` | `boolean` | No | `-` | Enables scrubbing interactions. When true, allows scrubbing and makes scrubber components interactive. |
+| `fillOpacity` | `number` | No | `-` | Fill opacity for the bar. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamilies` | `string[]` | No | `-` | Default font families to use within ChartText. If not provided, will be the default for the system. |
+| `fontProvider` | `SkTypefaceFontProvider` | No | `-` | Skia font provider to allow for custom fonts. If not provided, the only available fonts will be those defined by the system. |
+| `fontSize` | `FontSize \| inherit` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `inset` | `number \| Partial<ChartInset>` | No | `-` | Inset around the entire chart (outside the axes). |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `legend` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Whether to show the legend or a custom legend element. - true renders the default Legend component - A React element renders that element as the legend - false or omitted hides the legend |
+| `legendAccessibilityLabel` | `string` | No | `'Legend'` | Accessibility label for the legend group. |
+| `legendPosition` | `top \| bottom \| left \| right` | No | `'bottom'` | Position of the legend relative to the chart. |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onScrubberPositionChange` | `((index: number) => void) \| undefined` | No | `-` | Callback fired when the scrubber position changes. Receives the dataIndex of the scrubber or undefined when not scrubbing. |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `roundBaseline` | `boolean` | No | `-` | Whether to round the baseline of a bar (where the value is 0). |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `series` | `BarSeries[]` | No | `-` | Configuration objects that define how to visualize the data. Each series can optionally define its own BarComponent. |
+| `showXAxis` | `boolean` | No | `-` | Whether to show the X axis. |
+| `showYAxis` | `boolean` | No | `-` | Whether to show the Y axis. |
+| `stackGap` | `number` | No | `-` | Gap between bars in the stack. |
+| `stackMinSize` | `number` | No | `-` | Minimum size for the entire stack. |
+| `stacked` | `boolean` | No | `-` | Whether to stack the areas on top of each other. When true, each series builds cumulative values on top of the previous series. |
+| `stroke` | `string` | No | `-` | Stroke color for the bar outline. |
+| `strokeWidth` | `number` | No | `-` | Stroke width for the bar outline. |
+| `style` | `((false \| RegisteredStyle<ViewStyle> \| WithAnimatedObject<ViewStyle> \| Value \| AnimatedInterpolation<string \| number> \| WithAnimatedArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>> \| readonly (ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>)[]>) & ((false \| RegisteredStyle<ViewStyle> \| WithAnimatedObject<ViewStyle> \| Value \| AnimatedInterpolation<string \| number> \| WithAnimatedArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>> \| readonly (ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>)[]>) & (false \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<ViewStyle \| Falsy \| RegisteredStyle<ViewStyle>>))) \| null` | No | `-` | Custom styles for the root element. |
+| `styles` | `{ root?: StyleProp<ViewStyle>; chart?: StyleProp<ViewStyle>; }` | No | `-` | Custom styles for the component. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| double \| dotted \| dashed` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ perspective: AnimatableNumericValue; } & { rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleX: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `transition` | `{ type: timing; } & TimingConfig \| { type: spring; } & { stiffness?: number \| undefined; overshootClamping?: boolean \| undefined; restDisplacementThreshold?: number \| undefined; restSpeedThreshold?: number \| undefined; velocity?: number \| undefined; reduceMotion?: ReduceMotion \| undefined; } & { mass?: number \| undefined; damping?: number \| undefined; duration?: undefined; dampingRatio?: undefined; clamp?: undefined; } \| { type: spring; } & { stiffness?: number \| undefined; overshootClamping?: boolean \| undefined; restDisplacementThreshold?: number \| undefined; restSpeedThreshold?: number \| undefined; velocity?: number \| undefined; reduceMotion?: ReduceMotion \| undefined; } & { mass?: undefined; damping?: undefined; duration?: number \| undefined; dampingRatio?: number \| undefined; clamp?: { min?: number \| undefined; max?: number \| undefined; } \| undefined; }` | No | `-` | Transition configurations for different animation phases. |
+| `userSelect` | `none \| auto \| text \| contain \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `xAxis` | `(Partial<AxisConfigProps> & AxisBaseProps & { GridLineComponent?: LineComponent; LineComponent?: LineComponent \| undefined; TickMarkLineComponent?: LineComponent \| undefined; tickLabelFormatter?: ((value: number) => ChartTextChildren) \| undefined; TickLabelComponent?: AxisTickLabelComponent \| undefined; } & { position?: top \| bottom \| undefined; height?: number \| undefined; }) \| undefined` | No | `-` | Configuration for x-axis. Accepts axis config and axis props. To show the axis, set showXAxis to true. |
+| `yAxis` | `(Partial<AxisConfigProps> & AxisBaseProps & { GridLineComponent?: LineComponent; LineComponent?: LineComponent \| undefined; TickMarkLineComponent?: LineComponent \| undefined; tickLabelFormatter?: ((value: number) => ChartTextChildren) \| undefined; TickLabelComponent?: AxisTickLabelComponent \| undefined; } & { axisId?: string \| undefined; position?: left \| right \| undefined; width?: number \| undefined; }) \| undefined` | No | `-` | Configuration for y-axis. Accepts axis config and axis props. To show the axis, set showYAxis to true. |
+| `zIndex` | `number` | No | `-` | - |
+
+

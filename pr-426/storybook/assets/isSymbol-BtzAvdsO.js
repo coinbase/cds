@@ -1,0 +1,1 @@
+import{c as a,b as m}from"./isArray-JxMDBx0e.js";var e,o;function n(){if(o)return e;o=1;var s=a(),b=m(),i="[object Symbol]";function t(r){return typeof r=="symbol"||b(r)&&s(r)==i}return e=t,e}export{n as r};

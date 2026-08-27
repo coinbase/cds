@@ -1,0 +1,842 @@
+# RollingNumber
+
+A numeric display that animates value changes with rolling digits.
+
+## Import
+
+```tsx
+import { RollingNumber } from '@coinbase/cds-mobile/numbers/RollingNumber'
+```
+
+## Examples
+
+### Basic Example
+
+RollingNumber displays changing numeric values with a smooth per-digit roll animation and optional color pulse. It supports `Intl.NumberFormat` options, custom typography, ReactNode prefixes/suffixes, and accessibility.
+
+Pass a number in the `value` prop. Use the `format` prop for Intl formatting (currency, percent, grouping, compact) instead of pre-formatting the string yourself.
+
+```tsx
+<RollingNumber value={12345.67} />
+```
+
+### Example Use Case
+
+```tsx
+function ExampleUseCase() {
+  const price = 12345.67;
+  const difference = 79.65;
+  const trendColor = difference >= 0 ? 'fgPositive' : 'fgNegative';
+
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Portfolio Balance</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+
+      <HStack alignItems="center">
+        <RollingNumber
+          accessibilityLabelPrefix={difference > 0 ? 'up ' : difference < 0 ? 'down ' : ''}
+          color={trendColor}
+          font="body"
+          format={{
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }}
+          prefix={
+            difference >= 0 ? (
+              <Icon color={trendColor} name="diagonalUpArrow" size="xs" />
+            ) : (
+              <Icon color={trendColor} name="diagonalDownArrow" size="xs" />
+            )
+          }
+          suffix={`(${((Math.abs(difference) / price) * 100).toFixed(2)}%)`}
+          value={Math.abs(difference)}
+        />
+      </HStack>
+
+      <Text font="label1">BTC Conversion</Text>
+      <HStack alignItems="center" gap={1}>
+        <Icon color="fgPrimary" name="arrowsVertical" size="xs" />
+        <RollingNumber
+          color="fgPrimary"
+          fontFamily="body"
+          fontSize="body"
+          fontWeight="body"
+          format={{ minimumFractionDigits: 8, maximumFractionDigits: 8 }}
+          value={price / 150_000}
+        />
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+### Formatting
+
+Use `format` prop for currency, percent, grouping, and compact notation formatting. The `format` prop takes in `Intl.NumberFormat` [options](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/NumberFormat#options).
+
+```tsx
+function Format() {
+  const value = 98345.67;
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Compact number with currency sign</Text>
+      <RollingNumber
+        font="display3"
+        format={{
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 5,
+          notation: 'compact',
+        }}
+        value={value}
+      />
+      <Text font="label1">Number without grouping</Text>
+      <RollingNumber font="display3" format={{ useGrouping: false }} value={value} />
+    </VStack>
+  );
+}
+```
+
+### Typography
+
+RollingNumber forwards all Text props, but only character-level typographic props (e.g., `font`, `fontFamily`, `fontSize`, `fontWeight`, `lineHeight`, `tabularNumbers`, `color`) are meaningful for its per-digit rendering. Layout/container props may have no effect—use them judiciously.
+
+::::tip Mobile limitation
+Non-tabular numbers are currently not supported on mobile. The `tabularNumbers` setting should not be disabled.
+::::
+
+```tsx
+function TypographyExamples() {
+  const price = 9876.54;
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Font sizes, weights, and line heights</Text>
+      <RollingNumber
+        fontSize="display3"
+        fontWeight="title3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <RollingNumber
+        fontSize="title3"
+        fontWeight="headline"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <RollingNumber
+        fontSize="body"
+        fontWeight="body"
+        format={{ style: 'currency', currency: 'USD' }}
+        lineHeight="display3"
+        value={price}
+      />
+      <Text font="label1">Monospaced figures</Text>
+      <RollingNumber
+        mono
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+    </VStack>
+  );
+}
+```
+
+### Color and Transition
+
+You can customize the number color and its animation transitions. Configure `y` to control the digit roll, and `color` to control the pulse.
+
+##### `transition` prop:
+
+- Type: `y?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);
+color?: ({ type: 'timing' } & WithTimingConfig) | ({ type: 'spring' } & WithSpringConfig);`
+- Default: `{
+  y: {
+    type: 'timing',
+    duration: durations.moderate3,
+    easing: Easing.bezier(...curves.global),
+  },
+  color: {
+    type: 'timing',
+    duration: durations.slow4,
+    easing: Easing.bezier(...curves.global),
+  },
+}`
+
+```tsx
+function ColorAndTransition() {
+  const price = 555.55;
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Color pulse and custom transition</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        transition={{
+          color: {
+            duration: durations.moderate3,
+            easing: Easing.inOut(Easing.quad),
+          },
+          y: {
+            duration: durations.moderate3,
+            easing: Easing.in(Easing.quad),
+          },
+        }}
+        value={price}
+      />
+
+      <RollingNumber
+        colorPulseOnUpdate
+        color="accentBoldBlue"
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        transition={{
+          color: {
+            duration: durations.slow4,
+            easing: Easing.inOut(Easing.quad),
+          },
+          y: {
+            duration: durations.slow4,
+            easing: Easing.in(Easing.quad),
+          },
+        }}
+        value={price}
+      />
+
+      <Text font="label1">Customize positive and negative change colors</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        negativePulseColor="bgWarning"
+        positivePulseColor="fgPrimary"
+        value={price}
+      />
+
+      <Text font="label1">Fast digits, slow color</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'EUR' }}
+        transition={{
+          y: {
+            duration: durations.fast1,
+            easing: Easing.bezier(...curves.enterFunctional),
+          },
+          color: {
+            duration: 5000,
+            easing: Easing.bezier(...curves.global),
+          },
+        }}
+        value={price}
+      />
+
+      <Text font="label1">Springy digits</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        transition={{
+          y: { type: 'spring', stiffness: 1000, damping: 24, mass: 3, overshootClamping: false },
+        }}
+        value={price}
+      />
+
+      <Text font="label1">Custom easings</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="title1"
+        format={{ style: 'currency', currency: 'USD' }}
+        transition={{
+          y: {
+            duration: durations.moderate2,
+            easing: Easing.bezier(...curves.enterExpressive),
+          },
+          color: {
+            duration: durations.slow1,
+            easing: Easing.bezier(...curves.exitFunctional),
+          },
+        }}
+        value={price}
+      />
+    </VStack>
+  );
+}
+```
+
+### Digit Transition Variants
+
+RollingNumber supports two digit transition styles via the `digitTransitionVariant` prop:
+
+- **`'every'`** (default): Rolls through every intermediate digit (e.g., 1→2→3→...→9).
+- **`'single'`**: Rolls directly to the new digit without showing intermediates. Direction (up/down) is based on the total value change.
+
+```tsx
+function DigitTransitionVariants() {
+  const price = 12345.67;
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Every variant (default)</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="every"
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+      <Text font="label1">Single variant</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        digitTransitionVariant="single"
+        font="display3"
+        format={{ style: 'currency', currency: 'USD' }}
+        value={price}
+      />
+    </VStack>
+  );
+}
+```
+
+::::tip Direction-aware animation
+The single variant determines scroll direction based on the **total value change**, not individual digit changes. When the value increases, digits roll up (new digits enter from below). When the value decreases, digits roll down (new digits enter from above). This matches the behavior of the color pulse feature.
+::::
+
+### Prefix and Suffix
+
+Attach text or React nodes before/after the number to create rich compositions. If the prefix/suffix is a string, it will pulse color together with the main number.
+
+```tsx
+function PrefixAndSuffix() {
+  const value = 98345.67;
+  const format = {
+    style: 'currency' as const,
+    currency: 'USD',
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 5,
+  };
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Simple text prefix and suffix</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display3"
+        format={format}
+        prefix="+"
+        suffix=" BTC"
+        value={value}
+      />
+      <Text font="label1">Dynamic prefix and suffix</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display3"
+        format={format}
+        prefix="-"
+        suffix=" ETH"
+        value={value}
+      />
+      <Text font="label1">ReactNode prefix and suffix</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display3"
+        format={format}
+        prefix={<Icon name="arrowUp" size="l" />}
+        suffix={<Icon name="arrowDown" size="l" />}
+        value={value}
+      />
+      <Text font="label1">Suffix wraps to second line</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display1"
+        format={format}
+        styles={{ fraction: { paddingRight: 8 } }}
+        suffix="BTC"
+        value={value}
+      />
+      <Text font="label1">Suffix no wrapping</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display1"
+        format={format}
+        styles={{ visibleContent: { flexWrap: 'nowrap' }, fraction: { paddingRight: 8 } }}
+        suffix="BTC"
+        value={value}
+      />
+    </VStack>
+  );
+}
+```
+
+### Style Overrides
+
+Customize the look of each logical section (`i18nPrefix`, `integer`, `fraction`, `i18nSuffix`, `prefix`, `suffix`).
+
+:::tip Mobile limitation
+Per-section text styling (color, font, etc.) is not supported on mobile; text styles are applied globally within `RollingNumber`.
+:::
+
+```tsx
+function StyleOverrides() {
+  const price = 12345.67;
+  return (
+    <VStack gap={2}>
+      <Text font="label1">Style overrides per section</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display3"
+        format={{
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2,
+          notation: 'compact',
+        }}
+        prefix="-"
+        styles={{
+          root: {
+            borderStyle: 'dashed',
+            borderColor: 'rgba(0,0,0,0.1)',
+            borderWidth: 1,
+            paddingVertical: 4,
+            paddingHorizontal: 8,
+            borderRadius: 8,
+            backgroundColor: 'rgba(0,0,0,0.03)',
+          },
+          fraction: { opacity: 0.2, gap: 10 },
+          suffix: { marginLeft: 10 },
+        }}
+        suffix="BTC"
+        value={price}
+      />
+    </VStack>
+  );
+}
+```
+
+### Subscript Notation for Tiny Decimals
+
+Enable `enableSubscriptNotation` to compactly represent leading zeros in the fractional part.
+
+```tsx
+function Subscript() {
+  const value = 0.0000000001;
+  const format = { minimumFractionDigits: 2, maximumFractionDigits: 25 } as const;
+  return (
+    <VStack gap={1}>
+      <Text font="label1">Subscript for small decimals</Text>
+      <Text font="label2">Default:</Text>
+      <RollingNumber font="display3" format={format} value={value} />
+      <Text font="label2">With subscript:</Text>
+      <RollingNumber enableSubscriptNotation font="display3" format={format} value={value} />
+    </VStack>
+  );
+}
+```
+
+### User-Provided Formatted Value
+
+You can also provide `formattedValue`; the component will render it directly instead of using the internal formatter. The numeric `value` is still required to drive animations and the color pulse.
+
+```tsx
+function UserProvidedFormattedValue() {
+  const btc = { value: 98_765.43, formattedValue: '¥98,765.43 BTC' } as const;
+  const tiny = {
+    value: 0.00009,
+    formattedValue: '€0,0₄9',
+    accessibilityLabel: '€0.00009',
+  } as const;
+  return (
+    <VStack gap={1}>
+      <Text font="label1">User provided formatted value</Text>
+      <Text font="label2">BTC prices</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        font="display3"
+        formattedValue={btc.formattedValue}
+        prefix={<Icon name="crypto" size="l" />}
+        value={btc.value}
+      />
+      <Text font="label2">Subscripts with comma as decimal separator</Text>
+      <RollingNumber
+        colorPulseOnUpdate
+        accessibilityLabel={tiny.accessibilityLabel}
+        font="display3"
+        formattedValue={tiny.formattedValue}
+        value={tiny.value}
+      />
+    </VStack>
+  );
+}
+```
+
+::::tip Accessibility and formattedValue
+When you provide `formattedValue`, the `accessibilityLabel` will default to your `formattedValue`. However, what’s rendered on screen is not always ideal for accessibility. For example, the subscript notation '0₉' may be announced as '09'. Provide your own `accessibilityLabel` as needed.
+::::
+
+### Patterns & Recipes
+
+Practical demos combining formatting, animation, and interactivity.
+
+#### Counter
+
+```tsx
+function CounterExample() {
+  const [count, setCount] = React.useState(0);
+  const onInc = () => setCount((c) => c + 1);
+  const onDec = () => setCount((c) => Math.max(0, c - 1));
+  return (
+    <VStack gap={1}>
+      <HStack alignItems="center" gap={2}>
+        <IconButton accessibilityLabel="decrement" name="minus" onPress={onDec} />
+        <RollingNumber
+          colorPulseOnUpdate
+          font="display1"
+          format={{ minimumFractionDigits: 0, maximumFractionDigits: 0 }}
+          value={count}
+        />
+        <IconButton accessibilityLabel="increment" name="add" onPress={onInc} />
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+#### Countdown
+
+```tsx
+function CountDownExample() {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const totalSeconds = 5 * 60;
+  const [seconds, setSeconds] = React.useState(totalSeconds);
+  const [running, setRunning] = React.useState(false);
+  React.useEffect(() => {
+    if (!running) return;
+    const id = setInterval(() => {
+      setSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(id);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(id);
+  }, [running]);
+  const minutes = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  const formatted = `${pad(minutes)}:${pad(secs)}`;
+  const onReset = () => setSeconds(totalSeconds);
+  const progress = Math.max(0, Math.min(1, (totalSeconds - seconds) / totalSeconds));
+  return (
+    <VStack gap={1}>
+      <RollingNumber
+        font="display3"
+        formattedValue={formatted}
+        value={seconds}
+        accessibilityLiveRegion="none"
+      />
+      <HStack gap={2}>
+        <Button onPress={() => setRunning((r) => !r)}>{running ? 'Pause' : 'Start'}</Button>
+        <Button onPress={onReset}>Reset</Button>
+      </HStack>
+      <Text font="label1">Countdown with progress</Text>
+      <VStack gap={1}>
+        <ProgressBar progress={progress} />
+        <RollingNumber
+          font="body"
+          format={{ style: 'percent', maximumFractionDigits: 0 }}
+          prefix="Elapsed: "
+          value={progress}
+          accessibilityLiveRegion="none"
+        />
+      </VStack>
+    </VStack>
+  );
+}
+```
+
+#### Live Auction
+
+```tsx
+function LiveBiddingExample() {
+  const [currentBid, setCurrentBid] = React.useState(45000);
+  const [bidCount, setBidCount] = React.useState(23);
+  const [timeLeft, setTimeLeft] = React.useState(180);
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((t) => Math.max(0, t - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+  const placeBid = (increment: number) => {
+    setCurrentBid((b) => b + increment);
+    setBidCount((c) => c + 1);
+  };
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
+  return (
+    <VStack gap={2}>
+      <VStack gap={1}>
+        <Text color="fgMuted" font="caption">
+          Current Bid
+        </Text>
+        <RollingNumber
+          colorPulseOnUpdate
+          font="display2"
+          format={{ style: 'currency', currency: 'USD', minimumFractionDigits: 0 }}
+          positivePulseColor="accentBoldRed"
+          transition={{ y: { type: 'spring', stiffness: 200, damping: 20 } }}
+          value={currentBid}
+        />
+        <HStack gap={1}>
+          <RollingNumber font="body" format={{ minimumFractionDigits: 0 }} value={bidCount} />
+          <Text font="body">bids placed</Text>
+          <Text color="fgMuted" font="body">
+            •
+          </Text>
+          <RollingNumber
+            color={timeLeft < 30 ? 'fgNegative' : 'fg'}
+            font="body"
+            formattedValue={`${minutes}:${String(seconds).padStart(2, '0')}`}
+            value={timeLeft}
+            accessibilityLiveRegion="none"
+          />
+          <Text font="body">remaining</Text>
+        </HStack>
+      </VStack>
+      <HStack gap={1}>
+        <Button onPress={() => placeBid(100)}>+$100</Button>
+        <Button onPress={() => placeBid(500)}>+$500</Button>
+        <Button onPress={() => placeBid(1000)}>+$1000</Button>
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+### Anatomy & Customization
+
+RollingNumber (mobile) is composed of swappable subcomponents and exposes style hooks for each section of the number. Use these to customize structure and styling or to plug in your own components.
+
+#### Subcomponents
+
+- **RollingNumberMaskComponent**: Component responsible for masking the animated digit content.
+- **RollingNumberAffixSectionComponent**: Component responsible for rendering ReactNode `prefix` / `suffix` props.
+- **RollingNumberValueSectionComponent**: Component responsible for rendering the four `Intl.NumberFormat` sections (`i18nPrefix`, `integer`, `fraction`, `i18nSuffix`).
+- **RollingNumberDigitComponent**: Component responsible for the per-digit roll animation (Reanimated-driven).
+- **RollingNumberSymbolComponent**: Component responsible for rendering non-digit symbols (group separators, decimal, literals, etc.).
+
+You can replace any of these with your own components via props:
+
+```tsx
+<RollingNumber
+  RollingNumberMaskComponent={MyMask}
+  RollingNumberAffixSectionComponent={MyAffixSection}
+  RollingNumberValueSectionComponent={MyValueSection}
+  RollingNumberDigitComponent={MyDigit}
+  RollingNumberSymbolComponent={MySymbol}
+  value={1234.56}
+  format={{ style: 'currency', currency: 'USD' }}
+/>
+```
+
+#### Style overrides
+
+Use the `styles` prop to inline style specific parts:
+
+- **root**: Outer container (`HStack` root)
+- **visibleContent**: Container around the visible number and prefix/suffix
+- **formattedValueSection**: Container around the four i18n sections
+- **i18nPrefix**: Section generated by `Intl.NumberFormat` before the number
+- **integer**: Integer part of the number
+- **fraction**: Fractional part of the number
+- **i18nSuffix**: Section generated by `Intl.NumberFormat` after the number
+- **prefix**: Wrapper around your `prefix` prop
+- **suffix**: Wrapper around your `suffix` prop
+- **text**: Shared text style applied to digits, symbols, prefix, and suffix (mobile only)
+
+#### Structure diagrams
+
+High-level anatomy of RollingNumber (mobile) and its sections:
+
+```text
+RollingNumber (root: HStack)
+  ├── invisibleMeasuredDigits <Text>0</Text>  (offscreen, used for measuring digit height)
+  ├── screenReaderOnly <Text accessibilityLiveRegion>  (hidden a11y text)
+  └── HStack (visibleContent)
+       ├── AffixSection (prefix)               ← your ReactNode prefix
+       ├── HStack (formattedValueSection)
+       │    ├── ValueSection (i18nPrefix)
+       │    ├── ValueSection (integer)
+       │    ├── ValueSection (fraction)
+       │    └── ValueSection (i18nSuffix)
+       └── AffixSection (suffix)               ← your ReactNode suffix
+```
+
+Per-digit rendering inside a ValueSection:
+
+```text
+ValueSection
+  ├── Symbol(s)     (e.g., currency, group, decimal)
+  └── Digit(s)
+       ├── Fallback <Text> (rendered until digitHeight is measured)
+       └── Measured
+            └── Mask (RollingNumberMaskComponent)
+                 └── Animated.View (digit container): vertical stack of digits 0-9 (use translateY to position the current digit)
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `value` | `number` | Yes | `-` | Number to display. |
+| `RollingNumberAffixSectionComponent` | `RollingNumberAffixSectionComponent` | No | `-` | Component used to render prefix and suffix sections. |
+| `RollingNumberDigitComponent` | `RollingNumberDigitComponent` | No | `-` | Component used to render individual digits. |
+| `RollingNumberMaskComponent` | `RollingNumberMaskComponent` | No | `-` | Component used to render the mask container. |
+| `RollingNumberSymbolComponent` | `RollingNumberSymbolComponent` | No | `-` | Component used to render separators and other symbols. |
+| `RollingNumberValueSectionComponent` | `RollingNumberValueSectionComponent` | No | `-` | Component used to render the numeric sections. |
+| `accessibilityLabelPrefix` | `string` | No | `-` | Accessibility label prefix announced before the value. |
+| `accessibilityLabelSuffix` | `string` | No | `-` | Accessibility label suffix announced after the value. |
+| `adjustsFontSizeToFit` | `boolean` | No | `-` | Specifies whether font should be scaled down automatically to fit given style constraints. |
+| `align` | `end \| start \| center \| justify` | No | `start` | Specifies text alignment. On mobile, the value justify is only supported on iOS and fallbacks to start on Android. |
+| `alignContent` | `flex-start \| flex-end \| center \| stretch \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `allowFontScaling` | `boolean` | No | `-` | Specifies whether fonts should scale to respect Text Size accessibility settings. The default is true. |
+| `android_hyphenationFrequency` | `none \| normal \| full` | No | `-` | Hyphenation strategy |
+| `animated` | `boolean` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `'fg'` | Base text color token. When {@link colorPulseOnUpdate } is true, the color briefly pulses to a positive or negative mid color before returning to this base color. |
+| `colorPulseOnUpdate` | `boolean` | No | `-` | Enables color pulsing on positive or negative changes. |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string \| OpaqueColorValue` | No | `-` | - |
+| `dangerouslySetColor` | `string \| OpaqueColorValue` | No | `-` | - |
+| `dataDetectorType` | `link \| email \| none \| all \| phoneNumber \| null` | No | `-` | Determines the types of data converted to clickable URLs in the text element. By default no data types are detected. |
+| `digitTransitionVariant` | `every \| single` | No | `'every'` | Style of digit transition animation. - every: Rolls through every intermediate digit (e.g., 1→2→3→...→9). - single: Rolls directly to the new digit without showing intermediates (e.g., 1→9). |
+| `disabled` | `boolean` | No | `-` | Add disabled opacity style to text Specifies the disabled state of the text view for testing purposes. |
+| `display` | `flex \| none` | No | `-` | - |
+| `dynamicTypeRamp` | `title1 \| title2 \| title3 \| headline \| body \| caption2 \| caption1 \| footnote \| subheadline \| callout \| largeTitle` | No | `-` | The Dynamic Type scale ramp to apply to this element on iOS. |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `ellipsize` | `middle \| head \| tail \| clip` | No | `-` | Choose ellipsize mode. |
+| `ellipsizeMode` | `middle \| head \| tail \| clip` | No | `-` | This can be one of the following values:  - head - The line is displayed so that the end fits in the container and the missing text at the beginning of the line is indicated by an ellipsis glyph. e.g., ...wxyz - middle - The line is displayed so that the beginning and end fit in the container and the missing text in the middle is indicated by an ellipsis glyph. ab...yz - tail - The line is displayed so that the beginning fits in the container and the missing text at the end of the line is indicated by an ellipsis glyph. e.g., abcd... - clip - Lines are not drawn past the edge of the text container.  The default is tail.  numberOfLines must be set in conjunction with this prop.  > clip is working only for iOS |
+| `enableSubscriptNotation` | `boolean` | No | `-` | Enables subscript notation for leading zeros in the fractional part (for example, {@code 0.00009 => 0.0₄9}). |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `body` | Set text font family. |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `format` | `(Omit<NumberFormatOptions, notation> & { notation?: compact \| standard; }) \| undefined` | No | `-` | Intl.NumberFormat options applied when formatting the value. Scientific and engineering notation are not supported. |
+| `formattedValue` | `string` | No | `-` | Preformatted value rendered instead of formatting {@link value }. {@link value } is still used to determine numeric deltas. |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `id` | `string` | No | `-` | Used to reference react managed views from native code. |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineBreakMode` | `middle \| head \| tail \| clip` | No | `-` | Line Break mode. Works only with numberOfLines. clip is working only for iOS |
+| `lineBreakStrategyIOS` | `none \| standard \| hangul-word \| push-out` | No | `-` | Set line break strategy on iOS. |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `locale` | `string \| Locale \| readonly (string \| Locale)[]` | No | `-` | Locale used for formatting. Defaults to the locale from {@link LocaleProvider }. |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxFontSizeMultiplier` | `number \| null` | No | `-` | Specifies largest possible scale a font can reach when allowFontScaling is enabled. Possible values: - null/undefined (default): inherit from the parent node or the global default (0) - 0: no max, ignore parent/global default - >= 1: sets the maxFontSizeMultiplier of this node to this value |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `minimumFontScale` | `number` | No | `-` | Specifies smallest possible scale a font can reach when adjustsFontSizeToFit is enabled. (values 0.01-1.0). |
+| `mono` | `boolean` | No | `-` | Use monospace font family. |
+| `nativeID` | `string` | No | `-` | Used to reference react managed views from native code. |
+| `negativePulseColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `'fgNegative'` | Color token used for negative numeric changes. |
+| `noWrap` | `boolean` | No | `false` | Set text to be in a single line. |
+| `numberOfLines` | `number` | No | `-` | Truncates text after wrapping to a defined number of lines. Used to truncate the text with an ellipsis after computing the text layout, including line wrapping, such that the total number of lines does not exceed this number.  This prop is commonly used with ellipsizeMode. |
+| `onLayout` | `((event: LayoutChangeEvent) => void)` | No | `-` | Invoked on mount and layout changes with  {nativeEvent: { layout: {x, y, width, height}}}. |
+| `onLongPress` | `((event: GestureResponderEvent) => void)` | No | `-` | This function is called on long press. e.g., onLongPress={this.increaseSize}> |
+| `onPress` | `((event: GestureResponderEvent) => void)` | No | `-` | This function is called on press. Text intrinsically supports press handling with a default highlight state (which can be disabled with suppressHighlighting). |
+| `onPressIn` | `((event: GestureResponderEvent) => void)` | No | `-` | - |
+| `onPressOut` | `((event: GestureResponderEvent) => void)` | No | `-` | - |
+| `onTextLayout` | `((event: NativeSyntheticEvent<TextLayoutEventData>) => void)` | No | `-` | Invoked on Text layout |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `positivePulseColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `'fgPositive'` | Color token used for positive numeric changes. |
+| `prefix` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Content rendered before the formatted value. |
+| `ref` | `((instance: View \| null) => void) \| RefObject<View> \| null` | No | `-` | - |
+| `renderEmptyNode` | `boolean` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `selectable` | `boolean` | No | `-` | Lets the user select text, to use the native copy and paste functionality. |
+| `selectionColor` | `string \| OpaqueColorValue` | No | `-` | The highlight color of the text. |
+| `style` | `false \| Value \| AnimatedInterpolation<string \| number> \| RegisteredStyle<TextStyle> \| WithAnimatedObject<TextStyle> \| WithAnimatedArray<Falsy \| TextStyle \| RegisteredStyle<TextStyle> \| RecursiveArray<Falsy \| TextStyle \| RegisteredStyle<TextStyle>> \| readonly (Falsy \| TextStyle \| RegisteredStyle<TextStyle>)[]> \| null` | No | `-` | - |
+| `styles` | `{ root?: StyleProp<ViewStyle>; visibleContent?: StyleProp<ViewStyle>; formattedValueSection?: StyleProp<ViewStyle>; prefix?: StyleProp<ViewStyle>; suffix?: StyleProp<ViewStyle>; i18nPrefix?: StyleProp<ViewStyle>; i18nSuffix?: StyleProp<ViewStyle>; integer?: StyleProp<ViewStyle>; fraction?: StyleProp<ViewStyle>; text?: StyleProp<TextStyle>; }` | No | `-` | Custom styles for individual elements of the RollingNumber component |
+| `suffix` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Content rendered after the formatted value. |
+| `suppressHighlighting` | `boolean` | No | `-` | When true, no visual change is made when text is pressed down. By default, a gray oval highlights the text on press down. |
+| `tabularNumbers` | `boolean` | No | `false true` | Activates the set of figures where numbers are all of the same size, allowing them to be easily aligned. Enables tabular figures on the underlying {@link Text}. All digits render with equal width. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textBreakStrategy` | `simple \| highQuality \| balanced` | No | `-` | Set text break strategy on Android API Level 23+ default is highQuality. |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `transition` | `RollingNumberTransitionConfig` | No | `-` | Reanimated transition overrides. Supports per-property overrides for {@code y} and {@code color} only. |
+| `underline` | `boolean` | No | `false` | Set text decoration to underline. |
+| `userSelect` | `auto \| none \| text \| contain \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `zIndex` | `number` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Outer container element |
+| `visibleContent` | `-` | Animated visible content wrapper |
+| `formattedValueSection` | `-` | Formatted numeric value wrapper |
+| `prefix` | `-` | Prefix section (from props) |
+| `suffix` | `-` | Suffix section (from props) |
+| `i18nPrefix` | `-` | Prefix from Intl.NumberFormat (e.g. $ in $1,000) |
+| `i18nSuffix` | `-` | Suffix from Intl.NumberFormat (e.g. K in 100K) |
+| `integer` | `-` | Integer portion of formatted value |
+| `fraction` | `-` | Fractional portion of formatted value |
+| `text` | `-` | Text element for digits and symbols |
+
+

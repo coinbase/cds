@@ -1,0 +1,181 @@
+# NudgeCard
+
+A card component designed to encourage users to take essential actions.
+
+## Import
+
+```tsx
+import { NudgeCard } from '@coinbase/cds-web/cards/NudgeCard'
+```
+
+## Examples
+
+### with Transparent Button
+
+Use if the nudge card's purpose is to provide a gentle reminder or a secondary option. Transparent buttons are less intrusive and blends more seamlessly with the rest of the page.
+
+```jsx live
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Earn more crypto',
+      description: 'You’ve got unstaked crypto. Stake it now to earn more.',
+      pictogram: 'key',
+      action: 'Start earning',
+      onActionPress: NoopFn,
+      onDismissPress: NoopFn,
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <NudgeCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```
+
+### Compact
+
+Use when space is limited.
+
+```jsx live
+function Example() {
+  function NoopFn() {
+    console.log('pressed');
+  }
+  const cards = [
+    {
+      title: 'Derivatives Trading',
+      description: 'Derivative Exchange is available for all users',
+      pictogram: 'derivativesNavigation',
+      onActionPress: NoopFn,
+      compact: true,
+    },
+  ];
+  return (
+    <HStack minHeight={300} padding={2} alignItems="center" justifyContent="center" gap={2}>
+      {cards.map((card) => (
+        <NudgeCard {...card} />
+      ))}
+    </HStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `action` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React.ReactNode to display as the call to action |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| normal \| auto \| start \| end \| flex-start \| flex-end \| self-start \| self-end \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `as` | `div` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `bgAlternate` | Background color for the card. |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `description` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React.ReactNode to be displayed below the title in a TextBody |
+| `display` | `ResponsiveProp<grid \| revert \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<column \| row \| row-reverse \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<FontSize \| inherit>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<FontWeight \| inherit>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| space-between \| space-around \| space-evenly>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `lineHeight` | `ResponsiveProp<LineHeight \| inherit>` | No | `-` | - |
+| `margin` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -5 \| -10 \| -0.25 \| -0.5 \| -0.75 \| -1 \| -1.5 \| -2 \| -3 \| -4 \| -6 \| -7 \| -8 \| -9>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `media` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Pass any node to be rendered to the right of the text content |
+| `mediaPosition` | `left \| right` | No | `right` | Set the media position for the pictogram or media. |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `160` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `327` | - |
+| `numberOfLines` | `number` | No | `3` | Maximum number of lines shown for the title and description text. Text that exceeds will be truncated. |
+| `onActionPress` | `MouseEventHandler<Element>` | No | `-` | Callback fired when the action button is pressed Cannot be used when action is a React Element, only when action is a string |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `onDismissPress` | `MouseEventHandler<Element>` | No | `-` | Callback fired when the dismiss button is pressed |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pictogram` | `key \| warning \| error \| add \| arrowsUpDown \| browser \| calculator \| calendar \| checkmark \| clock \| coinbaseOneLogo \| crystalBallInsight \| derivativesProduct \| email \| gasFees \| identityCard \| instantUnstakingClock \| laptop \| learningRewardsProduct \| lock \| loop \| passport \| paypal \| phone \| pieChartData \| planet \| robot \| safe \| securityKey \| settings \| shield \| support \| taxes \| tokenSales \| trading \| verifiedPools \| wallet \| done \| cardSuccess \| 2fa \| accountsNavigation \| accreditedInvestor \| addCard \| addPayment \| addPhone \| addressBook \| addToWatchlist \| addWallet \| advancedTradingDesktop \| advancedTradingNavigation \| advancedTradingRebates \| agent \| alerts \| alertsCoinbaseOne \| analyticsNavigation \| apartOfDropsNft \| applyForHigherLimits \| apyInterest \| assetEncryption \| assetHubNavigation \| assetManagement \| assetManagementNavigation \| assetMeasurements \| assetMovement \| authenticationApp \| authenticator \| authenticatorAlt \| authenticatorProgress \| avatarAa \| avatarAb \| avatarAc \| avatarAd \| avatarAe \| avatarAf \| avatarAg \| avatarAh \| avatarAi \| avatarAj \| avatarBa \| avatarBb \| avatarBc \| avatarBd \| avatarBe \| avatarBf \| avatarBg \| avatarBh \| avatarBi \| avatarBj \| avatarCa \| avatarCb \| avatarCc \| avatarCd \| avatarCe \| avatarCf \| avatarCg \| avatarCh \| avatarCi \| avatarCj \| avatarDa \| avatarDb \| avatarDc \| avatarDd \| avatarDe \| avatarDf \| avatarDg \| avatarDh \| avatarDi \| avatarDj \| avatarEa \| avatarEb \| avatarEc \| avatarEd \| avatarEe \| avatarEf \| avatarEg \| avatarEh \| avatarEi \| avatarEj \| avatarFa \| avatarFb \| avatarFc \| avatarFd \| avatarFe \| avatarFf \| avatarFg \| avatarFh \| avatarFi \| avatarFj \| avatarGa \| avatarGb \| avatarGc \| avatarGd \| avatarGe \| avatarGf \| avatarGg \| avatarGh \| avatarGi \| avatarGj \| avatarHa \| avatarHb \| avatarHc \| avatarHd \| avatarHe \| avatarHf \| avatarHg \| avatarHh \| avatarHi \| avatarHj \| avatarIa \| avatarIb \| avatarIc \| avatarId \| avatarIe \| avatarIf \| avatarIg \| avatarIh \| avatarIi \| avatarIj \| avatarJa \| avatarJb \| avatarJc \| avatarJd \| avatarJe \| avatarJf \| avatarJg \| avatarJh \| avatarJi \| avatarJj \| barChart \| baseAscend \| baseCertificateStar \| baseChartSmall \| baseChatBubbleHeart \| baseCheckSmall \| baseCoinCryptoSmall \| baseCoinNetworkSmall \| baseCoinStack \| baseCoinStar \| baseComet \| baseComputer \| baseConfetti \| baseConnectApps \| baseConnectSmall \| baseCreatorCoin \| baseDecentralizationSmall \| baseDiamondSmall \| baseDiamondTrophy \| baseDoor \| baseEarnedBadge \| baseEmptySmall \| baseErrorButterflySmall \| baseErrorSmall \| baseExchange \| baseFire \| baseGem \| baseGlobe \| baseHandStar \| baseLayout \| baseLightningbolt \| baseLoadingSmall \| baseLocationSmall \| baseLogo \| baseLogoNavigation \| baseMedal \| baseMessaging \| baseMintNftSmall \| baseNetworkSmall \| baseNftSmall \| basePaycoinSmall \| basePeopleSmall \| basePiechartSmall \| basePlant \| basePower \| baseRibbon \| baseRocket \| baseRockon \| baseSaved \| baseSecuritySmall \| baseSendSmall \| baseSignin \| baseSmile \| baseStack \| baseStar \| baseTargetSmall \| baseTile \| bigBtcSend \| bitcoin \| bitcoinPizza \| bitcoinRewards \| bitcoinWhitePaper \| blockchainConnection \| bonusFivePercent \| bonusTwoPercent \| borrowCoins \| borrowingLending \| borrowNavigation \| browserMultiPlatform \| browserTransaction \| btcOneHundred \| bundle \| businessProduct \| calendarCaution \| calendarHighlight \| candleSticksGraph \| cardBlocked \| cardDeclined \| cardNavigation \| cb1BankTransfers \| chart \| chat \| cloudNavigation \| coinbaseLogoAdvancedBrand \| coinbaseLogoNavigation \| coinbaseOneAuthenticator \| coinbaseOneChat \| coinbaseOneEarn \| coinbaseOneEarnCoins \| coinbaseOneEarnCoinsLogo \| coinbaseOneFiat \| coinbaseOneProductIcon \| coinbaseOneProductInvestWeekly \| coinbaseOneRefreshed \| coinbaseOneShield \| coinbaseOneTrade \| coinbaseOneTrusted \| coinbaseOneUnlimitedRewards \| coinbaseUnlockOffers \| coinbaseWalletApp \| coinFocus \| coinShare \| coldStorageCheck \| collectionOfAssets \| commerceCheckout \| commerceInvoice \| commerceNavigation \| commodities \| completeQuiz \| complianceNavigation \| congratulations \| connectNavigation \| contactInfo \| controlWalletStorage \| creative \| creditCard \| crypto101 \| cryptoCard \| cryptoCoins \| cryptoFolder \| custodialJourney \| custodyNavigation \| dataMarketplaceNavigation \| decentralizationEverything \| decentralizedExchange \| decentralizedIdentity \| decentralizedWeb3 \| defiEarnMoment \| delegate \| delegateNavigation \| derivativesNavigation \| developerPlatformNavigation \| developerSDKNavigation \| directDepositNavigation \| dollarShowcase \| driversLicense \| driversLicenseWheel \| earnCoins \| earnGraph \| earnNavigation \| easyToUse \| economyGlobal \| emailAndMessages \| enableVoting \| envelope \| ethereumFocus \| ethRewards \| ethStaking \| ethStakingChart \| ethStakingRewards \| ethToken \| exchangeNavigation \| explore \| fast \| faucetNavigation \| feesRestriction \| fiat \| finance \| findYourSelection \| formDownload \| futures \| futuresCoinbaseOne \| gem \| genericCountryIDCard \| getStarted \| giftbox \| globalConnections \| globalPayments \| globalTransactions \| googleAuthenticator \| governance \| hardwareWallet \| helpCenterNavigation \| higherLimits \| holdingCoin \| idBlock \| idError \| idVerification \| increaseLimits \| institutionalNavigation \| institutions \| internationalExchangeNavigation \| internet \| investGraph \| laptopCharts \| laptopVideo \| layerNetworks \| leadGraph \| learn \| learningRewardsNavigation \| lightbulbLearn \| lightningNetworkSend \| linkYourAccount \| listingFees \| locationUsa \| lowFees \| manageWeb3SignersAcct \| miningCoins \| mintedNft \| mobileCharts \| mobileError \| mobileNotifcation \| mobileSuccess \| mobileWarning \| moneyCrypto \| moneyEarn \| moneySwift \| monitoringPerformance \| moreThanBitcoin \| multiAccountsAndCards \| multiPlatform \| multipleAssets \| musicAndSounds \| myNumberCard \| newUserChecklistBuyCrypto \| newUserChecklistCompleteAccount \| newUserChecklistVerifyId \| nftAvatar \| nftLibrary \| nftNavigation \| noAnnualFee \| noNftFound \| notificationHubAnalysis \| notificationHubNews \| notificationHubPortfolio \| notificationHubSocial \| notifications \| noVisibility \| noWiFi \| orders \| outage \| partialCoins \| participateNavigation \| passwordWalletLocked \| payNavigation \| peerToPeer \| pieChart \| pizza \| pluginBrowser \| podium \| positiveReviews \| predictionMarkets \| premiumInvestor \| priceTracking \| primeMobileApp \| primeNavigation \| privateClientNavigation \| proNavigation \| protectionPlan \| queryTransactNavigation \| receipt \| recurringPurchases \| restaking \| reviewAndAdd \| rewardsNavigation \| riskStaking \| rosettaNavigation \| securedAssets \| security \| securityCoinShield \| seedPhrase \| selectAddNft \| selfCustodyWallet \| selfServe \| sellSendAnytime \| sendPaymentToOthers \| settled \| sideChainSide \| signInNavigation \| smsAuthenticate \| sparkleCoinbaseOne \| ssnCard \| stableCoinMetaphor \| stacking \| stakingGraph \| standWithCryptoLogoNavigation \| startToday \| strongInfo \| strongWarning \| successPhone \| supportChat \| takeQuiz \| target \| taxBeta \| taxCenterNavigation \| taxesArrangement \| taxSeason \| timingCheck \| tokenBaskets \| transferSend \| transistor \| trendingAssets \| trusted \| tryAgainLater \| twoBonus \| typeScript \| ubiKey \| usaProduct \| usdcEarn \| usdcInterest \| usdcLoan \| usdcLogo \| usdcRewards \| usdcRewardsRibbon \| usdcToken \| venturesNavigation \| videoCalendar \| videoContent \| waiting \| waitingForConsensus \| walletAsServiceNavigation \| walletDeposit \| walletError \| walletExchange \| walletLinkNavigation \| walletLogoNavigation \| walletNavigation \| walletPassword \| walletSuccess \| walletWarning \| winBTC \| worldwide \| wrapEth` | No | `-` | If you pass a Pictogram name it will render a Pictogram to the right of the text content |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<fixed \| static \| relative \| absolute \| sticky>` | No | `-` | - |
+| `ref` | `RefObject<HTMLDivElement> \| ((instance: HTMLDivElement \| null) => void) \| null` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `CSSProperties` | No | `-` | - |
+| `testID` | `string` | No | `nudge-card` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<capitalize \| lowercase \| none \| uppercase>` | No | `-` | - |
+| `title` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Text or React.ReactNode to be displayed above the description in a TextHeadline |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `userSelect` | `ResponsiveProp<text \| none \| auto \| all>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `327` | - |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+

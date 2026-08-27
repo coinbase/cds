@@ -1,0 +1,107 @@
+# installation
+
+This guide will help you get started with installing CDS in your React project. Follow the instructions below to set up CDS and start building with our cross-platform components.
+
+### Installation
+
+:::tip Starting a new project?
+Check out our [templates](/getting-started/templates) for pre-configured starter apps with CDS already set up.
+:::
+
+To install the CDS library for React web applications, run the following command:
+
+```bash
+npm install @coinbase/cds-web framer-motion@^10
+```
+
+Alternatively, if you are using Yarn:
+
+```bash
+yarn add @coinbase/cds-web framer-motion@^10
+```
+
+### Getting started
+#### 1. Import global styles
+
+Some global and icon styles are required for components to render correctly. Import these styles near your application entry point.
+
+```tsx
+import '@coinbase/cds-icons/fonts/web/icon-font.css';
+import '@coinbase/cds-web/globalStyles';
+```
+
+[See the `globalStyles` source code here &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/styles/global.ts)
+
+If you are using the CDS `defaultTheme` you should also import the default font styles.
+
+```tsx
+import '@coinbase/cds-web/defaultFontStyles';
+```
+
+#### 2. Render a ThemeProvider and MediaQueryProvider
+
+Render a ThemeProvider at the root of your application, and pass the `theme` and `activeColorScheme`.
+
+Render a MediaQueryProvider for components that use the `useMediaQuery` hook.
+
+```tsx
+import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import App from './App';
+
+const Index = () => (
+  <MediaQueryProvider>
+    <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+      <App />
+    </ThemeProvider>
+  </MediaQueryProvider>
+);
+
+export default Index;
+```
+
+:::tip
+The MediaQueryProvider prevents issues with `window.matchMedia()` in SSR environments.
+[Read more here &rarr;](/components/other/MediaQueryProvider#server-side-rendering)
+:::
+
+#### 3. Verify the installation
+
+Try importing and rendering a simple CDS component.
+
+```tsx
+import { Button } from '@coinbase/cds-web/buttons';
+
+const Test = () => <Button>Click Me</Button>;
+```
+
+### Example implementation
+
+Here's an example React DOM app using the `defaultTheme`.
+
+```tsx
+import '@coinbase/cds-icons/fonts/web/icon-font.css';
+import '@coinbase/cds-web/defaultFontStyles';
+import '@coinbase/cds-web/globalStyles';
+import { createRoot } from 'react-dom/client';
+import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import App from './App';
+
+const root = createRoot(document.getElementById('root'));
+
+root.render(
+  <MediaQueryProvider>
+    <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+      <App />
+    </ThemeProvider>
+  </MediaQueryProvider>,
+);
+```
+
+### Next steps
+
+Learn how to customize CDS's appearance.
+
+[See the theming docs here &rarr;](/getting-started/theming)
+

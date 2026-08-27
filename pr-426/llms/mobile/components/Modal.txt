@@ -1,0 +1,83 @@
+# Modal
+
+A component that displays content in a window that requires user interaction.
+
+## Import
+
+```tsx
+import { Modal } from '@coinbase/cds-mobile/overlays/modal/Modal'
+```
+
+## Examples
+
+### Basic example
+
+```jsx
+function Example() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onPress={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          backAccessibilityLabel="Back"
+          closeAccessibilityLabel="Close"
+          onBackButtonClick={() => setVisible(false)}
+          testID="Basic Modal Test ID"
+          title="Basic Modal"
+        />
+        <ModalBody tabIndex={0} testID="modal-body">
+          Body contents go here
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onPress={() => setVisible(false)}>Save</Button>}
+          secondaryAction={
+            <Button onPress={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `onRequestClose` | `() => void` | Yes | `-` | Callback function fired when modal is closed. |
+| `visible` | `boolean` | Yes | `false` | Controls visibility of the Modal |
+| `accessibilityLabelledBy` | `string \| (string & string[])` | No | `-` | Identifies the element that labels the element it is applied to. When the assistive technology focuses on the component with this props, the text is read aloud. The value should should match the nativeID of the related element. |
+| `animated` | `boolean` | No | `-` | - |
+| `children` | `ReactNode \| FC<ModalChildrenRenderProps>` | No | `-` | Component to render as the Modal content |
+| `hardwareAccelerated` | `boolean` | No | `-` | Controls whether to force hardware acceleration for the underlying window. |
+| `hideCloseButton` | `boolean` | No | `false` | Hide the close icon on the top right |
+| `hideDividers` | `boolean` | No | `false` | Hide top and bottom dividers inside Modal body |
+| `key` | `Key \| null` | No | `-` | - |
+| `onDidClose` | `(() => void)` | No | `-` | Callback fired after the component is closed. |
+| `onDismiss` | `(() => void)` | No | `-` | The onDismiss prop allows passing a function that will be called once the modal has been dismissed. |
+| `onOrientationChange` | `((event: NativeSyntheticEvent<any>) => void)` | No | `-` | The onOrientationChange callback is called when the orientation changes while the modal is being displayed. The orientation provided is only portrait or landscape. This callback is also called on initial render, regardless of the current orientation. |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onShow` | `((event: NativeSyntheticEvent<any>) => void)` | No | `-` | The onShow prop allows passing a function that will be called once the modal has been shown. |
+| `presentationStyle` | `fullScreen \| pageSheet \| formSheet \| overFullScreen` | No | `-` | The presentationStyle determines the style of modal to show |
+| `ref` | `((instance: ModalRefBaseProps \| null) => void) \| RefObject<ModalRefBaseProps> \| null` | No | `-` | - |
+| `statusBarTranslucent` | `boolean` | No | `-` | Determines whether your modal should go under the system statusbar. |
+| `supportedOrientations` | `(portrait \| portrait-upside-down \| landscape \| landscape-left \| landscape-right)[]` | No | `-` | The supportedOrientations prop allows the modal to be rotated to any of the specified orientations. On iOS, the modal is still restricted by whats specified in your apps Info.plists UISupportedInterfaceOrientations field. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID Used to locate this view in end-to-end tests. |
+| `transparent` | `boolean` | No | `-` | The transparent prop determines whether your modal will fill the entire view. Setting this to true will render the modal over a transparent background. |
+| `width` | `number` | No | `-` | - |
+
+

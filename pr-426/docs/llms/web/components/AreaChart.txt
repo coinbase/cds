@@ -1,0 +1,735 @@
+# AreaChart
+
+A chart component that displays data as filled areas beneath lines. Ideal for showing cumulative values, stacked data, or emphasizing volume over time.
+
+## Import
+
+```tsx
+import { AreaChart } from '@coinbase/cds-web-visualization'
+```
+
+## Examples
+
+AreaChart is a cartesian chart variant that allows for easy visualization of stacked data.
+
+### Basic Example
+
+```jsx live
+<AreaChart
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 2, 68, 20, 21, 58],
+    },
+  ]}
+  type="gradient"
+  showLines
+  showYAxis
+  yAxis={{
+    showGrid: true,
+    width: 32,
+  }}
+/>
+```
+
+### Simple
+
+```jsx live
+<AreaChart
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={0}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 2, 68, 20, 21, 58],
+    },
+  ]}
+  type="gradient"
+  showLines
+/>
+```
+
+### Stacking
+
+You can use the `stacked` prop to stack all areas on top of each other. You can also use the `stackId` prop on a series to create different stack groups. See [CartesianChart](/components/graphs/CartesianChart/#series-stacks) for more details.
+
+```jsx live
+<AreaChart
+  showLines
+  stacked
+  curve="natural"
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={0}
+  series={[
+    {
+      id: 'currentRewards',
+      data: [
+        100, 150, 200, 280, 380, 500, 650, 820, 1020, 1250, 1510, 1800, 2120, 2470, 2850, 3260,
+        3700, 4170,
+      ],
+      color: 'var(--color-fg)',
+    },
+    {
+      id: 'potentialRewards',
+      data: [
+        150, 220, 300, 400, 520, 660, 820, 1000, 1200, 1420, 1660, 1920, 2200, 2500, 2820, 3160,
+        3520, 3900,
+      ],
+      color: 'var(--color-fgPositive)',
+      LineComponent: DottedLine,
+    },
+  ]}
+  AreaComponent={(props) => <DottedArea {...props} peakOpacity={0.4} baselineOpacity={0.4} />}
+  type="dotted"
+/>
+```
+
+### Negative Values
+
+When an area chart contains negative values, the baseline automatically adjusts to zero instead of the bottom of the chart. The area fills from the data line to the zero baseline, properly showing both positive and negative regions.
+
+```jsx live
+<AreaChart
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={0}
+  series={[
+    {
+      id: 'pageViews',
+      data: [24, 13, -98, 39, 48, 38, 43],
+    },
+  ]}
+  AreaComponent={(props) => <SolidArea {...props} opacity={0.4} />}
+  showLines
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+### Area Styles
+
+You can have different area styles for each series.
+
+```jsx live
+<AreaChart
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={0}
+  series={[
+    {
+      id: 'visitors',
+      data: [450, 520, 480, 600, 750, 680, 590],
+      label: 'Weekly Visitors',
+      color: '#fb4d3d',
+      type: 'dotted',
+    },
+    {
+      id: 'repeatVisitors',
+      data: [250, 200, 150, 140, 100, 80, 50],
+      label: 'Weekly Repeat Visitors',
+      color: '#16a34a',
+    },
+    {
+      id: 'signups',
+      data: [45, 62, 55, 250, 380, 400, 450],
+      label: 'Weekly Signups',
+      color: '#2563eb',
+      type: 'gradient',
+    },
+  ]}
+/>
+```
+
+### Animations
+
+You can configure chart transitions using the `transition` prop.
+
+#### Customized Transitions
+
+You can pass in a custom spring based transition to your `AreaChart` for a custom transition.
+
+```jsx live
+function AnimatedStackedAreas() {
+  const dataCount = 20;
+  const minYValue = 5000;
+  const maxDataOffset = 15000;
+  const minStepOffset = 2500;
+  const maxStepOffset = 10000;
+  const updateInterval = 500;
+  const seriesSpacing = 2000;
+  const myTransition = { type: 'spring', stiffness: 700, damping: 20 };
+
+  const seriesConfig = [
+    { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
+    { id: 'orange', label: 'Orange', color: 'rgb(var(--orange40))' },
+    { id: 'yellow', label: 'Yellow', color: 'rgb(var(--yellow40))' },
+    { id: 'green', label: 'Green', color: 'rgb(var(--green40))' },
+    { id: 'blue', label: 'Blue', color: 'rgb(var(--blue40))' },
+    { id: 'indigo', label: 'Indigo', color: 'rgb(var(--indigo40))' },
+    { id: 'purple', label: 'Purple', color: 'rgb(var(--purple40))' },
+  ];
+
+  const domainLimit = maxDataOffset + seriesConfig.length * seriesSpacing;
+
+  function generateNextValue(previousValue) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataOffset) {
+      direction = -1;
+    } else if (previousValue <= minYValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(minYValue, Math.min(maxDataOffset, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = minYValue + Math.random() * (maxDataOffset - minYValue);
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  const MemoizedDottedArea = memo((props) => (
+    <DottedArea {...props} baselineOpacity={1} peakOpacity={1} />
+  ));
+
+  function AnimatedChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 0;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const series = seriesConfig.map((config, index) => ({
+      id: config.id,
+      label: config.label,
+      color: config.color,
+      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
+    }));
+
+    return (
+      <AreaChart
+        overflow="visible"
+        stacked
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        series={series}
+        type="dotted"
+        showLines
+        AreaComponent={MemoizedDottedArea}
+        transition={myTransition}
+        inset={0}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+          width: 0,
+          tickLabelFormatter: () => '',
+          domain: { min: 0, max: domainLimit },
+        }}
+      />
+    );
+  }
+
+  return <AnimatedChart />;
+}
+```
+
+#### Disable Animations
+
+You can also disable animations by setting the `animate` prop to `false`.
+
+```jsx live
+function AnimatedStackedAreas() {
+  const dataCount = 20;
+  const minYValue = 5000;
+  const maxDataOffset = 15000;
+  const minStepOffset = 2500;
+  const maxStepOffset = 10000;
+  const updateInterval = 500;
+  const seriesSpacing = 2000;
+  const myTransition = { type: 'spring', stiffness: 700, damping: 20 };
+
+  const seriesConfig = [
+    { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
+    { id: 'orange', label: 'Orange', color: 'rgb(var(--orange40))' },
+    { id: 'yellow', label: 'Yellow', color: 'rgb(var(--yellow40))' },
+    { id: 'green', label: 'Green', color: 'rgb(var(--green40))' },
+    { id: 'blue', label: 'Blue', color: 'rgb(var(--blue40))' },
+    { id: 'indigo', label: 'Indigo', color: 'rgb(var(--indigo40))' },
+    { id: 'purple', label: 'Purple', color: 'rgb(var(--purple40))' },
+  ];
+
+  const domainLimit = maxDataOffset + seriesConfig.length * seriesSpacing;
+
+  function generateNextValue(previousValue) {
+    const range = maxStepOffset - minStepOffset;
+    const offset = Math.random() * range + minStepOffset;
+
+    let direction;
+    if (previousValue >= maxDataOffset) {
+      direction = -1;
+    } else if (previousValue <= minYValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(minYValue, Math.min(maxDataOffset, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = minYValue + Math.random() * (maxDataOffset - minYValue);
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  const MemoizedDottedArea = memo((props) => (
+    <DottedArea {...props} baselineOpacity={1} peakOpacity={1} />
+  ));
+
+  function AnimatedChart() {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? 0;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const series = seriesConfig.map((config, index) => ({
+      id: config.id,
+      label: config.label,
+      color: config.color,
+      // First series gets animated data, others get constant height
+      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
+    }));
+
+    return (
+      <AreaChart
+        animate={false}
+        overflow="visible"
+        stacked
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        series={series}
+        type="dotted"
+        showLines
+        AreaComponent={MemoizedDottedArea}
+        inset={0}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+          width: 0,
+          tickLabelFormatter: () => '',
+          domain: { min: 0, max: domainLimit },
+        }}
+      />
+    );
+  }
+
+  return <AnimatedChart />;
+}
+```
+
+### Gradients
+
+You can use the `gradient` prop on `series` or `Area` components to enable gradients.
+
+Each stop requires an `offset`, which is based on the data within the x/y scale and `color`, with an optional `opacity` (defaults to 1).
+
+Values in between stops will be interpolated smoothly using [srgb color space](https://www.w3.org/TR/SVG11/painting.html#ColorInterpolationProperty).
+
+```jsx live
+function ContinuousGradient() {
+  const spectrumColors = [
+    'blue',
+    'green',
+    'orange',
+    'yellow',
+    'gray',
+    'indigo',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+    'chartreuse',
+  ];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={1} justifyContent="flex-end" flexWrap="wrap">
+        {spectrumColors.map((color) => (
+          <Pressable
+            key={color}
+            onClick={() => setCurrentSpectrumColor(color)}
+            accessibilityLabel={`Select ${color}`}
+            style={{
+              backgroundColor: `rgb(var(--${color}20))`,
+              border: `2px solid rgb(var(--${color}50))`,
+              outlineColor: `rgb(var(--${color}80))`,
+              outline:
+                currentSpectrumColor === color ? `2px solid rgb(var(--${color}80))` : undefined,
+            }}
+            width={{ base: 16, tablet: 24, desktop: 24 }}
+            height={{ base: 16, tablet: 24, desktop: 24 }}
+            borderRadius={1000}
+          />
+        ))}
+      </HStack>
+      <AreaChart
+        enableScrubbing
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            gradient: {
+              stops: ({ min, max }) => [
+                // Allows a function which accepts min/max or direct array
+                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))` },
+              ],
+            },
+          },
+        ]}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber />
+      </AreaChart>
+    </VStack>
+  );
+}
+```
+
+#### Discrete
+
+You can set multiple stops at the same offset to create a discrete gradient.
+
+```jsx live
+function DiscreteGradient() {
+  const spectrumColors = [
+    'blue',
+    'green',
+    'orange',
+    'yellow',
+    'gray',
+    'indigo',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+    'chartreuse',
+  ];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={1} justifyContent="flex-end" flexWrap="wrap">
+        {spectrumColors.map((color) => (
+          <Pressable
+            key={color}
+            onClick={() => setCurrentSpectrumColor(color)}
+            accessibilityLabel={`Select ${color}`}
+            style={{
+              backgroundColor: `rgb(var(--${color}20))`,
+              border: `2px solid rgb(var(--${color}50))`,
+              outlineColor: `rgb(var(--${color}80))`,
+              outline:
+                currentSpectrumColor === color ? `2px solid rgb(var(--${color}80))` : undefined,
+            }}
+            width={{ base: 16, tablet: 24, desktop: 24 }}
+            height={{ base: 16, tablet: 24, desktop: 24 }}
+            borderRadius={1000}
+          />
+        ))}
+      </HStack>
+      <AreaChart
+        enableScrubbing
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            gradient: {
+              stops: ({ min, max }) => [
+                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: min + (max - min) / 3, color: `rgb(var(--${currentSpectrumColor}80))` },
+                { offset: min + (max - min) / 3, color: `rgb(var(--${currentSpectrumColor}50))` },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(var(--${currentSpectrumColor}50))`,
+                },
+                {
+                  offset: min + ((max - min) / 3) * 2,
+                  color: `rgb(var(--${currentSpectrumColor}20))`,
+                },
+                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))` },
+              ],
+            },
+          },
+        ]}
+        showLines
+        strokeWidth={4}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+        fillOpacity={0.5}
+      >
+        <Scrubber />
+      </AreaChart>
+    </VStack>
+  );
+}
+```
+
+#### Axes
+
+By default, gradients will be applied to the y-axis. You can apply a gradient to the x-axis by setting `axis` to `x` in the gradient definition.
+
+```jsx live
+function XAxisGradient() {
+  const spectrumColors = [
+    'blue',
+    'green',
+    'orange',
+    'yellow',
+    'gray',
+    'indigo',
+    'pink',
+    'purple',
+    'red',
+    'teal',
+    'chartreuse',
+  ];
+  const data = [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58];
+
+  const [currentSpectrumColor, setCurrentSpectrumColor] = useState('pink');
+
+  return (
+    <VStack gap={2}>
+      <HStack gap={1} justifyContent="flex-end" flexWrap="wrap">
+        {spectrumColors.map((color) => (
+          <Pressable
+            key={color}
+            onClick={() => setCurrentSpectrumColor(color)}
+            accessibilityLabel={`Select ${color}`}
+            style={{
+              backgroundColor: `rgb(var(--${color}20))`,
+              border: `2px solid rgb(var(--${color}50))`,
+              outlineColor: `rgb(var(--${color}80))`,
+              outline:
+                currentSpectrumColor === color ? `2px solid rgb(var(--${color}80))` : undefined,
+            }}
+            width={{ base: 16, tablet: 24, desktop: 24 }}
+            height={{ base: 16, tablet: 24, desktop: 24 }}
+            borderRadius={1000}
+          />
+        ))}
+      </HStack>
+      <AreaChart
+        enableScrubbing
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        series={[
+          {
+            id: 'prices',
+            data: data,
+            gradient: {
+              axis: 'x',
+              stops: ({ min, max }) => [
+                { offset: min, color: `rgb(var(--${currentSpectrumColor}80))`, opacity: 0 },
+                { offset: max, color: `rgb(var(--${currentSpectrumColor}20))`, opacity: 1 },
+              ],
+            },
+          },
+        ]}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+        }}
+      >
+        <Scrubber />
+      </AreaChart>
+    </VStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `AreaComponent` | `AreaComponent` | No | `-` | Component to render the area. Takes precedence over the type prop if provided. |
+| `LineComponent` | `LineComponent` | No | `-` | Component to render the line. Takes precedence over the type prop if provided. |
+| `alignContent` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| space-between \| space-around \| space-evenly \| stretch \| baseline \| first baseline \| last baseline>` | No | `-` | - |
+| `alignItems` | `ResponsiveProp<center \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| self-start \| self-end>` | No | `-` | - |
+| `alignSelf` | `ResponsiveProp<center \| auto \| normal \| start \| end \| flex-start \| flex-end \| stretch \| baseline \| first baseline \| last baseline \| self-start \| self-end>` | No | `-` | - |
+| `animate` | `boolean` | No | `true` | Whether to animate the chart. |
+| `as` | `div` | No | `-` | The underlying element or component the polymorphic component will render.  Changing as also changes the inherited native props (e.g. href for as=a) and the expected ref type. |
+| `aspectRatio` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `ResponsiveProp<Bottom<string \| number>>` | No | `-` | - |
+| `classNames` | `{ root?: string; chart?: string \| undefined; } \| undefined` | No | `-` | Custom class names for the component. |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `connectNulls` | `boolean` | No | `-` | When true, the area is connected across null values. |
+| `curve` | `bump \| catmullRom \| linear \| linearClosed \| monotone \| natural \| step \| stepBefore \| stepAfter` | No | `'bump'` | The curve interpolation method to use for the line. |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `display` | `ResponsiveProp<grid \| none \| block \| inline \| inline-block \| flex \| inline-flex \| inline-grid \| contents \| flow-root \| revert \| list-item>` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | - |
+| `enableScrubbing` | `boolean` | No | `-` | Enables scrubbing interactions. When true, allows scrubbing and makes scrubber components interactive. |
+| `fillOpacity` | `number` | No | `1` | Opacity of the area |
+| `flexBasis` | `ResponsiveProp<FlexBasis<string \| number>>` | No | `-` | - |
+| `flexDirection` | `ResponsiveProp<row \| row-reverse \| column \| column-reverse>` | No | `-` | - |
+| `flexGrow` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexShrink` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `flexWrap` | `ResponsiveProp<nowrap \| wrap \| wrap-reverse>` | No | `-` | - |
+| `font` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontFamily` | `ResponsiveProp<FontFamily \| inherit>` | No | `-` | - |
+| `fontSize` | `ResponsiveProp<inherit \| FontSize>` | No | `-` | - |
+| `fontWeight` | `ResponsiveProp<inherit \| FontWeight>` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `grid` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridArea` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridAutoColumns` | `ResponsiveProp<GridAutoColumns<string \| number>>` | No | `-` | - |
+| `gridAutoFlow` | `inherit \| revert \| row \| column \| -moz-initial \| initial \| revert-layer \| unset \| dense` | No | `-` | - |
+| `gridAutoRows` | `ResponsiveProp<GridAutoRows<string \| number>>` | No | `-` | - |
+| `gridColumn` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridColumnStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRow` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowEnd` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridRowStart` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplate` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateAreas` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `gridTemplateColumns` | `ResponsiveProp<GridTemplateColumns<string \| number>>` | No | `-` | - |
+| `gridTemplateRows` | `ResponsiveProp<GridTemplateRows<string \| number>>` | No | `-` | - |
+| `height` | `ResponsiveProp<Height<string \| number>>` | No | `-` | - |
+| `inset` | `number \| Partial<ChartInset>` | No | `-` | Inset around the entire chart (outside the axes). |
+| `justifyContent` | `ResponsiveProp<left \| right \| center \| normal \| start \| end \| flex-start \| flex-end \| space-between \| space-around \| space-evenly \| stretch>` | No | `-` | - |
+| `key` | `Key \| null` | No | `-` | - |
+| `left` | `ResponsiveProp<Left<string \| number>>` | No | `-` | - |
+| `legend` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Whether to show the legend or a custom legend element. - true renders the default Legend component - A React element renders that element as the legend - false or omitted hides the legend |
+| `legendAccessibilityLabel` | `string` | No | `'Legend'` | Accessibility label for the legend group. |
+| `legendPosition` | `top \| bottom \| left \| right` | No | `'bottom'` | Position of the legend relative to the chart. |
+| `lineHeight` | `ResponsiveProp<inherit \| LineHeight>` | No | `-` | - |
+| `lineType` | `dotted \| solid` | No | `'solid'` | The type of line to render. |
+| `margin` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginBottom` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginEnd` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginStart` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginTop` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginX` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `marginY` | `ResponsiveProp<0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10>` | No | `-` | - |
+| `maxHeight` | `ResponsiveProp<MaxHeight<string \| number>>` | No | `-` | - |
+| `maxWidth` | `ResponsiveProp<MaxWidth<string \| number>>` | No | `-` | - |
+| `minHeight` | `ResponsiveProp<MinHeight<string \| number>>` | No | `-` | - |
+| `minWidth` | `ResponsiveProp<MinWidth<string \| number>>` | No | `-` | - |
+| `onChange` | `FormEventHandler<HTMLDivElement>` | No | `-` | - |
+| `onScrubberPositionChange` | `((index: number) => void) \| undefined` | No | `-` | Callback fired when the scrubber position changes. Receives the dataIndex of the scrubber or undefined when not scrubbing. |
+| `opacity` | `inherit \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `overflow` | `ResponsiveProp<hidden \| auto \| visible \| clip \| scroll>` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `ResponsiveProp<static \| relative \| absolute \| fixed \| sticky>` | No | `-` | - |
+| `ref` | `((instance: SVGSVGElement \| null) => void) \| RefObject<SVGSVGElement> \| null` | No | `-` | - |
+| `right` | `ResponsiveProp<Right<string \| number>>` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `series` | `AreaSeries[]` | No | `-` | Configuration objects that define how to visualize the data. Each series supports Area and Line component props for individual customization. |
+| `showLines` | `boolean` | No | `-` | Whether to show lines on top of the areas. Useful for stacked contexts to show the outline of each area. |
+| `showXAxis` | `boolean` | No | `-` | Whether to show the X axis. |
+| `showYAxis` | `boolean` | No | `-` | Whether to show the Y axis. |
+| `stacked` | `boolean` | No | `-` | Whether to stack the areas on top of each other. When true, each series builds cumulative values on top of the previous series.  **Note**: Only applies to series data containing singular numbers (e.g., [10, 20, 30]). Series with [baseline, value] tuples (e.g., [[0, 10], [0, -5]]) will be skipped during stacking and rendered as-is. |
+| `strokeWidth` | `number` | No | `2` | Width of the line |
+| `style` | `CSSProperties` | No | `-` | Custom styles for the root element. |
+| `styles` | `{ root?: CSSProperties; chart?: CSSProperties \| undefined; } \| undefined` | No | `-` | Custom styles for the component. |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+| `textAlign` | `ResponsiveProp<center \| start \| end \| justify>` | No | `-` | - |
+| `textDecoration` | `ResponsiveProp<none \| underline \| overline \| line-through \| underline overline \| underline double>` | No | `-` | - |
+| `textTransform` | `ResponsiveProp<none \| uppercase \| lowercase \| capitalize>` | No | `-` | - |
+| `top` | `ResponsiveProp<Top<string \| number>>` | No | `-` | - |
+| `transform` | `inherit \| none \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+| `transition` | `Orchestration & Repeat & Tween \| Orchestration & Repeat & Spring \| Orchestration & Repeat & Keyframes \| Orchestration & Repeat & Inertia \| Orchestration & Repeat & Just \| Orchestration & Repeat & None \| Orchestration & Repeat & PermissiveTransitionDefinition \| Orchestration & Repeat & Tween & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & Spring & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & Keyframes & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & Inertia & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & Just & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & None & { [key: string]: TransitionDefinition; } \| Orchestration & Repeat & PermissiveTransitionDefinition & { [key: string]: TransitionDefinition; }` | No | `-` | Transition configuration for path animations. |
+| `type` | `dotted \| solid \| gradient` | No | `'solid'` | The type of area to render. |
+| `userSelect` | `ResponsiveProp<text \| none \| all \| auto>` | No | `-` | - |
+| `visibility` | `ResponsiveProp<hidden \| visible>` | No | `-` | - |
+| `width` | `ResponsiveProp<Width<string \| number>>` | No | `-` | - |
+| `xAxis` | `(Partial<AxisConfigProps> & SharedProps & { bandGridLinePlacement?: AxisBandPlacement; bandTickMarkPlacement?: AxisBandPlacement \| undefined; label?: string \| undefined; labelGap?: number \| undefined; minTickLabelGap?: number \| undefined; requestedTickCount?: number \| undefined; showGrid?: boolean \| undefined; showLine?: boolean \| undefined; showTickMarks?: boolean \| undefined; tickMarkSize?: number \| undefined; ticks?: number[] \| ((value: number) => boolean) \| undefined; tickMarkLabelGap?: number \| undefined; tickInterval?: number \| undefined; tickMinStep?: number \| undefined; tickMaxStep?: number \| undefined; } & { className?: string \| undefined; classNames?: { root?: string \| undefined; label?: string \| undefined; tickLabel?: string \| undefined; gridLine?: string \| undefined; line?: string \| undefined; tickMark?: string \| undefined; } \| undefined; style?: CSSProperties \| undefined; styles?: { root?: CSSProperties \| undefined; label?: CSSProperties \| undefined; tickLabel?: CSSProperties \| undefined; gridLine?: CSSProperties \| undefined; line?: CSSProperties \| undefined; tickMark?: CSSProperties \| undefined; } \| undefined; GridLineComponent?: LineComponent \| undefined; LineComponent?: LineComponent \| undefined; TickMarkLineComponent?: LineComponent \| undefined; tickLabelFormatter?: ((value: number) => ChartTextChildren) \| undefined; TickLabelComponent?: AxisTickLabelComponent \| undefined; } & { position?: top \| bottom \| undefined; height?: number \| undefined; }) \| undefined` | No | `-` | Configuration for x-axis. Accepts axis config and axis props. To show the axis, set showXAxis to true. |
+| `yAxis` | `(Partial<AxisConfigProps> & SharedProps & { bandGridLinePlacement?: AxisBandPlacement; bandTickMarkPlacement?: AxisBandPlacement \| undefined; label?: string \| undefined; labelGap?: number \| undefined; minTickLabelGap?: number \| undefined; requestedTickCount?: number \| undefined; showGrid?: boolean \| undefined; showLine?: boolean \| undefined; showTickMarks?: boolean \| undefined; tickMarkSize?: number \| undefined; ticks?: number[] \| ((value: number) => boolean) \| undefined; tickMarkLabelGap?: number \| undefined; tickInterval?: number \| undefined; tickMinStep?: number \| undefined; tickMaxStep?: number \| undefined; } & { className?: string \| undefined; classNames?: { root?: string \| undefined; label?: string \| undefined; tickLabel?: string \| undefined; gridLine?: string \| undefined; line?: string \| undefined; tickMark?: string \| undefined; } \| undefined; style?: CSSProperties \| undefined; styles?: { root?: CSSProperties \| undefined; label?: CSSProperties \| undefined; tickLabel?: CSSProperties \| undefined; gridLine?: CSSProperties \| undefined; line?: CSSProperties \| undefined; tickMark?: CSSProperties \| undefined; } \| undefined; GridLineComponent?: LineComponent \| undefined; LineComponent?: LineComponent \| undefined; TickMarkLineComponent?: LineComponent \| undefined; tickLabelFormatter?: ((value: number) => ChartTextChildren) \| undefined; TickLabelComponent?: AxisTickLabelComponent \| undefined; } & { axisId?: string \| undefined; position?: left \| right \| undefined; width?: number \| undefined; }) \| undefined` | No | `-` | Configuration for y-axis. Accepts axis config and axis props. To show the axis, set showYAxis to true. |
+| `zIndex` | `inherit \| auto \| revert \| -moz-initial \| initial \| revert-layer \| unset` | No | `-` | - |
+
+

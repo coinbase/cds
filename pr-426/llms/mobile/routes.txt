@@ -1,0 +1,150 @@
+
+# CDS Routes
+
+## Getting Started
+
+- [theming](mobile/getting-started/theming.txt): The theme contains design tokens like colors, fonts, spacing, and more. The ThemeProvider provides access to these values via CSS Variables for web, and React Context for both web and React Native.
+- [templates](mobile/getting-started/templates.txt): Get started quickly with a pre-built Expo template configured with CDS components and best practices.
+- [styling](mobile/getting-started/styling.txt): CDS includes powerful and flexible APIs for styling components. Easily access values from the theme, or go rogue with full customization.
+- [playground](mobile/getting-started/playground.txt)
+- [introduction](mobile/getting-started/introduction.txt)
+- [installation](mobile/getting-started/installation.txt): This guide will help you get started with installing CDS in your React Native project. Follow the instructions below to set up CDS and start building with our cross-platform components.
+- [ai-overview](mobile/getting-started/ai-overview.txt)
+
+## Components
+
+- [Text](mobile/components/Text.txt): A generic text element.
+- [Tag](mobile/components/Tag.txt): A small label for categorizing or labeling content.
+- [Link](mobile/components/Link.txt): A pressable Text component.
+- [Tray](mobile/components/Tray.txt): An elevated overlay container.
+- [Tooltip](mobile/components/Tooltip.txt): A component that displays additional information on press.
+- [Toast](mobile/components/Toast.txt): A temporary notification that appears at the bottom of the screen.
+- [PortalProvider](mobile/components/PortalProvider.txt): A component that manages the rendering of portals for overlay components.
+- [Overlay](mobile/components/Overlay.txt): A semi-transparent layer that covers content.
+- [ModalHeader](mobile/components/ModalHeader.txt): A component that provides a consistent header section for Modal.
+- [ModalFooter](mobile/components/ModalFooter.txt): A footer component for Modal.
+- [ModalBody](mobile/components/ModalBody.txt): A main content area component for Modal.
+- [Modal](mobile/components/Modal.txt): A component that displays content in a window that requires user interaction.
+- [Alert](mobile/components/Alert.txt): A dialog that communicates critical information and blocks user interaction.
+- [ThemeProvider](mobile/components/ThemeProvider.txt): Provides the theme context to all child components.
+- [DotSymbol](mobile/components/DotSymbol.txt): Dots are component adornments, typically used to communicate a numerical value or indicate the status or identity of a component to the end-user.
+- [DotStatusColor](mobile/components/DotStatusColor.txt): Dots are component adornments, typically used to communicate a numerical value or indicate the status or identity of a component to the end-user.
+- [DotCount](mobile/components/DotCount.txt): Dots are component adornments, typically used to communicate a numerical value or indicate the status or identity of a component to the end-user.
+- [DatePicker](mobile/components/DatePicker.txt): Date Picker allows our global users to input past, present, future and important dates into our interface in a simple and intuitive manner. Date Picker offers both manual and calendar entry options - accommodating both internationalization and accessibility needs while being adaptable across screen platforms.
+- [DateInput](mobile/components/DateInput.txt): DateInput is a text input field for entering dates by typing. The input automatically formats dates based on the user's locale.
+- [RollingNumber](mobile/components/RollingNumber.txt): A numeric display that animates value changes with rolling digits.
+- [Tour](mobile/components/Tour.txt): Creates guided tours of a user interface.
+- [TopNavBar](mobile/components/TopNavBar.txt): A customizable top navigation bar that can contain start, middle, and end content, as well as a bottom section for elements like tabs. It remains sticky at the top of the screen.
+- [Tabs](mobile/components/Tabs.txt): Tabs is a flexible, accessible tab navigation component for React Native, supporting animated indicators, custom tab components, and full accessibility.
+- [TabbedChipsAlpha](mobile/components/TabbedChipsAlpha.txt): A chip component commonly used in filter context to refine a date source
+- [TabbedChips](mobile/components/TabbedChips.txt): Tab chips are to be used in a filter setting where the user is given the ability to refine the data source they are accessing.
+- [TabNavigation](mobile/components/TabNavigation.txt): Organizes content across different screens or data sets.
+- [TabLabel](mobile/components/TabLabel.txt): A text label component used within tab navigation.
+- [TabIndicator](mobile/components/TabIndicator.txt): A visual indicator that shows the active tab position.
+- [Stepper](mobile/components/Stepper.txt): A component that visualizes states within a multi-step process.
+- [SegmentedTabs](mobile/components/SegmentedTabs.txt): Switches between different views of content.
+- [SectionHeader](mobile/components/SectionHeader.txt): A header component used to organize and label sections of content, with support for icons, descriptions, and additional content, optimized for mobile platforms.
+- [PageHeader](mobile/components/PageHeader.txt): Page Header is a flexible header component.
+- [PageFooter](mobile/components/PageFooter.txt): PageFooter is a layout component that provides a consistent footer area for pages, with centered alignment and fixed height, typically used for action buttons or navigation elements.
+- [NavigationTitleSelect](mobile/components/NavigationTitleSelect.txt): A select component styled as a navigation title, allowing users to switch between different views or contexts from the header. It opens a Tray to display options.
+- [NavigationTitle](mobile/components/NavigationTitle.txt): A component used to display a title within a navigation bar, with default styling for headlines.
+- [Coachmark](mobile/components/Coachmark.txt): Coachmark is a flexible, accessible overlay component for onboarding, feature tours, and contextual help in React Native apps. It supports custom content, actions, and media.
+- [BrowserBar](mobile/components/BrowserBar.txt): A navigation bar designed for browser-like interfaces, featuring slots for start, end, and central content. It provides a structured layout for controls and information within a browser context.
+- [SubBrandLogoWordMark](mobile/components/SubBrandLogoWordMark.txt): Coinbase sub-brand logo wordmarks for specialized branding.
+- [SubBrandLogoMark](mobile/components/SubBrandLogoMark.txt): Coinbase sub-brand logo marks for specialized branding.
+- [SpotSquare](mobile/components/SpotSquare.txt): A square-shaped illustration component for displaying spot graphics.
+- [SpotRectangle](mobile/components/SpotRectangle.txt): A rectangular illustration component for displaying spot graphics.
+- [SpotIcon](mobile/components/SpotIcon.txt): An icon-sized illustration component for displaying spot graphics.
+- [RemoteImageGroup](mobile/components/RemoteImageGroup.txt): A component to display a group of RemoteImage components in a stack.
+- [RemoteImage](mobile/components/RemoteImage.txt): A React component for displaying different types of images, including network images, static resources, temporary local images, and images from local disk, such as the camera roll.
+- [Pictogram](mobile/components/Pictogram.txt): Displays elevated product icons.
+- [LogoWordMark](mobile/components/LogoWordMark.txt): The full Coinbase logo with text for branding.
+- [LogoMark](mobile/components/LogoMark.txt): The Coinbase logo mark for branding.
+- [Icon](mobile/components/Icon.txt): Displays icons from the icon font.
+- [HeroSquare](mobile/components/HeroSquare.txt): Displays a square-shaped hero illustration.
+- [CellMedia](mobile/components/CellMedia.txt): Displays media within cells.
+- [Avatar](mobile/components/Avatar.txt): Avatar is a visual representation of a user, company, or entity.
+- [VStack](mobile/components/VStack.txt): A Box with flexDirection="column" set by default.
+- [Spacer](mobile/components/Spacer.txt): Creates space between elements.
+- [MultiContentModule](mobile/components/MultiContentModule.txt): A versatile container designed to streamline user experiences across Critical User Journeys. Accommodates a range of content including an illustration, input fields (text inputs, list cells, etc.), and an action button.
+- [HStack](mobile/components/HStack.txt): A Box with flexDirection="row" set by default.
+- [Divider](mobile/components/Divider.txt): Separates content into sections.
+- [Collapsible](mobile/components/Collapsible.txt): A container that can be expanded or collapsed.
+- [Carousel](mobile/components/Carousel.txt): A flexible carousel component for displaying sequences of content with navigation and pagination options.
+- [ButtonGroup](mobile/components/ButtonGroup.txt): Groups buttons with consistent spacing.
+- [Box](mobile/components/Box.txt): A generic container, like a supercharged View.
+- [AccordionItem](mobile/components/AccordionItem.txt): An individual collapsible item within an Accordion.
+- [Accordion](mobile/components/Accordion.txt): A collapsible component for displaying auxiliary content.
+- [TextInput](mobile/components/TextInput.txt): A control for entering text.
+- [Switch](mobile/components/Switch.txt): A control for toggling between on and off.
+- [SlideButton](mobile/components/SlideButton.txt): A button that slides to confirm an action.
+- [SelectOption](mobile/components/SelectOption.txt): A single option of a Select component.
+- [SelectChipAlpha](mobile/components/SelectChipAlpha.txt): A chip-styled Select control built on top of the Alpha Select component. Supports both single and multi selection.
+- [SelectChip](mobile/components/SelectChip.txt): A Chip and Select control for selecting from a list of options
+- [SelectAlpha](mobile/components/SelectAlpha.txt): A flexible select component for both single and multi-selection, built for mobile applications with comprehensive accessibility support.
+- [Select](mobile/components/Select.txt): A control for selecting from a list of options.
+- [SearchInput](mobile/components/SearchInput.txt): A control for searching a dataset.
+- [RadioGroup](mobile/components/RadioGroup.txt): Radio is a control component that allows users to select one option from a set.
+- [RadioCell](mobile/components/RadioCell.txt): A selectable cell that pairs a radio button with a title and description for single-choice selections.
+- [Radio](mobile/components/Radio.txt): Radio is a control component that allows users to select one option from a set of mutually exclusive options.
+- [Pressable](mobile/components/Pressable.txt): Extends the Interactable component to add accessibility support for press interactions.
+- [Numpad](mobile/components/Numpad.txt): A keypad for entering numbers.
+- [MediaChip](mobile/components/MediaChip.txt): A chip with spacing optimized for displaying circular asset media and CTA accessories. Automatically adjusts padding based on content configuration.
+- [Interactable](mobile/components/Interactable.txt): A generic component for creating interactable elements. Provides dynamic styling for hovered, pressed, and disabled states.
+- [InputChip](mobile/components/InputChip.txt): A Chip used for removable selections.
+- [IconButton](mobile/components/IconButton.txt): A Button with an Icon for content.
+- [ControlGroup](mobile/components/ControlGroup.txt): A layout component that arranges and manages a group of related controls, such as radio buttons, switches, or checkboxes.
+- [Combobox](mobile/components/Combobox.txt): A flexible combobox component for both single and multi-selection, built for mobile applications with comprehensive accessibility support.
+- [Chip](mobile/components/Chip.txt): A compact, interactive content element.
+- [CheckboxGroup](mobile/components/CheckboxGroup.txt): CheckboxGroup is a control component that allows users to select multiple options from a set of choices. It manages the state and layout of multiple checkbox inputs as a cohesive group.
+- [CheckboxCell](mobile/components/CheckboxCell.txt): A selectable cell that pairs a checkbox with a title and description for multi-choice selections.
+- [Checkbox](mobile/components/Checkbox.txt): Checkbox is a type of control component that allows user to select one or more options from a set. They can also be used alone to switch between on and off.
+- [Button](mobile/components/Button.txt): A pressable button element.
+- [AvatarButton](mobile/components/AvatarButton.txt): A pressable Avatar.
+- [YAxis](mobile/components/YAxis.txt): A vertical axis component for CartesianChart. Displays tick marks, labels, gridlines, and supports custom formatting, positioning, and data domains.
+- [XAxis](mobile/components/XAxis.txt): A horizontal axis component for CartesianChart. Displays tick marks, labels, gridlines, and supports custom formatting, positioning, and data domains.
+- [SparklineInteractiveHeader](mobile/components/SparklineInteractiveHeader.txt): The SparklineInteractiveHeader is used to display chart information that changes over time
+- [SparklineInteractive](mobile/components/SparklineInteractive.txt): The SparklineInteractive is used to display a Sparkline that has multiple time periods
+- [SparklineGradient](mobile/components/SparklineGradient.txt): A small line chart component with gradient fill below the line.
+- [Sparkline](mobile/components/Sparkline.txt): A small line chart component for displaying data trends.
+- [Scrubber](mobile/components/Scrubber.txt): An interactive scrubber component for exploring individual data points in charts. Displays values on hover or drag and supports custom labels and formatting.
+- [ReferenceLine](mobile/components/ReferenceLine.txt): A horizontal or vertical reference line to mark important values on a chart, such as targets, thresholds, or baseline values.
+- [Point](mobile/components/Point.txt): Visual markers that highlight specific data values on a chart. Points can be customized with different colors, sizes, and labels.
+- [PeriodSelector](mobile/components/PeriodSelector.txt): A selector component for choosing time periods in charts.
+- [LineChart](mobile/components/LineChart.txt): A flexible line chart component for displaying data trends over time. Supports multiple series, custom curves, areas, scrubbing, and interactive data exploration.
+- [Legend](mobile/components/Legend.txt): A legend component for displaying series information in charts. Supports customizable shapes, layouts, and custom item components.
+- [CartesianChart](mobile/components/CartesianChart.txt): A flexible, low-level chart component for displaying data in an x/y coordinate space. Provides a foundation for building custom chart visualizations with full control over rendering.
+- [BarChart](mobile/components/BarChart.txt): A bar chart component for comparing values across categories. Supports horizontal and vertical orientations, stacked bars, and grouped series.
+- [AreaChart](mobile/components/AreaChart.txt): A chart component that displays data as filled areas beneath lines. Ideal for showing cumulative values, stacked data, or emphasizing volume over time.
+- [Spinner](mobile/components/Spinner.txt): A loading indicator that displays a rotating animation to communicate that content is loading or a background process is in progress.
+- [ProgressCircle](mobile/components/ProgressCircle.txt): A circular visual indicator of completion progress.
+- [ProgressBarWithFloatLabel](mobile/components/ProgressBarWithFloatLabel.txt): A ProgressBar with a floating label that moves with progress.
+- [ProgressBarWithFixedLabels](mobile/components/ProgressBarWithFixedLabels.txt): A ProgressBar with fixed labels at defined positions.
+- [ProgressBar](mobile/components/ProgressBar.txt): A visual indicator of completion progress.
+- [Fallback](mobile/components/Fallback.txt): A component that displays a fallback animation.
+- [Banner](mobile/components/Banner.txt): Displays important messages and actions to users.
+- [ListCell](mobile/components/ListCell.txt): A versatile cell component used for displaying content in a list format, supporting various layouts and interactions.
+- [ContentCell](mobile/components/ContentCell.txt): A versatile cell component for displaying content with optional metadata.
+- [UpsellCard](mobile/components/UpsellCard.txt): Upsell Cards are used to promote new features, products, or actions within the app. They are part of the upsell framework and aim to drive user engagement and revenue.
+- [NudgeCard](mobile/components/NudgeCard.txt): A card component designed to encourage users to take essential actions.
+- [MessagingCard](mobile/components/MessagingCard.txt): MessagingCard displays promotional or informational content with two variants: 'upsell' for promoting features with a primary background, and 'nudge' for encouraging actions with an alternate background. It replaces the deprecated NudgeCard and UpsellCard components.
+- [MediaCard](mobile/components/MediaCard.txt): MediaCard displays content with optional media in a contained card layout. Use it to showcase assets, products, or content with a thumbnail, title, subtitle, description, and optional media placement. MediaCard replaces the deprecated FloatingAssetCard and ContainedAssetCard components.
+- [FloatingAssetCard](mobile/components/FloatingAssetCard.txt): Asset Cards display current and potential future assets, offering a straightforward method to view and manage a customer's holdings.
+- [DataCard](mobile/components/DataCard.txt): A flexible card component for displaying data with visualizations like progress bars and circles. It supports horizontal and vertical layouts with customizable thumbnails and title accessories.
+- [ContentCardHeader](mobile/components/ContentCardHeader.txt): ContentCardHeader is a subcomponent of ContentCard that provides the header section of the card, typically used for the title and subtitle.
+- [ContentCardFooter](mobile/components/ContentCardFooter.txt): ContentCardFooter is a subcomponent of ContentCard that provides the footer section of the card, typically used for actions or additional information.
+- [ContentCardBody](mobile/components/ContentCardBody.txt): ContentCardBody is a subcomponent of ContentCard that provides the main content area of the card.
+- [ContentCard](mobile/components/ContentCard.txt): A flexible, composable card component for displaying rich content with customizable header, body, and footer sections. Use with ContentCardHeader, ContentCardBody, and ContentCardFooter sub-components.
+- [ContainedAssetCard](mobile/components/ContainedAssetCard.txt): Asset Cards display current and potential future assets, offering a straightforward method to view and manage a customer's holdings.
+- [LottieStatusAnimation](mobile/components/LottieStatusAnimation.txt): A specialized component for displaying trade status animations.
+- [Lottie](mobile/components/Lottie.txt): Renders After Effects animations as vectors.
+
+## Hooks
+
+- [useTheme](mobile/hooks/useTheme.txt): Returns the currently active theme including color schemes, spacing, typography, and other design tokens.
+- [useRefMap](mobile/hooks/useRefMap.txt): Manages a collection of refs using a key-value map structure, allowing dynamic registration and retrieval of refs by their unique identifiers. Commonly used in components that need to track multiple DOM elements, such as tabs, tours, or complex navigation systems.
+- [usePreviousValue](mobile/hooks/usePreviousValue.txt): Returns the previous value of a given variable, useful for comparing current and previous states in effects or for tracking changes over time.
+- [useOverlayContentContext](mobile/hooks/useOverlayContentContext.txt): A React context and hook for detecting if components are rendered inside overlay containers like modals, drawers, tours, and trays.
+- [useMergeRefs](mobile/hooks/useMergeRefs.txt): Combines multiple refs into a single ref callback, allowing a component to work with multiple ref instances simultaneously. Useful when you need to combine refs from different sources, such as forwarded refs and internal component state.
+- [useEventHandler](mobile/hooks/useEventHandler.txt): Creates event handlers for components based on the EventHandlerProvider configuration. It enables centralized event handling and analytics tracking by mapping component actions to configured handlers.
+- [useDimensions](mobile/hooks/useDimensions.txt): Measures the screen dimensions and status bar height.

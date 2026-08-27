@@ -1,0 +1,79 @@
+# PortalProvider
+
+A component that manages the rendering of portals for overlay components.
+
+## Import
+
+```tsx
+import { PortalProvider } from '@coinbase/cds-mobile/overlays/PortalProvider'
+```
+
+## Examples
+
+### Basic usage
+
+The PortalProvider component is typically used at the root of your mobile application to manage overlay components:
+
+```tsx
+function App() {
+  return (
+    <PortalProvider>
+      <Box padding={4} bordered borderRadius={200}>
+        Your app content
+      </Box>
+    </PortalProvider>
+  );
+}
+```
+
+### Custom Portal Nodes
+
+You can disable the default portal rendering and use the PortalNodes component separately:
+
+```tsx
+function App() {
+  return (
+    <PortalProvider renderPortals={false}>
+      <Box padding={4} bordered borderRadius={200}>
+        Your app content
+      </Box>
+      <PortalNodes />
+    </PortalProvider>
+  );
+}
+```
+
+### Toast Example
+
+The PortalProvider's `toastBottomOffset` prop sets the default bottom offset for all toasts:
+
+```tsx
+function App() {
+  function ToastDemo() {
+    const toast = useToast();
+    return (
+      <Box padding={4} bordered borderRadius={200}>
+        <Button
+          onPress={() => toast.show('This toast appears with a custom bottom offset (80px)')}
+          label="Show Toast"
+        />
+      </Box>
+    );
+  }
+
+  return (
+    <PortalProvider toastBottomOffset={80}>
+      <ToastDemo />
+    </PortalProvider>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `renderPortals` | `boolean` | No | `true` | By default the PortalProvider will render portal nodes. Disable this if you want to use the PortalNodes component to render the nodes instead. |
+| `toastBottomOffset` | `string \| number` | No | `0` | An optional, global override to individual Toasts bottomOffset prop. This value will be applied to all Toasts render via this Provider instance |
+
+

@@ -1,0 +1,80 @@
+# TopNavBar
+
+A customizable top navigation bar that can contain start, middle, and end content, as well as a bottom section for elements like tabs. It remains sticky at the top of the screen.
+
+## Import
+
+```tsx
+import { TopNavBar } from '@coinbase/cds-mobile/navigation/TopNavBar'
+```
+
+## Examples
+
+### Basic usage
+
+A `TopNavBar` with a title and back button.
+
+```tsx
+<TopNavBar start={<NavBarIconButton name="arrowLeft" accessibilityLabel="Back" />}>
+  <NavigationTitle>Page Title</NavigationTitle>
+</TopNavBar>
+```
+
+### With Start and End Actions
+
+You can add actions to both the start and end sections of the navigation bar.
+
+```tsx
+<TopNavBar
+  start={<NavBarIconButton name="arrowLeft" accessibilityLabel="Back" />}
+  end={
+    <HStack>
+      <NavBarIconButton name="search" accessibilityLabel="Search" />
+      <NavBarIconButton name="more" accessibilityLabel="More options" />
+    </HStack>
+  }
+>
+  <NavigationTitle>Profile</NavigationTitle>
+</TopNavBar>
+```
+
+### With a Bottom Section
+
+The `bottom` prop can be used to render components like tabs below the main navigation bar.
+
+```tsx
+<TopNavBar
+  start={<NavBarIconButton name="close" accessibilityLabel="Close" />}
+  end={<NavBarIconButton name="settings" accessibilityLabel="Settings" />}
+  bottom={
+    <TabNavigation
+      tabs={[
+        { label: 'For you', id: 'foryou' },
+        { label: 'Portfolio', id: 'portfolio' },
+        { label: 'Explore', id: 'explore' },
+      ]}
+      value="foryou"
+      onChange={() => {}}
+    />
+  }
+>
+  <NavigationTitle>Home</NavigationTitle>
+</TopNavBar>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `accessibilityLabel` | `string` | No | `-` | Accessibility label for the nav bar |
+| `bottom` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | The bottom content. Use to render tabs |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | The middle content. Use the children to render the page title |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `2` | The gap between the bottom content and the top nav bar |
+| `end` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `2` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `2` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `0` | The gap between the start, middle (children), and end elements |
+| `start` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | - |
+
+

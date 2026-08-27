@@ -1,0 +1,58 @@
+# DotStatusColor
+
+Dots are component adornments, typically used to communicate a numerical value or indicate the status or identity of a component to the end-user.
+
+## Import
+
+```tsx
+import { DotStatusColor } from '@coinbase/cds-mobile/dots/DotStatusColor'
+```
+
+## Examples
+
+### Sizes
+
+```jsx
+function Sizes() {
+  const SIZES = ['xs', 's', 'm', 'l'];
+  return (
+    <VStack gap={2}>
+      {SIZES.map((size) => (
+        <VStack gap={1} key={`DotStatusColor-size-${size}`}>
+          <DotStatusColor variant="negative" size={size} />
+        </VStack>
+      ))}
+    </VStack>
+  );
+}
+```
+
+### Variants
+
+```jsx
+function Variants() {
+  const VARIANTS = ['positive', 'negative', 'primary', 'fgMuted', 'warning'];
+  return (
+    <VStack gap={2}>
+      {VARIANTS.map((variant) => (
+        <VStack gap={1} key={`DotStatusColor-variant-${variant}`}>
+          <DotStatusColor variant={variant} />
+        </VStack>
+      ))}
+    </VStack>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `variant` | `warning \| primary \| positive \| negative \| foregroundMuted` | Yes | `-` | Background color of dot |
+| `children` | `null \| string \| number \| false \| true \| ReactElement<any, string \| JSXElementConstructor<any>> \| Iterable<ReactNode> \| ReactPortal` | No | `-` | Children of where the dot will anchor to |
+| `overlap` | `circular` | No | `-` | Indicates what shape Dot is overlapping |
+| `pin` | `top-start \| top-end \| bottom-start \| bottom-end` | No | `-` | Position of dot relative to its parent |
+| `size` | `s \| l \| xs \| m` | No | `-` | Size of dot |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+

@@ -1,0 +1,634 @@
+# Stepper
+
+A component that visualizes states within a multi-step process.
+
+## Import
+
+```tsx
+import { Stepper } from '@coinbase/cds-mobile/stepper/Stepper'
+```
+
+## Examples
+
+### Basic Usage
+
+The stepper can be used in two directions: horizontal and vertical.
+Each direction has its own unique default design in order to support different use cases.
+
+#### Direction: Horizontal
+
+```tsx
+const steps = [
+  { id: '1', label: 'Account Details' },
+  { id: '2', label: 'Personal Information' },
+  { id: '3', label: 'Payment Method' },
+  { id: '4', label: 'Review & Submit' },
+];
+
+const [stepperState, stepperApi] = useStepper({ steps });
+const [complete, setComplete] = useState(false);
+
+// Handle completion logic in your component
+const handleNext = () => {
+  if (stepperState.activeStepId === '4') {
+    setComplete(true);
+  } else {
+    stepperApi.goNextStep();
+  }
+};
+
+return (
+  <Stepper
+    direction="horizontal"
+    activeStepId={stepperState.activeStepId}
+    steps={steps}
+    complete={complete}
+  />
+);
+```
+
+#### Direction: Vertical
+
+```tsx
+const steps = [
+  { id: '1', label: 'Account Details' },
+  { id: '2', label: 'Personal Information' },
+  { id: '3', label: 'Payment Method' },
+  { id: '4', label: 'Review & Submit' },
+];
+
+const [stepperState, stepperApi] = useStepper({ steps });
+const [complete, setComplete] = useState(false);
+
+// Handle completion logic in your component
+const handleNext = () => {
+  if (stepperState.activeStepId === '4') {
+    setComplete(true);
+  } else {
+    stepperApi.goNextStep();
+  }
+};
+
+return (
+  <Stepper
+    direction="vertical"
+    activeStepId={stepperState.activeStepId}
+    steps={steps}
+    complete={complete}
+  />
+);
+```
+
+### Step Config
+
+The Stepper is ultimately a visual representation of an array of step objects (i.e. `StepperValue[]`).
+These should be defined outside of the component or memoized prior to rendering a Stepper.
+
+Commonly used or required **StepperValue** properties:
+
+- `id` - A required, unique identifier for the step.
+- `label` - The label of the step. Optionally exclude this property to hide the label text.
+- `subSteps` - An optional array of sub-steps to nest under the step.
+- `metadata` - An optional object that can be used to store additional data about the step. This is useful when providing your own custom Step components.
+
+### useStepper hook
+
+Call the `useStepper` hook to initialize stepper state, access the current state and perform state mutations with its API.
+
+The hook returns a tuple where the first member is the current stepper state containing the `activeStepId`.
+
+```tsx
+const [stepperState, stepperApi] = useStepper({ steps });
+
+<Stepper direction="horizontal" activeStepId={stepperState.activeStepId} steps={steps} />;
+```
+
+The second member is an API for manipulating the stepper state and includes the following methods:
+
+```tsx
+type StepperApi = {
+  /** Update the currently active step to the step with `id`. */
+  goToStep: (id: string) => void;
+  /** Update the currently active step to the next enabled step in the steps array. Does nothing if the last step is already active. */
+  goNextStep: () => void;
+  /** Update the currently active step to the previous enabled step in the steps array. Does nothing if the first step is already active. */
+  goPreviousStep: () => void;
+  /** Reset the active step to the original default active step. */
+  reset: () => void;
+};
+```
+
+### Common Patterns & Use Cases
+
+#### Sub-steps
+
+A common use-case for the vertical stepper is to visualize long and complex workflows with nested/grouped steps.
+A StepperValue object optionally accepts a `subSteps` property, which is also an array of StepperValue objects.
+
+:::danger Avoid Deep Nesting
+Steps can be nested arbritrarily deep, however CDS does not advise nesting deeper than one level.
+:::
+
+```tsx
+const steps: StepperValue[] = [
+  {
+    id: 'first-step',
+    label: 'First step',
+  },
+  {
+    id: 'second-step',
+    label: 'Second step',
+    subSteps: [
+      {
+        id: 'second-step-substep-one',
+        label: 'Substep one',
+      },
+      {
+        id: 'second-step-substep-two',
+        label: 'Substep two',
+      },
+      {
+        id: 'second-step-substep-three',
+        label: 'Substep three',
+      },
+    ],
+  },
+  {
+    id: 'final-step',
+    label: 'Final step',
+  },
+];
+
+const [stepperState, stepperApi] = useStepper({ steps });
+const [complete, setComplete] = useState(false);
+
+return (
+  <Stepper
+    direction="vertical"
+    activeStepId={stepperState.activeStepId}
+    steps={steps}
+    complete={complete}
+    accessibilityLabel="Example Stepper"
+  />
+);
+```
+
+### Customization Options
+
+#### 1. Custom Components
+
+Stepper is highly customizable. Use the _Component_ props to customize Stepper with your own React components.
+Components can be set on the Stepper or individually on each step. Custom components set on a specific step will override the same component set on the Stepper.
+
+##### Customizable subcomponents
+
+- **StepperHeaderComponent**: Rendered above the entire stepper, helpful to display an overall title or label.
+- **StepperIconComponent**: Useful for showing a small visual with the step to convey state or the intent of the step.
+- **StepperProgressComponent**: Can be used to show an animated marker of progress with each step.
+- **StepperLabelComponent**: A component responsible for rendering the label text or main content associated with the step.
+- **StepperSubstepContainerComponent**: Responsible for rendering the recursive sub-steps of a step.
+
+Below are some basic diagrams to help visualize the Stepper anatomy in its two orientations.
+
+```text
+direction: horizontal
+  ┌─────────────────────────────────┐
+  │        Step (VStack)            │
+  │  ┌───────────────────────────┐  │
+  │  │         HStack            │  │
+  │  │ ┌──────┐ ┌──────────────┐ │  │
+  │  │ │ Icon │ │  Progress    │ │  │
+  │  │ │      │ │              │ │  │
+  │  │ └──────┘ └──────────────┘ │  │
+  │  └───────────────────────────┘  │
+  │  ┌───────────────────────────┐  │
+  │  │          Label            │  │
+  │  └───────────────────────────┘  │
+  │  ┌───────────────────────────┐  │
+  │  │    SubstepContainer       │  │
+  │  │       (recursive)         │  │
+  │  └───────────────────────────┘  │
+  └─────────────────────────────────┘
+```
+
+```text
+direction: vertical
+  ┌─────────────────────────────────────────────────┐
+  │                  Step (VStack)                  │
+  │  ┌───────────────────────────────────────────┐  │
+  │  │              HStack                       │  │
+  │  │  ┌─────────────┐  ┌───────────────────┐   │  │
+  │  │  │   VStack    │  │      VStack       │   │  │
+  │  │  │ ┌─────────┐ │  │ ┌───────────────┐ │   │  │
+  │  │  │ │  Icon   │ │  │ │     Label     │ │   │  │
+  │  │  │ └─────────┘ │  │ └───────────────┘ │   │  │
+  │  │  │ ┌─────────┐ │  │ ┌───────────────┐ │   │  │
+  │  │  │ │Progress │ │  │ │ Substeps      │ │   │  │
+  │  │  │ └─────────┘ │  │ │  (recursive)  │ │   │  │
+  │  │  └─────────────┘  │ └───────────────┘ │   │  │
+  │  └───────────────────────────────────────────┘  │
+  └─────────────────────────────────────────────────┘
+```
+
+Each custom component receives a specific set of props that provide access to step data and state.
+When writing your own components, make sure you're getting the most out of Stepper by importing our custom component types like so:
+
+```tsx
+import type { StepperLabelProps } from '@coinbase/cds-web/stepper/Stepper';
+
+const TravelBookingLabel = ({
+  step,
+  active,
+  depth,
+}: StepperLabelProps) => {
+  const { label, metadata, id } = step;
+  const subtitle = metadata?.subtitle as string;
+
+  if (depth === 0 && metadata) {
+    return (
+      <ListCell
+        description={metadata.name as string}
+        detail={metadata.date as string}
+        innerSpacing={{ paddingTop: 0, paddingBottom: 0 }}
+        maxWidth={350}
+        minHeight={undefined}
+        outerSpacing={{ paddingTop: 0, paddingBottom: 3, paddingStart: 0, paddingEnd: 0 }}
+        subdetail={metadata.time as string}
+        title={label}
+      />
+    );
+  }
+```
+
+:::tip Using Default Components
+In many cases, it may be helpful to compose the default Stepper Components within your own. For example, you may want to make the default label pressable.
+All of the default components used by Stepper are exported and available for you to use.
+
+```tsx
+import { DefaultStepperLabelHorizontal } from '@coinbase/cds-web/stepper';
+
+<Stepper
+  direction="horizontal"
+  StepperLabelComponent={(props) => (
+    <Pressable onClick={handleStepClick}>
+      <DefaultStepperLabelHorizontal {...props} />
+    </Pressable>
+  )}
+/>;
+```
+
+:::
+
+##### Null Components
+
+Pass null to any of the component props to completely disable its functionality and hide it from the user.
+
+```tsx
+const steps = [
+  { id: '1', label: 'Account Details' },
+  { id: '2', label: 'Personal Information' },
+  { id: '3', label: 'Payment Method' },
+  { id: '4', label: 'Review & Submit' },
+];
+
+const [stepperState, stepperApi] = useStepper({ steps });
+const [complete, setComplete] = useState(false);
+
+return (
+  <Stepper
+    direction="horizontal"
+    StepperLabelComponent={null}
+    activeStepId={stepperState.activeStepId}
+    steps={steps}
+    complete={complete}
+  />
+);
+```
+
+##### Custom Metadata for Rich Step Data
+
+The `metadata` property on each step allows you to store additional data that can be used
+by custom components to create rich, interactive experiences. This is particularly useful
+for complex workflows where each step needs to display contextual information.
+
+```tsx
+function StepperCustomMetadataExample() {
+  const CustomBookingLabel = ({ step, active }) => {
+    const { label, metadata } = step;
+
+    return (
+      <ListCell
+        title={label}
+        description={metadata.name}
+        detail={metadata.date}
+        subdetail={metadata.time}
+        maxWidth={350}
+        innerSpacing={{ paddingTop: 0, paddingBottom: 0 }}
+        outerSpacing={{ paddingTop: 0, paddingBottom: 3, paddingStart: 0, paddingEnd: 0 }}
+        minHeight={undefined}
+      />
+    );
+  };
+
+  const bookingSteps: StepperValue<{
+    name: string;
+    date: string;
+    time: string;
+  }>[] = [
+    {
+      id: 'book-hotel',
+      label: 'Book Hotel',
+      metadata: {
+        name: 'Marriott Downtown',
+        date: '2025-06-13',
+        time: '3:00 PM Check-in',
+      },
+    },
+    {
+      id: 'book-flight',
+      label: 'Book Flight',
+      metadata: {
+        name: 'Delta Airlines',
+        date: '2025-06-13',
+        time: '11:03 AM Departure',
+      },
+    },
+    {
+      id: 'rental-car',
+      label: 'Reserve Rental Car',
+      metadata: {
+        name: 'Enterprise Rent-A-Car',
+        date: '2025-06-14',
+        time: '2:24 PM Pickup',
+      },
+    },
+  ];
+
+  const [stepperState, stepperApi] = useStepper({
+    steps: bookingSteps,
+  });
+
+  return (
+    <Stepper
+      direction="vertical"
+      activeStepId={stepperState.activeStepId}
+      steps={bookingSteps}
+      complete={true}
+      StepperLabelComponent={CustomBookingLabel}
+      accessibilityLabel="Travel Booking Stepper"
+    />
+  );
+}
+```
+
+##### Custom Step with Error State
+
+You can create custom icon, label, and progress components for individual steps to show special states like errors.
+In this example, the "Payment Method" step uses metadata to indicate an error condition. The custom components check this metadata and the completion state to dynamically render an error indicator, falling back to default components otherwise.
+
+```jsx
+const ErrorStepperIcon = memo(function ErrorStepperIcon(props) {
+  const { step, visited, complete } = props;
+  const showError = step.metadata?.isError && (visited || complete);
+
+  if (!showError) {
+    return <DefaultStepperIconVertical {...props} />;
+  }
+
+  return (
+    <DefaultStepperIconVertical
+      {...props}
+      activeColor="bgNegative"
+      completeName="circleCross"
+      completeColor="bgNegative"
+      visitedName="circleCross"
+      visitedColor="bgNegative"
+    />
+  );
+});
+
+const ErrorStepperLabel = memo(function ErrorStepperLabel(props) {
+  const { step, visited, complete } = props;
+  const showError = step.metadata?.isError && (visited || complete);
+
+  if (!showError) {
+    return <DefaultStepperLabelVertical {...props} />;
+  }
+
+  return (
+    <DefaultStepperLabelVertical
+      {...props}
+      activeColor="fgNegative"
+      completeColor="fgNegative"
+      visitedColor="fgNegative"
+    />
+  );
+});
+
+const ErrorStepperProgress = memo(function ErrorStepperProgress(props) {
+  const { step, visited, complete } = props;
+  const showError = step.metadata?.isError && (visited || complete);
+
+  if (!showError) {
+    return <DefaultStepperProgressVertical {...props} />;
+  }
+
+  return (
+    <DefaultStepperProgressVertical {...props} completeFill="bgNegative" visitedFill="bgNegative" />
+  );
+});
+
+function StepperErrorStepExample() {
+  const steps = [
+    { id: '1', label: 'Account Details' },
+    { id: '2', label: 'Personal Information' },
+    {
+      id: '3',
+      label: 'Payment Method',
+      metadata: { isError: true },
+    },
+    { id: '4', label: 'Review & Submit' },
+  ];
+
+  const [stepperState, stepperApi] = useStepper({ steps });
+  const [complete, setComplete] = useState(false);
+
+  const handleNext = () => {
+    if (stepperState.activeStepId === '4') {
+      setComplete(true);
+    } else {
+      stepperApi.goNextStep();
+    }
+  };
+
+  return (
+    <Stepper
+      direction="vertical"
+      activeStepId={stepperState.activeStepId}
+      steps={steps}
+      complete={complete}
+      StepperIconComponent={ErrorStepperIcon}
+      StepperLabelComponent={ErrorStepperLabel}
+      StepperProgressComponent={ErrorStepperProgress}
+    />
+  );
+}
+```
+
+#### 2. styles API
+
+The Stepper component provides flexible styling options through the `styles` prop.
+Through this prop, you can apply inline styles to specific subcomponents of the Stepper; the same components which you can override with the `Component` props.
+
+##### styles
+
+The `styles` prop allows you to apply inline styles to specific child elements.
+
+It accepts an object with the following optional keys:
+
+- `header` - Applied to the header component
+- `step` - Applied to each individual step element
+- `substepContainer` - Applied to each substep container element
+- `progress` - Applied to each step progress bar element
+- `label` - Applied to each step label element
+- `icon` - Applied to each step icon element
+
+```tsx
+<Stepper
+  direction="horizontal"
+  styles={{
+    step: { ... },
+    substepContainer: { ... },
+    label: { ... },
+    progress: { ... },
+  }}
+  // ... other props
+/>
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `activeStepId` | `string \| null` | Yes | `-` | The id of the current/active step. Set this to null to visualize a completely unfilled/incomplete Stepper. |
+| `direction` | `horizontal \| vertical` | Yes | `-` | The orientation of the stepper. |
+| `steps` | `StepperValue<Metadata>[]` | Yes | `-` | An array of steps to render. |
+| `StepperHeaderComponent` | `StepperHeaderComponent<Metadata> \| null` | No | `-` | An optional component to render in place of the default Header subcomponent. Set to null to render nothing in this slot. |
+| `StepperIconComponent` | `StepperIconComponent<Metadata> \| null` | No | `-` | An optional component to render in place of the default Icon subcomponent. Set to null to render nothing in this slot. |
+| `StepperLabelComponent` | `StepperLabelComponent<Metadata> \| null` | No | `-` | An optional component to render in place of the default Label subcomponent. Set to null to render nothing in this slot. |
+| `StepperProgressComponent` | `StepperProgressComponent<Metadata> \| null` | No | `-` | An optional component to render in place of the default Progress subcomponent. Set to null to render nothing in this slot. |
+| `StepperStepComponent` | `StepperStepComponent<Metadata>` | No | `-` | An optional component to render in place of the default Step subcomponent. |
+| `StepperSubstepContainerComponent` | `StepperSubstepContainerComponent<Metadata> \| null` | No | `-` | An optional component to render in place of the default SubstepContainer subcomponent. |
+| `alignContent` | `flex-start \| flex-end \| center \| stretch \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `alignItems` | `flex-start \| flex-end \| center \| stretch \| baseline` | No | `-` | - |
+| `alignSelf` | `auto \| FlexAlignType` | No | `-` | - |
+| `animate` | `boolean` | No | `true` | Whether to animate the progress spring. |
+| `animated` | `boolean` | No | `-` | - |
+| `aspectRatio` | `string \| number` | No | `-` | - |
+| `background` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderBottomLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderBottomWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderColor` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `borderEndWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderStartWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderTopLeftRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopRightRadius` | `0 \| 100 \| 200 \| 300 \| 400 \| 500 \| 600 \| 700 \| 800 \| 900 \| 1000` | No | `-` | - |
+| `borderTopWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `borderWidth` | `0 \| 100 \| 200 \| 300 \| 400 \| 500` | No | `-` | - |
+| `bordered` | `boolean` | No | `-` | Add a border around all sides of the box. |
+| `borderedBottom` | `boolean` | No | `-` | Add a border to the bottom side of the box. |
+| `borderedEnd` | `boolean` | No | `-` | Add a border to the trailing side of the box. |
+| `borderedHorizontal` | `boolean` | No | `-` | Add a border to the leading and trailing sides of the box. |
+| `borderedStart` | `boolean` | No | `-` | Add a border to the leading side of the box. |
+| `borderedTop` | `boolean` | No | `-` | Add a border to the top side of the box. |
+| `borderedVertical` | `boolean` | No | `-` | Add a border to the top and bottom sides of the box. |
+| `bottom` | `string \| number` | No | `-` | - |
+| `color` | `currentColor \| fg \| fgMuted \| fgInverse \| fgPrimary \| fgWarning \| fgPositive \| fgNegative \| bg \| bgAlternate \| bgInverse \| bgOverlay \| bgElevation1 \| bgElevation2 \| bgPrimary \| bgPrimaryWash \| bgSecondary \| bgTertiary \| bgSecondaryWash \| bgNegative \| bgNegativeWash \| bgPositive \| bgPositiveWash \| bgWarning \| bgWarningWash \| bgLine \| bgLineHeavy \| bgLineInverse \| bgLinePrimary \| bgLinePrimarySubtle \| accentSubtleRed \| accentBoldRed \| accentSubtleGreen \| accentBoldGreen \| accentSubtleBlue \| accentBoldBlue \| accentSubtlePurple \| accentBoldPurple \| accentSubtleYellow \| accentBoldYellow \| accentSubtleGray \| accentBoldGray \| transparent` | No | `-` | - |
+| `columnGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `complete` | `boolean` | No | `-` | Set this to true to visualize a completely filled/complete Stepper |
+| `completedStepAccessibilityLabel` | `string` | No | `"Complete"` | An optional accessibility label used to announce a step as complete/visited. Useful for providing an internationalized label for this state. |
+| `dangerouslySetBackground` | `string` | No | `-` | - |
+| `disableAnimateOnMount` | `boolean` | No | `-` | Whether to disable the animation on mount. |
+| `display` | `flex \| none` | No | `-` | - |
+| `elevation` | `0 \| 1 \| 2` | No | `-` | Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. |
+| `flexBasis` | `string \| number` | No | `-` | - |
+| `flexDirection` | `row \| column \| row-reverse \| column-reverse` | No | `-` | - |
+| `flexGrow` | `number` | No | `-` | - |
+| `flexShrink` | `number` | No | `-` | - |
+| `flexWrap` | `wrap \| nowrap \| wrap-reverse` | No | `-` | - |
+| `font` | `inherit \| FontFamily` | No | `-` | - |
+| `fontFamily` | `inherit \| FontFamily` | No | `-` | - |
+| `fontSize` | `inherit \| FontSize` | No | `-` | - |
+| `fontWeight` | `inherit \| FontWeight` | No | `-` | - |
+| `gap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `height` | `string \| number` | No | `-` | - |
+| `justifyContent` | `flex-start \| flex-end \| center \| space-between \| space-around \| space-evenly` | No | `-` | - |
+| `left` | `string \| number` | No | `-` | - |
+| `lineHeight` | `inherit \| LineHeight` | No | `-` | - |
+| `margin` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginBottom` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginEnd` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginStart` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginTop` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginX` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `marginY` | `0 \| -1 \| -2 \| -0.25 \| -0.5 \| -0.75 \| -1.5 \| -3 \| -4 \| -5 \| -6 \| -7 \| -8 \| -9 \| -10` | No | `-` | - |
+| `maxHeight` | `string \| number` | No | `-` | - |
+| `maxWidth` | `string \| number` | No | `-` | - |
+| `minHeight` | `string \| number` | No | `-` | - |
+| `minWidth` | `string \| number` | No | `-` | - |
+| `onPointerCancel` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerCancelCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDown` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerDownCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnter` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerEnterCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeave` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerLeaveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMove` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerMoveCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUp` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `onPointerUpCapture` | `((event: PointerEvent) => void)` | No | `-` | - |
+| `opacity` | `number \| AnimatedNode` | No | `-` | - |
+| `overflow` | `visible \| hidden \| scroll` | No | `-` | - |
+| `padding` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingBottom` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingEnd` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingStart` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingTop` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingX` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `paddingY` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `pin` | `top \| bottom \| left \| right \| all` | No | `-` | Direction in which to absolutely pin the box. |
+| `position` | `static \| relative \| fixed \| absolute \| sticky` | No | `-` | - |
+| `progressSpringConfig` | `Partial<AnimationConfig>` | No | `-` | The spring config to use for the progress spring. |
+| `ref` | `null \| (instance: View \| null) => void \| RefObject<View>` | No | `-` | - |
+| `right` | `string \| number` | No | `-` | - |
+| `rowGap` | `0 \| 1 \| 2 \| 0.25 \| 0.5 \| 0.75 \| 1.5 \| 3 \| 4 \| 5 \| 6 \| 7 \| 8 \| 9 \| 10` | No | `-` | - |
+| `style` | `false \| RegisteredStyle<ViewStyle> \| Value \| AnimatedInterpolation<string \| number> \| WithAnimatedObject<ViewStyle> \| WithAnimatedArray<Falsy \| ViewStyle \| RegisteredStyle<ViewStyle> \| RecursiveArray<Falsy \| ViewStyle \| RegisteredStyle<ViewStyle>> \| readonly (Falsy \| ViewStyle \| RegisteredStyle<ViewStyle>)[]> \| null` | No | `-` | - |
+| `styles` | `{ root?: StyleProp<ViewStyle>; step?: StyleProp<ViewStyle>; substepContainer?: StyleProp<ViewStyle>; label?: StyleProp<ViewStyle>; progress?: StyleProp<ViewStyle>; icon?: StyleProp<ViewStyle>; header?: StyleProp<ViewStyle>; }` | No | `-` | Custom styles for individual elements of the Stepper component |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Used to locate this view in end-to-end tests. |
+| `textAlign` | `left \| right \| auto \| center \| justify` | No | `-` | - |
+| `textDecorationLine` | `none \| underline \| line-through \| underline line-through` | No | `-` | - |
+| `textDecorationStyle` | `solid \| dotted \| dashed \| double` | No | `-` | - |
+| `textTransform` | `none \| capitalize \| uppercase \| lowercase` | No | `-` | - |
+| `top` | `string \| number` | No | `-` | - |
+| `transform` | `string \| (({ scaleX: AnimatableNumericValue; } & { scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scaleY: AnimatableNumericValue; } & { scaleX?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateX: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ translateY: AnimatableNumericValue \| ${number}%; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ perspective: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotate: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ rotateZ: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ scale: AnimatableNumericValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; skewX?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewX: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewY?: undefined; matrix?: undefined; }) \| ({ skewY: AnimatableStringValue; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; matrix?: undefined; }) \| ({ matrix: AnimatableNumericValue[]; } & { scaleX?: undefined; scaleY?: undefined; translateX?: undefined; translateY?: undefined; perspective?: undefined; rotate?: undefined; rotateX?: undefined; rotateY?: undefined; rotateZ?: undefined; scale?: undefined; skewX?: undefined; skewY?: undefined; }))[]` | No | `-` | - |
+| `userSelect` | `auto \| none \| text \| contain \| all` | No | `-` | - |
+| `width` | `string \| number` | No | `-` | - |
+| `zIndex` | `number` | No | `-` | - |
+
+
+## Styles
+
+| Selector | Static class name | Description |
+| --- | --- | --- |
+| `root` | `-` | Root Stepper container element |
+| `step` | `-` | Step subcomponent element |
+| `substepContainer` | `-` | Substep container element |
+| `label` | `-` | Label subcomponent element |
+| `progress` | `-` | Progress subcomponent element |
+| `icon` | `-` | Icon subcomponent element |
+| `header` | `-` | Header subcomponent element |
+
+

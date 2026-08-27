@@ -1,0 +1,166 @@
+# Alert
+
+A dialog that communicates critical information and blocks user interaction.
+
+## Import
+
+```tsx
+import { Alert } from '@coinbase/cds-web/overlays/Alert'
+```
+
+## Examples
+
+:::tip Accessibility tip (Web only)
+
+Alerts require an accessibility label, which we set to `title` by default. However, if there's other text that gives the user better context to the alert, then you can pass an element id to `accessibilityLabelledBy`. Alternatively, you may directly provide a contextual label to `accessibilityLabel`.
+
+:::
+
+### Default Alert
+
+Controlled using `visible` and `onRequestClose`.
+
+```jsx live
+function DefaultAlertExample() {
+  const [visible, setVisible] = useState(false);
+
+  const toggleOn = () => setVisible(true);
+  const toggleOff = () => setVisible(false);
+
+  return (
+    <PortalProvider>
+      <ButtonGroup>
+        <Button onClick={toggleOn}>Show Alert</Button>
+      </ButtonGroup>
+      <Alert
+        title="Alert title"
+        body="Alert body type that can run over multiple lines, but should be kept short."
+        pictogram="warning"
+        visible={visible}
+        onRequestClose={toggleOff}
+        preferredActionLabel="Primary"
+        onPreferredActionPress={() => console.log('preferred pressed')}
+        dismissActionLabel="Cancel"
+        onDismissActionPress={() => console.log('dismiss pressed')}
+      />
+    </PortalProvider>
+  );
+}
+```
+
+### Portal Alert
+
+Controlled programmatically using the `useAlert` hook.
+
+:::warning
+
+**Deprecated**: Inserting JSX into the DOM using a function in an event handler is an anti-pattern. This hook will be removed in future version. Use the `visible` and `onRequestClose` props instead
+
+:::
+
+```jsx live
+function PortalAlertExample() {
+  function PortalAlert() {
+    const alert = useAlert();
+
+    const showAlert = () =>
+      alert.open(
+        <Alert
+          title="Alert title"
+          body="Alert body type that can run over multiple lines, but should be kept short."
+          pictogram="warning"
+          visible
+          onRequestClose={alert.close}
+          preferredActionLabel="Save"
+          onPreferredActionPress={() => console.log('Save pressed')}
+        />,
+      );
+
+    return <Button onClick={showAlert}>Show Alert</Button>;
+  }
+
+  return (
+    <PortalProvider>
+      <PortalAlert />
+    </PortalProvider>
+  );
+}
+```
+
+### Alert over Modal
+
+Alert displays on top of a `Modal`. You must pass stacked as a prop to `Alert` when it is used inside of a `Modal`.
+
+```jsx live
+function AlertOnModalExample() {
+  function AlertOnModal() {
+    const { openModal, closeModal } = useModal();
+    const alert = useAlert();
+
+    const showAlert = () =>
+      alert.open(
+        <Alert
+          visible
+          onRequestClose={alert.close}
+          title="Are you sure?"
+          body="Cancel will discard your existing changes, are you sure?"
+          pictogram="warning"
+          preferredActionLabel="Discard"
+          onPreferredActionPress={closeModal}
+          preferredActionVariant="negative"
+          dismissActionLabel="Cancel"
+          stacked
+        />,
+      );
+
+    const handlePress = () => {
+      openModal(
+        <Modal visible onRequestClose={closeModal}>
+          <ModalBody>
+            <Text as="p" font="body">
+              {loremIpsum}
+            </Text>
+          </ModalBody>
+          <ModalFooter
+            primaryAction={<Button onClick={closeModal}>Save</Button>}
+            secondaryAction={<Button onClick={showAlert}>Cancel</Button>}
+          />
+        </Modal>,
+      );
+    };
+
+    return <Button onClick={handlePress}>Open Modal</Button>;
+  }
+
+  return (
+    <PortalProvider>
+      <AlertOnModal />
+    </PortalProvider>
+  );
+}
+```
+
+## Props
+
+| Prop | Type | Required | Default | Description |
+| --- | --- | --- | --- | --- |
+| `body` | `string` | Yes | `-` | Alert body/description |
+| `onRequestClose` | `() => void` | Yes | `-` | Callback function fired when modal is closed. |
+| `preferredActionLabel` | `string` | Yes | `-` | Label of the preferred action |
+| `title` | `string` | Yes | `-` | Alert title |
+| `visible` | `boolean` | Yes | `false false` | Controls visibility of the Modal |
+| `accessibilityLabelledBy` | `string` | No | `-` | On web, maps to aria-labelledby and lists the id(s) of the element(s) that label the element on which the attribute is set. On mobile (Android only), a reference to another element nativeID used to build complex forms. |
+| `actionLayout` | `horizontal \| vertical` | No | `horizontal` | Layout of the actions |
+| `disablePortal` | `boolean` | No | `-` | Disable React portal integration |
+| `dismissActionLabel` | `string` | No | `-` | Label of the dismiss action |
+| `key` | `Key \| null` | No | `-` | - |
+| `onDidClose` | `((() => void) & (() => void))` | No | `-` | Callback fired after the component is closed. |
+| `onDismissActionPress` | `(() => void)` | No | `-` | Callback function fired when the dismiss action is pressed |
+| `onPreferredActionPress` | `(() => void)` | No | `-` | Callback function fired when the preferred action is pressed |
+| `pictogram` | `key \| warning \| error \| add \| arrowsUpDown \| browser \| calculator \| calendar \| checkmark \| clock \| coinbaseOneLogo \| crystalBallInsight \| derivativesProduct \| email \| gasFees \| identityCard \| instantUnstakingClock \| laptop \| learningRewardsProduct \| lock \| loop \| passport \| paypal \| phone \| pieChartData \| planet \| robot \| safe \| securityKey \| settings \| shield \| support \| taxes \| tokenSales \| trading \| verifiedPools \| wallet \| done \| cardSuccess \| 2fa \| accountsNavigation \| accreditedInvestor \| addCard \| addPayment \| addPhone \| addressBook \| addToWatchlist \| addWallet \| advancedTradingDesktop \| advancedTradingNavigation \| advancedTradingRebates \| agent \| alerts \| alertsCoinbaseOne \| analyticsNavigation \| apartOfDropsNft \| applyForHigherLimits \| apyInterest \| assetEncryption \| assetHubNavigation \| assetManagement \| assetManagementNavigation \| assetMeasurements \| assetMovement \| authenticationApp \| authenticator \| authenticatorAlt \| authenticatorProgress \| avatarAa \| avatarAb \| avatarAc \| avatarAd \| avatarAe \| avatarAf \| avatarAg \| avatarAh \| avatarAi \| avatarAj \| avatarBa \| avatarBb \| avatarBc \| avatarBd \| avatarBe \| avatarBf \| avatarBg \| avatarBh \| avatarBi \| avatarBj \| avatarCa \| avatarCb \| avatarCc \| avatarCd \| avatarCe \| avatarCf \| avatarCg \| avatarCh \| avatarCi \| avatarCj \| avatarDa \| avatarDb \| avatarDc \| avatarDd \| avatarDe \| avatarDf \| avatarDg \| avatarDh \| avatarDi \| avatarDj \| avatarEa \| avatarEb \| avatarEc \| avatarEd \| avatarEe \| avatarEf \| avatarEg \| avatarEh \| avatarEi \| avatarEj \| avatarFa \| avatarFb \| avatarFc \| avatarFd \| avatarFe \| avatarFf \| avatarFg \| avatarFh \| avatarFi \| avatarFj \| avatarGa \| avatarGb \| avatarGc \| avatarGd \| avatarGe \| avatarGf \| avatarGg \| avatarGh \| avatarGi \| avatarGj \| avatarHa \| avatarHb \| avatarHc \| avatarHd \| avatarHe \| avatarHf \| avatarHg \| avatarHh \| avatarHi \| avatarHj \| avatarIa \| avatarIb \| avatarIc \| avatarId \| avatarIe \| avatarIf \| avatarIg \| avatarIh \| avatarIi \| avatarIj \| avatarJa \| avatarJb \| avatarJc \| avatarJd \| avatarJe \| avatarJf \| avatarJg \| avatarJh \| avatarJi \| avatarJj \| barChart \| baseAscend \| baseCertificateStar \| baseChartSmall \| baseChatBubbleHeart \| baseCheckSmall \| baseCoinCryptoSmall \| baseCoinNetworkSmall \| baseCoinStack \| baseCoinStar \| baseComet \| baseComputer \| baseConfetti \| baseConnectApps \| baseConnectSmall \| baseCreatorCoin \| baseDecentralizationSmall \| baseDiamondSmall \| baseDiamondTrophy \| baseDoor \| baseEarnedBadge \| baseEmptySmall \| baseErrorButterflySmall \| baseErrorSmall \| baseExchange \| baseFire \| baseGem \| baseGlobe \| baseHandStar \| baseLayout \| baseLightningbolt \| baseLoadingSmall \| baseLocationSmall \| baseLogo \| baseLogoNavigation \| baseMedal \| baseMessaging \| baseMintNftSmall \| baseNetworkSmall \| baseNftSmall \| basePaycoinSmall \| basePeopleSmall \| basePiechartSmall \| basePlant \| basePower \| baseRibbon \| baseRocket \| baseRockon \| baseSaved \| baseSecuritySmall \| baseSendSmall \| baseSignin \| baseSmile \| baseStack \| baseStar \| baseTargetSmall \| baseTile \| bigBtcSend \| bitcoin \| bitcoinPizza \| bitcoinRewards \| bitcoinWhitePaper \| blockchainConnection \| bonusFivePercent \| bonusTwoPercent \| borrowCoins \| borrowingLending \| borrowNavigation \| browserMultiPlatform \| browserTransaction \| btcOneHundred \| bundle \| businessProduct \| calendarCaution \| calendarHighlight \| candleSticksGraph \| cardBlocked \| cardDeclined \| cardNavigation \| cb1BankTransfers \| chart \| chat \| cloudNavigation \| coinbaseLogoAdvancedBrand \| coinbaseLogoNavigation \| coinbaseOneAuthenticator \| coinbaseOneChat \| coinbaseOneEarn \| coinbaseOneEarnCoins \| coinbaseOneEarnCoinsLogo \| coinbaseOneFiat \| coinbaseOneProductIcon \| coinbaseOneProductInvestWeekly \| coinbaseOneRefreshed \| coinbaseOneShield \| coinbaseOneTrade \| coinbaseOneTrusted \| coinbaseOneUnlimitedRewards \| coinbaseUnlockOffers \| coinbaseWalletApp \| coinFocus \| coinShare \| coldStorageCheck \| collectionOfAssets \| commerceCheckout \| commerceInvoice \| commerceNavigation \| commodities \| completeQuiz \| complianceNavigation \| congratulations \| connectNavigation \| contactInfo \| controlWalletStorage \| creative \| creditCard \| crypto101 \| cryptoCard \| cryptoCoins \| cryptoFolder \| custodialJourney \| custodyNavigation \| dataMarketplaceNavigation \| decentralizationEverything \| decentralizedExchange \| decentralizedIdentity \| decentralizedWeb3 \| defiEarnMoment \| delegate \| delegateNavigation \| derivativesNavigation \| developerPlatformNavigation \| developerSDKNavigation \| directDepositNavigation \| dollarShowcase \| driversLicense \| driversLicenseWheel \| earnCoins \| earnGraph \| earnNavigation \| easyToUse \| economyGlobal \| emailAndMessages \| enableVoting \| envelope \| ethereumFocus \| ethRewards \| ethStaking \| ethStakingChart \| ethStakingRewards \| ethToken \| exchangeNavigation \| explore \| fast \| faucetNavigation \| feesRestriction \| fiat \| finance \| findYourSelection \| formDownload \| futures \| futuresCoinbaseOne \| gem \| genericCountryIDCard \| getStarted \| giftbox \| globalConnections \| globalPayments \| globalTransactions \| googleAuthenticator \| governance \| hardwareWallet \| helpCenterNavigation \| higherLimits \| holdingCoin \| idBlock \| idError \| idVerification \| increaseLimits \| institutionalNavigation \| institutions \| internationalExchangeNavigation \| internet \| investGraph \| laptopCharts \| laptopVideo \| layerNetworks \| leadGraph \| learn \| learningRewardsNavigation \| lightbulbLearn \| lightningNetworkSend \| linkYourAccount \| listingFees \| locationUsa \| lowFees \| manageWeb3SignersAcct \| miningCoins \| mintedNft \| mobileCharts \| mobileError \| mobileNotifcation \| mobileSuccess \| mobileWarning \| moneyCrypto \| moneyEarn \| moneySwift \| monitoringPerformance \| moreThanBitcoin \| multiAccountsAndCards \| multiPlatform \| multipleAssets \| musicAndSounds \| myNumberCard \| newUserChecklistBuyCrypto \| newUserChecklistCompleteAccount \| newUserChecklistVerifyId \| nftAvatar \| nftLibrary \| nftNavigation \| noAnnualFee \| noNftFound \| notificationHubAnalysis \| notificationHubNews \| notificationHubPortfolio \| notificationHubSocial \| notifications \| noVisibility \| noWiFi \| orders \| outage \| partialCoins \| participateNavigation \| passwordWalletLocked \| payNavigation \| peerToPeer \| pieChart \| pizza \| pluginBrowser \| podium \| positiveReviews \| predictionMarkets \| premiumInvestor \| priceTracking \| primeMobileApp \| primeNavigation \| privateClientNavigation \| proNavigation \| protectionPlan \| queryTransactNavigation \| receipt \| recurringPurchases \| restaking \| reviewAndAdd \| rewardsNavigation \| riskStaking \| rosettaNavigation \| securedAssets \| security \| securityCoinShield \| seedPhrase \| selectAddNft \| selfCustodyWallet \| selfServe \| sellSendAnytime \| sendPaymentToOthers \| settled \| sideChainSide \| signInNavigation \| smsAuthenticate \| sparkleCoinbaseOne \| ssnCard \| stableCoinMetaphor \| stacking \| stakingGraph \| standWithCryptoLogoNavigation \| startToday \| strongInfo \| strongWarning \| successPhone \| supportChat \| takeQuiz \| target \| taxBeta \| taxCenterNavigation \| taxesArrangement \| taxSeason \| timingCheck \| tokenBaskets \| transferSend \| transistor \| trendingAssets \| trusted \| tryAgainLater \| twoBonus \| typeScript \| ubiKey \| usaProduct \| usdcEarn \| usdcInterest \| usdcLoan \| usdcLogo \| usdcRewards \| usdcRewardsRibbon \| usdcToken \| venturesNavigation \| videoCalendar \| videoContent \| waiting \| waitingForConsensus \| walletAsServiceNavigation \| walletDeposit \| walletError \| walletExchange \| walletLinkNavigation \| walletLogoNavigation \| walletNavigation \| walletPassword \| walletSuccess \| walletWarning \| winBTC \| worldwide \| wrapEth` | No | `-` | Illustration pictogram name for alert |
+| `preferredActionVariant` | `primary \| negative` | No | `primary` | Button variant of the preferred action |
+| `ref` | `((instance: ModalRefBaseProps \| null) => void) \| RefObject<ModalRefBaseProps> \| null` | No | `-` | - |
+| `stacked` | `boolean` | No | `-` | Indicating if Alert is stacked on top of Modal |
+| `testID` | `string` | No | `-` | Used to locate this element in unit and end-to-end tests. Under the hood, testID translates to data-testid on Web. On Mobile, testID stays the same - testID |
+
+
