@@ -59,6 +59,20 @@ Not yet included: bundled Inter / Source Code Pro font files (typography default
 font; set `fontName` per role once fonts are registered), high-contrast / dense theme variants,
 and the `diffThemes` helper.
 
+## Guides
+
+Consumer-facing docs live in [`docs/`](docs/):
+
+- [Using theme tokens](docs/using-tokens.md) — reading tokens in a view and carrying them through your
+  own code. **Start here.**
+- [Creating a custom theme](docs/custom-themes.md) — the `cdsTheme { }` builder, overriding colors /
+  spectrum / scales, `CDSThemeProvider`, `InvertedThemeProvider`, and custom fonts.
+- [Theme token reference](docs/token-reference.md) — every scale, with default values and canonical
+  `tokenName`s.
+- [Publishing a version](docs/releasing.md) — cutting the XCFramework release. Maintainers only.
+
+For the module's API boundary and contribution rules, see [`AGENTS.md`](AGENTS.md).
+
 ## Usage
 
 ```swift

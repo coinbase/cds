@@ -187,9 +187,19 @@ private struct CDSThemeSetKey: EnvironmentKey {
 /// default theme inside an Xcode Preview (so unwrapped previews work) and traps everywhere else, so
 /// a missing provider surfaces immediately.
 enum CDSThemeEnvironment {
-    static func resolved(stored: CDSTheme?, scheme: ColorScheme, isPreview: Bool) -> CDSTheme {
+    /// Non-trapping core of the resolution rules: returns the stored theme, the default theme in a
+    /// preview, or `nil` when there is no ``CDSThemeProvider`` ancestor (and we're not previewing).
+    /// Split out so the "missing provider" branch is unit-testable without a `preconditionFailure`.
+    static func resolvedOrNil(stored: CDSTheme?, scheme: ColorScheme, isPreview: Bool) -> CDSTheme? {
         if let stored { return stored }
         if isPreview { return CDSThemeSet.default.resolve(scheme) }
+        return nil
+    }
+
+    static func resolved(stored: CDSTheme?, scheme: ColorScheme, isPreview: Bool) -> CDSTheme {
+        if let theme = resolvedOrNil(stored: stored, scheme: scheme, isPreview: isPreview) {
+            return theme
+        }
         preconditionFailure("No CDS theme found. Wrap your views in CDSThemeProvider { … }.")
     }
 
@@ -197,6 +207,45 @@ enum CDSThemeEnvironment {
     /// `LocalInspectionMode.current`.
     static let isRunningInXcodePreview: Bool =
         ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] == "1"
+}
+
+/// Resolves what an ``InvertedThemeProvider`` installs for its subtree. Mirrors
+/// ``CDSThemeEnvironment`` but flips the color scheme: it re-resolves the ambient ``CDSThemeSet``
+/// against the opposite scheme, keeps the Xcode Preview fallback, and — matching Android's
+/// `CdsInvertedThemeProvider` — fails loudly when there is no ``CDSThemeProvider`` ancestor, since
+/// there is nothing to invert without one.
+enum CDSInvertedThemeEnvironment {
+    /// Non-trapping core: returns the inverted theme, or `nil` when there is no ``CDSThemeProvider``
+    /// ancestor (and we're not previewing). Split out so the "missing provider" branch is
+    /// unit-testable without a `preconditionFailure`.
+    static func resolvedOrNil(
+        stored: CDSTheme?,
+        set: CDSThemeSet,
+        scheme: ColorScheme,
+        isPreview: Bool
+    ) -> CDSTheme? {
+        guard let base = CDSThemeEnvironment.resolvedOrNil(
+            stored: stored,
+            scheme: scheme,
+            isPreview: isPreview
+        ) else {
+            return nil
+        }
+        let inverse: ColorScheme = base.colorScheme == .dark ? .light : .dark
+        return set.resolve(inverse)
+    }
+
+    static func resolved(
+        stored: CDSTheme?,
+        set: CDSThemeSet,
+        scheme: ColorScheme,
+        isPreview: Bool
+    ) -> CDSTheme {
+        if let theme = resolvedOrNil(stored: stored, set: set, scheme: scheme, isPreview: isPreview) {
+            return theme
+        }
+        preconditionFailure("InvertedThemeProvider requires a CDSThemeProvider ancestor.")
+    }
 }
 
 extension EnvironmentValues {
@@ -273,9 +322,18 @@ public struct CDSThemeProvider<Content: View>: View {
 ///
 /// Re-resolves the current ``CDSThemeSet`` against the opposite scheme (dark → light and
 /// vice-versa) while keeping the same theme configuration.
+///
+/// Requires a ``CDSThemeProvider`` ancestor — there is nothing to invert without one — and traps
+/// with a clear message when used without one, matching Android's `CdsInvertedThemeProvider`. The
+/// only exception is an Xcode Preview, which falls back to the default theme (inverted) so
+/// unwrapped previews render instead of crashing.
 public struct InvertedThemeProvider<Content: View>: View {
-    @Environment(\.cdsTheme) private var theme
+    // Read the non-trapping storage (not `\.cdsTheme`) so the missing-ancestor case surfaces with
+    // this provider's own message via ``CDSInvertedThemeEnvironment`` rather than the generic
+    // `\.cdsTheme` trap.
+    @Environment(\.cdsThemeStorage) private var storedTheme
     @Environment(\.cdsThemeSet) private var themeSet
+    @Environment(\.colorScheme) private var scheme
     private let content: Content
 
     public init(@ViewBuilder content: () -> Content) {
@@ -283,9 +341,14 @@ public struct InvertedThemeProvider<Content: View>: View {
     }
 
     public var body: some View {
-        let inverse: ColorScheme = theme.colorScheme == .dark ? .light : .dark
+        let inverted = CDSInvertedThemeEnvironment.resolved(
+            stored: storedTheme,
+            set: themeSet,
+            scheme: scheme,
+            isPreview: CDSThemeEnvironment.isRunningInXcodePreview
+        )
         content
-            .environment(\.cdsThemeStorage, themeSet.resolve(inverse))
-            .environment(\.colorScheme, inverse)
+            .environment(\.cdsThemeStorage, inverted)
+            .environment(\.colorScheme, inverted.colorScheme)
     }
 }
