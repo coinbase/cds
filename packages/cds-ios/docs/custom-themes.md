@@ -78,8 +78,8 @@ import CDSDesignSystem
 enum AcmeTheme {
     // Acme's brand purple stands in for CDS's blue. The dark variant is a lighter tint, mirroring how
     // CDS itself lightens blue60 -> blue70 in dark mode to hold contrast against a dark background.
-    static let brandLight = Color(cdsRGB: 123, 63, 228)
-    static let brandDark = Color(cdsRGB: 174, 138, 251)
+    static let brandLight = Color(cdsHex: 0x7B3FE4)
+    static let brandDark = Color(cdsHex: 0xAE8AFB)
 
     static let themeSet: CDSThemeSet = cdsTheme {
         $0.id = "acme"
@@ -164,10 +164,10 @@ static let themeSet: CDSThemeSet = cdsTheme {
 
     // Remap a hue's ramp, then re-derive the semantic colors from the new spectrum.
     $0.lightSpectrum = $0.lightSpectrum.with {
-        $0.blue = $0.blue.with { $0.step60 = Color(cdsRGB: 123, 63, 228) }
+        $0.blue = $0.blue.with { $0.step60 = Color(cdsHex: 0x7B3FE4) }
     }
     $0.darkSpectrum = $0.darkSpectrum.with {
-        $0.blue = $0.blue.with { $0.step70 = Color(cdsRGB: 174, 138, 251) }
+        $0.blue = $0.blue.with { $0.step70 = Color(cdsHex: 0xAE8AFB) }
     }
     $0.light = .lightDeriving(from: $0.lightSpectrum)
     $0.dark = .darkDeriving(from: $0.darkSpectrum)

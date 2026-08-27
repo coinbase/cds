@@ -87,40 +87,40 @@ public struct CDSIllustrationColors: Sendable, Equatable {
     }
 
     public static let light = CDSIllustrationColors(
-        primary: Color(cdsRGB: 0, 82, 255),
-        black: Color(cdsRGB: 10, 11, 13),
-        white: Color(cdsRGB: 255, 255, 255),
+        primary: Color(cdsHex: 0x0052FF),
+        black: Color(cdsHex: 0x0A0B0D),
+        white: Color(cdsHex: 0xFFFFFF),
         // The light grays are intentionally non-monotonic (gray2 is near-black), matching
         // `lightIllustrationColor` in `defaultTheme.ts` — leave the values as-is.
-        gray: Color(cdsRGB: 206, 210, 219),
-        gray2: Color(cdsRGB: 10, 11, 15),
-        gray3: Color(cdsRGB: 206, 210, 220),
-        gray4: Color(cdsRGB: 200, 203, 210),
-        positive: Color(cdsRGB: 60, 194, 138),
-        negative: Color(cdsRGB: 225, 57, 71),
-        accent1: Color(cdsRGB: 255, 210, 0),
-        accent2: Color(cdsRGB: 93, 226, 248),
-        accent3: Color(cdsRGB: 237, 112, 47),
-        accent4: Color(cdsRGB: 115, 162, 255),
-        invert: Color(cdsRGB: 10, 11, 14),
-        invert2: Color(cdsRGB: 255, 255, 254)
+        gray: Color(cdsHex: 0xCED2DB),
+        gray2: Color(cdsHex: 0x0A0B0F),
+        gray3: Color(cdsHex: 0xCED2DC),
+        gray4: Color(cdsHex: 0xC8CBD2),
+        positive: Color(cdsHex: 0x3CC28A),
+        negative: Color(cdsHex: 0xE13947),
+        accent1: Color(cdsHex: 0xFFD200),
+        accent2: Color(cdsHex: 0x5DE2F8),
+        accent3: Color(cdsHex: 0xED702F),
+        accent4: Color(cdsHex: 0x73A2FF),
+        invert: Color(cdsHex: 0x0A0B0E),
+        invert2: Color(cdsHex: 0xFFFFFE)
     )
 
     public static let dark = CDSIllustrationColors(
-        primary: Color(cdsRGB: 87, 139, 250),
-        black: Color(cdsRGB: 10, 11, 13),
-        white: Color(cdsRGB: 255, 255, 255),
-        gray: Color(cdsRGB: 70, 75, 85),
-        gray2: Color(cdsRGB: 70, 75, 85),
-        gray3: Color(cdsRGB: 255, 255, 255),
-        gray4: Color(cdsRGB: 255, 255, 255),
-        positive: Color(cdsRGB: 68, 194, 141),
-        negative: Color(cdsRGB: 240, 97, 109),
-        accent1: Color(cdsRGB: 236, 208, 105),
-        accent2: Color(cdsRGB: 69, 217, 245),
-        accent3: Color(cdsRGB: 240, 120, 54),
-        accent4: Color(cdsRGB: 132, 170, 253),
-        invert: Color(cdsRGB: 255, 255, 255),
-        invert2: Color(cdsRGB: 114, 120, 134)
+        primary: Color(cdsHex: 0x578BFA),
+        black: Color(cdsHex: 0x0A0B0D),
+        white: Color(cdsHex: 0xFFFFFF),
+        gray: Color(cdsHex: 0x464B55),
+        gray2: Color(cdsHex: 0x464B55),
+        gray3: Color(cdsHex: 0xFFFFFF),
+        gray4: Color(cdsHex: 0xFFFFFF),
+        positive: Color(cdsHex: 0x44C28D),
+        negative: Color(cdsHex: 0xF0616D),
+        accent1: Color(cdsHex: 0xECD069),
+        accent2: Color(cdsHex: 0x45D9F5),
+        accent3: Color(cdsHex: 0xF07836),
+        accent4: Color(cdsHex: 0x84AAFD),
+        invert: Color(cdsHex: 0xFFFFFF),
+        invert2: Color(cdsHex: 0x727886)
     )
 }

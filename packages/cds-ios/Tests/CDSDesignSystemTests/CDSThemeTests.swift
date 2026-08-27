@@ -113,9 +113,9 @@ final class CDSThemeTests: XCTestCase {
         XCTAssertEqual(CDSTheme.resolve(.dark).spectrum.blue.step60, CDSSpectrum.dark.blue.step60)
     }
 
-    func testSpectrumStringParsesToComponents() {
-        // "0,82,255" (blue60 light) → ~ (0, 0.32, 1.0)
-        let resolved = Color(cdsSpectrum: "0,82,255").resolve(in: .init())
+    func testSpectrumHexResolvesToComponents() {
+        // 0x0052FF (blue60 light) → ~ (0, 0.32, 1.0)
+        let resolved = Color(cdsHex: 0x0052FF).resolve(in: .init())
         XCTAssertEqual(Double(resolved.red), 0, accuracy: 0.01)
         XCTAssertEqual(Double(resolved.green), 82.0 / 255.0, accuracy: 0.01)
         XCTAssertEqual(Double(resolved.blue), 1.0, accuracy: 0.01)
@@ -143,7 +143,7 @@ final class CDSThemeTests: XCTestCase {
     }
 
     func testCustomColorThemeOverridesSelectively() {
-        let brand = CDSColors.light.with { $0.bgPrimary = Color(cdsRGB: 124, 58, 237) }
+        let brand = CDSColors.light.with { $0.bgPrimary = Color(cdsHex: 0x7C3AED) }
         let set = CDSThemeSet(light: brand)
         let resolved = set.resolve(.light).colors.bgPrimary.resolve(in: .init())
         XCTAssertEqual(Double(resolved.red), 124.0 / 255.0, accuracy: 0.01)
@@ -154,7 +154,7 @@ final class CDSThemeTests: XCTestCase {
     func testDerivingFromCustomSpectrumRebrandsAccents() {
         // Swap blue60 in a typed spectrum; the derived bgPrimary should follow.
         let palette = CDSSpectrum.light.with {
-            $0.blue = $0.blue.with { $0.step60 = Color(cdsRGB: 1, 2, 3) }
+            $0.blue = $0.blue.with { $0.step60 = Color(cdsHex: 0x010203) }
         }
         let colors = CDSColors.lightDeriving(from: palette)
         let primary = colors.bgPrimary.resolve(in: .init())
@@ -166,7 +166,7 @@ final class CDSThemeTests: XCTestCase {
     func testCdsThemeBuilderOverridesFromBase() {
         let acme = cdsTheme {
             $0.id = "acme"
-            $0.light.bgPrimary = Color(cdsRGB: 124, 58, 237)
+            $0.light.bgPrimary = Color(cdsHex: 0x7C3AED)
             $0.spacing.x2 = 24
         }
         XCTAssertEqual(acme.id, "acme")
@@ -190,7 +190,7 @@ final class CDSThemeTests: XCTestCase {
     func testChangingAnyTokenBreaksThemeEquality() {
         let base = CDSThemeSet.default.resolve(.light)
 
-        let colorChanged = cdsTheme { $0.light.bgPrimary = Color(cdsRGB: 1, 2, 3) }.resolve(.light)
+        let colorChanged = cdsTheme { $0.light.bgPrimary = Color(cdsHex: 0x010203) }.resolve(.light)
         XCTAssertNotEqual(base, colorChanged)
 
         let spacingChanged = cdsTheme { $0.spacing.x2 = 999 }.resolve(.light)
@@ -215,7 +215,7 @@ final class CDSThemeTests: XCTestCase {
     }
 
     func testProviderValueTakesPrecedenceOverFallback() {
-        let brand = cdsTheme { $0.light.bgPrimary = Color(cdsRGB: 1, 2, 3) }.resolve(.light)
+        let brand = cdsTheme { $0.light.bgPrimary = Color(cdsHex: 0x010203) }.resolve(.light)
         let resolved = CDSThemeEnvironment.resolved(stored: brand, scheme: .light, isPreview: false)
         XCTAssertEqual(resolved, brand)
     }
@@ -225,7 +225,7 @@ final class CDSThemeTests: XCTestCase {
         // These must stay split: injecting through the trapping `cdsTheme` getter crashes SwiftUI's
         // writable-key-path materialization at runtime.
         var env = EnvironmentValues()
-        let brand = cdsTheme { $0.light.bgPrimary = Color(cdsRGB: 4, 5, 6) }.resolve(.light)
+        let brand = cdsTheme { $0.light.bgPrimary = Color(cdsHex: 0x040506) }.resolve(.light)
         env.cdsThemeStorage = brand
         XCTAssertEqual(env.cdsTheme, brand)
     }
@@ -252,7 +252,7 @@ final class CDSThemeTests: XCTestCase {
     func testIllustrationColorsResolveByScheme() {
         XCTAssertEqual(
             CDSThemeSet.default.resolve(.light).illustrationColors.primary.resolve(in: .init()).blue,
-            Color(cdsRGB: 0, 82, 255).resolve(in: .init()).blue,
+            Color(cdsHex: 0x0052FF).resolve(in: .init()).blue,
             accuracy: 0.01
         )
     }

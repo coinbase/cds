@@ -146,7 +146,7 @@ Every scale has **two representations**:
 |           | Type                        | Needs the environment? | Scheme-specific? | Use for                                                          |
 | --------- | --------------------------- | ---------------------- | ---------------- | ---------------------------------------------------------------- |
 | **Name**  | `CDSColorToken.fgPositive`  | No                     | No               | State, domain logic, your own APIs, anything stored or persisted |
-| **Value** | `Color(cdsRGB: 9, 133, 81)` | Yes, to obtain         | Yes              | The final read, at the point you paint                           |
+| **Value** | `Color(cdsHex: 0x098551)`   | Yes, to obtain         | Yes              | The final read, at the point you paint                           |
 
 The rule that falls out: **pass names around, resolve to values at the edge.** A resolved `Color` is a
 snapshot of one scheme at one moment. Capture it in state and it goes stale the instant the user flips

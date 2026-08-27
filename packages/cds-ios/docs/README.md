@@ -42,8 +42,8 @@ Build `MyBrandTheme` with the `cdsTheme { }` builder, overriding only the tokens
 ```swift
 let MyBrandTheme: CDSThemeSet = cdsTheme {
     $0.id = "my-brand"
-    $0.light = $0.light.with { $0.bgPrimary = Color(cdsRGB: 123, 63, 228) }
-    $0.dark = $0.dark.with { $0.bgPrimary = Color(cdsRGB: 174, 138, 251) }
+    $0.light = $0.light.with { $0.bgPrimary = Color(cdsHex: 0x7B3FE4) }
+    $0.dark = $0.dark.with { $0.bgPrimary = Color(cdsHex: 0xAE8AFB) }
 }
 ```
 

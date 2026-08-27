@@ -87,8 +87,8 @@ CDSThemeProvider {
 // Adding a token to CDS never changes this call site (evolution-safe construction).
 let brand = cdsTheme {
     $0.id = "brand"
-    $0.light.bgPrimary = Color(cdsRGB: 124, 58, 237)
-    $0.dark.bgPrimary  = Color(cdsRGB: 124, 58, 237)
+    $0.light.bgPrimary = Color(cdsHex: 0x7C3AED)
+    $0.dark.bgPrimary  = Color(cdsHex: 0x7C3AED)
     $0.spacing.x2 = 20
     $0.typography[.body] = CDSTextAttributes(size: 17, lineHeight: 26, weight: .regular)
 }
@@ -98,7 +98,7 @@ CDSThemeProvider(theme: brand) {
 
 // Rebrand from a custom palette: override the spectrum and re-derive the semantic colors.
 let paletteBrand = cdsTheme {
-    $0.lightSpectrum = $0.lightSpectrum.with { $0.blue = $0.blue.with { $0.step60 = Color(cdsRGB: 124, 58, 237) } }
+    $0.lightSpectrum = $0.lightSpectrum.with { $0.blue = $0.blue.with { $0.step60 = Color(cdsHex: 0x7C3AED) } }
     $0.light = .lightDeriving(from: $0.lightSpectrum)
 }
 ```

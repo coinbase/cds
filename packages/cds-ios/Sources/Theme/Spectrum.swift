@@ -110,46 +110,46 @@ public struct CDSSpectrum: Sendable, Equatable {
 
     /// The `cds-default` spectrum in the light color scheme.
     public static let light = CDSSpectrum(
-        blue: cdsRamp("245,248,255", "211,225,255", "176,202,255", "146,182,255", "115,162,255", "70,132,255", "38,110,255", "16,94,255", "0,82,255", "0,75,235", "0,62,193", "0,41,130", "0,24,77"),
-        green: cdsRamp("245,255,251", "203,245,227", "163,235,205", "131,224,186", "101,214,167", "60,194,138", "34,173,115", "18,153,97", "9,133,81", "4,112,67", "2,83,50", "0,57,35", "0,31,18"),
-        orange: cdsRamp("255,250,245", "254,232,210", "253,213,176", "251,194,147", "249,174,118", "244,140,76", "237,112,47", "225,89,27", "207,71,14", "181,54,6", "145,39,2", "100,26,0", "51,13,0"),
-        gray: cdsRamp("255,255,255", "247,248,249", "238,240,243", "222,225,231", "206,210,219", "177,183,195", "137,144,158", "113,120,134", "91,97,110", "70,75,85", "50,53,61", "30,32,37", "10,11,13"),
-        indigo: cdsRamp("246,247,255", "230,232,255", "214,218,254", "198,204,253", "181,189,253", "148,161,251", "116,135,247", "89,111,242", "66,91,233", "47,74,215", "31,54,173", "17,32,107", "8,15,51"),
-        pink: cdsRamp("255,245,255", "253,228,253", "251,212,250", "248,195,245", "244,178,240", "235,143,227", "221,110,209", "203,81,187", "179,58,162", "149,39,133", "116,26,102", "83,17,72", "51,10,44"),
-        purple: cdsRamp("251,247,255", "244,232,255", "237,217,255", "230,201,255", "222,184,255", "205,153,253", "188,123,251", "157,107,242", "138,85,233", "119,67,215", "90,48,173", "54,27,107", "25,13,51"),
-        red: cdsRamp("255,245,246", "254,225,228", "253,206,210", "251,186,191", "249,166,173", "244,127,136", "237,89,102", "225,57,71", "207,32,47", "181,15,29", "145,5,16", "100,1,9", "51,0,4"),
-        teal: cdsRamp("240,254,255", "188,246,253", "136,237,251", "93,226,248", "51,213,244", "0,188,235", "0,169,221", "0,147,203", "0,123,179", "0,97,149", "0,71,116", "0,47,83", "0,27,51"),
-        yellow: cdsRamp("255,252,241", "255,244,192", "255,240,145", "255,234,100", "255,228,54", "247,210,26", "235,186,0", "207,151,0", "174,113,0", "136,76,0", "96,48,0", "58,20,0", "27,6,0"),
-        chartreuse: cdsRamp("245,255,250", "221,251,232", "198,247,209", "176,242,182", "159,238,155", "137,223,117", "127,208,87", "86,179,64", "53,151,48", "35,122,43", "25,93,41", "17,64,35", "7,26,17")
+        blue: cdsRamp(0xF5F8FF, 0xD3E1FF, 0xB0CAFF, 0x92B6FF, 0x73A2FF, 0x4684FF, 0x266EFF, 0x105EFF, 0x0052FF, 0x004BEB, 0x003EC1, 0x002982, 0x00184D),
+        green: cdsRamp(0xF5FFFB, 0xCBF5E3, 0xA3EBCD, 0x83E0BA, 0x65D6A7, 0x3CC28A, 0x22AD73, 0x129961, 0x098551, 0x047043, 0x025332, 0x003923, 0x001F12),
+        orange: cdsRamp(0xFFFAF5, 0xFEE8D2, 0xFDD5B0, 0xFBC293, 0xF9AE76, 0xF48C4C, 0xED702F, 0xE1591B, 0xCF470E, 0xB53606, 0x912702, 0x641A00, 0x330D00),
+        gray: cdsRamp(0xFFFFFF, 0xF7F8F9, 0xEEF0F3, 0xDEE1E7, 0xCED2DB, 0xB1B7C3, 0x89909E, 0x717886, 0x5B616E, 0x464B55, 0x32353D, 0x1E2025, 0x0A0B0D),
+        indigo: cdsRamp(0xF6F7FF, 0xE6E8FF, 0xD6DAFE, 0xC6CCFD, 0xB5BDFD, 0x94A1FB, 0x7487F7, 0x596FF2, 0x425BE9, 0x2F4AD7, 0x1F36AD, 0x11206B, 0x080F33),
+        pink: cdsRamp(0xFFF5FF, 0xFDE4FD, 0xFBD4FA, 0xF8C3F5, 0xF4B2F0, 0xEB8FE3, 0xDD6ED1, 0xCB51BB, 0xB33AA2, 0x952785, 0x741A66, 0x531148, 0x330A2C),
+        purple: cdsRamp(0xFBF7FF, 0xF4E8FF, 0xEDD9FF, 0xE6C9FF, 0xDEB8FF, 0xCD99FD, 0xBC7BFB, 0x9D6BF2, 0x8A55E9, 0x7743D7, 0x5A30AD, 0x361B6B, 0x190D33),
+        red: cdsRamp(0xFFF5F6, 0xFEE1E4, 0xFDCED2, 0xFBBABF, 0xF9A6AD, 0xF47F88, 0xED5966, 0xE13947, 0xCF202F, 0xB50F1D, 0x910510, 0x640109, 0x330004),
+        teal: cdsRamp(0xF0FEFF, 0xBCF6FD, 0x88EDFB, 0x5DE2F8, 0x33D5F4, 0x00BCEB, 0x00A9DD, 0x0093CB, 0x007BB3, 0x006195, 0x004774, 0x002F53, 0x001B33),
+        yellow: cdsRamp(0xFFFCF1, 0xFFF4C0, 0xFFF091, 0xFFEA64, 0xFFE436, 0xF7D21A, 0xEBBA00, 0xCF9700, 0xAE7100, 0x884C00, 0x603000, 0x3A1400, 0x1B0600),
+        chartreuse: cdsRamp(0xF5FFFA, 0xDDFBE8, 0xC6F7D1, 0xB0F2B6, 0x9FEE9B, 0x89DF75, 0x7FD057, 0x56B340, 0x359730, 0x237A2B, 0x195D29, 0x114023, 0x071A11)
     )
 
     /// The `cds-default` spectrum in the dark color scheme.
     public static let dark = CDSSpectrum(
-        blue: cdsRamp("0,16,51", "1,29,91", "1,42,130", "3,51,154", "5,59,177", "10,72,206", "19,84,225", "33,98,238", "55,115,245", "87,139,250", "132,170,253", "185,207,255", "245,248,255"),
-        green: cdsRamp("0,31,18", "0,48,29", "1,70,42", "2,82,48", "2,92,55", "6,112,68", "11,133,82", "21,153,98", "39,173,117", "68,194,141", "111,214,171", "171,235,208", "245,255,251"),
-        orange: cdsRamp("51,13,0", "79,20,0", "107,28,1", "131,36,2", "155,44,4", "189,59,9", "213,76,18", "230,96,32", "240,120,54", "248,150,86", "252,185,131", "254,219,185", "255,250,245"),
-        gray: cdsRamp("10,11,13", "20,21,25", "30,32,37", "40,43,49", "50,53,61", "70,75,85", "91,97,110", "114,120,134", "138,145,158", "165,170,182", "193,198,207", "224,226,231", "255,255,255"),
-        indigo: cdsRamp("8,15,51", "14,27,91", "21,39,130", "27,47,154", "33,56,177", "48,73,206", "68,92,225", "92,113,238", "121,138,245", "153,165,250", "187,194,253", "219,223,255", "246,247,255"),
-        pink: cdsRamp("51,10,44", "70,14,61", "89,19,78", "108,24,94", "126,30,111", "159,44,142", "187,64,170", "208,88,193", "225,117,214", "237,149,230", "246,184,243", "252,217,251", "255,245,255"),
-        purple: cdsRamp("25,13,51", "43,22,89", "73,30,137", "97,37,175", "123,45,211", "142,51,234", "164,84,244", "188,123,251", "205,153,253", "217,176,254", "230,201,255", "237,217,255", "251,247,255"),
-        red: cdsRamp("51,0,4", "79,0,7", "107,1,10", "131,4,14", "155,7,19", "189,19,33", "213,38,52", "230,64,78", "240,97,109", "248,134,144", "252,174,181", "254,213,216", "255,245,246"),
-        teal: cdsRamp("0,20,38", "0,32,59", "0,45,79", "0,58,99", "0,72,118", "0,99,153", "0,125,182", "0,149,205", "0,170,223", "6,190,236", "69,217,245", "149,239,251", "240,254,255"),
-        yellow: cdsRamp("27,6,0", "49,17,0", "81,40,0", "96,48,0", "115,64,0", "147,96,0", "175,128,0", "199,158,0", "222,189,23", "229,205,48", "242,222,94", "255,240,145", "255,252,241"),
-        chartreuse: cdsRamp("5,22,14", "14,54,29", "21,79,34", "29,103,36", "45,128,40", "73,152,54", "107,176,73", "123,200,105", "140,209,136", "158,217,163", "178,222,188", "209,238,220", "245,255,250")
+        blue: cdsRamp(0x001033, 0x011D5B, 0x012A82, 0x03339A, 0x053BB1, 0x0A48CE, 0x1354E1, 0x2162EE, 0x3773F5, 0x578BFA, 0x84AAFD, 0xB9CFFF, 0xF5F8FF),
+        green: cdsRamp(0x001F12, 0x00301D, 0x01462A, 0x025230, 0x025C37, 0x067044, 0x0B8552, 0x159962, 0x27AD75, 0x44C28D, 0x6FD6AB, 0xABEBD0, 0xF5FFFB),
+        orange: cdsRamp(0x330D00, 0x4F1400, 0x6B1C01, 0x832402, 0x9B2C04, 0xBD3B09, 0xD54C12, 0xE66020, 0xF07836, 0xF89656, 0xFCB983, 0xFEDBB9, 0xFFFAF5),
+        gray: cdsRamp(0x0A0B0D, 0x141519, 0x1E2025, 0x282B31, 0x32353D, 0x464B55, 0x5B616E, 0x727886, 0x8A919E, 0xA5AAB6, 0xC1C6CF, 0xE0E2E7, 0xFFFFFF),
+        indigo: cdsRamp(0x080F33, 0x0E1B5B, 0x152782, 0x1B2F9A, 0x2138B1, 0x3049CE, 0x445CE1, 0x5C71EE, 0x798AF5, 0x99A5FA, 0xBBC2FD, 0xDBDFFF, 0xF6F7FF),
+        pink: cdsRamp(0x330A2C, 0x460E3D, 0x59134E, 0x6C185E, 0x7E1E6F, 0x9F2C8E, 0xBB40AA, 0xD058C1, 0xE175D6, 0xED95E6, 0xF6B8F3, 0xFCD9FB, 0xFFF5FF),
+        purple: cdsRamp(0x190D33, 0x2B1659, 0x491E89, 0x6125AF, 0x7B2DD3, 0x8E33EA, 0xA454F4, 0xBC7BFB, 0xCD99FD, 0xD9B0FE, 0xE6C9FF, 0xEDD9FF, 0xFBF7FF),
+        red: cdsRamp(0x330004, 0x4F0007, 0x6B010A, 0x83040E, 0x9B0713, 0xBD1321, 0xD52634, 0xE6404E, 0xF0616D, 0xF88690, 0xFCAEB5, 0xFED5D8, 0xFFF5F6),
+        teal: cdsRamp(0x001426, 0x00203B, 0x002D4F, 0x003A63, 0x004876, 0x006399, 0x007DB6, 0x0095CD, 0x00AADF, 0x06BEEC, 0x45D9F5, 0x95EFFB, 0xF0FEFF),
+        yellow: cdsRamp(0x1B0600, 0x311100, 0x512800, 0x603000, 0x734000, 0x936000, 0xAF8000, 0xC79E00, 0xDEBD17, 0xE5CD30, 0xF2DE5E, 0xFFF091, 0xFFFCF1),
+        chartreuse: cdsRamp(0x05160E, 0x0E361D, 0x154F22, 0x1D6724, 0x2D8028, 0x499836, 0x6BB049, 0x7BC869, 0x8CD188, 0x9ED9A3, 0xB2DEBC, 0xD1EEDC, 0xF5FFFA)
     )
 }
 
-/// Builds a ramp from thirteen `"r,g,b"` literals in step order.
+/// Builds a ramp from thirteen `0xRRGGBB` literals in step order.
 private func cdsRamp(
-    _ s0: String, _ s5: String, _ s10: String, _ s15: String, _ s20: String,
-    _ s30: String, _ s40: String, _ s50: String, _ s60: String, _ s70: String,
-    _ s80: String, _ s90: String, _ s100: String
+    _ s0: UInt32, _ s5: UInt32, _ s10: UInt32, _ s15: UInt32, _ s20: UInt32,
+    _ s30: UInt32, _ s40: UInt32, _ s50: UInt32, _ s60: UInt32, _ s70: UInt32,
+    _ s80: UInt32, _ s90: UInt32, _ s100: UInt32
 ) -> CDSColorRamp {
     CDSColorRamp(
-        step0: Color(cdsSpectrum: s0), step5: Color(cdsSpectrum: s5), step10: Color(cdsSpectrum: s10),
-        step15: Color(cdsSpectrum: s15), step20: Color(cdsSpectrum: s20), step30: Color(cdsSpectrum: s30),
-        step40: Color(cdsSpectrum: s40), step50: Color(cdsSpectrum: s50), step60: Color(cdsSpectrum: s60),
-        step70: Color(cdsSpectrum: s70), step80: Color(cdsSpectrum: s80), step90: Color(cdsSpectrum: s90),
-        step100: Color(cdsSpectrum: s100)
+        step0: Color(cdsHex: s0), step5: Color(cdsHex: s5), step10: Color(cdsHex: s10),
+        step15: Color(cdsHex: s15), step20: Color(cdsHex: s20), step30: Color(cdsHex: s30),
+        step40: Color(cdsHex: s40), step50: Color(cdsHex: s50), step60: Color(cdsHex: s60),
+        step70: Color(cdsHex: s70), step80: Color(cdsHex: s80), step90: Color(cdsHex: s90),
+        step100: Color(cdsHex: s100)
     )
 }

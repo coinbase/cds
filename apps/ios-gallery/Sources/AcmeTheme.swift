@@ -9,8 +9,8 @@ extension CDSThemeSet {
         $0.id = "acme"
 
         // A violet brand accent, per scheme.
-        let brandLight = Color(cdsRGB: 124, 58, 237)
-        let brandDark = Color(cdsRGB: 167, 139, 250)
+        let brandLight = Color(cdsHex: 0x7C3AED)
+        let brandDark = Color(cdsHex: 0xA78BFA)
 
         $0.light.bgPrimary = brandLight
         $0.light.fgPrimary = brandLight

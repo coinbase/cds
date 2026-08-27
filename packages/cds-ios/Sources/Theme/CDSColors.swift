@@ -214,7 +214,7 @@ public extension CDSColors {
     /// Return a copy with a handful of tokens overridden.
     ///
     /// ```swift
-    /// let brand = CDSColors.light.with { $0.bgPrimary = Color(cdsRGB: 124, 58, 237) }
+    /// let brand = CDSColors.light.with { $0.bgPrimary = Color(cdsHex: 0x7C3AED) }
     /// ```
     func with(_ mutate: (inout CDSColors) -> Void) -> CDSColors {
         var copy = self

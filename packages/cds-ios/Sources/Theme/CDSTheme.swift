@@ -152,8 +152,8 @@ public struct CDSThemeSet: Sendable, Equatable {
 /// ```swift
 /// let acme = cdsTheme {
 ///     $0.id = "acme"
-///     $0.light.bgPrimary = Color(cdsRGB: 124, 58, 237)
-///     $0.dark.bgPrimary = Color(cdsRGB: 124, 58, 237)
+///     $0.light.bgPrimary = Color(cdsHex: 0x7C3AED)
+///     $0.dark.bgPrimary = Color(cdsHex: 0x7C3AED)
 ///     $0.spacing.x2 = 24
 /// }
 /// ```

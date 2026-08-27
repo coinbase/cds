@@ -23,7 +23,7 @@ together: when you add or touch a declaration, decide its visibility on purpose.
   `CDSSpectrumHueToken`, `CDSColorRampToken`, `CDSRadiusToken`, `CDSSpacingToken`,
   `CDSBorderWidthToken`, `CDSIconSizeToken`, `CDSAvatarSizeToken`, `CDSControlSizeToken`,
   `CDSIllustrationColorToken`, `CDSShadowToken`, `CDSTextStyle`), and the `\.cdsTheme` environment
-  accessor plus the `Color(cdsRGB:)` helper.
+  accessor plus the `Color(cdsHex:)` helper.
 - Components under `Sources/Components/` — `CDSText`, `CDSButton` (+ its variants/sizes),
   `CDSSlideButton`, and the shared `CDSSpinner` — are deliberately **`internal`**. They were
   experiments and are **not customer API yet**, exactly like Android shipping `Text`, `Button`, and

@@ -47,12 +47,12 @@ Steps, per hue (`CDSColorRampToken`): `step0`, `step5`, `step10`, `step15`, `ste
 `step40`, `step50`, `step60`, `step70`, `step80`, `step90`, `step100`.
 
 `step0` is the lightest end in the light scheme and the darkest in the dark scheme — a ramp inverts
-between schemes rather than being reused. Default RGB values are in `Sources/Theme/Spectrum.swift`
+between schemes rather than being reused. Default values are in `Sources/Theme/Spectrum.swift`
 (`CDSSpectrum.light` / `CDSSpectrum.dark`), or browse them in the theme gallery.
 
 ```swift
 $0.lightSpectrum = $0.lightSpectrum.with {
-    $0.blue = $0.blue.with { $0.step60 = Color(cdsRGB: 26, 92, 255) }
+    $0.blue = $0.blue.with { $0.step60 = Color(cdsHex: 0x1A5CFF) }
 }
 ```
 

@@ -84,7 +84,7 @@ final class CDSThemeProviderTests: XCTestCase {
 
     func testInvertedProviderResolvesOverriddenTokensOfNestedSet() {
         // A rebranded set that overrides the *dark* slice — the scheme inversion will land on.
-        let brandDark = Color(cdsRGB: 124, 58, 237)
+        let brandDark = Color(cdsHex: 0x7C3AED)
         let set = cdsTheme {
             $0.id = "acme"
             $0.dark.bgPrimary = brandDark
