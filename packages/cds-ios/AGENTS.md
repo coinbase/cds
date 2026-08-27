@@ -25,10 +25,12 @@ together: when you add or touch a declaration, decide its visibility on purpose.
   `CDSIllustrationColorToken`, `CDSShadowToken`, `CDSTextStyle`), and the `\.cdsTheme` environment
   accessor plus the `Color(cdsHex:)` helper.
 - Components under `Sources/Components/` — `CDSText`, `CDSButton` (+ its variants/sizes),
-  `CDSSlideButton`, and the shared `CDSSpinner` — are deliberately **`internal`**. They were
-  experiments and are **not customer API yet**, exactly like Android shipping `Text`, `Button`, and
-  `SlideButton` as `internal` for the first release. Ship them in the artifact; keep them off the
-  public surface until they stabilize. Do not add `public` to a component to make a consumer compile.
+  `CDSSlideButton`, and `CDSProgressCircle` (the indeterminate progress indicator) — are deliberately
+  **`internal`**. They were experiments and are **not customer API yet**, exactly like Android
+  shipping `Text`, `Button`, and `SlideButton` as `internal` for the first release. Ship them in the
+  artifact; keep them off the public surface until they stabilize. Do not add `public` to a component
+  to make a consumer compile. `Sources/Components/internal/` holds `ComponentMetrics` — the only
+  shared, non-component internal helper left there.
 - **Never widen visibility to make `apps/ios-gallery` compile.** The gallery is a consumer. It reaches
   the internal components with `@testable import CDSDesignSystem` (Debug builds enable testability),
   so it can demo the _real_ components rather than reimplementing stand-ins — an iOS advantage over

@@ -62,7 +62,7 @@ struct CDSSlideButton: View {
                             .stroke(colors.content, style: StrokeStyle(lineWidth: metrics.iconSize * 0.12, lineCap: .round, lineJoin: .round))
                             .frame(width: metrics.iconSize, height: metrics.iconSize)
                             .opacity(1 - checkedAlpha)
-                        CDSSpinner(color: colors.content, diameter: metrics.iconSize)
+                        CDSProgressCircle(color: colors.content, diameter: metrics.iconSize)
                             .opacity(checkedAlpha)
                     }
                     .padding(.trailing, handleInset)

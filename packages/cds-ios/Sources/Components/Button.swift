@@ -117,7 +117,7 @@ private struct CDSButtonInnerStyle<Leading: View, Trailing: View>: ButtonStyle {
 
         return HStack(spacing: theme.spacing.x1) {
             if loading {
-                CDSSpinner(color: colors.content, diameter: metrics.iconSize)
+                CDSProgressCircle(color: colors.content, diameter: metrics.iconSize)
             } else {
                 leadingIcon(colors.content)
                 CDSText(text, style: metrics.font, color: colors.content, lineLimit: 1)

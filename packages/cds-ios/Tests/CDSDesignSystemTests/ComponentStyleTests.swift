@@ -88,6 +88,13 @@ final class ComponentStyleTests: XCTestCase {
         }
     }
 
+    func testProgressCircleDiameterBySize() {
+        let icon = theme.iconSize
+        XCTAssertEqual(cdsProgressCircleDiameter(.s, theme: theme), icon.s)
+        XCTAssertEqual(cdsProgressCircleDiameter(.m, theme: theme), icon.m)
+        XCTAssertEqual(cdsProgressCircleDiameter(.l, theme: theme), icon.l)
+    }
+
     func testSlideButtonMetricsBySize() {
         let space = theme.spacing
         let radius = theme.radius

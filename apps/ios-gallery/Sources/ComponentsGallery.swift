@@ -9,11 +9,12 @@ struct ComponentsGallery: View {
     @State private var slideChecked = false
 
     var body: some View {
-        SectionCard("Components", subtitle: "CDSText · CDSButton · CDSSlideButton · inverted theme") {
+        SectionCard("Components", subtitle: "CDSText · CDSButton · CDSSlideButton · CDSProgressCircle · inverted theme") {
             VStack(alignment: .leading, spacing: cds.spacing.x3) {
                 text
                 buttons
                 slideButton
+                progressCircle
                 invertedDemo
             }
         }
@@ -54,6 +55,17 @@ struct ComponentsGallery: View {
                 checkedLabel: "Confirming…"
             )
             CDSButton(text: "Reset slider", action: { slideChecked = false }, variant: .secondary, size: .s)
+        }
+    }
+
+    private var progressCircle: some View {
+        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+            CDSText("CDSProgressCircle", style: .label1, color: cds.colors.fgMuted)
+            HStack(spacing: cds.spacing.x3) {
+                CDSProgressCircle(size: .s)
+                CDSProgressCircle(size: .m)
+                CDSProgressCircle(size: .l)
+            }
         }
     }
 
