@@ -19,7 +19,9 @@ Its versions are independent of the `@coinbase/cds-*` npm packages and of `com.c
   `CDSSpectrumHueToken`, `CDSColorRampToken`, `CDSRadiusToken`, `CDSSpacingToken`,
   `CDSBorderWidthToken`, `CDSIconSizeToken`, `CDSAvatarSizeToken`, `CDSControlSizeToken`,
   `CDSIllustrationColorToken`, `CDSShadowToken`, `CDSTextStyle`).
-- Theming only — no UI components yet.
+- Also ships `internal` (not-yet-public) UI components — `Text`, `Button`, `SlideButton`, and
+  `ProgressCircle` — compiled into the artifact but excluded from the public API. The theme layer is
+  the only public surface for now; these components stay `internal` until they stabilize.
 
 #### Requirements
 
