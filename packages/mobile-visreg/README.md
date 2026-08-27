@@ -13,9 +13,9 @@ Visual regression testing for CDS mobile components. Runs Maestro flows on [Brow
 ```
 packages/mobile-visreg/
   config/
-    enabled-routes.mjs          # Explicit opt-in list of routes + overlay route set
+    enabled-routes.mjs          # Explicit opt-in list of routes + overlay route → dismiss label
   src/
-    config.mjs                  # Re-exports enabled routes + default settings
+    config.mjs                  # Re-exports enabled routes + timing budgets
     generate-flows.mjs          # Generates flows/capture-all.yaml from the route list
     browserstack.mjs            # BrowserStack App Automate REST API client
     browserstack-run.mjs        # Orchestrator CLI — uploads app+flows, triggers build, downloads screenshots
@@ -153,8 +153,27 @@ Both iOS and Android run in parallel on `ubuntu-latest`. No macOS runner, simula
 Routes must be explicitly opted in. To add one:
 
 1. Open `config/enabled-routes.mjs` and add the route key to `enabledRoutes`.
-2. If the route opens an overlay (modal, tray, drawer, alert), add it to `overlayRoutes` as well and verify what button text closes it (the flow tries `Cancel` then `Close`).
+2. If the route opens an overlay (modal, tray, drawer, alert), add it to `overlayRoutes` as well, mapped to the **exact visible text** of the control that dismisses it. The dismiss tap is not optional — if the label is wrong the flow fails, which is deliberate: an overlay left open bleeds into the next route's screenshot.
 3. Confirm the route key exactly matches what `ExamplesListScreen` in `apps/expo-app` renders as the `ListCell` title.
+
+## Run duration
+
+The suite runs all routes serially on a single device, so wall time scales linearly with the route count. Two things dominate it, and both are capped deliberately:
+
+- **`waitForAnimationToEnd`** defaults to 15s in Maestro and only returns early once the screen is pixel-stable. Routes that animate indefinitely (charts, `Carousel`, `Coachmark`, `SlideButton`) never stabilize, so they would burn the full 15s on every call and still screenshot mid-animation. Both sub-flows pass an explicit `timeout`; static routes are unaffected because they settle and return well inside it.
+- **Optional element lookups** are a hardcoded 7s in Maestro and cannot be tuned per command. This is why overlay dismissal targets one declared label instead of trying several.
+
+Every run prints a `Timing:` line splitting queue time from execution time. If runs start failing, that line tells you whether the BrowserStack account is saturated or the suite itself got slower — tune with the variables below rather than guessing.
+
+| Variable                      | Default | Purpose                                            |
+| ----------------------------- | ------- | -------------------------------------------------- |
+| `VISREG_QUEUE_TIMEOUT_MS`     | 15m     | Max time a build may wait for a free device        |
+| `VISREG_RUN_TIMEOUT_MS`       | 40m     | Max time a build may spend executing on the device |
+| `VISREG_POLL_INTERVAL_MS`     | 15s     | Delay between build-status polls                   |
+| `VISREG_REQUEST_TIMEOUT_MS`   | 60s     | Per-request cap for BrowserStack REST calls        |
+| `VISREG_DOWNLOAD_TIMEOUT_MS`  | 5m      | Per-request cap for artifact downloads             |
+| `VISREG_UPLOAD_TIMEOUT_MS`    | 10m     | Per-request cap for app / test-suite uploads       |
+| `VISREG_DOWNLOAD_CONCURRENCY` | 8       | Max concurrent screenshot downloads                |
 
 ## Changing target devices
 

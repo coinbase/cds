@@ -14,20 +14,36 @@ import { openAsBlob } from 'node:fs';
 import { access, mkdir, rm, writeFile } from 'node:fs/promises';
 import { basename, join } from 'node:path';
 
+import { downloadConcurrency, timeouts } from './config.mjs';
+
 const API_BASE = 'https://api-cloud.browserstack.com/app-automate/maestro/v2';
 
-// Build statuses that mean "still working" — anything else is terminal.
-const RUNNING_STATUSES = new Set([
-  'running',
-  'queued',
-  'in_queue',
-  'created',
-  'pending',
-  'scheduled',
-]);
+// Statuses that mean the build exists but has not started executing on a
+// device yet. Time spent here is queue time, budgeted separately from run time.
+const QUEUED_STATUSES = new Set(['queued', 'in_queue', 'created', 'pending', 'scheduled']);
 
-const POLL_INTERVAL_MS = 15_000;
-const POLL_TIMEOUT_MS = 30 * 60 * 1000;
+// Build statuses that mean "still working" — anything else is terminal.
+const RUNNING_STATUSES = new Set(['running', ...QUEUED_STATUSES]);
+
+const MAX_REQUEST_ATTEMPTS = 3;
+const RETRY_BASE_DELAY_MS = 2000;
+
+/** Transient HTTP statuses worth retrying rather than failing the whole run. */
+const RETRYABLE_STATUSES = new Set([408, 425, 429, 500, 502, 503, 504]);
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
+async function backoff(attempt, maxAttempts, error) {
+  console.warn(`  ⚠ ${error.message.split('\n')[0]} — retry ${attempt}/${maxAttempts - 1}`);
+  await sleep(RETRY_BASE_DELAY_MS * attempt);
+}
+
+function formatDuration(ms) {
+  const totalSeconds = Math.round(ms / 1000);
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${minutes}m${String(seconds).padStart(2, '0')}s`;
+}
 
 function authHeader() {
   const username = process.env.BROWSERSTACK_USERNAME;
@@ -44,6 +60,16 @@ function authHeader() {
  * fetch wrapper that attaches BrowserStack basic auth only for BrowserStack
  * hosts. Artifact URLs are sometimes pre-signed on a different host (e.g. S3),
  * where sending an Authorization header would be rejected.
+ *
+ * Every request carries an explicit timeout. Node's fetch has none, so without
+ * one a stalled connection hangs forever — the poll loop only checks its
+ * deadline between requests, so a hung request outlives any build budget and
+ * runs until the CI job itself is killed.
+ *
+ * GETs are retried on transient failures. Polling a build issues well over a
+ * hundred requests across a run, and a single blip 25 minutes in used to
+ * discard the entire build. Writes are never retried: re-sending an upload or
+ * a build trigger would duplicate it.
  */
 async function bsFetch(url, options = {}) {
   // Use exact match or subdomain check (with leading dot) to prevent a host
@@ -54,12 +80,45 @@ async function bsFetch(url, options = {}) {
   if (isBrowserStackHost) {
     headers.Authorization = authHeader();
   }
-  const res = await fetch(url, { ...options, headers });
-  if (!res.ok) {
+
+  const { timeoutMs = timeouts.requestMs, ...fetchOptions } = options;
+  const method = (fetchOptions.method ?? 'GET').toUpperCase();
+  const maxAttempts = method === 'GET' ? MAX_REQUEST_ATTEMPTS : 1;
+
+  let lastError;
+  for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    let res;
+    try {
+      res = await fetch(url, {
+        ...fetchOptions,
+        headers,
+        signal: AbortSignal.timeout(timeoutMs),
+      });
+    } catch (err) {
+      // AbortSignal.timeout rejects with a TimeoutError; surface it as such.
+      lastError =
+        err.name === 'TimeoutError'
+          ? new Error(`Request timed out after ${timeoutMs}ms (${url})`)
+          : err;
+      if (attempt === maxAttempts) break;
+      await backoff(attempt, maxAttempts, lastError);
+      continue;
+    }
+
+    if (res.ok) return res;
+
     const body = await res.text().catch(() => '');
-    throw new Error(`Request failed ${res.status} ${res.statusText} (${url})\n${body}`);
+    const error = new Error(`Request failed ${res.status} ${res.statusText} (${url})\n${body}`);
+    // Bad credentials or a missing build will fail identically on every
+    // attempt, so retrying only delays the report.
+    if (!RETRYABLE_STATUSES.has(res.status)) throw error;
+
+    lastError = error;
+    if (attempt === maxAttempts) break;
+    await backoff(attempt, maxAttempts, lastError);
   }
-  return res;
+
+  throw lastError;
 }
 
 /**
@@ -82,7 +141,11 @@ export async function uploadApp(filePath, customId) {
   form.set('file', await openAsBlob(filePath), basename(filePath));
   if (customId) form.set('custom_id', customId);
 
-  const res = await bsFetch(`${API_BASE}/app`, { method: 'POST', body: form });
+  const res = await bsFetch(`${API_BASE}/app`, {
+    method: 'POST',
+    body: form,
+    timeoutMs: timeouts.uploadMs,
+  });
   const json = await res.json();
   console.log(`  → app_url: ${json.app_url}`);
   return json.app_url;
@@ -99,7 +162,11 @@ export async function uploadTestSuite(zipPath, customId) {
   form.set('file', await openAsBlob(zipPath), basename(zipPath));
   if (customId) form.set('custom_id', customId);
 
-  const res = await bsFetch(`${API_BASE}/test-suite`, { method: 'POST', body: form });
+  const res = await bsFetch(`${API_BASE}/test-suite`, {
+    method: 'POST',
+    body: form,
+    timeoutMs: timeouts.uploadMs,
+  });
   const json = await res.json();
   console.log(`  → test_suite_url: ${json.test_suite_url}`);
   return json.test_suite_url;
@@ -156,29 +223,69 @@ export async function getSessionDetails(buildId, sessionId) {
 }
 
 /**
- * Poll a build until it reaches a terminal status or the timeout elapses.
- * @returns {Promise<object>} the final build object
+ * Poll a build until it reaches a terminal status or a timeout elapses.
+ *
+ * Queue time and execution time get separate budgets so a saturated
+ * BrowserStack account is distinguishable from a suite that got slower — with
+ * a single combined budget both present identically as "timed out at N
+ * minutes". The returned timing is logged so runs are comparable over time.
+ *
+ * @returns {Promise<object>} the final build object, with a `timing` field
  */
 export async function pollBuild(
   buildId,
-  { intervalMs = POLL_INTERVAL_MS, timeoutMs = POLL_TIMEOUT_MS } = {},
+  {
+    intervalMs = timeouts.pollIntervalMs,
+    queueTimeoutMs = timeouts.queueMs,
+    runTimeoutMs = timeouts.runMs,
+  } = {},
 ) {
-  const deadline = Date.now() + timeoutMs;
+  const startedAt = Date.now();
+  let startedRunningAt = null;
+  let lastStatus = null;
+
   let build = await getBuild(buildId);
-  console.log(`  build ${buildId} status: ${build.status}`);
 
   while (RUNNING_STATUSES.has(build.status)) {
-    if (Date.now() > deadline) {
+    const now = Date.now();
+    const isQueued = QUEUED_STATUSES.has(build.status);
+    if (!isQueued && startedRunningAt === null) {
+      startedRunningAt = now;
+    }
+
+    if (build.status !== lastStatus) {
+      console.log(`  [${formatDuration(now - startedAt)}] build ${buildId} → ${build.status}`);
+      lastStatus = build.status;
+    }
+
+    if (isQueued && now - startedAt > queueTimeoutMs) {
       throw new Error(
-        `Timed out after ${Math.round(timeoutMs / 1000)}s waiting for build ${buildId}`,
+        `Build ${buildId} sat in "${build.status}" for ${formatDuration(now - startedAt)} ` +
+          `(limit ${formatDuration(queueTimeoutMs)}). The BrowserStack account is likely out of ` +
+          `free parallel sessions. Raise VISREG_QUEUE_TIMEOUT_MS or reduce concurrent runs.`,
       );
     }
-    await new Promise((r) => setTimeout(r, intervalMs));
+    if (!isQueued && now - startedRunningAt > runTimeoutMs) {
+      throw new Error(
+        `Build ${buildId} ran for ${formatDuration(now - startedRunningAt)} without finishing ` +
+          `(limit ${formatDuration(runTimeoutMs)}). The suite is too slow for its budget — ` +
+          `check the per-flow timings on the BrowserStack dashboard.`,
+      );
+    }
+
+    await sleep(intervalMs);
     build = await getBuild(buildId);
-    console.log(`  build ${buildId} status: ${build.status}`);
   }
 
-  return build;
+  const finishedAt = Date.now();
+  const queuedMs = (startedRunningAt ?? finishedAt) - startedAt;
+  const ranMs = startedRunningAt === null ? 0 : finishedAt - startedRunningAt;
+  console.log(
+    `  [${formatDuration(finishedAt - startedAt)}] build ${buildId} → ${build.status} ` +
+      `(queued ${formatDuration(queuedMs)}, ran ${formatDuration(ranMs)})`,
+  );
+
+  return { ...build, timing: { queuedMs, ranMs, totalMs: finishedAt - startedAt } };
 }
 
 /** Recursively collect every `screenshots` string URL found in a session object. */
@@ -206,7 +313,7 @@ const ZIP_MAGIC = '504b0304';
  * `Button_ios.png`) are preserved.
  */
 async function fetchScreenshotArtifact(url, outDir, label) {
-  const res = await bsFetch(url);
+  const res = await bsFetch(url, { timeoutMs: timeouts.downloadMs });
   const contentType = res.headers.get('content-type') ?? '';
   const buf = Buffer.from(await res.arrayBuffer());
 
@@ -218,7 +325,7 @@ async function fetchScreenshotArtifact(url, outDir, label) {
       const imageUrl = typeof item === 'string' ? item : (item.url ?? item.image_url);
       if (!imageUrl) continue;
       const name = typeof item === 'object' ? (item.name ?? item.filename) : undefined;
-      const imgRes = await bsFetch(imageUrl);
+      const imgRes = await bsFetch(imageUrl, { timeoutMs: timeouts.downloadMs });
       const imgBuf = Buffer.from(await imgRes.arrayBuffer());
       const fileName = ensurePng(name ?? basename(new URL(imageUrl).pathname));
       await writeFile(join(outDir, fileName), imgBuf);
@@ -249,27 +356,50 @@ function ensurePng(name) {
   return name.toLowerCase().endsWith('.png') ? name : `${name}.png`;
 }
 
+/** Run `worker` over `items` with at most `limit` in flight at once. */
+async function mapWithConcurrency(items, limit, worker) {
+  const queue = [...items];
+  const runners = Array.from({ length: Math.min(limit, queue.length) }, async () => {
+    let item;
+    while ((item = queue.shift()) !== undefined) {
+      await worker(item);
+    }
+  });
+  await Promise.all(runners);
+}
+
 /**
  * Download all screenshots produced by a build into `outDir`.
+ *
+ * Artifacts are fetched concurrently: this runs after the build has already
+ * finished, so it is pure added latency on the critical path, and a suite this
+ * size produces dozens of independent downloads.
+ *
  * @param {object} build the terminal build object from pollBuild/getBuild
  * @returns {Promise<number>} number of screenshot artifacts downloaded
  */
 export async function downloadScreenshots(build, outDir) {
   await mkdir(outDir, { recursive: true });
-  let artifactCount = 0;
 
-  for (const device of build.devices ?? []) {
-    for (const session of device.sessions ?? []) {
-      const details = await getSessionDetails(build.id, session.id);
-      const urls = collectScreenshotUrls(details);
-      let idx = 0;
-      for (const url of urls) {
-        const label = `${(device.device ?? 'device').replace(/\s+/g, '_')}-${session.id}-${idx++}`;
-        await fetchScreenshotArtifact(url, outDir, label);
-        artifactCount += 1;
-      }
+  const sessions = (build.devices ?? []).flatMap((device) =>
+    (device.sessions ?? []).map((session) => ({ device, session })),
+  );
+
+  const artifacts = [];
+  await mapWithConcurrency(sessions, downloadConcurrency, async ({ device, session }) => {
+    const details = await getSessionDetails(build.id, session.id);
+    const deviceLabel = (device.device ?? 'device').replace(/\s+/g, '_');
+    let idx = 0;
+    for (const url of collectScreenshotUrls(details)) {
+      artifacts.push({ url, label: `${deviceLabel}-${session.id}-${idx++}` });
     }
-  }
+  });
+
+  let artifactCount = 0;
+  await mapWithConcurrency(artifacts, downloadConcurrency, async ({ url, label }) => {
+    await fetchScreenshotArtifact(url, outDir, label);
+    artifactCount += 1;
+  });
 
   return artifactCount;
 }

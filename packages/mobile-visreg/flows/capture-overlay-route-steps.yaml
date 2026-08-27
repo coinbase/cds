@@ -2,12 +2,16 @@ appId: ${APP_ID}
 ---
 # Sub-flow for overlay routes (alerts, modals, trays, drawers, etc.).
 # Same search-based navigation as capture-route-steps.yaml, with an extra
-# Open/Cancel step to capture the overlay before going back.
-# Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
+# Open/dismiss step to capture the overlay before going back.
+# Required env vars: ROUTE_NAME, DISMISS_LABEL, PLATFORM_SUFFIX
+# (inherited from capture-all.yaml)
+#
+# See capture-route-steps.yaml for why every waitForAnimationToEnd is capped.
 
 - tapOn:
     id: search-button
-- waitForAnimationToEnd
+- waitForAnimationToEnd:
+    timeout: 1500
 - inputText: ${ROUTE_NAME}
 - assertVisible:
     id: exact-match-button-cell-pressable
@@ -15,19 +19,19 @@ appId: ${APP_ID}
     id: exact-match-button-cell-pressable
 - assertVisible:
     id: mobile-playground-screen
-- waitForAnimationToEnd
+- waitForAnimationToEnd:
+    timeout: 2500
 - tapOn: 'Open'
-- waitForAnimationToEnd
+- waitForAnimationToEnd:
+    timeout: 2500
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
-# Different overlay components use different dismiss button text.
-# AlertBasic/ModalBasic use "Cancel"; TrayBasic uses "Close". Try both.
+# Not optional: an overlay left open would bleed into the next route's
+# screenshot, so a renamed dismiss control must fail this flow rather than
+# silently continue. The label comes from overlayRoutes in enabled-routes.mjs.
 - tapOn:
-    text: 'Cancel'
-    optional: true
-- tapOn:
-    text: 'Close'
-    optional: true
-- waitForAnimationToEnd
+    text: ${DISMISS_LABEL}
+- waitForAnimationToEnd:
+    timeout: 1500
 - tapOn:
     id: nav-back-button
 # No waitForAnimationToEnd here — the next sub-flow starts with
