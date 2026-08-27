@@ -30,11 +30,17 @@ public struct CDSShadowScale: Sendable, Equatable {
     public var elevation2: CDSShadow
 
     public init(
-        elevation1: CDSShadow = CDSShadow(radius: 12, y: 8),
+        elevation1: CDSShadow = CDSShadow(),
         elevation2: CDSShadow = CDSShadow(radius: 24, y: 8)
     ) {
         self.elevation1 = elevation1
         self.elevation2 = elevation2
+    }
+
+    public func with(_ mutate: (inout CDSShadowScale) -> Void) -> CDSShadowScale {
+        var copy = self
+        mutate(&copy)
+        return copy
     }
 
     /// Resolve a shadow token: `theme.shadow[.elevation1]`. Pairs with ``CDSShadowToken``.

@@ -9,23 +9,27 @@ enum CDSSlideButtonSize { case s, m, l }
 
 /// Resolved handle/content colors for a ``CDSSlideButtonVariant``. The track is always
 /// `bgSecondary`; only the handle recolors.
-struct CDSSlideButtonColors: Equatable {
+struct CDSSlideButtonColors {
     let container: Color
     let content: Color
 }
 
 func cdsSlideButtonColors(_ variant: CDSSlideButtonVariant, theme: CDSTheme) -> CDSSlideButtonColors {
-    let colors = theme.colors
+    // The handle mirrors the equivalent solid button variant, so derive from the button mapping
+    // rather than re-listing the same tokens.
+    let buttonVariant: CDSButtonVariant
     switch variant {
-    case .primary: return CDSSlideButtonColors(container: colors.bgPrimary, content: colors.fgInverse)
-    case .positive: return CDSSlideButtonColors(container: colors.bgPositive, content: colors.fgInverse)
-    case .negative: return CDSSlideButtonColors(container: colors.bgNegative, content: colors.fgInverse)
+    case .primary: buttonVariant = .primary
+    case .positive: buttonVariant = .positive
+    case .negative: buttonVariant = .negative
     }
+    let colors = cdsButtonColors(buttonVariant, transparent: false, theme: theme)
+    return CDSSlideButtonColors(container: colors.container, content: colors.content)
 }
 
 /// Resolved size-derived metrics for a ``CDSSlideButtonSize``. Height is not a field: it emerges
 /// from `paddingY` plus the font's line height, and the collapsed handle is a square of that height.
-struct CDSSlideButtonMetrics: Equatable {
+struct CDSSlideButtonMetrics {
     let paddingY: CGFloat
     let labelPaddingX: CGFloat
     let radius: CGFloat

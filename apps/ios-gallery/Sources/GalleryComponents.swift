@@ -1,6 +1,27 @@
 @testable import CDSDesignSystem
 import SwiftUI
 
+extension View {
+    /// The gallery's bordered-surface look: clip to a rounded rect and stroke the theme's hairline.
+    func cdsBorderedCard(radius: CGFloat) -> some View {
+        modifier(BorderedCard(radius: radius))
+    }
+}
+
+private struct BorderedCard: ViewModifier {
+    @Environment(\.cdsTheme) private var cds
+    let radius: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .clipShape(RoundedRectangle(cornerRadius: radius))
+            .overlay(
+                RoundedRectangle(cornerRadius: radius)
+                    .strokeBorder(cds.colors.bgLine, lineWidth: cds.borderWidth.w100)
+            )
+    }
+}
+
 /// A titled card that groups a gallery section, styled from the active theme.
 struct SectionCard<Content: View>: View {
     @Environment(\.cdsTheme) private var cds
@@ -27,11 +48,7 @@ struct SectionCard<Content: View>: View {
         .padding(cds.spacing.x2)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(cds.colors.bgElevation1)
-        .clipShape(RoundedRectangle(cornerRadius: cds.radius.r300))
-        .overlay(
-            RoundedRectangle(cornerRadius: cds.radius.r300)
-                .strokeBorder(cds.colors.bgLine, lineWidth: cds.borderWidth.w100)
-        )
+        .cdsBorderedCard(radius: cds.radius.r300)
     }
 }
 
@@ -46,10 +63,7 @@ struct Swatch: View {
             RoundedRectangle(cornerRadius: cds.radius.r200)
                 .fill(color)
                 .frame(height: 44)
-                .overlay(
-                    RoundedRectangle(cornerRadius: cds.radius.r200)
-                        .strokeBorder(cds.colors.bgLine, lineWidth: cds.borderWidth.w100)
-                )
+                .cdsBorderedCard(radius: cds.radius.r200)
             CDSText(label, style: .legal, color: cds.colors.fgMuted)
                 .lineLimit(1)
         }

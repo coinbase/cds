@@ -1,14 +1,16 @@
 import SwiftUI
 
 private let pressedScale = 0.98
-private let disabledAlpha = 0.4
 private let pressedScrimOpacity = 0.15
 
 /// CDS's primary call-to-action control. `internal` — not customer API yet. Covers `variant`,
 /// `size`, `enabled`/`loading`, `transparent`, `fullWidth`, and leading/trailing icon slots.
 /// Colors and metrics come from the ambient ``CDSTheme``. Icon slots receive the resolved content
 /// color so an icon's tint matches the label across variants and themes.
-struct CDSButton: View {
+///
+/// The icon slots are generic (`Leading`/`Trailing` default to `EmptyView`) so an icon keeps its
+/// concrete view type instead of being erased through `AnyView`.
+struct CDSButton<Leading: View, Trailing: View>: View {
     @Environment(\.cdsTheme) private var theme
 
     let text: String
@@ -19,8 +21,32 @@ struct CDSButton: View {
     var loading: Bool = false
     var transparent: Bool = false
     var fullWidth: Bool = false
-    var leadingIcon: ((Color) -> AnyView)? = nil
-    var trailingIcon: ((Color) -> AnyView)? = nil
+    let leadingIcon: (Color) -> Leading
+    let trailingIcon: (Color) -> Trailing
+
+    init(
+        text: String,
+        action: @escaping () -> Void,
+        variant: CDSButtonVariant = .primary,
+        size: CDSButtonSize = .l,
+        isEnabled: Bool = true,
+        loading: Bool = false,
+        transparent: Bool = false,
+        fullWidth: Bool = false,
+        @ViewBuilder leadingIcon: @escaping (Color) -> Leading,
+        @ViewBuilder trailingIcon: @escaping (Color) -> Trailing
+    ) {
+        self.text = text
+        self.action = action
+        self.variant = variant
+        self.size = size
+        self.isEnabled = isEnabled
+        self.loading = loading
+        self.transparent = transparent
+        self.fullWidth = fullWidth
+        self.leadingIcon = leadingIcon
+        self.trailingIcon = trailingIcon
+    }
 
     var body: some View {
         let colors = cdsButtonColors(variant, transparent: transparent, theme: theme)
@@ -43,9 +69,36 @@ struct CDSButton: View {
     }
 }
 
+extension CDSButton where Leading == EmptyView, Trailing == EmptyView {
+    /// The common icon-less button — the general initializer's icon slots default to `EmptyView`.
+    init(
+        text: String,
+        action: @escaping () -> Void,
+        variant: CDSButtonVariant = .primary,
+        size: CDSButtonSize = .l,
+        isEnabled: Bool = true,
+        loading: Bool = false,
+        transparent: Bool = false,
+        fullWidth: Bool = false
+    ) {
+        self.init(
+            text: text,
+            action: action,
+            variant: variant,
+            size: size,
+            isEnabled: isEnabled,
+            loading: loading,
+            transparent: transparent,
+            fullWidth: fullWidth,
+            leadingIcon: { _ in EmptyView() },
+            trailingIcon: { _ in EmptyView() }
+        )
+    }
+}
+
 /// Draws the whole button. Lives in a `ButtonStyle` because `configuration.isPressed` — needed for
 /// the press scale + scrim — is only available there.
-private struct CDSButtonInnerStyle: ButtonStyle {
+private struct CDSButtonInnerStyle<Leading: View, Trailing: View>: ButtonStyle {
     let text: String
     let theme: CDSTheme
     let colors: CDSButtonColors
@@ -53,8 +106,8 @@ private struct CDSButtonInnerStyle: ButtonStyle {
     let isEnabled: Bool
     let loading: Bool
     let fullWidth: Bool
-    let leadingIcon: ((Color) -> AnyView)?
-    let trailingIcon: ((Color) -> AnyView)?
+    let leadingIcon: (Color) -> Leading
+    let trailingIcon: (Color) -> Trailing
 
     func makeBody(configuration: Configuration) -> some View {
         let active = configuration.isPressed && isEnabled && !loading
@@ -66,9 +119,9 @@ private struct CDSButtonInnerStyle: ButtonStyle {
             if loading {
                 CDSSpinner(color: colors.content, diameter: metrics.iconSize)
             } else {
-                leadingIcon?(colors.content)
+                leadingIcon(colors.content)
                 CDSText(text, style: metrics.font, color: colors.content, lineLimit: 1)
-                trailingIcon?(colors.content)
+                trailingIcon(colors.content)
             }
         }
         .padding(.horizontal, metrics.paddingX)
@@ -78,7 +131,7 @@ private struct CDSButtonInnerStyle: ButtonStyle {
         .overlay(active ? scrim.opacity(pressedScrimOpacity) : .clear)
         .clipShape(shape)
         .scaleEffect(active ? pressedScale : 1)
-        .opacity(isEnabled ? 1 : disabledAlpha)
+        .opacity(isEnabled ? 1 : cdsDisabledAlpha)
         .animation(.easeOut(duration: 0.12), value: active)
     }
 }

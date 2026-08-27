@@ -33,6 +33,12 @@ public struct CDSSpacing: Sendable, Equatable {
         self.x8 = x8; self.x9 = x9; self.x10 = x10
     }
 
+    public func with(_ mutate: (inout CDSSpacing) -> Void) -> CDSSpacing {
+        var copy = self
+        mutate(&copy)
+        return copy
+    }
+
     /// Resolve a spacing token: `theme.spacing[.x2]`. Pairs with ``CDSSpacingToken``.
     public subscript(_ token: CDSSpacingToken) -> CGFloat {
         switch token {
@@ -83,6 +89,12 @@ public struct CDSRadius: Sendable, Equatable {
         self.r800 = r800; self.r900 = r900; self.r1000 = r1000
     }
 
+    public func with(_ mutate: (inout CDSRadius) -> Void) -> CDSRadius {
+        var copy = self
+        mutate(&copy)
+        return copy
+    }
+
     /// Resolve a border-radius token: `theme.radius[.r400]`. Pairs with ``CDSRadiusToken`` for
     /// dynamic, data-driven, and serialized lookups (mirrors ``CDSColors/subscript(_:)``).
     public subscript(_ token: CDSRadiusToken) -> CGFloat {
@@ -119,6 +131,12 @@ public struct CDSBorderWidth: Sendable, Equatable {
     ) {
         self.w0 = w0; self.w100 = w100; self.w200 = w200
         self.w300 = w300; self.w400 = w400; self.w500 = w500
+    }
+
+    public func with(_ mutate: (inout CDSBorderWidth) -> Void) -> CDSBorderWidth {
+        var copy = self
+        mutate(&copy)
+        return copy
     }
 
     /// Resolve a border-width token: `theme.borderWidth[.w100]`. Pairs with ``CDSBorderWidthToken``.

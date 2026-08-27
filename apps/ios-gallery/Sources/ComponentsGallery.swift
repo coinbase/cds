@@ -78,10 +78,6 @@ private struct InvertedCard: View {
             .padding(cds.spacing.x2)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(cds.colors.bg)
-            .clipShape(RoundedRectangle(cornerRadius: cds.radius.r300))
-            .overlay(
-                RoundedRectangle(cornerRadius: cds.radius.r300)
-                    .strokeBorder(cds.colors.bgLine, lineWidth: cds.borderWidth.w100)
-            )
+            .cdsBorderedCard(radius: cds.radius.r300)
     }
 }

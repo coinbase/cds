@@ -90,6 +90,8 @@ public struct CDSIllustrationColors: Sendable, Equatable {
         primary: Color(cdsRGB: 0, 82, 255),
         black: Color(cdsRGB: 10, 11, 13),
         white: Color(cdsRGB: 255, 255, 255),
+        // The light grays are intentionally non-monotonic (gray2 is near-black), matching
+        // `lightIllustrationColor` in `defaultTheme.ts` — leave the values as-is.
         gray: Color(cdsRGB: 206, 210, 219),
         gray2: Color(cdsRGB: 10, 11, 15),
         gray3: Color(cdsRGB: 206, 210, 220),

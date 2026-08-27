@@ -8,7 +8,7 @@ enum CDSButtonSize { case xs, s, m, l }
 
 /// Resolved container/content colors for a ``CDSButtonVariant``. Transparent variants use a true
 /// `.clear` container so the button reads correctly on any surface.
-struct CDSButtonColors: Equatable {
+struct CDSButtonColors {
     let container: Color
     let content: Color
 }
@@ -35,7 +35,7 @@ func cdsButtonColors(_ variant: CDSButtonVariant, transparent: Bool, theme: CDST
 
 /// Resolved size-derived metrics for a ``CDSButtonSize``. There is no `height` field: height falls
 /// out of `paddingY` plus the font's line height.
-struct CDSButtonMetrics: Equatable {
+struct CDSButtonMetrics {
     let paddingX: CGFloat
     let paddingY: CGFloat
     let radius: CGFloat

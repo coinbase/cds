@@ -11,6 +11,12 @@ public struct CDSIconSize: Sendable, Equatable {
         self.xs = xs; self.s = s; self.m = m; self.l = l
     }
 
+    public func with(_ mutate: (inout CDSIconSize) -> Void) -> CDSIconSize {
+        var copy = self
+        mutate(&copy)
+        return copy
+    }
+
     /// Resolve an icon-size token: `theme.iconSize[.m]`. Pairs with ``CDSIconSizeToken``.
     public subscript(_ token: CDSIconSizeToken) -> CGFloat {
         switch token {
@@ -39,6 +45,12 @@ public struct CDSAvatarSize: Sendable, Equatable {
     ) {
         self.s = s; self.m = m; self.l = l
         self.xl = xl; self.xxl = xxl; self.xxxl = xxxl
+    }
+
+    public func with(_ mutate: (inout CDSAvatarSize) -> Void) -> CDSAvatarSize {
+        var copy = self
+        mutate(&copy)
+        return copy
     }
 
     /// Resolve an avatar-size token: `theme.avatarSize[.xl]`. Pairs with ``CDSAvatarSizeToken``.
@@ -76,6 +88,12 @@ public struct CDSControlSize: Sendable, Equatable {
         self.switchHeight = switchHeight
         self.switchThumbSize = switchThumbSize
         self.tileSize = tileSize
+    }
+
+    public func with(_ mutate: (inout CDSControlSize) -> Void) -> CDSControlSize {
+        var copy = self
+        mutate(&copy)
+        return copy
     }
 
     /// Resolve a control measurement: `theme.controlSize[.checkboxSize]`. Pairs with ``CDSControlSizeToken``.

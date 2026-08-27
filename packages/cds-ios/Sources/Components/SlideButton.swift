@@ -1,7 +1,9 @@
 import SwiftUI
 
-private let disabledAlpha = 0.4
 private let settleSpring = Animation.spring(response: 0.35, dampingFraction: 0.6)
+// A tap that never moves the handle must not confirm, even on a track so narrow that the collapsed
+// handle alone already exceeds `checkThreshold`.
+private let minConfirmProgress: CGFloat = 0.01
 
 /// A "slide to confirm" control for actions that shouldn't trigger on an accidental tap.
 /// `internal` — not customer API yet. Covers `variant`, `size`, `enabled`, `checkThreshold`, and
@@ -20,10 +22,8 @@ struct CDSSlideButton: View {
     var checkThreshold: CGFloat = 0.7
     var onSlideComplete: (() -> Void)? = nil
 
-    // `progress` is the 0…1 position of the handle within its travel; `dragStart` captures it at
-    // gesture begin so the drag is relative.
+    // `progress` is the 0…1 position of the handle within its travel.
     @State private var progress: CGFloat = 0
-    @State private var dragStart: CGFloat = 0
 
     var body: some View {
         let colors = cdsSlideButtonColors(variant, theme: theme)
@@ -76,14 +76,13 @@ struct CDSSlideButton: View {
                 DragGesture(minimumDistance: 0)
                     .onChanged { value in
                         guard isEnabled, !checked else { return }
-                        if dragStart == 0, progress == 0 { dragStart = progress }
                         let range = max(width * (1 - collapsedFraction), 1)
-                        progress = min(max(dragStart + value.translation.width / range, 0), 1)
+                        progress = min(max(value.translation.width / range, 0), 1)
                     }
                     .onEnded { _ in
                         guard isEnabled, !checked else { return }
                         let finalDisplayed = collapsedFraction + progress * (1 - collapsedFraction)
-                        if finalDisplayed >= checkThreshold {
+                        if progress >= minConfirmProgress, finalDisplayed >= checkThreshold {
                             // Fire callbacks before the settle animation so the caller isn't delayed
                             // by the spring's duration.
                             checked = true
@@ -91,16 +90,14 @@ struct CDSSlideButton: View {
                             withAnimation(settleSpring) { progress = 1 }
                         } else {
                             withAnimation(settleSpring) { progress = 0 }
-                            dragStart = 0
                         }
                     }
             )
         }
         .frame(height: height)
-        .opacity(isEnabled ? 1 : disabledAlpha)
+        .opacity(isEnabled ? 1 : cdsDisabledAlpha)
         .onChange(of: checked) { _, isChecked in
             withAnimation(settleSpring) { progress = isChecked ? 1 : 0 }
-            if !isChecked { dragStart = 0 }
         }
     }
 }

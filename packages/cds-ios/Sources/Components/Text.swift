@@ -1,7 +1,5 @@
 import SwiftUI
 
-private let disabledAlpha = 0.4
-
 /// CDS's text primitive. `internal` — not customer API yet. `style` drives family/size/weight/
 /// line-height (read from `theme.typography`); `color` defaults to `fg`. Roles whose typography
 /// marks `uppercased` (e.g. `.caption`) are uppercased automatically.
@@ -51,7 +49,7 @@ struct CDSText: View {
             .foregroundStyle(color ?? theme.colors.fg)
             .multilineTextAlignment(alignment)
             .lineLimit(lineLimit)
-            .opacity(isEnabled ? 1 : disabledAlpha)
+            .opacity(isEnabled ? 1 : cdsDisabledAlpha)
     }
 }
 
