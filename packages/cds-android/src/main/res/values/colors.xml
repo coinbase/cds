@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      Exposed for consuming apps' own themes.xml / launch theme (window background, splash
+      screen): the native chrome that paints before any Compose code runs, so it can't read
+      CdsThemeProvider. Nothing in this module reads these; Compose UI uses CdsTheme.color
+      directly. Must be kept in sync by hand with the `bg` token in CdsDefaultColorPalette (Color.kt).
+
+      Named cds_default_* because these mirror CdsDefaultTheme specifically. A consumer supplying
+      their own CdsThemeConfig to CdsThemeProvider should define their own chrome color resources
+      (or override these by name) rather than assume this default theme's bg applies to them.
+    -->
+    <color name="cds_default_bg_light">#FFFFFFFF</color>
+    <color name="cds_default_bg_dark">#FF0A0B0D</color>
+</resources>

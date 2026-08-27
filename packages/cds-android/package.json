@@ -1,0 +1,7 @@
+{
+  "name": "cds-android",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Placeholder manifest. The real artifact is a Gradle/Maven AAR (com.coinbase.cds:cds) built from build.gradle.kts; this file only exists so Yarn and the Nx CI helpers can see the project.",
+  "license": "Apache-2.0"
+}

@@ -58,6 +58,41 @@ yarn nx run expo-app:android
 
 See [apps/expo-app/README.md](apps/expo-app/README.md) for details.
 
+### Native Android App
+
+```sh
+yarn nx run android-app:launch
+```
+
+Requires JDK 21 and the Android SDK, which `yarn install` does not provide. See
+[packages/cds-android/README.md](packages/cds-android/README.md) for setup.
+
+Unlike the Expo app, there is no dev server: Compose compiles into the APK, so `launch` builds,
+installs, and starts the app and then exits, and you re-run it to pick up changes.
+
+**For Kotlin work, open `android/` in Android Studio** — that folder, not the repo root. It is the
+Gradle root for both Android projects, and Studio is where the fast feedback loop lives: `@Preview`
+renders composables with no emulator, and Live Edit patches a running app without a rebuild.
+Neither has a command-line equivalent. The modules still point at `packages/cds-android` and
+`apps/android-app`, so you are editing the same files either way. See
+[android/README.md](android/README.md).
+
+## Platforms
+
+CDS ships on three platforms, and they are at different stages:
+
+| Platform                         | Package                | Distribution                               |
+| -------------------------------- | ---------------------- | ------------------------------------------ |
+| Web (React)                      | `packages/web`         | npm, `@coinbase/cds-web`                   |
+| Mobile (React Native)            | `packages/mobile`      | npm, `@coinbase/cds-mobile`                |
+| Native Android (Jetpack Compose) | `packages/cds-android` | GitHub Release AAR, `com.coinbase.cds:cds` |
+
+Web and React Native share design tokens through `@coinbase/cds-common`. Kotlin cannot consume a
+TypeScript package, so the Android tokens are currently a hand-maintained port and **will drift**
+from the other two until we have a shared token source that generates all three. That codegen is
+the intended way to unite the platforms; treating any one package's tokens as authoritative in the
+meantime is a mistake.
+
 ## Contributing
 
 We welcome contributions to the Coinbase Design System! Please read our [Contributing Guide](CONTRIBUTING.md) for details on our development process, coding standards, and how to submit pull requests.

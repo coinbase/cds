@@ -1,0 +1,7 @@
+{
+  "name": "android-app",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Placeholder manifest. The real build is the Gradle module :app; this file only exists so Yarn and the Nx CI helpers can see the project.",
+  "license": "Apache-2.0"
+}

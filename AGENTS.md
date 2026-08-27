@@ -1,10 +1,15 @@
 ## Overview
 
-This is the Coinbase Design System (CDS) - a cross-platform React component library.
+This is the Coinbase Design System (CDS) - a cross-platform component library.
 Primary language: Typescript
 Package manager: yarn
 Task runner & monorepo tooling: Nx
 Runtime: NodeJS (see .nvmrc for version)
+
+CDS ships on three platforms: web (React), mobile (React Native), and **native Android**
+(Kotlin/Jetpack Compose). The Android package shares no toolchain with the other two - it is
+Gradle + JDK 21 + the Android SDK, not Yarn/Nx-driven bundling. Everything in this file describes
+the JavaScript side unless a section says otherwise; see "Native Android" below.
 
 ## Agent Guidelines
 
@@ -13,6 +18,9 @@ Runtime: NodeJS (see .nvmrc for version)
   1. run the unit tests for the **specific file(s)** you modified
   2. run typecheck on the **specific package(s)** you modified
   3. run the formatter
+  - In Kotlin packages none of those three apply. Run `yarn nx run cds-android:test` and
+    `yarn nx run cds-android:assemble` instead - there is no tsc, no Jest, and Prettier does not
+    touch `.kt`/`.kts`.
 - For complex tasks, ask clarifying questions to the user before executing
 - ALWAYS look for relevant skills and rules you can apply before beginning your work
 
@@ -58,6 +66,43 @@ Runtime: NodeJS (see .nvmrc for version)
 - **`apps/docs/`** - Public documentation website (Docusaurus)
 - **`apps/storybook/`** - Component development and testing environment for cds-web
 - **`apps/expo-app/`** - Expo app for testing and visual regression of CDS mobile components
+- **`packages/cds-android/`** - Native Android components, Kotlin/Jetpack Compose (`com.coinbase.cds:cds`)
+- **`apps/android-app/`** - Native Android demo app that consumes `packages/cds-android` from source
+- **`android/`** - Gradle root for the two projects above (wrapper, version catalog, plugin classpath)
+
+## Native Android
+
+Kotlin/Jetpack Compose, built by Gradle. Read `packages/cds-android/AGENTS.md` before editing
+anything under `packages/cds-android/` - it is the source of truth for that module's API
+boundary. Load the `jetpack-best-practices` skill when writing Compose.
+
+**Layout.** The Gradle root is `android/`, and it maps two Gradle modules onto the Nx layout:
+`:cds` -> `packages/cds-android`, `:app` -> `apps/android-app`. Nx project names are
+`cds-android` and `android-app`. Open `android/` in Android Studio; run CLI commands from the repo
+root.
+
+**Commands.** These shell out to Gradle and require JDK 21 plus the Android SDK:
+
+- `yarn nx run cds-android:assemble` - build the AAR
+- `yarn nx run cds-android:test` - JUnit unit tests (headless composition, no Robolectric)
+- `yarn nx run android-app:launch` - build, install, and start the demo app on a device/emulator
+- `./android/gradlew -p android <task>` - anything Nx does not wrap
+
+**Rules.**
+
+- `:cds` compiles with Kotlin **explicit API mode**. Do not add a `public` declaration unless it
+  is intentional customer API.
+- Tag every Android Nx project `platform:android`. JavaScript CI (`ci.yml`) excludes that tag from
+  every `nx affected` job; Android unit tests run in a separate workflow
+  (`.github/workflows/android.yml`) on runners with JDK 21 and the Android SDK. Do not fold
+  Gradle jobs into `ci.yml`.
+- Never name an Android Nx target `build`, `typecheck`, or `lint`. Those names are wired to
+  JavaScript CI jobs that run on machines with no JDK or Android SDK.
+- Android versions independently, in Gradle. Never fold it into `yarn release` or the 9.x version
+  sync.
+- Kotlin cannot import `@coinbase/cds-common`. Android tokens are a hand-port today; shared
+  codegen is the goal, not something to fake with a runtime dependency.
+- There is no Kotlin linter configured yet. Formatting follows Android Studio's formatter.
 
 ## Skills
 

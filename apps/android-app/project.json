@@ -1,0 +1,60 @@
+{
+  "name": "android-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/android-app/src",
+  "tags": [
+    "platform:android"
+  ],
+  "implicitDependencies": [
+    "cds-android"
+  ],
+  "targets": {
+    "assemble": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./android/gradlew -p android :app:assembleDebug"
+      },
+      "dependsOn": [
+        "cds-android:assemble"
+      ],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/android/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/outputs"
+      ],
+      "cache": true
+    },
+    "launch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "./android/gradlew -p android :app:installDebug",
+          "adb shell am start -n com.coinbase.cds.androidapp/.MainActivity"
+        ],
+        "parallel": false
+      },
+      "dependsOn": [
+        "cds-android:assemble"
+      ],
+      "cache": false
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./android/gradlew -p android :app:testDebugUnitTest"
+      },
+      "dependsOn": [],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/android/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/reports/tests"
+      ],
+      "cache": true
+    }
+  }
+}
