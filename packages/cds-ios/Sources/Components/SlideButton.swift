@@ -5,19 +5,19 @@ private let settleSpring = Animation.spring(response: 0.35, dampingFraction: 0.6
 // handle alone already exceeds `checkThreshold`.
 private let minConfirmProgress: CGFloat = 0.01
 
-/// A "slide to confirm" control for actions that shouldn't trigger on an accidental tap.
-/// `internal` — not customer API yet. Covers `variant`, `size`, `enabled`, `checkThreshold`, and
-/// `onSlideComplete`. Height emerges from the size's padding plus the theme's line height, and the
-/// collapsed handle is a square derived from that height. `checked` is controlled — this view never
-/// resets itself; set it back to `false` to re-enable dragging.
-struct CDSSlideButton: View {
+/// A "slide to confirm" control for actions that shouldn't trigger on an accidental tap. Covers
+/// `variant`, `size`, `enabled`, `checkThreshold`, and `onSlideComplete`. Height emerges from the
+/// size's padding plus the theme's line height, and the collapsed handle is a square derived from
+/// that height. `checked` is controlled — this view never resets itself; set it back to `false` to
+/// re-enable dragging.
+struct SlideButton: View {
     @Environment(\.cdsTheme) private var theme
 
     @Binding var checked: Bool
     let uncheckedLabel: String
     let checkedLabel: String
-    var variant: CDSSlideButtonVariant = .primary
-    var size: CDSSlideButtonSize = .l
+    var variant: SlideButtonVariant = .primary
+    var size: SlideButtonSize = .l
     var isEnabled: Bool = true
     var checkThreshold: CGFloat = 0.7
     var onSlideComplete: (() -> Void)? = nil
@@ -26,8 +26,8 @@ struct CDSSlideButton: View {
     @State private var progress: CGFloat = 0
 
     var body: some View {
-        let colors = cdsSlideButtonColors(variant, theme: theme)
-        let metrics = cdsSlideButtonMetrics(size, theme: theme)
+        let colors = slideButtonColors(variant, theme: theme)
+        let metrics = slideButtonMetrics(size, theme: theme)
         let lineHeight = theme.typography[metrics.font].lineHeight
         let height = lineHeight + metrics.paddingY * 2
         let shape = RoundedRectangle(cornerRadius: metrics.radius)
@@ -45,12 +45,12 @@ struct CDSSlideButton: View {
             ZStack(alignment: .leading) {
                 shape.fill(theme.colors.bgSecondary)
 
-                CDSText(uncheckedLabel, style: metrics.font, color: theme.colors.fg, alignment: .center, lineLimit: 1)
+                Text(uncheckedLabel, style: metrics.font, color: theme.colors.fg, alignment: .center, lineLimit: 1)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.horizontal, metrics.labelPaddingX)
                     .opacity((1 - displayedFraction) * (1 - checkedAlpha))
 
-                CDSText(checkedLabel, style: metrics.font, color: colors.content, alignment: .center, lineLimit: 1)
+                Text(checkedLabel, style: metrics.font, color: colors.content, alignment: .center, lineLimit: 1)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.horizontal, metrics.labelPaddingX)
                     .opacity(checkedAlpha)
@@ -62,7 +62,7 @@ struct CDSSlideButton: View {
                             .stroke(colors.content, style: StrokeStyle(lineWidth: metrics.iconSize * 0.12, lineCap: .round, lineJoin: .round))
                             .frame(width: metrics.iconSize, height: metrics.iconSize)
                             .opacity(1 - checkedAlpha)
-                        CDSProgressCircle(color: colors.content, diameter: metrics.iconSize)
+                        ProgressCircle(color: colors.content, diameter: metrics.iconSize)
                             .opacity(checkedAlpha)
                     }
                     .padding(.trailing, handleInset)
@@ -123,13 +123,13 @@ private struct SlideButtonPreview: View {
     var body: some View {
         CDSThemeProvider {
             VStack(spacing: 16) {
-                CDSSlideButton(checked: $checked, uncheckedLabel: "Slide to send", checkedLabel: "Sending…")
-                Button("Reset") { checked = false }
+                SlideButton(checked: $checked, uncheckedLabel: "Slide to send", checkedLabel: "Sending…")
+                SwiftUI.Button("Reset") { checked = false }
             }
             .padding()
         }
     }
 }
 
-#Preview("CDSSlideButton") { SlideButtonPreview() }
+#Preview("SlideButton") { SlideButtonPreview() }
 #endif

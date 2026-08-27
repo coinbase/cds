@@ -141,8 +141,8 @@ package (relative path). Run CLI commands from the repo root.
 - The package builds under Swift 6 language mode; theme types are `Sendable` + `Equatable`. Keep
   memberwise initializers `internal` and evolve themes via the `cdsTheme { }` builder so adding a
   token stays source-compatible.
-- The theme layer is the public surface. Components under `Sources/Components/` (`CDSText`,
-  `CDSButton`, `CDSSlideButton`, `CDSSpinner`) are deliberately `internal` — they ship in the
+- The theme layer is the public surface. Components under `Sources/Components/` (`Text`,
+  `Button`, `SlideButton`, `ProgressCircle`) are deliberately `internal` — they ship in the
   XCFramework but are not customer API yet (the same status as Android's `internal` components). Do
   not add `public` to them to make the gallery compile: `apps/ios-gallery` uses `@testable import
 CDSDesignSystem` (Debug enables testability) to exercise the real components. Promote a component

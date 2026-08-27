@@ -255,7 +255,7 @@ system font until you register your own fonts and set `fontName` per role — se
 [custom themes, custom fonts](custom-themes.md#overriding-typography-and-custom-fonts). CDS specifies
 Inter for text and Source Code Pro for mono, but bundles no font resources.
 
-`caption` carries `uppercased: true`; CDS's internal `CDSText` applies the transform. Uppercase it
+`caption` carries `uppercased: true`; CDS's internal `Text` applies the transform. Uppercase it
 yourself if you render caption text with SwiftUI's own `Text`.
 
 ## Shadows

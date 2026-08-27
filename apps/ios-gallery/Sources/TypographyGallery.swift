@@ -1,7 +1,7 @@
 @testable import CDSDesignSystem
 import SwiftUI
 
-/// Every typography role rendered with `CDSText`, annotated with its size / line-height / weight.
+/// Every typography role rendered with `Text`, annotated with its size / line-height / weight.
 /// Driven by `CDSTextStyle.allCases`.
 struct TypographyGallery: View {
     @Environment(\.cdsTheme) private var cds
@@ -12,8 +12,8 @@ struct TypographyGallery: View {
                 ForEach(CDSTextStyle.allCases, id: \.self) { role in
                     let attrs = cds.typography[role]
                     VStack(alignment: .leading, spacing: cds.spacing.x0_25) {
-                        CDSText(role.tokenName, style: role)
-                        CDSText(
+                        CDSDesignSystem.Text(role.tokenName, style: role)
+                        CDSDesignSystem.Text(
                             "\(Int(attrs.size))/\(Int(attrs.lineHeight)) · \(weightLabel(attrs.weight))"
                                 + (attrs.uppercased ? " · uppercased" : ""),
                             style: .legal,

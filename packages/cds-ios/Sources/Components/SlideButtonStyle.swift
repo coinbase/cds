@@ -1,35 +1,35 @@
 import SwiftUI
 
-/// Visual/semantic variant — the subset of ``CDSButtonVariant`` that makes sense for a
+/// Visual/semantic variant — the subset of ``ButtonVariant`` that makes sense for a
 /// confirm-by-sliding action.
-enum CDSSlideButtonVariant { case primary, positive, negative }
+enum SlideButtonVariant { case primary, positive, negative }
 
 /// Size tier (`s`/`m`/`l`).
-enum CDSSlideButtonSize { case s, m, l }
+enum SlideButtonSize { case s, m, l }
 
-/// Resolved handle/content colors for a ``CDSSlideButtonVariant``. The track is always
+/// Resolved handle/content colors for a ``SlideButtonVariant``. The track is always
 /// `bgSecondary`; only the handle recolors.
-struct CDSSlideButtonColors {
+struct SlideButtonColors {
     let container: Color
     let content: Color
 }
 
-func cdsSlideButtonColors(_ variant: CDSSlideButtonVariant, theme: CDSTheme) -> CDSSlideButtonColors {
+func slideButtonColors(_ variant: SlideButtonVariant, theme: CDSTheme) -> SlideButtonColors {
     // The handle mirrors the equivalent solid button variant, so derive from the button mapping
     // rather than re-listing the same tokens.
-    let buttonVariant: CDSButtonVariant
+    let buttonVariant: ButtonVariant
     switch variant {
     case .primary: buttonVariant = .primary
     case .positive: buttonVariant = .positive
     case .negative: buttonVariant = .negative
     }
-    let colors = cdsButtonColors(buttonVariant, transparent: false, theme: theme)
-    return CDSSlideButtonColors(container: colors.container, content: colors.content)
+    let colors = buttonColors(buttonVariant, transparent: false, theme: theme)
+    return SlideButtonColors(container: colors.container, content: colors.content)
 }
 
-/// Resolved size-derived metrics for a ``CDSSlideButtonSize``. Height is not a field: it emerges
+/// Resolved size-derived metrics for a ``SlideButtonSize``. Height is not a field: it emerges
 /// from `paddingY` plus the font's line height, and the collapsed handle is a square of that height.
-struct CDSSlideButtonMetrics {
+struct SlideButtonMetrics {
     let paddingY: CGFloat
     let labelPaddingX: CGFloat
     let radius: CGFloat
@@ -37,13 +37,13 @@ struct CDSSlideButtonMetrics {
     let font: CDSTextStyle
 }
 
-func cdsSlideButtonMetrics(_ size: CDSSlideButtonSize, theme: CDSTheme) -> CDSSlideButtonMetrics {
+func slideButtonMetrics(_ size: SlideButtonSize, theme: CDSTheme) -> SlideButtonMetrics {
     let space = theme.spacing
     let radius = theme.radius
     let icon = theme.iconSize
     switch size {
-    case .s: return CDSSlideButtonMetrics(paddingY: space.x1, labelPaddingX: space.x2, radius: radius.r700, iconSize: icon.s, font: .headline)
-    case .m: return CDSSlideButtonMetrics(paddingY: space.x1_5, labelPaddingX: space.x2, radius: radius.r900, iconSize: icon.m, font: .headline)
-    case .l: return CDSSlideButtonMetrics(paddingY: space.x2, labelPaddingX: space.x2, radius: radius.r900, iconSize: icon.m, font: .headline)
+    case .s: return SlideButtonMetrics(paddingY: space.x1, labelPaddingX: space.x2, radius: radius.r700, iconSize: icon.s, font: .headline)
+    case .m: return SlideButtonMetrics(paddingY: space.x1_5, labelPaddingX: space.x2, radius: radius.r900, iconSize: icon.m, font: .headline)
+    case .l: return SlideButtonMetrics(paddingY: space.x2, labelPaddingX: space.x2, radius: radius.r900, iconSize: icon.m, font: .headline)
     }
 }

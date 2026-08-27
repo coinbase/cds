@@ -1,9 +1,9 @@
 import SwiftUI
 
-/// CDS's text primitive. `internal` — not customer API yet. `style` drives family/size/weight/
-/// line-height (read from `theme.typography`); `color` defaults to `fg`. Roles whose typography
-/// marks `uppercased` (e.g. `.caption`) are uppercased automatically.
-struct CDSText: View {
+/// CDS's text primitive. `style` drives family/size/weight/line-height (read from
+/// `theme.typography`); `color` defaults to `fg`. Roles whose typography marks `uppercased`
+/// (e.g. `.caption`) are uppercased automatically.
+struct Text: View {
     @Environment(\.cdsTheme) private var theme
 
     private let text: String
@@ -41,7 +41,7 @@ struct CDSText: View {
         let font: Font = mono
             ? .system(size: attrs.size, weight: attrs.weight, design: .monospaced)
             : attrs.font
-        return Text(displayed)
+        return SwiftUI.Text(displayed)
             .font(font)
             .tracking(attrs.uppercased ? 0.5 : 0)
             .underline(underline)
@@ -54,26 +54,25 @@ struct CDSText: View {
 }
 
 #if DEBUG
-// No provider on purpose: inside an Xcode Preview this renders the default theme via the preview
-// fallback instead of trapping, so a component preview "just works".
-#Preview("CDSText — preview fallback (no provider)") {
+// No provider on purpose: renders the default theme via the preview fallback instead of trapping.
+#Preview("Text — preview fallback (no provider)") {
     VStack(alignment: .leading, spacing: 8) {
-        CDSText("Display 3", style: .display3)
-        CDSText("Headline", style: .headline)
-        CDSText("Body", style: .body)
-        CDSText("Underlined", style: .body, underline: true)
-        CDSText("Monospace 123", style: .body, mono: true)
-        CDSText("Disabled", style: .body, enabled: false)
-        CDSText("Caption", style: .caption)
+        Text("Display 3", style: .display3)
+        Text("Headline", style: .headline)
+        Text("Body", style: .body)
+        Text("Underlined", style: .body, underline: true)
+        Text("Monospace 123", style: .body, mono: true)
+        Text("Disabled", style: .body, enabled: false)
+        Text("Caption", style: .caption)
     }
     .padding()
 }
 
-#Preview("CDSText — with CDSThemeProvider") {
+#Preview("Text — with CDSThemeProvider") {
     CDSThemeProvider {
         VStack(alignment: .leading, spacing: 8) {
-            CDSText("Title 2", style: .title2)
-            CDSText("Body", style: .body)
+            Text("Title 2", style: .title2)
+            Text("Body", style: .body)
         }
         .padding()
     }

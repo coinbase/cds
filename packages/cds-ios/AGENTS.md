@@ -24,8 +24,8 @@ together: when you add or touch a declaration, decide its visibility on purpose.
   `CDSBorderWidthToken`, `CDSIconSizeToken`, `CDSAvatarSizeToken`, `CDSControlSizeToken`,
   `CDSIllustrationColorToken`, `CDSShadowToken`, `CDSTextStyle`), and the `\.cdsTheme` environment
   accessor plus the `Color(cdsHex:)` helper.
-- Components under `Sources/Components/` — `CDSText`, `CDSButton` (+ its variants/sizes),
-  `CDSSlideButton`, and `CDSProgressCircle` (the indeterminate progress indicator) — are deliberately
+- Components under `Sources/Components/` — `Text`, `Button` (+ its variants/sizes),
+  `SlideButton`, and `ProgressCircle` (the indeterminate progress indicator) — are deliberately
   **`internal`**. They were experiments and are **not customer API yet**, exactly like Android
   shipping `Text`, `Button`, and `SlideButton` as `internal` for the first release. Ship them in the
   artifact; keep them off the public surface until they stabilize. Do not add `public` to a component

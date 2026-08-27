@@ -77,16 +77,16 @@ struct GalleryScreen: View {
 
     private var controls: some View {
         VStack(alignment: .leading, spacing: cds.spacing.x1) {
-            CDSText("CDS iOS — Theme Gallery", style: .title2)
-            CDSText("Live view of every token scale in the active theme.", style: .label2, color: cds.colors.fgMuted)
+            CDSDesignSystem.Text("CDS iOS — Theme Gallery", style: .title2)
+            CDSDesignSystem.Text("Live view of every token scale in the active theme.", style: .label2, color: cds.colors.fgMuted)
 
             Picker("Theme", selection: $theme) {
-                ForEach(ThemeChoice.allCases) { Text($0.label).tag($0) }
+                ForEach(ThemeChoice.allCases) { SwiftUI.Text($0.label).tag($0) }
             }
             .pickerStyle(.segmented)
 
             Picker("Color scheme", selection: $scheme) {
-                ForEach(SchemeChoice.allCases) { Text($0.label).tag($0) }
+                ForEach(SchemeChoice.allCases) { SwiftUI.Text($0.label).tag($0) }
             }
             .pickerStyle(.segmented)
         }

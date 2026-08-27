@@ -91,14 +91,14 @@ struct SizesGallery: View {
 
     private func sizeRow(_ title: String, _ items: [(String, CGFloat)]) -> some View {
         VStack(alignment: .leading, spacing: cds.spacing.x0_5) {
-            CDSText(title, style: .label1)
+            CDSDesignSystem.Text(title, style: .label1)
             HStack(alignment: .bottom, spacing: cds.spacing.x1_5) {
                 ForEach(items, id: \.0) { name, value in
                     VStack(spacing: cds.spacing.x0_25) {
                         RoundedRectangle(cornerRadius: 4)
                             .fill(cds.colors.accentBoldBlue)
                             .frame(width: value, height: value)
-                        CDSText("\(name)\n\(Int(value))", style: .legal, color: cds.colors.fgMuted)
+                        CDSDesignSystem.Text("\(name)\n\(Int(value))", style: .legal, color: cds.colors.fgMuted)
                             .multilineTextAlignment(.center)
                     }
                 }
@@ -128,7 +128,7 @@ struct ShadowGallery: View {
                 .fill(cds.colors.bgElevation2)
                 .frame(width: 96, height: 64)
                 .cdsShadow(shadow)
-            CDSText(label, style: .legal, color: cds.colors.fgMuted)
+            CDSDesignSystem.Text(label, style: .legal, color: cds.colors.fgMuted)
         }
     }
 }
