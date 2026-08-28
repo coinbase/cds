@@ -38,6 +38,12 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.mjs"
+      }
+    },
     "sync-icons": {
       "executor": "nx:run-commands",
       "dependsOn": [
