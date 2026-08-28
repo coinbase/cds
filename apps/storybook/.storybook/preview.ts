@@ -1,3 +1,7 @@
+/*
+ * Self-host Inter through Fontsource so Percy captures deterministic local assets
+ * instead of relying on Google Fonts network requests during asset discovery.
+ */
 import '@fontsource-variable/inter/standard.css';
 import '@fontsource-variable/inter/standard-italic.css';
 import '@coinbase/cds-icons/fonts/web/icon-font.css';
