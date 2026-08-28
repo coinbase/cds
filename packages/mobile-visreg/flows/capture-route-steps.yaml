@@ -5,10 +5,17 @@ appId: ${APP_ID}
 # Every route in enabled-routes.mjs must appear in the ExamplesListScreen for the
 # suite to pass, keeping the route list and visreg config in sync.
 # Required env vars: ROUTE_NAME, PLATFORM_SUFFIX (inherited from capture-all.yaml)
+#
+# Every waitForAnimationToEnd is given an explicit timeout. Maestro's default is
+# 15s, and it only returns early once the screen is pixel-stable — so any route
+# that animates forever (charts, Carousel, Coachmark, SlideButton) burns the full
+# 15s and still screenshots mid-animation. Capping costs static routes nothing
+# because they settle and return well inside the budget.
 
 - tapOn:
     id: search-button
-- waitForAnimationToEnd
+- waitForAnimationToEnd:
+    timeout: 1500
 - inputText: ${ROUTE_NAME}
 - assertVisible:
     id: exact-match-button-cell-pressable
@@ -16,7 +23,8 @@ appId: ${APP_ID}
     id: exact-match-button-cell-pressable
 - assertVisible:
     id: mobile-playground-screen
-- waitForAnimationToEnd
+- waitForAnimationToEnd:
+    timeout: 2500
 - takeScreenshot: ${ROUTE_NAME}${PLATFORM_SUFFIX}
 - tapOn:
     id: nav-back-button

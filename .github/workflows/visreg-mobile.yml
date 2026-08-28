@@ -42,6 +42,10 @@ jobs:
     needs: [check]
     if: needs.check.outputs.should_run == 'true'
     runs-on: ubuntu-latest
+    # Backstop only. The run script enforces its own queue/execution budgets and
+    # exits with a diagnosis; this exists so a hang that escapes those budgets
+    # fails in an hour instead of burning the 6h GitHub default.
+    timeout-minutes: 75
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -90,8 +94,13 @@ jobs:
         id: percy-upload
         if: always()
         run: |
+          # `set +e` around the capture: the step runs under `bash -e`, where a
+          # failing command substitution aborts before the echo below, hiding
+          # the Percy output that explains the failure.
+          set +e
           OUTPUT=$(yarn nx run mobile-visreg:upload 2>&1)
           EXIT_CODE=$?
+          set -e
           echo "$OUTPUT"
           PERCY_URL=$(echo "$OUTPUT" | grep -oE 'https://percy\.io[^[:space:]]+' | head -1)
           echo "percy_url=$PERCY_URL" >> "$GITHUB_OUTPUT"
@@ -115,6 +124,8 @@ jobs:
     needs: [check]
     if: needs.check.outputs.should_run == 'true'
     runs-on: ubuntu-latest
+    # See the iOS job — backstop only.
+    timeout-minutes: 75
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -178,8 +189,13 @@ jobs:
         id: percy-upload
         if: always()
         run: |
+          # `set +e` around the capture: the step runs under `bash -e`, where a
+          # failing command substitution aborts before the echo below, hiding
+          # the Percy output that explains the failure.
+          set +e
           OUTPUT=$(yarn nx run mobile-visreg:upload 2>&1)
           EXIT_CODE=$?
+          set -e
           echo "$OUTPUT"
           PERCY_URL=$(echo "$OUTPUT" | grep -oE 'https://percy\.io[^[:space:]]+' | head -1)
           echo "percy_url=$PERCY_URL" >> "$GITHUB_OUTPUT"

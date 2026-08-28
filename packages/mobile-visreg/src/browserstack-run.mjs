@@ -1,12 +1,10 @@
 /**
  * Runs the mobile-visreg Maestro suite on BrowserStack App Automate.
  *
- * This is the cloud counterpart to `run.mjs` (which drives a local
- * simulator/emulator). It uploads the app + zipped flows to BrowserStack,
- * triggers a Maestro build on a real device, waits for it to finish, and
- * downloads the captured screenshots into `maestro-test-output/screenshots/`
- * — the same directory `upload.mjs` reads — so the Percy upload step is
- * unchanged.
+ * Uploads the app + zipped flows to BrowserStack, triggers a Maestro build on a
+ * real device, waits for it to finish, and downloads the captured screenshots
+ * into `maestro-test-output/screenshots/` — the same directory `upload.mjs`
+ * reads — so the Percy upload step is unchanged.
  *
  * Usage:
  *   node src/browserstack-run.mjs \
@@ -65,6 +63,9 @@ const deviceList = devices
   .filter(Boolean);
 const resolvedAppPath = resolve(packageRoot, appPath);
 
+const fmt = (ms) =>
+  `${Math.floor(ms / 60000)}m${String(Math.round((ms % 60000) / 1000)).padStart(2, '0')}s`;
+
 async function main() {
   // 1. Generate the combined capture-all.yaml flow.
   console.log('Generating capture-all.yaml...');
@@ -102,23 +103,45 @@ async function main() {
     },
   });
 
-  // 5. Wait for completion.
-  console.log('\nWaiting for build to complete...');
-  const build = await pollBuild(buildId);
+  // 5. Wait for completion. The dashboard URL is printed before the wait, not
+  //    just on success, so a run that dies mid-poll still leaves behind
+  //    everything needed to inspect or recover it.
+  const dashboardUrl = `https://app-automate.browserstack.com/dashboard/v2/builds/${buildId}`;
+  console.log(`\nDashboard: ${dashboardUrl}`);
+  console.log('Waiting for build to complete...');
+
+  let build;
+  try {
+    build = await pollBuild(buildId);
+  } catch (err) {
+    console.error(`\n${err.message}`);
+    console.error(
+      `\nScreenshots may still be recoverable once the build settles:\n` +
+        `  yarn nx run mobile-visreg:recover-screenshots --args="--buildId ${buildId}"`,
+    );
+    process.exit(1);
+  }
 
   // 6. Download screenshots into the dir upload.mjs reads (always, even on
   //    failure, so partial results still reach Percy).
   const screenshotDir = resolve(packageRoot, 'maestro-test-output', 'screenshots');
   console.log(`\nDownloading screenshots to ${screenshotDir}...`);
+  const downloadStartedAt = Date.now();
   const artifactCount = await downloadScreenshots(build, screenshotDir);
+  const downloadMs = Date.now() - downloadStartedAt;
   const pngCount = readdirSync(screenshotDir).filter((f) => f.endsWith('.png')).length;
   console.log(
     `Downloaded ${artifactCount} screenshot artifact(s); ${pngCount} PNG(s) now in ${screenshotDir}`,
   );
 
-  // 7. Report and set exit status from the build result.
-  const dashboardUrl = `https://app-automate.browserstack.com/dashboard/v2/builds/${buildId}`;
+  // 7. Report and set exit status from the build result. The timing breakdown
+  //    is printed on every run so the CI log alone shows whether a slow run was
+  //    spent queueing or executing.
   console.log(`\nBuild status: ${build.status}`);
+  console.log(
+    `Timing: queued ${fmt(build.timing.queuedMs)}, ran ${fmt(build.timing.ranMs)}, ` +
+      `downloaded ${fmt(downloadMs)} (total ${fmt(build.timing.totalMs + downloadMs)})`,
+  );
   console.log(`Dashboard: ${dashboardUrl}`);
 
   if (build.status !== 'passed') {
