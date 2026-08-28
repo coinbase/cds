@@ -90,29 +90,30 @@ Fill out the [pull request template](https://github.com/coinbase/cds/blob/master
 
 ### Version and Changelog
 
-Before requesting review, update the version and changelog:
+CDS versions packages with [nx release version plans](docs/release.md). Instead of editing `package.json` and `CHANGELOG.md` by hand, you commit a small markdown file describing your change, and `nx release` derives the version bump and changelog entry from it.
 
 Use the [Versioning section in README](README.md#versioning) when choosing whether a change is major, minor, or patch.
 
 ```sh
-# Update changelog and bump version
-yarn bump-version
+# Write a version plan describing your change
+yarn changelog
 ```
 
-The tool will prompt you for:
+The generator will prompt you for:
 
-- **Changed package** (web, mobile, common, etc.)
-- **Type of change** (breaking, update, fix, etc.)
+- **Changed package(s)** (web, mobile, common, etc.)
+- **Type of change** (major, minor, or patch)
 - **Changelog message**
-- **PR number**
 
-You will do this for each package you have modified.
-
-Then run the release command to keep unmodified package versions in sync (such as `cds-common`):
+Then apply the plan, which writes the new version and changelog entry:
 
 ```sh
 yarn release
 ```
+
+Commit both the plan and the resulting `package.json` and `CHANGELOG.md` changes. CI fails if you changed a publishable package without either a version plan or a version bump.
+
+See [the release guide](docs/release.md) for the full workflow, including how to defer a release to a later batch.
 
 ### Review
 

@@ -24,14 +24,6 @@ Run this when icons are added, removed, or updated in `packages/icons`.
 
 ---
 
-### `yarn nx run codegen:update-packages-generic-bump`
-
-Syncs the version numbers of `web`, `mobile`, `common`, and `mcp-server` packages to the highest version among them, and inserts a corresponding entry into each out-of-date `CHANGELOG.md`. Used during the release process to keep versions in lockstep.
-
-**Source:** `src/release/updatePkgsForGenericBump.ts`
-
----
-
 ## Utilities
 
 Shared helpers used internally by codegen scripts (`src/utils/`):

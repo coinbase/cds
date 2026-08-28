@@ -5,8 +5,8 @@ type SyncIconsConfig = {
   figmaFileId: string;
   /* The absolute path of the repo root. */
   repoRoot: string;
-  /* The absolute path of the changelog file. */
-  changelogPath: string;
+  /* The absolute path of the nx release version plans directory. */
+  versionPlansPath: string;
   /* The absolute path of the manifest file. */
   manifestPath: string;
   /* The absolute path of the svg output directory. */
@@ -31,7 +31,7 @@ const ICONS_PKG = path.resolve(MONOREPO_ROOT, 'packages/icons');
 export const config: SyncIconsConfig = {
   figmaFileId: '1J3XC4iA2xRzlnC3y0pl1N',
   repoRoot: MONOREPO_ROOT,
-  changelogPath: path.resolve(ICONS_PKG, 'CHANGELOG.md'),
+  versionPlansPath: path.resolve(MONOREPO_ROOT, '.nx/version-plans'),
   manifestPath: path.resolve(ICONS_PKG, 'manifest.json'),
   outputSvgPath: path.resolve(ICONS_PKG, 'src/svgs'),
   outputDataPath: path.resolve(ICONS_PKG, 'src'),

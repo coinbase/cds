@@ -27,7 +27,8 @@ the JavaScript side unless a section says otherwise; see "Native Android" below.
 ## Core Commands
 
 - `yarn install` - Install dependencies
-- `yarn release` - Automates versioning of packages unaffected by changes to keep version numbers in sync
+- `yarn changelog` - Writes an nx release version plan describing your change (alias of `nx release plan`)
+- `yarn release` - Applies pending version plans, writing new versions and CHANGELOG entries. See `docs/release.md`
 - `yarn clean` - Removes all build artifacts, deletes .nx folder and resets the Nx daemon
 - `yarn nx reset` - Reset Nx daemon cache
 

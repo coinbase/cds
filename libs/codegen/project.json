@@ -27,12 +27,6 @@
         }
       }
     },
-    "update-packages-generic-bump": {
-      "command": "node {projectRoot}/src/release/updatePkgsForGenericBump.mjs",
-      "options": {
-        "cwd": "{workspaceRoot}"
-      }
-    },
     "mobile-routes": {
       "command": "tsx ./src/playground/prepareRoutes.ts",
       "options": {

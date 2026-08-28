@@ -10,7 +10,7 @@ import { syncIconCodeConnect } from '../sync-icon-code-connect/index';
 
 import { config } from './config';
 import { fetchIconLibrary } from './fetchIconLibrary';
-import { generateChangelog } from './generateChangelog';
+import { generateVersionPlan } from './generateVersionPlan';
 import { getDescriptionMap } from './getDescriptionMap';
 import { commitAndPushChanges, ensureCleanBranch, todaysDate } from './git';
 import { sortByCreatedAt } from './sortByCreatedAt';
@@ -142,10 +142,8 @@ const main = async () => {
   if (!fs.existsSync(config.outputDataPath))
     fs.mkdirSync(config.outputDataPath, { recursive: true });
 
-  if (!fs.existsSync(path.dirname(config.changelogPath)))
-    fs.mkdirSync(path.dirname(config.changelogPath), { recursive: true });
-  if (!fs.existsSync(config.changelogPath))
-    fs.writeFileSync(config.changelogPath, '<!-- template-start -->');
+  if (!fs.existsSync(config.versionPlansPath))
+    fs.mkdirSync(config.versionPlansPath, { recursive: true });
 
   if (!fs.existsSync(path.dirname(config.manifestPath)))
     fs.mkdirSync(path.dirname(config.manifestPath), { recursive: true });
@@ -165,9 +163,8 @@ const main = async () => {
     });
   });
 
-  console.log('Loading manifest and changelog files...');
+  console.log('Loading manifest file...');
   const oldManifest = JSON.parse(fs.readFileSync(config.manifestPath, 'utf-8')) as Manifest;
-  const changelog = fs.readFileSync(config.changelogPath, 'utf-8');
 
   console.log('Confirming that manifest svg output files exist...');
   // Check that all the svg output files in the manifest exist
@@ -504,15 +501,14 @@ export const descriptionMap: Record<string, IconName[]> = ${descriptionMapConten
     syncResults.renamedIconSets.length ||
     syncResults.updatedIconSets.length;
 
-  if (!hasChanges) console.log('No changes detected, skipping changelog...');
+  if (!hasChanges) console.log('No changes detected, skipping version plan...');
   else {
-    console.log('Writing changelog...');
-    const changelogContent = generateChangelog(syncResults);
-    const newChangelog = changelog.replace(
-      '<!-- template-start -->',
-      '<!-- template-start -->\n\n' + changelogContent,
+    console.log('Writing version plan...');
+    const date = new Date().toISOString().slice(0, 10);
+    fs.writeFileSync(
+      path.join(config.versionPlansPath, `icons-${date}.md`),
+      generateVersionPlan(syncResults, date),
     );
-    fs.writeFileSync(config.changelogPath, newChangelog);
   }
 
   console.log('Updating manifest...');

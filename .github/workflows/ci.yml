@@ -66,10 +66,8 @@ jobs:
         run: node ./tools/ci/validators/validateLockfile.mjs
       - name: Validate Patches
         run: node ./tools/ci/validators/validatePatches.mjs
-      - name: Validate Versioned
-        run: node ./tools/ci/validators/validateVersioned.mjs
-      - name: Validate CDS Versions
-        run: node ./tools/validateCDSVersions.mjs
+      - name: Validate Version Plans
+        run: node ./tools/ci/validators/validateVersionPlans.mjs
       - name: Validate Constraints
         run: yarn constraints || exit 1
       - name: Validate Icon SVG Map

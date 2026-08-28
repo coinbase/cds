@@ -10,6 +10,86 @@
     "appsDir": "apps",
     "libsDir": "packages"
   },
+  "release": {
+    "projectsRelationship": "independent",
+    "groups": {
+      "cds": {
+        "projects": [
+          "web",
+          "mobile",
+          "common",
+          "mcp-server"
+        ],
+        "projectsRelationship": "fixed",
+        "releaseTagPattern": "v{version}"
+      },
+      "standalone": {
+        "projects": [
+          "icons",
+          "illustrations",
+          "lottie-files",
+          "eslint-plugin-cds",
+          "migrator",
+          "utils",
+          "web-visualization",
+          "mobile-visualization"
+        ],
+        "projectsRelationship": "independent",
+        "releaseTagPattern": "{projectName}@{version}"
+      }
+    },
+    "version": {
+      "useLegacyVersioning": false,
+      "updateDependents": "never"
+    },
+    "changelog": {
+      "workspaceChangelog": false,
+      "projectChangelogs": {
+        "renderOptions": {
+          "authors": false,
+          "commitReferences": false
+        }
+      }
+    },
+    "versionPlans": {
+      "ignorePatternsForPlanCheck": [
+        "**/CHANGELOG.md",
+        "**/README.md",
+        "**/MIGRATION.md",
+        "**/CONTRIBUTING.md",
+        "**/OWNERS",
+        "**/*.md",
+        "**/*.mdx",
+        "**/*.yml",
+        "**/*.yaml",
+        "**/*.[dD]ockerfile",
+        "**/project.json",
+        "**/tsconfig*.json",
+        "**/jest.config.js",
+        "**/.eslintrc*",
+        "**/eslint.config.*",
+        "**/__tests__/**",
+        "**/__stories__/**",
+        "**/__mocks__/**",
+        "**/__fixtures__/**",
+        "**/*.test.*",
+        "**/*.spec.*",
+        "**/*.stories.*",
+        "**/*.figma.tsx",
+        "**/*.figma.ts",
+        "**/*.figma.batch.*",
+        "**/*.d.ts",
+        "apps/**",
+        "yarn.lock"
+      ]
+    },
+    "git": {
+      "commit": false,
+      "tag": false,
+      "push": false,
+      "stageChanges": false
+    }
+  },
   "namedInputs": {
     "default": [
       "{projectRoot}/*",

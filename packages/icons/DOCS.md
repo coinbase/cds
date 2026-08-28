@@ -45,18 +45,15 @@ yarn nx run icons:sync-icons
 
 5. Open a PR in [github.com/coinbase/cds](https://github.com/coinbase/cds). Title the PR exactly the same as the commit message: `feat: Publish icons YYYY-MM-DD`. Take note of the PR number for the next step
 
-6. Update the icons package changelog by completing the prompts as shown below
+6. Review the version plan that `sync-icons` wrote to `.nx/version-plans/icons-YYYY-MM-DD.md`. It lists the added, updated, renamed, and deleted icon sets, and selects `major` when any icon was renamed or deleted and `minor` otherwise. Edit the bump or the wording if you disagree with it. See [the release guide](../../docs/release.md) for how version plans work.
+
+7. Release the icons package so the plan is applied to `package.json` and `CHANGELOG.md`
 
 ```sh
-yarn changelog icons
+yarn release --projects=icons
 ```
 
-> - **Type of change?:** Choose **"Breaking"** for breaking changes, otherwise choose **"Update"**
-> - **Changelog message?:** "Publish icons YYYY-MM-DD"
-> - **PR number?:** Copy/paste your PR number
-> - Skip the rest (press enter to use defaults)
-
-7. Commit and push the changelog update to your PR
+8. Commit and push the version plan and release to your PR
 
 ```sh
 git add .
@@ -64,18 +61,18 @@ git commit -m 'Update changelog'
 git push origin icons/YYYY-MM-DD
 ```
 
-8. DM the icons DRI on Slack and share direct links to:
+9. DM the icons DRI on Slack and share direct links to:
 
 - the icon changelog in your PR
 - the Web Visual Regression results in Percy
 
 You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 
-9. Carefully review the two links you shared with the icons DRI. Does the changelog look correct? Do the visual regression results look correct?
+10. Carefully review the two links you shared with the icons DRI. Does the changelog look correct? Do the visual regression results look correct?
 
 **IMPORTANT: Breaking change releases are a big deal. They should be performed extremely rarely, and should ALWAYS be accompanied by a migration plan. You are responsible for any breaking changes that you release.**
 
-10. DO NOT MERGE until the icons DRI has carefully reviewed and signed off on the changelog and the visual regression test results.
+11. DO NOT MERGE until the icons DRI has carefully reviewed and signed off on the changelog and the visual regression test results.
 
 ### Syncing Icons Troubleshooting
 

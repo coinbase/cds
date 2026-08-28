@@ -48,7 +48,10 @@ local.properties
 *.hprof
 
 # Nx/Builds
-.nx
+# Ignore every .nx dir (cache, workspace-data, daemon) at any level, but keep
+# the root-level .nx/version-plans directory tracked for nx release.
+**/.nx/*
+!/.nx/version-plans
 .next
 cjs/
 !packages/illustrations/src/__generated__/**/svgJs/cjs/
