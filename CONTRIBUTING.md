@@ -96,7 +96,7 @@ Use the [Versioning section in README](README.md#versioning) when choosing wheth
 
 ```sh
 # Write a version plan describing your change
-yarn changelog
+yarn nx release plan
 ```
 
 The generator will prompt you for:

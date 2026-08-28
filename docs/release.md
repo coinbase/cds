@@ -12,7 +12,7 @@ This is the normal path. Both steps run locally.
 
 ```sh
 # 1. Describe your change
-yarn changelog
+yarn nx release plan
 
 # 2. Apply pending plans: writes package.json + CHANGELOG.md, deletes the consumed plans
 yarn release
@@ -38,7 +38,7 @@ You can also commit only the plan and skip `yarn release`. Plans accumulate on `
 
 ## Writing a version plan by hand
 
-`yarn changelog` is a generator, but the file is plain markdown: YAML frontmatter mapping names to bump types, followed by the changelog message.
+`yarn nx release plan` is a generator, but the file is plain markdown: YAML frontmatter mapping names to bump types, followed by the changelog message.
 
 ```md
 ---
@@ -94,6 +94,7 @@ Documentation, tests, stories, and Figma bindings never require a plan. If a pac
 - `.nx/` is gitignored except for `/.nx/version-plans`, so plan files are tracked while the nx cache, workspace data, and daemon files are not.
 - Conventional-commit inference is off. The version plan is the only thing that determines the bump, so a `feat:` or `fix:` prefix on your commit has no effect on versioning.
 - `nx release` does not commit, tag, or push. It only edits files, and you commit them yourself. CI cannot push to `master`, so there is no automated release workflow.
+- `yarn release` is the one script worth keeping as a wrapper, because it supplies `--skip-publish`. That flag cannot be set in `nx.json`, and without it `nx release --yes` would publish to npm straight from your machine. Publishing belongs to [`publish.yml`](../.github/workflows/publish.yml), which runs once your version bump lands on `master`.
 - `updateDependents` is set to `never`. Releasing `utils` does not cascade a bump into the packages that depend on it. Internal dependencies use the `workspace:^` protocol, so no version ranges need rewriting.
 - Generated changelog entries omit commit authors and commit references, and each package keeps its own `CHANGELOG.md`. There is no workspace-level changelog.
 - New entries are prepended to the top of `CHANGELOG.md`, which is why each file's title and registry link live in a footer at the bottom.

@@ -88,7 +88,7 @@ consumer-facing guides are in [`docs/`](docs/).
 - iOS versions independently. The version lives only in the `ios-v<version>` git tag and
   [`CHANGELOG.md`](CHANGELOG.md) — there is no manifest `version` field (Swift has no Gradle
   `version`). It is unrelated to the 9.x npm versions and to Android's `com.coinbase.cds:cds`, and must
-  never be pulled into `yarn release` or `yarn changelog`. Cutting a release is manual; follow
+  never be pulled into `yarn release` or `yarn nx release plan`. Cutting a release is manual; follow
   [`docs/releasing.md`](docs/releasing.md).
 - `apps/ios-gallery/CDSGallery.xcodeproj` is **generated and disposable** — it is produced by
   `xcodegen generate` from `apps/ios-gallery/project.yml`. Edit `project.yml` and regenerate; never

@@ -51,7 +51,6 @@
   },
   "packageManager": "yarn@4.9.2",
   "scripts": {
-    "changelog": "nx release plan",
     "clean-nx-dir": "rm -rf .nx || true",
     "clean-packemon-outs": "rm -rf packages/*/{dts,lib,esm,cjs} || true",
     "clean-dist-outs": "rm -rf packages/*/dist || true",

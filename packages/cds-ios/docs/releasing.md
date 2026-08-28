@@ -5,7 +5,7 @@ Release.
 
 This is a **manual** process — the direct parallel of
 [Android's release flow](../../cds-android/docs/releasing.md). There is no iOS publish pipeline, and
-this package is not part of `yarn release` or `yarn changelog`. Those tools version the npm
+this package is not part of `yarn release` or `yarn nx release plan`. Those tools version the npm
 packages and must never touch iOS.
 
 iOS versions independently of the `@coinbase/cds-*` 9.x line **and** of `com.coinbase.cds:cds`

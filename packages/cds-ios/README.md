@@ -224,7 +224,7 @@ Publishing is manual — the direct parallel of Android. Follow
 [`docs/releasing.md`](docs/releasing.md): pick a SemVer bump, add a [`CHANGELOG.md`](CHANGELOG.md)
 entry, build the XCFramework with `yarn nx run cds-ios:xcframework`, and attach
 `CDSDesignSystem.xcframework.zip` to a GitHub Release tagged `ios-v<version>`. Do not use
-`yarn release` or `yarn changelog`.
+`yarn release` or `yarn nx release plan`.
 
 ## Note on token source
 

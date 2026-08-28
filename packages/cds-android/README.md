@@ -217,7 +217,7 @@ show up immediately without a publish step.
 Publishing is manual. Follow [docs/releasing.md](docs/releasing.md) for the full checklist:
 bump the Gradle version, add a [`CHANGELOG.md`](CHANGELOG.md) entry, build the AAR, and attach
 it to a GitHub Release tagged `android-v<version>`. Do not use `yarn release` or
-`yarn changelog`.
+`yarn nx release plan`.
 
 ## Follow-ups
 

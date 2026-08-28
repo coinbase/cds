@@ -172,7 +172,7 @@ Do NOT attempt to modify files or force the patch. Return to `ORIGINAL_BRANCH` a
 > Run the changelog script with the release branch as the base so it detects your changes correctly:
 >
 > ```
-> GITHUB_BASE_REF=origin/<TARGET_BRANCH> yarn changelog
+> GITHUB_BASE_REF=origin/<TARGET_BRANCH> yarn nx release plan
 > ```
 >
 > Let me know when you're done and I'll push the branch and open the PR.
@@ -328,7 +328,7 @@ Be specific. Quote relevant line ranges or symbol names. Give the user enough co
 
 - **Record `ORIGINAL_BRANCH` at the very start** and always return to it at the end — success, failure, or early stop (except when stopping due to a dirty working tree, since you haven't moved).
 - **Never use `git checkout <sha> -- <file>`** to apply changes from a commit. This replaces the whole file with the master version and brings in unrelated changes. Always use `git show <sha> -- <files> | git apply --index`.
-- **Never apply `package.json` or `CHANGELOG.md` changes.** Always exclude versioning files from the patch. Remind the user to run `GITHUB_BASE_REF=origin/<TARGET_BRANCH> yarn changelog` and wait for them to confirm before pushing or opening the PR.
+- **Never apply `package.json` or `CHANGELOG.md` changes.** Always exclude versioning files from the patch. Remind the user to run `GITHUB_BASE_REF=origin/<TARGET_BRANCH> yarn nx release plan` and wait for them to confirm before pushing or opening the PR.
 - **Never resolve patch conflicts autonomously.** If `git apply` fails, diagnose and explain only.
 - **Always push and open a PR** after the user confirms versioning — this is the default, not optional.
 - **Never check out the source commit or the target branch locally.** Use `origin/<TARGET_BRANCH>` and inspect commits via `git show` / `git diff`. The only local branches you should create or switch to are the backport branch and the return to `ORIGINAL_BRANCH`.

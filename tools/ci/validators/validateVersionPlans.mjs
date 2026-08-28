@@ -21,7 +21,7 @@ export function validateVersionPlans(options = {}) {
     const missingPlans = await getProjectsMissingVersionPlans(logInfo, options);
 
     missingPlans.forEach((projectName) => {
-      const planCommand = color.shell('yarn changelog');
+      const planCommand = color.shell('yarn nx release plan');
       const privatePackageProp = color.shell('"private": true');
 
       logWarn(
