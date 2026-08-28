@@ -159,6 +159,17 @@ android
 # local.properties are still ignored by the Android/IntelliJ rules near the top of this file.
 !/android/
 
+# native-rewrite: the root ios/ umbrella (CDS.xcworkspace + README) is committed. The bare `ios`
+# pattern above matches any directory with that name (aimed at Expo prebuild output), so this
+# negation is what keeps the umbrella tracked. The iOS modules themselves live under
+# packages/cds-ios and apps/ios-gallery (not matched by `ios`); their .build/, DerivedData/, and
+# *.xcodeproj are ignored by their own .gitignore files.
+!/ios/
+# The umbrella workspace is committed (source of truth), but the global `*.xcworkspace` rule above
+# ignores it. Re-include just its contents file; xcuserdata inside stays ignored by other rules.
+!/ios/CDS.xcworkspace/
+!/ios/CDS.xcworkspace/contents.xcworkspacedata
+
 # expo-app generated artifacts
 apps/expo-app/artifacts
 apps/expo-app/build/

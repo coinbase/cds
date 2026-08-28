@@ -104,6 +104,59 @@ root.
   codegen is the goal, not something to fake with a runtime dependency.
 - There is no Kotlin linter configured yet. Formatting follows Android Studio's formatter.
 
+## Native iOS
+
+Swift 6 / SwiftUI, built by Swift Package Manager — no Yarn/Nx bundling, no `@coinbase/cds-common`
+import. It is the `native-rewrite` counterpart to Android, and follows the same layout: a lighter
+umbrella at `ios/`, the library under `packages/`, the app under `apps/`. For Swift review follow the
+package README at `packages/cds-ios/README.md`.
+
+**Layout.** Two Swift modules, mapped onto the Nx layout like Android's `:cds`/`:app`:
+
+| Module              | Directory           | Nx project    |
+| ------------------- | ------------------- | ------------- |
+| `CDSDesignSystem`   | `packages/cds-ios/` | `cds-ios`     |
+| `CDSGalleryiOS` app | `apps/ios-gallery/` | `ios-gallery` |
+
+`ios/` is the umbrella (`CDS.xcworkspace` + README). Unlike `android/` it is **not** a build root:
+SwiftPM has no `settings.gradle` equivalent and cannot remap target sources to a sibling directory,
+so each module is self-rooted. `apps/ios-gallery` depends on `packages/cds-ios` as a local SwiftPM
+package (relative path). Run CLI commands from the repo root.
+
+**Commands.** These require Swift 6 / Xcode (macOS only):
+
+- `yarn nx run cds-ios:test` - `swift test` (theme library unit tests)
+- `yarn nx run cds-ios:build-ios` - `swift build -c release`
+- `yarn nx run ios-gallery:build-ios` - `xcodegen generate` + iOS Simulator build of the app
+- `yarn nx run ios-gallery:launch` - build + install + run the gallery on an iOS Simulator
+- `cd packages/cds-ios && swift <build|test>` - anything Nx does not wrap
+
+**Rules.**
+
+- Tag every native-iOS Nx project `platform:ios`. JavaScript CI (`ci.yml`) excludes that tag from
+  every `nx affected` job; Swift/Xcode builds run in a separate workflow
+  (`.github/workflows/ios.yml`) on macOS runners. Do not fold Swift jobs into `ci.yml`.
+- Never name a `cds-ios`/`ios-gallery` target `build`, `typecheck`, or `lint`. Those names are wired
+  to JavaScript CI jobs that run on Linux runners with no Swift toolchain.
+- The package builds under Swift 6 language mode; theme types are `Sendable` + `Equatable`. Keep
+  memberwise initializers `internal` and evolve themes via the `cdsTheme { }` builder so adding a
+  token stays source-compatible.
+- The theme layer is the public surface. Components under `Sources/Components/` (`Text`,
+  `Button`, `SlideButton`, `ProgressCircle`) are deliberately `internal` — they ship in the
+  XCFramework but are not customer API yet (the same status as Android's `internal` components). Do
+  not add `public` to them to make the gallery compile: `apps/ios-gallery` uses `@testable import
+CDSDesignSystem` (Debug enables testability) to exercise the real components. Promote a component
+  to `public` only when it is an intentional, stable API.
+- iOS versions independently (SwiftPM / XCFramework). Never fold it into `yarn release` or the 9.x
+  version sync. Cutting a release is manual: build the XCFramework (`yarn nx run cds-ios:xcframework`)
+  and attach it to a GitHub Release tagged `ios-v<version>` — follow
+  [`packages/cds-ios/docs/releasing.md`](packages/cds-ios/docs/releasing.md) and record the version
+  in [`packages/cds-ios/CHANGELOG.md`](packages/cds-ios/CHANGELOG.md).
+- Swift cannot import `@coinbase/cds-common`. iOS tokens are a hand-port today; shared codegen is the
+  goal, not something to fake with a runtime dependency.
+- The generated `apps/ios-gallery/CDSGallery.xcodeproj` is disposable — edit
+  `apps/ios-gallery/project.yml` and regenerate with `xcodegen generate`, never hand-edit the project.
+
 ## Skills
 
 Skills for this project live in `skills/`. Each skill has a `README.md` and optionally an `evals/` directory with benchmark test cases.

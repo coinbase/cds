@@ -1,0 +1,35 @@
+{
+  "name": "ios-gallery",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/ios-gallery/Sources",
+  "tags": [
+    "platform:ios"
+  ],
+  "implicitDependencies": [
+    "cds-ios"
+  ],
+  "targets": {
+    "build-ios": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": [
+          "xcodegen generate",
+          "xcodebuild -project CDSGallery.xcodeproj -scheme CDSGalleryiOS -destination 'generic/platform=iOS Simulator' -derivedDataPath .build/xcode build"
+        ],
+        "parallel": false,
+        "cwd": "apps/ios-gallery"
+      },
+      "dependsOn": [],
+      "cache": false
+    },
+    "launch": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./scripts/launch-simulator.sh",
+        "cwd": "apps/ios-gallery"
+      },
+      "cache": false
+    }
+  }
+}
