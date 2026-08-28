@@ -3,7 +3,7 @@
 How to cut a version of `com.coinbase.cds:cds` and attach the AAR to a GitHub Release.
 
 This is a **manual** process. There is no Android publish pipeline, and this package is not part
-of `yarn release` or `yarn bump-version`. Those tools version the npm packages and must never
+of `yarn release` or `yarn changelog`. Those tools version the npm packages and must never
 touch Android.
 
 Android versions independently of the `@coinbase/cds-*` 9.x line. Do not sync the two.
@@ -61,7 +61,7 @@ the release should come from `master`.
 ## 3. Add a changelog entry
 
 Edit [`packages/cds-android/CHANGELOG.md`](../CHANGELOG.md) by hand. Do not run
-`yarn bump-version` or `yarn changelog`.
+`yarn changelog` or `yarn release`.
 
 Insert a new `## <version> (<date> PST)` section **immediately below**
 `<!-- template-start -->`, so the newest version stays at the top. Use today's date, for
