@@ -1,4 +1,7 @@
+import '@fontsource-variable/inter/standard.css';
+import '@fontsource-variable/inter/standard-italic.css';
 import '@coinbase/cds-icons/fonts/web/icon-font.css';
+import './storybook-fonts.css';
 
 import { defaultFontStyles } from '@coinbase/cds-web/styles/defaultFont';
 import { globalStyles } from '@coinbase/cds-web/styles/global';
@@ -56,6 +59,10 @@ const preview: Preview = {
     layout: 'fullscreen',
     backgrounds: { disabled: true },
     globalStyles: `${globalStyles} ${defaultFontStyles}`,
+    percy: {
+      // Avoid capturing fallback text or missing icon glyphs while fonts are loading.
+      waitForSelector: '[data-percy-fonts-ready="true"]',
+    },
     controls: {
       matchers: {
         color: /(background|color)$/i,
