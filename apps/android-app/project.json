@@ -4,19 +4,21 @@
   "projectType": "application",
   "sourceRoot": "apps/android-app/src",
   "tags": [
-    "platform:android"
+    "platform:android",
+    "toolchain:gradle"
   ],
   "implicitDependencies": [
     "cds-android"
   ],
   "targets": {
-    "assemble": {
+    "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "./android/gradlew -p android :app:assembleDebug"
+        "command": "./android/gradlew -p android :app:assembleDebug",
+        "cwd": "."
       },
       "dependsOn": [
-        "cds-android:assemble"
+        "cds-android:build"
       ],
       "inputs": [
         "default",
@@ -37,7 +39,7 @@
         "parallel": false
       },
       "dependsOn": [
-        "cds-android:assemble"
+        "cds-android:build"
       ],
       "cache": false
     },

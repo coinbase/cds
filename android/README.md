@@ -43,9 +43,9 @@ before the build can run. This is standard Gradle practice.
 From the **repo root**, either through Nx or straight to Gradle:
 
 ```sh
-yarn nx run cds-android:assemble      # AAR
-yarn nx run cds-android:test          # JUnit
-yarn nx run android-app:launch        # build + install + start the demo app
+yarn nx run cds-android:build  # AAR
+yarn nx run cds-android:test   # JUnit
+yarn nx run android-app:launch # build + install + start the demo app
 
 ./android/gradlew -p android :cds:assembleRelease
 ./android/gradlew -p android tasks
@@ -54,9 +54,8 @@ yarn nx run android-app:launch        # build + install + start the demo app
 The `-p android` is what points Gradle at this directory. Without it, Gradle looks in the current
 directory, finds no `settings.gradle.kts`, and fails.
 
-CI runs `:cds:test` from [`.github/workflows/android.yml`](../.github/workflows/android.yml) when
-these paths change. That workflow is separate from the JavaScript `CI` pipeline on purpose: it
-needs JDK 21 and the Android SDK, which those runners do not have.
+The root CI orchestrator calls [`.github/workflows/android.yml`](../.github/workflows/android.yml)
+when Gradle paths change. That reusable workflow runs with JDK 21 and the Android SDK.
 
 ## Working in Android Studio
 

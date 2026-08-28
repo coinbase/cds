@@ -3,7 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/eslint-plugin-cds/src",
   "projectType": "library",
-  "tags": [],
+  "tags": [
+    "toolchain:node"
+  ],
   "targets": {
     "build": {
       "command": "rm -rf esm lib && rollup -c",

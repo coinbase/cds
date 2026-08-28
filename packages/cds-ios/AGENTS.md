@@ -100,17 +100,15 @@ Run from the repo root:
 
 ```sh
 yarn nx run cds-ios:test        # swift test (theme library)
-yarn nx run cds-ios:build-ios    # swift build -c release
+yarn nx run cds-ios:build       # swift build -c release
 yarn nx run cds-ios:xcframework # build the distributable CDSDesignSystem.xcframework (+ checksum)
 ```
 
 Or directly with SwiftPM from `packages/cds-ios/`: `swift build`, `swift test`.
 
-CI runs Swift/Xcode builds in a separate macOS workflow (`.github/workflows/ios.yml`) on PRs and
-pushes that touch this package, `apps/ios-gallery`, or `ios/`. Every `cds-ios` / `ios-gallery` Nx
-project is tagged `platform:ios`, which the JavaScript CI (`ci.yml`) excludes from every `nx affected`
-job. Never name a `cds-ios` target `build`, `typecheck`, or `lint`: those names are wired to JS CI
-jobs that run on Linux runners with no Swift toolchain.
+The root CI workflow selects the reusable macOS workflow (`.github/workflows/ios.yml`) when this
+package, `apps/ios-gallery`, or `ios/` changes. Every `cds-ios` / `ios-gallery` Nx project uses
+`toolchain:xcode`, so Node jobs do not execute its targets.
 
 `.build/`, `*.xcframework`, and the generated `apps/ios-gallery/*.xcodeproj` are build outputs and
 stay untracked.

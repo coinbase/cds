@@ -111,7 +111,7 @@ git checkout master
 git pull
 
 yarn nx run cds-android:test
-yarn nx run cds-android:assemble
+yarn nx run cds-android:build
 ```
 
 The AAR is `packages/cds-android/build/outputs/aar/cds-release.aar`. Confirm that path exists
@@ -162,6 +162,6 @@ Confirm the release at https://github.com/coinbase/cds/releases. The asset name 
 - [ ] New section at the top of `CHANGELOG.md` (below `<!-- template-start -->`)
 - [ ] Requirements restated if any floor changed
 - [ ] Version PR merged to `master`
-- [ ] `yarn nx run cds-android:test` and `yarn nx run cds-android:assemble` from `master`
+- [ ] `yarn nx run cds-android:test` and `yarn nx run cds-android:build` from `master`
 - [ ] No existing `android-v<version>` release
 - [ ] `gh release create` with `cds-release.aar` and the changelog notes

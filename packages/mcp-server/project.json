@@ -3,7 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/mcp-server/src",
   "projectType": "library",
-  "tags": [],
+  "tags": [
+    "toolchain:node"
+  ],
   "targets": {
     "build": {
       "command": "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"

@@ -3,7 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/web-utils/src",
   "projectType": "library",
-  "tags": [],
+  "tags": [
+    "toolchain:node"
+  ],
   "targets": {
     "build": {
       "command": "rm -rf cjs && babel ./src --out-dir cjs --extensions .ts,.tsx,.js,.jsx"

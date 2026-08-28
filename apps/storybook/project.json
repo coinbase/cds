@@ -3,7 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/storybook",
   "projectType": "library",
-  "tags": [],
+  "tags": [
+    "toolchain:node"
+  ],
   "targets": {
     "dev": {
       "command": "storybook dev -p 6006"

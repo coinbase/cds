@@ -162,18 +162,17 @@ swift build
 swift test
 ```
 
-Or through Nx (project `cds-ios`, tagged `platform:ios`):
+Or through Nx (project `cds-ios`, tagged `toolchain:xcode`):
 
 ```bash
 yarn nx run cds-ios:test        # swift test (theme library)
-yarn nx run cds-ios:build-ios    # swift build -c release
+yarn nx run cds-ios:build       # swift build -c release
 yarn nx run cds-ios:xcframework # build the distributable CDSDesignSystem.xcframework (+ checksum)
 ```
 
-`platform:ios` projects are excluded from the JavaScript CI (`ci.yml`) — Swift/Xcode builds run
-in a separate macOS workflow (`.github/workflows/ios.yml`), mirroring how Android uses
-`android.yml`. Never name a `cds-ios` target `build`, `typecheck`, or `lint`: those names are
-wired to JS CI jobs that run on Linux runners with no Swift toolchain.
+The root CI workflow uses `toolchain:xcode` classification to call the reusable macOS workflow
+(`.github/workflows/ios.yml`), mirroring Android's Gradle lane. Node jobs do not execute Xcode
+project targets.
 
 ## Demo app
 

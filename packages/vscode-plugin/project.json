@@ -3,7 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/vscode-plugin/src",
   "projectType": "library",
-  "tags": [],
+  "tags": [
+    "toolchain:node"
+  ],
   "targets": {
     "build": {
       "command": "rm -rf dist && rollup -c",

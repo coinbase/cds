@@ -3,7 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "apps/vite-app",
   "projectType": "application",
-  "tags": [],
+  "tags": [
+    "toolchain:node"
+  ],
   "targets": {
     "dev": {
       "command": "vite dev"

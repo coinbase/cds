@@ -63,11 +63,12 @@ that get violated most often here: every element accepts and respects a `Modifie
 Run from the repo root:
 
 ```sh
-yarn nx run cds-android:assemble   # AAR -> packages/cds-android/build/outputs/aar/
-yarn nx run cds-android:test       # JUnit; headless composition, no Robolectric
+yarn nx run cds-android:build # AAR -> packages/cds-android/build/outputs/aar/
+yarn nx run cds-android:test  # JUnit; headless composition, no Robolectric
 ```
 
-CI runs the same Gradle test task (`.github/workflows/android.yml`) on PRs and pushes that touch
-this package, `apps/android-app`, or `android/`. Do not add Gradle jobs to the JavaScript `ci.yml`.
+The root CI workflow selects the reusable Gradle workflow (`.github/workflows/android.yml`) when
+this package, `apps/android-app`, or `android/` changes. New Android Nx projects use
+`toolchain:gradle`; keep Gradle-specific jobs in the reusable workflow.
 
 `build/`, `.gradle/`, `.idea/`, and `local.properties` are generated and stay untracked.

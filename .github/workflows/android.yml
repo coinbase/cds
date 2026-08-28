@@ -1,34 +1,10 @@
 name: Android
 
-# Native Android pipeline: JDK 21 + Android SDK + Gradle. Do not fold these jobs
-# into ci.yml — those runners have no JDK or Android SDK, and `nx affected
-# --target=test` would otherwise invoke Gradle for any project tagged
-# `platform:android`.
-#
-# Path filters are the inverse of ci.yml's paths-ignore, so an Android-only
-# change runs here and not there, a JS-only change runs there and not here, and
-# a mixed PR runs both. Keep the two lists in sync when adding Android paths.
+# Reusable native Android pipeline. ci.yml decides whether the Gradle toolchain is affected.
 
 on:
+  workflow_call:
   workflow_dispatch:
-  push:
-    branches:
-      - master
-    paths:
-      - 'android/**'
-      - 'apps/android-app/**'
-      - 'packages/cds-android/**'
-      - '.github/workflows/android.yml'
-      - '.github/actions/setup-android/**'
-  pull_request:
-    branches:
-      - master
-    paths:
-      - 'android/**'
-      - 'apps/android-app/**'
-      - 'packages/cds-android/**'
-      - '.github/workflows/android.yml'
-      - '.github/actions/setup-android/**'
 
 concurrency:
   group: Android-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
@@ -41,8 +17,8 @@ env:
   CI: true
 
 jobs:
-  test:
-    name: Test
+  build-test:
+    name: Build & Test
     runs-on: ubuntu-latest
     timeout-minutes: 30
     steps:
@@ -52,7 +28,11 @@ jobs:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       - uses: ./.github/actions/setup-android
-      # Same Gradle task as `yarn nx run cds-android:test` (packages/cds-android/project.json).
-      # Invoked directly so this workflow does not need Yarn, Node, or the JS install.
-      - name: Test
+      - name: Test CDS library
         run: ./android/gradlew -p android :cds:test
+      - name: Build CDS library
+        run: ./android/gradlew -p android :cds:assembleRelease
+      - name: Test demo app
+        run: ./android/gradlew -p android :app:testDebugUnitTest
+      - name: Build demo app
+        run: ./android/gradlew -p android :app:assembleDebug

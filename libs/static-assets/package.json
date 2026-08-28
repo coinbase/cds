@@ -7,5 +7,10 @@
     "type": "git",
     "url": "git@github.com:coinbase/cds.git",
     "directory": "libs/static-assets"
+  },
+  "nx": {
+    "tags": [
+      "toolchain:node"
+    ]
   }
 }

@@ -7,34 +7,12 @@ on:
       - master
       - 'cds-v[0-9]*'
       - 'release-[0-9]+.x'
-    # JavaScript pipeline (Yarn/Nx/ESLint/Jest/tsc). Native packages run in android.yml / ios.yml,
-    # so their paths are ignored here. Keep in sync with the `paths` lists in those workflows.
-    paths-ignore:
-      - 'android/**'
-      - 'apps/android-app/**'
-      - 'packages/cds-android/**'
-      - '.github/workflows/android.yml'
-      - '.github/actions/setup-android/**'
-      - 'ios/**'
-      - 'packages/cds-ios/**'
-      - 'apps/ios-gallery/**'
-      - '.github/workflows/ios.yml'
   pull_request:
     branches:
       - master
       - 'cds-v[0-9]+' # preferred branch names for CDS feature branches
       - 'cds-v9-master' # one off feature branch for CDS 9 after mistake in cds-v9 branch
       - 'release-[0-9]+.x' # preferred branch names for LTS version branches
-    paths-ignore:
-      - 'android/**'
-      - 'apps/android-app/**'
-      - 'packages/cds-android/**'
-      - '.github/workflows/android.yml'
-      - '.github/actions/setup-android/**'
-      - 'ios/**'
-      - 'packages/cds-ios/**'
-      - 'apps/ios-gallery/**'
-      - '.github/workflows/ios.yml'
 
 concurrency:
   group: CI-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
@@ -50,8 +28,35 @@ env:
   CB_GHA_BRANCH: ${{github.head_ref || github.base_ref || github.ref_name}}
 
 jobs:
+  changes:
+    name: Classify Changes
+    runs-on: ubuntu-latest
+    outputs:
+      node: ${{ steps.toolchains.outputs.node }}
+      gradle: ${{ steps.toolchains.outputs.gradle }}
+      xcode: ${{ steps.toolchains.outputs.xcode }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+      - name: Validate Nx project tags
+        run: node tools/ci/validators/validateProjectTags.mjs
+      - name: Classify affected toolchains
+        id: toolchains
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          FORCE_ALL: ${{ github.event_name == 'workflow_dispatch' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node tools/ci/classifyToolchains.mjs
+
   validate:
     name: Validate
+    needs: changes
+    if: needs.changes.outputs.node == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -75,6 +80,8 @@ jobs:
 
   lint:
     name: Lint
+    needs: changes
+    if: needs.changes.outputs.node == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -92,13 +99,12 @@ jobs:
         # preventing the count from growing unbounded. Lower it as the backlog is
         # paid down.
         #
-        # Android (`platform:android`) and iOS (`platform:ios`) Nx projects are excluded from every
-        # `nx affected` job: their targets need Gradle/Swift/Xcode, which these Linux runners lack.
-        # They run in android.yml / ios.yml instead.
-        run: yarn nx affected --exclude=tag:platform:android,tag:platform:ios --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=300
+        run: yarn nx affected --exclude='*,!tag:toolchain:node' --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=300
 
   format:
     name: Format
+    needs: changes
+    if: needs.changes.outputs.node == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -114,6 +120,8 @@ jobs:
 
   test:
     name: Test
+    needs: changes
+    if: needs.changes.outputs.node == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -125,10 +133,12 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Test
-        run: yarn nx affected --exclude=tag:platform:android,tag:platform:ios --target=test --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude='*,!tag:toolchain:node' --target=test --base=$NX_BASE --head=$NX_HEAD
 
   typecheck:
     name: Typecheck
+    needs: changes
+    if: needs.changes.outputs.node == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -140,10 +150,12 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Typecheck
-        run: yarn nx affected --exclude=tag:platform:android,tag:platform:ios --target=typecheck --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude='*,!tag:toolchain:node' --target=typecheck --base=$NX_BASE --head=$NX_HEAD
 
   build:
     name: Build
+    needs: changes
+    if: needs.changes.outputs.node == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -155,13 +167,14 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Build
-        run: yarn nx affected --exclude=expo-app,tag:platform:android,tag:platform:ios --target=build --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude='*,!tag:toolchain:node,expo-app' --target=build --base=$NX_BASE --head=$NX_HEAD
 
   depcheck:
     name: Depcheck
+    needs: changes
     runs-on: ubuntu-latest
     # Only run on master pushes (to cache baseline) or PRs targeting master (to compare)
-    if: github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master')
+    if: needs.changes.outputs.node == 'true' && (github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master'))
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -256,9 +269,10 @@ jobs:
 
   bundle-stats:
     name: Bundle Stats
+    needs: changes
     runs-on: ubuntu-latest
     # Only run on master pushes (to cache baseline) or PRs targeting master (to compare)
-    if: github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master')
+    if: needs.changes.outputs.node == 'true' && (github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master'))
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -315,6 +329,8 @@ jobs:
 
   lint-styles:
     name: Lint Styles
+    needs: changes
+    if: needs.changes.outputs.node == 'true'
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -326,4 +342,16 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
       - uses: ./.github/actions/setup
       - name: Lint Styles
-        run: yarn nx affected --exclude=tag:platform:android,tag:platform:ios --target=lint-styles --base=$NX_BASE --head=$NX_HEAD
+        run: yarn nx affected --exclude='*,!tag:toolchain:node' --target=lint-styles --base=$NX_BASE --head=$NX_HEAD
+
+  android:
+    name: Android
+    needs: changes
+    if: needs.changes.outputs.gradle == 'true'
+    uses: ./.github/workflows/android.yml
+
+  ios:
+    name: iOS
+    needs: changes
+    if: needs.changes.outputs.xcode == 'true'
+    uses: ./.github/workflows/ios.yml

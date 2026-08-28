@@ -4,10 +4,11 @@
   "projectType": "library",
   "sourceRoot": "packages/cds-ios/Sources",
   "tags": [
-    "platform:ios"
+    "platform:ios",
+    "toolchain:xcode"
   ],
   "targets": {
-    "build-ios": {
+    "build": {
       "executor": "nx:run-commands",
       "options": {
         "command": "swift build -c release",
@@ -16,6 +17,9 @@
       "dependsOn": [],
       "inputs": [
         "default"
+      ],
+      "outputs": [
+        "{projectRoot}/.build"
       ],
       "cache": true
     },
@@ -28,6 +32,9 @@
       "dependsOn": [],
       "inputs": [
         "default"
+      ],
+      "outputs": [
+        "{projectRoot}/.build"
       ],
       "cache": true
     },
