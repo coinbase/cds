@@ -2,9 +2,9 @@
 
 Native Android CDS: Kotlin and Jetpack Compose. Published as the AAR `com.coinbase.cds:cds`.
 
-This is a third CDS platform alongside `packages/web` (React) and `packages/mobile` (React
-Native). It shares their design language but none of their toolchain — no Yarn, no bundler, no
-TypeScript. It is a Gradle library module.
+This is one of four CDS platforms, alongside web (React), mobile (React Native), and native iOS
+(SwiftUI). It shares their design language but none of their implementation toolchain — it is a
+Gradle library module, not a TypeScript package.
 
 **Using CDS in an app?** Installation is below; then read [`docs/`](docs/README.md) for token usage,
 custom themes, and the full token reference. Everything after "Setup" is about developing the
@@ -165,15 +165,14 @@ packages can skip it entirely; the Android build is not part of `yarn install`.
 From the repo root:
 
 ```sh
-yarn nx run cds-android:assemble   # AAR -> build/outputs/aar/cds-release.aar
-yarn nx run cds-android:test       # JUnit unit tests
-yarn nx run android-app:launch     # build + install + start the demo app
+yarn nx run cds-android:build  # AAR -> build/outputs/aar/cds-release.aar
+yarn nx run cds-android:test   # JUnit unit tests
+yarn nx run android-app:launch # build + install + start the demo app
 ```
 
-Pull requests and pushes that touch this package, `apps/android-app`, or `android/` run
-`./android/gradlew -p android :cds:test` in [`.github/workflows/android.yml`](../../.github/workflows/android.yml)
-— JDK 21 and the Android SDK, not the JavaScript `CI` workflow. Tag any new Android Nx project
-`platform:android` so `ci.yml` keeps excluding it.
+The root CI workflow classifies changes to this package, `apps/android-app`, or `android/` as
+Gradle work and calls [`.github/workflows/android.yml`](../../.github/workflows/android.yml).
+Tag any new Android Nx project `toolchain:gradle`.
 
 There is no dev server. Unlike Expo, where Metro stays resident and serves JavaScript to a native
 shell, Compose compiles into the APK — so `launch` installs, starts the app, and exits. Re-run it

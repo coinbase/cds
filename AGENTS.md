@@ -1,27 +1,30 @@
 ## Overview
 
 This is the Coinbase Design System (CDS) - a cross-platform component library.
-Primary language: Typescript
+Primary language: TypeScript
 Package manager: yarn
 Task runner & monorepo tooling: Nx
 Runtime: NodeJS (see .nvmrc for version)
 
-CDS ships on three platforms: web (React), mobile (React Native), and **native Android**
-(Kotlin/Jetpack Compose). The Android package shares no toolchain with the other two - it is
-Gradle + JDK 21 + the Android SDK, not Yarn/Nx-driven bundling. Everything in this file describes
-the JavaScript side unless a section says otherwise; see "Native Android" below.
+CDS ships on four product platforms across three toolchains:
+
+| Product platform | Implementation         | Toolchain |
+| ---------------- | ---------------------- | --------- |
+| Web              | React                  | Node      |
+| Mobile           | React Native           | Node      |
+| Native Android   | Kotlin/Jetpack Compose | Gradle    |
+| Native iOS       | Swift/SwiftUI          | Xcode     |
+
+This root file contains repository-wide guidance. A package-level `AGENTS.md` is authoritative for
+work in that package and may add stricter local rules. In particular, read
+`packages/cds-android/AGENTS.md` before Kotlin work and `packages/cds-ios/AGENTS.md` before Swift
+work.
 
 ## Agent Guidelines
 
 - NEVER make commits without being instructed to do so directly
-- IMPORTANT: After you are done writing code, ALWAYS perform these tasks:
-  1. run the unit tests for the **specific file(s)** you modified
-  2. run typecheck on the **specific package(s)** you modified
-  3. run the formatter
-  - In Kotlin packages none of those three apply. Run `yarn nx run cds-android:test` and
-    `yarn nx run cds-android:assemble` instead - there is no tsc, no Jest, and Prettier does not
-    touch `.kt`/`.kts`.
-- For complex tasks, ask clarifying questions to the user before executing
+- Never commit secrets or credentials, log restricted PII, or remove or weaken security controls
+- Ask focused clarifying questions when ambiguity would materially change the implementation
 - ALWAYS look for relevant skills and rules you can apply before beginning your work
 
 ## Core Commands
@@ -32,12 +35,25 @@ the JavaScript side unless a section says otherwise; see "Native Android" below.
 - `yarn clean` - Removes all build artifacts, deletes .nx folder and resets the Nx daemon
 - `yarn nx reset` - Reset Nx daemon cache
 
-## Nx Commands
+## Verification
+
+After writing code, validate the smallest relevant scope:
+
+- Node: run tests for the modified files, typecheck and lint the modified projects, then run
+  `yarn nx format:write`
+- Gradle: run the changed project's `test` and `build` targets; Prettier does not format Kotlin
+- Xcode: run `cds-ios:test` and the changed project's `build` target; Prettier does not format Swift
+- Documentation only: run `yarn nx format:write` and verify changed commands and links
+
+See [`docs/testing.md`](docs/testing.md) for exact commands.
+
+## Nx and toolchains
 
 **ALWAYS** run Nx commands using the formats demonstrated by the commands below.
 
 - `yarn nx show projects` - Show all projects in the workspace (project names differ from package names)
 - `yarn nx affected --target=test` - Run tests only for affected projects
+- `yarn nx run <project>:build` - Build any project through its assigned toolchain
 - `yarn nx run <project>:test` - Run tests for a specific project
 - `yarn nx run <project>:test --testNamePattern=<pattern>` - Run tests matching pattern
 - `yarn nx format:write` - Formats all files in the workspace with Prettier
@@ -46,121 +62,37 @@ the JavaScript side unless a section says otherwise; see "Native Android" below.
 - `yarn nx run-many --target=<target1>,<target2>` - Run targets for all projects
 - `yarn nx run-many --target=<target1>,<target2> --projects=<project1>,<project2>` - Run targets for specific projects
 
+Every project has exactly one of `toolchain:node`, `toolchain:gradle`, or `toolchain:xcode`. Common
+targets use `build` and, where supported, `test`. Specialized targets such as `launch` and
+`xcframework` remain project-specific. See [`docs/nx.md`](docs/nx.md) for why the root target
+defaults remain Node-oriented, and [`docs/`](docs/README.md) for setup and CI architecture.
+
 ## Architecture
 
-### General Architecture
+- Platform implementations live in `packages/web`, `packages/mobile`, `packages/cds-android`, and
+  `packages/cds-ios`.
+- Shared Node functionality lives in `packages/common`; Kotlin and Swift cannot import TypeScript
+  packages.
+- Development apps are `apps/storybook`, `apps/expo-app`, `apps/android-app`, and
+  `apps/ios-gallery`.
+- `android/` is the Gradle root. `ios/` is the Xcode workspace umbrella.
+- Components generally colocate implementation, tests, stories, and Figma bindings where the
+  toolchain supports them.
 
-- **Platform-specific implementations**: Separate implementations for web (React) and mobile (React Native)
-- **Shared functionality**: Common business logic in `packages/common` used across other packages
-- **Theme system**: CDS design tokens are themable and applied via CSS variables (web) and styles (react-native) through a ThemeProvider
-- **Design tokens**: Design tokens (e.g. "bgPrimary", "fgMuted") can be used as values for special CDS component "style props" (e.g. "background")
-- **Component structure**: Each component has its own folder with the component, tests, stories, and Figma bindings
-- **Testing**: Tests are written in Typescript and run with Jest.
+## Native package guidance
 
-### Key Packages & Apps:
-
-- **`packages/web/`** - React web components (`@coinbase/cds-web`)
-- **`packages/mobile/`** - React Native mobile components (`@coinbase/cds-mobile`)
-- **`packages/common/`** - Shared functionality and types (`@coinbase/cds-common`)
-- **`packages/icons/`** - Icon definitions and data (`@coinbase/cds-icons`)
-- **`packages/illustrations/`** - Illustration assets (`@coinbase/illustrations`)
-- **`apps/docs/`** - Public documentation website (Docusaurus)
-- **`apps/storybook/`** - Component development and testing environment for cds-web
-- **`apps/expo-app/`** - Expo app for testing and visual regression of CDS mobile components
-- **`packages/cds-android/`** - Native Android components, Kotlin/Jetpack Compose (`com.coinbase.cds:cds`)
-- **`apps/android-app/`** - Native Android demo app that consumes `packages/cds-android` from source
-- **`android/`** - Gradle root for the two projects above (wrapper, version catalog, plugin classpath)
-
-## Native Android
-
-Kotlin/Jetpack Compose, built by Gradle. Read `packages/cds-android/AGENTS.md` before editing
-anything under `packages/cds-android/` - it is the source of truth for that module's API
-boundary. Load the `jetpack-best-practices` skill when writing Compose.
-
-**Layout.** The Gradle root is `android/`, and it maps two Gradle modules onto the Nx layout:
-`:cds` -> `packages/cds-android`, `:app` -> `apps/android-app`. Nx project names are
-`cds-android` and `android-app`. Open `android/` in Android Studio; run CLI commands from the repo
-root.
-
-**Commands.** These shell out to Gradle and require JDK 21 plus the Android SDK:
-
-- `yarn nx run cds-android:assemble` - build the AAR
-- `yarn nx run cds-android:test` - JUnit unit tests (headless composition, no Robolectric)
-- `yarn nx run android-app:launch` - build, install, and start the demo app on a device/emulator
-- `./android/gradlew -p android <task>` - anything Nx does not wrap
-
-**Rules.**
-
-- `:cds` compiles with Kotlin **explicit API mode**. Do not add a `public` declaration unless it
-  is intentional customer API.
-- Tag every Android Nx project `platform:android`. JavaScript CI (`ci.yml`) excludes that tag from
-  every `nx affected` job; Android unit tests run in a separate workflow
-  (`.github/workflows/android.yml`) on runners with JDK 21 and the Android SDK. Do not fold
-  Gradle jobs into `ci.yml`.
-- Never name an Android Nx target `build`, `typecheck`, or `lint`. Those names are wired to
-  JavaScript CI jobs that run on machines with no JDK or Android SDK.
-- Android versions independently, in Gradle. Never fold it into `yarn release` or the 9.x version
-  sync.
-- Kotlin cannot import `@coinbase/cds-common`. Android tokens are a hand-port today; shared
-  codegen is the goal, not something to fake with a runtime dependency.
-- There is no Kotlin linter configured yet. Formatting follows Android Studio's formatter.
-
-## Native iOS
-
-Swift 6 / SwiftUI, built by Swift Package Manager — no Yarn/Nx bundling, no `@coinbase/cds-common`
-import. It is the `native-rewrite` counterpart to Android, and follows the same layout: a lighter
-umbrella at `ios/`, the library under `packages/`, the app under `apps/`. For Swift review follow the
-package README at `packages/cds-ios/README.md`.
-
-**Layout.** Two Swift modules, mapped onto the Nx layout like Android's `:cds`/`:app`:
-
-| Module              | Directory           | Nx project    |
-| ------------------- | ------------------- | ------------- |
-| `CDSDesignSystem`   | `packages/cds-ios/` | `cds-ios`     |
-| `CDSGalleryiOS` app | `apps/ios-gallery/` | `ios-gallery` |
-
-`ios/` is the umbrella (`CDS.xcworkspace` + README). Unlike `android/` it is **not** a build root:
-SwiftPM has no `settings.gradle` equivalent and cannot remap target sources to a sibling directory,
-so each module is self-rooted. `apps/ios-gallery` depends on `packages/cds-ios` as a local SwiftPM
-package (relative path). Run CLI commands from the repo root.
-
-**Commands.** These require Swift 6 / Xcode (macOS only):
-
-- `yarn nx run cds-ios:test` - `swift test` (theme library unit tests)
-- `yarn nx run cds-ios:build-ios` - `swift build -c release`
-- `yarn nx run ios-gallery:build-ios` - `xcodegen generate` + iOS Simulator build of the app
-- `yarn nx run ios-gallery:launch` - build + install + run the gallery on an iOS Simulator
-- `cd packages/cds-ios && swift <build|test>` - anything Nx does not wrap
-
-**Rules.**
-
-- Tag every native-iOS Nx project `platform:ios`. JavaScript CI (`ci.yml`) excludes that tag from
-  every `nx affected` job; Swift/Xcode builds run in a separate workflow
-  (`.github/workflows/ios.yml`) on macOS runners. Do not fold Swift jobs into `ci.yml`.
-- Never name a `cds-ios`/`ios-gallery` target `build`, `typecheck`, or `lint`. Those names are wired
-  to JavaScript CI jobs that run on Linux runners with no Swift toolchain.
-- The package builds under Swift 6 language mode; theme types are `Sendable` + `Equatable`. Keep
-  memberwise initializers `internal` and evolve themes via the `cdsTheme { }` builder so adding a
-  token stays source-compatible.
-- The theme layer is the public surface. Components under `Sources/Components/` (`Text`,
-  `Button`, `SlideButton`, `ProgressCircle`) are deliberately `internal` — they ship in the
-  XCFramework but are not customer API yet (the same status as Android's `internal` components). Do
-  not add `public` to them to make the gallery compile: `apps/ios-gallery` uses `@testable import
-CDSDesignSystem` (Debug enables testability) to exercise the real components. Promote a component
-  to `public` only when it is an intentional, stable API.
-- iOS versions independently (SwiftPM / XCFramework). Never fold it into `yarn release` or the 9.x
-  version sync. Cutting a release is manual: build the XCFramework (`yarn nx run cds-ios:xcframework`)
-  and attach it to a GitHub Release tagged `ios-v<version>` — follow
-  [`packages/cds-ios/docs/releasing.md`](packages/cds-ios/docs/releasing.md) and record the version
-  in [`packages/cds-ios/CHANGELOG.md`](packages/cds-ios/CHANGELOG.md).
-- Swift cannot import `@coinbase/cds-common`. iOS tokens are a hand-port today; shared codegen is the
-  goal, not something to fake with a runtime dependency.
-- The generated `apps/ios-gallery/CDSGallery.xcodeproj` is disposable — edit
-  `apps/ios-gallery/project.yml` and regenerate with `xcodegen generate`, never hand-edit the project.
+- For Kotlin/Compose implementation rules, API boundaries, token details, and releases, follow
+  [`packages/cds-android/AGENTS.md`](packages/cds-android/AGENTS.md).
+- For Swift/SwiftUI implementation rules, API boundaries, token details, and releases, follow
+  [`packages/cds-ios/AGENTS.md`](packages/cds-ios/AGENTS.md).
+- Load the `jetpack-best-practices` skill when writing Compose.
+- Do not copy package-local consumer or release rules into this root file.
 
 ## Skills
 
-Skills for this project live in `skills/`. Each skill has a `README.md` and optionally an `evals/` directory with benchmark test cases.
+Repository-specific skills live in `skills/` and `.claude/skills/`. Load the relevant skill before
+working in its domain. Skills under `skills/` use a `README.md` and may include an `evals/`
+directory with benchmark test cases.
 
 ### After running skill evals
 

@@ -22,7 +22,7 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-node-ci
       - name: Check Figma Token
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
@@ -53,7 +53,7 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-node-ci
       - name: Check Figma Token
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
@@ -86,7 +86,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 100 # TODO: This needs to include the merge-base
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-node-ci
       - name: Check Figma Token
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
@@ -125,7 +125,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 100 # TODO: This needs to include the merge-base
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-node-ci
       - name: Run Audit
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}

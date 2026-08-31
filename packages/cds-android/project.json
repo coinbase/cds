@@ -4,13 +4,15 @@
   "projectType": "library",
   "sourceRoot": "packages/cds-android/src",
   "tags": [
-    "platform:android"
+    "platform:android",
+    "toolchain:gradle"
   ],
   "targets": {
-    "assemble": {
+    "build": {
       "executor": "nx:run-commands",
       "options": {
-        "command": "./android/gradlew -p android :cds:assembleRelease"
+        "command": "./android/gradlew -p android :cds:assembleRelease",
+        "cwd": "."
       },
       "dependsOn": [],
       "inputs": [

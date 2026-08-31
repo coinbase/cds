@@ -1,31 +1,10 @@
 name: iOS
 
-# Native iOS pipeline: Swift 6 + SwiftPM + Xcode. Do not fold these jobs into ci.yml — those
-# Linux runners have no Swift or Xcode, and `nx affected --target=test` would otherwise invoke
-# `swift test` for any project tagged `platform:ios`.
-#
-# Path filters are the inverse of ci.yml's paths-ignore, so an iOS-only change runs here and not
-# there, a JS-only change runs there and not here, and a mixed PR runs both. Keep the two lists in
-# sync when adding iOS paths.
+# Reusable native iOS pipeline. ci.yml decides whether the Xcode toolchain is affected.
 
 on:
+  workflow_call:
   workflow_dispatch:
-  push:
-    branches:
-      - master
-    paths:
-      - 'ios/**'
-      - 'packages/cds-ios/**'
-      - 'apps/ios-gallery/**'
-      - '.github/workflows/ios.yml'
-  pull_request:
-    branches:
-      - master
-    paths:
-      - 'ios/**'
-      - 'packages/cds-ios/**'
-      - 'apps/ios-gallery/**'
-      - '.github/workflows/ios.yml'
 
 concurrency:
   group: iOS-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
@@ -46,7 +25,7 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      # Same commands as `yarn nx run cds-ios:test` / `cds-ios:build-ios` (packages/cds-ios/project.json),
+      # Same commands as `yarn nx run cds-ios:test` / `cds-ios:build` (packages/cds-ios/project.json),
       # invoked directly so this workflow needs no Yarn, Node, or the JS install.
       - name: Swift test
         working-directory: packages/cds-ios
@@ -65,7 +44,7 @@ jobs:
         run: brew install xcodegen
       # Regenerate the (git-ignored) Xcode project from project.yml, then compile the iOS app
       # target for a simulator. This validates that the gallery sources — and the local
-      # packages/cds-ios dependency — compile for the iOS SDK. Mirrors `yarn nx run ios-gallery:build-ios`.
+      # packages/cds-ios dependency — compile for the iOS SDK. Mirrors `yarn nx run ios-gallery:build`.
       - name: Generate Xcode project
         working-directory: apps/ios-gallery
         run: xcodegen generate

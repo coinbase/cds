@@ -8,7 +8,7 @@ Add the relative path to the CDS icon font to your react-native.config.js. If yo
 
 In this monorepo, run the `expo-app` targets from the repo root:
 
-- `yarn nx run expo-app:launch:ios-debug` or `yarn nx run expo-app:launch:android-debug` for local debug launch
+- `yarn nx run expo-app:ios` or `yarn nx run expo-app:android` for local development
 
 ### Outside monorepo
 

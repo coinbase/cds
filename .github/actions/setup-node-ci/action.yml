@@ -1,16 +1,14 @@
-name: Setup CDS
-description: Checkout code, setup cache and install yarn packages
+name: Setup Node CI
+description: Set up Node, Yarn dependencies and cache, and Nx affected SHAs
 inputs:
   yarn-install:
     description: 'Whether to install yarn packages'
     required: false
     default: 'true'
-    type: boolean
   yarn-hardened-mode:
     description: 'Whether to run yarn in hardened mode'
     required: false
     default: 'false'
-    type: boolean
 
 runs:
   using: composite

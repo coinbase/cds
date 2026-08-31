@@ -3,6 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/docusaurus-plugin-llm-dev-server/src",
   "projectType": "library",
+  "tags": [
+    "toolchain:node"
+  ],
   "targets": {
     "build": {
       "command": "rm -rf cjs && babel ./src --out-dir cjs --extensions .ts,.tsx,.js,.jsx"

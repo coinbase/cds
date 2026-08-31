@@ -3,6 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "packages/mobile-visreg/src",
   "projectType": "library",
+  "tags": [
+    "toolchain:node"
+  ],
   "targets": {
     "browserstack-ios": {
       "command": "node ./src/browserstack-run.mjs --platform ios --appPath ../../apps/expo-app/prebuilds/ios-release-device/expoapp.ipa --devices 'iPhone 16-18' --appId com.anonymous.expo-app --scheme expoapp --platform-suffix _ios",

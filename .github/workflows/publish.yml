@@ -52,7 +52,7 @@ jobs:
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 0
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-node-ci
 
       - name: Determine packages to publish
         id: packages
@@ -199,7 +199,7 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-node-ci
 
       - name: Update npm
         run: |
@@ -288,7 +288,7 @@ jobs:
         with:
           egress-policy: audit
       - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-node-ci
 
       - name: Update npm
         run: |

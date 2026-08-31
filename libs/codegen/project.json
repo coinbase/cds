@@ -3,6 +3,9 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/codegen/src",
   "projectType": "library",
+  "tags": [
+    "toolchain:node"
+  ],
   "implicitDependencies": [
     "!web",
     "!common",
