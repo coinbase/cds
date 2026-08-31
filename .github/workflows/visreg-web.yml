@@ -42,7 +42,7 @@ jobs:
           fetch-depth: 100 # TODO: This needs to include the merge-base
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }} # Ensure correct ref for push/PR
 
-      - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup-node-ci
       - name: Set branch name for Percy
         env:
           EVENT_NAME: ${{ github.event_name }}
