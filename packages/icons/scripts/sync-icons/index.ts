@@ -86,7 +86,7 @@ type WebfontResult = Omit<WebfontReturnValue, 'glyphsData'> & {
   glyphsData: CorrectedWebfontGlyphData[];
 };
 
-/** Results from the sync process used to generate logs and changelogs. */
+/** Results from the sync process used to generate logs and the version plan. */
 export type IconSyncResults = {
   newIconSets: ManifestIconSet[];
   deletedIconSets: ManifestIconSet[];
@@ -192,7 +192,7 @@ const main = async () => {
     return;
   }
 
-  // Used for logging and changelog generation
+  // Used for logging and version plan generation
   const syncResults: IconSyncResults = {
     newIconSets: [],
     deletedIconSets: [],
@@ -504,10 +504,9 @@ export const descriptionMap: Record<string, IconName[]> = ${descriptionMapConten
   if (!hasChanges) console.log('No changes detected, skipping version plan...');
   else {
     console.log('Writing version plan...');
-    const date = new Date().toISOString().slice(0, 10);
     fs.writeFileSync(
-      path.join(config.versionPlansPath, `icons-${date}.md`),
-      generateVersionPlan(syncResults, date),
+      path.join(config.versionPlansPath, `icons-${todaysDate}.md`),
+      generateVersionPlan(syncResults, todaysDate),
     );
   }
 

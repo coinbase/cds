@@ -20,10 +20,11 @@ yarn release
 
 Commit the plan file together with the resulting `package.json` and `CHANGELOG.md` changes. When your PR merges, [`publish.yml`](../.github/workflows/publish.yml) sees the changed `packages/*/package.json` and publishes to npm.
 
-To limit a release to specific packages, pass `--projects`:
+To limit a release to specific packages, pass `--projects`. This only accepts packages that version independently; nx rejects the filter if it names a member of a fixed group, so target the `cds` group with `--group` instead. The same applies to `yarn nx release plan`.
 
 ```sh
 yarn release --projects=icons
+yarn release --group=cds
 ```
 
 Preview without touching any files:
