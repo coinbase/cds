@@ -14,7 +14,7 @@ import type { ScrubberBeaconComponent, ScrubberBeaconProps, ScrubberBeaconRef } 
 
 type BeaconWithDataProps = Pick<
   ScrubberBeaconProps,
-  'seriesId' | 'idlePulse' | 'animate' | 'transitions' | 'stroke'
+  'seriesId' | 'idlePulse' | 'animate' | 'transitions' | 'stroke' | 'style'
 > & {
   dataIndex: SharedValue<number>;
   dataIndexValue: SharedValue<number>;
@@ -36,6 +36,7 @@ const BeaconWithData = memo<BeaconWithDataProps>(
     transitions,
     beaconRef,
     stroke,
+    style,
   }) => {
     const { layout, getSeries, getSeriesData, getXScale, getYScale } = useCartesianChartContext();
     const theme = useTheme();
@@ -128,6 +129,7 @@ const BeaconWithData = memo<BeaconWithDataProps>(
         isIdle={isIdle}
         seriesId={seriesId}
         stroke={stroke}
+        style={style}
         transitions={transitions}
       />
     );
@@ -167,6 +169,10 @@ export type ScrubberBeaconGroupProps = ScrubberBeaconGroupBaseProps & {
    * @default theme.color.bg
    */
   stroke?: string;
+  /**
+   * Custom styles applied to each beacon group.
+   */
+  style?: ScrubberBeaconProps['style'];
 };
 
 export const ScrubberBeaconGroup = memo(
@@ -177,6 +183,7 @@ export const ScrubberBeaconGroup = memo(
     transitions,
     BeaconComponent = DefaultScrubberBeacon,
     stroke,
+    style,
   }: ScrubberBeaconGroupProps & {
     ref?: React.Ref<ScrubberBeaconGroupRef>;
   }) => {
@@ -247,6 +254,7 @@ export const ScrubberBeaconGroup = memo(
         isIdle={isIdle}
         seriesId={s.id}
         stroke={stroke}
+        style={style}
         transitions={transitions}
       />
     ));

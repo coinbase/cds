@@ -42,6 +42,7 @@ const PositionedLabel = memo<{
   BeaconLabelComponent: ScrubberBeaconLabelComponent;
   labelHorizontalOffset: number;
   labelFont?: ChartTextProps['font'];
+  style?: ScrubberBeaconLabelProps['style'];
 }>(
   ({
     index,
@@ -56,6 +57,7 @@ const PositionedLabel = memo<{
     BeaconLabelComponent,
     labelHorizontalOffset,
     labelFont,
+    style,
   }) => {
     const opacity = useDerivedValue(
       () => (positions.value[index] !== null ? 1 : 0),
@@ -122,6 +124,7 @@ const PositionedLabel = memo<{
         onDimensionsChange={(d) => onDimensionsChange(seriesId, d)}
         opacity={opacity}
         seriesId={seriesId}
+        style={style}
         x={x}
         y={y}
       />
@@ -166,6 +169,10 @@ export type ScrubberBeaconLabelGroupProps = ScrubberBeaconLabelGroupBaseProps & 
    * Transition configuration for beacon label animations.
    */
   transitions?: ScrubberBeaconProps['transitions'];
+  /**
+   * Custom styles applied to each beacon label.
+   */
+  style?: ScrubberBeaconLabelProps['style'];
 };
 
 export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
@@ -177,6 +184,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
     labelPreferredSide = 'right',
     BeaconLabelComponent = DefaultScrubberBeaconLabel,
     transitions,
+    style,
   }) => {
     const {
       getSeries,
@@ -376,6 +384,7 @@ export const ScrubberBeaconLabelGroup = memo<ScrubberBeaconLabelGroupProps>(
           position={currentPosition}
           positions={allLabelPositions}
           seriesId={info.seriesId}
+          style={style}
           updateTransition={updateTransition}
         />
       );

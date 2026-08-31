@@ -8,8 +8,10 @@ import {
 import {
   type AnimatedProp,
   Group,
+  type GroupProps,
   Paint,
   Rect,
+  type RectProps,
   type SkParagraph,
 } from '@shopify/react-native-skia';
 
@@ -19,6 +21,8 @@ import {
   ReferenceLine,
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
+  type ReferenceLineLabelStyle,
+  type ReferenceLineStyles,
 } from '../line/ReferenceLine';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
 import { type ChartInset, type Series } from '../utils/chart';
@@ -102,7 +106,17 @@ export type ScrubberBeaconBaseProps = {
   stroke?: string;
 };
 
+/**
+ * Style props applied to the beacon's Skia group. Positioning and the animated
+ * visibility opacity remain owned by the component.
+ */
+export type ScrubberBeaconStyle = Omit<GroupProps, 'children' | 'opacity'>;
+
 export type ScrubberBeaconProps = ScrubberBeaconBaseProps & {
+  /**
+   * Custom styles applied to the beacon group.
+   */
+  style?: ScrubberBeaconStyle;
   /**
    * Transition configuration for beacon animations.
    */
@@ -148,6 +162,10 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
      * Id of the series.
      */
     seriesId: Series['id'];
+    /**
+     * Custom styles applied to the beacon label.
+     */
+    style?: ReferenceLineLabelStyle;
   };
 export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
 
@@ -243,19 +261,32 @@ export type ScrubberProps = ScrubberBaseProps & {
   beaconTransitions?: ScrubberBeaconProps['transitions'];
   /** Custom styles for individual elements of the Scrubber component */
   styles?: {
-    /** Overlay rect which obscures data beyond the scrubber position */
-    overlay?: {
-      /**
-       * Fill color of the overlay.
-       * @default theme.color.bg
-       */
-      fill?: string;
-      /**
-       * Opacity of the overlay while scrubbing.
-       * @default 0.8
-       */
-      opacity?: number;
-    };
+    /**
+     * Style props applied to the overlay rect which obscures data beyond the
+     * scrubber position. Accepts any Skia `Rect` paint prop (e.g. `color`,
+     * `blendMode`).
+     * @note `color` defaults to `theme.color.bg` and `opacity` defaults to `0.8`
+     * while scrubbing. `opacity` is used as the target for the show/hide
+     * transition rather than a static value.
+     */
+    overlay?: Omit<RectProps, 'x' | 'y' | 'width' | 'height' | 'rect'>;
+    /**
+     * Style props applied to the beacon's Skia group.
+     * @note The animated visibility opacity remains owned by the component.
+     */
+    beacon?: ScrubberBeaconStyle;
+    /**
+     * Style props applied to the scrubber line, forwarded to its `LineComponent`.
+     */
+    line?: ReferenceLineStyles['line'];
+    /**
+     * Style props applied to the scrubber line label.
+     */
+    label?: ReferenceLineStyles['label'];
+    /**
+     * Style props applied to the beacon labels.
+     */
+    beaconLabel?: ReferenceLineLabelStyle;
   };
 };
 
@@ -358,8 +389,8 @@ export const Scrubber = memo(
       return scrubberPosition.value !== undefined ? 1 : 0;
     }, [scrubberPosition]);
 
-    const overlayFill = styles?.overlay?.fill ?? theme.color.bg;
-    const overlayActiveOpacity = styles?.overlay?.opacity ?? defaultOverlayOpacity;
+    const overlayStyle = styles?.overlay;
+    const overlayActiveOpacity = overlayStyle?.opacity ?? defaultOverlayOpacity;
 
     const overlayOpacity = useDerivedValue(() => {
       return scrubberPosition.value !== undefined ? overlayActiveOpacity : 0;
@@ -456,7 +487,8 @@ export const Scrubber = memo(
       <Group layer={<Paint opacity={scrubberOpacity} />}>
         {!hideOverlay && (
           <Rect
-            color={overlayFill}
+            color={theme.color.bg}
+            {...overlayStyle}
             height={overlayHeight}
             opacity={overlayOpacity}
             width={overlayWidth}
@@ -475,6 +507,7 @@ export const Scrubber = memo(
             labelFont={labelFont}
             opacity={lineOpacity}
             stroke={lineStroke}
+            styles={{ line: styles?.line, label: styles?.label }}
           />
         )}
         <ScrubberBeaconGroup
@@ -483,6 +516,7 @@ export const Scrubber = memo(
           idlePulse={idlePulse}
           seriesIds={filteredSeriesIds}
           stroke={beaconStroke}
+          style={styles?.beacon}
           transitions={transitions}
         />
         {showBeaconLabels && (
@@ -493,6 +527,7 @@ export const Scrubber = memo(
             labelMinGap={beaconLabelMinGap}
             labelPreferredSide={beaconLabelPreferredSide}
             labels={beaconLabels}
+            style={styles?.beaconLabel}
             transitions={transitions}
           />
         )}

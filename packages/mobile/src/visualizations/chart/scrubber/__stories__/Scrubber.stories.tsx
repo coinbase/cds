@@ -788,7 +788,44 @@ const CustomOverlay = () => {
         },
       ]}
     >
-      <Scrubber styles={{ overlay: { fill: theme.color.bgAlternate, opacity: 0.6 } }} />
+      <Scrubber styles={{ overlay: { color: theme.color.bgAlternate, opacity: 0.6 } }} />
+    </LineChart>
+  );
+};
+
+const CustomStyles = () => {
+  const theme = useTheme();
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      showYAxis
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={200}
+      inset={{ top: 40 }}
+      series={[
+        {
+          id: 'prices',
+          data: sampleData,
+          label: 'Price',
+        },
+      ]}
+      yAxis={{ showGrid: true }}
+    >
+      <Scrubber
+        hideBeaconLabels={false}
+        label={(dataIndex: number) => `Day ${dataIndex + 1}`}
+        labelElevated
+        styles={{
+          overlay: { color: theme.color.bgAlternate, opacity: 0.6 },
+          beacon: { blendMode: 'multiply' },
+          line: { stroke: theme.color.fgPrimary, strokeWidth: 2 },
+          label: { color: theme.color.fgInverse, background: theme.color.fgPrimary },
+          beaconLabel: { color: theme.color.fgInverse, background: theme.color.fgPrimary },
+        }}
+      />
     </LineChart>
   );
 };
@@ -1018,6 +1055,10 @@ const ExampleNavigator = () => {
       {
         title: 'Custom Overlay',
         component: <CustomOverlay />,
+      },
+      {
+        title: 'Custom Styles',
+        component: <CustomStyles />,
       },
       {
         title: 'Matchup Beacon Labels',

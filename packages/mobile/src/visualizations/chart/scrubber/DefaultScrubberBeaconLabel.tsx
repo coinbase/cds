@@ -32,6 +32,7 @@ export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
       bottom: labelVerticalInset,
     },
     label,
+    style,
     ...chartTextProps
   }) => {
     const theme = useTheme();
@@ -46,6 +47,7 @@ export const DefaultScrubberBeaconLabel = memo<DefaultScrubberBeaconLabelProps>(
         repositionAxes="none"
         verticalAlignment={verticalAlignment}
         {...chartTextProps}
+        {...style}
       >
         {label}
       </ChartText>

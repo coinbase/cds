@@ -69,6 +69,7 @@ export const DefaultScrubberBeacon = memo(
     radius = defaultRadius,
     stroke,
     strokeWidth = defaultStrokeWidth,
+    style,
   }: DefaultScrubberBeaconProps & {
     ref?: React.Ref<ScrubberBeaconRef>;
   }) => {
@@ -240,7 +241,7 @@ export const DefaultScrubberBeacon = memo(
     }, [targetPoint, drawingArea, opacityProp]);
 
     return (
-      <Group opacity={beaconOpacity}>
+      <Group {...style} opacity={beaconOpacity}>
         <Circle c={animatedPoint} color={color} opacity={pulseVisibility} r={pulseRadius} />
         <Circle c={animatedPoint} color={stroke ?? theme.color.bg} r={radius + strokeWidth / 2} />
         <Circle c={animatedPoint} color={color} r={radius - strokeWidth / 2} />
