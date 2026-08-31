@@ -271,13 +271,12 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             animate={false}
             stroke={effectiveLineStroke}
             strokeWidth={strokeWidth}
-            {...styles?.line}
             d={horizontalLine}
             strokeOpacity={opacity}
+            {...styles?.line}
           />
           {label && (
             <LabelComponent
-              {...styles?.label}
               boundsInset={labelBoundsInset}
               dx={labelDx}
               dy={labelDy}
@@ -288,6 +287,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
               verticalAlignment={labelVerticalAlignment ?? (isHorizontal ? 'middle' : undefined)}
               x={labelX}
               y={labelYPixel}
+              {...styles?.label}
             >
               {label}
             </LabelComponent>
@@ -313,13 +313,12 @@ export const ReferenceLine = memo<ReferenceLineProps>(
             animate={false}
             stroke={effectiveLineStroke}
             strokeWidth={strokeWidth}
-            {...styles?.line}
             d={verticalLine}
             strokeOpacity={opacity}
+            {...styles?.line}
           />
           {label && (
             <LabelComponent
-              {...styles?.label}
               boundsInset={labelBoundsInset}
               dx={labelDx}
               dy={labelDy}
@@ -332,6 +331,7 @@ export const ReferenceLine = memo<ReferenceLineProps>(
               verticalAlignment={labelVerticalAlignment}
               x={labelXPixel}
               y={labelY}
+              {...styles?.label}
             >
               {label}
             </LabelComponent>

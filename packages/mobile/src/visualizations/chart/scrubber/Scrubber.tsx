@@ -387,8 +387,10 @@ export const Scrubber = memo(
       return scrubberPosition.value !== undefined ? 1 : 0;
     }, [scrubberPosition]);
 
-    const overlayStyle = styles?.overlay;
-    const overlayActiveOpacity = overlayStyle?.opacity ?? 0.8;
+    // Pull `opacity` out of the overlay style so it can drive the animated
+    // show/hide transition rather than being applied as a static value.
+    const { opacity: overlayStyleOpacity, ...overlayStyle } = styles?.overlay ?? {};
+    const overlayActiveOpacity = overlayStyleOpacity ?? 0.8;
 
     const overlayOpacity = useDerivedValue(() => {
       return scrubberPosition.value !== undefined ? overlayActiveOpacity : 0;
@@ -486,12 +488,12 @@ export const Scrubber = memo(
         {!hideOverlay && (
           <Rect
             color={theme.color.bg}
-            {...overlayStyle}
             height={overlayHeight}
             opacity={overlayOpacity}
             width={overlayWidth}
             x={overlayX}
             y={overlayY}
+            {...overlayStyle}
           />
         )}
         {!hideLine && (
