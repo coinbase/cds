@@ -52,7 +52,7 @@ export type IconGlyphSource<Name extends string = string> = {
   getGlyph?: (args: IconGlyphResolverArgs<Name>) => string | undefined;
 };
 
-const IconGlyphSourceContext = createContext<IconGlyphSource<any> | undefined>(undefined);
+export const IconGlyphSourceContext = createContext<IconGlyphSource<any> | undefined>(undefined);
 
 export type IconGlyphSourceProviderProps = {
   /**
@@ -161,6 +161,19 @@ const resolveGlyph = (
   return fromContext ?? resolveFromSource(boundSource, args);
 };
 
+/**
+ * Resolves a glyph for `name` against the nearest `IconGlyphSourceProvider`,
+ * falling back to `boundSource` when the context has no match.
+ * Extracts the shared lookup logic so both `createIcon` and `TextIcon` use it.
+ */
+export function useResolvedGlyph(
+  boundSource: IconGlyphSource<any>,
+  args: Omit<IconGlyphResolverArgs<string>, 'glyphMap'>,
+): ResolvedGlyph | undefined {
+  const contextSource = useContext(IconGlyphSourceContext);
+  return resolveGlyph(contextSource, boundSource, args);
+}
+
 /** Creates a typed `Icon` component bound to an icon set. */
 export function createIcon<Name extends string>(source: IconGlyphSource<Name>) {
   const Icon = memo(({ ref, ..._props }: IconProps<Name> & { ref?: React.Ref<Text> }) => {
@@ -197,8 +210,7 @@ export function createIcon<Name extends string>(source: IconGlyphSource<Name>) {
     const finalColor = dangerouslySetColor ?? iconColor;
 
     // Tried before the bound set, so a source can override a built-in icon.
-    const contextSource = useContext(IconGlyphSourceContext);
-    const resolved = resolveGlyph(contextSource, source, {
+    const resolved = useResolvedGlyph(source, {
       name,
       size,
       pixelSize: iconSize,
