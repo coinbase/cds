@@ -9,10 +9,10 @@ If you encounter a bug, have a feature request, or notice something that could b
 ## Development Setup
 
 1. [Fork the repository](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo)
-2. Follow the [contributor setup guide](docs/contributing/setup.md) for Node, Gradle, or Xcode
+2. Follow the [contributor setup guide](docs/setup.md) for Node, Gradle, or Xcode
 3. [Setup a GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key) for signing commits
 
-The [contributor hub](docs/contributing/README.md) also covers validation commands and CI behavior.
+The [contributor hub](docs/README.md) also covers validation commands and CI behavior.
 
 ## Making Changes
 
@@ -25,7 +25,7 @@ When making changes:
 - Update [documentation](https://github.com/coinbase/cds/tree/master/apps/docs) if appropriate
 - Update [Storybook](https://github.com/coinbase/cds/tree/master/apps/storybook) if there are visual changes
 - Add or update tests
-- Follow the [testing and validation guide](docs/contributing/testing.md) for every changed project
+- Follow the [testing and validation guide](docs/testing.md) for every changed project
 
 ## Submitting a Pull Request
 
@@ -64,8 +64,8 @@ Fill out the [pull request template](https://github.com/coinbase/cds/blob/master
 ### Version and Changelog
 
 Versioning and release procedures differ by package and toolchain. Follow the
-[versioning and release guide](docs/contributing/releasing.md); do not apply Node release commands
-to native Android or native iOS artifacts.
+[versioning and release guide](docs/release.md); do not apply Node release commands to native
+Android or native iOS artifacts.
 
 CDS versions packages with [nx release version plans](docs/release.md). Instead of editing `package.json` and `CHANGELOG.md` by hand, you commit a small markdown file describing your change, and `nx release` derives the version bump and changelog entry from it.
 

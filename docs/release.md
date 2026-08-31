@@ -1,12 +1,19 @@
-# Release
+# Releases
+
+CDS release procedures are owned by each distribution toolchain. Node release commands must not be
+used for native Android or iOS artifacts.
+
+## Node packages
 
 CDS npm packages are versioned with [nx release version plans](https://nx.dev/recipes/nx-release/file-based-versioning-version-plans).
 
 Instead of editing `package.json` and `CHANGELOG.md` by hand, you commit a small markdown file describing your change. `nx release` reads the accumulated plans, derives the version bump and the changelog entry from them, and deletes the plans it consumed.
 
-Native Android (`packages/cds-android`) and native iOS (`packages/cds-ios`) are **not** part of this flow. They version independently through Gradle and SwiftPM, and are excluded because `release.groups` in `nx.json` is an allowlist that does not name them.
+Native Android (`packages/cds-android`) and native iOS (`packages/cds-ios`) are **not** part of this
+flow. They are excluded because `release.groups` in `nx.json` is an allowlist that does not name
+them.
 
-## Releasing in your PR
+### Releasing in your PR
 
 This is the normal path. Both steps run locally.
 
@@ -33,11 +40,11 @@ Preview without touching any files:
 yarn release --dry-run
 ```
 
-## Deferring a release
+### Deferring a release
 
 You can also commit only the plan and skip `yarn release`. Plans accumulate on `master` until someone runs `yarn release`, which then batches every pending plan into one version per package. This is useful when several PRs should ship as a single release.
 
-## Writing a version plan by hand
+### Writing a version plan by hand
 
 `yarn nx release plan` is a generator, but the file is plain markdown: YAML frontmatter mapping names to bump types, followed by the changelog message.
 
@@ -60,7 +67,7 @@ utils: patch
 Fix: correct the exported type of `IconName`.
 ```
 
-## Release groups
+### Release groups
 
 `nx.json` defines two groups, which control how a plan is interpreted.
 
@@ -81,7 +88,7 @@ Feat: add `size` prop to Button.
 
 Packages in `standalone` version independently. Bumping one does not bump the others.
 
-## CI
+### CI
 
 On every pull request, the **Validate** job runs [`validateVersionPlans.mjs`](../tools/ci/validators/validateVersionPlans.mjs). For each publishable package with meaningful source changes, it passes when either:
 
@@ -90,7 +97,7 @@ On every pull request, the **Validate** job runs [`validateVersionPlans.mjs`](..
 
 Documentation, tests, stories, and Figma bindings never require a plan. If a package should not be published at all, add `"private": true` to its `package.json`.
 
-## Things worth knowing
+### Things worth knowing
 
 - `.nx/` is gitignored except for `/.nx/version-plans`, so plan files are tracked while the nx cache, workspace data, and daemon files are not.
 - Conventional-commit inference is off. The version plan is the only thing that determines the bump, so a `feat:` or `fix:` prefix on your commit has no effect on versioning.
@@ -100,3 +107,13 @@ Documentation, tests, stories, and Figma bindings never require a plan. If a pac
 - Generated changelog entries omit commit authors and commit references, and each package keeps its own `CHANGELOG.md`. There is no workspace-level changelog.
 - New entries are prepended to the top of `CHANGELOG.md`, which is why each file's title and registry link live in a footer at the bottom.
 - `packages/illustrations/CHANGELOG.md` is the one exception, and still keeps its title in a header. The illustrations Figma sync lives in the internal `frontend/cds` repo and splices its entry in at the `<!-- template-start -->` marker, so removing that marker would make the sync silently write nothing. Give that file the same footer treatment once the sync is ported into this repo or updated to write a version plan.
+
+## Native Android
+
+Android versions independently in Gradle and publishes an AAR from a GitHub release. Follow the
+[native Android release guide](../packages/cds-android/docs/releasing.md).
+
+## Native iOS
+
+iOS versions independently through `ios-v<version>` tags and publishes an XCFramework from a
+GitHub release. Follow the [native iOS release guide](../packages/cds-ios/docs/releasing.md).

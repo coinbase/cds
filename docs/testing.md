@@ -45,7 +45,7 @@ yarn nx run android-app:test
 yarn nx run android-app:build
 ```
 
-Use `yarn nx run android-app:launch` only when you need to install and open the gallery on an
+Use `yarn nx run android-app:launch` only when you need to install and open the demo app on an
 emulator or device. Prettier does not format Kotlin; use Android Studio's formatter.
 
 ## Xcode projects

@@ -6,7 +6,7 @@ task you are doing:
 - [Set up local development](setup.md) for Node, Gradle, or Xcode.
 - [Test and validate changes](testing.md) before requesting review.
 - [Understand CI](ci.md), including toolchain selection and Nx affected behavior.
-- [Version and release packages](releasing.md) through their owning toolchain.
+- [Version and release packages](release.md) through their owning toolchain.
 
 ## Toolchains and product platforms
 
@@ -24,11 +24,11 @@ with its assigned toolchain.
 Use this hub for repository-wide setup, validation, and CI behavior. Keep implementation and
 consumer details close to their package:
 
-- Web: [`packages/web/README.md`](../../packages/web/README.md)
-- React Native: [`packages/mobile/README.md`](../../packages/mobile/README.md)
-- Native Android: [`packages/cds-android/README.md`](../../packages/cds-android/README.md) and
-  [`packages/cds-android/AGENTS.md`](../../packages/cds-android/AGENTS.md)
-- Native iOS: [`packages/cds-ios/README.md`](../../packages/cds-ios/README.md) and
-  [`packages/cds-ios/AGENTS.md`](../../packages/cds-ios/AGENTS.md)
+- Web: [`packages/web/README.md`](../packages/web/README.md)
+- React Native: [`packages/mobile/README.md`](../packages/mobile/README.md)
+- Native Android: [`packages/cds-android/README.md`](../packages/cds-android/README.md) and
+  [`packages/cds-android/AGENTS.md`](../packages/cds-android/AGENTS.md)
+- Native iOS: [`packages/cds-ios/README.md`](../packages/cds-ios/README.md) and
+  [`packages/cds-ios/AGENTS.md`](../packages/cds-ios/AGENTS.md)
 
 Those package guides are the source of truth for public APIs, tokens, and release procedures.

@@ -1,6 +1,6 @@
 # CI architecture
 
-[`.github/workflows/ci.yml`](../../.github/workflows/ci.yml) is the pull-request orchestrator. It
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) is the pull-request orchestrator. It
 classifies changed paths by toolchain, then starts only the required lanes.
 
 ## Toolchain tags
@@ -20,9 +20,9 @@ The orchestrator determines whether Node, Gradle, or Xcode paths changed:
 
 - Node changes enable the Linux Node jobs. Those jobs use `nx affected` plus
   `toolchain:node`, so only affected Node projects with the requested target run.
-- Gradle changes call the reusable [Android workflow](../../.github/workflows/android.yml), which
-  builds and tests the Android library and gallery with JDK 21 and the Android SDK.
-- Xcode changes call the reusable [iOS workflow](../../.github/workflows/ios.yml), which builds
+- Gradle changes call the reusable [Android workflow](../.github/workflows/android.yml), which
+  builds and tests the Android library and demo app with JDK 21 and the Android SDK.
+- Xcode changes call the reusable [iOS workflow](../.github/workflows/ios.yml), which builds
   and tests the Swift library and builds the gallery on macOS.
 
 This keeps toolchains isolated while preserving dependency-aware validation:

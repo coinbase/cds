@@ -11,8 +11,8 @@ Please visit our website https://cds.coinbase.com for the latest documentation.
 ## Contributing setup
 
 CDS uses three toolchains: Node for web and React Native, Gradle for native Android, and Xcode for
-native iOS. Start with the [contributor guide](docs/contributing/README.md) and follow the
-[setup instructions](docs/contributing/setup.md) for the platform you are changing.
+native iOS. Start with the [contributor guide](docs/README.md) and follow the
+[setup instructions](docs/setup.md) for the platform you are changing.
 
 ## Quick Start
 
@@ -61,7 +61,7 @@ yarn nx run ios-gallery:build
 open ios/CDS.xcworkspace
 ```
 
-See the [native setup guide](docs/contributing/setup.md) for Android and iOS prerequisites.
+See the [native setup guide](docs/setup.md) for Android and iOS prerequisites.
 
 ## Platforms
 
@@ -77,8 +77,8 @@ CDS ships on four platforms:
 ## Contributing
 
 We welcome contributions to the Coinbase Design System. Read [CONTRIBUTING.md](CONTRIBUTING.md) for
-the pull-request process and [`docs/contributing/`](docs/contributing/README.md) for local
-development, validation, and CI guidance.
+the pull-request process and [`docs/`](docs/README.md) for local development, validation, and CI
+guidance.
 
 ## Versioning
 
@@ -89,7 +89,7 @@ Visual changes are allowed in minor releases.
 Review changelog entries and validate UI when upgrading.
 
 Node packages use Nx release version plans, while Android and iOS version independently. See the
-[versioning and release guide](docs/contributing/releasing.md).
+[versioning and release guide](docs/release.md).
 
 ## Security
 

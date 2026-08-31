@@ -13,7 +13,7 @@ SwiftPM, and Xcode tools directly.
 
 ## Node: web and React Native
 
-Node projects use the version in [`.nvmrc`](../../.nvmrc), Yarn, and Nx.
+Node projects use the version in [`.nvmrc`](../.nvmrc), Yarn, and Nx.
 
 ```sh
 nvm install
@@ -32,7 +32,7 @@ yarn nx run expo-app:android
 ```
 
 The Expo targets additionally require the local iOS or Android development tools expected by
-React Native. See [`apps/expo-app/README.md`](../../apps/expo-app/README.md).
+React Native. See [`apps/expo-app/README.md`](../apps/expo-app/README.md).
 
 ## Gradle: native Android
 
@@ -41,7 +41,7 @@ Native Android requires JDK 21 and the Android SDK; `yarn install` does not inst
 1. Install Android Studio or the standalone Android command-line tools.
 2. Install Android SDK platforms 36 and 37, `platform-tools`, and an emulator image if needed.
 3. Set `ANDROID_HOME` and accept licenses with `sdkmanager --licenses`.
-4. Open [`android/`](../../android/) in Android Studio, not the repository root.
+4. Open [`android/`](../android/) in Android Studio, not the repository root.
 
 The Gradle wrapper pins the build tooling and can provision its JDK. Verify setup from the
 repository root:
@@ -57,8 +57,8 @@ Without Node/Yarn, invoke Gradle directly:
 ./android/gradlew -p android :cds:assembleRelease
 ```
 
-See [`android/README.md`](../../android/README.md) for the IDE workflow and
-[`packages/cds-android/README.md`](../../packages/cds-android/README.md) for package details.
+See [`android/README.md`](../android/README.md) for the IDE workflow and
+[`packages/cds-android/README.md`](../packages/cds-android/README.md) for package details.
 
 ## Xcode: native iOS
 
@@ -84,5 +84,5 @@ The library can also be verified without Yarn:
 (cd packages/cds-ios && swift build)
 ```
 
-See [`ios/README.md`](../../ios/README.md) for the workspace layout and
-[`packages/cds-ios/README.md`](../../packages/cds-ios/README.md) for package details.
+See [`ios/README.md`](../ios/README.md) for the workspace layout and
+[`packages/cds-ios/README.md`](../packages/cds-ios/README.md) for package details.

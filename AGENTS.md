@@ -45,7 +45,7 @@ After writing code, validate the smallest relevant scope:
 - Xcode: run `cds-ios:test` and the changed project's `build` target; Prettier does not format Swift
 - Documentation only: run `yarn nx format:write` and verify changed commands and links
 
-See [`docs/contributing/testing.md`](docs/contributing/testing.md) for exact commands.
+See [`docs/testing.md`](docs/testing.md) for exact commands.
 
 ## Nx and toolchains
 
@@ -64,8 +64,7 @@ See [`docs/contributing/testing.md`](docs/contributing/testing.md) for exact com
 
 Every project has exactly one of `toolchain:node`, `toolchain:gradle`, or `toolchain:xcode`. Common
 targets use `build` and, where supported, `test`. Specialized targets such as `launch` and
-`xcframework` remain project-specific. See [`docs/contributing/`](docs/contributing/README.md) for
-setup and CI architecture.
+`xcframework` remain project-specific. See [`docs/`](docs/README.md) for setup and CI architecture.
 
 ## Architecture
 
