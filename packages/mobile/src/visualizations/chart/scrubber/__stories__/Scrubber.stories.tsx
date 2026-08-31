@@ -771,6 +771,28 @@ const HideOverlay = () => {
   );
 };
 
+const CustomOverlay = () => {
+  const theme = useTheme();
+
+  return (
+    <LineChart
+      enableScrubbing
+      showArea
+      accessibilityLabel={chartAccessibilityLabel}
+      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
+      height={150}
+      series={[
+        {
+          id: 'prices',
+          data: sampleData,
+        },
+      ]}
+    >
+      <Scrubber styles={{ overlay: { fill: theme.color.bgAlternate, opacity: 0.6 } }} />
+    </LineChart>
+  );
+};
+
 const matchupBlueData = [
   47, 50, 51, 52, 53, 53, 53, 53, 52, 51, 51, 52, 53, 55, 57, 58, 59, 61, 63, 65, 64, 64, 64, 64,
   64, 63, 63, 63, 64, 66, 68, 70, 71, 72, 74, 76, 76, 75, 74, 73, 74, 75, 75, 78,
@@ -992,6 +1014,10 @@ const ExampleNavigator = () => {
       {
         title: 'Hide Overlay',
         component: <HideOverlay />,
+      },
+      {
+        title: 'Custom Overlay',
+        component: <CustomOverlay />,
       },
       {
         title: 'Matchup Beacon Labels',

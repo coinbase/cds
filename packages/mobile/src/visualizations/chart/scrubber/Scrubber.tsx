@@ -241,9 +241,27 @@ export type ScrubberProps = ScrubberBaseProps & {
    * @deprecationExpectedRemoval v4
    */
   beaconTransitions?: ScrubberBeaconProps['transitions'];
+  /** Custom styles for individual elements of the Scrubber component */
+  styles?: {
+    /** Overlay rect which obscures data beyond the scrubber position */
+    overlay?: {
+      /**
+       * Fill color of the overlay.
+       * @default theme.color.bg
+       */
+      fill?: string;
+      /**
+       * Opacity of the overlay while scrubbing.
+       * @default 0.8
+       */
+      opacity?: number;
+    };
+  };
 };
 
 export type ScrubberRef = ScrubberBeaconGroupRef;
+
+const defaultOverlayOpacity = 0.8;
 
 /**
  * Unified component that manages all scrubber elements (beacons, line, labels).
@@ -273,6 +291,7 @@ export const Scrubber = memo(
     beaconTransitions,
     transitions = beaconTransitions,
     beaconStroke,
+    styles,
   }: ScrubberProps & {
     ref?: React.Ref<ScrubberRef>;
   }) => {
@@ -339,9 +358,12 @@ export const Scrubber = memo(
       return scrubberPosition.value !== undefined ? 1 : 0;
     }, [scrubberPosition]);
 
+    const overlayFill = styles?.overlay?.fill ?? theme.color.bg;
+    const overlayActiveOpacity = styles?.overlay?.opacity ?? defaultOverlayOpacity;
+
     const overlayOpacity = useDerivedValue(() => {
-      return scrubberPosition.value !== undefined ? 0.8 : 0;
-    }, [scrubberPosition]);
+      return scrubberPosition.value !== undefined ? overlayActiveOpacity : 0;
+    }, [scrubberPosition, overlayActiveOpacity]);
 
     const pixelPosition = useDerivedValue(() => {
       if (dataValue.value === undefined || !indexScale) return undefined;
@@ -434,7 +456,7 @@ export const Scrubber = memo(
       <Group layer={<Paint opacity={scrubberOpacity} />}>
         {!hideOverlay && (
           <Rect
-            color={theme.color.bg}
+            color={overlayFill}
             height={overlayHeight}
             opacity={overlayOpacity}
             width={overlayWidth}

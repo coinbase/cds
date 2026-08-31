@@ -1,3 +1,9 @@
+## 9.24.0 (2026-08-31)
+
+### 🚀 Features
+
+- Added a styles prop to the mobile Scrubber
+
 ## 9.23.0 (8/27/2026 PST)
 
 #### 🚀 Updates
