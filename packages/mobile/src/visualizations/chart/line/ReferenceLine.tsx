@@ -51,10 +51,11 @@ export type ReferenceLineLabelComponentProps = Pick<
 export type ReferenceLineLabelComponent = React.FC<ReferenceLineLabelComponentProps>;
 
 /**
- * Cosmetic style props for a reference line label. Positioning, sizing, and
- * animated opacity remain owned by the component; only visual styling is exposed.
+ * Cosmetic style props for a chart text label (reference line or scrubber label).
+ * Positioning, sizing, and animated opacity remain owned by the component; only
+ * visual styling is exposed.
  */
-export type ReferenceLineLabelStyle = Pick<
+export type ChartLabelStyle = Pick<
   ReferenceLineLabelComponentProps,
   | 'color'
   | 'background'
@@ -73,7 +74,7 @@ export type ReferenceLineStyles = {
    */
   line?: Omit<LineComponentProps, 'd' | 'animate' | 'strokeOpacity' | 'xAxisId' | 'yAxisId'>;
   /** Style props applied to the label, forwarded to its `LabelComponent`. */
-  label?: ReferenceLineLabelStyle;
+  label?: ChartLabelStyle;
 };
 
 export type ReferenceLineBaseProps = {

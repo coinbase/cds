@@ -18,10 +18,10 @@ import {
 import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
 import {
+  type ChartLabelStyle,
   ReferenceLine,
   type ReferenceLineBaseProps,
   type ReferenceLineLabelComponentProps,
-  type ReferenceLineLabelStyle,
   type ReferenceLineStyles,
 } from '../line/ReferenceLine';
 import type { ChartTextChildren, ChartTextProps } from '../text/ChartText';
@@ -165,7 +165,7 @@ export type ScrubberBeaconLabelProps = Pick<Series, 'color'> &
     /**
      * Custom styles applied to the beacon label.
      */
-    style?: ReferenceLineLabelStyle;
+    style?: ChartLabelStyle;
   };
 export type ScrubberBeaconLabelComponent = React.FC<ScrubberBeaconLabelProps>;
 
@@ -286,13 +286,11 @@ export type ScrubberProps = ScrubberBaseProps & {
     /**
      * Style props applied to the beacon labels.
      */
-    beaconLabel?: ReferenceLineLabelStyle;
+    beaconLabel?: ChartLabelStyle;
   };
 };
 
 export type ScrubberRef = ScrubberBeaconGroupRef;
-
-const defaultOverlayOpacity = 0.8;
 
 /**
  * Unified component that manages all scrubber elements (beacons, line, labels).
@@ -390,7 +388,7 @@ export const Scrubber = memo(
     }, [scrubberPosition]);
 
     const overlayStyle = styles?.overlay;
-    const overlayActiveOpacity = overlayStyle?.opacity ?? defaultOverlayOpacity;
+    const overlayActiveOpacity = overlayStyle?.opacity ?? 0.8;
 
     const overlayOpacity = useDerivedValue(() => {
       return scrubberPosition.value !== undefined ? overlayActiveOpacity : 0;
