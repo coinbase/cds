@@ -64,7 +64,8 @@ See [`docs/testing.md`](docs/testing.md) for exact commands.
 
 Every project has exactly one of `toolchain:node`, `toolchain:gradle`, or `toolchain:xcode`. Common
 targets use `build` and, where supported, `test`. Specialized targets such as `launch` and
-`xcframework` remain project-specific. See [`docs/`](docs/README.md) for setup and CI architecture.
+`xcframework` remain project-specific. See [`docs/nx.md`](docs/nx.md) for why the root target
+defaults remain Node-oriented, and [`docs/`](docs/README.md) for setup and CI architecture.
 
 ## Architecture
 

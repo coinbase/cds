@@ -5,6 +5,7 @@ task you are doing:
 
 - [Set up local development](setup.md) for Node, Gradle, or Xcode.
 - [Test and validate changes](testing.md) before requesting review.
+- [Understand Nx configuration](nx.md), including the temporary Node-oriented defaults.
 - [Understand CI](ci.md), including toolchain selection and Nx affected behavior.
 - [Version and release packages](release.md) through their owning toolchain.
 
