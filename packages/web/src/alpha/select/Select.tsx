@@ -27,7 +27,7 @@ import { DefaultSelectOption } from './DefaultSelectOption';
 import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
 import {
   getTypeaheadMatchIndex,
-  isPrintableTypeaheadKey,
+  isTypeaheadKeyEvent,
   normalizeOptionText,
   TYPEAHEAD_RESET_MS,
 } from './typeahead';
@@ -170,9 +170,8 @@ const SelectBase = memo(
         excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
       });
 
-      // Typeahead: builds a short-lived search buffer as printable keys are pressed, then moves
-      // focus to the matching option, mirroring native `<select>` behavior. Works both when the
-      // listbox is closed (opens it, then focuses the match) and while it is open.
+      // Typeahead mirrors native `<select>`: printable keys build a short-lived buffer that moves
+      // focus to the matching option, both while the listbox is closed (open + focus) and open.
       const typeaheadBufferRef = useRef('');
       const typeaheadResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
       const pendingTypeaheadRef = useRef(false);
@@ -213,11 +212,9 @@ const SelectBase = memo(
 
       const handleControlKeyDown = useCallback(
         (event: React.KeyboardEvent) => {
-          // While open, the window-level listener below owns typeahead so keystrokes are handled
-          // consistently regardless of whether focus sits on the control or an option.
-          if (disabled || readOnly || open) return;
-          if (event.ctrlKey || event.metaKey || event.altKey) return;
-          if (!isPrintableTypeaheadKey(event.key)) return;
+          // While open, the window listener below owns typeahead so keystrokes are handled the
+          // same whether focus sits on the control or an option.
+          if (disabled || readOnly || open || !isTypeaheadKeyEvent(event)) return;
 
           appendToTypeaheadBuffer(event.key);
           pendingTypeaheadRef.current = true;
@@ -226,15 +223,14 @@ const SelectBase = memo(
         [disabled, readOnly, open, setOpen, appendToTypeaheadBuffer],
       );
 
-      // Once the dropdown has opened in response to a keystroke, focus the buffered match.
       useEffect(() => {
         if (!open || !pendingTypeaheadRef.current) return;
         pendingTypeaheadRef.current = false;
         focusTypeaheadMatch();
       }, [open, focusTypeaheadMatch]);
 
-      // Handle typeahead while the dropdown is open. A window listener is used because focus may
-      // move into the portaled dropdown, where the control's own key handler no longer fires.
+      // A window listener is required because focus moves into the portaled dropdown, where the
+      // control's own key handler no longer fires.
       useEffect(() => {
         if (!open || disabled || readOnly) return;
         const globals = getBrowserGlobals();
@@ -242,8 +238,7 @@ const SelectBase = memo(
         const { window: browserWindow, document: browserDocument } = globals;
 
         const handleWindowKeyDown = (event: KeyboardEvent) => {
-          if (event.ctrlKey || event.metaKey || event.altKey) return;
-          if (!isPrintableTypeaheadKey(event.key)) return;
+          if (!isTypeaheadKeyEvent(event)) return;
 
           const controlElement = refs.reference.current as HTMLElement | null;
           const floatingElement = refs.floating.current;

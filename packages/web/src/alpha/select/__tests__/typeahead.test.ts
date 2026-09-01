@@ -1,6 +1,7 @@
 import {
   getTypeaheadMatchIndex,
   isPrintableTypeaheadKey,
+  isTypeaheadKeyEvent,
   normalizeOptionText,
   TYPEAHEAD_RESET_MS,
 } from '../typeahead';
@@ -17,6 +18,32 @@ describe('typeahead helpers', () => {
         expect(isPrintableTypeaheadKey(key)).toBe(false);
       },
     );
+  });
+
+  describe('isTypeaheadKeyEvent', () => {
+    it('accepts a bare printable key', () => {
+      expect(isTypeaheadKeyEvent({ key: 'a', ctrlKey: false, metaKey: false, altKey: false })).toBe(
+        true,
+      );
+    });
+
+    it('rejects printable keys pressed with a modifier', () => {
+      expect(isTypeaheadKeyEvent({ key: 'a', ctrlKey: true, metaKey: false, altKey: false })).toBe(
+        false,
+      );
+      expect(isTypeaheadKeyEvent({ key: 'a', ctrlKey: false, metaKey: true, altKey: false })).toBe(
+        false,
+      );
+      expect(isTypeaheadKeyEvent({ key: 'a', ctrlKey: false, metaKey: false, altKey: true })).toBe(
+        false,
+      );
+    });
+
+    it('rejects non-printable keys', () => {
+      expect(
+        isTypeaheadKeyEvent({ key: 'Enter', ctrlKey: false, metaKey: false, altKey: false }),
+      ).toBe(false);
+    });
   });
 
   describe('normalizeOptionText', () => {
