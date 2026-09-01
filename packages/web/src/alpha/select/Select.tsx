@@ -1,13 +1,4 @@
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { autoUpdate, flip, useFloating, type UseFloatingReturn } from '@floating-ui/react-dom';
 
 import { cx } from '../../cx';
@@ -30,6 +21,7 @@ import {
   type SelectProps,
   type SelectType,
 } from './types';
+import { useTypeahead } from './useTypeahead';
 
 // Re-export all types for backward compatibility
 export type {
@@ -135,9 +127,7 @@ const SelectBase = memo(
         testID,
       } = mergedProps;
       const hasMounted = useHasMounted();
-      // The dropdown keeps a binary density toggle instead of the t-shirt scale, so Select owns
-      // the translation: only the smallest control size renders a compact dropdown. The control
-      // still receives the raw `compact` because it needs it for legacy label placement.
+      // Dropdown density is binary, so only the smallest size renders compact.
       const dropdownCompact = (size ?? (compact ? 's' : defaultSelectSize)) === 's';
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
@@ -163,42 +153,17 @@ const SelectBase = memo(
         excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
       });
 
-      const pendingTypeAheadKeyRef = useRef<string | null>(null);
+      const optionRole = accessibilityRoles?.option ?? 'option';
 
-      const handleControlKeyDown = useCallback(
-        (event: React.KeyboardEvent) => {
-          if (disabled || readOnly || open) return;
-          if (event.ctrlKey || event.metaKey || event.altKey) return;
-
-          const key = event.key;
-          if (/^[a-z]$/.test(key)) {
-            pendingTypeAheadKeyRef.current = key;
-            setOpen(true);
-          }
-        },
-        [disabled, readOnly, open, setOpen],
-      );
-
-      useEffect(() => {
-        if (!open || !pendingTypeAheadKeyRef.current) return;
-
-        const key = pendingTypeAheadKeyRef.current;
-        pendingTypeAheadKeyRef.current = null;
-
-        const floatingEl = refs.floating.current;
-        if (!floatingEl) return;
-
-        const optionRole = accessibilityRoles?.option ?? 'option';
-        const options = floatingEl.querySelectorAll(`[role="${optionRole}"]`);
-        const matchingOption = Array.from(options).find((option) => {
-          const firstLetterMatch = option.textContent?.match(/[a-z]/i);
-          return firstLetterMatch?.[0]?.toLowerCase() === key;
-        });
-
-        if (matchingOption) {
-          (matchingOption as HTMLElement).focus();
-        }
-      }, [open, refs.floating, accessibilityRoles?.option]);
+      const { onControlKeyDown } = useTypeahead({
+        open,
+        setOpen,
+        referenceRef: refs.reference as React.MutableRefObject<HTMLElement | null>,
+        floatingRef: refs.floating,
+        optionRole,
+        disabled,
+        readOnly,
+      });
 
       const rootStyles = useMemo(
         () => ({
@@ -344,7 +309,7 @@ const SelectBase = memo(
             labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
-            onKeyDown={handleControlKeyDown}
+            onKeyDown={onControlKeyDown}
             open={open}
             options={options}
             placeholder={placeholder}
