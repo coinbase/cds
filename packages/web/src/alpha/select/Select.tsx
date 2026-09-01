@@ -17,6 +17,7 @@ import { useHasMounted } from '../../hooks/useHasMounted';
 import { Box } from '../../layout/Box';
 import { Portal } from '../../overlays/Portal';
 import { modalContainerId } from '../../overlays/PortalProvider';
+import { getBrowserGlobals } from '../../utils/browser';
 
 import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectControl } from './DefaultSelectControl';
@@ -24,6 +25,12 @@ import { DefaultSelectDropdown } from './DefaultSelectDropdown';
 import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdownContents';
 import { DefaultSelectOption } from './DefaultSelectOption';
 import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
+import {
+  getTypeaheadMatchIndex,
+  isPrintableTypeaheadKey,
+  normalizeOptionText,
+  TYPEAHEAD_RESET_MS,
+} from './typeahead';
 import {
   defaultSelectSize,
   type SelectDropdownProps,
@@ -163,42 +170,111 @@ const SelectBase = memo(
         excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
       });
 
-      const pendingTypeAheadKeyRef = useRef<string | null>(null);
+      // Typeahead: builds a short-lived search buffer as printable keys are pressed, then moves
+      // focus to the matching option, mirroring native `<select>` behavior. Works both when the
+      // listbox is closed (opens it, then focuses the match) and while it is open.
+      const typeaheadBufferRef = useRef('');
+      const typeaheadResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+      const pendingTypeaheadRef = useRef(false);
 
-      const handleControlKeyDown = useCallback(
-        (event: React.KeyboardEvent) => {
-          if (disabled || readOnly || open) return;
-          if (event.ctrlKey || event.metaKey || event.altKey) return;
+      const optionRole = accessibilityRoles?.option ?? 'option';
 
-          const key = event.key;
-          if (/^[a-z]$/.test(key)) {
-            pendingTypeAheadKeyRef.current = key;
-            setOpen(true);
-          }
-        },
-        [disabled, readOnly, open, setOpen],
-      );
+      const appendToTypeaheadBuffer = useCallback((key: string) => {
+        typeaheadBufferRef.current += key.toLowerCase();
+        if (typeaheadResetTimeoutRef.current) clearTimeout(typeaheadResetTimeoutRef.current);
+        typeaheadResetTimeoutRef.current = setTimeout(() => {
+          typeaheadBufferRef.current = '';
+        }, TYPEAHEAD_RESET_MS);
+      }, []);
 
-      useEffect(() => {
-        if (!open || !pendingTypeAheadKeyRef.current) return;
-
-        const key = pendingTypeAheadKeyRef.current;
-        pendingTypeAheadKeyRef.current = null;
+      const focusTypeaheadMatch = useCallback(() => {
+        const search = typeaheadBufferRef.current;
+        if (!search) return;
 
         const floatingEl = refs.floating.current;
         if (!floatingEl) return;
 
-        const optionRole = accessibilityRoles?.option ?? 'option';
-        const options = floatingEl.querySelectorAll(`[role="${optionRole}"]`);
-        const matchingOption = Array.from(options).find((option) => {
-          const firstLetterMatch = option.textContent?.match(/[a-z]/i);
-          return firstLetterMatch?.[0]?.toLowerCase() === key;
-        });
+        const optionElements = Array.from(
+          floatingEl.querySelectorAll<HTMLElement>(`[role="${optionRole}"]`),
+        ).filter(
+          (option) =>
+            !(option as HTMLButtonElement).disabled &&
+            option.getAttribute('aria-disabled') !== 'true',
+        );
+        if (optionElements.length === 0) return;
 
-        if (matchingOption) {
-          (matchingOption as HTMLElement).focus();
-        }
-      }, [open, refs.floating, accessibilityRoles?.option]);
+        const labels = optionElements.map((option) => normalizeOptionText(option.textContent));
+        const activeElement = getBrowserGlobals()?.document.activeElement as HTMLElement | null;
+        const currentIndex = activeElement ? optionElements.indexOf(activeElement) : -1;
+
+        const matchIndex = getTypeaheadMatchIndex(labels, search, currentIndex);
+        if (matchIndex >= 0) optionElements[matchIndex].focus();
+      }, [refs.floating, optionRole]);
+
+      const handleControlKeyDown = useCallback(
+        (event: React.KeyboardEvent) => {
+          // While open, the window-level listener below owns typeahead so keystrokes are handled
+          // consistently regardless of whether focus sits on the control or an option.
+          if (disabled || readOnly || open) return;
+          if (event.ctrlKey || event.metaKey || event.altKey) return;
+          if (!isPrintableTypeaheadKey(event.key)) return;
+
+          appendToTypeaheadBuffer(event.key);
+          pendingTypeaheadRef.current = true;
+          setOpen(true);
+        },
+        [disabled, readOnly, open, setOpen, appendToTypeaheadBuffer],
+      );
+
+      // Once the dropdown has opened in response to a keystroke, focus the buffered match.
+      useEffect(() => {
+        if (!open || !pendingTypeaheadRef.current) return;
+        pendingTypeaheadRef.current = false;
+        focusTypeaheadMatch();
+      }, [open, focusTypeaheadMatch]);
+
+      // Handle typeahead while the dropdown is open. A window listener is used because focus may
+      // move into the portaled dropdown, where the control's own key handler no longer fires.
+      useEffect(() => {
+        if (!open || disabled || readOnly) return;
+        const globals = getBrowserGlobals();
+        if (!globals) return;
+        const { window: browserWindow, document: browserDocument } = globals;
+
+        const handleWindowKeyDown = (event: KeyboardEvent) => {
+          if (event.ctrlKey || event.metaKey || event.altKey) return;
+          if (!isPrintableTypeaheadKey(event.key)) return;
+
+          const controlElement = refs.reference.current as HTMLElement | null;
+          const floatingElement = refs.floating.current;
+          const activeElement = browserDocument.activeElement;
+          const withinSelect =
+            (!!controlElement && controlElement.contains(activeElement)) ||
+            (!!floatingElement && floatingElement.contains(activeElement));
+          if (!withinSelect) return;
+
+          appendToTypeaheadBuffer(event.key);
+          focusTypeaheadMatch();
+        };
+
+        browserWindow.addEventListener('keydown', handleWindowKeyDown);
+        return () => browserWindow.removeEventListener('keydown', handleWindowKeyDown);
+      }, [
+        open,
+        disabled,
+        readOnly,
+        refs.reference,
+        refs.floating,
+        appendToTypeaheadBuffer,
+        focusTypeaheadMatch,
+      ]);
+
+      useEffect(
+        () => () => {
+          if (typeaheadResetTimeoutRef.current) clearTimeout(typeaheadResetTimeoutRef.current);
+        },
+        [],
+      );
 
       const rootStyles = useMemo(
         () => ({
