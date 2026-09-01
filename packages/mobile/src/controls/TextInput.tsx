@@ -3,11 +3,12 @@ import React, {
   isValidElement,
   memo,
   useCallback,
+  useEffect,
   useMemo,
   useRef,
   useState,
 } from 'react';
-import { Pressable } from 'react-native';
+import { Keyboard, Platform, Pressable } from 'react-native';
 import type { ForwardedRef } from 'react';
 import type {
   DimensionValue,
@@ -193,6 +194,20 @@ export const TextInput = memo(
     const focusedVariant = useInputVariant(focused, variant);
     const internalRef = useRef<RNTextInput>(null);
     const refs = useMergeRefs(ref, internalRef);
+    // Tracks the latest focus state for the unmount cleanup, which can't read `focused` directly
+    // without re-subscribing on every focus change.
+    const focusedRef = useRef(false);
+    focusedRef.current = focused;
+
+    // Android doesn't dismiss the keyboard when a focused TextInput unmounts (iOS does), leaving it
+    // stranded on screen. Dismiss it on unmount when this field was focused.
+    useEffect(() => {
+      return () => {
+        if (Platform.OS === 'android' && focusedRef.current) {
+          Keyboard.dismiss();
+        }
+      };
+    }, []);
     const { borderFocusedStyle, borderUnfocusedStyle } = useInputBorderStyle(
       focused,
       variant,

@@ -1,5 +1,11 @@
 import { createRef } from 'react';
-import { Animated, StyleSheet, type TextInput as RNTextInput } from 'react-native';
+import {
+  Animated,
+  Keyboard,
+  Platform,
+  StyleSheet,
+  type TextInput as RNTextInput,
+} from 'react-native';
 import { focusedInputBorderWidth } from '@coinbase/cds-common/tokens/input';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
@@ -336,6 +342,61 @@ describe('TextInput', () => {
     fireEvent(screen.getByTestId(testID), 'blur');
     expect(onFocus).toHaveBeenCalledTimes(1);
     expect(onBlur).toHaveBeenCalledTimes(1);
+  });
+
+  describe('keyboard dismissal on unmount', () => {
+    const originalPlatform = Platform.OS;
+
+    afterEach(() => {
+      Platform.OS = originalPlatform;
+      jest.restoreAllMocks();
+    });
+
+    it('dismisses the keyboard on Android when a focused input unmounts', () => {
+      Platform.OS = 'android';
+      const dismissSpy = jest.spyOn(Keyboard, 'dismiss').mockImplementation(() => {});
+      const testID = 'input-testid';
+      const { unmount } = render(
+        <DefaultThemeProvider>
+          <TextInput accessibilityLabel="Field" testID={testID} />
+        </DefaultThemeProvider>,
+      );
+
+      fireEvent(screen.getByTestId(testID), 'focus');
+      unmount();
+
+      expect(dismissSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not dismiss the keyboard on Android when an unfocused input unmounts', () => {
+      Platform.OS = 'android';
+      const dismissSpy = jest.spyOn(Keyboard, 'dismiss').mockImplementation(() => {});
+      const { unmount } = render(
+        <DefaultThemeProvider>
+          <TextInput accessibilityLabel="Field" testID="input-testid" />
+        </DefaultThemeProvider>,
+      );
+
+      unmount();
+
+      expect(dismissSpy).not.toHaveBeenCalled();
+    });
+
+    it('does not dismiss the keyboard on iOS when a focused input unmounts', () => {
+      Platform.OS = 'ios';
+      const dismissSpy = jest.spyOn(Keyboard, 'dismiss').mockImplementation(() => {});
+      const testID = 'input-testid';
+      const { unmount } = render(
+        <DefaultThemeProvider>
+          <TextInput accessibilityLabel="Field" testID={testID} />
+        </DefaultThemeProvider>,
+      );
+
+      fireEvent(screen.getByTestId(testID), 'focus');
+      unmount();
+
+      expect(dismissSpy).not.toHaveBeenCalled();
+    });
   });
 
   it('keeps focused border width at 0 by default when bordered is false', () => {
