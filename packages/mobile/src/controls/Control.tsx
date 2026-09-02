@@ -14,6 +14,7 @@ import {
 } from '@coinbase/cds-common/tokens/interactable';
 import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { TypographyProps } from '@coinbase/cds-common/types/TextBaseProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -43,10 +44,8 @@ export type ControlIconProps = SharedProps & {
   accessible?: boolean;
 };
 
-export type ControlBaseProps<ControlValue extends string> = Omit<
-  PressableProps,
-  'disabled' | 'children' | 'style'
-> &
+export type ControlBaseProps<ControlValue extends string> = TypographyProps &
+  Omit<PressableProps, 'disabled' | 'children' | 'style'> &
   Partial<
     Pick<
       InteractableBaseProps,
@@ -132,6 +131,12 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
     borderWidth,
     controlSize,
     dotSize,
+    font = 'body',
+    fontFamily = font,
+    fontSize = font,
+    fontWeight = font,
+    lineHeight = font,
+    textTransform = font,
     ...props
   } = mergedProps;
   const theme = useTheme();
@@ -141,8 +146,6 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
       `Please specify an accessibility label for the ${accessibilityRole} control with value ${value}.`,
     );
   }
-
-  const bodyLineHeight = theme.lineHeight.body;
   const isMounted = useRef(false);
 
   const { animation, animatedBoxValue, animatedScaleValue, animatedOpacityValue } =
@@ -168,10 +171,10 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
 
   const iconWrapperStyles: ViewStyle = useMemo(
     () => ({
-      height: bodyLineHeight,
+      height: theme.lineHeight[lineHeight],
       justifyContent: 'center',
     }),
-    [bodyLineHeight],
+    [lineHeight, theme.lineHeight],
   );
 
   const pressableStyle: ViewStyle = useMemo(
@@ -267,9 +270,14 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
             <Text
               animated
               disabled={disabled || readOnly}
-              font="body"
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              lineHeight={lineHeight}
               style={getLabelStyle({ pressed })}
               testID={`${testID}Label`}
+              textTransform={theme.textTransform[textTransform]}
             >
               {label}
             </Text>
@@ -297,6 +305,13 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
       iconWrapperStyles,
       indeterminate,
       label,
+      font,
+      fontFamily,
+      fontSize,
+      fontWeight,
+      lineHeight,
+      textTransform,
+      theme,
       pressDisabled,
       readOnly,
       testID,

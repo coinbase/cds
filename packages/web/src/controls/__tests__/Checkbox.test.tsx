@@ -123,4 +123,18 @@ describe('Checkbox', () => {
 
     expect(outline.className).toContain('bg');
   });
+
+  it('applies the font prop to string labels', () => {
+    render(
+      <DefaultThemeProvider>
+        <Checkbox font="label2" onChange={mockOnChange}>
+          Label text
+        </Checkbox>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByText('Label text').getAttribute('style')).toContain(
+      'var(--textTransform-label2)',
+    );
+  });
 });

@@ -3,11 +3,13 @@ import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { TextTransform, TypographyProps } from '@coinbase/cds-common/types/TextBaseProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 import { Interactable, type InteractableBaseProps } from '../system/Interactable';
 import type { FilteredHTMLAttributes, StylesAndClassNames } from '../types';
@@ -73,6 +75,7 @@ export type ControlBaseProps<ControlValue extends string> = FilteredHTMLAttribut
   'value' | 'color'
 > &
   SharedProps &
+  TypographyProps &
   Partial<
     Pick<
       InteractableBaseProps,
@@ -141,8 +144,15 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     style,
     classNames,
     styles,
+    font = 'body',
+    fontFamily = font,
+    fontSize = font,
+    fontWeight = font,
+    lineHeight = font,
+    textTransform = font,
     ...htmlProps
   } = mergedProps;
+  const theme = useTheme();
   if (isDevelopment() && !children && !ariaLabelledby) {
     console.warn(
       `Please provide an aria label for the control component ${value} either through the children or aria-labelledby prop.`,
@@ -233,11 +243,21 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
         style={{ ...labelStyle, ...styles?.label }}
       >
         <Box alignItems="flex-start" flexDirection={isRtl() ? 'row-reverse' : 'row'} gap={1}>
-          <Box alignItems="center" height="var(--lineHeight-body)" role="presentation">
+          <Box alignItems="center" height={`var(--lineHeight-${lineHeight})`} role="presentation">
             {iconElement}
           </Box>
           {typeof label === 'string' ? (
-            <Text color={color} disabled={disabled || readOnly} font="body" id={labelId}>
+            <Text
+              color={color}
+              disabled={disabled || readOnly}
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              id={labelId}
+              lineHeight={lineHeight}
+              textTransform={theme.textTransform[textTransform] as TextTransform}
+            >
               {label}
             </Text>
           ) : (
@@ -257,6 +277,13 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     labelId,
     classNames?.label,
     styles?.label,
+    font,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    textTransform,
+    theme,
   ]);
 
   // If no label is provided, consumer should wrap the checkbox with <label> or provide a value for the aria-labelledby prop.

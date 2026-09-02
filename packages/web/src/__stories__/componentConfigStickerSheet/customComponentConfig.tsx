@@ -70,6 +70,7 @@ export const customComponentConfig: ComponentConfig = {
   Checkbox: (props) => ({
     borderWidth: 200,
     controlColor: 'fg',
+    font: 'label2',
     background: props.checked ? 'bgSecondary' : undefined,
     borderColor: props.checked ? 'bgSecondary' : 'bgLinePrimarySubtle',
   }),

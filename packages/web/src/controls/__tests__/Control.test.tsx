@@ -17,6 +17,20 @@ describe('Control', () => {
     expect(screen.getByText('test children')).toBeTruthy();
   });
 
+  it('applies the font prop to string labels', () => {
+    render(
+      <DefaultThemeProvider>
+        <Control font="label2" label="test label" type="checkbox">
+          <div>test children</div>
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByText('test label').getAttribute('style')).toContain(
+      '--text-textTransform: none',
+    );
+  });
+
   it('renders a ReactNode label without wrapping it in Text', () => {
     render(
       <DefaultThemeProvider>

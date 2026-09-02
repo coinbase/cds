@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
 import { View } from 'react-native';
 
+import { defaultTheme } from '../../themes/defaultTheme';
 import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Text } from '../../typography/Text';
 import { Control } from '../Control';
@@ -19,6 +20,21 @@ describe('Control', () => {
 
     expect(screen.getByText('test label')).toBeTruthy();
     expect(screen.getByTestId('test-controlLabel')).toBeTruthy();
+  });
+
+  it('applies the font prop to string labels', () => {
+    render(
+      <DefaultThemeProvider>
+        <Control font="label2" label="test label" testID="test-control">
+          {MockControlIcon}
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-controlLabel')).toHaveStyle({
+      fontSize: defaultTheme.fontSize.label2,
+      fontWeight: defaultTheme.fontWeight.label2,
+    });
   });
 
   it('renders a ReactNode label without wrapping it in Text', () => {
