@@ -1,3 +1,9 @@
+## 9.25.0 (2026-09-02)
+
+### 🚀 Features
+
+- Add new prop (startIconColor) to Banner to support customizing the color of the icon from its default variant-based color.
+
 ## 9.24.0 (2026-08-31)
 
 ### 🚀 Features

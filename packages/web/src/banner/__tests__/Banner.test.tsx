@@ -188,6 +188,24 @@ describe('Banner', () => {
     expect(screen.getByTestId(TEST_ID).className).toContain('bgSecondary');
   });
 
+  it('overrides start icon color', () => {
+    render(
+      <DefaultThemeProvider>
+        <Banner
+          startIcon="info"
+          startIconColor="fg"
+          testID={TEST_ID}
+          title="informational banner"
+          variant="informational"
+        >
+          Banner Content
+        </Banner>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId(`${TEST_ID}-icon`)).toHaveStyle({ color: 'var(--color-fg)' });
+  });
+
   it('renders promotional banner correctly', () => {
     render(
       <DefaultThemeProvider>

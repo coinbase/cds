@@ -2,6 +2,7 @@ import React from 'react';
 import type { View } from 'react-native';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 
+import { defaultTheme } from '../../themes/defaultTheme';
 import { Text } from '../../typography/Text';
 import { DefaultThemeProvider, treeHasStyleProp } from '../../utils/testHelpers';
 import type { MobileBannerProps } from '../Banner';
@@ -69,6 +70,14 @@ describe('Banner', () => {
     const tree = toJSON();
     expect(treeHasStyleProp(tree, (s) => s.borderTopWidth === 1)).toBe(true);
     expect(treeHasStyleProp(tree, (s) => s.borderBottomWidth === 2)).toBe(true);
+  });
+
+  it('overrides start icon color', () => {
+    const { toJSON } = render(<MockBanner startIconColor="fgPositive" variant="informational" />);
+
+    expect(treeHasStyleProp(toJSON(), (s) => s.color === defaultTheme.lightColor.fgPositive)).toBe(
+      true,
+    );
   });
 });
 
