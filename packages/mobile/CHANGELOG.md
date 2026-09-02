@@ -1,3 +1,9 @@
+## 9.26.0 (2026-09-02)
+
+### 🚀 Features
+
+- feat: support control font customization
+
 ## 9.25.0 (2026-09-02)
 
 ### 🚀 Features
