@@ -1,13 +1,4 @@
-import {
-  forwardRef,
-  memo,
-  useCallback,
-  useEffect,
-  useImperativeHandle,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import { forwardRef, memo, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { autoUpdate, flip, useFloating, type UseFloatingReturn } from '@floating-ui/react-dom';
 
 import { cx } from '../../cx';
@@ -17,7 +8,6 @@ import { useHasMounted } from '../../hooks/useHasMounted';
 import { Box } from '../../layout/Box';
 import { Portal } from '../../overlays/Portal';
 import { modalContainerId } from '../../overlays/PortalProvider';
-import { getBrowserGlobals } from '../../utils/browser';
 
 import { DefaultSelectAllOption } from './DefaultSelectAllOption';
 import { DefaultSelectControl } from './DefaultSelectControl';
@@ -26,17 +16,12 @@ import { DefaultSelectEmptyDropdownContents } from './DefaultSelectEmptyDropdown
 import { DefaultSelectOption } from './DefaultSelectOption';
 import { DefaultSelectOptionGroup } from './DefaultSelectOptionGroup';
 import {
-  getTypeaheadMatchIndex,
-  isTypeaheadKeyEvent,
-  normalizeOptionText,
-  TYPEAHEAD_RESET_MS,
-} from './typeahead';
-import {
   defaultSelectSize,
   type SelectDropdownProps,
   type SelectProps,
   type SelectType,
 } from './types';
+import { useTypeahead } from './useTypeahead';
 
 // Re-export all types for backward compatibility
 export type {
@@ -168,103 +153,17 @@ const SelectBase = memo(
         excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
       });
 
-      // Typeahead: printable keys build a short-lived buffer that focuses the matching option.
-      const typeaheadBufferRef = useRef('');
-      const typeaheadResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-      const pendingTypeaheadRef = useRef(false);
-
       const optionRole = accessibilityRoles?.option ?? 'option';
 
-      const appendToTypeaheadBuffer = useCallback((key: string) => {
-        typeaheadBufferRef.current += key.toLowerCase();
-        if (typeaheadResetTimeoutRef.current) clearTimeout(typeaheadResetTimeoutRef.current);
-        typeaheadResetTimeoutRef.current = setTimeout(() => {
-          typeaheadBufferRef.current = '';
-        }, TYPEAHEAD_RESET_MS);
-      }, []);
-
-      const focusTypeaheadMatch = useCallback(() => {
-        const search = typeaheadBufferRef.current;
-        if (!search) return;
-
-        const floatingEl = refs.floating.current;
-        if (!floatingEl) return;
-
-        const optionElements = Array.from(
-          floatingEl.querySelectorAll<HTMLElement>(`[role="${optionRole}"]`),
-        ).filter(
-          (option) =>
-            !(option as HTMLButtonElement).disabled &&
-            option.getAttribute('aria-disabled') !== 'true',
-        );
-        if (optionElements.length === 0) return;
-
-        const labels = optionElements.map((option) => normalizeOptionText(option.textContent));
-        const activeElement = getBrowserGlobals()?.document.activeElement as HTMLElement | null;
-        const currentIndex = activeElement ? optionElements.indexOf(activeElement) : -1;
-
-        const matchIndex = getTypeaheadMatchIndex(labels, search, currentIndex);
-        if (matchIndex >= 0) optionElements[matchIndex].focus();
-      }, [refs.floating, optionRole]);
-
-      const handleControlKeyDown = useCallback(
-        (event: React.KeyboardEvent) => {
-          // When open, the window listener owns typeahead.
-          if (disabled || readOnly || open || !isTypeaheadKeyEvent(event)) return;
-
-          appendToTypeaheadBuffer(event.key);
-          pendingTypeaheadRef.current = true;
-          setOpen(true);
-        },
-        [disabled, readOnly, open, setOpen, appendToTypeaheadBuffer],
-      );
-
-      useEffect(() => {
-        if (!open || !pendingTypeaheadRef.current) return;
-        pendingTypeaheadRef.current = false;
-        focusTypeaheadMatch();
-      }, [open, focusTypeaheadMatch]);
-
-      // Window listener needed: focus moves into the portaled dropdown, past the control's handler.
-      useEffect(() => {
-        if (!open || disabled || readOnly) return;
-        const globals = getBrowserGlobals();
-        if (!globals) return;
-        const { window: browserWindow, document: browserDocument } = globals;
-
-        const handleWindowKeyDown = (event: KeyboardEvent) => {
-          if (!isTypeaheadKeyEvent(event)) return;
-
-          const controlElement = refs.reference.current as HTMLElement | null;
-          const floatingElement = refs.floating.current;
-          const activeElement = browserDocument.activeElement;
-          const withinSelect =
-            (!!controlElement && controlElement.contains(activeElement)) ||
-            (!!floatingElement && floatingElement.contains(activeElement));
-          if (!withinSelect) return;
-
-          appendToTypeaheadBuffer(event.key);
-          focusTypeaheadMatch();
-        };
-
-        browserWindow.addEventListener('keydown', handleWindowKeyDown);
-        return () => browserWindow.removeEventListener('keydown', handleWindowKeyDown);
-      }, [
+      const { onControlKeyDown } = useTypeahead({
         open,
+        setOpen,
+        referenceRef: refs.reference as React.MutableRefObject<HTMLElement | null>,
+        floatingRef: refs.floating,
+        optionRole,
         disabled,
         readOnly,
-        refs.reference,
-        refs.floating,
-        appendToTypeaheadBuffer,
-        focusTypeaheadMatch,
-      ]);
-
-      useEffect(
-        () => () => {
-          if (typeaheadResetTimeoutRef.current) clearTimeout(typeaheadResetTimeoutRef.current);
-        },
-        [],
-      );
+      });
 
       const rootStyles = useMemo(
         () => ({
@@ -410,7 +309,7 @@ const SelectBase = memo(
             labelVariant={labelVariant}
             maxSelectedOptionsToShow={maxSelectedOptionsToShow}
             onChange={onChange}
-            onKeyDown={handleControlKeyDown}
+            onKeyDown={onControlKeyDown}
             open={open}
             options={options}
             placeholder={placeholder}
