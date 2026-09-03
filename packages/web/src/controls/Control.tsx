@@ -148,6 +148,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     fontSize = font,
     fontWeight = font,
     lineHeight = font,
+    textTransform,
     ...htmlProps
   } = mergedProps;
   if (isDevelopment() && !children && !ariaLabelledby) {
@@ -253,6 +254,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
               fontWeight={fontWeight}
               id={labelId}
               lineHeight={lineHeight}
+              textTransform={textTransform}
             >
               {label}
             </Text>
@@ -278,6 +280,7 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     fontSize,
     fontWeight,
     lineHeight,
+    textTransform,
   ]);
 
   // If no label is provided, consumer should wrap the checkbox with <label> or provide a value for the aria-labelledby prop.
