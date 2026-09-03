@@ -75,12 +75,12 @@ icons: major
 
 Publish icons 2026-08-28
 
-**⭐️ Added (2)**
+##### ⭐️ Added (2)
 
 - wallet
 - send
 
-**☠️ Renamed (1)**
+##### ☠️ Renamed (1)
 
 - walletOld → walletNew
 `);
