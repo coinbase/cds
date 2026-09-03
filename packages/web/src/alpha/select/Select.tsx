@@ -142,9 +142,7 @@ const SelectBase = memo(
         testID,
       } = mergedProps;
       const hasMounted = useHasMounted();
-      // The dropdown keeps a binary density toggle instead of the t-shirt scale, so Select owns
-      // the translation: only the smallest control size renders a compact dropdown. The control
-      // still receives the raw `compact` because it needs it for legacy label placement.
+      // Dropdown density is binary, so only the smallest size renders compact.
       const dropdownCompact = (size ?? (compact ? 's' : defaultSelectSize)) === 's';
       const [openInternal, setOpenInternal] = useState(defaultOpen ?? false);
       const open = openProp ?? openInternal;
@@ -170,8 +168,7 @@ const SelectBase = memo(
         excludeRefs: [refs.reference as React.MutableRefObject<HTMLElement>],
       });
 
-      // Typeahead mirrors native `<select>`: printable keys build a short-lived buffer that moves
-      // focus to the matching option, both while the listbox is closed (open + focus) and open.
+      // Typeahead: printable keys build a short-lived buffer that focuses the matching option.
       const typeaheadBufferRef = useRef('');
       const typeaheadResetTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
       const pendingTypeaheadRef = useRef(false);
@@ -212,8 +209,7 @@ const SelectBase = memo(
 
       const handleControlKeyDown = useCallback(
         (event: React.KeyboardEvent) => {
-          // While open, the window listener below owns typeahead so keystrokes are handled the
-          // same whether focus sits on the control or an option.
+          // When open, the window listener owns typeahead.
           if (disabled || readOnly || open || !isTypeaheadKeyEvent(event)) return;
 
           appendToTypeaheadBuffer(event.key);
@@ -229,8 +225,7 @@ const SelectBase = memo(
         focusTypeaheadMatch();
       }, [open, focusTypeaheadMatch]);
 
-      // A window listener is required because focus moves into the portaled dropdown, where the
-      // control's own key handler no longer fires.
+      // Window listener needed: focus moves into the portaled dropdown, past the control's handler.
       useEffect(() => {
         if (!open || disabled || readOnly) return;
         const globals = getBrowserGlobals();
