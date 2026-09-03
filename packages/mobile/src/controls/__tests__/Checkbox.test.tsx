@@ -267,4 +267,19 @@ describe('Checkbox', () => {
       borderColor: defaultTheme.lightColor.bgLineHeavy,
     });
   });
+
+  it('applies the font prop to string labels', () => {
+    render(
+      <DefaultThemeProvider>
+        <Checkbox font="label2" testID="font-checkbox">
+          Label text
+        </Checkbox>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('font-checkboxLabel')).toHaveStyle({
+      fontSize: defaultTheme.fontSize.label2,
+      fontWeight: defaultTheme.fontWeight.label2,
+    });
+  });
 });

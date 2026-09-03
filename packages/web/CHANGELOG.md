@@ -1,3 +1,15 @@
+## 9.26.1 (2026-09-03)
+
+### 🩹 Fixes
+
+- fix: exclude typography props from control cells
+
+## 9.26.0 (2026-09-02)
+
+### 🚀 Features
+
+- feat: support control font customization
+
 ## 9.25.0 (2026-09-02)
 
 ### 🚀 Features

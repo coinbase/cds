@@ -1,4 +1,21 @@
+import type { ThemeVars } from '../core/theme';
+
 export type TextTransform = 'uppercase' | 'lowercase' | 'capitalize' | 'none';
+
+export type TypographyProps = {
+  /** Typography font token for text. */
+  font?: ThemeVars.Font;
+  /** Font family token for text. */
+  fontFamily?: ThemeVars.FontFamily;
+  /** Font size token for text. */
+  fontSize?: ThemeVars.FontSize;
+  /** Font weight token for text. */
+  fontWeight?: ThemeVars.FontWeight;
+  /** Line height token for text. */
+  lineHeight?: ThemeVars.LineHeight;
+  /** Text transform for text. */
+  textTransform?: TextTransform;
+};
 
 export type TextAlignProps = {
   /**

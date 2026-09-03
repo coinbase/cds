@@ -3,6 +3,7 @@ import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { TypographyProps } from '@coinbase/cds-common/types/TextBaseProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
@@ -73,6 +74,7 @@ export type ControlBaseProps<ControlValue extends string> = FilteredHTMLAttribut
   'value' | 'color'
 > &
   SharedProps &
+  TypographyProps &
   Partial<
     Pick<
       InteractableBaseProps,
@@ -141,6 +143,12 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     style,
     classNames,
     styles,
+    font = 'body',
+    fontFamily = font,
+    fontSize = font,
+    fontWeight = font,
+    lineHeight = font,
+    textTransform,
     ...htmlProps
   } = mergedProps;
   if (isDevelopment() && !children && !ariaLabelledby) {
@@ -233,11 +241,21 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
         style={{ ...labelStyle, ...styles?.label }}
       >
         <Box alignItems="flex-start" flexDirection={isRtl() ? 'row-reverse' : 'row'} gap={1}>
-          <Box alignItems="center" height="var(--lineHeight-body)" role="presentation">
+          <Box alignItems="center" height={`var(--lineHeight-${lineHeight})`} role="presentation">
             {iconElement}
           </Box>
           {typeof label === 'string' ? (
-            <Text color={color} disabled={disabled || readOnly} font="body" id={labelId}>
+            <Text
+              color={color}
+              disabled={disabled || readOnly}
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              id={labelId}
+              lineHeight={lineHeight}
+              textTransform={textTransform}
+            >
               {label}
             </Text>
           ) : (
@@ -257,6 +275,12 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     labelId,
     classNames?.label,
     styles?.label,
+    font,
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    textTransform,
   ]);
 
   // If no label is provided, consumer should wrap the checkbox with <label> or provide a value for the aria-labelledby prop.

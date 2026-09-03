@@ -17,6 +17,34 @@ describe('Control', () => {
     expect(screen.getByText('test children')).toBeTruthy();
   });
 
+  it('applies the font prop to string labels', () => {
+    render(
+      <DefaultThemeProvider>
+        <Control font="label2" label="test label" type="checkbox">
+          <div>test children</div>
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByText('test label').getAttribute('style')).toContain(
+      'var(--textTransform-label2)',
+    );
+  });
+
+  it('applies custom lineHeight to the icon box height', () => {
+    render(
+      <DefaultThemeProvider>
+        <Control label="test label" lineHeight="label2" type="checkbox">
+          <div>test children</div>
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('presentation').getAttribute('style')).toContain(
+      'var(--lineHeight-label2)',
+    );
+  });
+
   it('renders a ReactNode label without wrapping it in Text', () => {
     render(
       <DefaultThemeProvider>
