@@ -13,8 +13,6 @@ export type TypographyProps = {
   fontWeight?: ThemeVars.FontWeight;
   /** Line height token for text. */
   lineHeight?: ThemeVars.LineHeight;
-  /** Text transform token for text. */
-  textTransform?: ThemeVars.TextTransform;
 };
 
 export type TextAlignProps = {

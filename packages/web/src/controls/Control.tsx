@@ -3,13 +3,12 @@ import { useMergeRefs } from '@coinbase/cds-common/hooks/useMergeRefs';
 import { usePrefixedId } from '@coinbase/cds-common/hooks/usePrefixedId';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
-import type { TextTransform, TypographyProps } from '@coinbase/cds-common/types/TextBaseProps';
+import type { TypographyProps } from '@coinbase/cds-common/types/TextBaseProps';
 import { isDevelopment } from '@coinbase/cds-utils';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
-import { useTheme } from '../hooks/useTheme';
 import { Box } from '../layout/Box';
 import { Interactable, type InteractableBaseProps } from '../system/Interactable';
 import type { FilteredHTMLAttributes, StylesAndClassNames } from '../types';
@@ -149,10 +148,8 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     fontSize = font,
     fontWeight = font,
     lineHeight = font,
-    textTransform = font,
     ...htmlProps
   } = mergedProps;
-  const theme = useTheme();
   if (isDevelopment() && !children && !ariaLabelledby) {
     console.warn(
       `Please provide an aria label for the control component ${value} either through the children or aria-labelledby prop.`,
@@ -256,7 +253,6 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
               fontWeight={fontWeight}
               id={labelId}
               lineHeight={lineHeight}
-              textTransform={theme.textTransform[textTransform] as TextTransform}
             >
               {label}
             </Text>
@@ -282,8 +278,6 @@ const ControlWithRef = forwardRef(function ControlWithRef<ControlValue extends s
     fontSize,
     fontWeight,
     lineHeight,
-    textTransform,
-    theme,
   ]);
 
   // If no label is provided, consumer should wrap the checkbox with <label> or provide a value for the aria-labelledby prop.

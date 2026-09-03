@@ -136,7 +136,6 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
     fontSize = font,
     fontWeight = font,
     lineHeight = font,
-    textTransform = font,
     ...props
   } = mergedProps;
   const theme = useTheme();
@@ -277,7 +276,6 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
               lineHeight={lineHeight}
               style={getLabelStyle({ pressed })}
               testID={`${testID}Label`}
-              textTransform={theme.textTransform[textTransform]}
             >
               {label}
             </Text>
@@ -310,7 +308,6 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
       fontSize,
       fontWeight,
       lineHeight,
-      textTransform,
       theme,
       pressDisabled,
       readOnly,

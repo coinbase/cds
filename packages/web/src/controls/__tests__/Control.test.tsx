@@ -27,7 +27,7 @@ describe('Control', () => {
     );
 
     expect(screen.getByText('test label').getAttribute('style')).toContain(
-      '--text-textTransform: none',
+      'var(--textTransform-label2)',
     );
   });
 
