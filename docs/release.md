@@ -106,7 +106,7 @@ Documentation, tests, stories, and Figma bindings never require a plan. If a pac
 - `updateDependents` is set to `never`. Releasing `utils` does not cascade a bump into the packages that depend on it. Internal dependencies use the `workspace:^` protocol, so no version ranges need rewriting.
 - Generated changelog entries omit commit authors and commit references, and each package keeps its own `CHANGELOG.md`. There is no workspace-level changelog.
 - New entries are prepended to the top of `CHANGELOG.md`, which is why each file's title and registry link live in a footer at the bottom.
-- `packages/illustrations/CHANGELOG.md` is the one exception, and still keeps its title in a header. The illustrations Figma sync lives in the internal `frontend/cds` repo and splices its entry in at the `<!-- template-start -->` marker, so removing that marker would make the sync silently write nothing. Give that file the same footer treatment once the sync is ported into this repo or updated to write a version plan.
+- The two Figma sync scripts write version plans rather than editing `CHANGELOG.md` directly, so a sync releases through the same path as any other change. See [syncing icons](../packages/icons/DOCS.md) and [syncing illustrations](../packages/illustrations/DOCS.md).
 
 ## Native Android
 

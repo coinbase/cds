@@ -25,6 +25,27 @@
     "lint": {
       "executor": "@nx/eslint:lint"
     },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.mjs"
+      }
+    },
+    "sync-illustrations": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        {
+          "projects": [
+            "figma-api"
+          ],
+          "target": "build"
+        }
+      ],
+      "options": {
+        "command": "tsx ./scripts/sync-illustrations/index.ts",
+        "cwd": "packages/illustrations"
+      }
+    },
     "generate-stories": {
       "command": "tsx ./scripts/generateStories.ts",
       "dependsOn": [
@@ -51,11 +72,16 @@
       "defaultConfiguration": "dev",
       "configurations": {
         "dev": {
-          "command": "tsc --build --pretty --verbose"
+          "commands": [
+            "tsc --build --pretty --verbose",
+            "tsc -p ./tsconfig.scripts.json --pretty"
+          ],
+          "parallel": false
         },
         "prod": {
           "commands": [
             "tsc --build ./tsconfig.build.json --pretty --verbose",
+            "tsc -p ./tsconfig.scripts.json --pretty",
             "prettier ./dts --write --loglevel warn"
           ],
           "parallel": false
