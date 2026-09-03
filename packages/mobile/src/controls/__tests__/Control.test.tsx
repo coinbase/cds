@@ -37,6 +37,34 @@ describe('Control', () => {
     });
   });
 
+  it('applies textTransform prop to string labels', () => {
+    render(
+      <DefaultThemeProvider>
+        <Control label="test label" testID="test-control" textTransform="uppercase">
+          {MockControlIcon}
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-controlLabel')).toHaveStyle({
+      textTransform: 'uppercase',
+    });
+  });
+
+  it('uses lineHeight prop for icon wrapper height', () => {
+    render(
+      <DefaultThemeProvider>
+        <Control font="body" label="test label" lineHeight="label2" testID="test-control">
+          {MockControlIcon}
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-controlIconWrapper')).toHaveStyle({
+      height: defaultTheme.lineHeight.label2,
+    });
+  });
+
   it('renders a ReactNode label without wrapping it in Text', () => {
     render(
       <DefaultThemeProvider>

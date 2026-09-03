@@ -9,6 +9,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { TypographyProps } from '@coinbase/cds-common/types/TextBaseProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
@@ -30,7 +31,10 @@ export type RadioCellBaseProps<RadioValue extends string> = {
   rowGap?: ThemeVars.Space;
   pressedBorderColor?: ThemeVars.Color;
   pressedBorderWidth?: ThemeVars.BorderWidth;
-} & Omit<ControlBaseProps<RadioValue>, 'style' | 'children' | 'title' | 'controlSize' | 'dotSize'> &
+} & Omit<
+  ControlBaseProps<RadioValue>,
+  'style' | 'children' | 'title' | 'controlSize' | 'dotSize' | keyof TypographyProps
+> &
   Omit<PressableProps, 'children' | 'noScaleOnPress'>;
 
 export type RadioCellProps<RadioValue extends string> = RadioCellBaseProps<RadioValue> & {

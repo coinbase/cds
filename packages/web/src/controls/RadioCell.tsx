@@ -2,6 +2,8 @@ import { type CSSProperties, forwardRef, memo, useId, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { css } from '@linaria/core';
 
+import type { TypographyProps } from '@coinbase/cds-common/types/TextBaseProps';
+
 import { cx } from '../cx';
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { Box } from '../layout/Box';
@@ -21,7 +23,13 @@ export type RadioCellBaseProps<RadioValue extends string> = Omit<
 > &
   Omit<
     ControlBaseProps<RadioValue>,
-    'onChange' | 'title' | 'children' | 'iconStyle' | 'labelStyle' | 'checked'
+    | 'onChange'
+    | 'title'
+    | 'children'
+    | 'iconStyle'
+    | 'labelStyle'
+    | 'checked'
+    | keyof TypographyProps
   > & {
     checked?: boolean;
     title: React.ReactNode;

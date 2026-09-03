@@ -265,7 +265,9 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
       if (!label) return iconElement;
       return (
         <>
-          <View style={iconWrapperStyles}>{iconElement}</View>
+          <View style={iconWrapperStyles} testID={testID ? `${testID}IconWrapper` : undefined}>
+            {iconElement}
+          </View>
           {typeof label === 'string' ? (
             <Text
               animated
@@ -311,7 +313,6 @@ const ControlWithRef = function ControlWithRef<ControlValue extends string>({
       fontWeight,
       lineHeight,
       textTransform,
-      theme,
       pressDisabled,
       readOnly,
       testID,

@@ -9,6 +9,7 @@ import {
   type ViewStyle,
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { TypographyProps } from '@coinbase/cds-common/types/TextBaseProps';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
@@ -30,7 +31,10 @@ export type CheckboxCellBaseProps<CheckboxValue extends string> = {
   rowGap?: ThemeVars.Space;
   pressedBorderColor?: ThemeVars.Color;
   pressedBorderWidth?: ThemeVars.BorderWidth;
-} & Omit<ControlBaseProps<CheckboxValue>, 'style' | 'children' | 'title' | 'dotSize'> &
+} & Omit<
+  ControlBaseProps<CheckboxValue>,
+  'style' | 'children' | 'title' | 'dotSize' | keyof TypographyProps
+> &
   Omit<PressableBaseProps, 'children' | 'noScaleOnPress'>;
 
 export type CheckboxCellProps<CheckboxValue extends string> =

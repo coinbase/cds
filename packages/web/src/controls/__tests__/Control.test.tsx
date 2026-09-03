@@ -31,6 +31,20 @@ describe('Control', () => {
     );
   });
 
+  it('applies custom lineHeight to the icon box height', () => {
+    const { container } = render(
+      <DefaultThemeProvider>
+        <Control label="test label" lineHeight="label2" type="checkbox">
+          <div>test children</div>
+        </Control>
+      </DefaultThemeProvider>,
+    );
+
+    const iconBox = container.querySelector('[role="presentation"]');
+    expect(iconBox).toBeTruthy();
+    expect(iconBox?.getAttribute('style')).toContain('var(--lineHeight-label2)');
+  });
+
   it('renders a ReactNode label without wrapping it in Text', () => {
     render(
       <DefaultThemeProvider>
