@@ -1,9 +1,9 @@
-import { render, screen } from '@testing-library/react-native';
 import { View } from 'react-native';
+import { render, screen } from '@testing-library/react-native';
 
 import { defaultTheme } from '../../themes/defaultTheme';
-import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Text } from '../../typography/Text';
+import { DefaultThemeProvider } from '../../utils/testHelpers';
 import { Control } from '../Control';
 
 const MockControlIcon = () => <View testID="control-icon" />;
