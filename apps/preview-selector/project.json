@@ -1,0 +1,55 @@
+{
+  "name": "preview-selector",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/preview-selector/src",
+  "projectType": "application",
+  "tags": [
+    "npm:private"
+  ],
+  "targets": {
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite",
+        "cwd": "apps/preview-selector"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite build",
+        "cwd": "apps/preview-selector"
+      },
+      "outputs": [
+        "{projectRoot}/dist"
+      ]
+    },
+    "preview": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "vite preview",
+        "cwd": "apps/preview-selector"
+      },
+      "dependsOn": [
+        "build"
+      ]
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc --noEmit",
+        "cwd": "apps/preview-selector"
+      }
+    },
+    "test-local": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ../../.github/scripts/test-selector-locally.mjs",
+        "cwd": "apps/preview-selector"
+      },
+      "dependsOn": [
+        "build"
+      ]
+    }
+  }
+}

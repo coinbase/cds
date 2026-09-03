@@ -4,6 +4,7 @@ import { Text } from '@coinbase/cds-web/typography';
 import type { PropSidebarItemLink } from '@docusaurus/plugin-content-docs';
 import { useDocsSidebar } from '@docusaurus/plugin-content-docs/lib/client/docsSidebar.js';
 import type { PropSidebarItemCategory } from '@docusaurus/plugin-content-docs/lib/sidebars/types.js';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 import { AnimatedHeroGrid } from '@site/src/components/home/AnimatedHero/HeroGrid';
 import type { ComponentCardProps } from '@site/src/components/home/ComponentCard';
 import { ComponentCard } from '@site/src/components/home/ComponentCard';
@@ -79,6 +80,7 @@ const componentCardLinks = {
 
 export default function Home() {
   const { items } = useDocsSidebar() || {};
+  const baseUrl = useBaseUrl('/');
   const componentCards: ComponentCardProps[] = useMemo(() => {
     const componentCategories = items?.find(
       (item) => item.type === 'category' && item.label === 'Components',
@@ -93,10 +95,10 @@ export default function Home() {
           return {
             name: item.label,
             count: item.items?.length,
-            bannerLightSrc: `/img/componentCardBanners/${categoryName}_light.svg`,
-            bannerLightOverlaySrc: `/img/componentCardBanners/${categoryName}_light_hover.svg`,
-            bannerDarkSrc: `/img/componentCardBanners/${categoryName}_dark.svg`,
-            bannerDarkOverlaySrc: `/img/componentCardBanners/${categoryName}_dark_hover.svg`,
+            bannerLightSrc: `${baseUrl}img/componentCardBanners/${categoryName}_light.svg`,
+            bannerLightOverlaySrc: `${baseUrl}img/componentCardBanners/${categoryName}_light_hover.svg`,
+            bannerDarkSrc: `${baseUrl}img/componentCardBanners/${categoryName}_dark.svg`,
+            bannerDarkOverlaySrc: `${baseUrl}img/componentCardBanners/${categoryName}_dark_hover.svg`,
             to:
               componentCardLinks[categoryName as keyof typeof componentCardLinks] ??
               firstItem?.href,
@@ -105,7 +107,7 @@ export default function Home() {
         return null;
       })
       .filter(Boolean) as ComponentCardProps[];
-  }, [items]);
+  }, [items, baseUrl]);
 
   return (
     <VStack gap={8}>
