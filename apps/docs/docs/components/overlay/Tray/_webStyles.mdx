@@ -1,0 +1,44 @@
+import { useState } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { Tray } from '@coinbase/cds-web/overlays';
+
+import webStylesData from ':docgen/web/overlays/tray/Tray/styles-data';
+
+export const TrayExample = ({ classNames }) => {
+  const [visible, setVisible] = useState(false);
+  return (
+    <VStack gap={2} alignItems="center">
+      <Button onClick={() => setVisible(true)}>Open Tray</Button>
+      <Text color="fgMuted" font="label2">
+        Select a selector, then open the Tray to see it highlighted
+      </Text>
+      {visible && (
+        <Tray
+          classNames={classNames}
+          onCloseComplete={() => setVisible(false)}
+          showHandleBar
+          title="Example Tray"
+        >
+          <Text color="fgMuted" paddingBottom={2}>
+            Curabitur commodo nulla vel dolor vulputate vestibulum. Nulla et nisl molestie, interdum
+            lorem id, viverra.
+          </Text>
+        </Tray>
+      )}
+    </VStack>
+  );
+};
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <TrayExample classNames={classNames} />}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="Tray" styles={webStylesData} />

@@ -1,0 +1,116 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": ".",
+    "erasableSyntaxOnly": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx",
+    "isolatedModules": true,
+    "lib": [
+      "dom",
+      "esnext"
+    ],
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "verbatimModuleSyntax": true,
+    "noErrorTruncation": true,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2020",
+    "paths": {
+      "@cds/type-analyzer": [
+        "libs/type-analyzer/src"
+      ],
+      "@cds/type-analyzer/*": [
+        "libs/type-analyzer/src/*"
+      ],
+      "@coinbase/cds-common": [
+        "packages/common/src"
+      ],
+      "@coinbase/cds-common/*": [
+        "packages/common/src/*"
+      ],
+      "@coinbase/cds-icons": [
+        "packages/icons/src"
+      ],
+      "@coinbase/cds-icons/*": [
+        "packages/icons/src/*"
+      ],
+      "@coinbase/cds-illustrations": [
+        "packages/illustrations/src"
+      ],
+      "@coinbase/cds-illustrations/*": [
+        "packages/illustrations/src/*"
+      ],
+      "@coinbase/cds-lottie-files": [
+        "packages/lottie-files/src"
+      ],
+      "@coinbase/cds-lottie-files/*": [
+        "packages/lottie-files/src/*"
+      ],
+      "@coinbase/cds-mcp-server": [
+        "packages/mcp-server/src"
+      ],
+      "@coinbase/cds-mcp-server/*": [
+        "packages/mcp-server/src/*"
+      ],
+      "@coinbase/cds-mobile": [
+        "packages/mobile/src"
+      ],
+      "@coinbase/cds-mobile-visualization": [
+        "packages/mobile-visualization/src"
+      ],
+      "@coinbase/cds-mobile-visualization/*": [
+        "packages/mobile-visualization/src/*"
+      ],
+      "@coinbase/cds-mobile/*": [
+        "packages/mobile/src/*"
+      ],
+      "@coinbase/cds-utils": [
+        "packages/utils/src"
+      ],
+      "@coinbase/cds-utils/*": [
+        "packages/utils/src/*"
+      ],
+      "@coinbase/cds-web": [
+        "packages/web/src"
+      ],
+      "@coinbase/cds-web-utils": [
+        "libs/web-utils/src"
+      ],
+      "@coinbase/cds-web-utils/*": [
+        "libs/web-utils/src/*"
+      ],
+      "@coinbase/cds-web-visualization": [
+        "packages/web-visualization/src"
+      ],
+      "@coinbase/cds-web-visualization/*": [
+        "packages/web-visualization/src/*"
+      ],
+      "@coinbase/cds-web/*": [
+        "packages/web/src/*"
+      ],
+      "@coinbase/docusaurus-plugin-docgen": [
+        "libs/docusaurus-plugin-docgen/src"
+      ],
+      "@coinbase/docusaurus-plugin-docgen/*": [
+        "libs/docusaurus-plugin-docgen/src/*"
+      ],
+      "@coinbase/docusaurus-plugin-kbar": [
+        "libs/docusaurus-plugin-kbar/src"
+      ],
+      "@coinbase/docusaurus-plugin-kbar/*": [
+        "libs/docusaurus-plugin-kbar/src/*"
+      ],
+      "@site/*": [
+        "apps/docs/*"
+      ]
+    }
+  }
+}

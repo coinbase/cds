@@ -1,0 +1,47 @@
+{
+  "name": "@cds/codegen",
+  "version": "0.0.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "libs/codegen"
+  },
+  "type": "module",
+  "main": "./esm/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./esm/index.js"
+    },
+    "./configs/spectrum": {
+      "types": "./dts/configs/spectrum/index.d.ts",
+      "default": "./esm/configs/spectrum/index.js"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./esm/*.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dts",
+    "esm",
+    "CHANGELOG"
+  ],
+  "dependencies": {
+    "@coinbase/cds-utils": "workspace:^",
+    "chalk": "^4.1.2",
+    "ejs": "^3.1.7",
+    "fast-glob": "^3.2.11",
+    "semver": "^7.5.4"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1"
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "import": "import { TableCellFallback } from '@coinbase/cds-web/tables/TableCellFallback'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tables/TableCellFallback.tsx",
+  "description": "Shows a loading state for Table cells.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-table-tablecellfallback--table-cell-fallback-example",
+  "relatedComponents": [
+    {
+      "label": "Table",
+      "url": "/components/data-display/Table"
+    },
+    {
+      "label": "TableBody",
+      "url": "/components/data-display/TableBody"
+    },
+    {
+      "label": "TableCaption",
+      "url": "/components/data-display/TableCaption"
+    },
+    {
+      "label": "TableCell",
+      "url": "/components/data-display/TableCell"
+    },
+    {
+      "label": "TableFooter",
+      "url": "/components/data-display/TableFooter"
+    },
+    {
+      "label": "TableHeader",
+      "url": "/components/data-display/TableHeader"
+    },
+    {
+      "label": "TableRow",
+      "url": "/components/data-display/TableRow"
+    }
+  ],
+  "dependencies": []
+}

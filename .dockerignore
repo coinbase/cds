@@ -1,0 +1,10 @@
+# These are files we don't want Docker to cache when pulling down container on subsequent runs
+**/*.Dockerfile
+**/.DS_Store
+**/dist
+**/lib
+**/node_modules
+.dockerignore
+.vscode
+docs
+README.md

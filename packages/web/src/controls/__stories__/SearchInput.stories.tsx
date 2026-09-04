@@ -1,0 +1,213 @@
+import React, { useCallback, useState } from 'react';
+
+import { VStack } from '../../layout';
+import { InputIconButton } from '../InputIconButton';
+import { SearchInput } from '../SearchInput';
+
+export default {
+  title: 'Components/Inputs/SearchInput',
+  component: SearchInput,
+};
+
+const Basic = () => {
+  const [text, setText] = useState('Value');
+
+  return (
+    <SearchInput
+      accessibilityLabel="Search"
+      onChangeText={setText}
+      onClear={() => {}}
+      placeholder="Placeholder"
+      value={text}
+    />
+  );
+};
+
+const Shrunken = () => {
+  const [text, setText] = useState('Value');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        compact
+        accessibilityLabel="Search"
+        height={32}
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder="Placeholder"
+        value={text}
+      />
+      <SearchInput
+        compact
+        accessibilityLabel="Search"
+        height={24}
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder="Placeholder"
+        value={text}
+      />
+    </VStack>
+  );
+};
+
+const HideStartIcon = () => {
+  const [text, setText] = useState('');
+
+  return (
+    <SearchInput
+      hideStartIcon
+      accessibilityLabel="Search"
+      onChangeText={setText}
+      onClear={() => {}}
+      value={text}
+    />
+  );
+};
+
+const HideEndIcon = () => {
+  const [text, setText] = useState('');
+
+  return (
+    <SearchInput
+      hideEndIcon
+      accessibilityLabel="Search"
+      onChangeText={setText}
+      onClear={() => {}}
+      value={text}
+    />
+  );
+};
+
+export const Sizes = () => {
+  const [text, setText] = useState('');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder='size="s"'
+        size="s"
+        value={text}
+      />
+      <SearchInput
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder='size="m"'
+        size="m"
+        value={text}
+      />
+      <SearchInput
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder='size="l" (default)'
+        size="l"
+        value={text}
+      />
+      <SearchInput
+        compact
+        accessibilityLabel="searchbox"
+        onChangeText={setText}
+        onClear={() => {}}
+        placeholder='compact (deprecated, renders as size "s")'
+        value={text}
+      />
+    </VStack>
+  );
+};
+
+/** `compact` is deprecated in favor of `size="s"`; kept here to verify legacy behavior. */
+const Compact = () => {
+  const [text, setText] = useState('');
+
+  return (
+    <SearchInput
+      compact
+      accessibilityLabel="searchbox"
+      onChangeText={setText}
+      onClear={() => {}}
+      value={text}
+    />
+  );
+};
+
+const Disabled = () => {
+  const [text, setText] = useState('');
+
+  return (
+    <SearchInput
+      disabled
+      accessibilityLabel="Search"
+      onChangeText={setText}
+      onClear={() => {}}
+      value={text}
+    />
+  );
+};
+
+const CustomEndNode = ({ end }: { end: React.ReactNode }) => {
+  const [text, setText] = useState('');
+
+  return (
+    <SearchInput
+      accessibilityLabel="Search"
+      end={end}
+      onChangeText={setText}
+      onClear={() => {}}
+      value={text}
+    />
+  );
+};
+
+export const Default = () => (
+  <VStack gap={2}>
+    <Basic />
+    <Disabled />
+    <Compact />
+    <HideStartIcon />
+    <HideEndIcon />
+    <CustomEndNode
+      end={
+        <InputIconButton
+          active
+          accessibilityHint="Warning text"
+          accessibilityLabel="Warning text"
+          name="warning"
+          onClick={() => {}}
+          testID="custom-close-iconbtn"
+        />
+      }
+    />
+    <Shrunken />
+  </VStack>
+);
+
+/**
+ * This tests how the SearchInput will work when
+ * onChange and onChangeText are used together
+ */
+export const OnChangeExample = () => {
+  const [text, setText] = useState('');
+
+  const handleOnChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setText(e.target.value);
+    },
+    [setText],
+  );
+
+  return (
+    <div>
+      <SearchInput
+        accessibilityLabel="Search"
+        onChange={handleOnChange}
+        onChangeText={setText}
+        value={text}
+      />
+      <p>{text}</p>
+    </div>
+  );
+};

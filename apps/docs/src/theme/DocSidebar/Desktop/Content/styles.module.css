@@ -1,0 +1,16 @@
+@media (min-width: 1280px) {
+  .menu {
+    flex-grow: 1;
+    padding: 24px 12px 24px 16px;
+  }
+  @supports (scrollbar-gutter: stable) {
+    .menu {
+      padding: 24px 4px 24px 16px;
+      scrollbar-gutter: stable;
+    }
+  }
+
+  .menuWithAnnouncementBar {
+    margin-bottom: var(--docusaurus-announcement-bar-height);
+  }
+}

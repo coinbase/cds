@@ -1,0 +1,50 @@
+{
+  "name": "@coinbase/cds-web-utils",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Jest utils and developer tools.",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "libs/web-utils"
+  },
+  "type": "commonjs",
+  "main": "./cjs/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./cjs/index.js"
+    },
+    "./jest": {
+      "types": "./dts/jest/index.d.ts",
+      "default": "./cjs/jest/index.js"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./cjs/*.js"
+    }
+  },
+  "files": [
+    "cjs",
+    "dts",
+    "CHANGELOG"
+  ],
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "jest-axe": "^10.0.0",
+    "source-map": "^0.7.3",
+    "stylis": "^3.5.4",
+    "yargs": "^17.5.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@babel/types": "^7.20.7",
+    "@linaria/babel-preset": "^3.0.0-beta.22",
+    "@testing-library/react": "^16.3.2"
+  }
+}

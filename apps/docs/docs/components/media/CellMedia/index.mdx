@@ -1,0 +1,33 @@
+---
+id: cell-media
+title: CellMedia
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import webPropsToc from ':docgen/web/cells/CellMedia/toc-props';
+import mobilePropsToc from ':docgen/mobile/cells/CellMedia/toc-props';
+import WebPropsTable from './_webPropsTable.mdx';
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader title="CellMedia" webMetadata={webMetadata} mobileMetadata={mobileMetadata} />
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webExamples={<WebExamples />}
+    mobilePropsTable={<MobilePropsTable />}
+    mobileExamples={<MobileExamples />}
+    webExamplesToc={webExamplesToc}
+    mobileExamplesToc={mobileExamplesToc}
+    webPropsToc={webPropsToc}
+    mobilePropsToc={mobilePropsToc}
+  />
+</VStack>

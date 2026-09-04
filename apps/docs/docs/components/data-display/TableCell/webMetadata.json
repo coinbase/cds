@@ -1,0 +1,37 @@
+{
+  "import": "import { TableCell } from '@coinbase/cds-web/tables/TableCell'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tables/TableCell.tsx",
+  "description": "Defines individual cells within a Table.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-table-tablecell--cell-spacing",
+  "relatedComponents": [
+    {
+      "label": "Table",
+      "url": "/components/data-display/Table"
+    },
+    {
+      "label": "TableBody",
+      "url": "/components/data-display/TableBody"
+    },
+    {
+      "label": "TableCaption",
+      "url": "/components/data-display/TableCaption"
+    },
+    {
+      "label": "TableCellFallback",
+      "url": "/components/data-display/TableCellFallback"
+    },
+    {
+      "label": "TableFooter",
+      "url": "/components/data-display/TableFooter"
+    },
+    {
+      "label": "TableHeader",
+      "url": "/components/data-display/TableHeader"
+    },
+    {
+      "label": "TableRow",
+      "url": "/components/data-display/TableRow"
+    }
+  ],
+  "dependencies": []
+}

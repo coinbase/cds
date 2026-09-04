@@ -1,0 +1,80 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Parameters
+
+The `useOverlayContentContext` hook accepts no parameters.
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Returns
+
+Returns an `OverlayContentContextValue` object with overlay state information:
+
+- `isOverlay?: boolean` - True if inside any overlay component (automatically derived from other values if not explicitly set)
+- `isModal?: boolean` - True if inside a Modal component
+- `isDrawer?: boolean` - True if inside a Drawer or Tray component
+- `isTour?: boolean` - True if inside a Tour component
+
+All properties are optional and will be `undefined` when outside of overlay contexts.
+
+:::tip
+This hook is safe to use anywhere in your component tree - it does not throw an error when used outside a provider. When `isOverlay` is not explicitly provided, it will be automatically derived as `true` if any of the other overlay type flags are `true`.
+:::
+
+</MDXArticle>
+
+<MDXArticle>
+
+## OverlayContentContext
+
+The React context that provides overlay state information. Can be used directly with `React.useContext` or through the `useOverlayContentContext` hook.
+
+### Context Value Type
+
+```typescript
+type OverlayContentContextValue = {
+  isOverlay?: boolean;
+  isModal?: boolean;
+  isDrawer?: boolean;
+  isTour?: boolean;
+};
+```
+
+</MDXArticle>
+
+<MDXArticle>
+
+## Provider Usage
+
+```tsx
+import { OverlayContentContext } from '@coinbase/cds-common/overlays/OverlayContentContext';
+
+function MyOverlayComponent() {
+  const contextValue = {
+    isModal: true,
+    isDrawer: false,
+    isTour: false,
+    // isOverlay will be automatically derived as true
+  };
+
+  return (
+    <OverlayContentContext.Provider value={contextValue}>
+      {/* Your overlay content */}
+    </OverlayContentContext.Provider>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+
+## Automatic Derivation
+
+If `isOverlay` is not explicitly provided in the context value, it will be automatically derived as `true` when any of `isModal`, `isDrawer`, or `isTour` is `true`. This ensures consistent behavior across the system.
+
+**Important**: When adding new overlay types to the `OverlayContentContextValue` type, remember to update the derivation logic in the `useOverlayContentContext` hook.
+
+</MDXArticle>

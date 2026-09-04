@@ -1,0 +1,14 @@
+# Build outputs
+esm/
+dts/
+*.tsbuildinfo
+
+# Node modules
+node_modules/
+
+# Migration history files (user-specific)
+.cds-migration-history.json
+
+# Logs
+*.log
+migration.log

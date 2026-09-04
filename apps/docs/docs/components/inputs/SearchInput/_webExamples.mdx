@@ -1,0 +1,126 @@
+### Basic usage
+
+```tsx live
+function BasicSearchInput() {
+  const [value, setValue] = useState('');
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        value={value}
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        onSearch={(searchTerm) => console.log('Searching for:', searchTerm)}
+        placeholder="Search..."
+      />
+      <Text color="foregroundMuted" font="caption">
+        Press Enter to trigger search
+      </Text>
+    </VStack>
+  );
+}
+```
+
+### Variants
+
+When `bordered={false}`, SearchInput keeps focused border styling disabled by default. Set
+`focusedBorderWidth` to opt into a focus border style.
+
+```tsx live
+function SearchInputVariants() {
+  const [value1, setValue1] = useState('');
+  const [value2, setValue2] = useState('');
+  const [value3, setValue3] = useState('');
+  const [value4, setValue4] = useState('');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        value={value1}
+        onChangeText={setValue1}
+        onClear={() => setValue1('')}
+        placeholder="Small search..."
+        size="s"
+      />
+      <SearchInput
+        value={value2}
+        onChangeText={setValue2}
+        onClear={() => setValue2('')}
+        placeholder="Borderless search (default focus behavior)..."
+        bordered={false}
+      />
+      <SearchInput
+        value={value3}
+        onChangeText={setValue3}
+        onClear={() => setValue3('')}
+        placeholder="Borderless search (with focus border)..."
+        bordered={false}
+        focusedBorderWidth={200}
+      />
+      <SearchInput
+        value={value4}
+        onChangeText={setValue4}
+        onClear={() => setValue4('')}
+        placeholder="No icons..."
+        hideStartIcon
+        hideEndIcon
+      />
+    </VStack>
+  );
+}
+```
+
+### Sizes
+
+`size` accepts `s`, `m`, and `l`. Defaults to `l`.
+
+```tsx live
+function SearchInputSizes() {
+  const [value, setValue] = useState('');
+
+  return (
+    <VStack gap={2}>
+      <SearchInput
+        accessibilityLabel="Small search"
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        placeholder='size="s"'
+        size="s"
+        value={value}
+      />
+      <SearchInput
+        accessibilityLabel="Medium search"
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        placeholder='size="m"'
+        size="m"
+        value={value}
+      />
+      <SearchInput
+        accessibilityLabel="Large search"
+        onChangeText={setValue}
+        onClear={() => setValue('')}
+        placeholder='size="l" (default)'
+        size="l"
+        value={value}
+      />
+    </VStack>
+  );
+}
+```
+
+### With Custom End Element
+
+```tsx live
+function CustomEndSearchInput() {
+  const [value, setValue] = useState('');
+  return (
+    <SearchInput
+      value={value}
+      onChangeText={setValue}
+      onClear={() => setValue('')}
+      placeholder="Custom end element..."
+      end={<InputIconButton name="filter" onClick={() => console.log('Filter clicked')} />}
+    />
+  );
+}
+```

@@ -1,0 +1,154 @@
+import React, { memo, useCallback, useEffect, useMemo } from 'react';
+import {
+  type GestureResponderEvent,
+  type StyleProp,
+  type View,
+  type ViewStyle,
+} from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring } from 'react-native-reanimated';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import { type TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
+
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useTheme } from '../hooks/useTheme';
+import { Box } from '../layout/Box';
+import { Pressable, type PressableBaseProps, type PressableProps } from '../system/Pressable';
+import { Text, type TextBaseProps } from '../typography/Text';
+
+import { tabsSpringConfig } from './Tabs';
+
+export type SegmentedTabBaseProps<TabId extends string = string> = TabValue<TabId> &
+  Pick<
+    TextBaseProps,
+    'font' | 'fontFamily' | 'fontSize' | 'fontWeight' | 'lineHeight' | 'textTransform'
+  > &
+  Omit<PressableBaseProps, 'children' | 'disabled' | 'onPress' | 'style'> & {
+    /**
+     * Text color when active.
+     * @default fgInverse
+     */
+    activeColor?: ThemeVars.Color;
+    /**
+     * Text color when inactive.
+     * @default fg
+     */
+    color?: ThemeVars.Color;
+  };
+
+export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId> &
+  Omit<PressableProps, 'children' | 'disabled' | 'onPress' | 'style'> & {
+    /** Callback that is fired when the SegmentedTab is pressed. */
+    onPress?: (id: TabId, event: GestureResponderEvent) => void;
+    style?: StyleProp<ViewStyle>;
+  };
+
+const AnimatedTextHeadline = Animated.createAnimatedComponent(Text);
+
+type SegmentedTabFC = <TabId extends string = string>(
+  props: SegmentedTabProps<TabId> & { ref?: React.ForwardedRef<View> },
+) => React.ReactElement;
+
+const SegmentedTabComponent = memo(
+  <TabId extends string = string>({
+    ref,
+    ..._props
+  }: SegmentedTabProps<TabId> & {
+    ref?: React.Ref<View>;
+  }) => {
+    const mergedProps = useComponentConfig('SegmentedTab', _props);
+    const {
+      id,
+      label,
+      disabled: disabledProp,
+      onPress,
+      color = 'fg',
+      activeColor = 'fgInverse',
+      style,
+      'aria-selected': ariaSelected,
+      accessibilityRole = 'button',
+      testID,
+      borderRadius = 1000,
+      font = 'headline',
+      fontFamily,
+      fontSize,
+      fontWeight,
+      lineHeight,
+      textTransform,
+      ...props
+    } = mergedProps;
+    const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<TabId>();
+    const isActive = activeTab?.id === id;
+    const isDisabled = disabledProp || allTabsDisabled;
+
+    const handlePress = useCallback(
+      (event: GestureResponderEvent) => {
+        updateActiveTab(id);
+        onPress?.(id, event);
+      },
+      [id, onPress, updateActiveTab],
+    );
+
+    const theme = useTheme();
+    const activeColorRgbaString = theme.color[activeColor];
+    const inactiveColorRgbaString = theme.color[color];
+    const targetColor = isActive ? activeColorRgbaString : inactiveColorRgbaString;
+    const animatedColor = useSharedValue(targetColor);
+
+    useEffect(() => {
+      animatedColor.value = withSpring(targetColor, tabsSpringConfig);
+    }, [animatedColor, targetColor]);
+
+    const animatedTextStyles = useAnimatedStyle(
+      () => ({ color: animatedColor.value }),
+      [animatedColor],
+    );
+
+    const pressableStyle = useMemo(
+      () => ({
+        borderRadius: theme.borderRadius[borderRadius],
+        opacity: disabledProp && !allTabsDisabled ? accessibleOpacityDisabled : undefined,
+      }),
+      [theme.borderRadius, borderRadius, disabledProp, allTabsDisabled],
+    );
+
+    return (
+      <Pressable
+        ref={ref}
+        accessibilityRole={accessibilityRole}
+        aria-selected={ariaSelected ?? isActive}
+        borderRadius={borderRadius}
+        disabled={isDisabled}
+        onPress={handlePress}
+        style={[pressableStyle, style]}
+        testID={testID}
+        {...props}
+      >
+        <Box alignItems="center" paddingX={2} paddingY={1}>
+          {typeof label === 'string' ? (
+            <AnimatedTextHeadline
+              animated
+              font={font}
+              fontFamily={fontFamily}
+              fontSize={fontSize}
+              fontWeight={fontWeight}
+              lineHeight={lineHeight}
+              style={animatedTextStyles}
+              textTransform={textTransform}
+              testID={`${testID}-label`}
+            >
+              {label}
+            </AnimatedTextHeadline>
+          ) : (
+            label
+          )}
+        </Box>
+      </Pressable>
+    );
+  },
+);
+
+SegmentedTabComponent.displayName = 'SegmentedTab';
+
+export const SegmentedTab = SegmentedTabComponent as SegmentedTabFC;

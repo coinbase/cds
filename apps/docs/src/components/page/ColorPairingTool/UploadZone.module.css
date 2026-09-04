@@ -1,0 +1,51 @@
+.dragThumbStack {
+  position: relative;
+  width: 88px;
+  height: 84px;
+  margin: 0 auto;
+}
+
+.thumb {
+  position: absolute;
+  width: 68px;
+  height: 68px;
+  border-radius: 12px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+}
+
+[data-theme='light'] .thumb {
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.thumb:nth-child(1) {
+  transform: rotate(-9deg) translate(-8px, 6px);
+  z-index: 1;
+}
+
+.thumb:nth-child(2) {
+  transform: rotate(5deg) translate(8px, -4px);
+  z-index: 2;
+}
+
+.thumb:nth-child(3) {
+  transform: rotate(0deg) translate(0px, 0px);
+  z-index: 3;
+}
+
+.thumbSingle {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  border: 1.5px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
+  flex-shrink: 0;
+  transform: rotate(-5deg);
+  margin-bottom: 12px;
+}
+
+[data-theme='light'] .thumbSingle {
+  border-color: rgba(0, 0, 0, 0.12);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}

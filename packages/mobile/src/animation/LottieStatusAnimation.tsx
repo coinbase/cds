@@ -1,0 +1,60 @@
+import { memo, useMemo } from 'react';
+import type { DimensionValue } from 'react-native';
+import { lottieStatusToAccessibilityLabel } from '@coinbase/cds-common/lottie/statusToAccessibilityLabel';
+import { useStatusAnimationPoller } from '@coinbase/cds-common/lottie/useStatusAnimationPoller';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+// eslint-disable-next-line internal/no-cds-barrel-imports -- tradeStatus is the deepest available export in cds-lottie-files
+import { tradeStatus } from '@coinbase/cds-lottie-files/tradeStatus';
+import type { LottieStatus } from 'packages/common/dts/types/LottieStatus';
+
+import { useLottie } from './useLottie';
+
+type LottieStatusAnimationBaseProps = {
+  status?: LottieStatus;
+  onFinish?: () => void;
+};
+
+type LottieStatusAnimationPropsWithWidth = {
+  width: DimensionValue;
+} & LottieStatusAnimationBaseProps;
+
+type LottieStatusAnimationPropsWithHeight = {
+  height: DimensionValue;
+} & LottieStatusAnimationBaseProps;
+
+export type LottieStatusAnimationProps = (
+  | LottieStatusAnimationPropsWithWidth
+  | LottieStatusAnimationPropsWithHeight
+) &
+  SharedProps &
+  SharedAccessibilityProps;
+
+export const LottieStatusAnimation = memo(
+  ({
+    status = 'loading',
+    onFinish,
+    testID,
+    accessibilityLabel,
+    ...otherProps
+  }: LottieStatusAnimationProps) => {
+    const { playMarkers, Lottie } = useLottie(tradeStatus);
+    const handlePolling = useStatusAnimationPoller({ status, playMarkers, onFinish });
+
+    const label = useMemo(
+      () => accessibilityLabel ?? lottieStatusToAccessibilityLabel[status],
+      [accessibilityLabel, status],
+    );
+
+    return (
+      <Lottie
+        accessible
+        accessibilityLabel={label}
+        accessibilityLiveRegion="polite"
+        onAnimationFinish={handlePolling}
+        testID={testID}
+        {...otherProps}
+      />
+    );
+  },
+);

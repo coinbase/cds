@@ -1,0 +1,26 @@
+---
+id: dropdown
+title: Dropdown
+platform_switcher_options: { web: true }
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+import { DropdownBanner } from '@site/src/components/page/ComponentBanner/DropdownBanner';
+import webPropsToc from ':docgen/web/dropdown/Dropdown/toc-props';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import WebPropsTable from './_webPropsTable.mdx';
+import webMetadata from './webMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader title="Dropdown" webMetadata={webMetadata} banner={<DropdownBanner />} />
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webPropsToc={webPropsToc}
+  />
+</VStack>

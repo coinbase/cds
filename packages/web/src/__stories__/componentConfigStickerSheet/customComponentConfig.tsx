@@ -1,0 +1,161 @@
+import type { ComponentConfig } from '../../core/componentConfig';
+
+export const customComponentConfig: ComponentConfig = {
+  Banner: {
+    borderRadius: 0,
+  },
+
+  Button: (props) => ({
+    borderRadius: 200,
+    paddingX: props.compact ? 2 : 4,
+    paddingY: props.compact ? 1 : 2,
+    font: props.compact ? 'label1' : 'headline',
+    ...(props.variant === 'tertiary'
+      ? {
+          background: 'bgAlternate',
+          color: 'fg',
+          borderColor: 'bgAlternate',
+        }
+      : {}),
+  }),
+
+  IconButton: (props) => {
+    const isCompact = props.compact ?? true;
+    return {
+      borderRadius: 200,
+      paddingX: isCompact ? 1.5 : 2,
+      paddingY: isCompact ? 1.5 : 2,
+      ...(props.variant === 'tertiary'
+        ? {
+            background: 'bgAlternate',
+            color: 'fg',
+            borderColor: 'bgAlternate',
+          }
+        : {}),
+    };
+  },
+
+  TextInput: ({ label, labelNode, readOnly, ...props }) => ({
+    labelColor: 'fgMuted',
+    labelFont: 'label2',
+    bordered: false,
+    inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
+    font: props.compact ? 'label2' : 'body',
+    variant: 'foregroundMuted',
+    focusedBorderWidth: 100,
+  }),
+
+  Switch: (props) => ({
+    background: props.checked ? 'bgPrimary' : undefined,
+    controlColor: props.checked ? 'bgAlternate' : 'fg',
+  }),
+
+  Tooltip: {
+    background: 'bgSecondary',
+    font: 'body',
+    invertColorScheme: false,
+  },
+
+  Radio: (props) => ({
+    background: 'bg',
+    borderWidth: 200,
+    borderColor: props.checked ? 'bgPrimary' : 'bgLinePrimarySubtle',
+    controlColor: 'bgPrimary',
+    dotSize: 20 / 3,
+  }),
+
+  /**
+   * Advanced parity gap: we use 4px border radius instead of 2px border radius, could be fixed by adding borderRadius of 50
+   */
+  Checkbox: (props) => ({
+    borderWidth: 200,
+    controlColor: 'fg',
+    font: 'label2',
+    background: props.checked ? 'bgSecondary' : undefined,
+    borderColor: props.checked ? 'bgSecondary' : 'bgLinePrimarySubtle',
+  }),
+
+  ModalHeader: {
+    paddingX: 4,
+    paddingY: 3,
+  },
+
+  ModalFooter: {
+    paddingX: 4,
+    paddingY: 4,
+  },
+
+  ModalBody: {
+    paddingX: 4,
+  },
+
+  Table: {
+    variant: 'default',
+  },
+
+  SegmentedTabs: {
+    activeBackground: 'bgSecondary',
+    background: 'bgAlternate',
+    borderRadius: 300,
+  },
+
+  SegmentedTab: {
+    activeColor: 'fg',
+    borderRadius: 200,
+    font: 'headline',
+  },
+
+  Chip: {
+    borderRadius: 200,
+  },
+
+  Link: {
+    underline: true,
+  },
+
+  ControlGroup: {
+    gap: 1,
+  },
+
+  SearchInput: (props) => ({
+    borderRadius: 200,
+    height: props.compact ? 24 : 32,
+  }),
+
+  Select: ({ readOnly, ...props }) => ({
+    bordered: false,
+    variant: 'foregroundMuted',
+    inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
+    focusedBorderWidth: 100,
+    font: props.compact ? (props.align === 'end' ? 'label1' : 'label2') : 'body',
+    labelColor: 'fgMuted',
+    labelFont: 'label2',
+  }),
+
+  ListCell: (props) => {
+    const spacingVariant = props.spacingVariant ?? (props.compact ? 'compact' : 'normal');
+    return {
+      ...(spacingVariant === 'normal' ? { minHeight: 36 } : {}),
+    };
+  },
+
+  Tabs: {
+    activeColor: 'fg',
+    color: 'fgMuted',
+    activeBackground: 'fg',
+  },
+
+  Tag: {
+    paddingY: 0.5,
+    paddingX: 1,
+    font: 'caption',
+    emphasis: 'low',
+  },
+
+  DotCount: {
+    height: 16,
+    // Design is 1.5 but this causes the badge to be too wide for some single-digit counts
+    paddingX: 1,
+    paddingY: 0,
+  },
+};

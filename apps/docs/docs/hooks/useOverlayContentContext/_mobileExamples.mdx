@@ -1,0 +1,231 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+
+The `useOverlayContentContext` hook provides information about whether a component is rendered inside various types of overlay containers on mobile. This is useful for conditional rendering and behavior based on the overlay context.
+
+</MDXArticle>
+
+<MDXArticle>
+
+## Basic usage
+
+```tsx
+function ExampleComponent() {
+  const { isOverlay, isModal, isDrawer, isTour } = useOverlayContentContext();
+
+  return (
+    <VStack gap={2}>
+      <Text variant="title3">Overlay Context Information</Text>
+      <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
+      <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
+      <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
+      <Text>Is inside tour: {isTour ? 'Yes' : 'No'}</Text>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle>
+
+## Real Modal Example
+
+This example shows how the hook works inside an actual mobile modal:
+
+```tsx
+function ModalExample() {
+  const { openModal } = useModal();
+
+  const ExampleComponent = () => {
+    const { isOverlay, isModal, isDrawer, isTour } = useOverlayContentContext();
+
+    return (
+      <VStack gap={2}>
+        <Text variant="title3">Overlay Context Information</Text>
+        <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
+        <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
+        <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
+        <Text>Is inside tour: {isTour ? 'Yes' : 'No'}</Text>
+      </VStack>
+    );
+  };
+
+  const ModalContent = () => {
+    return (
+      <VStack gap={3}>
+        <Text>This content is rendered inside a mobile modal. Notice the context values:</Text>
+        <VStack gap={2} padding={3} backgroundColor="surface1">
+          <ExampleComponent />
+        </VStack>
+        <Text color="muted" variant="caption">
+          The hook automatically detects it's inside a modal context on mobile!
+        </Text>
+      </VStack>
+    );
+  };
+
+  const handleOpenModal = () => {
+    openModal({
+      children: <ModalContent />,
+      header: 'Mobile Modal with Context',
+    });
+  };
+
+  return (
+    <VStack gap={3}>
+      <VStack gap={2} padding={3} backgroundColor="surface2">
+        <Text variant="title3">Outside Modal</Text>
+        <ExampleComponent />
+      </VStack>
+
+      <Button onPress={handleOpenModal}>Open Modal to See Context Change</Button>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle>
+
+## Using the Context Provider
+
+You can also use the `OverlayContentContext` directly to provide context values:
+
+```tsx
+function ContextProviderExample() {
+  const ExampleComponent = () => {
+    const { isOverlay, isModal, isDrawer, isTour } = useOverlayContentContext();
+
+    return (
+      <VStack gap={2}>
+        <Text variant="title3">Overlay Context Information</Text>
+        <Text>Is inside any overlay: {isOverlay ? 'Yes' : 'No'}</Text>
+        <Text>Is inside modal: {isModal ? 'Yes' : 'No'}</Text>
+        <Text>Is inside drawer/tray: {isDrawer ? 'Yes' : 'No'}</Text>
+        <Text>Is inside tour: {isTour ? 'Yes' : 'No'}</Text>
+      </VStack>
+    );
+  };
+
+  const contextValue = {
+    isModal: true,
+    isDrawer: false,
+    isTour: false,
+  };
+
+  return (
+    <OverlayContentContext.Provider value={contextValue}>
+      <VStack gap={2} padding={3} backgroundColor="surface2">
+        <Text variant="title3">Inside Context Provider</Text>
+        <ExampleComponent />
+      </VStack>
+    </OverlayContentContext.Provider>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle>
+
+## Conditional Rendering
+
+Use the hook to conditionally render content based on overlay context:
+
+```tsx
+function ConditionalRenderingExample() {
+  const { openModal } = useModal();
+
+  const ConditionalContent = () => {
+    const { isOverlay, isModal } = useOverlayContentContext();
+
+    return (
+      <VStack gap={2}>
+        <Text variant="title3">Conditional Content</Text>
+        {isOverlay ? (
+          <VStack gap={1}>
+            <Text color="positive">✓ This content shows when inside an overlay</Text>
+            {isModal && <Text color="primary">🎯 Specifically inside a modal!</Text>}
+          </VStack>
+        ) : (
+          <Text color="muted">This content shows when not in an overlay</Text>
+        )}
+      </VStack>
+    );
+  };
+
+  const handleOpenConditionalModal = () => {
+    openModal({
+      children: <ConditionalContent />,
+      header: 'Conditional Content Demo',
+    });
+  };
+
+  return (
+    <VStack gap={3}>
+      <VStack gap={2} padding={3} backgroundColor="surface2">
+        <Text variant="title3">Outside Modal</Text>
+        <ConditionalContent />
+      </VStack>
+
+      <Button onPress={handleOpenConditionalModal}>Open Modal to See Different Content</Button>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle>
+
+## Mobile-Specific Behavior
+
+```tsx
+function MobileBehaviorExample() {
+  const { isModal, isDrawer, isTour } = useOverlayContentContext();
+
+  // Adjust touch behavior based on overlay type
+  const getTouchHandler = () => {
+    if (isModal) return handleModalTouch;
+    if (isDrawer) return handleDrawerTouch;
+    if (isTour) return handleTourTouch;
+    return handleDefaultTouch;
+  };
+
+  return (
+    <Pressable onPress={getTouchHandler()}>
+      <VStack gap={2} padding={3}>
+        <Text variant="title3">Touch Behavior</Text>
+        <Text>Touch handling adapts to overlay context</Text>
+      </VStack>
+    </Pressable>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+
+## Safe Area Adjustments
+
+```tsx
+function SafeAreaExample() {
+  const { isModal, isDrawer } = useOverlayContentContext();
+
+  // Adjust safe area behavior for different overlay types
+  const shouldUseSafeArea = !isModal && !isDrawer;
+
+  return (
+    <VStack gap={2} padding={3} paddingTop={shouldUseSafeArea ? 'safeTop' : 3}>
+      <Text variant="title3">Safe Area Handling</Text>
+      <Text>Safe area behavior adapts to overlay context</Text>
+    </VStack>
+  );
+}
+```
+
+</MDXArticle>

@@ -1,0 +1,226 @@
+Tabs manages which tab is active and positions the animated indicator. For **pill / segmented** controls, use [SegmentedTabs](/components/navigation/SegmentedTabs) instead.
+
+## Basics
+
+Out of the box, **`Tabs`** uses **`DefaultTab`** for each row (headline text, optional [DotCount](/components/other/DotCount/) via `count` / `max` on each tab) and **`DefaultTabsActiveIndicator`** for the animated underline. Set **`color`** / **`activeColor`** on **`Tabs`** for inactive / active label tokens, and **`activeBackground`** for the underline (forwarded to the indicator as its **`background`** token).
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'tab1', label: 'Tab 1' },
+    { id: 'tab2', label: 'Tab 2' },
+    { id: 'tab3', label: 'Tab 3' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      accessibilityLabel="Example tabs"
+      activeTab={activeTab}
+      gap={4}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### No initial selection
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'tab1', label: 'Tab 1' },
+    { id: 'tab2', label: 'Tab 2' },
+    { id: 'tab3', label: 'Tab 3' },
+  ];
+  const [activeTab, setActiveTab] = useState(null);
+  return (
+    <Tabs
+      accessibilityLabel="Example tabs"
+      activeTab={activeTab}
+      gap={4}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Dot counts
+
+Optional **`count`** and **`max`** on each tab are forwarded to the badge next to the label (see [DotCount](/components/other/DotCount/)).
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'inbox', label: 'Inbox', count: 3, max: 99 },
+    { id: 'sent', label: 'Sent' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      accessibilityLabel="Mail folders"
+      activeTab={activeTab}
+      gap={4}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+### Disabled
+
+Disable the whole row with **`disabled`**, or set **`disabled: true`** on individual tab items.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'tab1', label: 'Tab 1' },
+    { id: 'tab2', label: 'Tab 2', disabled: true },
+    { id: 'tab3', label: 'Tab 3' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      accessibilityLabel="Example tabs"
+      activeTab={activeTab}
+      gap={4}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+## Accessibility
+
+Provide a descriptive **`accessibilityLabel`** on **`Tabs`** for the tab list. **`DefaultTab`** sets `aria-controls` / `aria-selected` for each tab; pair tabs with **`role="tabpanel"`** regions in your page content when you switch panels.
+
+## Styling
+
+### Colors
+
+You can set **`color`** and **`activeColor`** for label tokens, and **`activeBackground`** for the underline.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'tab1', label: 'Tab 1' },
+    { id: 'tab2', label: 'Tab 2' },
+    { id: 'tab3', label: 'Tab 3' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      accessibilityLabel="Example tabs"
+      activeBackground="fg"
+      activeColor="fg"
+      activeTab={activeTab}
+      color="fgMuted"
+      gap={4}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+}
+```
+
+## Custom `TabComponent`
+
+Use **`useTabsContext`** inside your own tab button.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'tab1', label: 'Tab 1' },
+    { id: 'tab2', label: 'Tab 2' },
+    { id: 'tab3', label: 'Tab 3' },
+  ];
+
+  const TabComponent = useCallback(({ id, label, disabled, ...props }) => {
+    const { activeTab, updateActiveTab } = useTabsContext();
+    const isActive = activeTab?.id === id;
+    return (
+      <Pressable
+        onClick={() => updateActiveTab(id)}
+        disabled={disabled}
+        aria-pressed={isActive}
+        {...props}
+      >
+        <Text font="headline" color={isActive ? 'fgPositive' : 'fg'}>
+          {label}
+        </Text>
+      </Pressable>
+    );
+  }, []);
+
+  const ActiveIndicator = useCallback(
+    (props) => <TabsActiveIndicator {...props} background="bgPositive" bottom={0} height={2} />,
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      gap={4}
+      tabs={tabs}
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      TabComponent={TabComponent}
+      TabsActiveIndicatorComponent={ActiveIndicator}
+    />
+  );
+}
+```
+
+### Custom label content
+
+Pass extra fields on each tab and read them in your `TabComponent` (for example icons).
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 'home', label: 'Home', icon: 'home' },
+    { id: 'profile', label: 'Profile', icon: 'user' },
+    { id: 'settings', label: 'Settings', icon: 'settings' },
+  ];
+
+  const CustomTab = useCallback(({ id, label, icon, disabled, ...props }) => {
+    const { activeTab, updateActiveTab } = useTabsContext();
+    const isActive = activeTab?.id === id;
+    return (
+      <Pressable
+        onClick={() => updateActiveTab(id)}
+        disabled={disabled}
+        aria-pressed={isActive}
+        {...props}
+      >
+        <HStack gap={1} alignItems="center">
+          <Icon name={icon} size="s" color={isActive ? 'fgPrimary' : 'fgMuted'} />
+          <Text font="headline" color={isActive ? 'fgPrimary' : 'fg'}>
+            {label}
+          </Text>
+        </HStack>
+      </Pressable>
+    );
+  }, []);
+
+  const ActiveIndicator = useCallback(
+    (props) => <TabsActiveIndicator {...props} background="bgPrimary" bottom={0} height={2} />,
+    [],
+  );
+
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      gap={4}
+      tabs={tabs}
+      activeTab={activeTab}
+      onChange={setActiveTab}
+      TabComponent={CustomTab}
+      TabsActiveIndicatorComponent={ActiveIndicator}
+    />
+  );
+}
+```

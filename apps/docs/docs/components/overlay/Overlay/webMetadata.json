@@ -1,0 +1,29 @@
+{
+  "import": "import { Overlay } from '@coinbase/cds-web/overlays/overlay/Overlay'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/overlays/overlay/Overlay.tsx",
+  "description": "A semi-transparent layer that covers content.",
+  "relatedComponents": [
+    {
+      "label": "Modal",
+      "url": "/components/overlay/Modal/"
+    },
+    {
+      "label": "Tray",
+      "url": "/components/overlay/Tray/"
+    },
+    {
+      "label": "Tooltip",
+      "url": "/components/overlay/Tooltip/"
+    },
+    {
+      "label": "Alert",
+      "url": "/components/overlay/Alert/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

@@ -1,0 +1,31 @@
+{
+  "import": "import { SpotIcon } from '@coinbase/cds-mobile/illustratations/SpotIcon'",
+  "changelog": "https://github.com/coinbase/cds/blob/master/packages/illustrations/CHANGELOG.md",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/illustrations/SpotIcon.tsx",
+  "figma": "https://www.figma.com/design/LmkJatvMRVzNgfiIkJDb99/%E2%9C%A8-Illustrations?node-id=3668-22&m=dev",
+  "description": "An icon-sized illustration component for displaying spot graphics.",
+  "relatedComponents": [
+    {
+      "label": "SpotSquare",
+      "url": "/components/media/SpotSquare/"
+    },
+    {
+      "label": "SpotRectangle",
+      "url": "/components/media/SpotRectangle/"
+    },
+    {
+      "label": "Icon",
+      "url": "/components/media/Icon/"
+    },
+    {
+      "label": "Pictogram",
+      "url": "/components/media/Pictogram/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "15.12.1"
+    }
+  ]
+}

@@ -1,0 +1,166 @@
+Calendar is a date grid for selecting dates and powers the picker in [DatePicker](/components/other/DatePicker). Control the visible month with `selectedDate` or `seedDate`, and use `onPressDate` to handle selection. It supports keyboard navigation, disabled and highlighted dates, and custom styling via `classNames` and `styles`.
+
+## Basics
+
+### Basic usage
+
+```tsx live
+() => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  return <Calendar selectedDate={selectedDate} onPressDate={setSelectedDate} />;
+};
+```
+
+## Disabled dates
+
+```tsx live
+() => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  // Disable today and tomorrow
+  const today = new Date();
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      disabledDates={[today, tomorrow]}
+      disabledDateError="This date is not selectable."
+    />
+  );
+};
+```
+
+## Highlighted dates
+
+```tsx live
+() => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  // Highlight the 10th, 15th, and 20th of the current month
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const highlightedDates = [
+    new Date(year, month, 10),
+    new Date(year, month, 15),
+    new Date(year, month, 20),
+  ];
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      highlightedDates={highlightedDates}
+    />
+  );
+};
+```
+
+## Styling
+
+### Slot styling
+
+Use the `classNames` and `styles` props to target specific elements: `root`, `header`, `monthLabel`, `navArrows` (container), `navArrow` (each button), `dayHeader`, `content` (day header + date grid), `calendarGrid` (date cells container), and `dayCell`.
+
+```tsx live
+() => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const highlightedDates = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return [d];
+  }, []);
+  const disabledDates = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() - 2);
+    return [d];
+  }, []);
+  return (
+    <>
+      <style>{`
+        .calendar-slot-demo-nav-arrow [data-icon-name] {
+          color: var(--color-bgNegative);
+        }
+        .calendar-slot-day-header span {
+          color: var(--color-bgNegative);
+        }
+        .calendar-slot-day-cell[aria-pressed="true"] {
+          background-color: var(--color-bgWarning);
+          border-color: var(--color-bgWarning);
+        }
+        .calendar-slot-day-cell[aria-current="date"] {
+          border-color: var(--color-accentBoldYellow);
+        }
+        .calendar-slot-day-cell[aria-disabled="true"] {
+          background-color: var(--color-bgDisabled);
+          border-color: var(--color-bgDisabled);
+        }
+        .calendar-slot-day-cell[aria-disabled="true"] span {
+          color: var(--color-bgPositive);
+        }
+        .calendar-slot-day-cell[data-highlight="true"] {
+          background-color: var(--color-bgPositiveWash);
+          border-color: var(--color-bgPositive);
+        }
+        .calendar-slot-day-cell[data-highlight="true"] span {
+          color: var(--color-fg);
+        }
+      `}</style>
+      <Calendar
+        selectedDate={selectedDate}
+        onPressDate={setSelectedDate}
+        disabledDates={disabledDates}
+        highlightedDates={highlightedDates}
+        classNames={{
+          navArrow: 'calendar-slot-demo-nav-arrow',
+          dayHeader: 'calendar-slot-day-header',
+          dayCell: 'calendar-slot-day-cell',
+        }}
+        styles={{
+          root: {
+            backgroundColor: 'var(--color-bgAlternate)',
+            borderRadius: 16,
+            borderColor: 'var(--color-bgLinePrimary)',
+            borderWidth: 'medium',
+          },
+          header: {
+            paddingBottom: 0,
+            backgroundColor: 'var(--color-bgPositiveWash)',
+            borderRadius: 16,
+          },
+          monthLabel: { color: 'var(--color-fgPrimary)' },
+          navArrows: { border: 'medium dashed var(--color-bgLine)', borderRadius: 8 },
+          navArrow: { backgroundColor: 'transparent', borderColor: 'transparent' },
+          calendarGrid: { paddingBottom: 8, paddingTop: 8 },
+          dayCell: { borderRadius: 8 },
+        }}
+      />
+    </>
+  );
+};
+```
+
+## Accessibility
+
+Use `nextArrowAccessibilityLabel` and `previousArrowAccessibilityLabel` so screen reader users can navigate months. When using `disabledDates`, `minDate`, or `maxDate`, provide `disabledDateError` so users understand why a date cannot be selected.
+
+```tsx live
+() => {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const nextMonth = useMemo(() => {
+    const d = new Date();
+    d.setMonth(d.getMonth() + 1);
+    return d;
+  }, []);
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      maxDate={nextMonth}
+      disabledDateError="Date is not available for selection"
+      nextArrowAccessibilityLabel="Go to next month"
+      previousArrowAccessibilityLabel="Go to previous month"
+      highlightedDateAccessibilityHint="Highlighted"
+    />
+  );
+};
+```

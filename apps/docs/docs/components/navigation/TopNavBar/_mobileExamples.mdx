@@ -1,0 +1,51 @@
+### Basic usage
+
+A `TopNavBar` with a title and back button.
+
+```tsx
+<TopNavBar start={<NavBarIconButton name="arrowLeft" accessibilityLabel="Back" />}>
+  <NavigationTitle>Page Title</NavigationTitle>
+</TopNavBar>
+```
+
+### With Start and End Actions
+
+You can add actions to both the start and end sections of the navigation bar.
+
+```tsx
+<TopNavBar
+  start={<NavBarIconButton name="arrowLeft" accessibilityLabel="Back" />}
+  end={
+    <HStack>
+      <NavBarIconButton name="search" accessibilityLabel="Search" />
+      <NavBarIconButton name="more" accessibilityLabel="More options" />
+    </HStack>
+  }
+>
+  <NavigationTitle>Profile</NavigationTitle>
+</TopNavBar>
+```
+
+### With a Bottom Section
+
+The `bottom` prop can be used to render components like tabs below the main navigation bar.
+
+```tsx
+<TopNavBar
+  start={<NavBarIconButton name="close" accessibilityLabel="Close" />}
+  end={<NavBarIconButton name="settings" accessibilityLabel="Settings" />}
+  bottom={
+    <TabNavigation
+      tabs={[
+        { label: 'For you', id: 'foryou' },
+        { label: 'Portfolio', id: 'portfolio' },
+        { label: 'Explore', id: 'explore' },
+      ]}
+      value="foryou"
+      onChange={() => {}}
+    />
+  }
+>
+  <NavigationTitle>Home</NavigationTitle>
+</TopNavBar>
+```

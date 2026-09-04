@@ -1,0 +1,162 @@
+import React, { memo, useCallback, useMemo, useRef } from 'react';
+import {
+  type BlurEvent,
+  type NativeSyntheticEvent,
+  type StyleProp,
+  type TextInput as NativeTextInput,
+  type TextInputChangeEventData,
+  type TextInputEndEditingEventData,
+  type ViewStyle,
+} from 'react-native';
+import { IntlDateFormat } from '@coinbase/cds-common/dates/IntlDateFormat';
+import { type DateInputOptions, useDateInput } from '@coinbase/cds-common/dates/useDateInput';
+import { useLocale } from '@coinbase/cds-common/system/LocaleProvider';
+
+import {
+  TextInput,
+  type TextInputBaseProps,
+  type TextInputProps,
+  type TextInputSize,
+} from '../controls/TextInput';
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { VStack } from '../layout/VStack';
+
+export type DateInputBaseProps = Omit<DateInputOptions, 'intlDateFormat'> &
+  Omit<TextInputBaseProps, 'inputNode' | 'value' | 'defaultValue' | 'compact'> & {
+    /** Date format separator character, e.g. the / in "MM/DD/YYYY". Defaults to forward slash (/). */
+    separator?: string;
+    /**
+     * Controls the vertical density (size) of the input field.
+     * @default 'l'
+     */
+    size?: TextInputSize;
+    /**
+     * Enables a smaller, compact input.
+     * @deprecated Use `size="s"` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v11
+     */
+    compact?: boolean;
+  };
+
+export type DateInputProps = DateInputBaseProps &
+  Omit<TextInputProps, 'inputNode' | 'value' | 'defaultValue' | 'style' | 'compact'> & {
+    style?: StyleProp<ViewStyle>;
+  };
+
+export const DateInput = memo(
+  ({
+    ref,
+    ..._props
+  }: DateInputProps & {
+    ref?: React.Ref<NativeTextInput>;
+  }) => {
+    const mergedProps = useComponentConfig('DateInput', _props);
+    const {
+      date,
+      onChangeDate,
+      error,
+      onErrorDate,
+      required,
+      separator = '/',
+      disabledDates,
+      minDate,
+      maxDate,
+      requiredError,
+      invalidDateError,
+      disabledDateError,
+      start,
+      end,
+      placeholder,
+      helperText,
+      variant,
+      onBlur,
+      onChange,
+      onEndEditing,
+      testIDMap,
+      style,
+      ...props
+    } = mergedProps;
+    const hasTyped = useRef(Boolean(date));
+    const { locale } = useLocale();
+    const intlDateFormat = useMemo(
+      () => new IntlDateFormat({ locale, separator }),
+      [locale, separator],
+    );
+
+    const {
+      inputValue,
+      onChangeDateInput,
+      validateDateInput,
+      placeholder: defaultPlaceholder,
+    } = useDateInput({
+      date,
+      onChangeDate,
+      error,
+      onErrorDate,
+      intlDateFormat,
+      required,
+      disabledDates,
+      minDate,
+      maxDate,
+      requiredError,
+      invalidDateError,
+      disabledDateError,
+    });
+
+    /**
+     * Be careful to preserve the correct event orders
+     *   1. Typing a date in a blank DateInput:                     onChange -> onChange -> ... -> onChangeDate -> onErrorDate
+     *   2. Typing a date in a DateInput that already had a date:   onChange -> onChangeDate -> onChange -> onChange -> ... -> onChangeDate -> onErrorDate
+     */
+
+    const handleBlur = useCallback(
+      (event: BlurEvent) => {
+        onBlur?.(event);
+        if (!required || !hasTyped.current) return;
+        const error = validateDateInput(inputValue);
+        if (error) onErrorDate(error);
+      },
+      [onBlur, required, validateDateInput, inputValue, onErrorDate],
+    );
+
+    const handleEndEditing = useCallback(
+      (event: NativeSyntheticEvent<TextInputEndEditingEventData>) => {
+        onEndEditing?.(event);
+        if (!required || !hasTyped.current) return;
+        const error = validateDateInput(inputValue);
+        if (error) onErrorDate(error);
+      },
+      [onEndEditing, required, validateDateInput, inputValue, onErrorDate],
+    );
+
+    const handleChange = useCallback(
+      (event: NativeSyntheticEvent<TextInputChangeEventData>) => {
+        hasTyped.current = true;
+        onChange?.(event);
+        onChangeDateInput(event.nativeEvent.text);
+      },
+      [onChange, onChangeDateInput],
+    );
+
+    return (
+      <VStack minWidth={164} style={style} width="100%">
+        <TextInput
+          ref={ref}
+          end={end}
+          helperText={helperText ?? error?.message ?? intlDateFormat.dateStringFormat}
+          keyboardType="number-pad"
+          onBlur={handleBlur}
+          onChange={handleChange}
+          onEndEditing={handleEndEditing}
+          placeholder={placeholder || defaultPlaceholder}
+          returnKeyType="done"
+          start={start}
+          testIDMap={testIDMap}
+          value={inputValue}
+          variant={variant || (error ? 'negative' : undefined)}
+          {...props}
+        />
+      </VStack>
+    );
+  },
+);

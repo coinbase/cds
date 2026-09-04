@@ -1,0 +1,39 @@
+---
+id: link
+title: Link
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { LinkBanner } from '@site/src/components/page/ComponentBanner/LinkBanner';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import webPropsToc from ':docgen/web/typography/Link/toc-props';
+import mobilePropsToc from ':docgen/mobile/typography/Link/toc-props';
+import WebPropsTable from './_webPropsTable.mdx';
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader
+    title="Link"
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+    banner={<LinkBanner />}
+  />
+  <ComponentTabsContainer
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webPropsTable={<WebPropsTable />}
+    webPropsToc={webPropsToc}
+    mobileExamples={<MobileExamples />}
+    mobileExamplesToc={mobileExamplesToc}
+    mobilePropsTable={<MobilePropsTable />}
+    mobilePropsToc={mobilePropsToc}
+  />
+</VStack>

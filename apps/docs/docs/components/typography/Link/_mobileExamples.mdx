@@ -1,0 +1,240 @@
+Link renders a pressable [Text](/components/typography/Text) element that opens URLs in an in-app browser by default. It inherits parent text styles and supports the same `font` and `color` props as Text.
+
+## Basics
+
+By default, Link inherits the text styles of its parent. Pass a `to` prop to set the destination URL.
+
+```jsx
+<Text font="body">
+  Check out the <Link to="https://www.coinbase.com/">Coinbase homepage</Link> for more info.
+</Text>
+```
+
+## Underline
+
+Use the `underline` prop to add a text decoration underline to the link. This is important for inline links within body text to ensure they are visually distinguishable from surrounding text.
+
+```jsx
+<Text font="body">
+  Read our{' '}
+  <Link underline to="https://www.coinbase.com/">
+    terms and conditions
+  </Link>{' '}
+  before proceeding.
+</Text>
+```
+
+### Underline with different fonts
+
+The underline works across all font styles.
+
+```jsx
+<VStack alignItems="flex-start" gap={3}>
+  <Link underline font="body" to="https://www.coinbase.com/">
+    body link
+  </Link>
+  <Link underline font="label1" to="https://www.coinbase.com/">
+    label1 link
+  </Link>
+  <Link underline font="caption" to="https://www.coinbase.com/">
+    caption link
+  </Link>
+  <Link underline font="legal" to="https://www.coinbase.com/">
+    legal link
+  </Link>
+  <Link underline font="title2" to="https://www.coinbase.com/">
+    title2 link
+  </Link>
+</VStack>
+```
+
+## Styling
+
+### Font
+
+To style a Link, either wrap it in the desired [Text](/components/typography/Text) component or use the `font` prop directly on the Link.
+
+#### Wrapping in Text
+
+```jsx
+<VStack alignItems="flex-start" gap={3}>
+  <Text font="body" as="p">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      body link
+    </Link>
+  </Text>
+  <Text font="caption" as="span">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      caption link
+    </Link>
+  </Text>
+  <Text font="label1" as="label">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      label1 link
+    </Link>
+  </Text>
+  <Text font="label2" as="label">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      label2 link
+    </Link>
+  </Text>
+  <Text font="legal" as="span">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      legal link
+    </Link>
+  </Text>
+  <Text font="title1" as="h1">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      title1 link
+    </Link>
+  </Text>
+  <Text font="title2" as="h2">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      title2 link
+    </Link>
+  </Text>
+  <Text font="title3" as="h3">
+    <Link to="https://www.coinbase.com/" openInNewWindow>
+      title3 link
+    </Link>
+  </Text>
+</VStack>
+```
+
+#### Using the font prop
+
+If you need to style a link without wrapping it in a parent text element, use the `font` prop directly.
+
+```jsx
+<VStack alignItems="flex-start" gap={3}>
+  {['body', 'caption', 'label1', 'label2', 'legal', 'title1', 'title2', 'title3'].map((font) => (
+    <Link font={font} to="https://www.coinbase.com/" openInNewWindow>
+      {`${font} link`}
+    </Link>
+  ))}
+</VStack>
+```
+
+### Color
+
+Override the default link color using the `color` prop.
+
+```jsx
+<VStack alignItems="flex-start" gap={3}>
+  <Link to="https://www.coinbase.com/" color="fgPrimary">
+    fgPrimary (default)
+  </Link>
+  <Link to="https://www.coinbase.com/" color="fgNegative">
+    fgNegative
+  </Link>
+  <Link underline to="https://www.coinbase.com/" color="fgNegative">
+    fgNegative with underline
+  </Link>
+</VStack>
+```
+
+## Navigation
+
+### Browser options
+
+Control how the link opens with `forceOpenOutsideApp`, `preventRedirectionIntoApp`, and `readerMode`.
+
+```jsx
+<VStack alignItems="flex-start" gap={3}>
+  <Link font="body" forceOpenOutsideApp to="https://www.coinbase.com/">
+    Opens outside the app
+  </Link>
+  <Link font="body" preventRedirectionIntoApp to="https://www.coinbase.com/">
+    Prevents redirect back into app
+  </Link>
+  <Link font="body" readerMode to="https://www.coinbase.com/">
+    Opens in reader mode (iOS only)
+  </Link>
+</VStack>
+```
+
+## Accessibility
+
+:::tip Accessibility tip
+
+[WCAG 2.0](https://webaim.org/standards/wcag/checklist) has 2 requirements for body text links that are not underlined by default:
+
+<br />
+
+_The link text must have a 3:1 contrast ratio from the surrounding non-link text. The link must present a "non-color designator" (typically the introduction of the underline) on both mouse hover and keyboard focus. These two requirements help ensure that all users can differentiate links from non-link text, even if they have low vision, color deficiency, or have overridden page colors._
+
+:::
+
+Use the `underline` prop on inline links within body text to ensure they are distinguishable without relying on color alone.
+
+```jsx
+<Text font="body">
+  By continuing, you agree to the{' '}
+  <Link underline to="https://www.coinbase.com/">
+    Terms of Service
+  </Link>{' '}
+  and{' '}
+  <Link underline to="https://www.coinbase.com/">
+    Privacy Policy
+  </Link>
+  .
+</Text>
+```
+
+### Nested link in text
+
+React Native flattens nested Text into a string and cannot focus internal links for accessibility. See the [official documentation](https://reactnative.dev/docs/text#nested-text) for details. For better accessibility, use this pattern:
+
+```jsx
+import { AccessibilityInfo, Linking } from 'react-native';
+
+<Text
+  font="legal"
+  suppressHighlighting
+  accessibilityLabel="Consider a case where you have a block of text with an inline link. Like so. You may want to write your code like this. Tap to go to coinbase.com."
+  accessibilityRole="link"
+  onPress={async () => {
+    try {
+      const screenReaderEnabled = await AccessibilityInfo.isScreenReaderEnabled();
+      if (screenReaderEnabled) {
+        await openURL('https://www.coinbase.com/');
+      }
+    } catch (error) {
+      console.error('Error in onPress handler:', error);
+    }
+  }}
+>
+  Consider a case where you have a block of text with an inline link.{' '}
+  <Link to="https://www.coinbase.com/">Like so.</Link> You may want to write your code like this.
+</Text>;
+```
+
+### Multiple nested links
+
+It is a design anti-pattern to have multiple nested links in a single block of text in React Native since it is bad for accessibility. If more than one link is necessary in one paragraph, separate them:
+
+```jsx
+function MultipleLinksA11yExample() {
+  return (
+    <>
+      <Text>
+        Terms & conditions last updated August 2025. Privacy policy last updated June 2025.
+      </Text>
+      <Link to="https://www.coinbase.com/">Tap here to view our terms & conditions</Link>
+      <Link to="https://www.coinbase.com/">Tap here to view our privacy policy</Link>
+    </>
+  );
+}
+```
+
+### With padding
+
+When applying padding to a `Text` component that contains a `Link`, wrap in a `Box` to prevent the hitbox from being misaligned.
+
+```jsx
+<Box paddingTop={2}>
+  <Text font="legal" color="fgMuted">
+    By continuing, you agree to the <Link to="/terms">Terms of Service</Link>.
+  </Text>
+</Box>
+```

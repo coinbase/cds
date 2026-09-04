@@ -1,0 +1,33 @@
+{
+  // Prettier
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // use ⌘-K S to format without saving
+  "editor.formatOnSave": true,
+
+  // Disable built-in formatters
+  "html.format.enable": false,
+  "json.format.enable": false,
+
+  // TypeScript
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "javascript.validate.enable": true,
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "typescript.preferences.importModuleSpecifier": "project-relative",
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "typescript.preferences.quoteStyle": "single",
+
+  // ESLint
+  "editor.codeActionsOnSave": ["source.fixAll.eslint"],
+  "eslint.useESLintClass": true,
+  "eslint.workingDirectories": [
+    { "pattern": "apps/*" },
+    { "pattern": "packages/*" }
+  ],
+
+  // Stylelint
+  "stylelint.validate": ["css", "typescript", "typescriptreact", "javascript", "javascriptreact"],
+
+  "nxConsole.generateAiAgentRules": true,
+}

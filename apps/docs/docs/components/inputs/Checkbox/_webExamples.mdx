@@ -1,0 +1,153 @@
+### Basic Usage
+
+Checkbox UI and state management are separated so that you can swap in any form or state code you like.
+
+```jsx live
+function BasicCheckbox() {
+  const [isChecked, setIsChecked] = useState(false);
+  return (
+    <Checkbox
+      value="newsletter"
+      onChange={(e) => setIsChecked(e.target.checked)}
+      checked={isChecked}
+    >
+      Subscribe to newsletter
+    </Checkbox>
+  );
+}
+```
+
+### Custom Layout
+
+If you don't want to use the default label or layout style, you can just not provide `children` to the `Checkbox` component. However, you should think about wrapping the custom label and `Checkbox` in a `<label>` if it makes sense to increase the tap target of the component and allow users to toggle by pressing on the label as well.
+
+```jsx live
+function CustomLayoutCheckbox() {
+  const [isChecked, setIsChecked] = useState(false);
+  return (
+    <Box as="label" justifyContent="space-between" maxWidth="350px">
+      <VStack gap={0} alignItems="flex-start">
+        <Text font="body">Premium Features</Text>
+        <Text font="caption" color="fgMuted">
+          Access to advanced tools and priority support
+        </Text>
+      </VStack>
+      <Checkbox
+        value="premium"
+        onChange={(e) => setIsChecked(e.target.checked)}
+        checked={isChecked}
+      />
+    </Box>
+  );
+}
+```
+
+### Different States
+
+Checkboxes support various states including disabled and indeterminate.
+
+```jsx live
+function CheckboxStates() {
+  const [checked, setChecked] = useState(false);
+  const [indeterminate, setIndeterminate] = useState(true);
+
+  return (
+    <VStack gap={2}>
+      <Checkbox value="enabled" onChange={(e) => setChecked(e.target.checked)} checked={checked}>
+        Normal checkbox
+      </Checkbox>
+      <Checkbox value="disabled-unchecked" checked={false} disabled>
+        Disabled & unchecked
+      </Checkbox>
+      <Checkbox value="disabled-checked" checked={true} disabled>
+        Disabled & checked
+      </Checkbox>
+      <Checkbox
+        value="indeterminate"
+        indeterminate={indeterminate}
+        onChange={(e) => {
+          setIndeterminate(false);
+          // Handle the change as needed
+        }}
+      >
+        Indeterminate state
+      </Checkbox>
+    </VStack>
+  );
+}
+```
+
+### Custom Colors
+
+Like other control components (i.e. Radio, Switch), you can customize the color of the Checkbox by setting the `controlColor` prop.
+
+```jsx live
+function CustomColors() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Checkbox
+      controlColor="accentBoldGreen"
+      onChange={() => setChecked((s) => !s)}
+      checked={checked}
+    >
+      Custom control color
+    </Checkbox>
+  );
+}
+```
+
+For more advanced customization, you can also control the border shape and thickness using `borderRadius` and `borderWidth`, along with `background` and `borderColor`:
+
+```jsx live
+function AdvancedCustomColors() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Checkbox
+      background={checked ? 'accentBoldPurple' : 'bgNegative'}
+      borderColor={checked ? 'bgPositive' : 'bgPrimary'}
+      borderRadius={200}
+      borderWidth={300}
+      checked={checked}
+      controlColor="bgPositive"
+      onChange={() => setChecked((s) => !s)}
+    >
+      Advanced styling (rounded corners + thick border)
+    </Checkbox>
+  );
+}
+```
+
+### Multiple Checkboxes
+
+For multiple checkbox scenarios, use [ControlGroup](/components/inputs/ControlGroup) with `role="group"` for better accessibility and state management:
+
+```jsx live
+function MultipleCheckboxes() {
+  const options = [
+    { value: 'email', children: 'Email notifications' },
+    { value: 'sms', children: 'SMS notifications' },
+    { value: 'push', children: 'Push notifications' },
+  ];
+
+  const [selectedValues, setSelectedValues] = useState(['email']);
+
+  const handleChange = (e) => {
+    const { value, checked } = e.target;
+    setSelectedValues((prev) => (checked ? [...prev, value] : prev.filter((v) => v !== value)));
+  };
+
+  return (
+    <ControlGroup
+      role="group"
+      ControlComponent={Checkbox}
+      label="Notification Preferences"
+      options={options}
+      value={selectedValues}
+      onChange={handleChange}
+      name="notifications"
+    />
+  );
+}
+```

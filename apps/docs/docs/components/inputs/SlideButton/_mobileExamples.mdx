@@ -1,0 +1,327 @@
+import useBaseUrl from '@docusaurus/useBaseUrl';
+import ThemedImage from '@theme/ThemedImage';
+
+## Basics
+
+Use the `onChange` callback to update the `checked` state. This is the primary callback that controls both the visual and accessible state of the component.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/default.gif'),
+    dark: useBaseUrl('/img/docs/slideButton/default_dark.gif'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Slide button"
+/>
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+    />
+  );
+}
+```
+
+## Variants
+
+Use the `variant` prop to change the color of the button. The default variant is `primary`. Available variants are `negative` and `positive`.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/negative_variant.jpg'),
+    dark: useBaseUrl('/img/docs/slideButton/negative_variant_dark.jpg'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Negative variant slide button"
+/>
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      variant="negative"
+    />
+  );
+}
+```
+
+## Sizes
+
+`size` accepts `s`, `m`, and `l`. Defaults to `l`. The size controls the button's height, border-radius, inner padding, and handle icon size.
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      size="s"
+    />
+  );
+}
+```
+
+## Disabled
+
+Use the `disabled` prop to prevent interaction. This works for both unchecked and checked states.
+
+```jsx
+function Example() {
+  return (
+    <VStack gap={2}>
+      <SlideButton
+        checked={false}
+        disabled
+        uncheckedLabel="Swipe to confirm"
+        checkedLabel="Confirming..."
+      />
+      <SlideButton checked disabled uncheckedLabel="Swipe to confirm" checkedLabel="Confirmed" />
+    </VStack>
+  );
+}
+```
+
+## Auto Complete on Threshold
+
+By default, the user must release the handle past the threshold to complete. Set `autoCompleteSlideOnThresholdMet` to automatically complete as soon as the threshold is reached, without requiring release.
+
+You can also adjust the threshold via `checkThreshold` (a value from 0 to 1, defaulting to 0.7).
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      autoCompleteSlideOnThresholdMet
+    />
+  );
+}
+```
+
+## Callback Lifecycle
+
+SlideButton fires callbacks in a specific order during the slide gesture:
+
+1. `onSlideStart` -- when the gesture begins
+2. `onChange` -- when the slide completes past the threshold (sets `checked` to `true`)
+3. `onSlideComplete` -- immediately after `onChange`
+4. `onSlideEnd` -- always fires last
+
+If the user releases before the threshold, `onSlideCancel` fires instead, followed by `onSlideEnd`.
+
+**Important:** Always use `onChange` to manage the `checked` state. The `checked` prop drives the component's `accessibilityLabel` (switching between `uncheckedLabel` and `checkedLabel`), so failing to update it means screen readers won't announce the state change. Use `onSlideComplete` only for supplementary side effects (e.g. analytics, haptic feedback) that don't affect accessible state.
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      onSlideStart={() => console.log('Started')}
+      onSlideComplete={() => console.log('Completed')}
+      onSlideCancel={() => console.log('Cancelled')}
+      onSlideEnd={() => console.log('Ended')}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+    />
+  );
+}
+```
+
+## Custom Nodes
+
+Use `startUncheckedNode` and `endCheckedNode` to replace the default arrow icon and loading indicator on the handle.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/custom_nodes.jpg'),
+    dark: useBaseUrl('/img/docs/slideButton/custom_nodes_dark.jpg'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Slide button with custom bell icons on the handle"
+/>
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to enable notifications"
+      checkedLabel="Enabling..."
+      startUncheckedNode={<Icon color="fgInverse" name="bell" size="m" />}
+      endCheckedNode={<Icon color="fgInverse" name="bellCheck" size="m" />}
+    />
+  );
+}
+```
+
+## Labels as Nodes
+
+The `uncheckedLabel` and `checkedLabel` props accept `ReactNode`, so you can pass custom styled text or other components. When using non-string labels, the component uses `accessibilityLabelledBy` to associate the handle with the container element, so ensure your label nodes contain meaningful text content.
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel={<Text font="label2">Swipe to confirm</Text>}
+      checkedLabel={
+        <Text color="fgInverse" font="label2">
+          Confirming...
+        </Text>
+      }
+    />
+  );
+}
+```
+
+## Custom Border Radius
+
+Use `borderRadius` to customize the shape of both the handle and the background. Token values are resolved through the theme, so the handle and background always match.
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      borderRadius={200}
+    />
+  );
+}
+```
+
+## Custom Background and Handle Components
+
+You can fully customize the background and handle by providing your own components via `SlideButtonBackgroundComponent` and `SlideButtonHandleComponent`. Your components receive typed props (`SlideButtonBackgroundProps` and `SlideButtonHandleProps`) including a `progress` spring value and the current `checked` state.
+
+<ThemedImage
+  sources={{
+    light: useBaseUrl('/img/docs/slideButton/custom_components.jpg'),
+    dark: useBaseUrl('/img/docs/slideButton/custom_components_dark.jpg'),
+  }}
+  style={{
+    borderRadius: 'var(--borderRadius-400)',
+    border: '1.5px solid var(--color-bgLine)',
+  }}
+  alt="Slide button with custom green/red background and handle"
+/>
+
+```tsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  const CustomHandle = ({ checked, ...props }: SlideButtonHandleProps) => (
+    <Pressable
+      {...props}
+      accessibilityLabel="Demo button"
+      accessibilityRole="button"
+      background={checked ? 'bgPositive' : 'bgNegative'}
+      borderRadius={300}
+      width="100%"
+    >
+      <HStack alignItems="center" height="100%" justifyContent="center" width="100%">
+        <HStack height="100%" pin="right" alignItems="center" padding={2}>
+          <Text font="label1">➡️</Text>
+        </HStack>
+      </HStack>
+    </Pressable>
+  );
+
+  const CustomBackground = ({ checked, ...props }: SlideButtonBackgroundProps) => (
+    <HStack
+      {...props}
+      bordered
+      alignItems="center"
+      background="bgSecondary"
+      borderColor={checked ? 'fgPositive' : 'fgNegative'}
+      borderRadius={300}
+      height="100%"
+      justifyContent="center"
+      width="100%"
+    >
+      <Text font="headline">Slide me</Text>
+    </HStack>
+  );
+
+  return (
+    <SlideButton
+      uncheckedLabel="Swipe to confirm"
+      checkedLabel="Confirming..."
+      checked={checked}
+      onChange={setChecked}
+      SlideButtonBackgroundComponent={CustomBackground}
+      SlideButtonHandleComponent={CustomHandle}
+      height={50}
+    />
+  );
+}
+```
+
+## Accessibility
+
+SlideButton has built-in accessibility support. The component automatically derives its `accessibilityLabel` from the `checked` state -- displaying `uncheckedLabel` when unchecked and `checkedLabel` when checked. It also registers an `activate` accessibility action so screen readers can trigger the slide without performing a gesture.
+
+**Use `onChange` as your primary callback.** The `onChange` callback updates the `checked` prop, which controls the accessible label. Placing critical logic in `onSlideComplete` without updating `checked` via `onChange` will leave the accessible state stale, meaning screen readers won't announce the confirmation.
+
+When providing a custom `SlideButtonHandleComponent`, always spread the incoming props to preserve the built-in `accessibilityActions` and `onAccessibilityAction` handlers, and set `accessibilityLabel` and `accessibilityRole="button"` on the handle element.
+
+When using `ReactNode` labels instead of strings, the component uses `accessibilityLabelledBy` to link to the container element, so ensure your custom label nodes contain meaningful text.
+
+```jsx
+function Example() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <SlideButton
+      checked={checked}
+      onChange={setChecked}
+      uncheckedLabel="Swipe to send payment"
+      checkedLabel="Sending payment..."
+    />
+  );
+}
+```

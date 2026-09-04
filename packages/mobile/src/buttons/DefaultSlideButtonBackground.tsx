@@ -1,0 +1,70 @@
+import React, { memo } from 'react';
+import type { View } from 'react-native';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
+
+import { Box } from '../layout/Box';
+import { Text } from '../typography/Text';
+
+import {
+  defaultSlideButtonSize,
+  type SlideButtonBackgroundProps,
+  slideButtonSizes,
+} from './SlideButton';
+
+export const DefaultSlideButtonBackground = memo(
+  ({
+    ref,
+    progress,
+    uncheckedLabel,
+    disabled,
+    size = defaultSlideButtonSize,
+    style,
+    borderRadius,
+    borderTopLeftRadius,
+    borderTopRightRadius,
+    borderBottomLeftRadius,
+    borderBottomRightRadius,
+  }: SlideButtonBackgroundProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const horizontalPadding = slideButtonSizes[size].backgroundPadding;
+
+    const animatedStyle = useAnimatedStyle(
+      () => ({ opacity: disabled ? 0.5 : 1 - progress.value }),
+      [progress, disabled],
+    );
+
+    return (
+      <Box
+        ref={ref}
+        aria-hidden
+        alignItems="center"
+        background="bgSecondary"
+        borderBottomLeftRadius={borderBottomLeftRadius}
+        borderBottomRightRadius={borderBottomRightRadius}
+        borderRadius={borderRadius}
+        borderTopLeftRadius={borderTopLeftRadius}
+        borderTopRightRadius={borderTopRightRadius}
+        height="100%"
+        justifyContent="center"
+        style={style}
+        width="100%"
+      >
+        <Animated.View style={animatedStyle}>
+          {typeof uncheckedLabel !== 'string' ? (
+            uncheckedLabel
+          ) : (
+            <Text
+              font="headline"
+              numberOfLines={1}
+              paddingEnd={horizontalPadding}
+              paddingStart={horizontalPadding}
+            >
+              {uncheckedLabel}
+            </Text>
+          )}
+        </Animated.View>
+      </Box>
+    );
+  },
+);

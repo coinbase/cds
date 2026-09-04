@@ -1,0 +1,39 @@
+import React, { memo } from 'react';
+
+import { Card, type CardBaseProps } from './Card';
+import { CardBody, type CardBodyBaseProps } from './CardBody';
+
+type FeatureEntryCardBaseProps = CardBaseProps & CardBodyBaseProps;
+type FeatureEntryCardProps = FeatureEntryCardBaseProps;
+
+/**
+ * @deprecated Use MessagingCard instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v6
+ */
+export const FeatureEntryCard = memo(function FeatureEntryCard({
+  onClick,
+  testID = 'feature-entry-card',
+  accessibilityHint,
+  accessibilityLabel,
+  description,
+  title,
+  borderRadius = 0,
+  elevation = 0,
+  ...props
+}: FeatureEntryCardProps) {
+  return (
+    <Card
+      accessibilityHint={
+        accessibilityHint ?? (typeof description === 'string' ? description : undefined)
+      }
+      accessibilityLabel={accessibilityLabel ?? (typeof title === 'string' ? title : undefined)}
+      borderRadius={borderRadius}
+      elevation={elevation}
+      flexShrink={0}
+      onClick={onClick}
+      testID={testID}
+    >
+      <CardBody description={description} testID={`${testID}-body`} title={title} {...props} />
+    </Card>
+  );
+});

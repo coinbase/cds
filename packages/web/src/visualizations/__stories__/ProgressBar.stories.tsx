@@ -1,0 +1,496 @@
+import React, { useCallback } from 'react';
+
+import { HStack, VStack } from '../../layout';
+import { Text } from '../../typography/Text';
+import { ProgressBar } from '../ProgressBar';
+import { ProgressBarWithFixedLabels } from '../ProgressBarWithFixedLabels';
+import { ProgressBarWithFloatLabel } from '../ProgressBarWithFloatLabel';
+import { ProgressContainerWithButtons } from '../ProgressContainerWithButtons';
+
+export default {
+  component: ProgressBar,
+  title: 'Components/ProgressBar',
+};
+
+export const Default = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={2}>
+          <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0)} />
+          <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.2)} />
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+Default.parameters = { percy: { enableJavaScript: true } };
+
+export const Thin = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={2}>
+          <ProgressBar
+            accessibilityLabel="Progress bar"
+            progress={calculateProgress(0)}
+            weight="thin"
+          />
+          <ProgressBar
+            accessibilityLabel="Progress bar"
+            progress={calculateProgress(0.2)}
+            weight="thin"
+          />
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+Thin.parameters = { percy: { enableJavaScript: true } };
+
+export const Semiheavy = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={2}>
+          <ProgressBar
+            accessibilityLabel="Progress bar"
+            progress={calculateProgress(0)}
+            weight="semiheavy"
+          />
+          <ProgressBar
+            accessibilityLabel="Progress bar"
+            progress={calculateProgress(0.2)}
+            weight="semiheavy"
+          />
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+Semiheavy.parameters = { percy: { enableJavaScript: true } };
+
+export const Heavy = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={2}>
+          <ProgressBar
+            accessibilityLabel="Progress bar"
+            progress={calculateProgress(0)}
+            weight="heavy"
+          />
+          <ProgressBar
+            accessibilityLabel="Progress bar"
+            progress={calculateProgress(0.2)}
+            weight="heavy"
+          />
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+Heavy.parameters = { percy: { enableJavaScript: true } };
+
+export const LabelAbove = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={2}>
+          <ProgressBarWithFloatLabel
+            label={Math.round(calculateProgress(0) * 100)}
+            labelPlacement="above"
+            progress={calculateProgress(0)}
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0)} />
+          </ProgressBarWithFloatLabel>
+          <ProgressBarWithFloatLabel
+            label={Math.round(calculateProgress(0.2) * 100)}
+            labelPlacement="above"
+            progress={calculateProgress(0.2)}
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.2)} />
+          </ProgressBarWithFloatLabel>
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+LabelAbove.parameters = { percy: { enableJavaScript: true } };
+
+export const LabelBelow = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={2}>
+          <ProgressBarWithFloatLabel
+            label={Math.round(calculateProgress(0) * 100)}
+            labelPlacement="below"
+            progress={calculateProgress(0)}
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0)} />
+          </ProgressBarWithFloatLabel>
+          <ProgressBarWithFloatLabel
+            label={Math.round(calculateProgress(0.2) * 100)}
+            labelPlacement="below"
+            progress={calculateProgress(0.2)}
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.2)} />
+          </ProgressBarWithFloatLabel>
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+LabelBelow.parameters = { percy: { enableJavaScript: true } };
+
+export const LabelAtBoundsBelow = () => {
+  return (
+    <VStack gap={4}>
+      <ProgressContainerWithButtons>
+        {({ calculateProgress }) => (
+          <VStack gap={2}>
+            <ProgressBarWithFixedLabels
+              endLabel={Math.round(calculateProgress(0.2) * 100)}
+              labelPlacement="below"
+              startLabel={0}
+            >
+              <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.2)} />
+            </ProgressBarWithFixedLabels>
+            <ProgressBarWithFixedLabels
+              endLabel={Math.round(calculateProgress(0.2) * 100)}
+              labelPlacement="below"
+            >
+              <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.2)} />
+            </ProgressBarWithFixedLabels>
+          </VStack>
+        )}
+      </ProgressContainerWithButtons>
+      <Text as="p" display="block" font="label1">
+        Wrapped in HStack
+      </Text>
+      <ProgressContainerWithButtons>
+        {({ calculateProgress }) => (
+          <HStack gap={2}>
+            <ProgressBarWithFixedLabels
+              endLabel={Math.round(calculateProgress(0.2) * 100)}
+              labelPlacement="below"
+              startLabel={0}
+            >
+              <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.2)} />
+            </ProgressBarWithFixedLabels>
+            <ProgressBarWithFixedLabels
+              endLabel={Math.round(calculateProgress(0.2) * 100)}
+              labelPlacement="below"
+            >
+              <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.2)} />
+            </ProgressBarWithFixedLabels>
+          </HStack>
+        )}
+      </ProgressContainerWithButtons>
+    </VStack>
+  );
+};
+LabelAtBoundsBelow.parameters = { percy: { enableJavaScript: true } };
+
+export const LabelBeside = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={2}>
+          <ProgressBarWithFixedLabels
+            endLabel={Math.round(calculateProgress(0.2) * 100)}
+            labelPlacement="beside"
+            startLabel={0}
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.2)} />
+          </ProgressBarWithFixedLabels>
+          <ProgressBarWithFixedLabels
+            endLabel={Math.round(calculateProgress(0.2) * 100)}
+            labelPlacement="beside"
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.2)} />
+          </ProgressBarWithFixedLabels>
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+LabelBeside.parameters = { percy: { enableJavaScript: true } };
+
+export const Disabled = () => {
+  return (
+    <VStack gap={2}>
+      <ProgressBarWithFixedLabels disabled labelPlacement="beside" startLabel={50}>
+        <ProgressBar disabled accessibilityLabel="Progress bar" progress={0.5} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFixedLabels disabled endLabel={10} labelPlacement="beside">
+        <ProgressBar disabled accessibilityLabel="Progress bar" progress={0.1} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFixedLabels disabled endLabel={20} labelPlacement="beside" startLabel={0}>
+        <ProgressBar disabled accessibilityLabel="Progress bar" progress={0.2} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFixedLabels disabled endLabel={50} labelPlacement="beside" startLabel={0}>
+        <ProgressBar disabled accessibilityLabel="Progress bar" progress={0.5} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFloatLabel disabled label={70} progress={0.7}>
+        <ProgressBar disabled accessibilityLabel="Progress bar" progress={0.7} />
+      </ProgressBarWithFloatLabel>
+    </VStack>
+  );
+};
+Disabled.parameters = {
+  percy: { enableJavaScript: true },
+};
+
+export const Colors = () => {
+  return (
+    <VStack gap={2}>
+      <ProgressBar accessibilityLabel="Progress bar" color="bgPositive" progress={0.5} />
+      <ProgressBar accessibilityLabel="Progress bar" color="bgNegative" progress={0.5} />
+      <ProgressBar disabled accessibilityLabel="Progress bar" color="bgPrimary" progress={0.5} />
+      <ProgressBar accessibilityLabel="Progress bar" color="bgWarning" progress={0.5} />
+      <ProgressBar accessibilityLabel="Progress bar" color="fg" progress={0.5} />
+      <ProgressBar disabled accessibilityLabel="Progress bar" color="fg" progress={0.5} />
+    </VStack>
+  );
+};
+Colors.parameters = { percy: { enableJavaScript: true } };
+
+const renderStartLabelNum = (num: number) => {
+  return <Text font="title3">${num.toLocaleString()}</Text>;
+};
+
+const renderEndLabelNum = (num: number) => {
+  return (
+    <Text noWrap font="label2" textAlign="end">
+      ${num.toLocaleString()} left
+    </Text>
+  );
+};
+
+const renderCustomStringLabel: (num: number) => string = (num: number) => {
+  return `$${num.toLocaleString()}`;
+};
+
+export const CustomLabels = () => {
+  return (
+    <ProgressContainerWithButtons hideIncrease>
+      {() => (
+        <VStack gap={2}>
+          <ProgressBarWithFixedLabels
+            endLabel={{ value: 35500, render: renderEndLabelNum }}
+            labelPlacement="above"
+            startLabel={{ value: 12500, render: renderStartLabelNum }}
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={0.6} />
+          </ProgressBarWithFixedLabels>
+          <ProgressBarWithFloatLabel
+            label={{ value: 12500, render: renderStartLabelNum }}
+            labelPlacement="above"
+            progress={0.6}
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={0.6} />
+          </ProgressBarWithFloatLabel>
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+
+export const CustomStringLabel = () => {
+  return (
+    <ProgressContainerWithButtons hideIncrease>
+      {() => (
+        <VStack gap={2}>
+          <ProgressBarWithFloatLabel
+            label={{ value: 35500, render: renderCustomStringLabel }}
+            labelPlacement="above"
+            progress={0.6}
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={0.6} />
+          </ProgressBarWithFloatLabel>
+          <ProgressBarWithFloatLabel
+            disabled
+            label={{ value: 35500, render: renderCustomStringLabel }}
+            labelPlacement="above"
+            progress={0.6}
+          >
+            <ProgressBar disabled accessibilityLabel="Progress bar" progress={0.6} />
+          </ProgressBarWithFloatLabel>
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+CustomStringLabel.parameters = {
+  percy: { enableJavaScript: true },
+};
+
+export const AnimationCallbacks = () => {
+  const [animationStatus, setAnimationStatus] = React.useState<string>('Ready');
+
+  const handleAnimationStart = useCallback(() => {
+    setAnimationStatus('Animating...');
+  }, []);
+
+  const handleAnimationEnd = useCallback(() => {
+    setAnimationStatus('Animation Ended');
+  }, []);
+
+  return (
+    <VStack gap={4}>
+      <Text as="p" display="block" font="label1">
+        Animation Status: {animationStatus}
+      </Text>
+      <ProgressContainerWithButtons>
+        {({ calculateProgress }) => (
+          <VStack gap={2}>
+            <ProgressBarWithFloatLabel
+              label={Math.round(calculateProgress(0.2) * 100)}
+              labelPlacement="above"
+              progress={calculateProgress(0.2)}
+            >
+              <ProgressBar
+                accessibilityLabel="Progress bar"
+                onAnimationEnd={handleAnimationEnd}
+                onAnimationStart={handleAnimationStart}
+                progress={calculateProgress(0.2)}
+              />
+            </ProgressBarWithFloatLabel>
+          </VStack>
+        )}
+      </ProgressContainerWithButtons>
+    </VStack>
+  );
+};
+AnimationCallbacks.parameters = { percy: { enableJavaScript: true } };
+
+export const DisableAnimateOnMount = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={4}>
+          <VStack gap={1}>
+            <Text font="label1">ProgressBar</Text>
+            <ProgressBar
+              disableAnimateOnMount
+              accessibilityLabel="Progress bar"
+              progress={calculateProgress(0.8)}
+            />
+          </VStack>
+          <VStack gap={1}>
+            <Text font="label1">ProgressBarWithFixedLabels</Text>
+            <ProgressBarWithFixedLabels
+              disableAnimateOnMount
+              endLabel={Math.round(calculateProgress(0.8) * 100)}
+              labelPlacement="above"
+              startLabel={0}
+            >
+              <ProgressBar
+                disableAnimateOnMount
+                accessibilityLabel="Progress bar"
+                progress={calculateProgress(0.8)}
+              />
+            </ProgressBarWithFixedLabels>
+          </VStack>
+          <VStack gap={1}>
+            <Text font="label1">ProgressBarWithFloatLabel</Text>
+            <ProgressBarWithFloatLabel
+              disableAnimateOnMount
+              label={Math.round(calculateProgress(0.8) * 100)}
+              labelPlacement="above"
+              progress={calculateProgress(0.8)}
+            >
+              <ProgressBar
+                disableAnimateOnMount
+                accessibilityLabel="Progress bar"
+                progress={calculateProgress(0.8)}
+              />
+            </ProgressBarWithFloatLabel>
+          </VStack>
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+DisableAnimateOnMount.parameters = { percy: { enableJavaScript: true } };
+
+export const CustomStyles = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={2}>
+          <ProgressBar
+            accessibilityLabel="Progress bar"
+            progress={calculateProgress(0.6)}
+            styles={{
+              root: { height: 'var(--space-8)' },
+            }}
+          />
+          <ProgressBar
+            accessibilityLabel="Progress bar"
+            progress={calculateProgress(0.3)}
+            styles={{
+              root: { height: 'var(--space-8)', borderRadius: 'var(--borderRadius-1000)' },
+              progress: {
+                borderRadius: 'var(--borderRadius-1000)',
+                background: 'linear-gradient(to right, rgb(var(--teal40)), rgb(var(--green40)))',
+              },
+            }}
+          />
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+CustomStyles.parameters = { percy: { enableJavaScript: true } };
+
+export const CustomStylesWithLabels = () => {
+  return (
+    <ProgressContainerWithButtons>
+      {({ calculateProgress }) => (
+        <VStack gap={2}>
+          <ProgressBarWithFixedLabels
+            endLabel={Math.round(calculateProgress(0.7) * 100)}
+            labelPlacement="above"
+            startLabel={0}
+            styles={{
+              startLabel: {
+                color: 'var(--color-fgNegative)',
+              },
+              endLabel: {
+                color: 'var(--color-fgPositive)',
+                fontWeight: 'bold',
+              },
+            }}
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.7)} />
+          </ProgressBarWithFixedLabels>
+          <ProgressBarWithFloatLabel
+            label={Math.round(calculateProgress(0.4) * 100)}
+            labelPlacement="above"
+            progress={calculateProgress(0.4)}
+            styles={{
+              labelContainer: {
+                background: 'var(--color-bgSubtle)',
+                borderRadius: 'var(--borderRadius-1000)',
+                padding: 'var(--space-1)',
+              },
+              label: {
+                color: 'var(--color-bgPrimary)',
+                fontWeight: 'bold',
+                background: 'var(--color-bg)',
+                borderRadius: 'var(--borderRadius-1)',
+                padding: 'var(--space-1)',
+              },
+            }}
+          >
+            <ProgressBar accessibilityLabel="Progress bar" progress={calculateProgress(0.4)} />
+          </ProgressBarWithFloatLabel>
+        </VStack>
+      )}
+    </ProgressContainerWithButtons>
+  );
+};
+CustomStylesWithLabels.parameters = { percy: { enableJavaScript: true } };

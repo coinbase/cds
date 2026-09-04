@@ -1,0 +1,215 @@
+{
+  "name": "design-system",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Coinbase design system",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git"
+  },
+  "contributors": [
+    {
+      "name": "Cody Persinger @codynova"
+    },
+    {
+      "name": "Stacy Sun @stacy-sun"
+    },
+    {
+      "name": "Adrien Zheng @adrienzheng"
+    },
+    {
+      "name": "Erich Kuerschner @e-kuerschner"
+    },
+    {
+      "name": "Hunter Copp @hcopp"
+    },
+    {
+      "name": "Max Macchi @maximomacchi"
+    },
+    {
+      "name": "Harry Hao @haoruikun"
+    },
+    {
+      "name": "Stephen Vergara @sverg84"
+    },
+    {
+      "name": "Siddharth Kulkarni @siddharthkul"
+    },
+    {
+      "name": "Tim Corcoran @timboutit"
+    },
+    {
+      "name": "Clinton Reece @clinton-reece"
+    },
+    {
+      "name": "Jeff Tan @j3tan"
+    }
+  ],
+  "engines": {
+    "node": "^22"
+  },
+  "packageManager": "yarn@4.9.2",
+  "scripts": {
+    "clean-nx-dir": "rm -rf .nx || true",
+    "clean-packemon-outs": "rm -rf packages/*/{dts,lib,esm,cjs} || true",
+    "clean-dist-outs": "rm -rf packages/*/dist || true",
+    "reset-nx-daemon": "nx reset",
+    "clean": "yarn clean-nx-dir && yarn clean-packemon-outs && yarn clean-dist-outs && yarn reset-nx-daemon",
+    "release": "nx release --skip-publish",
+    "generate-tarballs": "node tools/generateTarballs.mjs",
+    "audit-figma-integration": "node scripts/auditFigmaIntegration/index.mjs",
+    "code-connect:publish": "yarn code-connect:publish:web && yarn code-connect:publish:mobile",
+    "code-connect:publish:web": "figma connect publish --config figma.config.web.json --exit-on-unreadable-files --force --batch-size 50",
+    "code-connect:publish:mobile": "figma connect publish --config figma.config.mobile.json --exit-on-unreadable-files --force --batch-size 50",
+    "perf:component-config": "yarn exec jest --config packages/web/jest.config.js --runTestsByPath packages/web/src/__tests__/perf/component-config/Button.component-config.perf-test.tsx packages/web/src/__tests__/perf/component-config/ComponentConfigProvider.perf-test.tsx packages/web/src/__tests__/perf/component-config/ComponentConfigStickerSheet.perf-test.tsx --testMatch='**/*.perf-test.tsx' && yarn exec jest --config packages/mobile/jest.config.js --runTestsByPath packages/mobile/src/__tests__/perf/component-config/Button.component-config.perf-test.tsx packages/mobile/src/__tests__/perf/component-config/ComponentConfigProvider.perf-test.tsx packages/mobile/src/__tests__/perf/component-config/ComponentConfigStickerSheet.perf-test.tsx --testMatch='**/*.perf-test.tsx'"
+  },
+  "resolutions": {
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "@testing-library/user-event@^14.0.4": "patch:@testing-library/user-event@npm:14.0.4#.yarn/patches/@testing-library-user-event-npm-14.0.4-109d618170",
+    "framer-motion@^10.18.0": "patch:framer-motion@npm:10.18.0#.yarn/patches/framer-motion-npm-10.18.0-ae9ea02138",
+    "react-native-navigation-bar-color": "patch:react-native-navigation-bar-color@npm:2.0.2#.yarn/patches/react-native-navigation-bar-color-npm-2.0.2-9a2ea3aaf6.patch",
+    "@expo/cli": "patch:@expo/cli@npm:54.0.22#.yarn/patches/@expo-cli-npm-54.0.22-eb5155f2b5.patch",
+    "@expo/metro-config": "patch:@expo/metro-config@npm:54.0.14#.yarn/patches/@expo-metro-config-npm-54.0.14-88915da766.patch",
+    "react-native": "patch:react-native@npm:0.81.5#.yarn/patches/react-native-npm-0.81.5-0a0008b930.patch",
+    "expo-modules-core": "patch:expo-modules-core@npm:3.0.29#.yarn/patches/expo-modules-core-npm-3.0.29-7b93dc0961.patch",
+    "react-helmet-async": "^2.0.5",
+    "minimatch": "^10.2.4",
+    "tar": "^7.5.12"
+  },
+  "resolutionComments": {
+    "@types/react": "Forces a single version across all packages to prevent dual React types. Without this, dependencies like @docusaurus/types resolve a nested @types/react@18 which conflicts with React 19 types.",
+    "@types/react-dom": "Forces a single version across all packages to prevent dual React types. Without this, dependencies like @docusaurus/types resolve a nested @types/react@18 which conflicts with React 19 types.",
+    "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
+    "framer-motion@^10.18.0": "Export missing types",
+    "react-native-navigation-bar-color": "[Managed by CMR] Promisify react-native-navigation-bar-color.",
+    "@expo/cli": "[Managed by CMR] Necessary to use the proper appId when opening the app via Expo CLI shortcuts `i` or `a`",
+    "@expo/metro-config": "[Managed by CMR] Fixes Expo serializer to pick up custom defined env variables to be used in the app",
+    "react-native": "[Managed by CMR] Fixes bug presenting a modal on iOS (See https://github.cbhq.net/consumer/react-native/pull/30568). Allows to use React 19.1.2 due to a high severity security vulnerability.",
+    "expo-modules-core": "[Managed by CMR] Avoid initializing EXJavaScriptRuntimeManager runtimeFromBridge from the main thread on iOS to avoid JSI crash",
+    "react-helmet-async": "Working around Nx graph resolution issue",
+    "minimatch": "Request from Coinbase Security team to fix security vulnerability",
+    "tar": "Request from Coinbase Security team to fix security vulnerability"
+  },
+  "workspaces": [
+    "actions/*",
+    "apps/*",
+    "libs/*",
+    "packages/*",
+    "tools"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.20.7",
+    "@babel/core": "^7.28.0",
+    "@babel/parser": "^7.20.13",
+    "@babel/plugin-external-helpers": "^7.18.6",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@babel/register": "^7.18.9",
+    "@babel/runtime": "^7.28.2",
+    "@babel/template": "^7.20.7",
+    "@babel/types": "^7.20.7",
+    "@coinbase/eslint-plugin-cds": "workspace:^",
+    "@coinbase/eslint-plugin-internal": "workspace:^",
+    "@figma/code-connect": "^1.4.7",
+    "@graphql-tools/jest-transform": "^2.0.0",
+    "@inquirer/prompts": "^7.5.3",
+    "@joshcena/docusaurus-plugin-utils": "^0.1.3",
+    "@linaria/postcss-linaria": "^5.0.0",
+    "@linaria/stylelint": "^3.0.0-beta.22",
+    "@nx/eslint": "20.8.2",
+    "@nx/jest": "20.8.2",
+    "@nx/workspace": "20.8.2",
+    "@parcel/css-cli": "^1.9.0",
+    "@types/d3-array": "^3.2.1",
+    "@types/d3-color": "^3.1.3",
+    "@types/d3-interpolate": "^3.0.4",
+    "@types/d3-interpolate-path": "^2.0.3",
+    "@types/d3-scale": "^4.0.8",
+    "@types/d3-selection": "^3.0.10",
+    "@types/d3-shape": "^3.1.6",
+    "@types/d3-transition": "^3.0.8",
+    "@types/dotenv-webpack": "^7.0.3",
+    "@types/ejs": "^3.1.0",
+    "@types/humps": "^2.0.0",
+    "@types/intl": "^1.2.0",
+    "@types/jest": "^28.1.3",
+    "@types/jest-axe": "^3.5.9",
+    "@types/lodash": "^4.14.178",
+    "@types/mini-css-extract-plugin": "^2.2.0",
+    "@types/node": "^22",
+    "@types/react-router-dom": "^5.2.0",
+    "@types/react-virtualized": "^9.21.13",
+    "@types/semver": "^7",
+    "@types/url-parse": "^1.4.3",
+    "@types/yargs": "^17.0.11",
+    "@typescript-eslint/parser": "^7.18.0",
+    "@yarnpkg/types": "^4.0.0",
+    "autoprefixer": "^10.4.7",
+    "babel-loader": "^10.0.0",
+    "babel-plugin-dotenv-import": "^3.0.1",
+    "babel-plugin-module-resolver": "^4.1.0",
+    "babel-plugin-replace-ts-export-assignment": "^0.0.2",
+    "chalk": "^4.1.2",
+    "depcheck": "patch:depcheck@npm%3A1.4.7#.yarn/patches/depcheck-npm-1.4.7-d4cc813cc3.patch",
+    "diff": "^5.1.0",
+    "dotenv-webpack": "7.0.3",
+    "eslint": "^9.22.0",
+    "eslint-import-resolver-typescript": "^3.8.7",
+    "eslint-plugin-codegen": "^0.30.0",
+    "eslint-plugin-import": "^2.31.0",
+    "eslint-plugin-jest": "^28.11.0",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "eslint-plugin-react-native": "^5.0.0",
+    "eslint-plugin-react-native-a11y": "^3.5.1",
+    "eslint-plugin-react-perf": "^3.3.3",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "eslint-plugin-storybook": "9.1.17",
+    "eslint-plugin-testing-library": "^7.1.1",
+    "execa": "^5.1.1",
+    "fast-glob": "^3.2.11",
+    "glob": "^10.3.10",
+    "globals": "^16.0.0",
+    "inquirer": "^12.1.0",
+    "jest": "^29.7.0",
+    "jest-axe": "^10.0.0",
+    "jest-canvas-mock": "^2.5.2",
+    "jest-environment-jsdom": "^29.5.0",
+    "jest-extended": "^4.0.2",
+    "node-fetch": "^2.6.7",
+    "nx": "20.8.2",
+    "postcss-cli": "^9.1.0",
+    "postcss-nested": "^5.0.6",
+    "postcss-sort-media-queries": "^4.2.1",
+    "postcss-styled-syntax": "^0.7.1",
+    "prettier": "^3.6.2",
+    "reassure": "^0.7.1",
+    "shelljs": "^0.8.5",
+    "simple-git": "^3.19.1",
+    "stylelint": "^15.11.0",
+    "stylelint-a11y": "^1.2.3",
+    "stylelint-config-prettier": "^9.0.5",
+    "stylelint-config-recommended": "^13.0.0",
+    "stylelint-high-performance-animation": "^1.10.0",
+    "stylelint-no-unsupported-browser-features": "^7.0.0",
+    "stylelint-prettier": "^4.1.0",
+    "ts-morph": "^19.0.0",
+    "tsconfig-paths": "^4.0.0",
+    "tsx": "^4.19.1",
+    "type-fest": "^2.19.0",
+    "typescript": "~5.9.2",
+    "typescript-eslint": "^8.26.1",
+    "webfont": "11.2.26",
+    "webpack": "^5.101.0",
+    "webpack-bundle-analyzer": "^4.10.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2",
+    "yargs": "^17.5.1"
+  }
+}

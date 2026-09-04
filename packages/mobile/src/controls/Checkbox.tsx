@@ -1,0 +1,146 @@
+import React, { memo, useMemo } from 'react';
+import { Animated } from 'react-native';
+import type { View } from 'react-native';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useTheme } from '../hooks/useTheme';
+import { Icon } from '../icons/Icon';
+import { Interactable } from '../system/Interactable';
+
+import { Control, type ControlBaseProps, type ControlIconProps } from './Control';
+
+export type CheckboxBaseProps<CheckboxValue extends string> = Omit<
+  ControlBaseProps<CheckboxValue>,
+  'controlColor' | 'controlSize' | 'dotSize'
+> & {
+  /**
+   * Sets the checked/active color of the checkbox.
+   * @default fgInverse
+   */
+  controlColor?: ThemeVars.Color;
+  /**
+   * Sets the border width of the checkbox.
+   * @default 100
+   */
+  borderWidth?: ThemeVars.BorderWidth;
+  /**
+   * Sets the outer checkbox control size in pixels.
+   * @default theme.controlSize.checkboxSize
+   */
+  controlSize?: number;
+};
+
+export type CheckboxProps<CheckboxValue extends string> = CheckboxBaseProps<CheckboxValue>;
+
+const CheckboxIcon = memo(
+  ({
+    pressed,
+    checked,
+    indeterminate,
+    disabled,
+    controlColor = 'fgInverse',
+    background = checked || indeterminate ? 'bgPrimary' : 'bg',
+    borderColor = checked || indeterminate ? 'bgPrimary' : 'bgLineHeavy',
+    borderRadius = 100,
+    borderWidth = 100,
+    elevation,
+    animatedScaleValue,
+    animatedOpacityValue,
+    testID,
+    controlSize,
+  }: React.PropsWithChildren<ControlIconProps>) => {
+    const filled = checked || indeterminate;
+    const theme = useTheme();
+    const checkboxSize = controlSize ?? theme.controlSize.checkboxSize;
+    const iconPadding = checkboxSize / 5;
+    const iconSize = checkboxSize - iconPadding;
+
+    const animatedStyle = useMemo(
+      () => ({ transform: [{ scale: animatedScaleValue }], opacity: animatedOpacityValue }),
+      [animatedScaleValue, animatedOpacityValue],
+    );
+
+    const iconStyle = useMemo(
+      () => ({
+        icon: {
+          width: iconSize,
+          height: iconSize,
+          fontSize: iconSize,
+          lineHeight: iconSize,
+          opacity: filled ? 1 : 0,
+        } as const,
+      }),
+      [iconSize, filled],
+    );
+
+    return (
+      <Interactable
+        alignItems="center"
+        background={background}
+        borderColor={borderColor}
+        borderRadius={borderRadius}
+        borderWidth={borderWidth}
+        disabled={disabled}
+        elevation={elevation}
+        height={checkboxSize}
+        justifyContent="center"
+        pressed={pressed}
+        testID={testID}
+        width={checkboxSize}
+      >
+        <Animated.View style={animatedStyle}>
+          <Icon
+            color={controlColor}
+            name={checked ? 'checkmark' : 'minus'}
+            size="s"
+            styles={iconStyle}
+            testID="checkbox-icon"
+          />
+        </Animated.View>
+      </Interactable>
+    );
+  },
+);
+
+const CheckboxWithRef = function Checkbox<CheckboxValue extends string>({
+  ref,
+  ..._props
+}: CheckboxProps<CheckboxValue> & {
+  ref?: React.Ref<View>;
+}) {
+  const mergedProps = useComponentConfig('Checkbox', _props);
+  const {
+    children,
+    accessibilityLabel,
+    accessibilityHint,
+    accessible = true,
+    ...props
+  } = mergedProps;
+  const accessibilityLabelValue =
+    typeof children === 'string' && accessibilityLabel === undefined
+      ? children
+      : accessibilityLabel;
+
+  const accessibilityHintValue =
+    typeof children === 'string' && accessibilityHint === undefined ? children : accessibilityHint;
+
+  return (
+    <Control<CheckboxValue>
+      ref={ref}
+      accessibilityHint={accessibilityHintValue}
+      accessibilityLabel={accessibilityLabelValue}
+      accessibilityRole="checkbox"
+      accessible={accessible}
+      hitSlop={5}
+      label={children}
+      {...props}
+    >
+      {CheckboxIcon}
+    </Control>
+  );
+};
+
+// Preserve generic call signature through React.memo
+export const Checkbox = memo(CheckboxWithRef) as typeof CheckboxWithRef &
+  React.MemoExoticComponent<typeof CheckboxWithRef>;

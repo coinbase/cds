@@ -1,0 +1,25 @@
+{
+  "import": "import { Numpad } from '@coinbase/cds-mobile/numpad/Numpad'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/numpad/Numpad.tsx",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=14012-3416&t=6hbCJmIQxCsPCzeU-1",
+  "description": "A keypad for entering numbers.",
+  "relatedComponents": [
+    {
+      "label": "TextInput",
+      "url": "/components/inputs/TextInput/"
+    },
+    {
+      "label": "Button",
+      "url": "/components/inputs/Button/"
+    },
+    {
+      "label": "DatePicker",
+      "url": "/components/other/DatePicker/"
+    },
+    {
+      "label": "Modal",
+      "url": "/components/overlay/Modal/"
+    }
+  ],
+  "dependencies": []
+}

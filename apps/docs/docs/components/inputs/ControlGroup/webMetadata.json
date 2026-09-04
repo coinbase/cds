@@ -1,0 +1,37 @@
+{
+  "import": "import { ControlGroup } from '@coinbase/cds-web/controls/ControlGroup'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/controls/ControlGroup.tsx",
+  "description": "A layout component that arranges and manages a group of related controls, such as radio buttons, switches, or checkboxes.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-controlgroup--radio-group-story",
+  "relatedComponents": [
+    {
+      "label": "Checkbox",
+      "url": "/components/inputs/Checkbox/"
+    },
+    {
+      "label": "CheckboxCell",
+      "url": "/components/inputs/CheckboxCell/"
+    },
+    {
+      "label": "CheckboxGroup",
+      "url": "/components/inputs/CheckboxGroup/"
+    },
+    {
+      "label": "Radio",
+      "url": "/components/inputs/Radio/"
+    },
+    {
+      "label": "RadioCell",
+      "url": "/components/inputs/RadioCell/"
+    },
+    {
+      "label": "RadioGroup",
+      "url": "/components/inputs/RadioGroup/"
+    },
+    {
+      "label": "Switch",
+      "url": "/components/inputs/Switch/"
+    }
+  ],
+  "dependencies": []
+}

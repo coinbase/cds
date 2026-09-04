@@ -1,0 +1,392 @@
+MediaCard provides a contained card layout with optional media, ideal for showcasing assets, products, or promotional content.
+
+:::info Migrating from FloatingAssetCard or ContainedAssetCard?
+See the [Migration Guide](#migration-from-deprecated-components) at the end of this page.
+:::
+
+## Basic
+
+At minimum, provide a `thumbnail` to display visual content and a `title` for the card heading.
+
+```jsx
+<VStack gap={2}>
+  <MediaCard
+    thumbnail={
+      <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+  />
+  <MediaCard
+    thumbnail={
+      <RemoteImage
+        accessibilityLabel="Ethereum"
+        shape="circle"
+        size="l"
+        source={CDSDataAssets.ethBackground}
+      />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        source={ethBackground}
+        width="100%"
+      />
+    }
+  />
+</VStack>
+```
+
+## Media Placement
+
+Use the `media` prop to display larger visual content. Control its position with `mediaPlacement`:
+
+- `start`: Media on the left
+- `end` (default): Media on the right
+
+```jsx
+<VStack gap={2}>
+  <MediaCard
+    thumbnail={
+      <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        source={ethBackground}
+        width="100%"
+      />
+    }
+    mediaPlacement="start"
+  />
+  <MediaCard
+    thumbnail={
+      <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        source={ethBackground}
+        width="100%"
+      />
+    }
+    mediaPlacement="end"
+  />
+</VStack>
+```
+
+## Interactive
+
+MediaCard can be made interactive with the `onPress` prop and `renderAsPressable`.
+
+```jsx
+<MediaCard
+  renderAsPressable
+  accessibilityLabel="View Ethereum details"
+  thumbnail={
+    <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+  }
+  title="Interactive Card"
+  subtitle="Button"
+  description="Clickable card with onPress handler"
+  width={320}
+  media={
+    <RemoteImage
+      accessibilityLabel="Media"
+      height="100%"
+      resizeMode="cover"
+      shape="rectangle"
+      source={ethBackground}
+      width="100%"
+    />
+  }
+  onPress={() => console.log('Card clicked!')}
+/>
+```
+
+## Text Content
+
+### Long Text
+
+The card handles long text content with truncation.
+
+```jsx
+<MediaCard
+  thumbnail={
+    <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+  }
+  title="This is a very long title text that will get truncated"
+  subtitle="This is a very long subtitle text that will get truncated"
+  description="This is a very long description text that demonstrates how the card handles longer content"
+  width={320}
+  media={
+    <RemoteImage
+      accessibilityLabel="Media"
+      height="100%"
+      resizeMode="cover"
+      shape="rectangle"
+      source={ethBackground}
+      width="100%"
+    />
+  }
+/>
+```
+
+### Custom Content
+
+Use React nodes for custom styled text content.
+
+```jsx
+<MediaCard
+  thumbnail={
+    <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+  }
+  title={<Text font="title3">Custom Title</Text>}
+  subtitle={
+    <Text font="headline" color="fgPositive">
+      Custom Subtitle
+    </Text>
+  }
+  description={
+    <Text font="label2">
+      Custom description with <Text font="headline">bold text</Text> and{' '}
+      <Text font="label1">italic text</Text>
+    </Text>
+  }
+  width={320}
+  media={
+    <RemoteImage
+      accessibilityLabel="Media"
+      height="100%"
+      resizeMode="cover"
+      shape="rectangle"
+      source={ethBackground}
+      width="100%"
+    />
+  }
+/>
+```
+
+## Styling
+
+Use the `styles` prop to customize specific parts of the card.
+
+```jsx
+<VStack gap={2}>
+  <MediaCard
+    thumbnail={
+      <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        source={ethBackground}
+        width="100%"
+      />
+    }
+    styles={{
+      layoutContainer: { gap: 3 },
+      contentContainer: { padding: 3, gap: 2 },
+      textContainer: { gap: 1 },
+      headerContainer: { gap: 1 },
+      mediaContainer: { borderRadius: 300 },
+    }}
+  />
+  <MediaCard
+    thumbnail={
+      <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+    }
+    title="Title"
+    subtitle="Subtitle"
+    description="Description"
+    width={320}
+    media={
+      <RemoteImage
+        accessibilityLabel="Media"
+        height="100%"
+        resizeMode="cover"
+        shape="rectangle"
+        source={ethBackground}
+        width="100%"
+      />
+    }
+    styles={{
+      root: { borderWidth: 2, borderColor: 'blue' },
+    }}
+  />
+</VStack>
+```
+
+## Multiple Cards
+
+Display multiple cards in a carousel.
+
+```jsx
+<Carousel styles={{ carousel: { gap: 16 } }}>
+  <CarouselItem id="card1">
+    <MediaCard
+      thumbnail={
+        <RemoteImage accessibilityLabel="Ethereum" shape="circle" size="l" source={ethBackground} />
+      }
+      title="Title"
+      subtitle="Subtitle"
+      description="Description"
+      width={320}
+      media={
+        <RemoteImage
+          accessibilityLabel="Media"
+          height="100%"
+          resizeMode="cover"
+          shape="rectangle"
+          source={ethBackground}
+          width="100%"
+        />
+      }
+    />
+  </CarouselItem>
+  <CarouselItem id="card2">
+    <MediaCard
+      renderAsPressable
+      accessibilityLabel="View Bitcoin details"
+      thumbnail={
+        <RemoteImage
+          accessibilityLabel="Bitcoin thumbnail"
+          shape="square"
+          size="l"
+          source={assets.btc.imageUrl}
+        />
+      }
+      title="Bitcoin"
+      subtitle="BTC"
+      description="Another card with different content"
+      width={320}
+      media={
+        <RemoteImage
+          accessibilityLabel="Ethereum background media"
+          height="100%"
+          resizeMode="cover"
+          shape="rectangle"
+          source={ethBackground}
+          width="100%"
+        />
+      }
+    />
+  </CarouselItem>
+  <CarouselItem id="card3">
+    <MediaCard
+      renderAsPressable
+      accessibilityLabel="View Ethereum details"
+      thumbnail={
+        <RemoteImage
+          accessibilityLabel="Ethereum thumbnail"
+          shape="circle"
+          size="l"
+          source={ethBackground}
+        />
+      }
+      title="Ethereum"
+      subtitle="ETH"
+      description="Card with onPress handler"
+      width={320}
+      onPress={() => {}}
+    />
+  </CarouselItem>
+</Carousel>
+```
+
+## Accessibility
+
+### Interactive Cards
+
+When making MediaCard interactive with `renderAsPressable`:
+
+- Add an `accessibilityLabel` to summarize the card's action for VoiceOver users (e.g., `accessibilityLabel="View Ethereum details"`)
+
+:::warning Avoid Nested Interactive Elements
+Don't place buttons or pressables inside an interactive card, as this creates accessibility issues for VoiceOver users and can cause unexpected behavior when tapping.
+:::
+
+### Color Contrast
+
+When customizing card backgrounds, ensure sufficient color contrast between text and background colors. WCAG AA requires a minimum contrast ratio of 4.5:1 for normal text.
+
+## Migration from Deprecated Components
+
+### Migrating from ContainedAssetCard
+
+Replace `ContainedAssetCard` with `MediaCard`:
+
+```jsx
+// Before
+<ContainedAssetCard
+  header={<RemoteImage source={assets.btc.imageUrl} width={32} height={32} />}
+  title="$309.43"
+  subtitle="Bitcoin"
+  description={<Text color="fgPositive">↗3.37%</Text>}
+  size="l"
+>
+  <RemoteImage source={ethBackground} ... />
+</ContainedAssetCard>
+
+// After
+<MediaCard
+  thumbnail={<RemoteImage source={assets.btc.imageUrl} shape="circle" size="l" />}
+  title="$309.43"
+  subtitle="Bitcoin"
+  description={<Text color="fgPositive">↗3.37%</Text>}
+  media={<RemoteImage source={ethBackground} height="100%" width="100%" resizeMode="cover" />}
+  mediaPlacement="end"
+/>
+```
+
+### Migrating from FloatingAssetCard
+
+Replace `FloatingAssetCard` with `MediaCard`. Note that the floating variation (media outside the card container) is no longer supported:
+
+```jsx
+// Before
+<FloatingAssetCard
+  title="Balancing the Air"
+  subtitle="Amber V's Artwork"
+  description="0.5 ETH"
+  media={<RemoteImage source={{ uri: '...' }} ... />}
+/>
+
+// After
+<MediaCard
+  thumbnail={<RemoteImage source={{ uri: '...' }} shape="circle" size="l" />}
+  title="Balancing the Air"
+  subtitle="Amber V's Artwork"
+  description="0.5 ETH"
+/>
+```

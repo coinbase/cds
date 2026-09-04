@@ -1,0 +1,12 @@
+src/
+tsconfig.json
+tsconfig.build.json
+babel.config.cjs
+project.json
+__tests__/
+__stories__/
+__mocks__/
+__fixtures__/
+*.test.*
+*.spec.*
+*.stories.*

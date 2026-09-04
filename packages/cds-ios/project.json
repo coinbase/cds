@@ -1,0 +1,50 @@
+{
+  "name": "cds-ios",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/cds-ios/Sources",
+  "tags": [
+    "platform:ios",
+    "toolchain:xcode"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "swift build -c release",
+        "cwd": "packages/cds-ios"
+      },
+      "dependsOn": [],
+      "inputs": [
+        "default"
+      ],
+      "outputs": [
+        "{projectRoot}/.build"
+      ],
+      "cache": true
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "swift test",
+        "cwd": "packages/cds-ios"
+      },
+      "dependsOn": [],
+      "inputs": [
+        "default"
+      ],
+      "outputs": [
+        "{projectRoot}/.build"
+      ],
+      "cache": true
+    },
+    "xcframework": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./scripts/build-xcframework.sh",
+        "cwd": "packages/cds-ios"
+      },
+      "cache": false
+    }
+  }
+}

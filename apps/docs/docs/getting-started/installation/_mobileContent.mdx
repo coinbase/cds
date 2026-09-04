@@ -1,0 +1,84 @@
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXSection>
+<MDXArticle>
+## Installation
+
+:::tip Starting a new project?
+Check out our [templates](/getting-started/templates) for pre-configured starter apps with CDS already set up.
+:::
+
+To install the CDS library for React Native applications, run the following command:
+
+```bash
+npm install @coinbase/cds-mobile
+```
+
+Alternatively, if you are using Yarn:
+
+```bash
+yarn add @coinbase/cds-mobile
+```
+
+:::tip
+For React Native projects, ensure you have set up your environment for React Native development. Refer to the [React Native Environment Setup Guide](https://reactnative.dev/docs/environment-setup) if needed.
+:::
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Getting started
+</MDXArticle>
+<MDXArticle>
+### 1. Render providers
+
+Render the following providers at the root of your application:
+
+- **ThemeProvider** — applies the CDS theme and color scheme
+- **PortalProvider** — manages the registry of active overlay components (Modal, Toast, Alert, Tooltip, Tray). ([read more &rarr;](/components/overlay/PortalProvider))
+
+```tsx
+import { ThemeProvider } from '@coinbase/cds-mobile/system';
+import { PortalProvider } from '@coinbase/cds-mobile/overlays/PortalProvider';
+import { defaultTheme } from '@coinbase/cds-mobile/themes/defaultTheme';
+import App from './App';
+
+const Index = () => (
+  <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+    <PortalProvider>
+      <App />
+    </PortalProvider>
+  </ThemeProvider>
+);
+
+export default Index;
+```
+
+</MDXArticle>
+<MDXArticle>
+### 2. Verify the installation
+
+Try importing and rendering a simple CDS component.
+
+```tsx
+import { Button } from '@coinbase/cds-mobile/buttons';
+
+const Test = () => <Button>Click Me</Button>;
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Next steps
+
+Learn how to customize CDS's appearance.
+
+[See the theming docs here &rarr;](/getting-started/theming)
+
+</MDXArticle>
+</MDXSection>

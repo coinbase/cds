@@ -1,0 +1,14 @@
+{
+  "import": "import { Select } from '@coinbase/cds-mobile/alpha/select'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/alpha/select/Select.tsx",
+  "storybook": "",
+  "description": "A flexible select component for both single and multi-selection, built for mobile applications with comprehensive accessibility support.",
+  "alpha": true,
+  "relatedComponents": [],
+  "dependencies": [
+    {
+      "name": "react-native-safe-area-context",
+      "version": "5.6.0"
+    }
+  ]
+}

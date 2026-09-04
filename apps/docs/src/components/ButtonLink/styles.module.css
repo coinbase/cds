@@ -1,0 +1,15 @@
+.default,
+.default:hover,
+.default:active,
+.default:visited {
+  color: var(--color-fgInverse);
+  text-decoration: none;
+}
+
+.transparent,
+.transparent:hover,
+.transparent:active,
+.transparent:visited {
+  color: var(--color-fgPrimary);
+  text-decoration: none;
+}

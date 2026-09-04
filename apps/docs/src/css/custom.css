@@ -1,0 +1,245 @@
+/**
+ * Any CSS included here will be global. The classic template
+ * bundles Infima by default. Infima is a CSS framework designed to
+ * work well for content-centric websites.
+ */
+
+/* You can override the default Infima variables here. */
+:root {
+  --ifm-color-primary: #3578e5;
+  --ifm-color-primary-dark: #2f6cd1;
+  --ifm-color-primary-darker: #295fbd;
+  --ifm-color-primary-darkest: #234aa9;
+  --ifm-color-primary-light: #3d84f0;
+  --ifm-color-primary-lighter: #468ffb;
+  --ifm-color-primary-lightest: #509aff;
+  --ifm-code-font-size: 95%;
+  --ifm-hr-height: unset;
+  --ifm-navbar-sidebar-width: 240px;
+  --ifm-link-hover-decoration: none;
+  --ifm-list-item-margin: unset;
+  --docusaurus-highlighted-code-line-bg: #fff;
+  --default-text-color: rgb(10, 11, 13);
+
+  /* left sidebar */
+
+  --zIndex-portal: 100001;
+
+  --table-of-content-width: 230px;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme='dark'] {
+  --ifm-color-primary: #3578e5;
+  --ifm-color-primary-dark: #2f6cd1;
+  --ifm-color-primary-darker: #295fbd;
+  --ifm-color-primary-darkest: #234aa9;
+  --ifm-color-primary-light: #3d84f0;
+  --ifm-color-primary-lighter: #468ffb;
+  --ifm-color-primary-lightest: #509aff;
+  --docusaurus-highlighted-code-line-bg: #32353d;
+  --default-text-color: rgb(255, 255, 255);
+}
+
+/* Docusaurus-specific utility class */
+.docusaurus-mt-lg {
+  margin-top: 3rem;
+}
+
+#__docusaurus {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+html {
+  color: var(--default-text-color);
+}
+
+body {
+  font-style: normal;
+  font-weight: 400;
+}
+
+code {
+  font-size: 90%;
+  color: var(--color-fg);
+  background-color: var(--color-bgSecondary);
+}
+
+.navbar {
+  padding: 0;
+  height: auto;
+  background-color: var(--color-bg);
+  box-shadow: none;
+}
+
+.navbar-sidebar {
+  background-color: var(--color-bg);
+}
+
+.navbar__logo {
+  width: var(--space-5);
+  height: var(--space-5);
+}
+
+/**
+ * Hide breadcrumbs navigation
+*/
+/* stylelint-disable-next-line a11y/no-display-none -- this one is okay */
+.theme-doc-breadcrumbs {
+  display: none;
+}
+
+/**
+ * Hide pagination navigation
+*/
+/* stylelint-disable-next-line a11y/no-display-none -- this one is okay */
+.pagination-nav {
+  display: none;
+}
+
+.menu__link {
+  padding: var(--space-1) var(--space-2);
+}
+
+.menu__link:hover {
+  background: none;
+  transition: none;
+}
+
+.menu__link--active:not(.menu__link--sublist) {
+  background: none;
+}
+
+.menu__list-item:not(:first-child) {
+  margin-top: 0;
+}
+
+a,
+a:hover,
+a:active,
+a:focus-visible {
+  color: var(--color-fgPrimary);
+  text-decoration: none;
+}
+
+table {
+  width: 100%;
+  display: table;
+  color: var(--color-fg);
+  min-width: auto;
+  word-break: break-word;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+table tr {
+  border-bottom: none;
+  color: var(--color-fg);
+}
+
+table thead tr {
+  border-bottom: none;
+  color: var(--color-fg);
+}
+
+table th,
+table td {
+  padding: var(--space-2);
+  border-left: none;
+  border-right: 1px solid var(--color-bgLine);
+  border-bottom: 1px solid var(--color-bgLine);
+  text-align: left;
+}
+
+table td {
+  vertical-align: top;
+  border-top: none;
+}
+
+table th {
+  border-top: 1px solid var(--color-bgLine);
+}
+
+table thead th {
+  background-color: rgb(var(--gray10));
+}
+
+table th:first-child,
+table td:first-child {
+  border-left: 1px solid var(--color-bgLine);
+}
+
+table thead tr th:first-child {
+  border-top-left-radius: var(--borderRadius-400);
+}
+
+table thead tr th:last-child {
+  border-top-right-radius: var(--borderRadius-400);
+}
+
+table tbody tr:last-child td:first-child {
+  border-bottom-left-radius: var(--borderRadius-400);
+}
+
+table tbody tr:last-child td:last-child {
+  border-bottom-right-radius: var(--borderRadius-400);
+}
+/* Remove background color from table rows */
+table tr:nth-child(even),
+table tr:nth-child(odd) {
+  background-color: transparent;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+li {
+  color: var(--color-fg);
+}
+
+.table-of-contents,
+.table-of-contents ul {
+  display: flex;
+  flex-direction: column;
+  padding: 0 var(--space-0_5);
+  gap: var(--space-1_5);
+}
+
+.table-of-contents ul {
+  padding-left: var(--space-1);
+  padding-right: 0;
+  border-left: var(--borderWidth-100) solid var(--color-bgLine);
+}
+
+.table-of-contents li {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.table-of-contents__left-border {
+  border-left: none;
+}
+
+.jsonCodeBlock {
+  height: 340px;
+  overflow: scroll !important;
+  border-radius: var(--borderRadius-400);
+  background: var(--color-bg);
+
+  @media (min-width: 997px) {
+    height: 460px;
+  }
+}
+
+/* override the weird margin-bottom on the first h1 applied by docusaurus */
+.markdown h1:first-child {
+  margin-bottom: 0;
+}

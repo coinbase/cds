@@ -1,0 +1,7 @@
+{
+  "name": "ios-gallery",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Placeholder manifest. The real build is the Xcode app target CDSGalleryiOS (generated from project.yml via XcodeGen); this file only exists so Yarn and the Nx CI helpers can see the project.",
+  "license": "Apache-2.0"
+}

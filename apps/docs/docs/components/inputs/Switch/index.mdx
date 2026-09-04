@@ -1,0 +1,51 @@
+---
+id: switch
+title: Switch
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { SwitchBanner } from '@site/src/components/page/ComponentBanner/SwitchBanner';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import mobilePropsToc from ':docgen/mobile/controls/Switch/toc-props';
+import WebPropsTable from './_webPropsTable.mdx';
+import webPropsToc from ':docgen/web/controls/Switch/toc-props';
+
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
+
+import { sharedParentTypes } from ':docgen/_types/sharedParentTypes';
+import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
+import { VStack } from '@coinbase/cds-web/layout';
+
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader
+    title="Switch"
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+    banner={<SwitchBanner />}
+  />
+
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webStyles={<WebStyles />}
+    webExamples={<WebExamples />}
+    mobilePropsTable={<MobilePropsTable />}
+    mobileStyles={<MobileStyles />}
+    mobileExamples={<MobileExamples />}
+    webExamplesToc={webExamplesToc}
+    mobileExamplesToc={mobileExamplesToc}
+    webPropsToc={webPropsToc}
+    webStylesToc={webStylesToc}
+    mobilePropsToc={mobilePropsToc}
+    mobileStylesToc={mobileStylesToc}
+  />
+</VStack>

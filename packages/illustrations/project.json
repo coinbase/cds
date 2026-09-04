@@ -1,0 +1,92 @@
+{
+  "name": "illustrations",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/illustrations/src",
+  "projectType": "library",
+  "tags": [
+    "toolchain:node"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+        },
+        "prod": {
+          "commands": [
+            "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx --copy-files --no-copy-ignored"
+          ],
+          "parallel": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.mjs"
+      }
+    },
+    "sync-illustrations": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        {
+          "projects": [
+            "figma-api"
+          ],
+          "target": "build"
+        }
+      ],
+      "options": {
+        "command": "tsx ./scripts/sync-illustrations/index.ts",
+        "cwd": "packages/illustrations"
+      }
+    },
+    "generate-stories": {
+      "command": "tsx ./scripts/generateStories.ts",
+      "dependsOn": [
+        "^build"
+      ],
+      "options": {
+        "cwd": "packages/illustrations"
+      }
+    },
+    "release": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "^build"
+      ],
+      "options": {
+        "commands": [
+          "nx run illustrations:generate-stories"
+        ],
+        "parallel": false
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "commands": [
+            "tsc --build --pretty --verbose",
+            "tsc -p ./tsconfig.scripts.json --pretty"
+          ],
+          "parallel": false
+        },
+        "prod": {
+          "commands": [
+            "tsc --build ./tsconfig.build.json --pretty --verbose",
+            "tsc -p ./tsconfig.scripts.json --pretty",
+            "prettier ./dts --write --loglevel warn"
+          ],
+          "parallel": false
+        }
+      }
+    }
+  }
+}

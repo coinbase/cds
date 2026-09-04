@@ -1,0 +1,13 @@
+diff --git a/src/index.js b/src/index.js
+index eeab32f8d27662b4e26751ac897e03c8ba04a5df..d4d8a2c30012dbf8a742f952a18105cb1e9069ce 100644
+--- a/src/index.js
++++ b/src/index.js
+@@ -9,7 +9,7 @@ const changeNavigationBarColor = (
+ ) => {
+   if (Platform.OS === 'android') {
+     const LightNav = light ? true : false;
+-    NavigationBarColor.changeNavigationBarColor(color, LightNav, animated);
++    return NavigationBarColor.changeNavigationBarColor(color, LightNav, animated);
+   }
+ };
+ const hideNavigationBar = () => {

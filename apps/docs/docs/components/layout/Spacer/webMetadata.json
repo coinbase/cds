@@ -1,0 +1,24 @@
+{
+  "import": "import { Spacer } from '@coinbase/cds-web/layout/Spacer'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/layout/Spacer.tsx",
+  "description": "Creates space between elements.",
+  "relatedComponents": [
+    {
+      "label": "Box",
+      "url": "/components/layout/Box/"
+    },
+    {
+      "label": "VStack",
+      "url": "/components/layout/VStack/"
+    },
+    {
+      "label": "HStack",
+      "url": "/components/layout/HStack/"
+    },
+    {
+      "label": "Grid",
+      "url": "/components/layout/Grid/"
+    }
+  ],
+  "dependencies": []
+}

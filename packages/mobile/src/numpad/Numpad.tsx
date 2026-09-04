@@ -1,0 +1,235 @@
+import React, { memo, useCallback, useMemo } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { type SharedProps } from '@coinbase/cds-common/types/SharedProps';
+
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useTheme } from '../hooks/useTheme';
+import { Icon } from '../icons/Icon';
+import { type BoxBaseProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { VStack, type VStackProps } from '../layout/VStack';
+import { type HapticFeedbackType, Pressable } from '../system/Pressable';
+import { Text } from '../typography/Text';
+
+export const SEPARATOR = 'SEPARATOR';
+export const DELETE = 'DELETE';
+
+export type SeparatorType = typeof SEPARATOR;
+export type DeleteType = typeof DELETE;
+
+export type NumpadValue = number | SeparatorType | DeleteType;
+
+export type NumpadButtonProps = {
+  value: NumpadValue;
+  onPress: (value: NumpadValue) => void;
+  onLongPress?: (value: NumpadValue) => void;
+  separator?: string;
+  hideSeparator?: boolean;
+  disabled?: boolean;
+  separatorAccessibilityLabel?: string;
+  deleteAccessibilityLabel?: string;
+  feedback?: HapticFeedbackType;
+};
+
+export type NumpadBaseProps = BoxBaseProps & {
+  separator?: string;
+  /** When `true`, hides the separator key and removes it from the accessibility tree. */
+  hideSeparator?: boolean;
+  disabled?: boolean;
+  accessory?: React.ReactNode;
+  action?: React.ReactNode;
+  separatorAccessibilityLabel?: string;
+  deleteAccessibilityLabel?: string;
+};
+
+export type NumpadProps = NumpadBaseProps &
+  VStackProps & {
+    onPress: (value: NumpadValue) => void;
+    onLongPress?: (value: NumpadValue) => void;
+    /**
+     * Haptic feedback to trigger when being pressed.
+     * @default none
+     */
+    feedback?: HapticFeedbackType;
+  } & SharedProps &
+  VStackProps;
+
+const buttonValues: NumpadValue[][] = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
+  [SEPARATOR, 0, DELETE],
+];
+
+const styles = StyleSheet.create({
+  content: {
+    alignItems: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    height: 48,
+  },
+  button: {
+    justifyContent: 'center',
+    alignItems: 'stretch',
+    width: '33.3333333%',
+  },
+});
+
+export const Numpad = memo(
+  ({
+    ref: forwardedRef,
+    ..._props
+  }: NumpadProps & {
+    ref?: React.Ref<View>;
+  }) => {
+    const mergedProps = useComponentConfig('Numpad', _props);
+    const {
+      separator = '.',
+      hideSeparator = false,
+      disabled,
+      onPress,
+      onLongPress,
+      accessory,
+      action,
+      deleteAccessibilityLabel = 'delete',
+      separatorAccessibilityLabel = 'period',
+      testID,
+      background,
+      flexGrow = 0,
+      flexShrink = 0,
+      gap = 2,
+      feedback,
+      ...props
+    } = mergedProps;
+    const buttons = useMemo(() => {
+      return buttonValues.map((values, i) => {
+        return (
+          <HStack
+            key={`num_pad_item_${i}`}
+            alignItems="stretch"
+            flexGrow={1}
+            flexWrap="nowrap"
+            justifyContent="space-between"
+            paddingX={2}
+          >
+            {values.map((value) => (
+              <NumpadButton
+                key={`value_${value}`}
+                deleteAccessibilityLabel={deleteAccessibilityLabel}
+                disabled={disabled}
+                feedback={feedback}
+                hideSeparator={hideSeparator}
+                onLongPress={onLongPress}
+                onPress={onPress}
+                separator={separator}
+                separatorAccessibilityLabel={separatorAccessibilityLabel}
+                value={value}
+              />
+            ))}
+          </HStack>
+        );
+      });
+    }, [
+      deleteAccessibilityLabel,
+      disabled,
+      feedback,
+      hideSeparator,
+      onLongPress,
+      onPress,
+      separator,
+      separatorAccessibilityLabel,
+    ]);
+
+    return (
+      <VStack
+        ref={forwardedRef}
+        background={background}
+        flexGrow={flexGrow}
+        flexShrink={flexShrink}
+        gap={gap}
+        testID={testID}
+        {...props}
+      >
+        {accessory}
+        <VStack flexGrow={1} flexShrink={1} justifyContent="space-between">
+          {buttons}
+        </VStack>
+        {action}
+      </VStack>
+    );
+  },
+);
+
+const NumpadButton = memo(function NumpadButton({
+  value,
+  onPress,
+  onLongPress,
+  separator = '.',
+  hideSeparator = false,
+  disabled,
+  separatorAccessibilityLabel,
+  deleteAccessibilityLabel,
+  feedback,
+}: NumpadButtonProps) {
+  const theme = useTheme();
+  const content = useMemo(() => {
+    if (value === 'DELETE') {
+      return <Icon color="fg" name="backArrow" size="s" />;
+    }
+    return (
+      <Text align="center" font="title2" padding={0}>
+        {value === 'SEPARATOR' ? separator : value}
+      </Text>
+    );
+  }, [separator, value]);
+
+  const handleOnPress = useCallback(() => onPress(value), [onPress, value]);
+
+  const handleLongPress = useCallback(() => onLongPress?.(value), [onLongPress, value]);
+
+  const accessibilityLabel = useMemo(() => {
+    if (value === 'DELETE') return deleteAccessibilityLabel;
+    if (value === 'SEPARATOR') return separatorAccessibilityLabel;
+    return String(value);
+  }, [value, deleteAccessibilityLabel, separatorAccessibilityLabel]);
+
+  const testID = useMemo(() => {
+    if (value === 'DELETE') return 'numpad-back';
+    if (value === 'SEPARATOR') return 'numpad-separator';
+    return `numpad-${value}`;
+  }, [value]);
+
+  const isSeparatorHidden = value === 'SEPARATOR' && (hideSeparator || separator === '');
+
+  const pressableStyles = useMemo(
+    () => ({
+      ...styles.button,
+      opacity: isSeparatorHidden ? 0 : undefined,
+      pointerEvents: isSeparatorHidden ? ('none' as const) : undefined,
+    }),
+    [isSeparatorHidden],
+  );
+
+  return (
+    <Pressable
+      accessibilityElementsHidden={isSeparatorHidden}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="button"
+      accessibilityState={{ disabled }}
+      accessible={isSeparatorHidden ? false : undefined}
+      background="transparent"
+      blendStyles={{ pressedBackground: theme.color.bg, disabledBackground: theme.color.bg }}
+      borderRadius={200}
+      debounceTime={100}
+      disabled={disabled}
+      feedback={feedback}
+      importantForAccessibility={isSeparatorHidden ? 'no-hide-descendants' : undefined}
+      onLongPress={handleLongPress}
+      onPress={handleOnPress}
+      style={pressableStyles}
+      testID={testID}
+    >
+      <View style={styles.content}>{content}</View>
+    </Pressable>
+  );
+});

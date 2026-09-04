@@ -1,0 +1,23 @@
+{
+  "import": "import { TabLabel } from '@coinbase/cds-web/tabs/TabLabel'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tabs/TabLabel.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-tabs-tablabel--default",
+  "description": "A text label component used within tab navigation.",
+  "warning": "This component is deprecated along with the TabNavigation component. Please use the Tabs component and DefaultTab instead.",
+  "relatedComponents": [
+    {
+      "label": "TabNavigation",
+      "url": "/components/navigation/TabNavigation/"
+    },
+    {
+      "label": "TabIndicator",
+      "url": "/components/navigation/TabIndicator/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

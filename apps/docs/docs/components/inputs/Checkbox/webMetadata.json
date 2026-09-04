@@ -1,0 +1,35 @@
+{
+  "import": "import { Checkbox } from '@coinbase/cds-web/controls/Checkbox'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/controls/Checkbox.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-checkbox--normal",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=415-14028&t=8hgl6nX25pIzCo0y-1",
+  "description": "Checkbox is a type of control component that allows user to select one or more options from a set. They can also be used alone to switch between on and off.",
+  "relatedComponents": [
+    {
+      "label": "CheckboxCell",
+      "url": "/components/inputs/CheckboxCell/"
+    },
+    {
+      "label": "CheckboxGroup",
+      "url": "/components/inputs/CheckboxGroup/"
+    },
+    {
+      "label": "ControlGroup",
+      "url": "/components/inputs/ControlGroup/"
+    },
+    {
+      "label": "Radio",
+      "url": "/components/inputs/Radio/"
+    },
+    {
+      "label": "Switch",
+      "url": "/components/inputs/Switch/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

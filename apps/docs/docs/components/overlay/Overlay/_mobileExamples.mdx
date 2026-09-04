@@ -1,0 +1,41 @@
+### Basic usage
+
+```tsx
+function BasicOverlay() {
+  const opacity = useRef(new Animated.Value(0)).current;
+
+  const showOverlay = () => {
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  return (
+    <VStack height={200} position="relative" width="100%">
+      <Button onPress={showOverlay}>Show Overlay</Button>
+      <Text>Content underneath the overlay</Text>
+      <Overlay opacity={opacity} />
+    </VStack>
+  );
+}
+```
+
+### With useOverlayAnimation Hook
+
+```tsx
+function AnimatedOverlay() {
+  const { opacity, show, hide } = useOverlayAnimation();
+
+  return (
+    <VStack height={200} position="relative" width="100%">
+      <Button onPress={show}>Show Overlay</Button>
+      <Text>Content underneath the overlay</Text>
+      <Overlay opacity={opacity} onPress={hide} />
+    </VStack>
+  );
+}
+```
+
+Note: The mobile version of Overlay requires an Animated.Value for opacity transitions. It's recommended to use the `useOverlayAnimation` hook which provides pre-configured animation values and methods.

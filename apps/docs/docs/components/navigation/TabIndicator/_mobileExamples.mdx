@@ -1,0 +1,23 @@
+### Basic Example
+
+```jsx
+function TabIndicatorExample() {
+  const getRandomNumber = () => Math.random() * 100 + 100;
+  const [width, setWidth] = useState(120);
+  const [x, setX] = useState(120);
+
+  const handlePress = () => {
+    setWidth(getRandomNumber());
+    setX(getRandomNumber());
+  };
+
+  return (
+    <VStack padding={4} gap={2} background="bg">
+      <Button onPress={handlePress} block>
+        Randomize
+      </Button>
+      <TabIndicator width={width} x={x} />
+    </VStack>
+  );
+}
+```

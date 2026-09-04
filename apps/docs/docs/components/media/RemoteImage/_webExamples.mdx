@@ -1,0 +1,45 @@
+### Border Color
+
+Adjust the borderColor of RemoteImages
+
+```jsx live
+<RemoteImage source={assets.eth.imageUrl} shape="circle" size="xxxl" borderColor="secondary" />
+```
+
+### size
+
+Adjust size of RemoteImage using AvatarSizes
+
+```jsx live
+<HStack gap={1}>
+  <RemoteImage source={assets.ada.imageUrl} size="m" shape="circle" />
+  <RemoteImage source={assets.eth.imageUrl} size="l" shape="circle" />
+  <RemoteImage source={assets.ltc.imageUrl} size="xl" shape="circle" />
+  <RemoteImage source={assets.sushi.imageUrl} size="xxl" shape="circle" />
+  <RemoteImage source={assets.uni.imageUrl} size="xxxl" shape="circle" />
+</HStack>
+```
+
+### Shape
+
+```jsx live
+<VStack gap={2}>
+  <RemoteImage source={assets.ada.imageUrl} size="xxxl" shape="circle" />
+  <RemoteImage source={squareAssets.human1} size="xxxl" shape="squircle" />
+  <RemoteImage source={squareAssets.human2} size="xxxl" shape="square" />
+  <RemoteImage source={squareAssets.human3} width={40} height={60} shape="rectangle" />
+</VStack>
+```
+
+### Default fallback
+
+If no images are shown, RemoteImage will show a default Fallback. Be aware that a rectangular fallback will truncate content from the fallback to fit the rectangle.
+
+```jsx live
+<VStack gap={2}>
+  <RemoteImage size="m" shape="squircle" />
+  <RemoteImage size="l" shape="circle" />
+  <RemoteImage size="xl" shape="square" />
+  <RemoteImage width={50} height={80} shape="rectangle" />
+</VStack>
+```

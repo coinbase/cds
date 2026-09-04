@@ -1,0 +1,274 @@
+{
+  "name": "@coinbase/cds-web",
+  "version": "9.26.1",
+  "description": "Coinbase Design System - Web",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "packages/web"
+  },
+  "type": "module",
+  "main": "./esm/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./esm/index.js"
+    },
+    "./AccessibilityAnnouncer": {
+      "types": "./dts/AccessibilityAnnouncer/index.d.ts",
+      "default": "./esm/AccessibilityAnnouncer/index.js"
+    },
+    "./accordion": {
+      "types": "./dts/accordion/index.d.ts",
+      "default": "./esm/accordion/index.js"
+    },
+    "./alpha": {
+      "types": "./dts/alpha/index.d.ts",
+      "default": "./esm/alpha/index.js"
+    },
+    "./alpha/combobox": {
+      "types": "./dts/alpha/combobox/index.d.ts",
+      "default": "./esm/alpha/combobox/index.js"
+    },
+    "./alpha/data-card": {
+      "types": "./dts/alpha/data-card/index.d.ts",
+      "default": "./esm/alpha/data-card/index.js"
+    },
+    "./alpha/select": {
+      "types": "./dts/alpha/select/index.d.ts",
+      "default": "./esm/alpha/select/index.js"
+    },
+    "./alpha/select-chip": {
+      "types": "./dts/alpha/select-chip/index.d.ts",
+      "default": "./esm/alpha/select-chip/index.js"
+    },
+    "./alpha/tabbed-chips": {
+      "types": "./dts/alpha/tabbed-chips/index.d.ts",
+      "default": "./esm/alpha/tabbed-chips/index.js"
+    },
+    "./animation": {
+      "types": "./dts/animation/index.d.ts",
+      "default": "./esm/animation/index.js"
+    },
+    "./banner": {
+      "types": "./dts/banner/index.d.ts",
+      "default": "./esm/banner/index.js"
+    },
+    "./buttons": {
+      "types": "./dts/buttons/index.d.ts",
+      "default": "./esm/buttons/index.js"
+    },
+    "./cards": {
+      "types": "./dts/cards/index.d.ts",
+      "default": "./esm/cards/index.js"
+    },
+    "./cards/ContentCard": {
+      "types": "./dts/cards/ContentCard/index.d.ts",
+      "default": "./esm/cards/ContentCard/index.js"
+    },
+    "./cards/MediaCard": {
+      "types": "./dts/cards/MediaCard/index.d.ts",
+      "default": "./esm/cards/MediaCard/index.js"
+    },
+    "./cards/MessagingCard": {
+      "types": "./dts/cards/MessagingCard/index.d.ts",
+      "default": "./esm/cards/MessagingCard/index.js"
+    },
+    "./carousel": {
+      "types": "./dts/carousel/index.d.ts",
+      "default": "./esm/carousel/index.js"
+    },
+    "./cells": {
+      "types": "./dts/cells/index.d.ts",
+      "default": "./esm/cells/index.js"
+    },
+    "./chips": {
+      "types": "./dts/chips/index.d.ts",
+      "default": "./esm/chips/index.js"
+    },
+    "./coachmark": {
+      "types": "./dts/coachmark/index.d.ts",
+      "default": "./esm/coachmark/index.js"
+    },
+    "./collapsible": {
+      "types": "./dts/collapsible/index.d.ts",
+      "default": "./esm/collapsible/index.js"
+    },
+    "./controls": {
+      "types": "./dts/controls/index.d.ts",
+      "default": "./esm/controls/index.js"
+    },
+    "./dates": {
+      "types": "./dts/dates/index.d.ts",
+      "default": "./esm/dates/index.js"
+    },
+    "./dots": {
+      "types": "./dts/dots/index.d.ts",
+      "default": "./esm/dots/index.js"
+    },
+    "./dropdown": {
+      "types": "./dts/dropdown/index.d.ts",
+      "default": "./esm/dropdown/index.js"
+    },
+    "./icons": {
+      "types": "./dts/icons/index.d.ts",
+      "default": "./esm/icons/index.js"
+    },
+    "./illustrations": {
+      "types": "./dts/illustrations/index.d.ts",
+      "default": "./esm/illustrations/index.js"
+    },
+    "./layout": {
+      "types": "./dts/layout/index.d.ts",
+      "default": "./esm/layout/index.js"
+    },
+    "./loaders": {
+      "types": "./dts/loaders/index.d.ts",
+      "default": "./esm/loaders/index.js"
+    },
+    "./media": {
+      "types": "./dts/media/index.d.ts",
+      "default": "./esm/media/index.js"
+    },
+    "./multi-content-module": {
+      "types": "./dts/multi-content-module/index.d.ts",
+      "default": "./esm/multi-content-module/index.js"
+    },
+    "./navigation": {
+      "types": "./dts/navigation/index.d.ts",
+      "default": "./esm/navigation/index.js"
+    },
+    "./numbers": {
+      "types": "./dts/numbers/index.d.ts",
+      "default": "./esm/numbers/index.js"
+    },
+    "./numbers/RollingNumber": {
+      "types": "./dts/numbers/RollingNumber/index.d.ts",
+      "default": "./esm/numbers/RollingNumber/index.js"
+    },
+    "./overlays": {
+      "types": "./dts/overlays/index.d.ts",
+      "default": "./esm/overlays/index.js"
+    },
+    "./page": {
+      "types": "./dts/page/index.d.ts",
+      "default": "./esm/page/index.js"
+    },
+    "./pagination": {
+      "types": "./dts/pagination/index.d.ts",
+      "default": "./esm/pagination/index.js"
+    },
+    "./section-header": {
+      "types": "./dts/section-header/index.d.ts",
+      "default": "./esm/section-header/index.js"
+    },
+    "./stepper": {
+      "types": "./dts/stepper/index.d.ts",
+      "default": "./esm/stepper/index.js"
+    },
+    "./system": {
+      "types": "./dts/system/index.d.ts",
+      "default": "./esm/system/index.js"
+    },
+    "./tables": {
+      "types": "./dts/tables/index.d.ts",
+      "default": "./esm/tables/index.js"
+    },
+    "./tabs": {
+      "types": "./dts/tabs/index.d.ts",
+      "default": "./esm/tabs/index.js"
+    },
+    "./tag": {
+      "types": "./dts/tag/index.d.ts",
+      "default": "./esm/tag/index.js"
+    },
+    "./tour": {
+      "types": "./dts/tour/index.d.ts",
+      "default": "./esm/tour/index.js"
+    },
+    "./typography": {
+      "types": "./dts/typography/index.d.ts",
+      "default": "./esm/typography/index.js"
+    },
+    "./visualizations/chart": {
+      "types": "./dts/visualizations/chart/index.d.ts",
+      "default": "./esm/visualizations/chart/index.js"
+    },
+    "./visualizations/sparkline": {
+      "types": "./dts/visualizations/sparkline/index.d.ts",
+      "default": "./esm/visualizations/sparkline/index.js"
+    },
+    "./visualizations": {
+      "types": "./dts/visualizations/index.d.ts",
+      "default": "./esm/visualizations/index.js"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./esm/*.js"
+    }
+  },
+  "sideEffects": [
+    "*.css",
+    "./esm/defaultFontStyles.js",
+    "./esm/styles/defaultFont.js",
+    "./esm/globalStyles.js",
+    "./esm/styles/global.js"
+  ],
+  "files": [
+    "dts",
+    "esm",
+    "CHANGELOG"
+  ],
+  "peerDependencies": {
+    "framer-motion": "^10.18.0",
+    "react": "^18.0.0 || ~19.1.2",
+    "react-dom": "^18.0.0 || ~19.1.2"
+  },
+  "dependencies": {
+    "@coinbase/cds-common": "workspace:^",
+    "@coinbase/cds-icons": "workspace:^",
+    "@coinbase/cds-illustrations": "workspace:^",
+    "@coinbase/cds-lottie-files": "workspace:^",
+    "@coinbase/cds-utils": "workspace:^",
+    "@floating-ui/react-dom": "^2.1.1",
+    "@popperjs/core": "^2.9.0",
+    "@react-spring/web": "^9.7.4",
+    "d3-color": "^3.1.0",
+    "d3-interpolate": "^3.0.1",
+    "d3-interpolate-path": "^2.3.0",
+    "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.1",
+    "fuse.js": "^7.1.0",
+    "lodash": "^4.17.21",
+    "lottie-web": "^5.13.0",
+    "react-popper": "^2.2.4",
+    "react-use-measure": "^2.1.7",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@coinbase/cds-web-utils": "workspace:^",
+    "@linaria/core": "^3.0.0-beta.22",
+    "@linaria/shaker": "^3.0.0-beta.22",
+    "@storybook/jest": "^0.2.3",
+    "@storybook/react": "^9.1.2",
+    "@storybook/testing-library": "^0.2.2",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.0.4",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "csstype": "^3.1.3",
+    "framer-motion": "^10.18.0",
+    "glob": "^10.3.10",
+    "react": "19.1.2",
+    "react-dom": "19.1.2",
+    "storybook-addon-performance": "^0.16.1",
+    "typescript": "~5.9.2",
+    "zx": "^8.1.9"
+  }
+}

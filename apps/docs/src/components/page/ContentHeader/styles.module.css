@@ -1,0 +1,18 @@
+.importText {
+  display: block;
+  max-width: calc(100% - 40px - var(--space-2));
+  min-width: 0;
+  margin: 0;
+  overflow: auto;
+  white-space: nowrap;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.importText > * {
+  padding-inline-end: 40px;
+}
+
+.importText::-webkit-scrollbar {
+  display: none;
+}

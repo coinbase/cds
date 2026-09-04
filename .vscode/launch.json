@@ -1,0 +1,41 @@
+{
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "cds-vscode-plugin:client",
+      "type": "extensionHost",
+      "request": "launch",
+      "runtimeExecutable": "${execPath}/packages/vscode-plugin",
+      "args": [
+        "--extensionDevelopmentPath=${workspaceFolder}/packages/vscode-plugin"
+      ],
+      "outFiles": [
+        "${workspaceFolder}/packages/vscode-plugin/dist/**/*.js"
+      ],
+      "preLaunchTask": "cds-vscode-plugin:watch",
+      "postDebugTask": "cds-vscode-plugin:stop-watch"
+    },
+    {
+      "name": "cds-vscode-plugin:server",
+      "type": "node",
+      "request": "attach",
+      "port": 6009,
+      "restart": true,
+      "outFiles": [
+        "${workspaceFolder}/packages/vscode-plugin/dist/**/*.js"
+      ]
+    }
+  ],
+  "compounds": [
+    {
+      "name": "cds-vscode-plugin:debug",
+      "configurations": [
+        "cds-vscode-plugin:client",
+        "cds-vscode-plugin:server"
+      ]
+    }
+  ]
+}

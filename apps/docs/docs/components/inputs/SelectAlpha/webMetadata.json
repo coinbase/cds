@@ -1,0 +1,18 @@
+{
+  "import": "import { Select } from '@coinbase/cds-web/alpha/select'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/alpha/select/Select.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-alpha-select-singleselect--default",
+  "description": "A flexible select component for both single and multi-selection, built for web applications with comprehensive accessibility support.",
+  "alpha": true,
+  "relatedComponents": [],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    },
+    {
+      "name": "react-dom",
+      "version": "^18.0.0 || ~19.1.2"
+    }
+  ]
+}

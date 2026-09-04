@@ -1,0 +1,151 @@
+import { memo, useCallback, useEffect, useMemo, useRef } from 'react';
+
+import { NativeInput } from '../../controls/NativeInput';
+import { HStack } from '../../layout/HStack';
+import { NAVIGATION_KEYS } from '../../overlays/FocusTrap';
+import { Text } from '../../typography/Text';
+import { DefaultSelectControl } from '../select/DefaultSelectControl';
+import type { SelectType } from '../select/types';
+
+import type { ComboboxControlComponent, ComboboxControlProps } from './Combobox';
+
+const hasSelectedValue = (currentValue: unknown): boolean =>
+  currentValue !== null &&
+  typeof currentValue !== 'undefined' &&
+  !(Array.isArray(currentValue) && currentValue.length === 0);
+
+export const DefaultComboboxControl = memo(
+  <Type extends SelectType = 'single', SelectOptionValue extends string = string>({
+    SelectControlComponent = DefaultSelectControl,
+    value,
+    placeholder,
+    controlRef,
+    hideSearchInput,
+    options,
+    open,
+    setOpen,
+    compact,
+    align,
+    searchText,
+    onSearch,
+    font = 'body',
+    accessibilityLabel,
+    ...props
+  }: ComboboxControlProps<Type, SelectOptionValue>) => {
+    const searchInputRef = useRef<HTMLInputElement | null>(null);
+    const hasValue = hasSelectedValue(value);
+    const shouldShowSearchInput = !hideSearchInput && (!hasValue || open);
+
+    useEffect(() => {
+      if (shouldShowSearchInput && open) {
+        searchInputRef.current?.focus();
+      }
+    }, [shouldShowSearchInput, open]);
+
+    const handleSearchChange = useCallback(
+      (event: React.ChangeEvent<HTMLInputElement>) => {
+        onSearch(event.target.value);
+      },
+      [onSearch],
+    );
+
+    const handleSearchClick = useCallback(
+      (event: React.MouseEvent<HTMLInputElement>) => {
+        event.stopPropagation();
+        setOpen(true);
+      },
+      [setOpen],
+    );
+
+    const computedAccessibilityLabel = useMemo(() => {
+      let label = accessibilityLabel;
+      if (!hasValue && typeof placeholder === 'string') {
+        label = `${label}, ${placeholder}`;
+      }
+      return label;
+    }, [hasValue, accessibilityLabel, placeholder]);
+
+    return (
+      <SelectControlComponent
+        ref={controlRef.current?.refs.setReference}
+        accessibilityLabel={computedAccessibilityLabel}
+        align={align}
+        compact={compact}
+        font={font}
+        open={open}
+        options={options}
+        role="combobox"
+        setOpen={setOpen}
+        value={value}
+        {...props}
+        contentNode={
+          shouldShowSearchInput ? (
+            <HStack flexGrow={1} flexWrap="wrap" width="100%">
+              <NativeInput
+                ref={searchInputRef}
+                font={font}
+                onChange={handleSearchChange}
+                onClick={handleSearchClick}
+                onKeyDown={(event) => {
+                  if (!NAVIGATION_KEYS.includes(event.key)) {
+                    event.stopPropagation();
+                  }
+                  if (
+                    event.key === 'Enter' ||
+                    (!NAVIGATION_KEYS.includes(event.key) && !event.shiftKey)
+                  ) {
+                    setOpen(true);
+                  }
+                }}
+                placeholder={typeof placeholder === 'string' ? placeholder : undefined}
+                style={{
+                  // unset default padding to let DefaultSelectControl handle layout/spacing
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                  paddingTop: 0,
+                  paddingBottom: 0,
+                  minWidth: 0,
+                  flexGrow: 1,
+                  width: '100%',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                  textAlign: align,
+                }}
+                tabIndex={0}
+                value={searchText}
+              />
+            </HStack>
+          ) : (
+            <>
+              {hasValue ? null : (
+                <Text
+                  as="p"
+                  color="fgMuted"
+                  display="block"
+                  font={font}
+                  overflow="truncate"
+                  paddingY={0}
+                  textAlign={align}
+                >
+                  {placeholder}
+                </Text>
+              )}
+            </>
+          )
+        }
+        styles={{
+          ...props.styles,
+          controlEndNode: {
+            ...props.styles?.controlEndNode,
+            alignItems: hasValue && shouldShowSearchInput ? 'flex-end' : 'center',
+          },
+          controlValueNode: {
+            ...props.styles?.controlValueNode,
+          },
+        }}
+        tabIndex={shouldShowSearchInput ? -1 : 0}
+      />
+    );
+  },
+) as ComboboxControlComponent;

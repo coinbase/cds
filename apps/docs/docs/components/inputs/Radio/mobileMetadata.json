@@ -1,0 +1,34 @@
+{
+  "import": "import { Radio } from '@coinbase/cds-mobile/controls/Radio'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/controls/Radio.tsx",
+  "description": "Radio is a control component that allows users to select one option from a set of mutually exclusive options.",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=465-13782&t=DfwvmXdSSL0yIBag-0",
+  "relatedComponents": [
+    {
+      "label": "Checkbox",
+      "url": "/components/inputs/Checkbox"
+    },
+    {
+      "label": "ControlGroup",
+      "url": "/components/inputs/ControlGroup"
+    },
+    {
+      "label": "RadioCell",
+      "url": "/components/inputs/RadioCell"
+    },
+    {
+      "label": "RadioGroup",
+      "url": "/components/inputs/RadioGroup"
+    },
+    {
+      "label": "Switch",
+      "url": "/components/inputs/Switch"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "15.12.1"
+    }
+  ]
+}

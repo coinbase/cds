@@ -1,0 +1,43 @@
+{
+  "name": "cds-android",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "library",
+  "sourceRoot": "packages/cds-android/src",
+  "tags": [
+    "platform:android",
+    "toolchain:gradle"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./android/gradlew -p android :cds:assembleRelease",
+        "cwd": "."
+      },
+      "dependsOn": [],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/android/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/outputs"
+      ],
+      "cache": true
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "./android/gradlew -p android :cds:test"
+      },
+      "dependsOn": [],
+      "inputs": [
+        "default",
+        "{workspaceRoot}/android/**/*"
+      ],
+      "outputs": [
+        "{projectRoot}/build/reports/tests"
+      ],
+      "cache": true
+    }
+  }
+}

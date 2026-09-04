@@ -1,0 +1,25 @@
+{
+  "import": "import { MediaChip } from '@coinbase/cds-web/chips/MediaChip'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/chips/MediaChip.tsx",
+  "description": "A chip with spacing optimized for displaying circular asset media and CTA accessories. Automatically adjusts padding based on content configuration.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-chips-mediachip--default",
+  "relatedComponents": [
+    {
+      "label": "Chip",
+      "url": "/components/inputs/Chip/"
+    },
+    {
+      "label": "InputChip",
+      "url": "/components/inputs/InputChip/"
+    },
+    {
+      "label": "SelectChip",
+      "url": "/components/inputs/SelectChip/"
+    },
+    {
+      "label": "TabbedChips",
+      "url": "/components/navigation/TabbedChips/"
+    }
+  ],
+  "dependencies": []
+}

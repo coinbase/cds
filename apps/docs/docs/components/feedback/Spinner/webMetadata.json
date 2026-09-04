@@ -1,0 +1,26 @@
+{
+  "import": "import { Spinner } from '@coinbase/cds-web/loaders/Spinner'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/loaders/Spinner.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-loaders-spinner--spinner-default",
+  "description": "A loading indicator that displays a rotating animation to communicate that content is loading or a background process is in progress.",
+  "warning": "This component is deprecated. Use indeterminate ProgressCircle for loading indicators instead.",
+  "relatedComponents": [
+    {
+      "label": "Fallback",
+      "url": "/components/feedback/Fallback/"
+    },
+    {
+      "label": "ProgressBar",
+      "url": "/components/feedback/ProgressBar/"
+    },
+    {
+      "label": "ProgressCircle",
+      "url": "/components/feedback/ProgressCircle/"
+    },
+    {
+      "label": "Button",
+      "url": "/components/inputs/Button/"
+    }
+  ],
+  "dependencies": []
+}

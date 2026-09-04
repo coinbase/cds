@@ -1,0 +1,137 @@
+import React, { memo, useCallback, useEffect, useImperativeHandle } from 'react';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type {
+  ToastBaseProps as CommonToastBaseProps,
+  ToastRefHandle,
+} from '@coinbase/cds-common/overlays/ToastProvider';
+import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
+
+import { Button } from '../buttons/Button';
+import { useA11y } from '../hooks/useA11y';
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { Box, type BoxProps } from '../layout/Box';
+import { HStack } from '../layout/HStack';
+import { ColorSurge } from '../motion/ColorSurge';
+import { Text } from '../typography/Text';
+
+import { useToastAnimation } from './useToastAnimation';
+import { useToastPanResponder } from './useToastPanResponder';
+
+export type ToastBaseProps = CommonToastBaseProps;
+export type ToastProps = ToastBaseProps & BoxProps;
+
+export const Toast = memo(
+  ({
+    ref,
+    ..._props
+  }: ToastProps & {
+    ref?: React.Ref<ToastRefHandle>;
+  }) => {
+    const mergedProps = useComponentConfig('Toast', _props);
+    const {
+      text,
+      action,
+      onWillHide,
+      onDidHide,
+      bottomOffset,
+      variant,
+      accessibilityLabel,
+      ...props
+    } = mergedProps;
+    const { bottom: safeAreaBottom } = useSafeAreaInsets();
+    const [{ opacity, bottom }, animateIn, animateOut] = useToastAnimation();
+    const { announceForA11y } = useA11y();
+    const defaultA11yLabel = text + (action ? action.label : '');
+
+    useEffect(() => {
+      animateIn.start(({ finished }) => {
+        if (finished) {
+          // announce toast copy and action label to screen reader
+          announceForA11y(accessibilityLabel ?? defaultA11yLabel);
+        }
+      });
+    }, [animateIn, text, action, accessibilityLabel, defaultA11yLabel, announceForA11y]);
+
+    const handleClose = useCallback(async (): Promise<boolean> => {
+      onWillHide?.();
+
+      return new Promise((resolve) => {
+        animateOut.start(({ finished }) => {
+          if (finished) {
+            onDidHide?.();
+            resolve(finished);
+          }
+        });
+      });
+    }, [onWillHide, onDidHide, animateOut]);
+
+    const { panHandlers, panResponderAnimation } = useToastPanResponder({
+      onWillHide,
+      onDidHide,
+    });
+
+    useImperativeHandle(
+      ref,
+      () => ({
+        hide: handleClose,
+      }),
+      [handleClose],
+    );
+
+    const handleActionPress = useCallback(() => {
+      action?.onPress();
+      void handleClose();
+    }, [action, handleClose]);
+
+    return (
+      <Box
+        accessibilityRole="alert"
+        alignSelf="center"
+        bottom={(bottomOffset as number) ?? safeAreaBottom}
+        maxWidth="100%"
+        padding={2}
+        position="absolute"
+        style={{
+          // display on android
+          elevation: zIndex.portal,
+        }}
+        zIndex={zIndex.portal}
+        {...props}
+      >
+        <HStack
+          animated
+          bordered
+          alignItems="center"
+          background="bgAlternate"
+          borderRadius={200}
+          elevation={2}
+          overflow="hidden"
+          paddingEnd={1}
+          paddingStart={3}
+          paddingY={1}
+          style={{
+            opacity,
+            transform: [{ translateY: bottom }, ...panResponderAnimation],
+          }}
+          {...panHandlers}
+        >
+          <ColorSurge background={variant} />
+          {/* avoid pushing contents off screen */}
+          <Box accessible flexShrink={1} paddingEnd={2} paddingY={1}>
+            <Text font="headline">{text}</Text>
+          </Box>
+          {!!action && (
+            <Button
+              transparent
+              onPress={handleActionPress}
+              size="s"
+              testID={action.testID ?? 'toast-action'}
+            >
+              {action.label}
+            </Button>
+          )}
+        </HStack>
+      </Box>
+    );
+  },
+);

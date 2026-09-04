@@ -1,0 +1,47 @@
+### Basic example
+
+```jsx
+<SpotRectangle name="creditCardExcitement" />
+```
+
+### `scaleMultiplier` prop
+
+If no predefined dimensions fit your use case, you can use the `scaleMultiplier` prop to scale the illustration.
+
+Use `scaleMultiplier` sparingly and with caution. We have predefined dimensions to ensure that illustrations scale elegantly.
+
+```jsx
+<SpotRectangle name="creditCardExcitement" scaleMultiplier={1.5} />
+```
+
+### Scaling with dimension
+
+If `dimension` and `scaleMultiplier` are both provided the component will scale based on the provided dimension.
+
+```jsx
+<SpotRectangle name="creditCardExcitement" dimension="240x120" scaleMultiplier={1.5} />
+```
+
+## Theming
+
+Use the `applyTheme` prop to enable dynamic theming. When set, the illustration is colored by the active `ThemeProvider`'s illustration palette instead of using the hardcoded light or dark variant.
+
+```jsx
+const customTheme = {
+  ...defaultTheme,
+  lightIllustrationColor: {
+    ...defaultTheme.lightIllustrationColor,
+    primary: 'rgb(220, 38, 38)',
+    accent1: 'rgb(124, 58, 237)',
+  },
+  darkIllustrationColor: {
+    ...defaultTheme.darkIllustrationColor,
+    primary: 'rgb(248, 113, 113)',
+    accent1: 'rgb(167, 139, 250)',
+  },
+};
+
+<ThemeProvider activeColorScheme="light" theme={customTheme}>
+  <SpotRectangle applyTheme name="creditCardExcitement" />
+</ThemeProvider>;
+```

@@ -1,0 +1,37 @@
+---
+id: useOverlayContentContext
+title: useOverlayContentContext
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { HooksBanner } from '@site/src/components/page/ComponentBanner/HooksBanner';
+import { HookTabsContainer } from '@site/src/components/page/HookTabsContainer';
+
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import WebApi, { toc as webApiToc } from './_webApi.mdx';
+import MobileApi, { toc as mobileApiToc } from './_mobileApi.mdx';
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader
+    title="useOverlayContentContext"
+    banner={<HooksBanner />}
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+  />
+  <HookTabsContainer
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webApi={<WebApi />}
+    webApiToc={webApiToc}
+    mobileExamples={<MobileExamples />}
+    mobileExamplesToc={mobileExamplesToc}
+    mobileApi={<MobileApi />}
+    mobileApiToc={mobileApiToc}
+  />
+</VStack>

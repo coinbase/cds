@@ -1,0 +1,164 @@
+import React, { forwardRef, memo, useCallback } from 'react';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
+import { type TabValue } from '@coinbase/cds-common/tabs/useTabs';
+import { css } from '@linaria/core';
+
+import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { Box } from '../layout/Box';
+import type { ResponsiveProp } from '../styles/styleProps';
+import { Pressable, type PressableBaseProps } from '../system/Pressable';
+import { Text } from '../typography/Text';
+
+const insetFocusRingCss = css`
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible {
+    outline-style: solid;
+    outline-width: 2px;
+    outline-color: var(--color-bgPrimary);
+    outline-offset: 0;
+  }
+`;
+
+const buttonCss = css`
+  position: relative;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: var(--borderRadius-1000);
+`;
+
+const buttonDisabledCss = css`
+  cursor: default;
+  pointer-events: none;
+  touch-action: none;
+`;
+
+export type SegmentedTabBaseProps<TabId extends string = string> = PressableBaseProps &
+  TabValue<TabId> & {
+    /**
+     * Text color when active.
+     * @default fgInverse
+     */
+    activeColor?: ResponsiveProp<ThemeVars.Color>;
+    /**
+     * Text color when inactive.
+     * @default fg
+     */
+    color?: ResponsiveProp<ThemeVars.Color>;
+  };
+
+export type SegmentedTabProps<TabId extends string = string> = SegmentedTabBaseProps<TabId> & {
+  /** Callback that is fired when the SegmentedTab is clicked. */
+  onClick?: (id: TabId, event: React.MouseEvent) => void;
+};
+
+const disabledCss = css`
+  opacity: 0.5;
+`;
+
+type SegmentedTabComponent = <TabId extends string = string>(
+  props: SegmentedTabProps<TabId> & { ref?: React.ForwardedRef<HTMLButtonElement> },
+) => React.ReactElement;
+
+const SegmentedTabComponent = memo(
+  forwardRef(
+    <TabId extends string>(
+      _props: SegmentedTabProps<TabId>,
+      ref: React.ForwardedRef<HTMLButtonElement>,
+    ) => {
+      const mergedProps = useComponentConfig('SegmentedTab', _props);
+      const {
+        id,
+        label,
+        disabled: disabledProp,
+        onClick,
+        color = 'fg',
+        activeColor = 'fgInverse',
+        className,
+        testID,
+        font = 'headline',
+        fontFamily,
+        fontSize,
+        fontWeight,
+        lineHeight,
+        textAlign,
+        textTransform,
+        ...props
+      } = mergedProps;
+      const { activeTab, updateActiveTab, disabled: allTabsDisabled } = useTabsContext<TabId>();
+      const isActive = activeTab?.id === id;
+      const isDisabled = disabledProp || allTabsDisabled;
+
+      const handlePress = useCallback(
+        (event: React.MouseEvent) => {
+          updateActiveTab(id);
+          onClick?.(id, event);
+        },
+        [id, updateActiveTab, onClick],
+      );
+
+      return (
+        <Pressable
+          ref={ref}
+          aria-selected={isActive}
+          className={cx(
+            insetFocusRingCss,
+            buttonCss,
+            isDisabled && buttonDisabledCss,
+            disabledProp && !allTabsDisabled && disabledCss,
+            className,
+          )}
+          data-testid={testID}
+          disabled={isDisabled}
+          font={font}
+          fontFamily={fontFamily}
+          fontSize={fontSize}
+          fontWeight={fontWeight}
+          id={id}
+          justifyContent="center"
+          lineHeight={lineHeight}
+          onClick={handlePress}
+          role="tab"
+          textAlign={textAlign}
+          textTransform={textTransform}
+          type="button"
+          {...props}
+        >
+          <Box
+            as="span"
+            color={isActive ? activeColor : color}
+            justifyContent="center"
+            paddingX={2}
+            paddingY={1}
+          >
+            {typeof label === 'string' ? (
+              <Text
+                color="currentColor"
+                font={font}
+                fontFamily={fontFamily}
+                fontSize={fontSize}
+                fontWeight={fontWeight}
+                lineHeight={lineHeight}
+                textAlign={textAlign}
+                textTransform={textTransform}
+              >
+                {label}
+              </Text>
+            ) : (
+              label
+            )}
+          </Box>
+        </Pressable>
+      );
+    },
+  ),
+);
+
+SegmentedTabComponent.displayName = 'SegmentedTab';
+
+export const SegmentedTab = SegmentedTabComponent as SegmentedTabComponent;

@@ -1,0 +1,100 @@
+### Placements
+
+```jsx
+function Placements() {
+  const PIN_DIRECTIONS = ['top-start', 'top-end', 'bottom-start', 'bottom-end'];
+  return (
+    <VStack gap={4}>
+      {PIN_DIRECTIONS.map((pinDirection) => (
+        <VStack gap={4} padding={1} key={`dotsymbol-placement-${pinDirection}`} paddingBottom={4}>
+          <DotSymbol size="m" pin={pinDirection} source={assets.btc.imageUrl}>
+            <VStack bordered padding={1}>
+              Child
+            </VStack>
+          </DotSymbol>
+          <DotSymbol size="m" pin={pinDirection} source={assets.btc.imageUrl}>
+            <Icon name="airdrop" shape="square" size="l" />
+          </DotSymbol>
+        </VStack>
+      ))}
+    </ResponsiveExample>
+  );
+}
+```
+
+### Sizes
+
+```jsx
+function Sizes() {
+  const SIZES = ['xs', 's', 'm', 'l'];
+  return (
+    <VStack gap={2}>
+      {SIZES.map((size) => (
+        <VStack gap={1} key={`dotsymbol-size-${size}`}>
+          <DotSymbol source={assets.btc.imageUrl} size={size} />
+        </VStack>
+      ))}
+    </ResponsiveExample>
+  );
+}
+```
+
+### Dotting relative to shape of child
+
+You can use the overlap prop to place the dot relative to the corner of the wrapped element.
+
+```jsx
+function DottingRelativeToShapeOfChild() {
+  return (
+    <VStack gap={2}>
+      <HStack gap={2}>
+        <DotSymbol source={assets.eth.imageUrl} overlap="circular" pin="bottom-end" size="m">
+          <Avatar src={assets.btc.imageUrl} size="xxxl" />
+        </DotSymbol>
+        <DotSymbol source={assets.eth.imageUrl} overlap="circular" pin="bottom-end" size="l">
+          <Avatar src={assets.btc.imageUrl} size="xxxl" />
+        </DotSymbol>
+      </HStack>
+    </VStack>
+  );
+}
+```
+
+### Use DotSymbol paired with Icon
+
+```jsx
+function UseDotSymbolPairedWithIcon() {
+  return (
+    <VStack gap={1}>
+      <DotSymbol
+        overlap="circular"
+        active
+        iconName="lightningBolt"
+        pin="bottom-end"
+        size={avatarIconSizeMap['xxxl']}
+      >
+        <Avatar source={assets.dai.imageUrl} size="xxxl" />
+      </DotSymbol>
+    </VStack>
+  );
+}
+```
+
+### Use DotSymbol paired with another Asset
+
+```jsx
+function UseDotSymbolPairedWithAnotherAsset() {
+  return (
+    <VStack>
+      <DotSymbol
+        overlap="circular"
+        pin="bottom-end"
+        source={assets.polygon.imageUrl}
+        size={avatarDotSizeMap['xxxl']}
+      >
+        <Avatar source={assets.dai.imageUrl} size="xxxl" />
+      </DotSymbol>
+    </ResponsiveExample>
+  );
+}
+```

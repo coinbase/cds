@@ -1,0 +1,27 @@
+.cardWrapper {
+  cursor: pointer;
+  transition: background-color ease-out 300ms;
+}
+
+.cardBannerArtOverlay {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  transition: opacity ease-out 300ms;
+}
+
+.cardWrapper:hover,
+.cardWrapper:active,
+.cardWrapper:focus {
+  .cardBannerArtOverlay {
+    opacity: 1;
+  }
+}
+
+.cardBannerArt {
+  height: 150px;
+  background-size: cover;
+  background-position: center;
+  flex: 1 1 auto;
+}

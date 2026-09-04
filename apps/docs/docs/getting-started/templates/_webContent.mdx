@@ -1,0 +1,148 @@
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { TemplateCard } from '@site/src/components/page/TemplateCard';
+import { HStack } from '@coinbase/cds-web/layout';
+import ThemedImage from '@theme/ThemedImage';
+
+<MDXSection>
+<MDXArticle>
+
+## Get started
+
+The easiest way to get started with CDS is with a template. All templates include the required CDS packages, dependencies, and pre-configured settings. Each template provides a working example application with common UI patterns to help you start building.
+
+<HStack gap={2} style={{ marginTop: '1.5rem', flexWrap: 'wrap', alignItems: 'stretch' }}>
+  <TemplateCard
+    description="Built for web applications with SSR and full-stack capabilities"
+    href="https://github.com/coinbase/cds/tree/master/templates/next-app"
+    icon={
+      <ThemedImage
+        sources={{
+          light: '/img/logos/frameworks/nextjs_light.png',
+          dark: '/img/logos/frameworks/nextjs_dark.png',
+        }}
+        alt="Next.js"
+        style={{ paddingTop: 'var(--space-1_5)', paddingBottom: 'var(--space-1_5)' }}
+        height="100%"
+      />
+    }
+  />
+  <TemplateCard
+    name="Vite"
+    description="Built for fast, modern single page applications"
+    href="https://github.com/coinbase/cds/tree/master/templates/vite-app"
+    icon={
+      <ThemedImage
+        sources={{
+          light: '/img/logos/frameworks/vite.png',
+          dark: '/img/logos/frameworks/vite.png',
+        }}
+        alt=""
+        style={{ paddingTop: 'var(--space-0_5)', paddingBottom: 'var(--space-0_5)' }}
+        height="100%"
+      />
+    }
+  />
+  <TemplateCard
+    description="Built for customizable build setups"
+    href="https://github.com/coinbase/cds/tree/master/templates/webpack-app"
+    icon={
+      <ThemedImage
+        sources={{
+          light: '/img/logos/frameworks/webpack_light.png',
+          dark: '/img/logos/frameworks/webpack_dark.png',
+        }}
+        alt="Webpack"
+        height="100%"
+      />
+    }
+  />
+</HStack>
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Installation
+
+To create a new project from a template, use `gitpick` to bootstrap your application:
+
+### Next.js
+
+```bash
+npx -y gitpick coinbase/cds/tree/master/templates/next-app cds-next
+cd cds-next
+```
+
+### Vite
+
+```bash
+npx -y gitpick coinbase/cds/tree/master/templates/vite-app cds-vite
+cd cds-vite
+```
+
+### Webpack
+
+```bash
+npx -y gitpick coinbase/cds/tree/master/templates/webpack-app cds-webpack
+cd cds-webpack
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Setup
+
+After creating your project, install dependencies and start developing:
+
+```bash
+# We suggest using nvm to manage Node.js versions
+nvm install
+nvm use
+
+# Enable corepack for package manager setup
+corepack enable
+
+# Install dependencies
+yarn
+
+# Start development server
+yarn dev
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## What's included
+
+All templates come pre-configured with:
+
+- Latest CDS packages (`@coinbase/cds-web`, `@coinbase/cds-icons`, etc.)
+- TypeScript configuration
+- Example components demonstrating common UI patterns
+- Theme setup with CDS default theme
+- Responsive layouts using CDS layout components
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Next steps
+
+After setting up your template, learn how to customize and extend CDS:
+
+- [Theming](/getting-started/theming) - Customize colors, spacing, and typography
+- [Installation](/getting-started/installation) - Manual installation and setup options
+
+</MDXArticle>
+</MDXSection>

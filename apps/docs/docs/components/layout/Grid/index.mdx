@@ -1,0 +1,29 @@
+---
+id: grid
+title: Grid
+platform_switcher_options: { web: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import WebPropsTable from './_webPropsTable.mdx';
+import webPropsToc from ':docgen/web/layout/Grid/toc-props';
+
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+
+import { sharedParentTypes } from ':docgen/_types/sharedParentTypes';
+import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
+import { VStack } from '@coinbase/cds-web/layout';
+import webMetadata from './webMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader title="Grid" webMetadata={webMetadata} />
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webPropsToc={webPropsToc}
+  />
+</VStack>

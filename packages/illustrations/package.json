@@ -1,0 +1,44 @@
+{
+  "name": "@coinbase/cds-illustrations",
+  "version": "4.48.0",
+  "description": "CDS illustrations",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "packages/illustrations"
+  },
+  "type": "module",
+  "main": "./esm/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./esm/index.js"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./esm/*.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dts",
+    "esm",
+    "CHANGELOG"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@cds/figma-api": "workspace:^",
+    "@figma/rest-api-spec": "^0.34.0",
+    "@types/lodash": "^4.14.178",
+    "chalk": "^4.1.2",
+    "lodash": "^4.17.21",
+    "prettier": "^3.6.2",
+    "sharp": "^0.35.4",
+    "svgo": "^3.0.2"
+  }
+}

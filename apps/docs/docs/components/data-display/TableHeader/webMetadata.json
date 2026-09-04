@@ -1,0 +1,36 @@
+{
+  "import": "import { TableHeader } from '@coinbase/cds-web/tables/TableHeader'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tables/TableHeader.tsx",
+  "description": "Defines the header section of Table.",
+  "relatedComponents": [
+    {
+      "label": "Table",
+      "url": "/components/data-display/Table"
+    },
+    {
+      "label": "TableBody",
+      "url": "/components/data-display/TableBody"
+    },
+    {
+      "label": "TableCaption",
+      "url": "/components/data-display/TableCaption"
+    },
+    {
+      "label": "TableCell",
+      "url": "/components/data-display/TableCell"
+    },
+    {
+      "label": "TableCellFallback",
+      "url": "/components/data-display/TableCellFallback"
+    },
+    {
+      "label": "TableFooter",
+      "url": "/components/data-display/TableFooter"
+    },
+    {
+      "label": "TableRow",
+      "url": "/components/data-display/TableRow"
+    }
+  ],
+  "dependencies": []
+}

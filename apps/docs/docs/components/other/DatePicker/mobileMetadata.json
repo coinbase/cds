@@ -1,0 +1,30 @@
+{
+  "import": "import { DatePicker } from '@coinbase/cds-mobile/dates/DatePicker'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/dates/DatePicker.tsx",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=14743-52589",
+  "description": "Date Picker allows our global users to input past, present, future and important dates into our interface in a simple and intuitive manner. Date Picker offers both manual and calendar entry options - accommodating both internationalization and accessibility needs.",
+  "relatedComponents": [
+    {
+      "label": "DateInput",
+      "url": "/components/other/DateInput/"
+    },
+    {
+      "label": "Calendar",
+      "url": "/components/other/Calendar/"
+    },
+    {
+      "label": "TextInput",
+      "url": "/components/inputs/TextInput/"
+    },
+    {
+      "label": "Modal",
+      "url": "/components/overlay/Modal/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-safe-area-context",
+      "version": "5.6.0"
+    }
+  ]
+}

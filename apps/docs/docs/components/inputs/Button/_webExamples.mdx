@@ -1,0 +1,290 @@
+Buttons allow users to take actions and make choices with a single tap. They communicate what action will occur when the user interacts with them.
+
+## Basics
+
+The only required prop is `children`, which is the button's label. Buttons default to the `primary` variant.
+
+```jsx live
+<Button onClick={console.log}>Get started</Button>
+```
+
+## Variants
+
+Use variants to communicate the importance and intent of an action.
+
+- **Primary** — High emphasis for main actions like "Save" or "Confirm". Limit to one per screen.
+- **Secondary** — Medium emphasis for multiple actions of equal weight.
+- **Tertiary** — Low emphasis with a muted background.
+- **Inverse** — High contrast with inverted background.
+- **Negative** — Destructive actions that can't be undone. Use sparingly.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap">
+  <Button onClick={console.log} variant="primary">
+    Primary
+  </Button>
+  <Button onClick={console.log} variant="secondary">
+    Secondary
+  </Button>
+  <Button onClick={console.log} variant="tertiary">
+    Tertiary
+  </Button>
+  <Button onClick={console.log} variant="inverse">
+    Inverse
+  </Button>
+  <Button onClick={console.log} variant="negative">
+    Negative
+  </Button>
+</HStack>
+```
+
+### Transparent
+
+Use transparent buttons for supplementary actions with lower prominence. The container is only visible on interaction. Works with any variant.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap">
+  <Button onClick={console.log} transparent>
+    Primary
+  </Button>
+  <Button onClick={console.log} variant="secondary" transparent>
+    Secondary
+  </Button>
+  <Button onClick={console.log} variant="tertiary" transparent>
+    Tertiary
+  </Button>
+  <Button onClick={console.log} variant="inverse" transparent>
+    Inverse
+  </Button>
+  <Button onClick={console.log} variant="negative" transparent>
+    Negative
+  </Button>
+</HStack>
+```
+
+## States
+
+### Loading
+
+Use the `loading` prop to indicate an action is in progress. The button becomes non-interactive and displays a loading indicator (indeterminate [ProgressCircle](/components/feedback/ProgressCircle)) while preserving its width.
+
+#### Loading by variant
+
+Loading works with all variants and transparent. The label is hidden and the progress circle is shown in the button’s accent color.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap" alignItems="center">
+  <Button loading>Primary</Button>
+  <Button loading variant="secondary">
+    Secondary
+  </Button>
+  <Button loading variant="tertiary">
+    Tertiary
+  </Button>
+  <Button loading variant="negative">
+    Negative
+  </Button>
+  <Button loading transparent variant="secondary">
+    Transparent
+  </Button>
+  <Button loading size="s">
+    Small
+  </Button>
+</HStack>
+```
+
+#### Interactive loading
+
+Toggle loading state to see the transition. Use for async actions like save or submit.
+
+```jsx live
+function LoadingExample() {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleClick = () => {
+    setIsLoading(true);
+    setTimeout(() => setIsLoading(false), 2000);
+  };
+
+  return (
+    <HStack gap={2} flexWrap="wrap">
+      <Button onClick={handleClick} loading={isLoading}>
+        Save changes
+      </Button>
+      <Button onClick={handleClick} variant="secondary" loading={isLoading}>
+        Submit
+      </Button>
+    </HStack>
+  );
+}
+```
+
+### Disabled
+
+Use the `disabled` prop to prevent interaction and indicate the action is unavailable.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap">
+  <Button disabled onClick={console.log}>
+    Primary
+  </Button>
+  <Button disabled onClick={console.log} variant="secondary">
+    Secondary
+  </Button>
+  <Button disabled onClick={console.log} variant="negative">
+    Negative
+  </Button>
+</HStack>
+```
+
+## Sizes
+
+`size` accepts `xs`, `s`, `m`, and `l`. Defaults to `l`.
+
+```jsx live
+<HStack alignItems="center" flexWrap="wrap" gap={2}>
+  <Button onClick={console.log} size="xs">
+    xs
+  </Button>
+  <Button onClick={console.log} size="s">
+    s
+  </Button>
+  <Button onClick={console.log} size="m">
+    m
+  </Button>
+  <Button onClick={console.log} size="l">
+    l (default)
+  </Button>
+</HStack>
+```
+
+## Block
+
+Use `block` to make the button expand to fill its container width.
+
+```jsx live
+<VStack gap={2}>
+  <Button onClick={console.log} block>
+    Full width button
+  </Button>
+  <Button onClick={console.log} variant="secondary" block>
+    Another full width
+  </Button>
+</VStack>
+```
+
+## Typography
+
+Button forwards text-related font props to the internal `Text` label, so you can customize typography without rendering a custom child.
+
+```jsx live
+<VStack alignItems="flex-start" gap={2}>
+  <Button onClick={console.log}>Default (headline)</Button>
+  <Button font="body" onClick={console.log}>
+    Body font
+  </Button>
+  <Button font="title3" onClick={console.log}>
+    Title3 font
+  </Button>
+  <Button fontSize="title3" fontWeight="body" onClick={console.log}>
+    Custom fontSize + fontWeight
+  </Button>
+</VStack>
+```
+
+## Icons
+
+### End Icon
+
+Add an icon after the label to provide additional context or indicate direction.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap">
+  <Button onClick={console.log} endIcon="forwardArrow" size="s" variant="secondary">
+    See more
+  </Button>
+  <Button onClick={console.log} endIcon="externalLink" size="s" variant="secondary">
+    Open link
+  </Button>
+</HStack>
+```
+
+### Start Icon
+
+Add an icon before the label to reinforce the action.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap">
+  <Button onClick={console.log} size="s" startIcon="add" startIconActive variant="secondary">
+    Add item
+  </Button>
+  <Button onClick={console.log} size="s" startIcon="download" variant="secondary">
+    Download
+  </Button>
+</HStack>
+```
+
+### Full Width with Icons
+
+When using `block` with icons, the content automatically spreads across the button width.
+
+```jsx live
+<Button onClick={console.log} startIcon="wallet" endIcon="forwardArrow" variant="secondary" block>
+  Connect wallet
+</Button>
+```
+
+## Accessibility
+
+Buttons automatically use their `children` as the accessible label. For buttons with only icons or ambiguous labels, provide an `accessibilityLabel`.
+
+```jsx
+<Button onClick={handleClose} accessibilityLabel="Close dialog">
+  ×
+</Button>
+```
+
+## Composed Examples
+
+### Confirmation Dialog
+
+A common pattern using primary and secondary buttons together.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap" justifyContent="flex-end">
+  <Button onClick={console.log} variant="secondary" transparent>
+    Cancel
+  </Button>
+  <Button onClick={console.log}>Confirm</Button>
+</HStack>
+```
+
+### Destructive Confirmation
+
+Use negative buttons with a secondary cancel option for destructive actions.
+
+```jsx live
+<HStack gap={2} flexWrap="wrap" justifyContent="flex-end">
+  <Button onClick={console.log} variant="secondary" transparent>
+    Cancel
+  </Button>
+  <Button onClick={console.log} variant="negative">
+    Delete
+  </Button>
+</HStack>
+```
+
+### Form Actions
+
+A full-width primary action with a compact secondary option.
+
+```jsx live
+<VStack gap={2}>
+  <Button onClick={console.log} block>
+    Create account
+  </Button>
+  <Button onClick={console.log} variant="secondary" transparent block>
+    Already have an account? Sign in
+  </Button>
+</VStack>
+```

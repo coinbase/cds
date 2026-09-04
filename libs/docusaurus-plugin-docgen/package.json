@@ -1,0 +1,59 @@
+{
+  "name": "@coinbase/docusaurus-plugin-docgen",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Docusaurus plugin for generating api documentation from Typescript files",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "libs/docusaurus-plugin-docgen"
+  },
+  "type": "commonjs",
+  "main": "./cjs/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./cjs/index.js"
+    },
+    "./module-declarations": {
+      "types": "./module-declarations.d.ts"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./cjs/*.js"
+    }
+  },
+  "files": [
+    "cjs",
+    "dts",
+    "module-declarations.d.ts",
+    "CHANGELOG"
+  ],
+  "peerDependencies": {
+    "fast-glob": "^3.2.11",
+    "lodash": "^4.17.21",
+    "prettier": "^3.6.2",
+    "type-fest": "^2.19.0"
+  },
+  "dependencies": {
+    "@docusaurus/logger": "~3.7.0",
+    "@docusaurus/utils": "~3.7.0",
+    "ejs": "^3.1.7",
+    "react-docgen-typescript": "^2.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@docusaurus/types": "~3.7.0",
+    "@types/ejs": "^3.1.0",
+    "@types/lodash": "^4.14.178",
+    "fast-glob": "^3.2.11",
+    "lodash": "^4.17.21",
+    "prettier": "^3.6.2",
+    "type-fest": "^2.19.0"
+  }
+}

@@ -1,0 +1,110 @@
+HStack component uses [flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox) to lay content out in a column.
+
+**On mobile only** HStack is essentially the same component as [Box](/components/layout/Box), because Box by default has [flexbox](https://developer.mozilla.org/en-US/docs/Learn/CSS/CSS_layout/Flexbox) enabled (`display: flex`) and takes `column` as its initial `flex-direction` value.
+
+You should use VStack when:
+
+- you want to lay content out in rows that are sized to their content (height only, by default each child will fill the width of the VStack)
+- you want to add gaps between columns
+- you want to lay content out in columns that fill the available space within the parent container
+- you need columns of proportionate size to each other (also known as a ratio-based layout)
+
+### Rows Sized to Content
+
+```jsx
+<VStack gap={1}>
+  <Box height={100} bordered>
+    I am 100px tall
+  </Box>
+  <Box height={200} bordered>
+    I am 200px tall
+  </Box>
+  <Box bordered>I am as tall as my content</Box>
+</VStack>
+```
+
+### Rows with Gaps
+
+```jsx
+<VStack gap={1}>
+  <Box gap={3} background="bgAlternate">
+    First
+  </Box>
+  <Box gap={3} background="bgAlternate">
+    Second
+  </Box>
+  <Box gap={3} background="bgAlternate">
+    Third
+  </Box>
+</VStack>
+```
+
+### Rows that Fill the Available Space
+
+```jsx
+<Box height={200}>
+  <VStack gap={3} flexGrow={1} background="bgAlternate">
+    I will fill the entire width and height of my parent
+  </VStack>
+</Box>
+```
+
+### Rows that Have Proportionate Sizes
+
+```jsx
+<VStack gap={1} height={600}>
+  <Box gap={3} flexGrow={1} background="bgAlternate">
+    First
+  </Box>
+  <Box gap={3} flexGrow={2} background="bgAlternate">
+    Second
+  </Box>
+  <Box gap={3} flexGrow={3} background="bgAlternate">
+    Third
+  </Box>
+</VStack>
+```
+
+### A11y
+
+Has the same accessibility requirements as [Box](/components/layout/Box#a11y).
+
+### Responsive Styles
+
+**Web only** You can create responsive layouts by passing a configuration object to each supported property of VStack and specify unique styles for phones, tablets, or desktops.
+
+Please note, there are no default responsive styles for VStack. This is an additive feature that you will need to configure yourself.
+
+#### Supported Properties
+
+- Padding
+- Margin
+- Gap
+- Flex styles (justify content, align content, align items, align self, flex direction, and flex wrap)
+- Display
+- Visibility
+
+#### Usage
+
+```jsx
+function ResponsiveVStack() {
+  return (
+    <VStack
+      padding={{ base: 4, tablet: 3, desktop: 2 }}
+      gap={{ base: 0.5, tablet: 2, desktop: 3 }}
+      justifyContent={{ base: 'flex-end', tablet: 'flex-start', desktop: 'center' }}
+      alignItems={{ base: 'flex-end', tablet: 'flex-start', desktop: 'center' }}
+    >
+      <HStack background="bgAlternate" padding={1}>
+        <Text as="p">First</Text>
+      </HStack>
+      <HStack background="bgSecondary" padding={1}>
+        <Text as="p">Second</Text>
+      </HStack>
+      <HStack background="bgOverlay" padding={1}>
+        <Text as="p">Third</Text>
+      </HStack>
+    </VStack>
+  );
+}
+```

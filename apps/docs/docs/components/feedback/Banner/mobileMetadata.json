@@ -1,0 +1,18 @@
+{
+  "import": "import { Banner } from '@coinbase/cds-mobile/banner/Banner'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/banner/Banner.tsx",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=155-12184",
+  "description": "Displays important messages and actions to users.",
+  "relatedComponents": [
+    {
+      "label": "NudgeCard",
+      "url": "/components/cards/NudgeCard/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-reanimated",
+      "version": "4.1.1"
+    }
+  ]
+}

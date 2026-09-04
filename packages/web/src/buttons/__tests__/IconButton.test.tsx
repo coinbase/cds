@@ -1,0 +1,337 @@
+import { glyphMap } from '@coinbase/cds-icons/glyphMap';
+import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { defaultTheme } from '../../themes/defaultTheme';
+import { DefaultThemeProvider } from '../../utils/test';
+import { IconButton, iconButtonClassNames } from '../IconButton';
+
+const name = 'arrowsHorizontal';
+
+describe('IconButton', () => {
+  it('passes accessibility', async () => {
+    expect(
+      await renderA11y(
+        <DefaultThemeProvider>
+          <IconButton accessibilityLabel="test-label" name={name} />
+        </DefaultThemeProvider>,
+      ),
+    ).toHaveNoViolations();
+  });
+
+  it('renders a button by default', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton name={name} />
+      </DefaultThemeProvider>,
+    );
+    const button = screen.getByRole('button');
+
+    expect(button).toBeDefined();
+    expect(button).toHaveAttribute('type', 'button');
+  });
+
+  it('renders a link when passed `to` prop', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton as="a" href="/" name={name} />
+      </DefaultThemeProvider>,
+    );
+    const button = screen.getByRole('link');
+
+    expect(button).toBeDefined();
+    expect(button).toHaveAttribute('href', '/');
+  });
+
+  it('fires `onClick` when clicked', () => {
+    const spy = jest.fn();
+    render(
+      <DefaultThemeProvider>
+        <IconButton name={name} onClick={spy} />
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent.click(screen.getByRole('button'));
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  describe('disabled', () => {
+    it('disables user interaction when disabled', () => {
+      const spy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <IconButton disabled name={name} onClick={spy} />
+        </DefaultThemeProvider>,
+      );
+
+      fireEvent.click(screen.getByRole('button'));
+
+      expect(spy).not.toHaveBeenCalled();
+    });
+
+    it('passes accessibility', async () => {
+      expect(
+        await renderA11y(
+          <DefaultThemeProvider>
+            <IconButton disabled accessibilityLabel="test-label" name={name} />
+          </DefaultThemeProvider>,
+        ),
+      ).toHaveNoViolations();
+    });
+  });
+
+  describe('loading', () => {
+    it('disables user interaction when loading', () => {
+      const spy = jest.fn();
+      render(
+        <DefaultThemeProvider>
+          <IconButton loading accessibilityLabel="click me" name={name} onClick={spy} />
+        </DefaultThemeProvider>,
+      );
+
+      fireEvent.click(screen.getByRole('button'));
+
+      expect(spy).not.toHaveBeenCalled();
+      expect(screen.getByLabelText('click me, loading')).toBeInTheDocument();
+    });
+
+    it('passes accessibility', async () => {
+      expect(
+        await renderA11y(
+          <DefaultThemeProvider>
+            <IconButton loading name={name} />
+          </DefaultThemeProvider>,
+        ),
+      ).toHaveNoViolations();
+    });
+
+    it('handles loading state without accessibility label', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton loading name={name} testID="icon-button" />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      expect(button).toHaveAttribute('aria-label', ', loading');
+    });
+  });
+
+  it('sets forwarded ref', () => {
+    const ref = { current: null };
+    render(
+      <DefaultThemeProvider>
+        <IconButton ref={ref} name={name} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(ref.current).toBeInstanceOf(HTMLElement);
+  });
+
+  it('passes down testID', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton name={name} testID="test-test-id" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('test-test-id')).toBeDefined();
+  });
+
+  it('renders ProgressCircle when loading and not Icon', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton loading name={name} testID="icon-button" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('icon-button-progress-circle')).toBeInTheDocument();
+    expect(screen.queryByTestId(`icon-${name}`)).not.toBeInTheDocument(); // Assuming Icon component adds a testID like this or similar identifiable attribute
+  });
+
+  it('renders ProgressCircle with correct size when loading and compact', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton compact loading name={name} testID="icon-button" />
+      </DefaultThemeProvider>,
+    );
+    const progressCircle = screen.getByTestId('icon-button-progress-circle');
+    expect(progressCircle).toBeInTheDocument();
+    expect(progressCircle).toHaveStyle({ '--width': `${defaultTheme.iconSize.s}px` });
+    expect(progressCircle).toHaveStyle({ '--height': `${defaultTheme.iconSize.s}px` });
+  });
+
+  it('renders ProgressCircle with correct size when loading and not compact', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton loading compact={false} name={name} testID="icon-button" />
+      </DefaultThemeProvider>,
+    );
+    const progressCircle = screen.getByTestId('icon-button-progress-circle');
+    expect(progressCircle).toBeInTheDocument();
+    expect(progressCircle).toHaveStyle({ '--width': `${defaultTheme.iconSize.m}px` });
+    expect(progressCircle).toHaveStyle({ '--height': `${defaultTheme.iconSize.m}px` });
+  });
+
+  it('renders Icon with overridden iconSize', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton iconSize="xs" name={name} />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(
+      glyphMap[`${name}-12-inactive`],
+    );
+  });
+
+  it('renders ProgressCircle with overridden iconSize when loading', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton loading iconSize="xs" name={name} testID="icon-button" />
+      </DefaultThemeProvider>,
+    );
+
+    const progressCircle = screen.getByTestId('icon-button-progress-circle');
+    expect(progressCircle).toHaveStyle({ '--width': `${defaultTheme.iconSize.xs}px` });
+    expect(progressCircle).toHaveStyle({ '--height': `${defaultTheme.iconSize.xs}px` });
+  });
+
+  it('sets data attributes for style variants', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton compact transparent flush="end" name={name} variant="secondary" />
+      </DefaultThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('data-compact', 'true');
+    expect(button).toHaveAttribute('data-flush', 'end');
+    expect(button).toHaveAttribute('data-transparent', 'true');
+    expect(button).toHaveAttribute('data-variant', 'secondary');
+  });
+  it('omits optional data attributes for default icon button', () => {
+    render(
+      <DefaultThemeProvider>
+        <IconButton name={name} />
+      </DefaultThemeProvider>,
+    );
+    const button = screen.getByRole('button');
+    expect(button).not.toHaveAttribute('data-flush');
+    expect(button).not.toHaveAttribute('data-transparent');
+    expect(button).toHaveAttribute('data-variant', 'secondary');
+    expect(button).toHaveAttribute('data-compact', 'true');
+  });
+
+  describe('size', () => {
+    const glyphSmall = glyphMap[`${name}-16-inactive`];
+    const glyphMedium = glyphMap[`${name}-24-inactive`];
+
+    it('defaults to the "s" geometry (padding 1.5, icon size s) via compact-by-default', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton name={name} />
+        </DefaultThemeProvider>,
+      );
+      expect(screen.getByRole('button').className).toMatch(/(^|\s)_1_5-/);
+      expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(glyphSmall);
+    });
+
+    it('resolves each t-shirt size to its expected padding and icon size', () => {
+      const cases = [
+        { size: 'xs', padding: /(^|\s)_1-/, glyph: glyphSmall },
+        { size: 's', padding: /(^|\s)_1_5-/, glyph: glyphSmall },
+        { size: 'm', padding: /(^|\s)_1_5-/, glyph: glyphMedium },
+        { size: 'l', padding: /(^|\s)_2-/, glyph: glyphMedium },
+      ] as const;
+
+      cases.forEach(({ size, padding, glyph }) => {
+        const { unmount } = render(
+          <DefaultThemeProvider>
+            <IconButton name={name} size={size} />
+          </DefaultThemeProvider>,
+        );
+        expect(screen.getByRole('button').className).toMatch(padding);
+        expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(glyph);
+        unmount();
+      });
+    });
+
+    it('renders `compact` alone as the "s" geometry (padding 1.5)', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton compact name={name} />
+        </DefaultThemeProvider>,
+      );
+      expect(screen.getByRole('button').className).toMatch(/(^|\s)_1_5-/);
+    });
+
+    it('renders `compact={false}` as the "l" geometry (padding 2)', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton compact={false} name={name} />
+        </DefaultThemeProvider>,
+      );
+      expect(screen.getByRole('button').className).toMatch(/(^|\s)_2-/);
+    });
+
+    it('lets `size` win over `compact` while still emitting data-compact', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton compact name={name} size="m" />
+        </DefaultThemeProvider>,
+      );
+      const button = screen.getByRole('button');
+      // "m" geometry (padding 1.5 + 24px icon) rather than compact's "s" (still 1.5, but 16px)
+      expect(button.className).toMatch(/(^|\s)_1_5-/);
+      expect(screen.getByTestId('icon-base-glyph')).toHaveTextContent(glyphMedium);
+      expect(button).toHaveAttribute('data-compact', 'true');
+    });
+
+    it('lets explicit style props override the size-derived defaults', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton name={name} padding={4} size="l" />
+        </DefaultThemeProvider>,
+      );
+      expect(screen.getByRole('button').className).toMatch(/(^|\s)_4-/);
+    });
+  });
+
+  describe('static classNames', () => {
+    it('applies static class names to component elements', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton name={name} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      expect(button).toHaveClass(iconButtonClassNames.root);
+      expect(screen.getByTestId('icon-base-glyph')).toHaveClass(iconButtonClassNames.icon);
+    });
+  });
+
+  describe('styles and classNames', () => {
+    it('applies styles.icon to the inner icon glyph element', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton name={name} styles={{ icon: { fontSize: '99px' } }} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('icon-base-glyph')).toHaveStyle({ fontSize: '99px' });
+    });
+
+    it('applies classNames.icon to the inner icon glyph element', () => {
+      render(
+        <DefaultThemeProvider>
+          <IconButton classNames={{ icon: 'custom-icon-class' }} name={name} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('icon-base-glyph')).toHaveClass('custom-icon-class');
+    });
+  });
+});

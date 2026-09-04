@@ -1,0 +1,457 @@
+import { isSharedValue } from 'react-native-reanimated';
+import type { AnimatedProp } from '@shopify/react-native-skia';
+import { stack as d3Stack, stackOffsetDiverging, stackOrderNone } from 'd3-shape';
+
+import { type CartesianAxisConfigProps, defaultAxisId } from './axis';
+import type { CartesianChartLayout } from './context';
+import type { GradientDefinition } from './gradient';
+
+export const defaultStackId = 'DEFAULT_STACK_ID';
+
+/**
+ * Shape variants available for legend items.
+ */
+export type LegendShapeVariant = 'circle' | 'square' | 'squircle' | 'pill';
+
+/**
+ * Shape for legend items. Can be a preset variant or a custom ReactNode.
+ */
+export type LegendShape = LegendShapeVariant | React.ReactNode;
+
+/**
+ * Position of the legend relative to the chart.
+ */
+export type LegendPosition = 'top' | 'bottom' | 'left' | 'right';
+
+export type AxisBounds = {
+  min: number;
+  max: number;
+};
+
+/**
+ * Type guard to check if bounds are complete with both min and max values.
+ * @param bounds - The bounds to validate
+ * @returns True if bounds has both min and max defined
+ */
+export const isValidBounds = (bounds: Partial<AxisBounds>): bounds is AxisBounds =>
+  bounds.min !== undefined && bounds.max !== undefined;
+
+export type Series = {
+  /**
+   * Id of the series.
+   */
+  id: string;
+  /**
+   * Data array for this series. Use null values to create gaps in the visualization.
+   *
+   * Can be either:
+   * - Array of numbers: `[10, -5, 20]`
+   * - Array of tuples: `[[0, 10], [0, -5], [0, 20]]` [baseline, value] pairs
+   */
+  data?: Array<number | null> | Array<[number, number] | null>;
+  /**
+   * Label of the series.
+   * Used for scrubber beacon labels.
+   */
+  label?: string;
+  /**
+   * Color for the series.
+   * If gradient is provided, that will be used for chart components
+   * Color will still be used by scrubber beacon labels
+   */
+  color?: string;
+  /**
+   * Color gradient configuration.
+   * Takes precedence over color except for scrubber beacon labels.
+   */
+  gradient?: GradientDefinition;
+  /**
+   * Id of the x-axis this series uses.
+   * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'horizontal'. Vertical layout uses a single x-axis.
+   */
+  xAxisId?: string;
+  /**
+   * Id of the y-axis this series uses.
+   * Defaults to defaultAxisId if not specified.
+   * @note Only used for axis selection when layout is 'vertical'. Horizontal layout supports a single y-axis.
+   */
+  yAxisId?: string;
+  /**
+   * Id of the stack group this series belongs to.
+   * Series with the same stackId value will be stacked together.
+   * If not specified, the series will not be stacked.
+   */
+  stackId?: string;
+  /**
+   * Shape of the legend item for this series.
+   * Can be a preset shape variant or a custom ReactNode.
+   * @default 'circle'
+   */
+  legendShape?: LegendShape;
+};
+
+/**
+ * Calculates the domain of a chart from series data.
+ * Domain represents the range of x-values from the data.
+ */
+export const getChartDomain = (
+  series: Series[],
+  min?: number,
+  max?: number,
+): Partial<AxisBounds> => {
+  const domain = {
+    min,
+    max,
+  };
+
+  if (domain.min !== undefined && domain.max !== undefined) {
+    return domain;
+  }
+
+  if (series.length > 0) {
+    const dataLength = Math.max(...series.map((s) => s.data?.length || 0));
+
+    if (dataLength > 0) {
+      if (domain.min === undefined) domain.min = 0;
+      if (domain.max === undefined) domain.max = dataLength - 1;
+    }
+  }
+
+  return domain;
+};
+
+/**
+ * Creates a composite stack key that includes stack ID and axis IDs.
+ * This ensures series with different scales don't get stacked together.
+ */
+const createStackKey = (series: Series): string | undefined => {
+  if (series.stackId === undefined) return undefined;
+
+  // Include axis IDs to prevent cross-scale stacking
+  const xAxisId = series.xAxisId || 'default';
+  const yAxisId = series.yAxisId || 'default';
+  return `${series.stackId}:${xAxisId}:${yAxisId}`;
+};
+
+/**
+ * Get the baseline for a series on the value axis for a series (stacking and plain numeric points).
+ * @returns The baseline for the series on the value axis, or `0` if none.
+ */
+const getValueAxisBaselineForSeries = (
+  layout: CartesianChartLayout,
+  series: Series,
+  xAxisConfigs: CartesianAxisConfigProps[],
+  yAxisConfigs: CartesianAxisConfigProps[],
+): number => {
+  if (layout === 'horizontal') {
+    const seriesAxisId = series.xAxisId ?? defaultAxisId;
+    return xAxisConfigs.find((a) => a.id === seriesAxisId)?.baseline ?? 0;
+  }
+  const seriesAxisId = series.yAxisId ?? defaultAxisId;
+  return yAxisConfigs.find((a) => a.id === seriesAxisId)?.baseline ?? 0;
+};
+
+/**
+ * Transforms series data into stacked data using D3's stack algorithm.
+ * Returns a map of series ID to transformed [baseline, value] tuples.
+ *
+ * @param series - Array of series with potential stack properties
+ * @param layout - When set with axis configs, value-axis baselines are resolved for stacking
+ * @returns Map of series ID to stacked data arrays
+ */
+export const getStackedSeriesData = (
+  series: Series[],
+  layout: CartesianChartLayout,
+  xAxisConfigs: CartesianAxisConfigProps[],
+  yAxisConfigs: CartesianAxisConfigProps[],
+): Map<string, Array<[number, number] | null>> => {
+  const stackedDataMap = new Map<string, Array<[number, number] | null>>();
+
+  const numericStackGroups = new Map<string, typeof series>();
+  const individualSeries: typeof series = [];
+
+  const normalizeSeriesData = (seriesItem: Series): Array<[number, number] | null> | undefined => {
+    if (!seriesItem.data) return;
+
+    const baseline = getValueAxisBaselineForSeries(layout, seriesItem, xAxisConfigs, yAxisConfigs);
+
+    return seriesItem.data.map((val) => {
+      if (val === null) return null;
+
+      if (Array.isArray(val)) {
+        return val as [number, number];
+      }
+
+      if (typeof val === 'number') return [baseline, val];
+
+      return null;
+    });
+  };
+
+  series.forEach((s) => {
+    const stackKey = createStackKey(s);
+    const hasTupleData = s.data?.some((val) => Array.isArray(val));
+
+    if (hasTupleData || stackKey === undefined) {
+      individualSeries.push(s);
+    } else {
+      if (!numericStackGroups.has(stackKey)) {
+        numericStackGroups.set(stackKey, []);
+      }
+      numericStackGroups.get(stackKey)!.push(s);
+    }
+  });
+
+  individualSeries.forEach((s) => {
+    const normalizedData = normalizeSeriesData(s);
+    if (!normalizedData) return;
+    stackedDataMap.set(s.id, normalizedData);
+  });
+
+  numericStackGroups.forEach((groupSeries) => {
+    // A lone series with stackId should still behave like a non-stacked series.
+    if (groupSeries.length < 2) {
+      groupSeries.forEach((singleSeries) => {
+        const normalizedData = normalizeSeriesData(singleSeries);
+        if (!normalizedData) return;
+        stackedDataMap.set(singleSeries.id, normalizedData);
+      });
+      return;
+    }
+
+    const maxLength = Math.max(...groupSeries.map((s) => s.data?.length || 0));
+
+    if (maxLength === 0) return;
+
+    const first = groupSeries[0];
+    const groupBaseline = getValueAxisBaselineForSeries(layout, first, xAxisConfigs, yAxisConfigs);
+
+    const dataset: Array<Record<string, number>> = new Array(maxLength)
+      .fill(undefined)
+      .map((_, i) => {
+        const row: Record<string, number> = {};
+        for (const s of groupSeries) {
+          const val = s.data?.[i];
+          // Stack around baseline by translating values into baseline-relative deltas.
+          const num = typeof val === 'number' ? val - groupBaseline : 0;
+          row[s.id] = num;
+        }
+        return row;
+      });
+
+    const keys = groupSeries.map((s) => s.id);
+    const stackedSeries = d3Stack<Record<string, number>, string>()
+      .keys(keys)
+      .order(stackOrderNone)
+      .offset(stackOffsetDiverging)(dataset);
+
+    stackedSeries.forEach((layer, layerIndex) => {
+      const seriesId = keys[layerIndex];
+      const stackedData: Array<[number, number] | null> = layer.map(([bottom, top]) => [
+        bottom + groupBaseline,
+        top + groupBaseline,
+      ]);
+      stackedDataMap.set(seriesId, stackedData);
+    });
+  });
+
+  return stackedDataMap;
+};
+
+/**
+ * Extracts line data values from series data that may contain tuples.
+ * For tuple data [[baseline, value]], extracts the last value.
+ * For numeric data [value], returns as-is.
+ *
+ * @param data - Array of numbers, tuples, or null values
+ * @returns Array of numbers or null values
+ */
+export const getLineData = (
+  data?: Array<number | null> | Array<[number, number] | null>,
+): Array<number | null> => {
+  if (!data) return [];
+
+  // Check if this is tuple data by finding first non-null entry
+  const firstNonNull = data.find((d) => d !== null);
+  if (Array.isArray(firstNonNull)) {
+    return data.map((d) => {
+      if (d === null) return null;
+      if (Array.isArray(d)) return d[d.length - 1] ?? null;
+      return d as number;
+    });
+  }
+
+  // Already numeric data
+  return data as Array<number | null>;
+};
+
+/**
+ * Calculates the range of a chart from series data.
+ * Range represents the range of y-values from the data.
+ * Handles stacking by transforming data when series have stack properties.
+ */
+export const getChartRange = (
+  series: Series[],
+  layout: CartesianChartLayout,
+  xAxisConfigs: CartesianAxisConfigProps[],
+  yAxisConfigs: CartesianAxisConfigProps[],
+  min?: number,
+  max?: number,
+): Partial<AxisBounds> => {
+  const range = {
+    min,
+    max,
+  };
+
+  if (range.min !== undefined && range.max !== undefined) {
+    return range;
+  }
+
+  if (series.length === 0) {
+    return range;
+  }
+
+  // Group series by composite stack key for proper calculation
+  const stackGroups = new Map<string | undefined, typeof series>();
+  series.forEach((s) => {
+    const stackKey = createStackKey(s);
+    if (!stackGroups.has(stackKey)) {
+      stackGroups.set(stackKey, []);
+    }
+    stackGroups.get(stackKey)!.push(s);
+  });
+
+  // Check if we have any stacked series
+  const hasStacks = Array.from(stackGroups.keys()).some((k) => k !== undefined);
+
+  if (hasStacks) {
+    // Get stacked data using the shared function
+    const stackedDataMap = getStackedSeriesData(series, layout, xAxisConfigs, yAxisConfigs);
+
+    // Find the extreme values from the stacked data
+    let stackedMax = -Infinity;
+    let stackedMin = Infinity;
+
+    stackedDataMap.forEach((stackedData) => {
+      stackedData.forEach((point) => {
+        if (point !== null) {
+          const [bottom, top] = point;
+          if (top > stackedMax) stackedMax = top;
+          if (bottom < stackedMin) stackedMin = bottom;
+        }
+      });
+    });
+
+    // Don't add padding - let D3's nice() function handle axis padding
+    if (range.min === undefined) range.min = stackedMin === Infinity ? 0 : stackedMin;
+    if (range.max === undefined) range.max = stackedMax === -Infinity ? 0 : stackedMax;
+  } else {
+    // No stacking, calculate range from raw values
+    const allValues: number[] = [];
+
+    series.forEach((s) => {
+      if (s.data) {
+        s.data.forEach((point) => {
+          if (typeof point === 'number') {
+            allValues.push(point);
+          } else if (Array.isArray(point)) {
+            // Filter out null values from tuples
+            const validValues = point.filter((val): val is number => val !== null);
+            allValues.push(...validValues);
+          }
+        });
+      }
+    });
+
+    if (allValues.length > 0) {
+      const minValue = Math.min(...allValues);
+      const maxValue = Math.max(...allValues);
+      if (range.min === undefined) range.min = minValue;
+      if (range.max === undefined) range.max = maxValue;
+    }
+  }
+
+  return range;
+};
+
+export type ChartInset = {
+  top: number;
+  left: number;
+  bottom: number;
+  right: number;
+};
+
+export const defaultVerticalLayoutChartInset: ChartInset = {
+  top: 32,
+  left: 16,
+  bottom: 16,
+  right: 16,
+};
+
+export const defaultHorizontalLayoutChartInset: ChartInset = {
+  top: 16,
+  left: 16,
+  bottom: 16,
+  right: 48,
+};
+
+/**
+ * @deprecated Use `defaultVerticalLayoutChartInset` for vertical layout charts or. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
+ * `defaultHorizontalLayoutChartInset` for horizontal layout charts.
+ */
+export const defaultChartInset: ChartInset = defaultVerticalLayoutChartInset;
+
+/**
+ * Normalize padding to include all sides with a value.
+ * @param padding - The padding to get.
+ * @param defaults - Optional complete default values to use instead of 0.
+ * @returns The calculated padding.
+ */
+/**
+ * Normalize inset to include all sides with a value.
+ * @param inset - The inset to get.
+ * @param defaults - Optional complete default values to use instead of 0.
+ * @returns The calculated inset.
+ */
+export const getChartInset = (
+  inset?: number | Partial<ChartInset>,
+  defaults?: ChartInset,
+): ChartInset => {
+  const baseDefaults = defaults ?? {
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  };
+
+  if (typeof inset === 'number') {
+    return {
+      top: inset,
+      left: inset,
+      bottom: inset,
+      right: inset,
+    };
+  }
+
+  return {
+    top: inset?.top ?? baseDefaults.top,
+    left: inset?.left ?? baseDefaults.left,
+    bottom: inset?.bottom ?? baseDefaults.bottom,
+    right: inset?.right ?? baseDefaults.right,
+  };
+};
+
+/**
+ * Unwraps an optionally animated value to get the raw value.
+ * @param value - The value to unwrap.
+ * @returns The raw value.
+ */
+export const unwrapAnimatedValue = <T>(value: AnimatedProp<T>): T => {
+  'worklet';
+  if (isSharedValue<T>(value)) {
+    return value.value;
+  }
+  return value as T;
+};

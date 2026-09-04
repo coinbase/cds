@@ -1,0 +1,107 @@
+import React, { forwardRef, memo } from 'react';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { IconSize } from '@coinbase/cds-common/types/IconSize';
+import type { ValidateProps } from '@coinbase/cds-common/types/SpreadPropsSafely';
+import { formatCount } from '@coinbase/cds-common/utils/formatCount';
+import type { IconName } from '@coinbase/cds-icons';
+
+import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { Icon } from '../icons/Icon';
+import { HStack } from '../layout/HStack';
+import { Pressable, type PressableDefaultElement, type PressableProps } from '../system/Pressable';
+import { Text } from '../typography/Text';
+
+export type IconCounterButtonBaseProps = {
+  /** Name of the icon or a ReactNode */
+  icon: Exclude<React.ReactNode, 'string'> | IconName;
+  /** Size for given icon. */
+  size?: IconSize;
+  /** Whether the icon is active */
+  active?: boolean;
+  /** Number to display */
+  count?: number;
+  /** Color of the icon */
+  color?: ThemeVars.Color;
+  /**
+   * @deprecated Use `styles.icon`, `classNames.icon`, or `color` to customize icon color. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v10
+   */
+  dangerouslySetColor?: string;
+  /** Background color of the overlay (element being interacted with). */
+  background?: ThemeVars.Color;
+};
+
+export type IconCounterButtonProps = IconCounterButtonBaseProps &
+  Omit<PressableProps<PressableDefaultElement>, 'background'> & {
+    /** Custom inline styles for individual elements of the IconCounterButton component */
+    styles?: {
+      /** Root Pressable element */
+      root?: React.CSSProperties;
+      /** Icon element rendered when `icon` is an icon name */
+      icon?: React.CSSProperties;
+    };
+    /** Custom class names for individual elements of the IconCounterButton component */
+    classNames?: {
+      /** Root Pressable element */
+      root?: string;
+      /** Icon element rendered when `icon` is an icon name */
+      icon?: string;
+    };
+  };
+
+export const IconCounterButton = memo(
+  forwardRef(function IconCounterButton(
+    _props: IconCounterButtonProps,
+    ref: React.Ref<HTMLButtonElement>,
+  ) {
+    const mergedProps = useComponentConfig('IconCounterButton', _props);
+    const {
+      icon,
+      size = 's',
+      active,
+      count = 0,
+      color = 'fg',
+      dangerouslySetColor,
+      background = 'transparent',
+      styles,
+      classNames,
+      className,
+      style,
+      ...props
+    } = mergedProps;
+    return (
+      <Pressable
+        ref={ref}
+        background={background}
+        className={cx(className, classNames?.root)}
+        style={{ ...style, ...styles?.root }}
+        {...(props satisfies ValidateProps<
+          typeof props,
+          Omit<IconCounterButtonProps, keyof PressableProps<PressableDefaultElement>>
+        >)}
+      >
+        <HStack alignItems="center" gap={1}>
+          {typeof icon === 'string' ? (
+            <Icon
+              active={active}
+              className={classNames?.icon}
+              color={color}
+              dangerouslySetColor={dangerouslySetColor}
+              name={icon as IconName}
+              size={size}
+              style={styles?.icon}
+            />
+          ) : (
+            icon
+          )}
+          {count > 0 ? (
+            <Text mono as="p" display="block" font="label1">
+              {formatCount(count)}
+            </Text>
+          ) : null}
+        </HStack>
+      </Pressable>
+    );
+  }),
+);

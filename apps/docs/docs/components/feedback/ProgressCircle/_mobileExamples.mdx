@@ -1,0 +1,282 @@
+## Default
+
+```jsx
+<HStack gap={2}>
+  <ProgressCircle progress={0} size={100} />
+  <ProgressCircle progress={0.5} size={100} />
+  <ProgressCircle progress={1} size={100} />
+</HStack>
+```
+
+## Indeterminate
+
+Use the `indeterminate` prop when progress is unknown (e.g. loading). The circle shows a spinning partial arc with no percentage text. This is the recommended replacement for the deprecated [Spinner](/components/feedback/Spinner) in loading contexts such as [IconButton](/components/buttons/IconButton) or button loading states.
+
+When `indeterminate` is true, the default color is `fgMuted`; you can override `color` as needed. Always provide `accessibilityLabel` so screen readers announce the loading state.
+
+### Thickness (weight)
+
+Indeterminate uses the same `weight` prop as determinate progress. The default is **`"normal"`** (4px stroke). Use `"thin"` (2px), `"semiheavy"` (8px), or `"heavy"` (12px) to change thickness.
+
+```jsx
+<HStack gap={2} alignItems="center">
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">Default (normal)</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate size={64} />
+  </VStack>
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">weight="thin"</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate size={64} weight="thin" />
+  </VStack>
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">weight="semiheavy"</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate size={64} weight="semiheavy" />
+  </VStack>
+</HStack>
+```
+
+### Progress (arc length)
+
+When `indeterminate` is true, the **`progress` prop controls the length of the visible arc** (how much of the circle is drawn), not a completion percentage. It defaults to `0.75` (a 270° arc). Override it to change the arc length—e.g. `0.5` for a half circle or `0.25` for a shorter arc.
+
+```jsx
+<HStack gap={2} alignItems="center">
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">progress=0.25</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate progress={0.25} size={56} />
+  </VStack>
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">progress=0.5</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate progress={0.5} size={56} />
+  </VStack>
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">progress=0.75 (default)</Text>
+    <ProgressCircle accessibilityLabel="Loading" indeterminate progress={0.75} size={56} />
+  </VStack>
+</HStack>
+```
+
+### Sizes and color
+
+```jsx
+<HStack gap={2} alignItems="center">
+  <ProgressCircle accessibilityLabel="Loading" indeterminate size={32} />
+  <ProgressCircle accessibilityLabel="Loading" indeterminate size={56} />
+  <ProgressCircle accessibilityLabel="Loading" indeterminate size={100} />
+  <ProgressCircle accessibilityLabel="Loading" indeterminate color="bgPrimary" size={56} />
+</HStack>
+```
+
+## Thin
+
+```jsx
+<HStack gap={2}>
+  <ProgressCircle progress={0} weight="thin" size={100} />
+  <ProgressCircle progress={0.5} weight="thin" size={100} />
+  <ProgressCircle progress={1} weight="thin" size={100} />
+</HStack>
+```
+
+## Semiheavy
+
+```jsx
+<HStack gap={2}>
+  <ProgressCircle progress={0} weight="semiheavy" size={100} />
+  <ProgressCircle progress={0.5} weight="semiheavy" size={100} />
+  <ProgressCircle progress={1} weight="semiheavy" size={100} />
+</HStack>
+```
+
+## Heavy
+
+```jsx
+<HStack gap={2}>
+  <ProgressCircle progress={0} weight="heavy" size={100} />
+  <ProgressCircle progress={0.5} weight="heavy" size={100} />
+  <ProgressCircle progress={1} weight="heavy" size={100} />
+</HStack>
+```
+
+## No Text
+
+```jsx
+<HStack gap={2}>
+  <ProgressCircle progress={0} hideContent size={25} />
+  <ProgressCircle progress={0.5} hideContent size={25} />
+  <ProgressCircle progress={1} hideContent size={25} />
+</HStack>
+```
+
+## Disabled
+
+```jsx
+<HStack gap={2}>
+  <ProgressCircle progress={0} disabled size={100} />
+  <ProgressCircle progress={0.5} disabled size={100} />
+  <ProgressCircle progress={1} disabled size={100} />
+</HStack>
+```
+
+## Colors
+
+```jsx
+<HStack gap={2}>
+  <ProgressCircle progress={0.5} color="fgPositive" size={100} />
+  <ProgressCircle progress={0.5} color="bgNegative" size={100} />
+  <ProgressCircle progress={0.5} color="bgPrimary" size={100} />
+  <ProgressCircle progress={0.5} color="fg" size={100} />
+</HStack>
+```
+
+## Fill Parent
+
+The progress circle can be dynamically sized to fit its parent. If you drag the browser window smaller or larger then the ProgressCircle will resize accordingly.
+
+```jsx
+<HStack gap={2} flexWrap="wrap">
+  <div style={{ height: '15vw', width: '15vw', minWidth: '60px', minHeight: '60px' }}>
+    <ProgressCircle progress={1} />
+  </div>
+  <div style={{ height: '10vw', width: '10vw', minWidth: '60px', minHeight: '60px' }}>
+    <ProgressCircle progress={1} />
+  </div>
+  <div style={{ height: '5vw', width: '5vw', minWidth: '60px', minHeight: '60px' }}>
+    <ProgressCircle progress={1} />
+  </div>
+</HStack>
+```
+
+## Content Node Customization
+
+You can override the default content node to display a custom node. Note that the content node is clipped to the circle.
+
+### With Asset
+
+You can provide an image, such as an asset, as the content node.
+
+```jsx
+<ProgressCircle
+  progress={1}
+  size={56}
+  styles={{
+    progress: {
+      stroke: assets.eth.color,
+    },
+  }}
+  contentNode={
+    <Box height="100%" padding={0.25} width="100%">
+      <RemoteImage
+        alt={assets.eth.name}
+        shape="circle"
+        source={assets.eth.imageUrl}
+        style={{ width: '100%', height: '100%' }}
+      />
+    </Box>
+  }
+  weight="thin"
+/>
+```
+
+### Custom Text Color
+
+The progress circle's default content can be customized to display a custom text color.
+
+```jsx
+<HStack gap={2}>
+  <ProgressCircle
+    color="fgPrimary"
+    progress={0.2}
+    size={100}
+    contentNode={<DefaultProgressCircleContent color="fgPrimary" progress={0.2} />}
+  />
+  <ProgressCircle
+    color="fgPositive"
+    progress={0.4}
+    size={100}
+    contentNode={<DefaultProgressCircleContent color="fgPositive" progress={0.4} />}
+  />
+</HStack>
+```
+
+## Custom Styles
+
+The progress circle can be customized with styles.
+
+```jsx
+<HStack gap={2}>
+  <ProgressCircle
+    progress={0.4}
+    size={100}
+    styles={{
+      circle: {
+        stroke: 'transparent',
+      },
+    }}
+    contentNode={
+      <Text font="title1" color="fgPrimary">
+        40%
+      </Text>
+    }
+    weight="semiheavy"
+  />
+  <ProgressCircle
+    color="fgPositive"
+    progress={0.6}
+    size={100}
+    styles={{
+      progress: {
+        strokeLinecap: 'square',
+      },
+    }}
+    contentNode={<Icon color="fgPositive" name="circleCheckmark" size="l" />}
+  />
+</HStack>
+```
+
+## Animation
+
+By default, ProgressCircle animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
+
+```tsx
+<HStack gap={2}>
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">Normal animation</Text>
+    <ProgressCircle progress={0.5} size={100} />
+  </VStack>
+
+  <VStack gap={1} alignItems="center">
+    <Text variant="label2">Disable animation on mount</Text>
+    <ProgressCircle disableAnimateOnMount progress={0.5} size={100} />
+  </VStack>
+</HStack>
+```
+
+### Callbacks
+
+You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
+
+```jsx
+function Example() {
+  const [animationStatus, setAnimationStatus] = React.useState('Ready');
+
+  const handleAnimationStart = useCallback(() => {
+    setAnimationStatus('Animating...');
+  }, []);
+
+  const handleAnimationEnd = useCallback(() => {
+    setAnimationStatus('Animation Ended');
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <Text>Animation Status: {animationStatus}</Text>
+      <ProgressCircle
+        onAnimationEnd={handleAnimationEnd}
+        onAnimationStart={handleAnimationStart}
+        progress={0.2}
+        size={100}
+      />
+    </VStack>
+  );
+}
+```

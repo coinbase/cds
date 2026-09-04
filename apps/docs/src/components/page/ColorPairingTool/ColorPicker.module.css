@@ -1,0 +1,27 @@
+/* react-colorful overrides — scoped to avoid affecting other pickers */
+.pickerWrapper :global(.react-colorful) {
+  width: 100%;
+  height: auto;
+  gap: 0;
+}
+
+.pickerWrapper :global(.react-colorful__saturation) {
+  min-height: 110px;
+  border-radius: 10px 10px 0 0;
+  flex: 1;
+}
+
+.pickerWrapper :global(.react-colorful__hue) {
+  height: 14px;
+  border-radius: 0 0 8px 8px;
+  margin-top: 4px;
+}
+
+.pickerWrapper :global(.react-colorful__pointer) {
+  width: 18px;
+  height: 18px;
+  border-width: 2.5px;
+  box-shadow:
+    0 0 0 1px rgba(0, 0, 0, 0.2),
+    0 1px 4px rgba(0, 0, 0, 0.3);
+}

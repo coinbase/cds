@@ -1,0 +1,16 @@
+{
+  "import": "import { CellMedia } from '@coinbase/cds-web/cells/CellMedia'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/cells/CellMedia.tsx",
+  "description": "Displays media within cells.",
+  "relatedComponents": [
+    {
+      "label": "ContentCell",
+      "url": "/components/data-display/ContentCell"
+    },
+    {
+      "label": "ListCell",
+      "url": "/components/data-display/ListCell"
+    }
+  ],
+  "dependencies": []
+}

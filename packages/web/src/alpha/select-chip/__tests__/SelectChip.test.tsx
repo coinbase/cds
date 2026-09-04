@@ -1,0 +1,693 @@
+import React from 'react';
+import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { DefaultThemeProvider } from '../../../utils/test';
+import { defaultTheme } from '../../../themes/defaultTheme';
+import { ComponentConfigProvider } from '../../../system';
+import type { SelectOption } from '../../select/types';
+import type { SelectChipProps } from '../SelectChip';
+import { SelectChip } from '../SelectChip';
+
+jest.mock('../../../overlays/Portal', () => ({
+  Portal: ({ children, containerId }: { children: React.ReactNode; containerId?: string }) => (
+    <div data-testid="portal-container">{children}</div>
+  ),
+}));
+
+const mockOptions: SelectOption<string>[] = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  { value: 'option3', label: 'Option 3', disabled: true },
+  { value: 'option4', label: 'Option 4', description: 'Option 4 description' },
+  { value: null, label: 'Empty option' },
+];
+
+const defaultProps: SelectChipProps<'single'> = {
+  options: mockOptions,
+  value: null,
+  onChange: jest.fn(),
+  placeholder: 'Select an option',
+};
+
+const getSelectChipControl = () => screen.getByRole('button');
+
+const expectInvertedChip = (chip: HTMLElement) => {
+  expect(chip.parentElement).toHaveClass('dark');
+};
+
+const expectNonInvertedChip = (chip: HTMLElement) => {
+  expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+};
+
+describe('SelectChip', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('Accessibility', () => {
+    it('passes accessibility when closed', async () => {
+      expect(
+        await renderA11y(
+          <DefaultThemeProvider>
+            <SelectChip {...defaultProps} controlAccessibilityLabel="Select an option" />
+          </DefaultThemeProvider>,
+        ),
+      ).toHaveNoViolations();
+    });
+
+    it('has correct accessibility attributes', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} controlAccessibilityLabel="Custom accessibility label" />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      expect(button).toHaveAttribute('aria-label', 'Custom accessibility label');
+      expect(button).toHaveAttribute('aria-haspopup', 'listbox');
+    });
+
+    it('sets correct accessibility roles for options', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        expect(options.length).toBeGreaterThan(0);
+      });
+    });
+  });
+
+  describe('Single Select Mode', () => {
+    it('renders SelectChip correctly', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toBeInTheDocument();
+      expect(screen.getByRole('button')).toBeInTheDocument();
+    });
+
+    it('displays selected value', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
+    });
+
+    it('shows placeholder when no value selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toBeInTheDocument();
+    });
+
+    it('defaults to active colors when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button');
+      const activeWrapper = chip.parentElement;
+      expect(activeWrapper).toHaveClass('dark');
+      expect(activeWrapper).toHaveStyle({
+        '--color-bgSecondary': defaultTheme.darkColor.bgSecondary,
+        '--color-fg': defaultTheme.darkColor.fg,
+      });
+    });
+
+    it('renders inactive colors when no value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button');
+      expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+    });
+
+    it('respects explicit active={false} when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} active={false} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button');
+      expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+    });
+
+    it('respects explicit invertColorScheme={false} opt-out when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} invertColorScheme={false} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button');
+      expect(chip.parentElement?.className).not.toMatch(/\bdark\b/);
+    });
+
+    it('applies legacy invertColorScheme when no value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} invertColorScheme value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button');
+      expect(chip.parentElement).toHaveClass('dark');
+    });
+
+    it('applies border props from ComponentConfigProvider', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              SelectChip: {
+                borderWidth: 100,
+                bordered: true,
+                borderColor: 'bgLine',
+              },
+            }}
+          >
+            <SelectChip {...defaultProps} value={null} />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('button')).toHaveStyle({
+        borderColor: 'var(--color-bgLine)',
+        borderWidth: 'var(--borderWidth-100)',
+      });
+    });
+
+    it('forces active chip colors when active is true without a selected value', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} active value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expectInvertedChip(getSelectChipControl());
+    });
+
+    it('applies activeBackground without inverting when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip
+            {...defaultProps}
+            activeBackground="bgPositive"
+            activeColor="fgPositive"
+            value="option1"
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = getSelectChipControl();
+      expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgPositive)' });
+      expect(screen.getByText('Option 1')).toHaveStyle({ color: 'var(--color-fgPositive)' });
+      expectNonInvertedChip(chip);
+    });
+
+    it('applies color to the default caret', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} color="fgPrimary" value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('icon-base-glyph')).toHaveStyle({
+        color: 'var(--color-fgPrimary)',
+      });
+    });
+
+    it('applies activeColor to the default caret when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} activeColor="fgPositive" value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('icon-base-glyph')).toHaveStyle({
+        color: 'var(--color-fgPositive)',
+      });
+    });
+
+    it('applies active branch styling from ComponentConfigProvider when a value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              SelectChip: (props) =>
+                props.active
+                  ? { activeBackground: 'bgPositive', activeColor: 'fgPositive' }
+                  : { background: 'bg' },
+            }}
+          >
+            <SelectChip {...defaultProps} value="option1" />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      const chip = getSelectChipControl();
+      expect(chip).toHaveStyle({ backgroundColor: 'var(--color-bgPositive)' });
+      expect(screen.getByText('Option 1')).toHaveStyle({ color: 'var(--color-fgPositive)' });
+      expectNonInvertedChip(chip);
+    });
+
+    it('opens dropdown when clicked', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+    });
+
+    it('calls onChange when option is selected', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} onChange={onChange} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      const option = screen.getByText('Option 2');
+      await user.click(option);
+
+      expect(onChange).toHaveBeenCalledWith('option2');
+    });
+
+    it('displays option description when available', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} value="option4" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Option 4')).toBeInTheDocument();
+    });
+
+    it('renders with startNode', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} startNode={<div data-testid="start-node">Start</div>} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('start-node')).toBeInTheDocument();
+    });
+
+    it('renders with endNode', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} endNode={<div data-testid="end-node">End</div>} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('end-node')).toBeInTheDocument();
+    });
+
+    it('renders with compact prop and applies compact styling', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} compact />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      const content = button.firstElementChild;
+
+      expect(button).toBeInTheDocument();
+      // Compact chips should have smaller padding
+      // MediaChip with compact uses padding: var(--space-1-5) var(--space-0-75)
+      expect(content).toHaveStyle('padding: var(--space-1-5) var(--space-0-75)');
+    });
+
+    it('renders disabled state', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} disabled />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      expect(button).toBeDisabled();
+    });
+
+    it('uses displayValue when provided', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} displayValue="Custom Display Value" value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      // displayValue should override the default label
+      expect(screen.getByText('Custom Display Value')).toBeInTheDocument();
+      expect(screen.queryByText('Option 1')).not.toBeInTheDocument();
+    });
+
+    it('uses displayValue with ReactNode', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip
+            {...defaultProps}
+            displayValue={
+              <div data-testid="custom-display">
+                <span data-testid="custom-text">Custom Node</span>
+              </div>
+            }
+            value="option1"
+          />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('custom-display')).toBeInTheDocument();
+      expect(screen.getByTestId('custom-text')).toBeInTheDocument();
+      expect(screen.queryByText('Option 1')).not.toBeInTheDocument();
+    });
+
+    it('applies maxWidth prop', () => {
+      const { container } = render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} maxWidth={150} />
+        </DefaultThemeProvider>,
+      );
+
+      // maxWidth is passed to MediaChip which passes it to Chip which applies it to HStack
+      // We verify the prop is passed through by checking the rendered component structure
+      const button = screen.getByRole('button');
+      expect(button).toBeInTheDocument();
+      // The maxWidth prop should be applied internally to limit the chip width
+      // We can verify it's working by checking the component renders correctly
+    });
+  });
+
+  describe('Multi Select Mode', () => {
+    const multiSelectProps: SelectChipProps<'multi'> = {
+      options: mockOptions,
+      type: 'multi',
+      value: [],
+      onChange: jest.fn(),
+      placeholder: 'Select options',
+    };
+
+    it('renders multi-select SelectChip correctly', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...multiSelectProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select options')).toBeInTheDocument();
+    });
+
+    it('displays multiple selected values', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...multiSelectProps} value={['option1', 'option2']} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Option 1, Option 2')).toBeInTheDocument();
+    });
+
+    it('defaults to inactive chip colors for an empty multi-select value', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...multiSelectProps} value={[]} />
+        </DefaultThemeProvider>,
+      );
+
+      expectNonInvertedChip(getSelectChipControl());
+    });
+
+    it('defaults to active chip colors when multi-select has values', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...multiSelectProps} value={['option1']} />
+        </DefaultThemeProvider>,
+      );
+
+      expectInvertedChip(getSelectChipControl());
+    });
+
+    it('shows truncated selection with more count', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip
+            {...multiSelectProps}
+            maxSelectedOptionsToShow={1}
+            value={['option1', 'option2', 'option4']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText(/Option 1.*\+2 more/)).toBeInTheDocument();
+    });
+
+    it('calls onChange with array when option is selected', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...multiSelectProps} onChange={onChange} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      const option = screen.getByText('Option 1');
+      await user.click(option);
+
+      expect(onChange).toHaveBeenCalledWith('option1');
+    });
+
+    it('handles multiple selections', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...multiSelectProps} onChange={onChange} value={['option1']} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      const option2 = screen.getByText('Option 2');
+      await user.click(option2);
+
+      expect(onChange).toHaveBeenCalledWith('option2');
+    });
+
+    it('uses displayValue in multi-select mode', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip
+            {...multiSelectProps}
+            displayValue="2 items selected"
+            value={['option1', 'option2']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      // displayValue should override the default multi-select label
+      expect(screen.getByText('2 items selected')).toBeInTheDocument();
+      expect(screen.queryByText('Option 1, Option 2')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Option Groups', () => {
+    const groupOptions: SelectChipProps<'single', string>['options'] = [
+      {
+        label: 'Group 1',
+        options: [
+          { value: '1', label: 'Option 1' },
+          { value: '2', label: 'Option 2' },
+        ],
+      },
+      { value: '3', label: 'Option 3 (no group)' },
+    ];
+
+    it('renders with option groups', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} options={groupOptions} placeholder="Select an option" />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByText('Group 1')).toBeInTheDocument();
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Option 1')).toBeInTheDocument();
+      });
+
+      await waitFor(() => {
+        expect(screen.getByText('Option 3 (no group)')).toBeInTheDocument();
+      });
+    });
+
+    it('handles selection from grouped options', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} onChange={onChange} options={groupOptions} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      const option = screen.getByText('Option 1');
+      await user.click(option);
+
+      expect(onChange).toHaveBeenCalledWith('1');
+    });
+  });
+
+  describe('Edge Cases', () => {
+    it('handles null value option', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByText('Empty option')).toBeInTheDocument();
+      });
+    });
+
+    it('handles disabled options', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} onChange={onChange} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      const disabledOption = screen.getByText('Option 3');
+      await user.click(disabledOption);
+
+      expect(onChange).not.toHaveBeenCalled();
+    });
+
+    it('handles empty options array', () => {
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} options={[]} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toBeInTheDocument();
+    });
+  });
+
+  describe('Controlled vs Uncontrolled', () => {
+    it('works as controlled component', async () => {
+      const setOpen = jest.fn();
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} open={false} setOpen={setOpen} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+
+      rerender(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} open={true} setOpen={setOpen} />
+        </DefaultThemeProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+    });
+
+    it('works as uncontrolled component', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <SelectChip {...defaultProps} defaultOpen={false} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+    });
+  });
+});

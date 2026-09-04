@@ -1,0 +1,98 @@
+name: Visreg Web
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled, ready_for_review]
+    branches: [master]
+
+concurrency:
+  group: Visreg-Web-${{github.ref_name}}-${{github.event.pull_request.number || github.sha}}
+  cancel-in-progress: ${{github.event_name == 'pull_request'}}
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+env:
+  CI: true
+  PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: 1
+
+jobs:
+  check:
+    uses: ./.github/workflows/visreg-check.yml
+    with:
+      source-paths: packages/web/src packages/common/src packages/icons/src packages/illustrations/src
+      cache-key-prefix: web-visreg-v1
+      has-label: ${{ contains(github.event.pull_request.labels.*.name, 'visreg') }}
+
+  visreg-web:
+    name: Visreg Web
+    needs: [check]
+    if: needs.check.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }} # Ensure correct ref for push/PR
+
+      - uses: ./.github/actions/setup-node-ci
+      - name: Set branch name for Percy
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [[ "$EVENT_NAME" == "pull_request" ]]; then
+            echo "PERCY_BRANCH=$HEAD_REF" >> "$GITHUB_ENV"
+          else
+            echo "PERCY_BRANCH=$REF_NAME" >> "$GITHUB_ENV"
+          fi
+      - name: Setup Chrome
+        uses: browser-actions/setup-chrome@b94431e051d1c52dcbe9a7092a4f10f827795416 # v2.1.0
+        with:
+          chrome-version: stable
+          install-chromedriver: true
+      - name: Visreg Web
+        id: percy-run
+        run: |
+          OUTPUT=$(yarn nx run storybook:percy 2>&1)
+          EXIT_CODE=$?
+          echo "$OUTPUT"
+          PERCY_URL=$(echo "$OUTPUT" | grep -oE 'https://percy\.io[^[:space:]]+' | head -1)
+          echo "percy_url=$PERCY_URL" >> "$GITHUB_OUTPUT"
+          exit $EXIT_CODE
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+          STORYBOOK_SKIP_ANIMATION: true
+          PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
+          CI: true
+      - name: Comment Percy link on PR
+        if: always() && github.event_name == 'pull_request' && steps.percy-run.outputs.percy_url != ''
+        uses: ./.github/actions/visreg-comment-percy
+        with:
+          percy_url: ${{ steps.percy-run.outputs.percy_url }}
+
+  finalize:
+    name: Save visreg result cache
+    needs: [check, visreg-web]
+    if: github.event_name == 'pull_request' && needs.visreg-web.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+      - name: Create visreg cache marker
+        run: touch .visreg-cache-marker
+      - name: Save visreg result cache
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: .visreg-cache-marker
+          key: web-visreg-v1-${{ needs.check.outputs.content_hash }}

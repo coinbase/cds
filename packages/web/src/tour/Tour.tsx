@@ -1,0 +1,426 @@
+import React, { type CSSProperties, useCallback, useEffect, useMemo, useRef } from 'react';
+import {
+  OverlayContentContext,
+  type OverlayContentContextValue,
+} from '@coinbase/cds-common/overlays/OverlayContentContext';
+import { TourContext, type TourContextValue } from '@coinbase/cds-common/tour/TourContext';
+import type {
+  TourOptions,
+  TourScrollOptions,
+  TourStepValue,
+} from '@coinbase/cds-common/tour/useTour';
+import { useTour } from '@coinbase/cds-common/tour/useTour';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import {
+  arrow as arrowMiddleware,
+  autoPlacement,
+  type AutoPlacementOptions,
+  autoUpdate,
+  type Coords,
+  offset,
+  type OffsetOptions,
+  type Placement,
+  shift,
+  type ShiftOptions,
+  useFloating,
+} from '@floating-ui/react-dom';
+import { css } from '@linaria/core';
+import { animated, config as springConfig, useSpring } from '@react-spring/web';
+
+import { cx } from '../cx';
+import { useComponentConfig } from '../hooks/useComponentConfig';
+import { useScrollBlocker } from '../hooks/useScrollBlocker';
+import { FocusTrap } from '../overlays/FocusTrap';
+import { Portal } from '../overlays/Portal';
+import { modalContainerId } from '../overlays/PortalProvider';
+import type { StylesAndClassNames } from '../types';
+
+import { DefaultTourMask } from './DefaultTourMask';
+import { DefaultTourStepArrow } from './DefaultTourStepArrow';
+
+/**
+ * Static class names for Calendar component parts.
+ * Use these selectors to target specific elements with CSS.
+ */
+export const tourClassNames = {
+  /** Root element */
+  root: 'cds-Tour',
+  /** The opaque overlay/mask that emphasizes current step */
+  mask: 'cds-Tour-mask',
+  /** A step's arrow element */
+  stepArrow: 'cds-Tour-stepArrow',
+  /** A step element's positioned container */
+  stepContainer: 'cds-Tour-stepContainer',
+} as const;
+
+const overlayContentContextValue: OverlayContentContextValue = {
+  isTour: true,
+};
+
+const containerCss = css`
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100vw;
+  height: 100vh;
+`;
+
+// ------------ SUBCOMPONENT PROP TYPES ------------
+export type TourStepArrowComponentProps = {
+  arrow?: Partial<Coords> & {
+    centerOffset: number;
+    alignmentOffset?: number;
+  };
+  placement: Placement;
+  style?: CSSProperties;
+  className?: string;
+};
+
+export type TourMaskComponentProps = {
+  /**
+   * Rect of the active TourStep's target element.
+   */
+  activeTourStepTargetRect: Rect;
+  /**
+   * Padding to add around the edges of the TourOverlay's content mask.
+   */
+  padding?: string | number;
+  /**
+   * Corner radius for the TourOverlay's content mask. Uses SVG rect element's `rx` and `ry`
+   * attributes https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/rx.
+   */
+  borderRadius?: string | number;
+};
+
+// ------------ SUBCOMPONENT TYPES ------------
+export type TourStepArrowComponent = React.ForwardRefExoticComponent<
+  TourStepArrowComponentProps & { ref?: React.Ref<any> }
+>;
+
+export type TourMaskComponent = React.FC<TourMaskComponentProps>;
+
+export type TourBaseProps<TourStepId extends string = string> = SharedProps &
+  TourOptions<TourStepId> &
+  Pick<SharedAccessibilityProps, 'accessibilityLabel' | 'accessibilityLabelledBy' | 'id'> & {
+    children?: React.ReactNode;
+    /**
+     * The Component to render as a tour overlay and mask.
+     * @default DefaultTourMask
+     */
+    TourMaskComponent?: TourMaskComponent;
+    /**
+     * The default Component to render for each TourStep arrow element.
+     * @default DefaultTourStepArrow
+     */
+    TourStepArrowComponent?: TourStepArrowComponent;
+    /**
+     * Hide overlay when tour is active
+     */
+    hideOverlay?: boolean;
+    /**
+     * Configures `@floating-ui` offset options for Tour Step component. See https://floating-ui.com/docs/offset.
+     */
+    tourStepOffset?: OffsetOptions;
+    /**
+     * Configures `@floating-ui` autoPlacement options for Tour Step component. See https://floating-ui.com/docs/autoplacement.
+     * @default 24
+     */
+    tourStepAutoPlacement?: AutoPlacementOptions;
+    /**
+     * Configures `@floating-ui` shift options for Tour Step component. See https://floating-ui.com/docs/shift.
+     */
+    tourStepShift?: ShiftOptions;
+    /**
+     * Padding to add around the edges of the TourMask's content mask.
+     */
+    tourMaskPadding?: string | number;
+    /**
+     * Corner radius for the TourMask's content mask. Uses SVG rect element's `rx` and `ry`
+     * attributes https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/rx.
+     */
+    tourMaskBorderRadius?: string | number;
+    /**
+     * Controls the scrolling behavior and margins when calling element.scrollTo() to scroll to an active TourStep target.
+     */
+    scrollOptions?: TourScrollOptions;
+    /**
+     * @danger This disables React portal integration. Use this with caution.
+     */
+    disablePortal?: boolean;
+    /**
+     * Disable automatically scrolling to active elements.
+     */
+    disableAutoScroll?: boolean;
+  };
+
+export type TourProps<TourStepId extends string = string> = TourBaseProps<TourStepId> &
+  StylesAndClassNames<typeof tourClassNames>;
+
+const defaultScrollOptions: TourScrollOptions = {
+  behavior: 'smooth',
+  marginX: 100,
+  marginY: 100,
+};
+
+/** Waits for scrolling to finish before resolving, up to maximum of 3 seconds. */
+const waitForScroll = async () =>
+  new Promise<void>((resolve) => {
+    let isScrolling: ReturnType<typeof setTimeout>;
+    let resolved = false;
+    const listener = () => {
+      clearTimeout(isScrolling);
+      isScrolling = setTimeout(() => {
+        window.removeEventListener('scroll', listener);
+        resolved = true;
+        resolve();
+      }, 50);
+    };
+    window.addEventListener('scroll', listener);
+    // This is a failsafe so we don't hang the whole app
+    // if `waitForScroll` is called when not scrolling.
+    // We assume scrolling won't last longer than 3 sec.
+    setTimeout(() => {
+      if (!resolved) resolve();
+    }, 3000);
+  });
+
+const scrollIntoView = async (element: HTMLElement | null, scrollOptions?: TourScrollOptions) => {
+  if (!element) return;
+  const rect = element.getBoundingClientRect();
+  const shouldScrollUp = rect.top < 0;
+  const shouldScrollDown = rect.bottom > window.innerHeight;
+  const shouldScrollLeft = rect.left < 0;
+  const shouldScrollRight = rect.right > window.innerWidth;
+  const shouldScrollX =
+    (shouldScrollLeft && !shouldScrollRight) || (!shouldScrollLeft && shouldScrollRight);
+  const shouldScrollY =
+    (shouldScrollUp && !shouldScrollDown) || (!shouldScrollUp && shouldScrollDown);
+  if (!shouldScrollX && !shouldScrollY) return;
+  const marginX = scrollOptions?.marginX ?? 0;
+  const marginY = scrollOptions?.marginY ?? 0;
+  const targetX = rect.left + window.scrollX - marginX;
+  const targetY = rect.top + window.scrollY - marginY;
+  window.scrollTo({
+    top: shouldScrollY ? targetY : undefined,
+    left: shouldScrollX ? targetX : undefined,
+    behavior: 'smooth',
+  });
+  await waitForScroll();
+};
+
+export type TourFC = <TourStepId extends string = string>(
+  props: TourProps<TourStepId>,
+) => React.ReactNode;
+
+const defaultTourStepOffset = 24;
+const defaultTourStepShiftPadding = 32;
+
+const TourComponent = <TourStepId extends string = string>(_props: TourProps<TourStepId>) => {
+  const mergedProps = useComponentConfig('Tour', _props);
+  const {
+    steps,
+    activeTourStep,
+    onChange,
+    children,
+    TourMaskComponent = DefaultTourMask,
+    TourStepArrowComponent = DefaultTourStepArrow,
+    hideOverlay,
+    tourStepOffset = defaultTourStepOffset,
+    tourStepShift,
+    tourStepAutoPlacement,
+    tourMaskPadding,
+    tourMaskBorderRadius,
+    scrollOptions = defaultScrollOptions,
+    disablePortal,
+    disableAutoScroll,
+    classNames,
+    styles,
+    accessibilityLabel,
+    accessibilityLabelledBy,
+    id,
+    testID,
+  } = mergedProps;
+  const tourStepArrowRef = useRef<HTMLDivElement>(null);
+  // let individual step data override global custom components
+  const RenderedTourStep = activeTourStep?.Component;
+  // activeTourStep.ArrowComponent references old, deprecated type in cds-common
+  const RenderedTourStepArrow =
+    (activeTourStep?.ArrowComponent as TourStepArrowComponent) ?? TourStepArrowComponent;
+
+  // This state is used to store the active tour step target element.
+  // const [activeTourStepTarget, setActiveTourStepTarget] = useState<HTMLElement | null>(null);
+
+  const blockScroll = useScrollBlocker();
+  const [animation, animationApi] = useSpring(
+    () => ({ from: { opacity: 0 }, config: springConfig.slow }),
+    [],
+  );
+
+  const tourMaskStyles = useMemo(
+    () => ({
+      ...animation,
+      ...styles?.mask,
+    }),
+    [animation, styles?.mask],
+  );
+
+  const {
+    refs,
+    floatingStyles,
+    placement,
+    middlewareData: { arrow },
+  } = useFloating<HTMLElement>({
+    middleware: [
+      autoPlacement(tourStepAutoPlacement),
+      offset(tourStepOffset),
+      shift(tourStepShift ?? { padding: defaultTourStepShiftPadding }),
+      arrowMiddleware({ element: tourStepArrowRef }),
+    ],
+    whileElementsMounted: autoUpdate,
+  });
+
+  const stepContainerStyle = useMemo(
+    () => ({
+      ...animation,
+      ...styles?.stepContainer,
+    }),
+    [animation, styles?.stepContainer],
+  );
+
+  const handleChange = useCallback(
+    (tourStep: TourStepValue<TourStepId> | null) => {
+      void animationApi.start({
+        to: { opacity: 0 },
+        config: springConfig.stiff,
+        onResolve: () => onChange(tourStep),
+      });
+    },
+    [animationApi, onChange],
+  );
+
+  const api = useTour<TourStepId, HTMLElement>({ steps, activeTourStep, onChange: handleChange });
+  const { activeTourStepTarget, setActiveTourStepTarget } = api;
+
+  // Component Lifecycle & Side Effects
+  // ---------------------------------------------------------------------------
+  // This component's visual side effects (scrolling and animations) are driven
+  // by a single callback, `handleSetActiveTourStepTarget`.
+  //
+  // This function is called from the `TourStep` component's ref callback
+  // whenever the active step changes. Because the ref callback is tied to the
+  // lifecycle of the `TourStep`, it reliably fires whenever a new step becomes
+  // active, regardless of whether the change was triggered internally (by a
+  // "Next" button) or externally (by a direct prop change).
+  //
+  // This centralizes the logic for revealing a step: we get the target element,
+  // scroll it into view, and then kick off the fade-in animation, all in one
+  // sequential, event-driven flow.
+
+  const handleActiveTourStepTargetChange = useCallback(
+    (target: HTMLElement | null) => {
+      refs.setReference(target);
+      setActiveTourStepTarget(target);
+
+      const revealTourStep = async () => {
+        // Scroll the new target into view.
+        if (!disableAutoScroll && !activeTourStep?.disableAutoScroll) {
+          await scrollIntoView(target, activeTourStep?.scrollOptions ?? scrollOptions);
+        }
+        void animationApi.start({ to: { opacity: 1 }, config: springConfig.slow });
+      };
+
+      void revealTourStep();
+    },
+    [
+      refs,
+      setActiveTourStepTarget,
+      disableAutoScroll,
+      activeTourStep?.disableAutoScroll,
+      activeTourStep?.scrollOptions,
+      animationApi,
+      scrollOptions,
+    ],
+  );
+
+  // Manages scroll locking for the tour's duration. `useEffect` is used to
+  // guarantee that scroll is re-enabled when the tour is closed or unmounted.
+  useEffect(() => {
+    if (activeTourStep?.id) {
+      blockScroll(true);
+    }
+
+    return () => {
+      blockScroll(false);
+    };
+  }, [activeTourStep, animationApi, blockScroll, disableAutoScroll, scrollOptions]);
+
+  return (
+    <OverlayContentContext.Provider value={overlayContentContextValue}>
+      <TourContext.Provider
+        value={
+          { ...api, setActiveTourStepTarget: handleActiveTourStepTargetChange } as TourContextValue
+        }
+      >
+        {children}
+        {!!RenderedTourStep && (
+          <Portal containerId={modalContainerId} disablePortal={disablePortal}>
+            <div
+              aria-label={accessibilityLabel}
+              aria-labelledby={accessibilityLabelledBy}
+              aria-modal="true"
+              className={cx(tourClassNames.root, containerCss, classNames?.root)}
+              data-testid={testID}
+              id={id}
+              role="dialog"
+              style={styles?.root}
+            >
+              {!(activeTourStep.hideOverlay ?? hideOverlay) && activeTourStepTarget && (
+                // TODO: Remove type assertion after replacing @react-spring/web with framer-motion v11+ for React 19 compatibility
+                <animated.div
+                  {...({
+                    className: cx(tourClassNames.mask, classNames?.mask),
+                    style: tourMaskStyles,
+                  } as React.ComponentProps<typeof animated.div>)}
+                >
+                  <TourMaskComponent
+                    activeTourStepTargetRect={activeTourStepTarget.getBoundingClientRect()}
+                    borderRadius={activeTourStep.tourMaskBorderRadius ?? tourMaskBorderRadius}
+                    padding={activeTourStep.tourMaskPadding ?? tourMaskPadding}
+                  />
+                </animated.div>
+              )}
+              <div ref={refs.setFloating} style={floatingStyles}>
+                <FocusTrap>
+                  {/* TODO: Remove type assertion after replacing @react-spring/web with framer-motion v11+ for React 19 compatibility */}
+                  <animated.div
+                    {...({
+                      className: cx(tourClassNames.stepContainer, classNames?.stepContainer),
+                      style: stepContainerStyle,
+                    } as React.ComponentProps<typeof animated.div>)}
+                  >
+                    <RenderedTourStepArrow
+                      ref={tourStepArrowRef}
+                      arrow={arrow}
+                      className={cx(tourClassNames.stepArrow, classNames?.stepArrow)}
+                      placement={placement}
+                      style={styles?.stepArrow}
+                    />
+                    <RenderedTourStep {...activeTourStep} />
+                  </animated.div>
+                </FocusTrap>
+              </div>
+            </div>
+          </Portal>
+        )}
+      </TourContext.Provider>
+    </OverlayContentContext.Provider>
+  );
+};
+
+TourComponent.displayName = 'Tour';
+
+export const Tour = TourComponent as TourFC;

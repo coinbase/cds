@@ -1,0 +1,122 @@
+/*
+ * Self-host Inter through Fontsource so Percy captures deterministic local assets
+ * instead of relying on Google Fonts network requests during asset discovery.
+ */
+import '@fontsource-variable/inter/standard.css';
+import '@fontsource-variable/inter/standard-italic.css';
+import '@coinbase/cds-icons/fonts/web/icon-font.css';
+import './storybook-fonts.css';
+
+import { defaultFontStyles } from '@coinbase/cds-web/styles/defaultFont';
+import { globalStyles } from '@coinbase/cds-web/styles/global';
+import type { Preview } from '@storybook/react-vite';
+import { themes } from '@storybook/theming';
+
+import { StoryContainer } from './StoryContainer';
+
+const themeConfigs = [
+  {
+    title: 'Theme: Default',
+    value: 'defaultTheme',
+  },
+  {
+    title: 'Theme: Default high contrast',
+    value: 'defaultHighContrastTheme',
+  },
+] as const;
+
+export type ThemeConfigValue = (typeof themeConfigs)[number]['value'];
+
+const themeBackgroundColors = [
+  {
+    title: 'Background: bg',
+    value: 'bg',
+  },
+  {
+    title: 'Background: bgAlternate',
+    value: 'bgAlternate',
+  },
+] as const;
+
+export type ThemeBackgroundColorValue = (typeof themeBackgroundColors)[number]['value'];
+
+const storyPadding = [
+  {
+    title: 'Padding: None',
+    value: '0',
+  },
+  {
+    title: 'Padding: 16px',
+    value: '16',
+  },
+  {
+    title: 'Padding: 24px',
+    value: '24',
+  },
+] as const;
+
+export type StoryPaddingValue = (typeof storyPadding)[number]['value'];
+
+const preview: Preview = {
+  decorators: [StoryContainer],
+  parameters: {
+    layout: 'fullscreen',
+    backgrounds: { disabled: true },
+    globalStyles: `${globalStyles} ${defaultFontStyles}`,
+    percy: {
+      // Avoid capturing fallback text or missing icon glyphs while fonts are loading.
+      waitForSelector: '[data-percy-fonts-ready="true"]',
+    },
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+    options: {
+      storySort: {
+        method: 'alphabetical',
+      },
+    },
+    darkMode: {
+      dark: { ...themes.dark, barBg: themes.dark.appBg },
+      light: { ...themes.light, barBg: themes.light.appBg },
+    },
+  },
+  globalTypes: {
+    themeConfig: {
+      description: 'Theme config',
+      toolbar: {
+        title: 'Theme config',
+        icon: 'paintbrush',
+        items: themeConfigs,
+        dynamicTitle: true,
+      },
+    },
+    themeBackgroundColor: {
+      description: 'Background color',
+      toolbar: {
+        title: 'Background color',
+        icon: 'contrast',
+        items: themeBackgroundColors,
+        dynamicTitle: true,
+      },
+    },
+    storyPadding: {
+      description: 'Story padding',
+      toolbar: {
+        title: 'Story padding',
+        icon: 'padding',
+        items: storyPadding,
+        dynamicTitle: true,
+      },
+    },
+  },
+  initialGlobals: {
+    themeConfig: themeConfigs[0].value,
+    themeBackgroundColor: themeBackgroundColors[0].value,
+    storyPadding: storyPadding[0].value,
+  },
+};
+
+export default preview;

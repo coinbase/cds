@@ -1,0 +1,39 @@
+{
+  "name": "cds-webpack-app",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "engines": {
+    "node": "^22"
+  },
+  "scripts": {
+    "dev": "webpack serve --mode=development",
+    "build": "webpack --mode=production",
+    "start": "webpack serve --mode=production"
+  },
+  "dependencies": {
+    "@coinbase/cds-icons": "^5",
+    "@coinbase/cds-illustrations": "^4",
+    "@coinbase/cds-web": "^9",
+    "framer-motion": "^10",
+    "react": "19.1.2",
+    "react-dom": "19.1.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.27.1",
+    "@babel/preset-typescript": "^7.27.1",
+    "@types/node": "^22",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "babel-loader": "^10.0.0",
+    "css-loader": "^7.1.2",
+    "html-webpack-plugin": "^5.6.5",
+    "mini-css-extract-plugin": "^2.9.4",
+    "typescript": "~5.9.2",
+    "webpack": "^5.101.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.3"
+  }
+}

@@ -1,0 +1,25 @@
+import { Accordion } from '@coinbase/cds-web/accordion/Accordion';
+import { AccordionItem } from '@coinbase/cds-web/accordion/AccordionItem';
+import { Text } from '@coinbase/cds-web/typography/Text';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+
+import webStylesData from ':docgen/web/accordion/AccordionItem/styles-data';
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => (
+    <Accordion defaultActiveKey="1">
+      <AccordionItem classNames={classNames} itemKey="1" subtitle="Subtitle" title="Accordion item">
+        <Text as="p" font="body">
+          Accordion panel content
+        </Text>
+      </AccordionItem>
+    </Accordion>
+  )}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="AccordionItem" styles={webStylesData} />

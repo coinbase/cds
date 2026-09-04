@@ -1,0 +1,79 @@
+### Basic Usage
+
+```tsx live
+<RemoteImageGroup>
+  <RemoteImage source={assets.eth.imageUrl} />
+  <RemoteImage source={assets.eth.imageUrl} />
+  <RemoteImage source={assets.dai.imageUrl} />
+  <RemoteImage source={assets.hbar.imageUrl} />
+  <RemoteImage source={assets.ltc.imageUrl} />
+  <RemoteImage source={assets.uni.imageUrl} />
+</RemoteImageGroup>
+```
+
+### Max Items
+
+```tsx live
+<RemoteImageGroup max={4} size={32}>
+  <RemoteImage source={assets.eth.imageUrl} />
+  <RemoteImage source={assets.btc.imageUrl} />
+  <RemoteImage source={assets.dai.imageUrl} />
+  <RemoteImage source={assets.hbar.imageUrl} />
+  <RemoteImage source={assets.ltc.imageUrl} />
+  <RemoteImage source={assets.uni.imageUrl} />
+</RemoteImageGroup>
+```
+
+### Different Shapes
+
+```tsx live
+<RemoteImageGroup shape="circle" size="xxl">
+  <RemoteImage shape="squircle" source={squareAssets.human1} />
+  <RemoteImage source={assets.sushi.imageUrl} />
+  <RemoteImage shape="squircle" source={squareAssets.human2} />
+  <RemoteImage source={assets.ltc.imageUrl} />
+</RemoteImageGroup>
+```
+
+### Different Sizes
+
+Use the `size` prop to change the dimensions of the avatars in the group.
+
+```tsx live
+function Component() {
+  const [size, setSize] = React.useState('m');
+  const avatarSizes = ['s', 'm', 'l', 'xl', 'xxl', 'xxxl', 16, 24, 32];
+  const options = avatarSizes.map((s) => ({ value: s, label: String(s) }));
+
+  return (
+    <VStack gap={2}>
+      <Select
+        labelVariant="inside"
+        label="Image Size"
+        value={size}
+        onChange={setSize}
+        options={options}
+      />
+      <RemoteImageGroup size={size}>
+        <RemoteImage source={assets.eth.imageUrl} />
+        <RemoteImage source={assets.btc.imageUrl} />
+        <RemoteImage source={assets.dai.imageUrl} />
+        <RemoteImage source={assets.hbar.imageUrl} />
+      </RemoteImageGroup>
+    </VStack>
+  );
+}
+```
+
+### Bordered Images
+
+Use the `borderWidth` and `borderColor` props to change border style of the images in the group. `borderColor` defaults to `bg` when `borderWidth` is set.
+
+```tsx live
+<RemoteImageGroup borderWidth={300} max={3}>
+  <RemoteImage source={assets.eth.imageUrl} />
+  <RemoteImage source={assets.btc.imageUrl} />
+  <RemoteImage source={assets.dai.imageUrl} />
+  <RemoteImage source={assets.hbar.imageUrl} />
+</RemoteImageGroup>
+```

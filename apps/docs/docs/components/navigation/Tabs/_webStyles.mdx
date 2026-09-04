@@ -1,0 +1,36 @@
+import { useState } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { DefaultTabsActiveIndicator, Tabs } from '@coinbase/cds-web/tabs';
+
+import webStylesData from ':docgen/web/tabs/Tabs/styles-data';
+
+export const TabsExample = ({ classNames }) => {
+  const tabs = [
+    { id: 'tab1', label: 'Tab 1' },
+    { id: 'tab2', label: 'Tab 2' },
+    { id: 'tab3', label: 'Tab 3' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <Tabs
+      classNames={classNames}
+      accessibilityLabel="Example tabs"
+      activeTab={activeTab}
+      background="bg"
+      gap={4}
+      onChange={setActiveTab}
+      tabs={tabs}
+    />
+  );
+};
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <TabsExample classNames={classNames} />}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="Tabs" styles={webStylesData} />

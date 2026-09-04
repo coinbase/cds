@@ -1,0 +1,52 @@
+// url=https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=10177-5161
+// source=packages/web/src/chips/InputChip.tsx
+// component=InputChip
+import figma from 'figma';
+
+const instance = figma.selectedInstance;
+
+// Label text
+const label = instance.getString('↳ value');
+
+// size: VARIANT → size prop
+const size = instance.getEnum('size', { s: 's', xs: 'xs' });
+
+// state: disabled maps to disabled prop; focused/hovered/pressed are interaction-only states
+const disabled = instance.getEnum('state', {
+  default: false,
+  focused: false,
+  hovered: false,
+  pressed: false,
+  disabled: true,
+});
+
+// show start: whether the start slot is populated
+const showStart = instance.getEnum('show start', { true: true, false: false });
+
+// show label: whether the label text is visible (false = icon-only chip)
+const showLabel = instance.getEnum('show label', { true: true, false: false });
+
+// active: Figma active variant maps directly to the active prop
+const active = instance.getEnum('active', { true: true, false: false });
+
+// The start element uses different instance swaps depending on the size
+const startCompact = instance.getInstanceSwap('↳ startCompact');
+const startRegular = instance.getInstanceSwap('↳ start');
+const startHandle = size === 'xs' ? startCompact : startRegular;
+let startCode;
+if (showStart && startHandle && startHandle.type === 'INSTANCE') {
+  startCode = startHandle.executeTemplate().example;
+}
+
+// eslint-disable-next-line no-restricted-exports
+export default {
+  example: figma.code`<InputChip
+  ${size !== 's' ? figma.code`size="${size}"` : ''}
+  ${!active ? 'active={false}' : ''}
+  ${disabled ? 'disabled' : ''}
+  ${startCode ? figma.code`start={${startCode}}` : ''}
+>${showLabel ? label : ''}</InputChip>`,
+  imports: ['import { InputChip } from "@coinbase/cds-web/chips"'],
+  id: 'input-chip',
+  metadata: { nestable: true },
+};

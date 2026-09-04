@@ -1,0 +1,33 @@
+{
+  "name": "@coinbase/docusaurus-plugin-llm-dev-server",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Docusaurus plugin for serving LLM docs on-the-fly in dev mode",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "libs/docusaurus-plugin-llm-dev-server"
+  },
+  "type": "commonjs",
+  "main": "./cjs/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./cjs/index.js"
+    }
+  },
+  "files": [
+    "cjs",
+    "dts"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@docusaurus/types": "~3.7.0",
+    "@types/express": "^4.17.21"
+  }
+}

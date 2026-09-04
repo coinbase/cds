@@ -1,0 +1,180 @@
+import React, { forwardRef, memo, useMemo } from 'react';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
+import type { TextAlignProps } from '@coinbase/cds-common/types/TextBaseProps';
+import { css } from '@linaria/core';
+
+import { cx } from '../cx';
+import { useTheme } from '../hooks/useTheme';
+import { Box, type BoxBaseProps, type BoxProps } from '../layout/Box';
+
+const baseCss = css`
+  min-width: 0;
+  flex-grow: 2;
+  background-color: transparent;
+  color: var(--color-fg);
+  border-color: transparent;
+
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  &:focus {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+  }
+
+  &::placeholder {
+    color: var(--color-fgMuted);
+    opacity: 1;
+  }
+
+  &[type='number'] {
+    -moz-appearance: textfield;
+  }
+
+  &[readonly]:not(:disabled) {
+    background-color: var(--color-bgSecondary);
+  }
+
+  /* stylelint-disable a11y/no-display-none */
+  /* clears the "X" from Internet Explorer */
+  &[type='search']::-ms-clear {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  &[type='search']::-ms-reveal {
+    display: none;
+    width: 0;
+    height: 0;
+  }
+  /* clears the "X" from Chrome */
+  &[type='search']::-webkit-search-decoration,
+  &[type='search']::-webkit-search-cancel-button,
+  &[type='search']::-webkit-search-results-button,
+  &[type='search']::-webkit-search-results-decoration {
+    display: none;
+  }
+  /* stylelint-enable a11y/no-display-none */
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus,
+  &:-webkit-autofill:active {
+    border-radius: var(--borderRadius-200);
+    -webkit-text-fill-color: var(--color-fg);
+    transition: background-color 0s ease-in-out 5000s;
+  }
+`;
+
+const originalContainerPaddingCss = css`
+  padding: var(--space-2);
+`;
+
+const compactContainerPaddingCss = css`
+  padding: var(--space-1);
+`;
+
+export type NativeInputBaseProps = BoxBaseProps & {
+  /**
+   * Decreases the padding within the input element
+   * @default false
+   * @deprecated Use `padding` props instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v11
+   */
+  compact?: boolean;
+  /** Custom container spacing if needed. This will add to the existing spacing */
+  containerSpacing?: string;
+  /**
+   * Text Align Input
+   * @default start
+   * */
+  align?: TextAlignProps['align'];
+  /**
+   * Color of the caret (cursor).
+   * @default fgPrimary
+   */
+  caretColor?: ThemeVars.Color;
+};
+
+export type NativeInputProps = NativeInputBaseProps &
+  BoxProps<'input'> &
+  SharedProps &
+  Pick<
+    SharedAccessibilityProps,
+    'accessibilityLabel' | 'accessibilityLabelledBy' | 'accessibilityHint'
+  > & {
+    /**
+     * Callback fired when pressed/clicked
+     */
+    onClick?: React.MouseEventHandler;
+  };
+
+export const NativeInput = memo(
+  forwardRef(function NativeInput(
+    {
+      containerSpacing,
+      testID,
+      align = 'start',
+      font = 'body',
+      onFocus,
+      onClick,
+      onBlur,
+      onKeyDown,
+      onChange,
+      accessibilityLabel,
+      accessibilityLabelledBy,
+      accessibilityHint,
+      compact,
+      className,
+      caretColor = 'fgPrimary',
+      style,
+      ...props
+    }: NativeInputProps,
+    ref: React.ForwardedRef<HTMLInputElement>,
+  ) {
+    const { activeColorScheme } = useTheme();
+    // NativeInput has no `size` prop, so the deprecated `compact` still drives its own
+    // padding here. When rendered inside TextInput, `containerSpacing` (size-derived) is
+    // passed and overrides this fallback.
+    const defaultContainerPadding = compact
+      ? compactContainerPaddingCss
+      : originalContainerPaddingCss;
+
+    const dynamicStyles = useMemo(
+      () => ({
+        textAlign: align,
+        colorScheme: activeColorScheme,
+        caretColor: `var(--color-${caretColor})`,
+        ...style,
+      }),
+      [align, activeColorScheme, caretColor, style],
+    );
+
+    return (
+      <Box
+        ref={ref}
+        aria-describedby={accessibilityHint}
+        aria-label={accessibilityLabel}
+        aria-labelledby={accessibilityLabelledBy}
+        as="input"
+        className={cx(baseCss, containerSpacing ?? defaultContainerPadding, className)}
+        data-testid={testID}
+        font={font}
+        onBlur={onBlur}
+        onChange={onChange}
+        onClick={onClick}
+        onFocus={onFocus}
+        onKeyDown={onKeyDown}
+        style={dynamicStyles}
+        tabIndex={0}
+        {...props}
+      />
+    );
+  }),
+);

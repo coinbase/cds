@@ -1,0 +1,225 @@
+## Basics
+
+Pass `content` for the panel body and `children` as the trigger. The trigger toggles open and closed on press; the panel applies focus management and escape-to-close behavior.
+
+:::tip Use an interactive element as the trigger
+Always pass a natively interactive element — such as [Button](/components/inputs/Button/), [IconButton](/components/inputs/IconButton/), or an `<a>` tag — as `children`. Non-interactive elements (plain `div`, `span`, `Text`) are not reachable by keyboard and are invisible to assistive technology, which breaks accessibility.
+:::
+
+```jsx live
+function BasicExample() {
+  return (
+    <PortalProvider>
+      <PopoverPanel
+        content={({ closePopover }) => (
+          <VStack padding={3} gap={2}>
+            <Text font="headline">Panel title</Text>
+            <Text color="fgMuted">Arbitrary content for a floating panel.</Text>
+            <Button variant="secondary" compact onClick={closePopover}>
+              Action
+            </Button>
+          </VStack>
+        )}
+        accessibilityLabel="Example settings panel"
+      >
+        <Button>Open panel</Button>
+      </PopoverPanel>
+    </PortalProvider>
+  );
+}
+```
+
+## Selectable list
+
+Use [`ListCell`](/components/data-display/ListCell/) with local state for the selected row and `closePopover` from the `content` render callback. You do not need `SelectProvider` or `SelectContext`.
+
+After a value is chosen, the trigger often shows only the title. Set **`accessibilityLabel`** on the trigger to include the same details a sighted user gets from the list (for example title and description). Optionally set the panel **`accessibilityLabel`** so the dialog name matches the task (first choice vs. changing the value).
+
+```jsx live
+function ListCellSelectExample() {
+  const [selectedId, setSelectedId] = useState(null);
+  const options = [
+    { id: 'eth', title: 'Ethereum', description: 'Main network' },
+    { id: 'base', title: 'Base', description: 'L2 network' },
+    { id: 'sol', title: 'Solana', description: 'External wallet' },
+  ];
+  const selected = options.find((o) => o.id === selectedId);
+
+  return (
+    <PortalProvider>
+      <PopoverPanel
+        panelWidth={320}
+        accessibilityLabel={selected ? 'Change network' : 'Choose network'}
+        content={({ closePopover }) => (
+          <VStack gap={0}>
+            {options.map((option) => (
+              <ListCell
+                key={option.id}
+                spacingVariant="condensed"
+                title={option.title}
+                description={option.description}
+                selected={selectedId === option.id}
+                onClick={() => {
+                  setSelectedId(option.id);
+                  closePopover();
+                }}
+              />
+            ))}
+          </VStack>
+        )}
+      >
+        <Button
+          endIcon="caretDown"
+          width={240}
+          accessibilityLabel={
+            selected
+              ? `${selected.title}, ${selected.description}, click to change`
+              : 'Choose network'
+          }
+        >
+          {selected ? selected.title : 'Choose Network'}
+        </Button>
+      </PopoverPanel>
+    </PortalProvider>
+  );
+}
+```
+
+## Overlay and placement
+
+Use `showOverlay` to dim content behind the panel. Adjust floating placement with `contentPosition` (see [Floating UI placement](https://floating-ui.com/docs/useFloating#placement)).
+
+```jsx live
+function OverlayAndPlacementExample() {
+  return (
+    <PortalProvider>
+      <HStack gap={3} flexWrap="wrap">
+        <PopoverPanel
+          content={({ closePopover }) => (
+            <VStack padding={3} gap={2}>
+              <Text>Content with overlay and top placement.</Text>
+              <Button variant="secondary" compact onClick={closePopover}>
+                Done
+              </Button>
+            </VStack>
+          )}
+          showOverlay
+          accessibilityLabel="Panel with overlay"
+        >
+          <Button>With overlay</Button>
+        </PopoverPanel>
+        <PopoverPanel
+          content={({ closePopover }) => (
+            <VStack padding={3} gap={2}>
+              <Text>Content with overlay and top placement.</Text>
+              <Button variant="secondary" compact onClick={closePopover}>
+                Done
+              </Button>
+            </VStack>
+          )}
+          contentPosition={{ placement: 'top', gap: 1 }}
+          accessibilityLabel="Panel above trigger"
+        >
+          <Button>Top placement</Button>
+        </PopoverPanel>
+      </HStack>
+    </PortalProvider>
+  );
+}
+```
+
+## Panel sizing
+
+By default, the panel content uses the same width as the trigger. Set `panelWidth`, `minPanelWidth`, `maxPanelWidth`, and `maxPanelHeight` when you need different constraints. The default max height is exported as `POPOVER_PANEL_MAX_HEIGHT`.
+
+```jsx live
+function SizingExample() {
+  return (
+    <PortalProvider>
+      <PopoverPanel
+        content={({ closePopover }) => (
+          <VStack padding={2} gap={1}>
+            {Array.from({ length: 12 }, (_, i) => (
+              <Text key={i}>Row {i + 1}</Text>
+            ))}
+            <Button variant="secondary" compact onClick={closePopover}>
+              Close
+            </Button>
+          </VStack>
+        )}
+        panelWidth={280}
+        maxPanelHeight={200}
+        accessibilityLabel="Scrollable panel"
+      >
+        <Button>Fixed width and max height</Button>
+      </PopoverPanel>
+    </PortalProvider>
+  );
+}
+```
+
+## Mobile modal
+
+On small viewports, pass `enableMobileModal` to render the panel in a modal shell instead of a floating popover.
+
+```jsx live
+function MobileModalExample() {
+  return (
+    <PortalProvider>
+      <PopoverPanel
+        content={({ closePopover }) => (
+          <VStack padding={3} gap={2}>
+            <Text font="headline">Modal-style panel</Text>
+            <Text color="fgMuted">
+              Useful when the floating surface would be cramped on phone breakpoints.
+            </Text>
+            <Button variant="secondary" compact onClick={closePopover}>
+              Close
+            </Button>
+          </VStack>
+        )}
+        enableMobileModal
+        accessibilityLabel="Settings in modal"
+        panelWidth={320}
+        maxPanelWidth="80vw"
+      >
+        <Button>Open (modal on small screens)</Button>
+      </PopoverPanel>
+    </PortalProvider>
+  );
+}
+```
+
+## Imperative open and close
+
+Use a ref to call `openPopover` and `closePopover` when you need to drive visibility from elsewhere (for example, a separate control or analytics callback).
+
+```jsx live
+function ImperativeExample() {
+  const panelRef = useRef(null);
+
+  return (
+    <PortalProvider>
+      <HStack gap={2} flexWrap="wrap" alignItems="center">
+        <Button variant="secondary" onClick={() => panelRef.current?.openPopover()}>
+          Open programmatically
+        </Button>
+        <PopoverPanel
+          ref={panelRef}
+          content={
+            <VStack padding={3} gap={2}>
+              <Text>Panel opened from an external button.</Text>
+              <Button variant="secondary" compact onClick={() => panelRef.current?.closePopover()}>
+                Close from inside
+              </Button>
+            </VStack>
+          }
+          accessibilityLabel="Programmatic panel"
+        >
+          <Button>Trigger</Button>
+        </PopoverPanel>
+      </HStack>
+    </PortalProvider>
+  );
+}
+```

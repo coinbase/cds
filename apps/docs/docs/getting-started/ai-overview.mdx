@@ -1,0 +1,141 @@
+---
+id: ai-overview
+title: AI Overview
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+
+<VStack gap={5}>
+<ContentHeader
+  title="AI Overview"
+  description="Use AI as your CDS development partner to build consistent, accessible user interfaces across web and mobile platforms."
+/>
+
+<MDXSection>
+<MDXArticle>
+
+## Agent Skills
+
+Agent skills are portable instruction sets that teach AI coding agents how to work with specific tools, frameworks, and libraries. CDS provides official agent skills that can be installed into any project to give your AI agent deep knowledge of CDS components, patterns, and best practices.
+
+### `cds-code`
+
+The `cds-code` skill teaches AI agents to produce high-quality CDS code for React and React Native projects. When activated, the agent will:
+
+- **Detect your environment** — Automatically determine whether your project uses React (web) or React Native (mobile) and discover installed CDS packages and their valid import paths.
+- **Select the right components** — Use a built-in component selection guide to choose the appropriate CDS components for any UI task, from layout primitives like `Box` and `VStack` to complex components like `Modal`, `Table`, and `Select`.
+- **Follow CDS best practices** — Prefer CDS style props and design tokens over raw CSS values and use semantic design tokens where possible
+- **Discover icons and illustrations** — Search and select from the full set of CDS icons and illustrations available in your installed version.
+
+#### Installation
+
+Install the `cds-code` skill with the following command:
+
+```bash
+npx skills add https://github.com/coinbase/cds --skill cds-code
+```
+
+For even better results, also install the `cds-docs` skill to give your agent access to full CDS documentation:
+
+```bash
+npx skills add https://github.com/coinbase/cds --skill cds-docs
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## MCP Server
+
+The CDS MCP Server provides direct CDS context to LLMs, allowing AI models to understand and work with CDS APIs and components.
+
+From [modelcontextprotocol.io](https://modelcontextprotocol.io/docs/getting-started/intro):
+
+> _MCP is an open protocol that standardizes how applications provide context to large language models (LLMs). MCP provides a standardized way to connect AI models to different data sources and tools._
+
+### First time setup
+
+Run the setup command to install the CDS MCP Server for Cursor or Claude Code, then enable the MCP server in your agent.
+
+```bash
+npx --package=@coinbase/cds-mcp-server cds-mcp-setup
+```
+
+:::tip
+Make sure to enable the MCP server after installation.<br />
+See the [Cursor docs here](https://cursor.com/docs/context/mcp#using-mcp-in-chat) and the [Claude Code docs here](https://docs.claude.com/en/docs/claude-code/mcp#managing-your-servers) for more information.
+:::
+
+### Using the MCP server
+
+Once the CDS MCP Server is enabled in your agent, the agent will automatically be able to use the CDS MCP tools to interact with the CDS APIs and components.
+
+Try asking a question like "How can I add an icon to a CDS Button?" or "How can I customize the CDS Stepper component behavior?"
+
+### Advanced installation
+
+To install the MCP server separately as a standalone package and add it as a dependency to your project:
+
+```bash
+npm install @coinbase/cds-mcp-server
+```
+
+Or with Yarn:
+
+```bash
+yarn add @coinbase/cds-mcp-server
+```
+
+:::tip
+Avoid installing mismatched versions of the CDS libraries and the CDS MCP Server. The MCP server is automatically included as a dependency of the CDS libraries.
+:::
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Documentation
+
+Documentation pages include "View as markdown" and "Copy page" buttons in a markdown like format.
+This is useful when pasting documentation into ChatGPT, Claude, or Perplexity for help with implementation.
+
+### Documentation indexes
+
+CDS also provides a comprehensive index of documentation in markdown format per platform:
+
+**Web:**
+
+```
+https://cds.coinbase.com/llms/web/routes.txt
+```
+
+**Mobile:**
+
+```
+https://cds.coinbase.com/llms/mobile/routes.txt
+```
+
+Each routes file contains links to all component documentation, React hooks, getting started guides, and brief descriptions for each item.
+
+#### Adding indexes to Cursor
+
+You can add these indexes to Cursor for searchable access to the entire CDS documentation library:
+
+1. Open Cursor Settings
+2. Navigate to "Indexing & Docs"
+3. Add the docs URL for your platform (web or mobile) using the routes links above
+4. AI will automatically fetch relevant docs when you reference components
+
+Other AI IDEs and assistants can be given these indexes as needed or added to their rule files.
+
+</MDXArticle>
+</MDXSection>
+</VStack>

@@ -1,0 +1,17 @@
+{
+  "import": "import { LottieStatusAnimation } from '@coinbase/cds-mobile/animation/LottieStatusAnimation'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/animation/LottieStatusAnimation.tsx",
+  "description": "A specialized component for displaying trade status animations.",
+  "relatedComponents": [
+    {
+      "label": "Lottie",
+      "url": "/components/animation/Lottie"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "lottie-react-native",
+      "version": "7.3.1"
+    }
+  ]
+}

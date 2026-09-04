@@ -1,0 +1,47 @@
+---
+id: heroSquare
+title: HeroSquare
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+import { HeroSquareBanner } from '@site/src/components/page/ComponentBanner/HeroSquareBanner';
+import { IllustrationSheet } from '@site/src/components/page/IllustrationSheet';
+
+import webPropsToc from ':docgen/web/illustrations/HeroSquare/toc-props';
+import mobilePropsToc from ':docgen/mobile/illustrations/HeroSquare/toc-props';
+
+import WebPropsTable from './_webPropsTable.mdx';
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader
+    title="HeroSquare"
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+    banner={<HeroSquareBanner />}
+  />
+  <VStack background="bgAlternate" borderRadius={500} overflow="hidden" padding={4}>
+    ### Illustrations
+    <IllustrationSheet variant="heroSquare" />
+  </VStack>
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webExamples={<WebExamples />}
+    mobilePropsTable={<MobilePropsTable />}
+    mobileExamples={<MobileExamples />}
+    webExamplesToc={webExamplesToc}
+    mobileExamplesToc={mobileExamplesToc}
+    webPropsToc={webPropsToc}
+    mobilePropsToc={mobilePropsToc}
+  />
+</VStack>

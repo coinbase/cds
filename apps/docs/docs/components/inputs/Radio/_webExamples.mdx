@@ -1,0 +1,184 @@
+### Basic Usage
+
+Radio components are typically used individually as part of a radio group. Each radio represents a single option in a mutually exclusive set.
+
+```jsx live
+function BasicRadio() {
+  const [selectedValue, setSelectedValue] = useState('option1');
+
+  return (
+    <VStack gap={2}>
+      <Radio
+        name="basic-radio"
+        value="option1"
+        checked={selectedValue === 'option1'}
+        onChange={(e) => setSelectedValue(e.target.value)}
+      >
+        Option 1
+      </Radio>
+      <Radio
+        name="basic-radio"
+        value="option2"
+        checked={selectedValue === 'option2'}
+        onChange={(e) => setSelectedValue(e.target.value)}
+      >
+        Option 2
+      </Radio>
+      <Radio
+        name="basic-radio"
+        value="option3"
+        checked={selectedValue === 'option3'}
+        onChange={(e) => setSelectedValue(e.target.value)}
+      >
+        Option 3
+      </Radio>
+    </VStack>
+  );
+}
+```
+
+### Radio Groups
+
+The recommended way to use Radio components is with a ControlGroup for better accessibility and easier state management.
+
+```jsx live
+function RadioGroupExample() {
+  const options = [
+    { value: 'btc', children: 'Bitcoin' },
+    { value: 'eth', children: 'Ethereum' },
+    { value: 'ltc', children: 'Litecoin' },
+  ];
+
+  const [selectedCurrency, setSelectedCurrency] = useState('btc');
+
+  return (
+    <ControlGroup
+      role="radiogroup"
+      ControlComponent={Radio}
+      label="Choose a cryptocurrency"
+      options={options}
+      value={selectedCurrency}
+      onChange={(e) => setSelectedCurrency(e.target.value)}
+      name="currency-radio-group"
+    />
+  );
+}
+```
+
+### Custom Colors
+
+You can customize the radio's color using the `controlColor` prop.
+
+```jsx live
+function CustomColorRadio() {
+  const [selectedColor, setSelectedColor] = useState('default');
+
+  return (
+    <VStack gap={2}>
+      <Radio
+        name="color-radio"
+        value="default"
+        checked={selectedColor === 'default'}
+        onChange={(e) => setSelectedColor(e.target.value)}
+      >
+        Default Color
+      </Radio>
+      <Radio
+        name="color-radio"
+        value="green"
+        checked={selectedColor === 'green'}
+        onChange={(e) => setSelectedColor(e.target.value)}
+        controlColor="accentBoldGreen"
+      >
+        Custom Green
+      </Radio>
+      <Radio
+        name="color-radio"
+        value="purple"
+        checked={selectedColor === 'purple'}
+        onChange={(e) => setSelectedColor(e.target.value)}
+        controlColor="accentBoldPurple"
+      >
+        Custom Purple
+      </Radio>
+    </VStack>
+  );
+}
+```
+
+### Disabled State
+
+Radio components can be disabled to prevent user interaction.
+
+```jsx live
+function DisabledRadio() {
+  const [selectedValue, setSelectedValue] = useState('enabled');
+
+  return (
+    <VStack gap={2}>
+      <Radio
+        name="disabled-radio"
+        value="enabled"
+        checked={selectedValue === 'enabled'}
+        onChange={(e) => setSelectedValue(e.target.value)}
+      >
+        Enabled Radio
+      </Radio>
+      <Radio
+        name="disabled-radio"
+        value="disabled-unchecked"
+        checked={false}
+        disabled
+        onChange={(e) => setSelectedValue(e.target.value)}
+      >
+        Disabled & Unchecked
+      </Radio>
+      <Radio
+        name="disabled-radio"
+        value="disabled-checked"
+        checked={true}
+        disabled
+        onChange={(e) => setSelectedValue(e.target.value)}
+      >
+        Disabled & Checked
+      </Radio>
+    </VStack>
+  );
+}
+```
+
+### Custom Styling
+
+You can further customize the radio's appearance using style props.
+
+```jsx live
+function CustomStyledRadio() {
+  const [selectedStyle, setSelectedStyle] = useState('styled1');
+
+  return (
+    <VStack gap={2}>
+      <Radio
+        name="styled-radio"
+        value="styled1"
+        checked={selectedStyle === 'styled1'}
+        onChange={(e) => setSelectedStyle(e.target.value)}
+        background="bgSecondary"
+        borderColor="accentBoldBlue"
+        controlColor="accentBoldBlue"
+      >
+        Custom Background & Border
+      </Radio>
+      <Radio
+        name="styled-radio"
+        value="styled2"
+        checked={selectedStyle === 'styled2'}
+        onChange={(e) => setSelectedStyle(e.target.value)}
+        controlColor="accentBoldOrange"
+        borderColor="accentBoldOrange"
+      >
+        Orange Theme
+      </Radio>
+    </VStack>
+  );
+}
+```

@@ -1,0 +1,109 @@
+## Basic Example
+
+```jsx
+<AvatarButton
+  src="https://avatars.slack-edge.com/2019-12-09/865473396980_e8c83b072b452e4d03f7_192.jpg"
+  accessibilityLabel="Sneezy"
+/>
+```
+
+## Compact
+
+AvatarButton can be compact.
+
+```jsx
+<HStack gap={2} alignItems="center">
+  <AvatarButton
+    src="https://avatars.slack-edge.com/2019-12-09/865473396980_e8c83b072b452e4d03f7_192.jpg"
+    accessibilityLabel="Sneezy"
+  />
+  <AvatarButton
+    src="https://avatars.slack-edge.com/2019-12-09/865473396980_e8c83b072b452e4d03f7_192.jpg"
+    compact
+    accessibilityLabel="Sneezy Compact"
+  />
+</HStack>
+```
+
+## Shapes
+
+AvatarButton supports three different shapes: `circle`, `square`, and `hexagon`. The default shape is `circle`.
+
+```jsx
+<HStack gap={2} alignItems="center">
+  <AvatarButton name="Alice" colorScheme="blue" shape="circle" accessibilityLabel="Alice Profile" />
+  <AvatarButton name="Bob" colorScheme="purple" shape="square" accessibilityLabel="Bob Profile" />
+  <AvatarButton
+    name="Charlie"
+    colorScheme="green"
+    shape="hexagon"
+    accessibilityLabel="Charlie Profile"
+  />
+</HStack>
+```
+
+## Selected State
+
+AvatarButtons can show a selected state with a border indicator.
+
+```jsx
+<HStack gap={2}>
+  <AvatarButton name="Alice" colorScheme="blue" accessibilityLabel="Alice Profile" />
+  <AvatarButton
+    name="Alice"
+    colorScheme="blue"
+    selected
+    accessibilityLabel="Alice Profile Selected"
+  />
+  <AvatarButton name="Bob" colorScheme="purple" shape="square" accessibilityLabel="Bob Profile" />
+  <AvatarButton
+    name="Bob"
+    colorScheme="purple"
+    shape="square"
+    selected
+    accessibilityLabel="Bob Profile Selected"
+  />
+</HStack>
+```
+
+## Loading State
+
+AvatarButtons can show a loading state while content is being fetched.
+
+```jsx
+<HStack gap={2}>
+  <AvatarButton name="Alice" colorScheme="blue" accessibilityLabel="Alice Profile" />
+  <AvatarButton
+    name="Alice"
+    colorScheme="blue"
+    loading
+    accessibilityLabel="Alice Profile Loading"
+  />
+</HStack>
+```
+
+## Fallback Image
+
+If you do not provide a src or if the provided src does not resolve, AvatarButton will surface a placeholder image.
+
+```jsx
+<HStack gap={2} alignItems="center">
+  <AvatarButton accessibilityLabel="Default Avatar" />
+  <AvatarButton selected accessibilityLabel="Default Avatar Selected" />
+</HStack>
+```
+
+## Fallback with Colors
+
+AvatarButton can use fallback colors with names when no image source is provided.
+
+```jsx
+<HStack gap={2} alignItems="center">
+  <AvatarButton name="Alice" colorScheme="blue" accessibilityLabel="Alice Profile" />
+  <AvatarButton name="Bob" colorScheme="purple" accessibilityLabel="Bob Profile" />
+  <AvatarButton name="Charlie" colorScheme="green" accessibilityLabel="Charlie Profile" />
+  <AvatarButton name="Diana" colorScheme="teal" accessibilityLabel="Diana Profile" />
+  <AvatarButton name="Eve" colorScheme="pink" accessibilityLabel="Eve Profile" />
+  <AvatarButton name="Frank" colorScheme="gray" accessibilityLabel="Frank Profile" />
+</HStack>
+```

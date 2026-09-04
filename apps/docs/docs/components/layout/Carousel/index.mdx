@@ -1,0 +1,49 @@
+---
+id: carousel
+title: Carousel
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import WebPropsTable from './_webPropsTable.mdx';
+import webPropsToc from ':docgen/web/carousel/Carousel/toc-props';
+import WebStyles, { toc as webStylesToc } from './_webStyles.mdx';
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import mobilePropsToc from ':docgen/mobile/carousel/Carousel/toc-props';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
+
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+
+import { sharedParentTypes } from ':docgen/_types/sharedParentTypes';
+import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
+import { VStack } from '@coinbase/cds-web/layout';
+
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader
+    title="Carousel"
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+  />
+
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webStyles={<WebStyles />}
+    webExamples={<WebExamples />}
+    mobilePropsTable={<MobilePropsTable />}
+    mobileStyles={<MobileStyles />}
+    mobileExamples={<MobileExamples />}
+    webExamplesToc={webExamplesToc}
+    mobileExamplesToc={mobileExamplesToc}
+    webPropsToc={webPropsToc}
+    webStylesToc={webStylesToc}
+    mobilePropsToc={mobilePropsToc}
+    mobileStylesToc={mobileStylesToc}
+  />  
+</VStack>

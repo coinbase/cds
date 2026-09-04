@@ -1,0 +1,197 @@
+### Basic Usage
+
+Checkbox UI and state management are separated so that you can swap in any form or state code you like.
+
+```jsx
+function BasicCheckbox() {
+  const [isChecked, setIsChecked] = useState(false);
+  return (
+    <Checkbox value="newsletter" onChange={setIsChecked} checked={isChecked}>
+      Subscribe to newsletter
+    </Checkbox>
+  );
+}
+```
+
+### Custom Layout
+
+If you don't want to use the default label or layout style, you can just not provide `children` to the `Checkbox` component. However, you should think about wrapping the custom label and `Checkbox` in a `Pressable` to increase the tap target.
+
+```jsx
+function CustomLayoutCheckbox() {
+  const [isChecked, setIsChecked] = useState(false);
+  return (
+    <Pressable onPress={() => setIsChecked(!isChecked)}>
+      <HStack justifyContent="space-between" alignItems="center" paddingY={2}>
+        <VStack gap={0} alignItems="flex-start">
+          <Text font="body">Premium Features</Text>
+          <Text font="caption" color="fgMuted">
+            Access to advanced tools and priority support
+          </Text>
+        </VStack>
+        <Checkbox value="premium" onChange={setIsChecked} checked={isChecked} />
+      </HStack>
+    </Pressable>
+  );
+}
+```
+
+### Different States
+
+Checkboxes support various states including disabled and indeterminate.
+
+```jsx
+function CheckboxStates() {
+  const [checked, setChecked] = useState(false);
+  const [indeterminate, setIndeterminate] = useState(true);
+
+  return (
+    <VStack gap={2}>
+      <Checkbox value="enabled" onChange={setChecked} checked={checked}>
+        Normal checkbox
+      </Checkbox>
+      <Checkbox value="disabled-unchecked" checked={false} disabled>
+        Disabled & unchecked
+      </Checkbox>
+      <Checkbox value="disabled-checked" checked={true} disabled>
+        Disabled & checked
+      </Checkbox>
+      <Checkbox
+        value="indeterminate"
+        indeterminate={indeterminate}
+        onChange={() => {
+          setIndeterminate(false);
+          // Handle the change as needed
+        }}
+        accessibilityLabel="Partially selected option"
+      >
+        Indeterminate state
+      </Checkbox>
+    </VStack>
+  );
+}
+```
+
+### Accessibility
+
+Mobile checkboxes should include proper accessibility labels and hints for screen readers.
+
+```jsx
+function AccessibleCheckbox() {
+  const [settings, setSettings] = useState({
+    notifications: true,
+    location: false,
+    analytics: false,
+  });
+
+  const updateSetting = (key) => {
+    setSettings((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  return (
+    <VStack gap={2}>
+      <Checkbox
+        value="notifications"
+        checked={settings.notifications}
+        onChange={() => updateSetting('notifications')}
+        accessibilityLabel="Enable push notifications"
+        accessibilityHint="Receive alerts about important updates"
+      >
+        Push Notifications
+      </Checkbox>
+      <Checkbox
+        value="location"
+        checked={settings.location}
+        onChange={() => updateSetting('location')}
+        accessibilityLabel="Share location data"
+        accessibilityHint="Used for location-based features"
+      >
+        Location Services
+      </Checkbox>
+      <Checkbox
+        value="analytics"
+        checked={settings.analytics}
+        onChange={() => updateSetting('analytics')}
+        accessibilityLabel="Allow analytics tracking"
+        accessibilityHint="Helps improve the app experience"
+      >
+        Analytics
+      </Checkbox>
+    </VStack>
+  );
+}
+```
+
+### Custom Colors
+
+Like other control components (i.e. Radio, Switch), you can customize the color of the Checkbox by setting the `controlColor` prop.
+
+```jsx
+function CustomColors() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Checkbox
+      controlColor="accentBoldGreen"
+      onChange={() => setChecked((s) => !s)}
+      checked={checked}
+    >
+      Custom control color
+    </Checkbox>
+  );
+}
+```
+
+For more advanced color customization, you can use additional style props like `background`, `borderColor`, `borderRadius`, and `borderWidth`:
+
+```jsx
+function AdvancedCustomColors() {
+  const [checked, setChecked] = useState(false);
+
+  return (
+    <Checkbox
+      background={checked ? 'accentBoldPurple' : 'bgNegative'}
+      borderColor={checked ? 'bgPositive' : 'bgPrimary'}
+      borderRadius={200}
+      borderWidth={500}
+      checked={checked}
+      controlColor="bgPositive"
+      onChange={() => setChecked((s) => !s)}
+    >
+      Advanced styling
+    </Checkbox>
+  );
+}
+```
+
+### Multiple Checkboxes
+
+For multiple checkbox scenarios, use [ControlGroup](/components/inputs/ControlGroup) with `accessibilityRole="group"` for better accessibility and state management:
+
+```jsx
+function MultipleCheckboxes() {
+  const options = [
+    { value: 'email', children: 'Email notifications' },
+    { value: 'sms', children: 'SMS notifications' },
+    { value: 'push', children: 'Push notifications' },
+  ];
+
+  const [selectedValues, setSelectedValues] = useState(['email']);
+
+  const handleChange = (value, checked) => {
+    setSelectedValues((prev) => (checked ? [...prev, value] : prev.filter((v) => v !== value)));
+  };
+
+  return (
+    <ControlGroup
+      accessibilityRole="group"
+      ControlComponent={Checkbox}
+      label="Notification Preferences"
+      options={options}
+      value={selectedValues}
+      onChange={handleChange}
+      name="notifications"
+    />
+  );
+}
+```

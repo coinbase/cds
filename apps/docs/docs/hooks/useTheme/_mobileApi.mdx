@@ -1,0 +1,224 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+
+## Overview
+
+The `useTheme` hook returns the currently active theme based on the `ThemeProvider's` active color scheme. All values are optimized for React Native usage, with numeric values in points rather than rem units.
+
+</MDXArticle>
+
+<MDXArticle>
+## Parameters
+
+None. The hook takes no parameters.
+
+</MDXArticle>
+
+<MDXArticle>
+## Returns
+
+Returns a `Theme` object containing the following categories of design tokens:
+
+### Color Tokens
+
+#### Color Scheme
+
+- `colorScheme`: `'light' | 'dark'`
+- `spectrum`: Raw color values in RGB format (e.g., `'245,248,255'` for `blue0`)
+
+#### Semantic Colors
+
+- Text Colors
+  - `color.fg`: Primary text color (RGB format)
+  - `color.fgMuted`: Secondary text color
+  - `color.fgInverse`: Inverted text color
+  - `color.fgPrimary`: Primary brand text color
+  - `color.fgWarning`: Warning text color
+  - `color.fgPositive`: Success text color
+  - `color.fgNegative`: Error text color
+
+- Background Colors
+  - `color.bg`: Primary background color
+  - `color.bgAlternate`: Secondary background color
+  - `color.bgInverse`: Inverted background color
+  - `color.bgOverlay`: Semi-transparent overlay
+  - `color.bgPrimary`: Primary brand background
+  - `color.bgPrimaryWash`: Light primary background
+  - `color.bgSecondary`: Secondary background
+  - `color.bgTertiary`: Tertiary background
+  - `color.bgSecondaryWash`: Light secondary background
+  - `color.bgNegative`: Error background
+  - `color.bgNegativeWash`: Light error background
+  - `color.bgPositive`: Success background
+  - `color.bgPositiveWash`: Light success background
+  - `color.bgWarning`: Warning background
+  - `color.bgWarningWash`: Light warning background
+  - `color.currentColor`: Current color context
+  - `color.bgElevation1`: First level elevation background
+  - `color.bgElevation2`: Second level elevation background
+
+- Line Colors
+  - `color.bgLine`: Default line color (semi-transparent)
+  - `color.bgLineHeavy`: Emphasized line color
+  - `color.bgLineInverse`: Inverted line color
+  - `color.bgLinePrimary`: Primary brand line color
+  - `color.bgLinePrimarySubtle`: Subtle primary line color
+
+- Accent Colors
+  - `color.accentSubtleGreen`: Subtle green accent
+  - `color.accentBoldGreen`: Bold green accent
+  - `color.accentSubtleBlue`: Subtle blue accent
+  - `color.accentBoldBlue`: Bold blue accent
+  - `color.accentSubtlePurple`: Subtle purple accent
+  - `color.accentBoldPurple`: Bold purple accent
+  - `color.accentSubtleYellow`: Subtle yellow accent
+  - `color.accentBoldYellow`: Bold yellow accent
+  - `color.accentSubtleRed`: Subtle red accent
+  - `color.accentBoldRed`: Bold red accent
+  - `color.accentSubtleGray`: Subtle gray accent
+  - `color.accentBoldGray`: Bold gray accent
+  - `color.transparent`: Transparent color
+
+### Layout Tokens
+
+#### Spacing
+
+- `space`: Object containing spacing values from `0` to `10` in points
+
+  ```tsx
+  {
+    0: 0,
+    1: 8,
+    2: 16,
+    3: 24,
+    // ...up to 10
+  }
+  ```
+
+#### Component Sizes
+
+- `iconSize`: `{ xs: 8, s: 12, m: 16, l: 24 }`
+- `avatarSize`: `{ s: 16, m: 20, l: 24, xl: 36, xxl: 44, xxxl: 48 }`
+- `controlSize`: Form control sizes
+
+  ```tsx
+  {
+    checkboxSize: 16,
+    radioSize: 16,
+    switchWidth: 42,
+    switchHeight: 24,
+    switchThumbSize: 22,
+    tileSize: 92
+  }
+  ```
+
+#### Borders
+
+- `borderWidth`: Values from `0` to `500` in points
+- `borderRadius`: Values from `0` to `1000` in points
+
+### Typography Tokens
+
+#### Font Families
+
+- `fontFamily`: Base font families for each text style
+
+  ```tsx
+  {
+    display1: 'CoinbaseDisplay-Regular',
+    display2: 'CoinbaseDisplay-Regular',
+    display3: 'CoinbaseDisplay-Regular',
+    title1: 'CoinbaseDisplay-Medium',
+    // ...and more variants
+  }
+  ```
+
+- `fontFamilyMono`: Monospace font families (optional)
+
+  ```tsx
+  {
+    display1: 'CoinbaseMono-Regular',
+    display2: 'CoinbaseMono-Regular',
+    // ...and more variants
+  }
+  ```
+
+#### Text Styles
+
+- `fontSize`: Font sizes in points (not rem)
+
+  ```tsx
+  {
+    display1: 64,
+    display2: 48,
+    display3: 40,
+    // ...and more variants
+  }
+  ```
+
+- `fontWeight`: Font weights as React Native TextStyle values
+
+  ```tsx
+  {
+    display1: '400',
+    title1: '600',
+    // ...and more variants
+  }
+  ```
+
+- `lineHeight`: Line heights in points (not rem)
+
+  ```tsx
+  {
+    display1: 72,
+    display2: 56,
+    // ...and more variants
+  }
+  ```
+
+- `textTransform`: Text transformations as React Native TextStyle values
+
+  ```tsx
+  {
+    caption: 'uppercase',
+    body: 'none',
+    // ...and more variants
+  }
+  ```
+
+### Effect Tokens
+
+#### Shadows
+
+- `shadow`: React Native shadow styles
+
+  ```tsx
+  {
+    elevation1: {
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.02,
+      shadowRadius: 12
+    },
+    elevation2: {
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 8 },
+      shadowOpacity: 0.12,
+      shadowRadius: 24
+    }
+  }
+  ```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Notes
+
+1. The hook must be used within a `ThemeProvider` component, or it will throw an error.
+2. All numeric values are in points (pt) rather than rem units, optimized for React Native.
+3. Colors are provided in RGB format for text and background colors, allowing for opacity adjustments.
+4. Shadow values are provided as React Native shadow style objects, including platform-specific implementations.
+5. Font families are platform-specific font names that should be properly linked in your React Native project.
+
+</MDXArticle>

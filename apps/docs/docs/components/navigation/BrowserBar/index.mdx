@@ -1,0 +1,25 @@
+---
+id: browserBar
+title: BrowserBar
+platform_switcher_options: { web: false, mobile: true }
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import mobilePropsToc from ':docgen/mobile/navigation/BrowserBar/toc-props';
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader title="BrowserBar" mobileMetadata={mobileMetadata} />
+  <ComponentTabsContainer
+    mobilePropsTable={<MobilePropsTable />}
+    mobileExamples={<MobileExamples />}
+    mobileExamplesToc={mobileExamplesToc}
+    mobilePropsToc={mobilePropsToc}
+  />
+</VStack>

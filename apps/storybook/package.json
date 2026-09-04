@@ -1,0 +1,39 @@
+{
+  "name": "@coinbase/cds-storybook",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "should-run-visreg": "node ../../tools/ci/shouldRunVisreg.mjs packages/web/src packages/common/src packages/icons/src packages/illustrations/src"
+  },
+  "dependencies": {
+    "@coinbase/cds-common": "workspace:^",
+    "@coinbase/cds-icons": "workspace:^",
+    "@coinbase/cds-illustrations": "workspace:^",
+    "@coinbase/cds-web": "workspace:^",
+    "react": "19.1.2",
+    "react-dom": "19.1.2"
+  },
+  "devDependencies": {
+    "@fontsource-variable/inter": "^5.3.0",
+    "@linaria/babel-preset": "^3.0.0-beta.22",
+    "@linaria/core": "^3.0.0-beta.22",
+    "@linaria/rollup": "^3.0.0-beta.22",
+    "@percy/cli": "^1.31.1",
+    "@percy/storybook": "^9.1.0",
+    "@storybook-community/storybook-dark-mode": "^6.0.0",
+    "@storybook/addon-docs": "9.1.17",
+    "@storybook/jest": "^0.2.3",
+    "@storybook/react-vite": "9.1.17",
+    "@storybook/testing-library": "^0.2.2",
+    "@types/diff": "^5.0.9",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "@vitejs/plugin-react": "^5.1.2",
+    "diff": "^5.1.0",
+    "rollup-plugin-visualizer": "^6.0.3",
+    "storybook": "9.1.17",
+    "typescript": "~5.9.2",
+    "vite": "^7.3.1"
+  }
+}

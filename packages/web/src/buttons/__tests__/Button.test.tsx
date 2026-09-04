@@ -1,0 +1,344 @@
+import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { fireEvent, render, screen } from '@testing-library/react';
+
+import { Box } from '../../layout';
+import { ComponentConfigProvider } from '../../system';
+import { DefaultThemeProvider } from '../../utils/test';
+import { Button } from '../Button';
+
+const testA11yLabel = 'test-a11y-label';
+
+describe('Button', () => {
+  it('passes accessibility', async () => {
+    expect(
+      await renderA11y(
+        <DefaultThemeProvider>
+          <Button>Child</Button>
+        </DefaultThemeProvider>,
+      ),
+    ).toHaveNoViolations();
+  });
+  it('passes accessibility when loading', async () => {
+    expect(
+      await renderA11y(
+        <DefaultThemeProvider>
+          <Button loading>Child</Button>
+        </DefaultThemeProvider>,
+      ),
+    ).toHaveNoViolations();
+  });
+
+  it('renders a button with an accessibility label if provided', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button accessibilityLabel={testA11yLabel}>Child</Button>
+      </DefaultThemeProvider>,
+    );
+    const button = screen.getByRole('button');
+
+    expect(button).toHaveAttribute('aria-label', testA11yLabel);
+  });
+
+  it('renders a button with a custom accessibility label if provided and loading is true', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button loading accessibilityLabel={testA11yLabel}>
+          Child
+        </Button>
+      </DefaultThemeProvider>,
+    );
+    const button = screen.getByRole('button');
+
+    expect(button).toHaveAttribute('aria-label', testA11yLabel);
+  });
+
+  it('renders a button with a loading spinner and children are visually hidden when loading is true', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button loading>Child</Button>
+      </DefaultThemeProvider>,
+    );
+    const button = screen.getByRole('button');
+    const buttonChild = screen.getByText('Child');
+
+    expect(button).toHaveAttribute('aria-label', 'Loading');
+    expect(buttonChild.className).toContain('hiddenCss');
+  });
+
+  it('renders a button with a type', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button>Child</Button>
+      </DefaultThemeProvider>,
+    );
+    const button = screen.getByRole('button');
+
+    expect(button).toBeDefined();
+    expect(button).toHaveAttribute('type', 'button');
+  });
+
+  it('renders a link with a href', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button as="a" href="/">
+          Child
+        </Button>
+      </DefaultThemeProvider>,
+    );
+    const button = screen.getByRole('link');
+
+    expect(button).toBeDefined();
+    expect(button).toHaveAttribute('href', '/');
+  });
+
+  it('can mark as disabled', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button disabled>Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).toHaveAttribute('disabled');
+  });
+
+  it('can change type', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button type="submit">Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).toHaveAttribute('type', 'submit');
+  });
+
+  it('fires `onClick` when clicked', () => {
+    const spy = jest.fn();
+    render(
+      <DefaultThemeProvider>
+        <Button onClick={spy}>Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    fireEvent.click(screen.getByRole('button'));
+
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('doesnt pass `onClick` to button element', () => {
+    const spy = jest.fn();
+    render(
+      <DefaultThemeProvider>
+        <Button onClick={spy}>Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).not.toHaveAttribute('onClick');
+  });
+
+  it('renders a button with a ReactNode as endIcon', () => {
+    const CustomIcon = () => <Box testID="custom-react-node">Custom Icon</Box>;
+    render(
+      <DefaultThemeProvider>
+        <Button end={<CustomIcon />}>Child</Button>
+      </DefaultThemeProvider>,
+    );
+    const button = screen.getByRole('button');
+    expect(button).toBeDefined();
+    expect(screen.getByTestId('custom-react-node')).toBeInTheDocument();
+  });
+
+  it('sets data attributes for style variants', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button block compact transparent flush="start" variant="primary">
+          Child
+        </Button>
+      </DefaultThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('data-block', 'true');
+    expect(button).toHaveAttribute('data-compact', 'true');
+    expect(button).toHaveAttribute('data-flush', 'start');
+    expect(button).toHaveAttribute('data-transparent', 'true');
+    expect(button).toHaveAttribute('data-variant', 'primary');
+  });
+
+  it('omits optional data attributes for default button', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button>Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).not.toHaveAttribute('data-block');
+    expect(button).not.toHaveAttribute('data-compact');
+    expect(button).not.toHaveAttribute('data-flush');
+    expect(button).not.toHaveAttribute('data-transparent');
+    expect(button).toHaveAttribute('data-variant');
+  });
+
+  it('passes font props to internal text', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button fontFamily="body">Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    const childTextNode = screen.getByText('Child');
+    expect(childTextNode.parentElement).toHaveStyle({
+      '--text-textTransform': 'var(--textTransform-body)',
+    });
+  });
+
+  it('forwards textTransform to internal text', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button textTransform="uppercase">Child</Button>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByText('Child').parentElement).toHaveStyle({
+      '--text-textTransform': 'uppercase',
+    });
+  });
+
+  it('applies Button defaults from ComponentConfigProvider', () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider value={{ Button: { variant: 'secondary' } }}>
+          <Button>Child</Button>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'secondary');
+  });
+
+  it('keeps local Button props higher precedence than provider defaults', () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider value={{ Button: { variant: 'secondary' } }}>
+          <Button variant="positive">Child</Button>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).toHaveAttribute('data-variant', 'positive');
+  });
+
+  it('supports functional Button config resolvers', () => {
+    render(
+      <DefaultThemeProvider>
+        <ComponentConfigProvider
+          value={{
+            Button: (props) => ({
+              variant: props.loading ? 'secondary' : 'positive',
+            }),
+          }}
+        >
+          <Button loading>Loading</Button>
+          <Button>Ready</Button>
+        </ComponentConfigProvider>
+      </DefaultThemeProvider>,
+    );
+
+    const [loadingButton, readyButton] = screen.getAllByRole('button');
+    expect(loadingButton).toHaveAttribute('data-variant', 'secondary');
+    expect(readyButton).toHaveAttribute('data-variant', 'positive');
+  });
+
+  describe('size', () => {
+    const getFontToken = (label: string) =>
+      screen.getByText(label).parentElement?.getAttribute('style') ?? '';
+
+    it('defaults to size "l" geometry (radius 900, paddingX 4, paddingY 2, headline)', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button>Child</Button>
+        </DefaultThemeProvider>,
+      );
+      const cls = screen.getByRole('button').className;
+      expect(cls).toMatch(/(^|\s)_900-/);
+      expect(cls).toMatch(/(^|\s)_4-/);
+      expect(cls).toMatch(/(^|\s)_2-/);
+      expect(getFontToken('Child')).toContain('--textTransform-headline');
+    });
+
+    it('resolves each t-shirt size to its expected radius and font', () => {
+      const cases = [
+        { size: 'xs', radius: /_700-/, font: 'label1' },
+        { size: 's', radius: /_700-/, font: 'headline' },
+        { size: 'm', radius: /_900-/, font: 'headline' },
+        { size: 'l', radius: /_900-/, font: 'headline' },
+      ] as const;
+
+      cases.forEach(({ size, radius, font }) => {
+        const { unmount } = render(
+          <DefaultThemeProvider>
+            <Button size={size}>{size}</Button>
+          </DefaultThemeProvider>,
+        );
+        expect(screen.getByRole('button').className).toMatch(radius);
+        expect(getFontToken(size)).toContain(`--textTransform-${font}`);
+        unmount();
+      });
+    });
+
+    it('renders `compact` alone as the "s" geometry (radius 700, paddingX 2, paddingY 1)', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button compact>Child</Button>
+        </DefaultThemeProvider>,
+      );
+      const cls = screen.getByRole('button').className;
+      expect(cls).toMatch(/(^|\s)_700-/);
+      expect(cls).toMatch(/(^|\s)_2-/);
+      expect(cls).toMatch(/(^|\s)_1-/);
+    });
+
+    it('lets `size` win over `compact` for geometry while still emitting data-compact', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button compact size="m">
+            Child
+          </Button>
+        </DefaultThemeProvider>,
+      );
+      const button = screen.getByRole('button');
+      // "m" geometry (radius 900) rather than compact's "s" (radius 700)
+      expect(button.className).toMatch(/(^|\s)_900-/);
+      expect(button).toHaveAttribute('data-compact', 'true');
+    });
+
+    it('lets explicit style props override the size-derived defaults', () => {
+      render(
+        <DefaultThemeProvider>
+          <Button borderRadius={100} font="body" paddingX={6} paddingY={5} size="xs">
+            Child
+          </Button>
+        </DefaultThemeProvider>,
+      );
+      const cls = screen.getByRole('button').className;
+      expect(cls).toMatch(/(^|\s)_100-/);
+      expect(cls).toMatch(/(^|\s)_6-/);
+      expect(cls).toMatch(/(^|\s)_5-/);
+      expect(getFontToken('Child')).toContain('--textTransform-body');
+    });
+  });
+
+  it('applies height and width props as CSS custom properties', () => {
+    render(
+      <DefaultThemeProvider>
+        <Button height="80px" width="300px">
+          Child
+        </Button>
+      </DefaultThemeProvider>,
+    );
+
+    const button = screen.getByRole('button');
+    expect(button).toHaveAttribute('style', expect.stringContaining('--height: 80px'));
+    expect(button).toHaveAttribute('style', expect.stringContaining('--width: 300px'));
+  });
+});

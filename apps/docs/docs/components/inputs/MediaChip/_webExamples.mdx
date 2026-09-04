@@ -1,0 +1,162 @@
+MediaChip automatically adjusts spacing based on the combination of `start`, `children`, and `end` content.
+
+## Basics
+
+:::tip Recommended component sizes for regular-sized chips
+
+- Start: **24×24** circular media
+- End: **xs** size icons
+  :::
+
+```tsx live
+<HStack gap={2} flexWrap="wrap">
+  <MediaChip>Label only</MediaChip>
+  <MediaChip
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  />
+  <MediaChip
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    Media + Label
+  </MediaChip>
+</HStack>
+```
+
+## Layout Configurations
+
+MediaChip supports all six content combinations automatically.
+
+```tsx live
+<VStack gap={2}>
+  <HStack flexWrap="wrap" gap={2}>
+    <MediaChip>Label only</MediaChip>
+    <MediaChip
+      start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+    />
+    <MediaChip
+      end={<Icon active color="fg" name="caretDown" size="xs" />}
+      start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+    />
+  </HStack>
+  <HStack flexWrap="wrap" gap={2}>
+    <MediaChip
+      start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+    >
+      Media + Label
+    </MediaChip>
+    <MediaChip end={<Icon active color="fg" name="filter" size="xs" />}>Label + Icon</MediaChip>
+    <MediaChip
+      end={<Icon active color="fg" name="caretDown" size="xs" />}
+      start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+    >
+      All three
+    </MediaChip>
+  </HStack>
+</VStack>
+```
+
+## Styling
+
+### Sizes
+
+`size` accepts `xs` and `s`. Defaults to `s`.
+
+:::tip Recommended media dimensions per size
+
+- `s` (default): **24×24** circular media, **xs** size icons
+- `xs`: **16×16** circular media, **xs** size icons
+  :::
+
+```tsx live
+<HStack flexWrap="wrap" gap={2}>
+  <MediaChip
+    size="s"
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    s
+  </MediaChip>
+  <MediaChip
+    size="xs"
+    start={<RemoteImage height={16} shape="circle" source={assets.eth.imageUrl} width={16} />}
+  >
+    xs
+  </MediaChip>
+</HStack>
+```
+
+### Active
+
+Use `active` to emphasize the chip with high-contrast colors.
+
+```tsx live
+<HStack gap={2} flexWrap="wrap">
+  <MediaChip active>Selected</MediaChip>
+  <MediaChip
+    active
+    end={<Icon active color="fg" name="check" size="xs" />}
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    Active State
+  </MediaChip>
+</HStack>
+```
+
+### Custom spacing
+
+Override automatic spacing with custom values when needed.
+
+```tsx live
+<HStack gap={2} flexWrap="wrap">
+  <MediaChip paddingX={4} paddingY={2}>
+    Custom spacing
+  </MediaChip>
+  <MediaChip
+    paddingStart={3}
+    paddingEnd={5}
+    paddingY={1.5}
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    Asymmetric padding
+  </MediaChip>
+</HStack>
+```
+
+## Interactivity
+
+Provide `onClick` to make MediaChip interactive. Use `disabled` to prevent interaction.
+
+```tsx live
+<HStack gap={2} flexWrap="wrap">
+  <MediaChip onClick={() => alert('Clicked!')}>Clickable</MediaChip>
+  <MediaChip
+    onClick={() => alert('Clicked!')}
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  >
+    With Media
+  </MediaChip>
+  <MediaChip disabled onClick={() => alert('Should not fire')}>
+    Disabled
+  </MediaChip>
+</HStack>
+```
+
+## Accessibility
+
+When `onClick` is provided and visible text is unclear (or absent), provide an `accessibilityLabel`.
+
+```tsx live
+<HStack gap={2} flexWrap="wrap">
+  <MediaChip
+    accessibilityLabel="Open Ethereum details"
+    onClick={() => alert('Open ETH')}
+    start={<RemoteImage height={24} shape="circle" source={assets.eth.imageUrl} width={24} />}
+  />
+  <MediaChip
+    accessibilityLabel="Open token filter"
+    end={<Icon active color="fg" name="caretDown" size="xs" />}
+    onClick={() => alert('Open filter')}
+  >
+    Filter
+  </MediaChip>
+</HStack>
+```

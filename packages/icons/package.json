@@ -1,0 +1,52 @@
+{
+  "name": "@coinbase/cds-icons",
+  "version": "5.22.0",
+  "description": "CDS icons",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "packages/icons"
+  },
+  "type": "module",
+  "main": "./esm/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./esm/index.js"
+    },
+    "./fonts/web/icon-font.css": {
+      "default": "./esm/fonts/web/icon-font.css"
+    },
+    "./fonts/web/*.woff2": {
+      "default": "./esm/fonts/web/*.woff2"
+    },
+    "./fonts/native/CoinbaseIcons.ttf": {
+      "default": "./esm/fonts/native/CoinbaseIcons.ttf"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./esm/*.js"
+    }
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dts",
+    "esm",
+    "CHANGELOG"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@cds/figma-api": "workspace:^",
+    "chalk": "^4.1.2",
+    "dotenv": "^16.4.7",
+    "prettier": "^3.6.2",
+    "svgo": "^3.0.2"
+  }
+}

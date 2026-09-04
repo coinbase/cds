@@ -1,0 +1,29 @@
+.deprecationTable {
+  margin-bottom: var(--space-3);
+}
+
+.deprecationTableHead {
+  background-color: transparent;
+}
+
+.deprecationTableCell {
+  vertical-align: top;
+}
+
+.deprecationColumn {
+  width: 32%;
+}
+
+.packageColumn {
+  width: 18%;
+}
+
+.notesColumn {
+  width: 50%;
+}
+
+.packageTags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-0\\.5);
+}

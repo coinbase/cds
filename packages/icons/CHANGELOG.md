@@ -1,0 +1,374 @@
+## 5.22.0 (8/20/2026 PST)
+
+#### 🚀 Updates
+
+- Publish icons 2026-08-20. [[#854](https://github.com/coinbase/cds/pull/854)]
+
+##### ⭐️ Added (8)
+
+- rewards
+- advanced
+- predictions
+- inviteFriends
+- borrow
+- creditCard
+- advisor
+- standWithCrypto
+
+## 5.21.0 (7/15/2026 PST)
+
+#### 🚀 Updates
+
+- Publish icons 2026-07-15. [[#795](https://github.com/coinbase/cds/pull/795)]
+
+##### ⭐️ Added (1)
+
+- lineChartPoints
+
+## 5.20.0 (6/24/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-06-24. [[#769](https://github.com/coinbase/cds/pull/769)]
+
+##### ⭐️ Added (5)
+
+- waveForm
+- record
+- stop
+- desktop
+- liveEvents
+
+## 5.19.0 (6/9/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-06-09. [[#747](https://github.com/coinbase/cds/pull/747)]
+
+##### ⭐️ Added (1)
+
+- learningCenter
+
+## 5.18.0 (5/29/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-05-29. [[#738](https://github.com/coinbase/cds/pull/738)]
+
+##### ⭐️ Added (1)
+
+- ipoChart
+
+#### 📘 Misc
+
+- Added dev dependencies and internal documentation. [[#713](https://github.com/coinbase/cds/pull/713)]
+
+## 5.17.0 (5/22/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-05-22. [[#715](https://github.com/coinbase/cds/pull/715)]
+
+##### ⭐️ Added (4)
+
+- addModuleUI
+- openBook
+- parlaysAdd
+- parlaysEmpty
+
+##### ⭐️ Updated (12)
+
+- upload
+- metaverse
+- baseTransact
+- singleCoin
+- unfollowPeople
+- baseWallet
+- rocket
+- music
+- exclamationMark
+- gif
+- noWifi
+- twitterLogo
+
+#### 📘 Misc
+
+- Dependency upgrades.
+
+## 5.16.0 (4/27/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-04-27. [[#645](https://github.com/coinbase/cds/pull/645)]
+
+##### ⭐️ Added (2)
+
+- caretExpand
+- caretCollapse
+
+## 5.15.0 (4/16/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-04-16. [[#619](https://github.com/coinbase/cds/pull/619)]
+
+##### ⭐️ Added (1)
+
+- baseLock
+
+## 5.14.0 (4/8/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-04-08. [[#596](https://github.com/coinbase/cds/pull/596)]
+
+##### ⭐️ Added (3)
+
+- overPredictions
+- column
+- underPredictions
+
+##### ⭐️ Updated (1)
+
+- usdc
+
+## 5.13.0 (3/11/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-03-11. [[#496](https://github.com/coinbase/cds/pull/496)]
+
+##### ⭐️ Updated (1)
+
+- ideal
+
+## 5.12.0 (3/2/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-03-03.
+
+##### ⭐️ Added (3)
+
+- usdc
+- filterLineStack
+- pieChartWithArrow
+
+## 5.11.0 (2/5/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026/02/025. [[#367](https://github.com/coinbase/cds/pull/367)]
+
+##### ⭐️ Added (2)
+
+- autoCar
+- webhooks
+
+## 5.10.0 (1/29/2026 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2026-01-29. [[#342](https://github.com/coinbase/cds/pull/342)]
+
+##### ⭐️ Added (1)
+
+- birthcertificate
+
+##### ⭐️ Updated (1)
+
+- smartContract
+- pencil
+
+## 5.9.0 (12/22/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2025-12-22. [[#274](https://github.com/coinbase/cds/pull/274)]
+
+##### ⭐️ Added (96)
+
+- test
+- golf
+- basketball
+- football
+- tokenLaunchCoin
+- chess
+- baseball
+- strategy
+- motorsport
+- tokenLaunchRocket
+- boxing
+- cricket
+- starBubble
+- tennis
+- factory
+- building
+- podiumStar
+- pillBottle
+- tshirt
+- singleNote
+- playbutton
+- ratingsChecks
+- scienceAtom
+- earthquake
+- cloudPartial
+- oil
+- virus
+- singlecloud
+- calendarHeart
+- ballot
+- tv
+- airdropParachute
+- educationBook
+- bug
+- briefcaseAlt
+- politicsFlag
+- mma
+- pillCapsule
+- microphoneCordless
+- snow
+- politicsCandidate
+- rain
+- tvStand
+- wind
+- quotation
+- shoe
+- tornado
+- calendarMoney
+- ribbon
+- scienceBeaker
+- atSign
+- hospital
+- scienceMoon
+- ratingsStar
+- politicsStar
+- ratingsCheck
+- microscope
+- bandage
+- speechBubble
+- starTrophy
+- stableCoin
+- apple
+- politicsPodium
+- educationPencil
+- politicsBuilding
+- medal
+- calendarDates
+- needle
+- ballotbox
+- alien
+- politicsGavel
+- stablecoinStack
+- umbrella
+- thermometer
+- entertainment
+- greenEnergy
+- soccer
+- city
+- hockey
+- hurricane
+- filmStrip
+- corporation
+- gaming
+- rottenTomato
+- musicArticles
+- computerChip
+- calendarStar
+- atomScience
+- starAward
+- airdropAlt
+- barChartSimple
+- apothecary
+- hospitalCross
+- gasFeesAlt
+- airdropCoins
+- lightning
+
+## 5.8.0 (12/5/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2025/12/05. [[#213](https://github.com/coinbase/cds/pull/213)]
+
+##### ⭐️ Added (1)
+
+- robot
+
+## 5.7.0 (11/18/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2025/11/18. [[#174](https://github.com/coinbase/cds/pull/174)]
+
+##### ⭐️ Added (8)
+
+- arrowsUpDown
+- moneyCardCoin
+- singleCoin
+- calendarBlank
+- coinsCrypto
+- loop
+- pieChartData
+- crystalBallInsight
+
+## 5.6.0 (11/14/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2025-11-14. [[#163](https://github.com/coinbase/cds/pull/163)]
+
+##### ⭐️ Added (1)
+
+- baseQuickBuy
+
+## 5.5.1 (11/4/2025 PST)
+
+This is an artificial version bump with no new change.
+
+## 5.5.0 (10/21/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 2025-10-21. [[#122](https://github.com/coinbase/cds/pull/122)]
+
+##### ⭐️ Added (2)
+
+- unfollowPeople
+- tokenSales
+
+## 5.4.2 (10/6/2025 PST)
+
+This is an artificial version bump with no new change.
+
+## 5.4.1 (10/1/2025 PST)
+
+#### 🐞 Fixes
+
+- Update links for new repo. [[#42](https://github.com/coinbase/cds/pull/42)]
+
+## 5.4.0 (9/25/2025 PST)
+
+#### 🚀 Updates
+
+- Feat: Publish icons 09/25/2025. [[#19](https://github.com/coinbase/cds/pull/19)]
+
+##### ⭐️ Added (9)
+
+- instantUnstakingClock
+- auto
+- creatorCoin
+- allocation
+- baseVerification
+- distribution
+- disabledPhone
+- config
+- location
+
+## 5.3.0 (9/18/2025 PST)
+
+- Prepare for open source release.
+
+---
+
+<sub>Release entries above are generated by `nx release` from version plans. See the [NPM registry](https://www.npmjs.com/package/@coinbase/cds-icons) for published versions. `@coinbase/cds-icons` adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).</sub>

@@ -1,0 +1,22 @@
+{
+  "import": "import { Avatar } from '@coinbase/cds-web/media/Avatar'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/media/Avatar.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-avatar--normal",
+  "description": "Avatar is a visual representation of a user, company, or entity.",
+  "relatedComponents": [
+    {
+      "label": "AvatarButton",
+      "url": "/components/inputs/AvatarButton/"
+    },
+    {
+      "label": "DotCount",
+      "url": "/components/other/DotCount/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "react-dom",
+      "version": "^18.0.0 || ~19.1.2"
+    }
+  ]
+}

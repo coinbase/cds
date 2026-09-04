@@ -1,0 +1,25 @@
+---
+id: tableBody
+title: TableBody
+platform_switcher_options: { web: true, mobile: false }
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import webPropsToc from ':docgen/web/tables/TableBody/toc-props';
+import WebPropsTable from './_webPropsTable.mdx';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+import webMetadata from './webMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader title="TableBody" webMetadata={webMetadata} />
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webExamples={<WebExamples />}
+    webExamplesToc={webExamplesToc}
+    webPropsToc={webPropsToc}
+  />
+</VStack>

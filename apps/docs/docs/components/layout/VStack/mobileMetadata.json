@@ -1,0 +1,20 @@
+{
+  "import": "import { VStack } from '@coinbase/cds-mobile/layout/VStack'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/layout/VStack.tsx",
+  "description": "A Box with flexDirection=\"column\" set by default.",
+  "relatedComponents": [
+    {
+      "label": "Box",
+      "url": "/components/layout/Box/"
+    },
+    {
+      "label": "HStack",
+      "url": "/components/layout/HStack/"
+    },
+    {
+      "label": "Grid",
+      "url": "/components/layout/Grid/"
+    }
+  ],
+  "dependencies": []
+}

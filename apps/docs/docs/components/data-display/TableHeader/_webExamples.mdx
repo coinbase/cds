@@ -1,0 +1,77 @@
+### Basic usage
+
+```tsx live
+<Table bordered variant="ruled">
+  <TableHeader>
+    <TableRow>
+      <TableCell title="TableHeader" subtitle="This is the TableHeader" />
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell title="TableBody" subtitle="This is the TableBody" />
+    </TableRow>
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell title="TableFooter" subtitle="This is the TableFooter" />
+    </TableRow>
+  </TableFooter>
+</Table>
+```
+
+### Sticky Header Example
+
+```tsx live
+<Box height={300} overflow="auto" border="1px solid" borderColor="border">
+  <Table>
+    <TableHeader sticky>
+      <TableRow>
+        <TableCell>Name</TableCell>
+        <TableCell>Role</TableCell>
+        <TableCell>Department</TableCell>
+        <TableCell>Location</TableCell>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {Array.from({ length: 20 }, (_, i) => (
+        <TableRow key={i}>
+          <TableCell>Employee {i + 1}</TableCell>
+          <TableCell>{['Developer', 'Designer', 'Manager', 'Analyst'][i % 4]}</TableCell>
+          <TableCell>{['Engineering', 'Design', 'Product', 'Sales'][i % 4]}</TableCell>
+          <TableCell>{['New York', 'London', 'Tokyo', 'Berlin'][i % 4]}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+</Box>
+```
+
+### Multiple Columns Example
+
+```tsx live
+<Table bordered>
+  <TableHeader>
+    <TableRow>
+      <TableCell>ID</TableCell>
+      <TableCell>Name</TableCell>
+      <TableCell>Status</TableCell>
+      <TableCell>Date</TableCell>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>001</TableCell>
+      <TableCell>Project Alpha</TableCell>
+      <TableCell>Active</TableCell>
+      <TableCell>2024-03-20</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>002</TableCell>
+      <TableCell>Project Beta</TableCell>
+      <TableCell>Pending</TableCell>
+      <TableCell>2024-03-21</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```

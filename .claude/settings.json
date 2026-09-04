@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch",
+      "WebSearch",
+      "Write",
+      "Skill(cds-components)",
+      "mcp__linear-server__get_issue",
+      "mcp__linear-server__get_user",
+      "mcp__linear-server__list_teams",
+      "mcp__linear-server__list_issues",
+      "mcp__linear-server__list_cycles",
+      "mcp__figma-dev-mode-mcp-server__get_design_context",
+      "mcp__figma-dev-mode-mcp-server__get_screenshot",
+      "mcp__figma-dev-mode-mcp-server__get_metadata",
+      "mcp__figma-dev-mode-mcp-server__get_variable_defs",
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(yarn nx run-many:*)",
+      "Bash(yarn nx run web:typecheck)",
+      "Bash(yarn nx run mobile:typecheck)",
+      "Bash(yarn nx run common:typecheck)",
+      "Bash(yarn nx run web:test:*)",
+      "Bash(yarn nx run mobile:test:*)",
+      "Bash(yarn nx run common:test:*)",
+      "Bash(yarn nx format:write)",
+      "Bash(yarn nx format:check)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "enabledPlugins": {
+    "figma@claude-plugins-official": true
+  }
+}

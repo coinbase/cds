@@ -1,0 +1,65 @@
+import { useState } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import { Button } from '@coinbase/cds-web/buttons';
+import { VStack } from '@coinbase/cds-web/layout';
+import { Text } from '@coinbase/cds-web/typography';
+import { Tour, TourStep } from '@coinbase/cds-web/tour';
+import { useTourContext } from '@coinbase/cds-common/tour/TourContext';
+
+import webStylesData from ':docgen/web/tour/Tour/styles-data';
+
+export const TourStylesExample = ({ classNames }) => {
+  const [activeTourStep, setActiveTourStep] = useState(null);
+
+const StepContent = () => {
+const { stopTour } = useTourContext();
+return (
+
+<div
+  style={{
+    padding: '16px',
+    background: 'white',
+    borderRadius: '8px',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+    minWidth: '200px',
+  }}
+>
+  <p style={{ margin: '0 0 12px', fontSize: '14px' }}>Tour step content</p>
+  <Button compact onClick={stopTour}>
+    Close Tour
+  </Button>
+</div>
+); };
+
+const steps = [{ id: 'step1', Component: StepContent }];
+
+return (
+
+<VStack gap={2} alignItems="center">
+  <Tour
+    steps={steps}
+    activeTourStep={activeTourStep}
+    onChange={setActiveTourStep}
+    classNames={classNames}
+    accessibilityLabel="Styles example tour"
+  >
+    <TourStep id="step1">
+      <Button onClick={() => setActiveTourStep(steps[0])}>Start Tour</Button>
+    </TourStep>
+  </Tour>
+  <Text color="fgMuted" font="label2">
+    Select a selector, then click Start Tour to see it highlighted
+  </Text>
+</VStack>
+); };
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <TourStylesExample classNames={classNames} />}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="Tour" styles={webStylesData} />

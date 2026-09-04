@@ -1,0 +1,70 @@
+{
+  "extends": "./tsconfig.project.json",
+  "include": [],
+  "files": [],
+  "references": [
+    {
+      "path": "apps/docs"
+    },
+    {
+      "path": "apps/storybook"
+    },
+    {
+      "path": "apps/expo-app"
+    },
+    {
+      "path": "apps/vite-app"
+    },
+    {
+      "path": "libs/codegen"
+    },
+    {
+      "path": "libs/docusaurus-plugin-docgen"
+    },
+    {
+      "path": "libs/docusaurus-plugin-kbar"
+    },
+    {
+      "path": "libs/type-analyzer"
+    },
+    {
+      "path": "libs/web-utils"
+    },
+    {
+      "path": "packages/common"
+    },
+    {
+      "path": "packages/mcp-server"
+    },
+    {
+      "path": "packages/mobile"
+    },
+    {
+      "path": "packages/vscode-plugin"
+    },
+    {
+      "path": "packages/web"
+    },
+    {
+      "path": "packages/eslint-plugin-cds"
+    },
+    {
+      "path": "packages/icons"
+    },
+    {
+      "path": "packages/illustrations"
+    },
+    {
+      "path": "packages/lottie-files"
+    },
+    {
+      "path": "packages/mobile-visualization"
+    },
+    {
+      "path": "packages/utils"
+    },
+    {
+      "path": "packages/web-visualization"
+    }
+  ]
+}

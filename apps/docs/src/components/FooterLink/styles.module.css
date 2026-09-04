@@ -1,0 +1,7 @@
+.text:hover,
+.text:active,
+.text:visited {
+  color: var(--color-fgPrimary);
+  text-decoration: unset;
+  transition: color 100ms ease-in-out;
+}

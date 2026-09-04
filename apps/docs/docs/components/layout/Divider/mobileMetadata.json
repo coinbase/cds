@@ -1,0 +1,25 @@
+{
+  "import": "import { Divider } from '@coinbase/cds-mobile/layout/Divider'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/layout/Divider.tsx",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=419-16182",
+  "description": "Separates content into sections.",
+  "relatedComponents": [
+    {
+      "label": "Box",
+      "url": "/components/layout/Box/"
+    },
+    {
+      "label": "VStack",
+      "url": "/components/layout/VStack/"
+    },
+    {
+      "label": "HStack",
+      "url": "/components/layout/HStack/"
+    },
+    {
+      "label": "Spacer",
+      "url": "/components/layout/Spacer/"
+    }
+  ],
+  "dependencies": []
+}

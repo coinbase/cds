@@ -1,0 +1,358 @@
+/**
+ * For Web.
+ * ESLint rule for control-has-associated-label with extended CDS specific component targeting.
+ * Checks for the presence of an `accessibilityLabel` on designated Web CDS components.
+ * It enforces that components listed under `componentsRequiringAccessibilityLabel` have an `accessibilityLabel`
+ * attribute unless
+ * - they contain inner text or
+ * - have props spread.
+ *
+ * For components listed under `collapsibleCheckForControlledElementAccessibilityProps` and `dropdownCheckForControlledElementAccessibilityProps`, this rule
+ * ensures that `controlledElementAccessibilityProps` are provided.
+ */
+
+import type { TSESTree } from '@typescript-eslint/utils';
+import { AST_NODE_TYPES, ESLintUtils } from '@typescript-eslint/utils';
+
+import { extractA11yAttributesState } from '../utils/extractA11yAttributesState';
+import { getSimpleNameFromJSX } from '../utils/getSimpleNameFromJSX';
+
+const ruleCreator = ESLintUtils.RuleCreator(
+  (name) =>
+    `https://github.com/coinbase/cds/blob/master/packages/eslint-plugin-cds/README.md#${name}`,
+);
+
+type MessageIds =
+  | 'missingAccessibilityLabel'
+  | 'missingAccessibilityLabelSuggestion'
+  | 'missingAccessibleName'
+  | 'missingControlAccessibilityLabel'
+  | 'missingRemoveSelectedOptionAccessibilityLabel'
+  | 'missingHiddenSelectedOptionsLabel'
+  | 'missingCloseAccessibilityLabel'
+  | 'missingBackAccessibilityLabel'
+  | 'missingTableAccessibleName'
+  | 'missingControlledElementAccessibilityProps'
+  | 'missingControlledElementAccessibilityPropsDropdown'
+  | 'missingHelperTextErrorIconAccessibilityLabel'
+  | 'missingCalendarOpenCloseAccessibilityLabels'
+  | 'missingNextArrowAccessibilityLabel'
+  | 'missingPreviousArrowAccessibilityLabel'
+  | 'missingCardDismissAccessibilityLabel'
+  | 'missingStartIconAccessibilityLabel'
+  | 'missingClearIconAccessibilityLabel';
+
+type ConditionalCheckType = {
+  configArray: string[];
+  condition: boolean;
+  messageId: MessageIds;
+  suggestedPropToAdd?: string;
+};
+
+const config = {
+  componentsRequiringAccessibilityLabel: [
+    'Button',
+    'Checkbox',
+    'InputChip',
+    'IconButton',
+    'IconCounterButton',
+    'Pressable',
+    'Switch',
+    'TextInput',
+    'FeedCard',
+    'ProgressBar',
+    'Select',
+    'NavigationBar',
+    'Sidebar',
+    'Popover',
+    'SegmentedTabs',
+  ],
+  checkForInteractiveAccessibilityLabelProps: ['Chip', 'MediaChip', 'ListCell'],
+  collapsibleCheckForControlledElementAccessibilityProps: ['Collapsible'],
+  dropdownCheckForControlledElementAccessibilityProps: ['Dropdown'],
+  checkForComboboxAccessibilityLabelProps: ['Combobox'],
+  checkForComboboxControlAccessibilityLabelProps: ['Combobox'],
+  checkForComboboxMultiSelectionAccessibilityLabelProps: ['Combobox'],
+  checkForModalHeaderActionAccessibilityLabelProps: ['ModalHeader'],
+  checkForAccessibleNameProps: ['Tray'],
+  checkForTableAccessibleNameProps: ['Table'],
+  checkForHelperTextErrorIconAccessibilityLabelProps: ['TextInput', 'SelectStack'],
+  checkForCalendarOpenCloseAccessibilityLabelProps: ['DatePicker'],
+  checkForArrowAccessibilityProps: ['DatePicker', 'Calendar', 'TabNavigation'],
+  checkForCardDismissAccessibilityLabelProps: ['NudgeCard', 'UpsellCard'],
+  checkForSearchInputAccessibilityLabelProps: ['SearchInput'],
+
+  allowedPackages: ['@coinbase/cds-common', '@coinbase/cds-web', '@coinbase/cds-web-visualization'],
+};
+
+export const controlHasAssociatedLabelExtended = ruleCreator({
+  name: 'control-has-associated-label-extended',
+  defaultOptions: [],
+  meta: {
+    type: 'problem',
+    docs: {
+      description:
+        'Checks for the presence of accessibilityLabel on Mobile CDS components. Will not flag it component has text content inside the element.',
+    },
+    messages: {
+      missingAccessibilityLabel: `Missing 'accessibilityLabel' on <{{componentName}}>.`,
+      missingAccessibilityLabelSuggestion: `Add missing accessibility label`,
+      missingAccessibleName: `Missing an accessible name on <{{componentName}}>. Add 'accessibilityLabel' or 'accessibilityLabelledBy'.`,
+      missingControlAccessibilityLabel: `Missing 'controlAccessibilityLabel' on <{{componentName}}>.`,
+      missingRemoveSelectedOptionAccessibilityLabel: `Missing 'removeSelectedOptionAccessibilityLabel' on <{{componentName}}> when type='multi'.`,
+      missingHiddenSelectedOptionsLabel: `Missing 'hiddenSelectedOptionsLabel' on <{{componentName}}> when type='multi'.`,
+      missingCloseAccessibilityLabel: `Missing 'closeAccessibilityLabel' on <{{componentName}}>.`,
+      missingBackAccessibilityLabel: `Missing 'backAccessibilityLabel' on <{{componentName}}> when back action is provided.`,
+      missingTableAccessibleName: `Missing an accessible table name on <{{componentName}}>. Add <TableCaption> as a child, or use 'accessibilityLabel' / 'accessibilityLabelledBy'.`,
+      missingControlledElementAccessibilityProps: `Missing 'controlledElementAccessibilityProps' on <{{componentName}}>. More info: https://cds.coinbase.com/components/collapsible#[object%20Object],Accessibility%20tip%20(web)`,
+      missingControlledElementAccessibilityPropsDropdown: `Missing 'controlledElementAccessibilityProps' on <{{componentName}}>. More info: https://cds.coinbase.com/components/dropdown#page=implementation`,
+      missingHelperTextErrorIconAccessibilityLabel: `Missing 'helperTextErrorIconAccessibilityLabel' on <{{componentName}}>.`,
+      missingCalendarOpenCloseAccessibilityLabels: `Missing calendar open/close accessibility label on <{{componentName}}>. Provide both 'openCalendarAccessibilityLabel' and 'closeCalendarAccessibilityLabel' (or deprecated 'calendarIconButtonAccessibilityLabel').`,
+      missingNextArrowAccessibilityLabel: `Missing 'nextArrowAccessibilityLabel' on <{{componentName}}>.`,
+      missingPreviousArrowAccessibilityLabel: `Missing 'previousArrowAccessibilityLabel' on <{{componentName}}>.`,
+      missingCardDismissAccessibilityLabel: `Missing 'accessibilityLabel' on <{{componentName}}> for dismiss button.`,
+      missingStartIconAccessibilityLabel: `Missing 'startIconAccessibilityLabel' on <{{componentName}}>.`,
+      missingClearIconAccessibilityLabel: `Missing 'clearIconAccessibilityLabel' on <{{componentName}}>.`,
+    },
+    hasSuggestions: true,
+    fixable: 'code',
+    schema: [],
+  },
+  create(context) {
+    const importedComponents: Record<string, string> = {};
+
+    return {
+      ImportDeclaration(node: TSESTree.ImportDeclaration) {
+        const packageName = node.source.value;
+
+        if (
+          typeof packageName === 'string' &&
+          config.allowedPackages.some(
+            (pkg) => packageName === pkg || packageName.startsWith(`${pkg}/`),
+          )
+        ) {
+          node.specifiers.forEach((specifier) => {
+            switch (specifier.type) {
+              case 'ImportSpecifier':
+              case 'ImportDefaultSpecifier':
+              case 'ImportNamespaceSpecifier':
+                importedComponents[specifier.local.name] = packageName;
+                break;
+              default:
+                break;
+            }
+          });
+        }
+      },
+      JSXElement(node) {
+        const {
+          hasLabel,
+          hasAccessibilityLabel,
+          hasAccessibilityLabelledBy,
+          hasControlAccessibilityLabel,
+          hasRemoveSelectedOptionAccessibilityLabel,
+          hasHiddenSelectedOptionsLabel,
+          hasBackAccessibilityLabel,
+          hasCloseAccessibilityLabel,
+          hasOnBackButtonClickProp,
+          hasControlledElementAccessibilityProps,
+          hasOnClickProp,
+          hasSpreadProps,
+          componentName,
+          hasInnerText,
+          hasHelperTextErrorIconAccessibilityLabel,
+          hasOpenCalendarAccessibilityLabel,
+          hasCloseCalendarAccessibilityLabel,
+          hasDeprecatedCalendarIconButtonAccessibilityLabel,
+          hasMissingNextArrowAccessibilityLabel,
+          hasMissingPreviousArrowAccessibilityLabel,
+          hasOnDismissPressProp,
+          hasMissingStartIconAccessibilityLabel,
+          hasMissingClearIconAccessibilityLabel,
+        } = extractA11yAttributesState(node, node.openingElement);
+
+        let isTextInputWithNegativeVariant = true;
+        if (getSimpleNameFromJSX(node.openingElement) === 'TextInput') {
+          const attributes = node.openingElement.attributes as TSESTree.JSXAttribute[];
+          const variantAttribute = attributes.find((attr) => attr.name?.name === 'variant');
+          if (variantAttribute) {
+            const variantValue = variantAttribute.value;
+            if (variantValue && variantValue.type === AST_NODE_TYPES.Literal) {
+              isTextInputWithNegativeVariant = variantValue.value === 'negative';
+            }
+          } else {
+            // No variant attribute found
+            isTextInputWithNegativeVariant = false;
+          }
+        } else {
+          // Not a TextInput component
+          isTextInputWithNegativeVariant = false;
+        }
+
+        let isComboboxWithMultiType = false;
+        if (getSimpleNameFromJSX(node.openingElement) === 'Combobox') {
+          const attributes = node.openingElement.attributes as TSESTree.JSXAttribute[];
+          const typeAttribute = attributes.find((attr) => attr.name?.name === 'type');
+          if (typeAttribute) {
+            const typeValue = typeAttribute.value;
+            if (typeValue && typeValue.type === AST_NODE_TYPES.Literal) {
+              isComboboxWithMultiType = typeValue.value === 'multi';
+            }
+          }
+        }
+
+        const hasTableCaptionChild = node.children.some((child) => {
+          if (child.type !== AST_NODE_TYPES.JSXElement) {
+            return false;
+          }
+          const childName = getSimpleNameFromJSX(child.openingElement);
+          return childName === 'TableCaption';
+        });
+
+        const conditionalChecks: ConditionalCheckType[] = [
+          {
+            configArray: config.componentsRequiringAccessibilityLabel,
+            condition:
+              !hasAccessibilityLabel &&
+              !hasAccessibilityLabelledBy &&
+              !(hasSpreadProps || hasInnerText || hasLabel),
+            messageId: 'missingAccessibilityLabel',
+            suggestedPropToAdd: 'accessibilityLabel',
+          },
+          {
+            configArray: config.checkForInteractiveAccessibilityLabelProps,
+            condition: hasOnClickProp && !hasAccessibilityLabel && !hasAccessibilityLabelledBy,
+            messageId: 'missingAccessibilityLabel',
+            suggestedPropToAdd: 'accessibilityLabel',
+          },
+          {
+            configArray: config.dropdownCheckForControlledElementAccessibilityProps,
+            condition: !hasControlledElementAccessibilityProps,
+            messageId: 'missingControlledElementAccessibilityPropsDropdown',
+          },
+          {
+            configArray: config.checkForComboboxAccessibilityLabelProps,
+            condition: !hasAccessibilityLabel && !hasAccessibilityLabelledBy,
+            messageId: 'missingAccessibleName',
+            suggestedPropToAdd: 'accessibilityLabel',
+          },
+          {
+            configArray: config.checkForComboboxControlAccessibilityLabelProps,
+            condition: !hasControlAccessibilityLabel,
+            messageId: 'missingControlAccessibilityLabel',
+            suggestedPropToAdd: 'controlAccessibilityLabel',
+          },
+          {
+            configArray: config.checkForComboboxMultiSelectionAccessibilityLabelProps,
+            condition: isComboboxWithMultiType && !hasRemoveSelectedOptionAccessibilityLabel,
+            messageId: 'missingRemoveSelectedOptionAccessibilityLabel',
+            suggestedPropToAdd: 'removeSelectedOptionAccessibilityLabel',
+          },
+          {
+            configArray: config.checkForComboboxMultiSelectionAccessibilityLabelProps,
+            condition: isComboboxWithMultiType && !hasHiddenSelectedOptionsLabel,
+            messageId: 'missingHiddenSelectedOptionsLabel',
+            suggestedPropToAdd: 'hiddenSelectedOptionsLabel',
+          },
+          {
+            configArray: config.checkForModalHeaderActionAccessibilityLabelProps,
+            condition: !hasCloseAccessibilityLabel,
+            messageId: 'missingCloseAccessibilityLabel',
+            suggestedPropToAdd: 'closeAccessibilityLabel',
+          },
+          {
+            configArray: config.checkForModalHeaderActionAccessibilityLabelProps,
+            condition: hasOnBackButtonClickProp && !hasBackAccessibilityLabel,
+            messageId: 'missingBackAccessibilityLabel',
+            suggestedPropToAdd: 'backAccessibilityLabel',
+          },
+          {
+            configArray: config.checkForAccessibleNameProps,
+            condition: !hasAccessibilityLabel && !hasAccessibilityLabelledBy,
+            messageId: 'missingAccessibleName',
+          },
+          {
+            configArray: config.checkForTableAccessibleNameProps,
+            condition:
+              !hasAccessibilityLabel && !hasAccessibilityLabelledBy && !hasTableCaptionChild,
+            messageId: 'missingTableAccessibleName',
+          },
+          {
+            configArray: config.checkForHelperTextErrorIconAccessibilityLabelProps,
+            condition: !hasHelperTextErrorIconAccessibilityLabel && isTextInputWithNegativeVariant,
+            messageId: 'missingHelperTextErrorIconAccessibilityLabel',
+            suggestedPropToAdd: 'helperTextErrorIconAccessibilityLabel',
+          },
+          {
+            configArray: config.checkForCalendarOpenCloseAccessibilityLabelProps,
+            condition: !(
+              (hasOpenCalendarAccessibilityLabel && hasCloseCalendarAccessibilityLabel) ||
+              hasDeprecatedCalendarIconButtonAccessibilityLabel
+            ),
+            messageId: 'missingCalendarOpenCloseAccessibilityLabels',
+            suggestedPropToAdd: 'openCalendarAccessibilityLabel',
+          },
+          {
+            configArray: config.checkForArrowAccessibilityProps,
+            condition: !hasMissingNextArrowAccessibilityLabel,
+            messageId: 'missingNextArrowAccessibilityLabel',
+            suggestedPropToAdd: 'nextArrowAccessibilityLabel',
+          },
+          {
+            configArray: config.checkForArrowAccessibilityProps,
+            condition: !hasMissingPreviousArrowAccessibilityLabel,
+            messageId: 'missingPreviousArrowAccessibilityLabel',
+            suggestedPropToAdd: 'previousArrowAccessibilityLabel',
+          },
+          {
+            // Check for presence of onDismissPress prop and absence of accessibilityLabel
+            // Applicable for NudgeCard and UpsellCard where the accessibilityLabel is conditionally rendered
+            configArray: config.checkForCardDismissAccessibilityLabelProps,
+            condition: !hasAccessibilityLabel && hasOnDismissPressProp,
+            messageId: 'missingCardDismissAccessibilityLabel',
+            suggestedPropToAdd: 'accessibilityLabel',
+          },
+          {
+            configArray: config.checkForSearchInputAccessibilityLabelProps,
+            condition: !hasMissingStartIconAccessibilityLabel,
+            messageId: 'missingStartIconAccessibilityLabel',
+            suggestedPropToAdd: 'startIconAccessibilityLabel',
+          },
+          {
+            configArray: config.checkForSearchInputAccessibilityLabelProps,
+            condition: !hasMissingClearIconAccessibilityLabel,
+            messageId: 'missingClearIconAccessibilityLabel',
+            suggestedPropToAdd: 'clearIconAccessibilityLabel',
+          },
+        ];
+
+        conditionalChecks.forEach(({ configArray, condition, messageId, suggestedPropToAdd }) => {
+          if (
+            importedComponents[componentName] &&
+            configArray.includes(componentName) &&
+            condition
+          ) {
+            context.report({
+              node,
+              messageId,
+              data: { componentName },
+              suggest: suggestedPropToAdd
+                ? [
+                    {
+                      messageId: 'missingAccessibilityLabelSuggestion',
+                      fix(fixer) {
+                        return fixer.insertTextAfter(
+                          node.openingElement.name,
+                          ` ${suggestedPropToAdd}=""`,
+                        );
+                      },
+                    },
+                  ]
+                : [],
+            });
+          }
+        });
+      },
+    };
+  },
+});

@@ -1,0 +1,63 @@
+### Basic usage
+
+```tsx live
+<VStack alignItems="center">
+  <Box width="100%">
+    <LogoMark size={32} />
+  </Box>
+</VStack>
+```
+
+### Different Sizes
+
+```tsx live
+<VStack gap={4}>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Size 16
+    </Text>
+    <Box width="100%">
+      <LogoMark size={16} />
+    </Box>
+  </VStack>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Size 24
+    </Text>
+    <Box width="100%">
+      <LogoMark size={24} />
+    </Box>
+  </VStack>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Size 32
+    </Text>
+    <Box width="100%">
+      <LogoMark size={32} />
+    </Box>
+  </VStack>
+</VStack>
+```
+
+### Foreground Variations
+
+```tsx live
+<VStack gap={4}>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Default (brand blue in light mode, white in dark mode)
+    </Text>
+    <Box width="100%">
+      <LogoMark size={32} />
+    </Box>
+  </VStack>
+  <VStack gap={2}>
+    <Text font="label2" color="fgMuted">
+      Foreground (high contrast black in light mode, white in dark mode)
+    </Text>
+    <Box width="100%">
+      <LogoMark size={32} foreground={true} />
+    </Box>
+  </VStack>
+</VStack>
+```

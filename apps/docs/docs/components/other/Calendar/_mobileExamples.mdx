@@ -1,0 +1,379 @@
+Calendar is a date grid for selecting dates and powers the picker in [DatePicker](/components/other/DatePicker). It can be used standalone or inside a [Tray](/components/overlay/Tray) with a confirm action.
+
+### Basic usage
+
+A basic Calendar with date selection functionality. The Calendar component is used within the DatePicker and can also be used independently.
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  return <Calendar selectedDate={selectedDate} onPressDate={setSelectedDate} />;
+}
+```
+
+### No selection
+
+A Calendar without an initially selected date.
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  return <Calendar selectedDate={selectedDate} onPressDate={setSelectedDate} />;
+}
+```
+
+### Seeding the calendar
+
+The `seedDate` prop controls which month the Calendar opens to when there is no selected date value. Defaults to today when undefined.
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const seedDate = new Date(today.getFullYear(), today.getMonth() + 1, 15);
+
+  return <Calendar selectedDate={selectedDate} onPressDate={setSelectedDate} seedDate={seedDate} />;
+}
+```
+
+### Minimum and maximum dates
+
+Use `minDate` and `maxDate` to restrict the selectable date range. Navigation to dates before the `minDate` and after the `maxDate` is disabled. Make sure to provide the `disabledDateError` prop.
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const lastMonth15th = new Date(today.getFullYear(), today.getMonth() - 1, 15);
+  const nextMonth15th = new Date(today.getFullYear(), today.getMonth() + 1, 15);
+
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      minDate={lastMonth15th}
+      maxDate={nextMonth15th}
+      disabledDateError="Date is outside allowed range"
+    />
+  );
+}
+```
+
+### Future dates only
+
+Restrict selection to future dates by setting `minDate` to today.
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      minDate={today}
+      disabledDateError="Past dates are not available"
+    />
+  );
+}
+```
+
+### Highlighted dates
+
+Use `highlightedDates` to visually emphasize specific dates or date ranges. A number is created for every individual date within a tuple range, so do not abuse this with massive ranges.
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  const nextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      highlightedDates={[yesterday, today, nextWeek]}
+    />
+  );
+}
+```
+
+### Disabled dates
+
+Use `disabledDates` to prevent selection of specific dates or date ranges. Make sure to provide the `disabledDateError` prop.
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(null);
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+
+  // Disable weekends for demonstration
+  const getNextWeekendDates = (centerDate) => {
+    const weekends = [];
+    const currentDate = new Date(centerDate);
+
+    // Find next 4 weekends
+    for (let i = 0; i < 4; i++) {
+      // Find next Saturday
+      const daysUntilSaturday = (6 - currentDate.getDay() + 7) % 7 || 7;
+      currentDate.setDate(currentDate.getDate() + daysUntilSaturday);
+
+      const saturday = new Date(currentDate);
+      const sunday = new Date(currentDate);
+      sunday.setDate(sunday.getDate() + 1);
+
+      weekends.push([saturday, sunday]);
+
+      // Move to next week
+      currentDate.setDate(currentDate.getDate() + 7);
+    }
+
+    return weekends;
+  };
+
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      disabledDates={getNextWeekendDates(today)}
+      disabledDateError="Weekends are not available"
+    />
+  );
+}
+```
+
+### Date ranges
+
+Highlight a date range using a tuple `[startDate, endDate]`.
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
+  const nextWeek = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
+
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      highlightedDates={[[yesterday, nextWeek]]}
+    />
+  );
+}
+```
+
+### Hidden controls
+
+Hide the navigation arrows with `hideControls`. This is typically used when `minDate` and `maxDate` are set to the first and last days of the same month.
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+  const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      minDate={firstDayOfMonth}
+      maxDate={lastDayOfMonth}
+      hideControls
+    />
+  );
+}
+```
+
+### Disabled
+
+Disable the entire Calendar with the `disabled` prop.
+
+```jsx
+function Example() {
+  const selectedDate = new Date();
+
+  return <Calendar selectedDate={selectedDate} disabled />;
+}
+```
+
+### Slot styling
+
+Use the `styles` prop to target: **`root`** (outer container), **`header`** (month row), **`title`** (month/year text), **`navigation`** (both arrow buttons’ container), **`content`** (weekday row + date grid), and **`day`** (each date cell pressable — single `ViewStyle`).
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      styles={{
+        root: {
+          backgroundColor: 'lightgray',
+          borderColor: '#ccc',
+          borderRadius: 16,
+          borderWidth: 1,
+          padding: 12,
+        },
+        header: {
+          backgroundColor: 'rgba(0, 120, 0, 0.1)',
+          borderRadius: 16,
+          paddingBottom: 0,
+        },
+        title: { opacity: 0.9 },
+        navigation: {
+          borderColor: '#888',
+          borderRadius: 8,
+          borderStyle: 'dashed',
+          borderWidth: 1,
+          padding: 4,
+        },
+        content: { paddingVertical: 8 },
+        day: { borderRadius: 8 },
+      }}
+    />
+  );
+}
+```
+
+### Accessibility
+
+Always provide accessibility labels for the navigation controls and error messages for disabled dates.
+
+```jsx
+function Example() {
+  const [selectedDate, setSelectedDate] = useState(new Date());
+
+  const today = new Date(new Date().setHours(0, 0, 0, 0));
+  const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
+
+  return (
+    <Calendar
+      selectedDate={selectedDate}
+      onPressDate={setSelectedDate}
+      maxDate={nextMonth}
+      disabledDateError="Date is not available for selection"
+      nextArrowAccessibilityLabel="Go to next month"
+      previousArrowAccessibilityLabel="Go to previous month"
+      todayAccessibilityHint="Today"
+      highlightedDateAccessibilityHint="Highlighted"
+    />
+  );
+}
+```
+
+### Date selection with Chip trigger
+
+When you need a compact trigger instead of the full [DateInput](/components/other/DateInput/) used in [DatePicker](/components/other/DatePicker/), you can use a [Chip](/components/inputs/Chip) (or similar control) to open a Tray with a Calendar and a confirm button.
+
+```jsx
+function Example() {
+  const { locale } = useLocale();
+  const [date, setDate] = useState(null);
+  const [showPicker, setShowPicker] = useState(false);
+  const [calendarSelectedDate, setCalendarSelectedDate] = useState(null);
+  const calendarRef = useRef(null);
+
+  const formatDateLabel = useCallback(
+    (date, locale) =>
+      date
+        ? date.toLocaleDateString(locale, { month: 'short', day: 'numeric', year: 'numeric' })
+        : 'Select date',
+    [],
+  );
+
+  const handleOpenPicker = useCallback(() => {
+    setCalendarSelectedDate(date);
+    setShowPicker(true);
+  }, [date]);
+
+  const handleClosePicker = useCallback(() => setShowPicker(false), []);
+
+  const handleCancelPicker = useCallback(() => {
+    setCalendarSelectedDate(null);
+    handleClosePicker();
+  }, [handleClosePicker]);
+
+  const handleCalendarDatePress = useCallback((selectedDate) => {
+    setCalendarSelectedDate(selectedDate);
+  }, []);
+
+  const handleModalShow = useCallback(() => {
+    calendarRef.current?.focusInitialDate();
+  }, []);
+
+  const handleConfirmCalendar = useCallback(() => {
+    if (calendarSelectedDate) {
+      setDate(calendarSelectedDate);
+      handleClosePicker();
+    }
+  }, [calendarSelectedDate, handleClosePicker]);
+
+  const formattedLabel = formatDateLabel(date, locale);
+
+  const trayFooter = useMemo(
+    () => (
+      <Box paddingTop={3} paddingX={3}>
+        <Button
+          block
+          compact
+          accessibilityHint={!calendarSelectedDate ? 'Select a date first' : undefined}
+          accessibilityLabel="Confirm date selection"
+          disabled={!calendarSelectedDate}
+          onPress={handleConfirmCalendar}
+        >
+          Confirm
+        </Button>
+      </Box>
+    ),
+    [calendarSelectedDate, handleConfirmCalendar],
+  );
+
+  return (
+    <>
+      <Box alignSelf="flex-start">
+        <Chip
+          compact
+          accessibilityLabel={formattedLabel}
+          end={<AnimatedCaret active color="fg" rotate={showPicker ? 0 : 180} size="xs" />}
+          onPress={handleOpenPicker}
+        >
+          {formattedLabel}
+        </Chip>
+      </Box>
+      {showPicker && (
+        <Tray
+          accessibilityRole="none"
+          footer={trayFooter}
+          handleBarAccessibilityLabel="Close calendar"
+          handleBarVariant="inside"
+          onCloseComplete={handleCancelPicker}
+          onOpenComplete={handleModalShow}
+        >
+          <Calendar
+            ref={calendarRef}
+            onPressDate={handleCalendarDatePress}
+            paddingBottom={2}
+            paddingX={2}
+            selectedDate={calendarSelectedDate}
+          />
+        </Tray>
+      )}
+    </>
+  );
+}
+```

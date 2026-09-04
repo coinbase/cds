@@ -1,0 +1,49 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Basic usage
+
+```tsx live
+function Example() {
+  const ref = useRef(null);
+  const { width, height } = useDimensions({ ref });
+
+  return (
+    <Box ref={ref} padding={3} background="bgAlternate" borderRadius={300} width="100%">
+      <Text font="headline">
+        This box is {width}px wide and {height}px tall
+      </Text>
+    </Box>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## With Breakpoints
+
+```tsx live
+function Example() {
+  const ref = useRef(null);
+  const { width, currentBreakpoint } = useDimensions({
+    ref,
+    breakpoints: {
+      small: 300,
+      medium: 400,
+      large: 500,
+    },
+  });
+
+  return (
+    <Box ref={ref} padding={3} background="bgAlternate" borderRadius={300} width="100%">
+      <VStack gap={2}>
+        <Text font="headline">Width: {width}px</Text>
+        <Text font="headline">Current breakpoint: {currentBreakpoint || 'none'}</Text>
+      </VStack>
+    </Box>
+  );
+}
+```
+
+</MDXArticle>

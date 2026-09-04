@@ -1,0 +1,247 @@
+## Deprecation Notice
+
+:::danger Deprecated Component
+
+**CheckboxGroup is deprecated and will be removed in a future version.**
+
+Use **[ControlGroup](/components/inputs/ControlGroup)** with `accessibilityRole="group"` instead for better accessibility, consistency, and maintainability.
+
+:::
+
+## Migration Guide
+
+### ✅ Recommended: Using ControlGroup
+
+The new recommended approach provides better accessibility, cleaner API, and consistent behavior across the design system.
+
+```jsx
+function RecommendedCheckboxGroup() {
+  const options = [
+    { value: 'email', children: 'Email notifications' },
+    { value: 'sms', children: 'SMS notifications' },
+    { value: 'push', children: 'Push notifications' },
+    { value: 'newsletter', children: 'Newsletter subscription' },
+  ];
+
+  const [selectedValues, setSelectedValues] = useState(['email', 'push']);
+
+  const handleChange = (value, checked) => {
+    setSelectedValues((prev) => (checked ? [...prev, value] : prev.filter((v) => v !== value)));
+  };
+
+  return (
+    <VStack gap={2}>
+      <ControlGroup
+        accessibilityRole="group"
+        ControlComponent={Checkbox}
+        label="Notification Preferences"
+        options={options}
+        value={selectedValues}
+        onChange={handleChange}
+        name="notifications"
+      />
+      <Text font="caption" color="fgMuted">
+        Selected: {selectedValues.join(', ') || 'None'}
+      </Text>
+    </VStack>
+  );
+}
+```
+
+### Migration Steps
+
+1. **Replace CheckboxGroup with [ControlGroup](/components/inputs/ControlGroup)**:
+
+   ```jsx
+   // Old (deprecated)
+   <CheckboxGroup selectedValues={new Set(values)} onChange={onChange}>
+     <Checkbox value="option1">Option 1</Checkbox>
+     <Checkbox value="option2">Option 2</Checkbox>
+   </CheckboxGroup>
+
+   // New (recommended)
+   <ControlGroup
+     accessibilityRole="group"
+     ControlComponent={Checkbox}
+     options={[
+       { value: 'option1', children: 'Option 1' },
+       { value: 'option2', children: 'Option 2' }
+     ]}
+     value={values}
+     onChange={onChange}
+   />
+   ```
+
+2. **Update state management**:
+
+   ```jsx
+   // Old: Used Set<string>
+   const [selectedValues, setSelectedValues] = useState(new Set(['value1']));
+
+   // New: Use Array<string>
+   const [selectedValues, setSelectedValues] = useState(['value1']);
+   ```
+
+3. **Update onChange handler**:
+
+   ```jsx
+   // Old: Toggle logic with single value callback
+   const oldOnChange = (value) => {
+     setSelectedValues((prev) => {
+       const newSet = new Set(prev);
+       if (newSet.has(value)) {
+         newSet.delete(value);
+       } else {
+         newSet.add(value);
+       }
+       return newSet;
+     });
+   };
+
+   // New: Simplified with value and checked parameters
+   const newOnChange = (value, checked) => {
+     setSelectedValues((prev) => (checked ? [...prev, value] : prev.filter((v) => v !== value)));
+   };
+   ```
+
+4. **Update accessibility**:
+
+   ```jsx
+   // Old: accessibilityLabel prop
+   <CheckboxGroup accessibilityLabel="Group label">
+
+   // New: label prop with accessibilityRole
+   <ControlGroup
+     accessibilityRole="group"
+     label="Group label"
+   >
+   ```
+
+## Legacy Usage (Deprecated)
+
+:::warning Legacy Example
+
+The following examples show the **deprecated** CheckboxGroup usage. **Do not use this in new code.** Use [ControlGroup](/components/inputs/ControlGroup) instead.
+
+:::
+
+### Basic CheckboxGroup (Legacy)
+
+```jsx
+function LegacyCheckboxGroup() {
+  const [selectedValues, setSelectedValues] = useState(new Set(['feature1']));
+
+  const handleToggle = (value) => {
+    setSelectedValues((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(value)) {
+        newSet.delete(value);
+      } else {
+        newSet.add(value);
+      }
+      return newSet;
+    });
+  };
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline">Features (Legacy CheckboxGroup)</Text>
+      <CheckboxGroup
+        accessibilityLabel="Feature settings"
+        selectedValues={selectedValues}
+        onChange={handleToggle}
+      >
+        <Checkbox value="feature1">Dark mode</Checkbox>
+        <Checkbox value="feature2">Two-factor authentication</Checkbox>
+        <Checkbox value="feature3">Email notifications</Checkbox>
+        <Checkbox value="feature4">Auto-save</Checkbox>
+      </CheckboxGroup>
+      <Text font="caption" color="fgMuted">
+        Selected: {Array.from(selectedValues).join(', ') || 'None'}
+      </Text>
+    </VStack>
+  );
+}
+```
+
+### With Custom Label (Legacy)
+
+```jsx
+function LegacyCheckboxGroupWithLabel() {
+  const [permissions, setPermissions] = useState(new Set(['read']));
+
+  const handlePermissionChange = (value) => {
+    setPermissions((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(value)) {
+        newSet.delete(value);
+      } else {
+        newSet.add(value);
+      }
+      return newSet;
+    });
+  };
+
+  return (
+    <CheckboxGroup
+      label={<Text font="headline">User Permissions</Text>}
+      selectedValues={permissions}
+      onChange={handlePermissionChange}
+    >
+      <Checkbox value="read">Read access</Checkbox>
+      <Checkbox value="write">Write access</Checkbox>
+      <Checkbox value="admin">Admin access</Checkbox>
+    </CheckboxGroup>
+  );
+}
+```
+
+### With Accessibility Features (Legacy)
+
+```jsx
+function LegacyAccessibleCheckboxGroup() {
+  const [settings, setSettings] = useState(new Set());
+
+  const handleSettingChange = (value) => {
+    setSettings((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(value)) {
+        newSet.delete(value);
+      } else {
+        newSet.add(value);
+      }
+      return newSet;
+    });
+  };
+
+  return (
+    <CheckboxGroup
+      accessibilityLabel="Privacy settings options"
+      selectedValues={settings}
+      onChange={handleSettingChange}
+    >
+      <Checkbox
+        value="analytics"
+        accessibilityLabel="Allow analytics tracking"
+        accessibilityHint="Helps improve the app experience"
+      >
+        Analytics tracking
+      </Checkbox>
+      <Checkbox
+        value="marketing"
+        accessibilityLabel="Receive marketing emails"
+        accessibilityHint="Get updates about new features"
+      >
+        Marketing emails
+      </Checkbox>
+      <Checkbox
+        value="location"
+        accessibilityLabel="Share location data"
+        accessibilityHint="Used for location-based features"
+      >
+        Location sharing
+      </Checkbox>
+    </CheckboxGroup>
+  );
+}
+```

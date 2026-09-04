@@ -1,0 +1,220 @@
+{
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "cacheDirectory": "./.nx/cache",
+  "useInferencePlugins": false,
+  "cli": {
+    "packageManager": "yarn"
+  },
+  "defaultBase": "master",
+  "workspaceLayout": {
+    "appsDir": "apps",
+    "libsDir": "packages"
+  },
+  "release": {
+    "projectsRelationship": "independent",
+    "groups": {
+      "cds": {
+        "projects": [
+          "web",
+          "mobile",
+          "common",
+          "mcp-server"
+        ],
+        "projectsRelationship": "fixed",
+        "releaseTagPattern": "v{version}"
+      },
+      "standalone": {
+        "projects": [
+          "icons",
+          "illustrations",
+          "lottie-files",
+          "eslint-plugin-cds",
+          "migrator",
+          "utils",
+          "web-visualization",
+          "mobile-visualization"
+        ],
+        "projectsRelationship": "independent",
+        "releaseTagPattern": "{projectName}@{version}"
+      }
+    },
+    "version": {
+      "useLegacyVersioning": false,
+      "updateDependents": "never"
+    },
+    "changelog": {
+      "workspaceChangelog": false,
+      "projectChangelogs": {
+        "renderOptions": {
+          "authors": false,
+          "commitReferences": false
+        }
+      }
+    },
+    "versionPlans": {
+      "ignorePatternsForPlanCheck": [
+        "**/*.md",
+        "**/*.mdx",
+        "**/OWNERS",
+        "**/*.yml",
+        "**/*.yaml",
+        "**/*.[dD]ockerfile",
+        "**/project.json",
+        "**/tsconfig*.json",
+        "**/jest.config.*",
+        "**/.eslintrc*",
+        "**/eslint.config.*",
+        "**/__tests__/**",
+        "**/__stories__/**",
+        "**/__mocks__/**",
+        "**/__fixtures__/**",
+        "**/*.test.*",
+        "**/*.spec.*",
+        "**/*.stories.*",
+        "**/*.figma.*",
+        "**/*.d.ts",
+        "apps/**",
+        "yarn.lock"
+      ]
+    },
+    "git": {
+      "commit": false,
+      "tag": false,
+      "push": false,
+      "stageChanges": false
+    }
+  },
+  "namedInputs": {
+    "default": [
+      "{projectRoot}/*",
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
+    "sharedGlobals": [
+      "{workspaceRoot}/eslint.config.mjs",
+      "{workspaceRoot}/.github/**/*.yml",
+      "{workspaceRoot}/.*ignore",
+      "{workspaceRoot}/*.config.js",
+      "{workspaceRoot}/*.config.cjs",
+      "{workspaceRoot}/*.config.mjs",
+      "{workspaceRoot}/nx.json",
+      "{workspaceRoot}/package.json",
+      "{workspaceRoot}/tsconfig.json",
+      "{workspaceRoot}/tsconfig.*.json"
+    ],
+    "production": [
+      "default",
+      "!{projectRoot}/**/__stories__/**",
+      "!{projectRoot}/**/__tests__/**",
+      "!{projectRoot}/**/__mocks__/**",
+      "!{projectRoot}/**/__fixtures__/**",
+      "!{projectRoot}/**/*.stories.*",
+      "!{projectRoot}/**/*.test.*",
+      "!{projectRoot}/**/*.spec.*"
+    ]
+  },
+  "targetDefaults": {
+    "build": {
+      "dependsOn": [
+        "^build"
+      ],
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "production",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/cjs",
+        "{projectRoot}/dist",
+        "{projectRoot}/esm",
+        "{projectRoot}/lib"
+      ],
+      "cache": true
+    },
+    "typecheck": {
+      "dependsOn": [
+        "^build",
+        "^typecheck"
+      ],
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "default",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/dts",
+        "{projectRoot}/tsconfig.tsbuildinfo",
+        "{projectRoot}/tsconfig.build.tsbuildinfo"
+      ],
+      "cache": true
+    },
+    "dev": {
+      "options": {
+        "cwd": "{projectRoot}"
+      }
+    },
+    "start": {
+      "dependsOn": [
+        "^build",
+        "typecheck"
+      ],
+      "options": {
+        "cwd": "{projectRoot}"
+      },
+      "inputs": [
+        "production",
+        "^production"
+      ]
+    },
+    "lint": {
+      "dependsOn": [
+        {
+          "projects": [
+            "eslint-plugin-cds"
+          ],
+          "target": "build"
+        }
+      ],
+      "inputs": [
+        "default",
+        "^production"
+      ],
+      "outputs": [
+        "{options.outputFile}"
+      ],
+      "cache": true
+    },
+    "test": {
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "default",
+        "^production"
+      ],
+      "outputs": [
+        "{projectRoot}/coverage"
+      ],
+      "cache": true
+    },
+    "a11y-web": {
+      "cache": true
+    },
+    "build-css": {
+      "cache": true
+    },
+    "build-for-tests": {
+      "cache": true
+    },
+    "format": {
+      "cache": true
+    },
+    "lint-styles": {
+      "cache": true
+    }
+  }
+}

@@ -1,0 +1,141 @@
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXSection>
+<MDXArticle>
+## Installation
+
+:::tip Starting a new project?
+Check out our [templates](/getting-started/templates) for pre-configured starter apps with CDS already set up.
+:::
+
+To install the CDS library for React web applications, run the following command:
+
+```bash
+npm install @coinbase/cds-web framer-motion@^10
+```
+
+Alternatively, if you are using Yarn:
+
+```bash
+yarn add @coinbase/cds-web framer-motion@^10
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Getting started
+</MDXArticle>
+<MDXArticle>
+### 1. Import global styles
+
+Some global and icon styles are required for components to render correctly. Import these styles near your application entry point.
+
+```tsx
+import '@coinbase/cds-icons/fonts/web/icon-font.css';
+import '@coinbase/cds-web/globalStyles';
+```
+
+[See the `globalStyles` source code here &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/styles/global.ts)
+
+If you are using the CDS `defaultTheme` you should also import the default font styles.
+
+```tsx
+import '@coinbase/cds-web/defaultFontStyles';
+```
+
+</MDXArticle>
+<MDXArticle>
+
+### 2. Render providers
+
+Render the following providers at the root of your application:
+
+- **ThemeProvider** — applies the CDS theme and color scheme
+- **MediaQueryProvider** — prevents issues with `window.matchMedia()` in SSR environments ([read more &rarr;](/components/other/MediaQueryProvider#server-side-rendering))
+- **PortalProvider** — creates the DOM containers required by overlay components (Modal, Toast, Alert, Tooltip, Tray). ([read more &rarr;](/components/overlay/PortalProvider))
+
+```tsx
+import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
+import { PortalProvider } from '@coinbase/cds-web/overlays/PortalProvider';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import App from './App';
+
+const Index = () => (
+  <MediaQueryProvider>
+    <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+      <PortalProvider>
+        <App />
+      </PortalProvider>
+    </ThemeProvider>
+  </MediaQueryProvider>
+);
+
+export default Index;
+```
+
+:::tip
+The MediaQueryProvider prevents issues with `window.matchMedia()` in SSR environments.
+[Read more here &rarr;](/components/other/MediaQueryProvider#ssr-support)
+:::
+
+</MDXArticle>
+<MDXArticle>
+### 3. Verify the installation
+
+Try importing and rendering a simple CDS component.
+
+```tsx
+import { Button } from '@coinbase/cds-web/buttons';
+
+const Test = () => <Button>Click Me</Button>;
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Example implementation
+
+Here's an example React DOM app using the `defaultTheme`.
+
+```tsx
+import '@coinbase/cds-icons/fonts/web/icon-font.css';
+import '@coinbase/cds-web/defaultFontStyles';
+import '@coinbase/cds-web/globalStyles';
+import { createRoot } from 'react-dom/client';
+import { ThemeProvider, MediaQueryProvider } from '@coinbase/cds-web/system';
+import { PortalProvider } from '@coinbase/cds-web/overlays/PortalProvider';
+import { defaultTheme } from '@coinbase/cds-web/themes/defaultTheme';
+import App from './App';
+
+const root = createRoot(document.getElementById('root'));
+
+root.render(
+  <MediaQueryProvider>
+    <ThemeProvider theme={defaultTheme} activeColorScheme="light">
+      <PortalProvider>
+        <App />
+      </PortalProvider>
+    </ThemeProvider>
+  </MediaQueryProvider>,
+);
+```
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+## Next steps
+
+Learn how to customize CDS's appearance.
+
+[See the theming docs here &rarr;](/getting-started/theming)
+
+</MDXArticle>
+</MDXSection>

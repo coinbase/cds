@@ -1,0 +1,44 @@
+---
+id: text
+title: Text
+platform_switcher_options: { web: true, mobile: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { TextBanner } from '@site/src/components/page/ComponentBanner/TextBanner';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import mobilePropsToc from ':docgen/mobile/typography/Text/toc-props';
+import WebPropsTable from './_webPropsTable.mdx';
+import webPropsToc from ':docgen/web/typography/Text/toc-props';
+
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import WebExamples, { toc as webExamplesToc } from './_webExamples.mdx';
+
+import { sharedParentTypes } from ':docgen/_types/sharedParentTypes';
+import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
+import { VStack } from '@coinbase/cds-web/layout';
+import webMetadata from './webMetadata.json';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader
+    title="Text"
+    webMetadata={webMetadata}
+    mobileMetadata={mobileMetadata}
+    banner={<TextBanner />}
+  />
+
+  <ComponentTabsContainer
+    webPropsTable={<WebPropsTable />}
+    webExamples={<WebExamples />}
+    mobilePropsTable={<MobilePropsTable />}
+    mobileExamples={<MobileExamples />}
+    webExamplesToc={webExamplesToc}
+    mobileExamplesToc={mobileExamplesToc}
+    webPropsToc={webPropsToc}
+    mobilePropsToc={mobilePropsToc}
+  />
+</VStack>

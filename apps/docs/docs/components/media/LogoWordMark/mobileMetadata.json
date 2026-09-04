@@ -1,0 +1,25 @@
+{
+  "import": "import { LogoWordmark } from '@coinbase/cds-mobile/icons/LogoWordmark'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/icons/LogoWordmark.tsx",
+  "description": "The full Coinbase logo with text for branding.",
+  "relatedComponents": [
+    {
+      "label": "LogoMark",
+      "url": "/components/media/LogoMark/"
+    },
+    {
+      "label": "SubBrandLogoMark",
+      "url": "/components/media/SubBrandLogoMark/"
+    },
+    {
+      "label": "SubBrandLogoWordMark",
+      "url": "/components/media/SubBrandLogoWordMark/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "react-native-svg",
+      "version": "15.12.1"
+    }
+  ]
+}

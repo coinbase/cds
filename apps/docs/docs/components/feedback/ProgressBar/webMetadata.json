@@ -1,0 +1,26 @@
+{
+  "import": "import { ProgressBar } from '@coinbase/cds-web/visualizations/ProgressBar'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/visualizations/ProgressBar.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-progressbar--default",
+  "description": "A visual indicator of completion progress.",
+  "relatedComponents": [
+    {
+      "label": "ProgressCircle",
+      "url": "/components/feedback/ProgressCircle"
+    },
+    {
+      "label": "ProgressBarWithFloatLabel",
+      "url": "/components/feedback/ProgressBarWithFloatLabel"
+    },
+    {
+      "label": "ProgressBarWithFixedLabels",
+      "url": "/components/feedback/ProgressBarWithFixedLabels"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

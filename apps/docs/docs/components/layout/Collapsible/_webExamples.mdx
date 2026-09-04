@@ -1,0 +1,91 @@
+### Basic Collapsible
+
+:::tip Accessibility tip (web)
+
+In order to ensure Collapsible components are accessible on the web, we need to set up the trigger and Collapsible to reference each other correctly. The `useA11yControlledVisibility` is ideal for this, but you can also wire up each `aria-*` attr manually following the [aria-expanded](https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-expanded) spec.
+
+:::
+
+```jsx live
+function BasicCollapsible() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  // Web only a11y configuration
+  const { triggerAccessibilityProps, controlledElementAccessibilityProps } =
+    useA11yControlledVisibility(!collapsed, {
+      accessibilityLabel: 'cds-collapsible',
+      hasPopupType: 'true',
+    });
+
+  return (
+    <VStack gap={3}>
+      <Button onClick={() => setCollapsed(!collapsed)} {...triggerAccessibilityProps}>
+        Click me!
+      </Button>
+      <Collapsible collapsed={collapsed} padding={3} {...controlledElementAccessibilityProps}>
+        <VStack>Send a crypto gift! Share the gift of crypto this holiday season.</VStack>
+      </Collapsible>
+    </VStack>
+  );
+}
+```
+
+### Expand Top
+
+Place `Collapsible` above the trigger to expand top.
+
+```jsx live
+function ExpandTop() {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <VStack gap={3}>
+      <Collapsible collapsed={collapsed}>
+        <VStack>Send a crypto gift! Share the gift of crypto this holiday season.</VStack>
+      </Collapsible>
+      <Button onClick={() => setCollapsed(!collapsed)}>Click me!</Button>
+    </VStack>
+  );
+}
+```
+
+### Scroll Content
+
+Enable scroll by setting `maxHeight`.
+
+```jsx live
+function Scroll() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <VStack gap={3}>
+      <Button onClick={() => setCollapsed(!collapsed)}>Click me!</Button>
+      <Collapsible collapsed={collapsed} maxHeight={400}>
+        <Text font="body" as="p">
+          {loremIpsum.repeat(50)}
+        </Text>
+      </Collapsible>
+    </VStack>
+  );
+}
+```
+
+### Horizontal (Experimental)
+
+Set `direction="horizontal"` for horizontal expand/collapse.
+
+```jsx live
+function Horizontal() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <HStack gap={2} alignItems="center">
+      <Button onClick={() => setCollapsed(!collapsed)}>Click me!</Button>
+      <Collapsible collapsed={collapsed} direction="horizontal">
+        <DotCount count={100} />
+        <DotCount count={1} />
+        <DotCount count={99} />
+      </Collapsible>
+    </HStack>
+  );
+}
+```

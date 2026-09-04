@@ -1,0 +1,860 @@
+import React from 'react';
+import { renderA11y } from '@coinbase/cds-web-utils/jest';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { ComponentConfigProvider } from '../../../system';
+import { DefaultThemeProvider } from '../../../utils/test';
+import { Select, type SelectDropdownComponent, type SelectProps } from '../Select';
+
+const mockOptions = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  { value: 'option3', label: 'Option 3', disabled: true },
+  { value: 'option4', label: 'Option 4', description: 'Option 4 description' },
+  { value: null, label: 'Empty option' },
+];
+
+const defaultProps: SelectProps<'single' | 'multi'> = {
+  options: mockOptions,
+  value: null,
+  onChange: jest.fn(),
+  placeholder: 'Select an option',
+  label: 'Test Select',
+};
+
+jest.mock('../../../overlays/Portal', () => ({
+  Portal: ({ children, containerId }: { children: React.ReactNode; containerId?: string }) => (
+    <div data-testid="portal-container">{children}</div>
+  ),
+}));
+
+describe('Select', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('Accessibility', () => {
+    it('passes accessibility when closed', async () => {
+      expect(
+        await renderA11y(
+          <DefaultThemeProvider>
+            <Select {...defaultProps} />
+          </DefaultThemeProvider>,
+        ),
+      ).toHaveNoViolations();
+    });
+
+    // Due to the Clear All button in the multi-select dropdown,
+    // there's an a11y violation.
+    // TODO: Implement new markup for the Clear All button.
+    // eslint-disable-next-line jest/no-commented-out-tests
+    // it('passes accessibility when open', async () => {
+    //   expect(
+    //     await renderA11y(
+    //       <DefaultThemeProvider>
+    //         <Select {...defaultProps} defaultOpen />
+    //       </DefaultThemeProvider>,
+    //     ),
+    //   ).toHaveNoViolations();
+    // });
+
+    it('sets correct accessibility roles for dropdown and options', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} defaultOpen />
+        </DefaultThemeProvider>,
+      );
+
+      const listbox = screen.getByRole('listbox');
+      expect(listbox).toBeInTheDocument();
+
+      const options = screen.getAllByRole('option');
+      expect(options).toHaveLength(mockOptions.length);
+    });
+
+    it('supports custom accessibility roles', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select
+            {...defaultProps}
+            defaultOpen
+            accessibilityRoles={{
+              dropdown: 'menu',
+              option: 'menuitem',
+            }}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const menu = screen.getByRole('menu');
+      expect(menu).toBeInTheDocument();
+
+      const menuItems = screen.getAllByRole('menuitem');
+      expect(menuItems).toHaveLength(mockOptions.length);
+    });
+  });
+
+  describe('Single Select Functionality', () => {
+    it('renders single select by default', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toBeInTheDocument();
+      expect(screen.getByText('Test Select')).toBeInTheDocument();
+    });
+
+    it('opens dropdown when clicked', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+    });
+
+    it('closes dropdown when option is selected', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} onChange={onChange} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      const option = screen.getByText('Option 1');
+      await user.click(option);
+
+      expect(onChange).toHaveBeenCalledWith('option1');
+    });
+
+    it('displays selected value', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
+    });
+
+    it('shows placeholder when no value is selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toBeInTheDocument();
+    });
+
+    it('handles disabled options correctly', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} defaultOpen onChange={onChange} />
+        </DefaultThemeProvider>,
+      );
+
+      const disabledOption = screen.getByText('Option 3');
+      await user.click(disabledOption);
+
+      expect(onChange).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('Multi Select Functionality', () => {
+    const multiSelectProps: SelectProps<'single' | 'multi'> = {
+      ...defaultProps,
+      type: 'multi',
+      value: [],
+      onChange: jest.fn(),
+    };
+
+    it('renders multi select correctly', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...multiSelectProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toBeInTheDocument();
+    });
+
+    it('shows selected values as chips', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...multiSelectProps} value={['option1', 'option2']} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('button', { name: 'Remove Option 1' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Remove Option 2' })).toBeInTheDocument();
+    });
+
+    it('handles option selection in multi mode', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...multiSelectProps} defaultOpen onChange={onChange} />
+        </DefaultThemeProvider>,
+      );
+
+      const option = screen.getByText('Option 1');
+      await user.click(option);
+
+      expect(onChange).toHaveBeenCalledWith('option1');
+    });
+
+    it('shows select all option when enabled', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...multiSelectProps} defaultOpen />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText(/Select all/)).toBeInTheDocument();
+    });
+
+    it('hides select all option when disabled', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...multiSelectProps} defaultOpen hideSelectAll />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.queryByText(/Select all/)).not.toBeInTheDocument();
+    });
+
+    it('handles select all functionality', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...multiSelectProps} defaultOpen onChange={onChange} />
+        </DefaultThemeProvider>,
+      );
+
+      const selectAllOption = screen.getByText(/Select all/);
+      await user.click(selectAllOption);
+
+      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option4']);
+    });
+
+    it('does not select disabled options when using select all', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      const optionsWithDisabled = [
+        { value: 'option1', label: 'Option 1' },
+        { value: 'option2', label: 'Option 2' },
+        { value: 'option3', label: 'Option 3', disabled: true },
+        { value: 'option4', label: 'Option 4', disabled: true },
+        { value: 'option5', label: 'Option 5' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select
+            {...multiSelectProps}
+            defaultOpen
+            onChange={onChange}
+            options={optionsWithDisabled}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const selectAllOption = screen.getByText(/Select all/);
+      await user.click(selectAllOption);
+
+      // Should only select enabled options (option1, option2, option5)
+      // Disabled options (option3, option4) should be excluded
+      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option5']);
+      expect(onChange).not.toHaveBeenCalledWith(expect.arrayContaining(['option3', 'option4']));
+    });
+
+    it('does not select options from disabled groups when using select all', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      const optionsWithDisabledGroup = [
+        { value: 'option1', label: 'Option 1' },
+        { value: 'option2', label: 'Option 2' },
+        {
+          label: 'Disabled Group',
+          disabled: true,
+          options: [
+            { value: 'option3', label: 'Option 3' },
+            { value: 'option4', label: 'Option 4' },
+          ],
+        },
+        { value: 'option5', label: 'Option 5' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select
+            {...multiSelectProps}
+            defaultOpen
+            onChange={onChange}
+            options={optionsWithDisabledGroup}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const selectAllOption = screen.getByText(/Select all/);
+      await user.click(selectAllOption);
+
+      // Should only select options from enabled groups (option1, option2, option5)
+      // Options from disabled group (option3, option4) should be excluded
+      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option5']);
+      expect(onChange).not.toHaveBeenCalledWith(expect.arrayContaining(['option3', 'option4']));
+    });
+
+    it('does not select individually disabled options within enabled groups', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      const optionsWithDisabledInGroup = [
+        { value: 'option1', label: 'Option 1' },
+        {
+          label: 'Enabled Group',
+          options: [
+            { value: 'option2', label: 'Option 2' },
+            { value: 'option3', label: 'Option 3', disabled: true },
+            { value: 'option4', label: 'Option 4' },
+          ],
+        },
+        { value: 'option5', label: 'Option 5' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select
+            {...multiSelectProps}
+            defaultOpen
+            onChange={onChange}
+            options={optionsWithDisabledInGroup}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const selectAllOption = screen.getByText(/Select all/);
+      await user.click(selectAllOption);
+
+      // Should select enabled options from enabled group (option2, option4)
+      // and other enabled options (option1, option5)
+      // But exclude disabled option within group (option3)
+      expect(onChange).toHaveBeenCalledWith(['option1', 'option2', 'option4', 'option5']);
+      expect(onChange).not.toHaveBeenCalledWith(expect.arrayContaining(['option3']));
+    });
+
+    it('shows correct count in select all label excluding disabled options', () => {
+      const optionsWithDisabled = [
+        { value: 'option1', label: 'Option 1' },
+        { value: 'option2', label: 'Option 2' },
+        { value: 'option3', label: 'Option 3', disabled: true },
+        { value: 'option4', label: 'Option 4', disabled: true },
+        { value: 'option5', label: 'Option 5' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select {...multiSelectProps} defaultOpen options={optionsWithDisabled} />
+        </DefaultThemeProvider>,
+      );
+
+      // Should show count of 3 (option1, option2, option5) excluding disabled options
+      expect(screen.getByText(/Select all \(3\)/)).toBeInTheDocument();
+    });
+
+    it('shows overflow indicator when maxSelectedOptionsToShow is exceeded', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select
+            {...multiSelectProps}
+            maxSelectedOptionsToShow={2}
+            value={['option1', 'option2', 'option4']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('+1 more')).toBeInTheDocument();
+    });
+  });
+
+  describe('Props and Customization', () => {
+    it('renders with helper text', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} helperText="This is helper text" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('This is helper text')).toBeInTheDocument();
+    });
+
+    it('renders with start node', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} startNode={<div data-testid="start-node">Start</div>} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('start-node')).toBeInTheDocument();
+    });
+
+    it('shows empty options message when no options', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} defaultOpen emptyOptionsLabel="No options found" options={[]} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('No options found')).toBeInTheDocument();
+    });
+
+    it('supports custom SelectOptionComponent', () => {
+      const CustomOption = ({ label }: { label?: React.ReactNode }) => (
+        <div data-testid="custom-option">{label}</div>
+      );
+
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} defaultOpen SelectOptionComponent={CustomOption} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getAllByTestId('custom-option')).toHaveLength(mockOptions.length);
+    });
+
+    it('supports custom empty options component', () => {
+      const CustomEmpty = () => <div data-testid="custom-empty">No data available</div>;
+
+      render(
+        <DefaultThemeProvider>
+          <Select
+            {...defaultProps}
+            defaultOpen
+            SelectEmptyDropdownContentsComponent={CustomEmpty}
+            options={[]}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('custom-empty')).toBeInTheDocument();
+    });
+  });
+
+  describe('Controlled vs Uncontrolled', () => {
+    it('works as uncontrolled component', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select onChange={jest.fn()} options={mockOptions} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+    });
+
+    it('works as controlled component', async () => {
+      const onChange = jest.fn();
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <Select
+            onChange={onChange}
+            open={false}
+            options={mockOptions}
+            setOpen={jest.fn()}
+            value="option1"
+          />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
+
+      rerender(
+        <DefaultThemeProvider>
+          <Select
+            onChange={onChange}
+            open={false}
+            options={mockOptions}
+            setOpen={jest.fn()}
+            value="option2"
+          />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Option 2')).toBeInTheDocument();
+    });
+
+    it('throws error for partially controlled component', () => {
+      const consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+
+      expect(() => {
+        render(
+          <DefaultThemeProvider>
+            <Select {...defaultProps} open={true} />
+          </DefaultThemeProvider>,
+        );
+      }).toThrow(
+        'Select component must be fully controlled or uncontrolled: "open" and "setOpen" props must be provided together or not at all',
+      );
+
+      consoleError.mockRestore();
+    });
+  });
+
+  describe('Keyboard Navigation', () => {
+    it('opens dropdown on Enter key', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('{Enter}');
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+    });
+
+    it('opens dropdown on Space key', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard(' ');
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+    });
+
+    it('closes dropdown on Escape key', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} defaultOpen />
+        </DefaultThemeProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      await user.keyboard('{Escape}');
+
+      await waitFor(() => {
+        expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+      });
+    });
+
+    it('opens dropdown when a letter key is pressed while closed', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('o');
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+    });
+
+    it('focuses the first matching option when a letter key opens the dropdown', async () => {
+      const user = userEvent.setup();
+      const typeAheadOptions = [
+        { value: 'apple', label: 'Apple' },
+        { value: 'banana', label: 'Banana' },
+        { value: 'cherry', label: 'Cherry' },
+        { value: 'date', label: 'Date' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} options={typeAheadOptions} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('b');
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        const bananaOption = options.find((opt) => opt.textContent?.includes('Banana'));
+        expect(bananaOption).toHaveFocus();
+      });
+    });
+
+    it('focuses the matching option even when textContent has non-letter prefix characters', async () => {
+      const user = userEvent.setup();
+      const typeAheadOptions = [
+        { value: 'apple', label: 'Apple' },
+        { value: 'banana', label: 'Banana' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} options={typeAheadOptions} type="multi" value={[]} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('b');
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      await waitFor(() => {
+        const options = screen.getAllByRole('option');
+        const bananaOption = options.find((opt) => opt.textContent?.includes('Banana'));
+        expect(bananaOption).toHaveFocus();
+      });
+    });
+
+    it('does not open dropdown when letter key is pressed while disabled', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} disabled />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('o');
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('does not open dropdown when readOnly', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} readOnly />
+        </DefaultThemeProvider>,
+      );
+
+      await user.click(screen.getByRole('button'));
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('does not open dropdown when letter key is pressed while readOnly', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} readOnly />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('o');
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+
+    it('does not open dropdown when modifier key + letter is pressed', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('{Control>}a{/Control}');
+
+      expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('readOnly', () => {
+    it('does not apply disabled opacity styling', () => {
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} readOnly />
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = screen.getByTestId('input-interactable-area');
+      const trigger = screen.getByRole('button');
+
+      expect(inputArea).not.toHaveAttribute('aria-disabled', 'true');
+      expect(trigger).toHaveAttribute('aria-readonly', 'true');
+    });
+  });
+
+  describe('ComponentConfig', () => {
+    it('applies read-only background from component config resolver', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              Select: ({ readOnly }) => ({
+                inputBackground: readOnly ? 'bgSecondary' : 'bgAlternate',
+              }),
+            }}
+          >
+            <Select {...defaultProps} readOnly />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = screen.getByTestId('input-interactable-area');
+      expect(inputArea).toHaveStyle({ backgroundColor: 'var(--color-bgSecondary)' });
+    });
+
+    it('applies Select defaults from ComponentConfigProvider', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              Select: {
+                bordered: false,
+                focusedBorderWidth: 100,
+                inputBackground: 'bgAlternate',
+                labelColor: 'fgMuted',
+                labelFont: 'label2',
+              },
+            }}
+          >
+            <Select {...defaultProps} />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = screen.getByTestId('input-interactable-area');
+      expect(inputArea.style.getPropertyValue('--border-color-unfocused')).toBe(
+        'var(--color-bgLineHeavy)',
+      );
+      expect(inputArea.style.getPropertyValue('--border-width-focused')).toBe(
+        'var(--borderWidth-100)',
+      );
+    });
+
+    it('local props override ComponentConfigProvider defaults', () => {
+      render(
+        <DefaultThemeProvider>
+          <ComponentConfigProvider
+            value={{
+              Select: {
+                inputBackground: 'bgAlternate',
+                labelColor: 'fgMuted',
+              },
+            }}
+          >
+            <Select {...defaultProps} inputBackground="bgPrimary" labelColor="fg" />
+          </ComponentConfigProvider>
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = screen.getByTestId('input-interactable-area');
+      expect(inputArea).toHaveStyle({ backgroundColor: 'var(--color-bgPrimary)' });
+      expect(screen.getByText(defaultProps.label as string)).toHaveStyle({
+        color: 'var(--color-fg)',
+      });
+    });
+  });
+
+  describe('Ref Forwarding', () => {
+    it('forwards ref correctly', () => {
+      const ref = React.createRef<any>();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} ref={ref} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(ref.current).not.toBeNull();
+      expect(typeof ref.current.open).toBe('boolean');
+      expect(typeof ref.current.setOpen).toBe('function');
+      expect(ref.current.refs).toBeDefined();
+    });
+  });
+
+  describe('Dropdown density', () => {
+    /**
+     * The dropdown keeps a binary `compact` toggle instead of the t-shirt scale, so Select is
+     * responsible for translating its own resolved size into it.
+     */
+    const captureDropdownCompact = (props: Partial<SelectProps<'single' | 'multi'>>) => {
+      let captured: boolean | undefined;
+      const CapturingDropdown: SelectDropdownComponent<'single' | 'multi'> = ({ compact }) => {
+        captured = compact;
+        return null;
+      };
+
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} SelectDropdownComponent={CapturingDropdown} {...props} />
+        </DefaultThemeProvider>,
+      );
+
+      return captured;
+    };
+
+    it.each([
+      ['size="s"', true, { size: 's' as const }],
+      ['size="m"', false, { size: 'm' as const }],
+      ['size="l"', false, { size: 'l' as const }],
+      ['no size or compact', false, {}],
+      ['the deprecated compact alone', true, { compact: true }],
+      ['compact={false}', false, { compact: false }],
+    ])('%s resolves the dropdown to compact=%s', (_label, expected, props) => {
+      expect(captureDropdownCompact(props)).toBe(expected);
+    });
+
+    it('lets an explicit size win over the deprecated compact', () => {
+      // `compact` only ever acted as a fallback for geometry, so it must not force a compact
+      // dropdown once the caller has opted into a larger explicit size.
+      expect(captureDropdownCompact({ compact: true, size: 'l' })).toBe(false);
+    });
+  });
+});

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Workspace
+   version = "1.0">
+   <!--
+     Reference only the app project; it declares the local SwiftPM dependency on
+     ../../packages/cds-ios, so Xcode shows CDSDesignSystem under "Package Dependencies" with its
+     sources editable in place. Do not add the package folder as a separate FileRef.
+   -->
+   <FileRef
+      location = "group:../apps/ios-gallery/CDSGallery.xcodeproj">
+   </FileRef>
+</Workspace>

@@ -1,0 +1,21 @@
+{
+  "import": "import { Switch } from '@coinbase/cds-mobile/controls/Switch'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/controls/Switch.tsx",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?m=auto&node-id=466-13810&t=K73gadcWiDv2aYlS-1",
+  "description": "A control for toggling between on and off.",
+  "relatedComponents": [
+    {
+      "label": "Checkbox",
+      "url": "/components/inputs/Checkbox/?platform=mobile"
+    },
+    {
+      "label": "ControlGroup",
+      "url": "/components/inputs/ControlGroup/?platform=mobile"
+    },
+    {
+      "label": "Radio",
+      "url": "/components/inputs/Radio/?platform=mobile"
+    }
+  ],
+  "dependencies": []
+}

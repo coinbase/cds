@@ -1,0 +1,114 @@
+### Basic usage
+
+```tsx live
+<Table bordered variant="ruled">
+  <TableBody>
+    <TableRow>
+      <TableCell title="Basic Row" />
+    </TableRow>
+    <TableRow backgroundColor="bgAlternate">
+      <TableCell title="Row with Background" />
+    </TableRow>
+    <TableRow color="fgPrimary">
+      <TableCell title="Row with Custom Text Color" />
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Interactive Rows
+
+```tsx live
+function InteractiveExample() {
+  const handlePress = () => console.log('Row clicked');
+
+  return (
+    <Table bordered>
+      <TableBody>
+        <TableRow onClick={handlePress}>
+          <TableCell
+            direction="horizontal"
+            title="Clickable Row"
+            end={
+              <Button variant="secondary" compact>
+                Action
+              </Button>
+            }
+          />
+        </TableRow>
+        <TableRow onClick={handlePress} disableHoverIndicator>
+          <TableCell
+            direction="horizontal"
+            title="Clickable Row (No Hover)"
+            end={
+              <Button variant="secondary" compact>
+                Action
+              </Button>
+            }
+          />
+        </TableRow>
+      </TableBody>
+    </Table>
+  );
+}
+```
+
+### Full Width Rows
+
+```tsx live
+<Table bordered>
+  <TableBody>
+    <TableRow fullWidth>
+      <HStack gap={2} alignItems="center">
+        <Icon name="check" />
+        <Text>Full Width Content</Text>
+        <Button variant="secondary" compact>
+          Action
+        </Button>
+      </HStack>
+    </TableRow>
+    <TableRow fullWidth>
+      <HStack gap={2} alignItems="center">
+        <Icon active name="warning" />
+        <Text>Another Full Width Row</Text>
+        <Button variant="secondary" compact>
+          Action
+        </Button>
+      </HStack>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+### Responsive Spacing
+
+```tsx live
+function ResponsiveExample() {
+  const responsiveConfig = {
+    phone: {
+      innerSpacing: { spacingHorizontal: 2 },
+      outerSpacing: { spacingVertical: 1 },
+    },
+    desktop: {
+      innerSpacing: { spacingHorizontal: 4 },
+      outerSpacing: { spacingVertical: 2 },
+    },
+  };
+
+  return (
+    <Table bordered>
+      <TableBody>
+        <TableRow fullWidth innerSpacing={responsiveConfig.phone.innerSpacing}>
+          <HStack gap={2} alignItems="center">
+            <Icon name="check" />
+            <Text>Responsive Spacing Row</Text>
+            <Button variant="secondary" compact>
+              Action
+            </Button>
+          </HStack>
+        </TableRow>
+      </TableBody>
+    </Table>
+  );
+}
+```

@@ -1,0 +1,225 @@
+import React, { Fragment, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { type AccessibilityState, Modal as RNModal, TouchableOpacity, View } from 'react-native';
+import {
+  tooltipMaxWidth,
+  tooltipPaddingX,
+  tooltipPaddingY,
+} from '@coinbase/cds-common/tokens/tooltip';
+
+import { useComponentConfig } from '../../hooks/useComponentConfig';
+import { InvertedThemeProvider } from '../../system/ThemeProvider';
+
+import { InternalTooltip } from './InternalTooltip';
+import type { SubjectLayout, TooltipBaseProps } from './TooltipProps';
+import { useTooltipAnimation } from './useTooltipAnimation';
+
+export type { TooltipBaseProps };
+
+export type TooltipProps = TooltipBaseProps & {
+  /**
+   * Accessibility state for the trigger.
+   */
+  accessibilityState?: AccessibilityState;
+};
+
+export const Tooltip = memo((_props: TooltipProps) => {
+  const mergedProps = useComponentConfig('Tooltip', _props);
+  const {
+    children,
+    content,
+    placement = 'top',
+    onCloseTooltip,
+    onOpenTooltip,
+    gap = 1,
+    yShiftByStatusBarHeight,
+    testID,
+    accessibilityLabel,
+    accessibilityHint,
+    accessibilityLabelForContent,
+    accessibilityHintForContent,
+    accessibilityState,
+    visible,
+    invertColorScheme = true,
+    elevation,
+    openDelay,
+    closeDelay,
+    background = 'bg',
+    borderRadius = 200,
+    maxWidth = tooltipMaxWidth,
+    paddingX = tooltipPaddingX,
+    paddingY = tooltipPaddingY,
+    color = 'fg',
+    font = 'label2',
+    fontFamily,
+    fontSize,
+    fontWeight,
+    lineHeight,
+    textTransform,
+    ...props
+  } = mergedProps;
+  const subjectRef = useRef<View | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const isVisible = visible !== false && isOpen;
+  const [subjectLayout, setSubjectLayout] = useState<SubjectLayout>();
+  const openTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const closeTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const WrapperComponent = invertColorScheme ? InvertedThemeProvider : Fragment;
+
+  const { opacity, translateY, animateIn, animateOut } = useTooltipAnimation(placement);
+
+  const clearOpenTimeout = useCallback(() => {
+    if (openTimeoutRef.current) {
+      clearTimeout(openTimeoutRef.current);
+      openTimeoutRef.current = null;
+    }
+  }, []);
+
+  const clearCloseTimeout = useCallback(() => {
+    if (closeTimeoutRef.current) {
+      clearTimeout(closeTimeoutRef.current);
+      closeTimeoutRef.current = null;
+    }
+  }, []);
+
+  const handleRequestClose = useCallback(() => {
+    clearOpenTimeout();
+    clearCloseTimeout();
+
+    const closeTooltip = () => {
+      animateOut.start(() => {
+        setIsOpen(false);
+        onCloseTooltip?.();
+      });
+    };
+
+    if (closeDelay && closeDelay > 0) {
+      closeTimeoutRef.current = setTimeout(closeTooltip, closeDelay);
+    } else {
+      closeTooltip();
+    }
+  }, [animateOut, clearCloseTimeout, clearOpenTimeout, closeDelay, onCloseTooltip]);
+
+  const handlePressSubject = useCallback(() => {
+    clearCloseTimeout();
+    subjectRef.current?.measure((x, y, width, height, pageOffsetX, pageOffsetY) => {
+      setSubjectLayout({
+        width,
+        height,
+        pageOffsetX,
+        pageOffsetY,
+      });
+    });
+    const openTooltip = () => {
+      setIsOpen(true);
+      onOpenTooltip?.();
+    };
+
+    clearOpenTimeout();
+    if (openDelay && openDelay > 0) {
+      openTimeoutRef.current = setTimeout(openTooltip, openDelay);
+    } else {
+      openTooltip();
+    }
+  }, [clearCloseTimeout, clearOpenTimeout, onOpenTooltip, openDelay]);
+
+  // The accessibility props for the trigger component. Trigger component
+  // equals the component where when you click on it, it will show the tooltip
+  const accessibilityPropsForTrigger = useMemo(
+    () => ({
+      accessibilityLabel:
+        typeof children === 'string' && accessibilityLabel === undefined
+          ? children
+          : accessibilityLabel,
+      accessibilityHint:
+        typeof children === 'string' && accessibilityHint === undefined
+          ? children
+          : accessibilityHint,
+      // accessibilityState is applied to the trigger regardless of screen reader usage.
+      // Only set it when you need screen reader behavior.
+      // e.g. disabled = true: state is announced and the trigger cannot activate
+      accessibilityState,
+    }),
+    [children, accessibilityLabel, accessibilityHint, accessibilityState],
+  );
+
+  const accessibilityPropsForContent = useMemo(
+    () => ({
+      accessibilityLabel:
+        typeof content === 'string' && accessibilityLabelForContent === undefined
+          ? content
+          : accessibilityLabelForContent,
+      accessibilityHint:
+        typeof content === 'string' && accessibilityHintForContent === undefined
+          ? content
+          : accessibilityHintForContent,
+      onAccessibilityEscape: handleRequestClose,
+      onAccessibilityTap: handleRequestClose,
+    }),
+    [content, accessibilityLabelForContent, accessibilityHintForContent, handleRequestClose],
+  );
+
+  useEffect(() => {
+    return () => {
+      clearOpenTimeout();
+      clearCloseTimeout();
+    };
+  }, [clearCloseTimeout, clearOpenTimeout]);
+
+  return (
+    <View ref={subjectRef} collapsable={false}>
+      <TouchableOpacity
+        {...accessibilityPropsForTrigger}
+        accessibilityRole="button"
+        onPress={handlePressSubject}
+      >
+        {children}
+      </TouchableOpacity>
+
+      <RNModal
+        hardwareAccelerated
+        transparent
+        accessibilityRole="alert"
+        animationType="none"
+        onRequestClose={handleRequestClose}
+        visible={isVisible}
+      >
+        <TouchableOpacity
+          accessibilityElementsHidden
+          accessibilityRole="button"
+          activeOpacity={1}
+          onPress={handleRequestClose}
+          style={{ flex: 1 }}
+        />
+        <WrapperComponent>
+          <InternalTooltip
+            animateIn={animateIn}
+            background={background}
+            borderRadius={borderRadius}
+            color={color}
+            content={content}
+            elevation={elevation}
+            font={font}
+            fontFamily={fontFamily}
+            fontSize={fontSize}
+            fontWeight={fontWeight}
+            gap={gap}
+            lineHeight={lineHeight}
+            maxWidth={maxWidth}
+            opacity={opacity}
+            paddingX={paddingX}
+            paddingY={paddingY}
+            placement={placement}
+            subjectLayout={subjectLayout}
+            testID={testID}
+            textTransform={textTransform}
+            translateY={translateY}
+            yShiftByStatusBarHeight={yShiftByStatusBarHeight}
+            {...props}
+            {...accessibilityPropsForContent}
+          />
+        </WrapperComponent>
+      </RNModal>
+    </View>
+  );
+});

@@ -1,0 +1,85 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+
+## useOverlayContentContext
+
+Returns the current overlay context information for mobile applications. This hook does not throw an error when used outside a provider, making it safe to use anywhere in your component tree.
+
+### Return Value
+
+The hook returns an object with the following properties:
+
+- **`isOverlay?: boolean`** - True if inside any overlay component (derived from other values if not explicitly set)
+- **`isModal?: boolean`** - True if inside a Modal component
+- **`isDrawer?: boolean`** - True if inside a Drawer or Tray component
+- **`isTour?: boolean`** - True if inside a Tour component
+
+</MDXArticle>
+
+<MDXArticle>
+
+## OverlayContentContext
+
+The React context that provides overlay state information for mobile applications. Can be used directly with `React.useContext` or through the `useOverlayContentContext` hook.
+
+### Context Value Type
+
+```typescript
+type OverlayContentContextValue = {
+  isOverlay?: boolean;
+  isModal?: boolean;
+  isDrawer?: boolean;
+  isTour?: boolean;
+};
+```
+
+</MDXArticle>
+
+<MDXArticle>
+
+## Provider Usage
+
+```tsx
+import { OverlayContentContext } from '@coinbase/cds-common/overlays/OverlayContentContext';
+
+function MyMobileOverlayComponent() {
+  const contextValue = {
+    isModal: true,
+    isDrawer: false,
+    isTour: false,
+    // isOverlay will be automatically derived as true
+  };
+
+  return (
+    <OverlayContentContext.Provider value={contextValue}>
+      {/* Your mobile overlay content */}
+    </OverlayContentContext.Provider>
+  );
+}
+```
+
+</MDXArticle>
+
+<MDXArticle>
+
+## Mobile Considerations
+
+On mobile platforms, overlay contexts are particularly useful for:
+
+- **Touch Handling**: Adjusting touch behaviors based on overlay type
+- **Safe Areas**: Managing safe area insets differently in overlays vs full-screen content
+- **Navigation**: Preventing or modifying navigation gestures in overlay contexts
+- **Accessibility**: Providing appropriate focus management for screen readers
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+
+## Automatic Derivation
+
+If `isOverlay` is not explicitly provided in the context value, it will be automatically derived as `true` when any of `isModal`, `isDrawer`, or `isTour` is `true`. This ensures consistent behavior across the system.
+
+**Important**: When adding new overlay types to the `OverlayContentContextValue` type, remember to update the derivation logic in the `useOverlayContentContext` hook.
+
+</MDXArticle>

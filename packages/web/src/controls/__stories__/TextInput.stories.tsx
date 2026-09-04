@@ -1,0 +1,792 @@
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { InputVariant } from '@coinbase/cds-common/types/InputBaseProps';
+import { css } from '@linaria/core';
+import type { Meta, StoryObj } from '@storybook/react';
+
+import { Icon } from '../../icons/Icon';
+import { Box } from '../../layout/Box';
+import { HStack } from '../../layout/HStack';
+import { VStack } from '../../layout/VStack';
+import { Avatar } from '../../media/Avatar';
+import { Tooltip } from '../../overlays/tooltip/Tooltip';
+import { Link } from '../../typography/Link';
+import { Text } from '../../typography/Text';
+import { InputIcon } from '../InputIcon';
+import { InputIconButton } from '../InputIconButton';
+import { InputLabel } from '../InputLabel';
+import { NativeTextArea } from '../NativeTextArea';
+import { TextInput } from '../TextInput';
+
+const meta: Meta = {
+  title: 'Components/Inputs/TextInput',
+  component: TextInput,
+};
+
+export default meta;
+type Story = StoryObj;
+
+const nativeInputCustomCss = css`
+  &:focus {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+  }
+
+  background-color: transparent;
+`;
+
+const variants = [
+  'positive',
+  'negative',
+  'foregroundMuted',
+  'foreground',
+  'primary',
+  'secondary',
+] as const;
+
+const customContainerPaddingCss = css`
+  padding: var(--space-4);
+`;
+
+/**
+ * DEFAULT TEXT INPUT VARIATIONS
+ */
+
+export const Basic = function Basic() {
+  const onFocus = useCallback(() => {
+    console.log('Focusing');
+  }, []);
+
+  const onBlur = useCallback(() => {
+    console.log('Blurring');
+  }, []);
+
+  return <TextInput label="Label" onBlur={onBlur} onFocus={onFocus} />;
+};
+
+export const InsideLabel = function InsideLabel() {
+  return (
+    <VStack gap={2}>
+      <TextInput label="Inside Label" labelVariant="inside" placeholder="Placeholder" />
+      <TextInput
+        label="Secondary Start"
+        labelVariant="inside"
+        placeholder="Placeholder"
+        start={<InputIconButton transparent accessibilityLabel="Add" name="add" />}
+        variant="secondary"
+      />
+      <TextInput
+        end={<InputIconButton transparent accessibilityLabel="Add" name="add" />}
+        label=" Secondary End"
+        labelVariant="inside"
+        placeholder="Placeholder"
+        variant="secondary"
+      />
+      <TextInput
+        compact
+        label="Compact+Inside"
+        labelVariant="inside"
+        placeholder="Placeholder"
+        variant="secondary"
+      />
+      <TextInput
+        helperText="Error: Your favorite color is not orange"
+        label="Error state"
+        labelVariant="inside"
+        placeholder="Enter your favorite color"
+        variant="negative"
+      />
+    </VStack>
+  );
+};
+
+export const Placeholder = function Placeholder() {
+  return <TextInput label="Label" placeholder="placeholder" />;
+};
+
+export const HelperText = function HelperText() {
+  return <TextInput helperText="helperText" label="Label" placeholder="placeholder" />;
+};
+
+export const Align = function Align() {
+  const alignments = ['start', 'end'] as const;
+
+  return (
+    <>
+      {alignments.map((align) => (
+        <TextInput
+          align={align}
+          helperText="helperText"
+          label={`Label: ${align}`}
+          placeholder="placeholder"
+        />
+      ))}
+    </>
+  );
+};
+
+export const Variants = () => {
+  return (
+    <>
+      {variants.map((variant) => (
+        <TextInput
+          helperText="helperText"
+          label={`Label: ${variant}`}
+          placeholder="placeholder"
+          variant={variant}
+        />
+      ))}
+    </>
+  );
+};
+
+export const ColorSurge = () => {
+  return (
+    <>
+      {variants.map((variant) => (
+        <TextInput
+          enableColorSurge
+          helperText="helperText"
+          label={`Label: ${variant}`}
+          placeholder="placeholder"
+          variant={variant}
+        />
+      ))}
+    </>
+  );
+};
+
+export const NumberInput = function NumberInput() {
+  return <TextInput label="Number Input" type="number" />;
+};
+
+export const Width = function Width() {
+  const widths = ['100%', '30%', '75%', '10%'] as const;
+
+  return (
+    <>
+      {widths.map((width) => (
+        <TextInput
+          key={`input-width-${width}`}
+          helperText="helperText"
+          label={`Width: ${width}`}
+          placeholder="placeholder"
+          width={width}
+        />
+      ))}
+    </>
+  );
+};
+
+export const Height = function Height() {
+  const heights = [56, 40];
+
+  return (
+    <>
+      {heights.map((height) => (
+        <TextInput
+          key={`input-height-${height}`}
+          height={height}
+          helperText="helperText"
+          label={`Height: ${height}`}
+          placeholder="placeholder"
+        />
+      ))}
+    </>
+  );
+};
+
+const borderRadii: ThemeVars.BorderRadius[] = [
+  0, 100, 200, 300, 400, 500, 600, 700, 800, 900, 1000,
+] as const;
+
+export const BorderRadius = () =>
+  borderRadii.map((borderRadius) => (
+    <TextInput
+      key={`border-radius-${borderRadius}`}
+      borderRadius={borderRadius}
+      helperText="helperText"
+      label={`BorderRadius: ${borderRadius}`}
+      placeholder="placeholder"
+    />
+  ));
+
+export const Borderless = function Borderless() {
+  return (
+    <TextInput
+      bordered={false}
+      helperText="helperText"
+      label="borderless"
+      placeholder="placeholder"
+    />
+  );
+};
+
+const DisabledRender = () => {
+  return (
+    <>
+      <TextInput disabled label="Disabled label" />
+      <TextInput
+        disabled
+        label="Label"
+        start={<InputIconButton active transparent accessibilityLabel="Add" name="add" />}
+      />
+    </>
+  );
+};
+
+export const Disabled: Story = {
+  render: () => <DisabledRender />,
+};
+
+export const NoLabel = function NoLabel() {
+  return <TextInput accessibilityLabel="No Label" />;
+};
+
+export const CustomLabel = function CustomLabel() {
+  return (
+    <VStack gap={2}>
+      {/* Default with tooltip */}
+      <TextInput
+        accessibilityLabel="Display name"
+        id="display-name-tooltip"
+        labelNode={
+          <HStack alignItems="center">
+            <InputLabel htmlFor="display-name-tooltip">Display name</InputLabel>
+            <Tooltip content="This will be visible to other users.">
+              <Icon
+                active
+                accessibilityLabel="Info"
+                color="fg"
+                name="info"
+                padding={0.75}
+                role="button"
+                size="xs"
+                tabIndex={0}
+              />
+            </Tooltip>
+          </HStack>
+        }
+        placeholder="Satoshi Nakamoto"
+      />
+      {/* Compact with required indicator */}
+      <TextInput
+        compact
+        accessibilityLabel="Amount"
+        labelNode={
+          <InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              Amount
+              <Text color="fgNegative" font="label1">
+                *
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        placeholder="0.00"
+        suffix="USD"
+      />
+      {/* Compact with start icon */}
+      <TextInput
+        compact
+        accessibilityLabel="Search"
+        labelNode={<InputLabel>Search</InputLabel>}
+        placeholder="Search..."
+        start={<InputIconButton transparent accessibilityLabel="Search" name="search" />}
+      />
+      {/* Compact with start avatar */}
+      <TextInput
+        compact
+        accessibilityLabel="Amount"
+        labelNode={
+          <InputLabel>
+            <HStack alignItems="center" gap={0.5}>
+              Amount
+              <Text color="fgNegative" font="label1">
+                *
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        placeholder="0.00"
+        start={
+          <Box paddingX={1}>
+            <Avatar
+              alt="USD"
+              size="s"
+              src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+            />
+          </Box>
+        }
+        suffix="USD"
+      />
+      {/* Inside variant with optional indicator */}
+      <TextInput
+        accessibilityLabel="Bio"
+        id="bio-input"
+        labelNode={
+          <InputLabel htmlFor="bio-input" paddingY={0}>
+            <HStack alignItems="center" gap={1}>
+              Bio
+              <Text color="fgMuted" font="legal">
+                (optional)
+              </Text>
+            </HStack>
+          </InputLabel>
+        }
+        labelVariant="inside"
+        placeholder="Tell us about yourself"
+      />
+      {/* Inside variant with start icon */}
+      <TextInput
+        accessibilityLabel="Notes"
+        id="notes-input"
+        labelNode={
+          <InputLabel htmlFor="notes-input" paddingY={0}>
+            Notes
+          </InputLabel>
+        }
+        labelVariant="inside"
+        placeholder="Add a note"
+        start={<InputIcon name="pencil" />}
+      />
+    </VStack>
+  );
+};
+
+/**
+ * START, END, AND SUFFIX CONTENT
+ *
+ * Each feature is rendered at both `size="l"` (the default) and `size="s"` to show how the
+ * surrounding content adapts.
+ */
+
+export const StartEndAndSuffixContent = function StartEndAndSuffixContent() {
+  return (
+    <VStack gap={4}>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Start content
+        </Text>
+        <TextInput
+          label="Large (l) - default"
+          start={<InputIconButton accessibilityLabel="Add" name="add" />}
+        />
+        <TextInput
+          label="Small (s)"
+          size="s"
+          start={<InputIconButton accessibilityLabel="Add" name="add" />}
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Start avatar
+        </Text>
+        <TextInput
+          label="Large (l) - default"
+          start={
+            <Box>
+              <Avatar
+                alt="address"
+                size="l"
+                src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+              />
+            </Box>
+          }
+        />
+        <TextInput
+          label="Small (s)"
+          size="s"
+          start={
+            <Box>
+              <Avatar
+                alt="address"
+                size="l"
+                src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+              />
+            </Box>
+          }
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          End content
+        </Text>
+        <TextInput
+          end={
+            <HStack paddingEnd={1}>
+              <Link font="headline" href="">
+                Hello
+              </Link>
+            </HStack>
+          }
+          label="Large (l) - default"
+        />
+        <TextInput
+          end={
+            <HStack paddingEnd={1}>
+              <Link font="headline" href="">
+                Hello
+              </Link>
+            </HStack>
+          }
+          label="Small (s)"
+          size="s"
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Suffix
+        </Text>
+        <TextInput label="Large (l) - default" suffix="USD" />
+        <TextInput label="Small (s)" size="s" suffix="USD" />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Suffix and end content
+        </Text>
+        <TextInput
+          end={<InputIconButton active transparent accessibilityLabel="Add" name="add" />}
+          label="Large (l) - default"
+          suffix="USD"
+        />
+        <TextInput
+          end={<InputIconButton active transparent accessibilityLabel="Add" name="add" />}
+          label="Small (s)"
+          size="s"
+          suffix="USD"
+        />
+      </VStack>
+    </VStack>
+  );
+};
+
+/**
+ * T-SHIRT SIZE VARIATIONS
+ */
+
+export const Sizes = function Sizes() {
+  return (
+    <VStack gap={4}>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Outside label (default)
+        </Text>
+        <TextInput label="Small (s)" placeholder="Small" size="s" />
+        <TextInput label="Medium (m)" placeholder="Medium" size="m" />
+        <TextInput label="Large (l) - default" placeholder="Large" size="l" />
+        <TextInput
+          compact
+          label='Compact (deprecated, renders as size "s")'
+          placeholder="Compact"
+        />
+      </VStack>
+      <VStack gap={2}>
+        <Text as="h3" display="block" font="headline">
+          Inside label
+        </Text>
+        <TextInput label="Small (s)" labelVariant="inside" placeholder="Small" size="s" />
+        <TextInput label="Medium (m)" labelVariant="inside" placeholder="Medium" size="m" />
+        <TextInput label="Large (l) - default" labelVariant="inside" placeholder="Large" size="l" />
+        <TextInput
+          compact
+          label="Compact (deprecated, label forced outside)"
+          labelVariant="inside"
+          placeholder="Compact"
+        />
+      </VStack>
+    </VStack>
+  );
+};
+
+/**
+ * DEPRECATED COMPACT VARIATIONS
+ *
+ * `compact` is superseded by `size="s"`. These are kept as regression demos of the legacy
+ * behavior, which also forces the label into the inline start slot.
+ */
+
+export const CompactInput = function CompactInput() {
+  return <TextInput compact label="Label" />;
+};
+
+export const CompactInputStart = function CompactInputStart() {
+  return (
+    <TextInput
+      compact
+      label="Label"
+      start={
+        <Box>
+          <Avatar
+            alt="address"
+            size="l"
+            src="https://dynamic-assets.coinbase.com/e785e0181f1a23a30d9476038d9be91e9f6c63959b538eabbc51a1abc8898940383291eede695c3b8dfaa1829a9b57f5a2d0a16b0523580346c6b8fab67af14b/asset_icons/b57ac673f06a4b0338a596817eb0a50ce16e2059f327dc117744449a47915cb2.png"
+          />
+        </Box>
+      }
+    />
+  );
+};
+
+export const CompactInputEnd = function CompactInputEnd() {
+  return (
+    <TextInput
+      compact
+      end={
+        <HStack paddingEnd={1}>
+          <Link font="headline" href="">
+            Hello
+          </Link>
+        </HStack>
+      }
+      label="Label"
+    />
+  );
+};
+
+export const CompactInputSuffix = function CompactInputSuffix() {
+  return <TextInput compact label="Label" suffix="USD" />;
+};
+
+export const CompactHelperText = function CompactHelperText() {
+  return <TextInput compact helperText="helperText" label="Label" suffix="USD" />;
+};
+
+export const InputOnChange = function InputOnChange() {
+  const [inputText, setInputText] = useState('Test');
+
+  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+  }, []);
+
+  return (
+    <div>
+      <TextInput helperText={inputText} label="Label" onChange={onChange} />
+    </div>
+  );
+};
+
+export const RenderInputDefault = () => {
+  const [inputText, setInputText] = useState('Test');
+  const ref = useRef<HTMLInputElement>(null);
+
+  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+  }, []);
+
+  const renderInput = (
+    <input
+      className={nativeInputCustomCss}
+      onChange={onChange}
+      style={{ width: '100%', borderRadius: 'var(--borderRadius-200)' }}
+    />
+  );
+
+  return (
+    <div>
+      <TextInput ref={ref} helperText={inputText} inputNode={renderInput} label="Label" />
+    </div>
+  );
+};
+
+const RenderInputDisabledRender = () => {
+  const [inputText, setInputText] = useState('Test');
+  const ref = useRef<HTMLInputElement>(null);
+
+  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+  }, []);
+
+  const renderInput = (
+    <input
+      className={nativeInputCustomCss}
+      onChange={onChange}
+      style={{ width: '100%', borderRadius: 'var(--borderRadius-200)' }}
+      value="Custom Input"
+    />
+  );
+
+  return (
+    <div>
+      <TextInput ref={ref} disabled helperText={inputText} inputNode={renderInput} label="Label" />
+    </div>
+  );
+};
+
+export const RenderInputDisabled: Story = {
+  render: () => <RenderInputDisabledRender />,
+};
+
+export const RenderInputCompact = () => {
+  const [inputText, setInputText] = useState('Test');
+  const ref = useRef<HTMLInputElement>(null);
+
+  const onChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputText(e.target.value);
+  }, []);
+
+  const renderInput = (
+    <input
+      className={nativeInputCustomCss}
+      onChange={onChange}
+      style={{ width: '100%', borderRadius: 'var(--borderRadius-200)' }}
+    />
+  );
+
+  return (
+    <div>
+      <TextInput ref={ref} compact helperText={inputText} inputNode={renderInput} label="Label" />
+    </div>
+  );
+};
+
+export const RenderNativeTextArea = () => {
+  const [inputText, setInputText] = useState('');
+
+  const onChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputText(e.target.value);
+  }, []);
+
+  const customNativeTextAreaCSS = useMemo(() => {
+    return {
+      resize: 'none',
+    } as const;
+  }, []);
+
+  return (
+    <div>
+      <TextInput
+        helperText="Test"
+        inputNode={
+          <NativeTextArea
+            cols={5}
+            onChange={onChange}
+            rows={7}
+            style={customNativeTextAreaCSS}
+            value={inputText}
+          />
+        }
+        label="Label"
+      />
+    </div>
+  );
+};
+
+export const RenderNativeTextAreaCustomSpacing = () => {
+  const [inputText, setInputText] = useState('');
+
+  const onChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputText(e.target.value);
+  }, []);
+
+  const customNativeTextAreaCSS = useMemo(() => {
+    return {
+      resize: 'none',
+    } as const;
+  }, []);
+
+  return (
+    <div>
+      <TextInput
+        helperText="Test"
+        inputNode={
+          <NativeTextArea
+            cols={5}
+            containerSpacing={customContainerPaddingCss}
+            onChange={onChange}
+            rows={7}
+            style={customNativeTextAreaCSS}
+            value={inputText}
+          />
+        }
+        label="Label"
+      />
+    </div>
+  );
+};
+
+/**
+ * COMPLEX INPUTS
+ * These are inputs that people have requested. And I am building it
+ * to prove that it can be done with our component.
+ */
+
+const variantColorMap: Record<InputVariant, ThemeVars.Color> = {
+  primary: 'fgPrimary',
+  positive: 'fgPositive',
+  negative: 'fgNegative',
+  foreground: 'fg',
+  foregroundMuted: 'fgMuted',
+  secondary: 'bgSecondary',
+};
+
+export const CopyTextInput = function CopyTextInput() {
+  const [copied, setCopied] = useState(false);
+  const [variant, setVariant] = useState<InputVariant>('foregroundMuted');
+
+  const handleOnClick = useCallback(() => {
+    setCopied(!copied);
+    setVariant(copied ? 'foregroundMuted' : 'positive');
+    console.log(variant);
+  }, [copied, variant]);
+
+  const handleOnChange = useCallback(() => {
+    setVariant('foregroundMuted');
+    setCopied(false);
+  }, []);
+
+  return (
+    <div>
+      <TextInput
+        end={
+          <HStack>
+            <Link as="button" color={variantColorMap[variant]} font="legal" onClick={handleOnClick}>
+              {copied ? 'copied' : 'copy'}
+            </Link>
+            <InputIcon active name="visible" />
+          </HStack>
+        }
+        helperText="Warning: Something interesting"
+        label="Label"
+        onChange={handleOnChange}
+        variant={variant}
+      />
+    </div>
+  );
+};
+
+export const ReadOnly = function ReadOnly() {
+  return (
+    <VStack gap={1}>
+      <TextInput readOnly label="Read-Only Label" value="Some text" />
+      <TextInput
+        readOnly
+        helperText="Some helper text"
+        label="Read-Only with HelperText"
+        value="Some text"
+      />
+      <TextInput
+        readOnly
+        label="Read-Only with Start Node"
+        start={
+          <Box paddingX={2}>
+            <Icon color="fg" name="qrCode" size="m" />
+          </Box>
+        }
+        value="Some text"
+      />
+      <TextInput
+        compact
+        readOnly
+        end={
+          <Box paddingX={2}>
+            <Icon color="fg" name="qrCode" size="m" />
+          </Box>
+        }
+        label="Compact Read-Only with End Node"
+        placeholder="Placeholder"
+      />
+    </VStack>
+  );
+};

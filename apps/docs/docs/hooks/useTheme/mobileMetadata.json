@@ -1,0 +1,11 @@
+{
+  "import": "import { useTheme } from '@coinbase/cds-mobile'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/hooks/useTheme.ts",
+  "description": "Returns the currently active theme including color schemes, spacing, typography, and other design tokens.",
+  "relatedComponents": [
+    {
+      "label": "ThemeProvider",
+      "url": "/components/other/ThemeProvider"
+    }
+  ]
+}

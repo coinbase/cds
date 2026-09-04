@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "linear-server": {
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
+    },
+    "figma-dev-mode-mcp-server": {
+      "type": "http",
+      "url": "https://mcp.figma.com/mcp"
+    },
+    "cds": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@coinbase/cds-mcp-server"
+      ]
+    }
+  }
+}

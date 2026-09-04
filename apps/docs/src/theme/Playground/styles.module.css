@@ -1,0 +1,12 @@
+/* If you update these styles make sure to also change apps/docs/src/theme/CodeBlock/Content/styles.module.css */
+.playgroundEditor pre {
+  white-space: pre !important;
+  padding: var(--space-2) !important;
+  scrollbar-width: thin;
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  color: var(--color-fg) !important;
+  font-family: var(--fontFamilyMono-label2) !important;
+  font-size: var(--fontSize-label2) !important;
+  font-weight: var(--fontWeight-label2) !important;
+}

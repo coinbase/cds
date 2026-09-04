@@ -1,0 +1,32 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": false
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "**/__stories__/**",
+    "**/__tests__/**",
+    "**/__mocks__/**",
+    "**/__fixtures__/**",
+    "**/*.stories.*",
+    "**/*.test.*",
+    "**/*.spec.*"
+  ],
+  "references": [
+    {
+      "path": "../../packages/icons"
+    },
+    {
+      "path": "../../packages/illustrations"
+    },
+    {
+      "path": "../../packages/mcp-server"
+    },
+    {
+      "path": "../../packages/utils"
+    }
+  ]
+}

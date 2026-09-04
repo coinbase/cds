@@ -1,0 +1,742 @@
+import React from 'react';
+import { render, screen, within } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+
+import { DefaultThemeProvider } from '../../../utils/test';
+import { DefaultSelectControl } from '../DefaultSelectControl';
+import type { SelectControlProps, SelectOption } from '../Select';
+import type { SelectOptionList } from '../types';
+
+const mockOptions: SelectOption[] = [
+  { value: 'option1', label: 'Option 1' },
+  { value: 'option2', label: 'Option 2' },
+  { value: 'option3', label: 'Option 3', disabled: true },
+];
+
+const defaultProps: SelectControlProps<'single' | 'multi'> = {
+  options: mockOptions,
+  value: 'option1',
+  placeholder: 'Select an option',
+  onChange: jest.fn(),
+  open: false,
+  setOpen: jest.fn(),
+  label: 'Test Select Control',
+};
+
+describe('DefaultSelectControl', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
+  describe('Accessibility', () => {
+    it('has correct ARIA attributes', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...defaultProps}
+            accessibilityLabel="Custom accessibility label"
+            ariaHaspopup="listbox"
+            testID="select-control-test"
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      expect(button).toHaveAttribute('aria-haspopup', 'listbox');
+      expect(button).toHaveAttribute('aria-label', 'Custom accessibility label, Option 1');
+    });
+
+    it('renders with proper focus management', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.tab();
+      expect(button).toHaveFocus();
+    });
+  });
+
+  describe('Single Select Mode', () => {
+    it('renders single select control correctly', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Test Select Control')).toBeInTheDocument();
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
+      expect(screen.getByRole('button')).toBeInTheDocument();
+    });
+
+    it('displays selected value', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Option 1')).toBeInTheDocument();
+    });
+
+    it('shows placeholder when no value selected', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toBeInTheDocument();
+    });
+
+    it('renders placeholder with fgMuted when value is null', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value={null} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toHaveStyle({ color: 'var(--color-fgMuted)' });
+    });
+
+    it('renders placeholder with fgMuted when value is empty string', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toHaveStyle({ color: 'var(--color-fgMuted)' });
+    });
+
+    it('renders placeholder with fgMuted when value is not in options', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="unknown" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toHaveStyle({ color: 'var(--color-fgMuted)' });
+    });
+
+    it('renders selected option with fg when value matches an option', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} value="option1" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Option 1')).toHaveStyle({ color: 'var(--color-fg)' });
+    });
+
+    it('calls setOpen when clicked', async () => {
+      const setOpen = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} setOpen={setOpen} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      await user.click(button);
+
+      expect(setOpen).toHaveBeenCalledWith(expect.any(Function));
+    });
+
+    it('calls setOpen when the field chrome is clicked', async () => {
+      const setOpen = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} helperText="Help" setOpen={setOpen} />
+        </DefaultThemeProvider>,
+      );
+
+      await user.click(screen.getByTestId('input-interactable-area'));
+
+      expect(setOpen).toHaveBeenCalledWith(expect.any(Function));
+    });
+
+    it('does not call setOpen when helper text is clicked', async () => {
+      const setOpen = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} helperText="Help" setOpen={setOpen} />
+        </DefaultThemeProvider>,
+      );
+
+      await user.click(screen.getByText('Help'));
+
+      expect(setOpen).not.toHaveBeenCalled();
+    });
+
+    it('renders with start node', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...defaultProps}
+            startNode={<div data-testid="start-node">Start</div>}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByTestId('start-node')).toBeInTheDocument();
+    });
+  });
+
+  describe('Multi Select Mode', () => {
+    const multiSelectProps: SelectControlProps<'single' | 'multi'> = {
+      ...defaultProps,
+      type: 'multi',
+      value: [],
+      onChange: jest.fn(),
+    };
+
+    it('renders multi select control correctly', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...multiSelectProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('Select an option')).toBeInTheDocument();
+      expect(screen.getByRole('button')).toBeInTheDocument();
+    });
+
+    it('displays selected values as chips', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...multiSelectProps} value={['option1', 'option2']} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByRole('button', { name: 'Remove Option 1' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Remove Option 2' })).toBeInTheDocument();
+    });
+
+    it('handles chip removal', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...multiSelectProps}
+            onChange={onChange}
+            value={['option1', 'option2']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const chipButton = screen.getByRole('button', { name: 'Remove Option 1' });
+      await user.click(chipButton);
+      expect(onChange).toHaveBeenCalledWith('option1');
+    });
+
+    it('shows overflow indicator when maxSelectedOptionsToShow is exceeded', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...multiSelectProps}
+            maxSelectedOptionsToShow={2}
+            value={['option1', 'option2', 'option3', 'option4']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('+2 more')).toBeInTheDocument();
+    });
+
+    it('handles disabled options in chips', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...multiSelectProps}
+            value={['option1', 'option3']} // option3 is disabled
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const chip1 = screen.getByRole('button', { name: 'Remove Option 1' });
+      const chip3 = screen.getByRole('button', { name: 'Remove Option 3' });
+
+      expect(chip1).not.toHaveAttribute('disabled');
+      expect(chip3).toHaveAttribute('disabled');
+    });
+  });
+
+  describe('States and Variants', () => {
+    it('renders disabled state correctly', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} disabled />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      expect(button).toHaveAttribute('disabled');
+    });
+
+    it('renders with helper text', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} helperText="This is helper text" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(screen.getByText('This is helper text')).toBeInTheDocument();
+    });
+  });
+
+  describe('Keyboard Interaction', () => {
+    it('handles Enter key press', async () => {
+      const setOpen = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} setOpen={setOpen} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard('{Enter}');
+
+      expect(setOpen).toHaveBeenCalled();
+    });
+
+    it('handles Space key press', async () => {
+      const setOpen = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} setOpen={setOpen} />
+        </DefaultThemeProvider>,
+      );
+
+      const button = screen.getByRole('button');
+      button.focus();
+      await user.keyboard(' ');
+
+      expect(setOpen).toHaveBeenCalled();
+    });
+  });
+
+  describe('Focus Management in Multi-Select', () => {
+    const multiSelectProps: SelectControlProps<'multi'> = {
+      options: mockOptions,
+      placeholder: 'Select an option',
+      open: false,
+      setOpen: jest.fn(),
+      label: 'Test Select Control',
+      type: 'multi',
+      value: ['option1', 'option2'],
+      onChange: jest.fn(),
+    };
+
+    it('focuses control when last chip is removed', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...multiSelectProps}
+            onChange={onChange}
+            testID="select-control-test"
+            value={['option1']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      const chip = screen.getByRole('button', { name: 'Remove Option 1' });
+      await user.click(chip);
+      const control = screen.getByTestId('select-control-test');
+      const controlInputNode = control.querySelector('button');
+      expect(controlInputNode).toHaveFocus();
+    });
+
+    it('focuses next chip when middle chip is removed', async () => {
+      const onChange = jest.fn();
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...multiSelectProps}
+            onChange={onChange}
+            value={['option1', 'option2', 'option3']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      // Remove the middle chip (option2)
+      const chip2 = screen.getByRole('button', { name: 'Remove Option 2' });
+      await user.click(chip2);
+      expect(onChange).toHaveBeenCalledWith('option2');
+    });
+  });
+
+  describe('Size', () => {
+    const getInputArea = () => screen.getByTestId('input-interactable-area');
+
+    it('defaults to size "l" (16px vertical padding)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-2)',
+        paddingBottom: 'var(--space-2)',
+      });
+    });
+
+    it('applies 8px vertical padding for size "s"', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-1)',
+        paddingBottom: 'var(--space-1)',
+      });
+    });
+
+    it('applies 12px vertical padding for size "m"', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="m" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-1_5)',
+        paddingBottom: 'var(--space-1_5)',
+      });
+    });
+
+    it('applies 16px vertical padding for size "l"', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="l" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-2)',
+        paddingBottom: 'var(--space-2)',
+      });
+    });
+
+    it('does not change horizontal padding across sizes', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingLeft: 'var(--space-2)',
+        paddingRight: 'var(--space-2)',
+      });
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="l" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingLeft: 'var(--space-2)',
+        paddingRight: 'var(--space-2)',
+      });
+    });
+
+    it('renders the label inline and uses 8px padding for the deprecated compact prop', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact />
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = getInputArea();
+      expect(inputArea).toHaveStyle({
+        paddingTop: 'var(--space-1)',
+        paddingBottom: 'var(--space-1)',
+      });
+      // Compact forces the inline label inside the control.
+      expect(within(inputArea).getByText('Test Select Control')).toBeInTheDocument();
+    });
+
+    it('lets size win over compact (label above, 12px padding)', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} compact size="m" />
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = getInputArea();
+      expect(inputArea).toHaveStyle({
+        paddingTop: 'var(--space-1_5)',
+        paddingBottom: 'var(--space-1_5)',
+      });
+      // Size wins, so the label is not forced inline.
+      expect(within(inputArea).queryByText('Test Select Control')).not.toBeInTheDocument();
+      expect(screen.getByText('Test Select Control')).toBeInTheDocument();
+    });
+
+    it('stacks an inside label vertically at size "l" and tightens padding to keep the field height', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="inside" size="l" />
+        </DefaultThemeProvider>,
+      );
+
+      const inputArea = getInputArea();
+      // Stacked label + value fit the same 58px field an outside label produces (6px top/bottom).
+      expect(inputArea).toHaveStyle({
+        paddingTop: 'var(--space-0_75)',
+        paddingBottom: 'var(--space-0_75)',
+      });
+      expect(within(inputArea).getByText('Test Select Control')).toBeInTheDocument();
+    });
+
+    it('keeps an inside label horizontal (in the start slot) at sizes "s" and "m"', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="inside" size="s" />
+        </DefaultThemeProvider>,
+      );
+
+      // Horizontal inside label uses the same per-size padding as an outside label.
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-1)',
+        paddingBottom: 'var(--space-1)',
+      });
+      expect(within(getInputArea()).getByText('Test Select Control')).toBeInTheDocument();
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} labelVariant="inside" size="m" />
+        </DefaultThemeProvider>,
+      );
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-1_5)',
+        paddingBottom: 'var(--space-1_5)',
+      });
+    });
+
+    it('tightens padding hardest for a size "l" multi-select with a stacked inside label', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl
+            {...defaultProps}
+            labelVariant="inside"
+            size="l"
+            type="multi"
+            value={['option1']}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      // Stacked label + xs chips fit the 58px field (2px top/bottom).
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-0_25)',
+        paddingBottom: 'var(--space-0_25)',
+      });
+    });
+
+    it('tightens vertical padding for a multi-select with selected values', () => {
+      const { rerender } = render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} type="multi" value={['option1']} />
+        </DefaultThemeProvider>,
+      );
+
+      // Selected value chips add their own height, so a size "l" multi-select drops from 16px to 12px.
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-1_5)',
+        paddingBottom: 'var(--space-1_5)',
+      });
+
+      rerender(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} size="s" type="multi" value={['option1']} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-0_5)',
+        paddingBottom: 'var(--space-0_5)',
+      });
+    });
+
+    it('keeps the full size padding for an empty multi-select', () => {
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} type="multi" value={[]} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(getInputArea()).toHaveStyle({
+        paddingTop: 'var(--space-2)',
+        paddingBottom: 'var(--space-2)',
+      });
+    });
+  });
+
+  describe('Ref Forwarding', () => {
+    it('forwards ref correctly', () => {
+      const ref = React.createRef<HTMLDivElement>();
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} ref={ref} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(ref.current).not.toBeNull();
+    });
+  });
+
+  describe('Duplicate Option Values', () => {
+    const originalEnv = process.env.NODE_ENV;
+    const originalWarn = console.warn;
+
+    beforeEach(() => {
+      console.warn = jest.fn();
+    });
+
+    afterEach(() => {
+      console.warn = originalWarn;
+      process.env.NODE_ENV = originalEnv;
+    });
+
+    it('warns about duplicate values in flat options and uses first occurrence', () => {
+      process.env.NODE_ENV = 'development';
+      const duplicateOptions: SelectOptionList<'single' | 'multi'> = [
+        { value: 'duplicate', label: 'First Option' },
+        { value: 'option2', label: 'Option 2' },
+        { value: 'duplicate', label: 'Second Option' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} options={duplicateOptions} value="duplicate" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[Select] Duplicate option value detected: "duplicate"'),
+      );
+      // First occurrence should be used for display
+      expect(screen.getByText('First Option')).toBeInTheDocument();
+      expect(screen.queryByText('Second Option')).not.toBeInTheDocument();
+    });
+
+    it('warns about duplicate values within option groups', () => {
+      process.env.NODE_ENV = 'development';
+      const optionsWithGroup: SelectControlProps<'single' | 'multi'>['options'] = [
+        {
+          label: 'Group 1',
+          options: [
+            { value: 'duplicate', label: 'First in Group' },
+            { value: 'duplicate', label: 'Second in Group' },
+          ],
+        },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} options={optionsWithGroup} value="duplicate" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[Select] Duplicate option value detected: "duplicate"'),
+      );
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('Found duplicate in group "Group 1"'),
+      );
+      // First occurrence should be used for display
+      expect(screen.getByText('First in Group')).toBeInTheDocument();
+      expect(screen.queryByText('Second in Group')).not.toBeInTheDocument();
+    });
+
+    it('warns about duplicate values across groups and flat options', () => {
+      process.env.NODE_ENV = 'development';
+      const mixedOptions: SelectControlProps<'single' | 'multi'>['options'] = [
+        { value: 'duplicate', label: 'Flat Option' },
+        {
+          label: 'Group 1',
+          options: [{ value: 'duplicate', label: 'Group Option' }],
+        },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} options={mixedOptions} value="duplicate" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[Select] Duplicate option value detected: "duplicate"'),
+      );
+      // First occurrence (flat option) should be used for display
+      expect(screen.getByText('Flat Option')).toBeInTheDocument();
+      expect(screen.queryByText('Group Option')).not.toBeInTheDocument();
+    });
+
+    it('does not warn in production mode', () => {
+      process.env.NODE_ENV = 'production';
+      const duplicateOptions: SelectOption[] = [
+        { value: 'duplicate', label: 'First Option' },
+        { value: 'duplicate', label: 'Second Option' },
+      ];
+
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...defaultProps} options={duplicateOptions} value="duplicate" />
+        </DefaultThemeProvider>,
+      );
+
+      expect(console.warn).not.toHaveBeenCalled();
+      // Still uses first occurrence
+      expect(screen.getByText('First Option')).toBeInTheDocument();
+    });
+
+    it('handles duplicate values in multi-select mode', () => {
+      process.env.NODE_ENV = 'development';
+      const duplicateOptions: SelectOptionList<'multi'> = [
+        { value: 'duplicate', label: 'First Option' },
+        { value: 'duplicate', label: 'Second Option' },
+      ];
+
+      const multiSelectProps: SelectControlProps<'multi'> = {
+        ...defaultProps,
+        type: 'multi',
+        value: ['duplicate'],
+        options: duplicateOptions,
+      };
+
+      render(
+        <DefaultThemeProvider>
+          <DefaultSelectControl {...multiSelectProps} />
+        </DefaultThemeProvider>,
+      );
+
+      expect(console.warn).toHaveBeenCalledWith(
+        expect.stringContaining('[Select] Duplicate option value detected: "duplicate"'),
+      );
+      // First occurrence should be used for display
+      expect(screen.getByText('First Option')).toBeInTheDocument();
+      expect(screen.queryByText('Second Option')).not.toBeInTheDocument();
+    });
+  });
+});

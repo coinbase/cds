@@ -1,0 +1,188 @@
+## Label Below
+
+```jsx
+<VStack gap={2}>
+  <ProgressBarWithFixedLabels startLabel={0} endLabel={20} labelPlacement="below">
+    <ProgressBar progress={0.2} />
+  </ProgressBarWithFixedLabels>
+  <ProgressBarWithFixedLabels endLabel={20} labelPlacement="below">
+    <ProgressBar progress={0.2} />
+  </ProgressBarWithFixedLabels>
+</VStack>
+```
+
+## Label Beside
+
+```jsx
+<VStack gap={2}>
+  <ProgressBarWithFixedLabels startLabel={0} endLabel={20} labelPlacement="beside">
+    <ProgressBar progress={0.2} />
+  </ProgressBarWithFixedLabels>
+  <ProgressBarWithFixedLabels endLabel={20} labelPlacement="beside">
+    <ProgressBar progress={0.2} />
+  </ProgressBarWithFixedLabels>
+</VStack>
+```
+
+## Disabled
+
+```jsx
+<VStack gap={2}>
+  <ProgressBarWithFixedLabels startLabel={0} endLabel={20} disabled labelPlacement="beside">
+    <ProgressBar disabled progress={0.2} />
+  </ProgressBarWithFixedLabels>
+  <ProgressBarWithFixedLabels startLabel={0} endLabel={20} disabled labelPlacement="above">
+    <ProgressBar disabled progress={0.2} />
+  </ProgressBarWithFixedLabels>
+</VStack>
+```
+
+## Custom Labels
+
+```jsx
+function Example() {
+  const renderStartLabelNumStr = useCallback((num) => {
+    return `$${num.toLocaleString()}`;
+  }, []);
+
+  const renderEndLabelNumStr = useCallback((num) => {
+    return `${num.toLocaleString()} left`;
+  }, []);
+
+  const renderStartLabelNum = useCallback((num, disabled) => {
+    return (
+      <Text disabled={disabled} as="span" font="title3">
+        ${num.toLocaleString()}
+      </Text>
+    );
+  }, []);
+
+  const renderEndLabelNum = useCallback((num, disabled) => {
+    return (
+      <Text disabled={disabled} as="span" font="label2" align="end" noWrap>
+        ${num.toLocaleString()} left
+      </Text>
+    );
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <ProgressBarWithFixedLabels
+        startLabel={{ value: 12500, render: renderStartLabelNumStr }}
+        endLabel={{ value: 35500, render: renderEndLabelNumStr }}
+        labelPlacement="above"
+      >
+        <ProgressBar progress={0.6} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFixedLabels
+        startLabel={{ value: 12500, render: renderStartLabelNum }}
+        endLabel={{ value: 35500, render: renderEndLabelNum }}
+        labelPlacement="above"
+      >
+        <ProgressBar progress={0.6} />
+      </ProgressBarWithFixedLabels>
+
+      <ProgressBarWithFixedLabels
+        startLabel={{ value: 12500, render: renderStartLabelNumStr }}
+        endLabel={{ value: 35500, render: renderEndLabelNumStr }}
+        labelPlacement="above"
+        disabled
+      >
+        <ProgressBar disabled progress={0.6} />
+      </ProgressBarWithFixedLabels>
+      <ProgressBarWithFixedLabels
+        startLabel={{ value: 12500, render: renderStartLabelNum }}
+        endLabel={{ value: 35500, render: renderEndLabelNum }}
+        labelPlacement="above"
+        disabled
+      >
+        <ProgressBar disabled progress={0.6} />
+      </ProgressBarWithFixedLabels>
+    </VStack>
+  );
+}
+```
+
+## Custom Styles
+
+You can customize the appearance of the progress bar and labels using the `styles` prop.
+
+```tsx
+<ProgressContainerWithButtons>
+  {({ calculateProgress }) => (
+    <VStack gap={2}>
+      <ProgressBarWithFixedLabels
+        endLabel={Math.round(calculateProgress(0.7) * 100)}
+        labelPlacement="above"
+        startLabel={0}
+        styles={{
+          startLabel: { color: 'red' },
+          endLabel: { color: 'green' },
+        }}
+      >
+        <ProgressBar
+          progress={calculateProgress(0.7)}
+          styles={{
+            root: { height: 24 },
+            progress: { borderRadius: 12 },
+          }}
+        />
+      </ProgressBarWithFixedLabels>
+    </VStack>
+  )}
+</ProgressContainerWithButtons>
+```
+
+## Animation
+
+By default, ProgressBar animates progress changes. Use `disableAnimateOnMount` to skip the initial animation while still animating subsequent changes.
+
+```tsx
+<VStack gap={2}>
+  <Text variant="label2">Normal animation</Text>
+  <ProgressBarWithFixedLabels startLabel={0} endLabel={50} labelPlacement="above">
+    <ProgressBar progress={0.5} />
+  </ProgressBarWithFixedLabels>
+
+  <Text variant="label2">Disable animation on mount</Text>
+  <ProgressBarWithFixedLabels
+    disableAnimateOnMount
+    startLabel={0}
+    endLabel={50}
+    labelPlacement="above"
+  >
+    <ProgressBar disableAnimateOnMount progress={0.5} />
+  </ProgressBarWithFixedLabels>
+</VStack>
+```
+
+### Callbacks
+
+You can use the `onAnimationStart` and `onAnimationEnd` callbacks to track the progress of the animation.
+
+```jsx
+function Example() {
+  const [animationStatus, setAnimationStatus] = React.useState('Ready');
+
+  const handleAnimationStart = useCallback(() => {
+    setAnimationStatus('Animating...');
+  }, []);
+
+  const handleAnimationEnd = useCallback(() => {
+    setAnimationStatus('Animation Ended');
+  }, []);
+
+  return (
+    <VStack gap={2}>
+      <Text>Animation Status: {animationStatus}</Text>
+      <ProgressBarWithFixedLabels startLabel={0} endLabel={20} labelPlacement="above">
+        <ProgressBar
+          onAnimationEnd={handleAnimationEnd}
+          onAnimationStart={handleAnimationStart}
+          progress={0.2}
+        />
+      </ProgressBarWithFixedLabels>
+    </VStack>
+  );
+}
+```

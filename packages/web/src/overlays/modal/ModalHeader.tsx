@@ -1,0 +1,139 @@
+import React from 'react';
+import { useModalContext } from '@coinbase/cds-common/overlays/ModalContext';
+import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
+
+import { IconButton } from '../../buttons/IconButton';
+import { useComponentConfig } from '../../hooks/useComponentConfig';
+import { Box } from '../../layout/Box';
+import {
+  HStack,
+  type HStackBaseProps,
+  type HStackDefaultElement,
+  type HStackProps,
+} from '../../layout/HStack';
+import { Text } from '../../typography/Text';
+
+export type ModalHeaderBaseProps = Omit<HStackBaseProps, 'children' | 'title'> & {
+  /** Handles back button press */
+  onBackButtonClick?: React.MouseEventHandler;
+  /** Title of the Modal */
+  title?: React.ReactNode;
+  /**
+   * Sets an accessible label for the back button.
+   * On web, maps to `aria-label` and defines a string value that labels an interactive element.
+   * On mobile, VoiceOver will read this string when a user selects the associated element.
+   * @link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
+   * @link https://reactnative.dev/docs/accessibility#accessibilitylabel
+   */
+  backAccessibilityLabel?: SharedAccessibilityProps['accessibilityLabel'];
+  /**
+   * Sets an accessible hint or description for the back button.
+   * On web, maps to `aria-describedby` and lists the id(s) of the element(s) that describe the element on which the attribute is set.
+   * On mobile, a string that helps users understand what will happen when they perform an action on the accessibility element
+   * when that result is not clear from the accessibility label.
+   * @link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-describedby
+   * @link https://reactnative.dev/docs/accessibility#accessibilityhint
+   */
+  backAccessibilityHint?: SharedAccessibilityProps['accessibilityHint'];
+  /**
+   * Sets an accessible label for the close button.
+   * On web, maps to `aria-label` and defines a string value that labels an interactive element.
+   * On mobile, VoiceOver will read this string when a user selects the associated element.
+   * @link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-label
+   * @link https://reactnative.dev/docs/accessibility#accessibilitylabel
+   */
+  closeAccessibilityLabel?: SharedAccessibilityProps['accessibilityLabel'];
+  /**
+   * Sets an accessible hint or description for the close button.
+   * On web, maps to `aria-describedby` and lists the id(s) of the element(s) that describe the element on which the attribute is set.
+   * On mobile, a string that helps users understand what will happen when they perform an action on the accessibility element
+   * when that result is not clear from the accessibility label.
+   * @link https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Attributes/aria-describedby
+   * @link https://reactnative.dev/docs/accessibility#accessibilityhint
+   */
+  closeAccessibilityHint?: SharedAccessibilityProps['accessibilityHint'];
+};
+
+export type ModalHeaderProps = ModalHeaderBaseProps &
+  Omit<HStackProps<HStackDefaultElement>, 'children' | 'title'>;
+
+export const ModalHeader = (_props: ModalHeaderProps) => {
+  const mergedProps = useComponentConfig('ModalHeader', _props);
+  const {
+    alignItems = 'center',
+    paddingX = 3,
+    paddingY = 2,
+    font = 'headline',
+    title,
+    onBackButtonClick,
+    backAccessibilityLabel,
+    backAccessibilityHint,
+    closeAccessibilityLabel,
+    closeAccessibilityHint,
+    ...props
+  } = mergedProps;
+  const { onRequestClose, accessibilityLabelledBy, hideCloseButton, hideDividers } =
+    useModalContext();
+
+  if (!title && !onBackButtonClick && !onRequestClose) return null;
+
+  const emptyPlaceholder = (
+    <Box aria-hidden style={{ visibility: 'hidden' }}>
+      <IconButton disabled transparent name="close" tabIndex={-1} />
+    </Box>
+  );
+
+  return (
+    <HStack
+      alignItems={alignItems}
+      borderedBottom={!hideDividers}
+      font={font}
+      paddingX={paddingX}
+      paddingY={paddingY}
+      {...props}
+    >
+      {onBackButtonClick ? (
+        <Box>
+          <IconButton
+            transparent
+            accessibilityHint={backAccessibilityHint}
+            accessibilityLabel={backAccessibilityLabel}
+            name="backArrow"
+            onClick={onBackButtonClick}
+            testID="modal-back-button"
+          />
+        </Box>
+      ) : (
+        emptyPlaceholder
+      )}
+      <Box alignItems="center" flexGrow={1} justifyContent="center" paddingX={2}>
+        {title &&
+          (typeof title === 'string' ? (
+            <Text
+              as="h2"
+              display="block"
+              font="inherit"
+              id={accessibilityLabelledBy}
+              textAlign="center"
+            >
+              {title}
+            </Text>
+          ) : (
+            title
+          ))}
+      </Box>
+      {!hideCloseButton && (
+        <Box justifyContent="flex-end">
+          <IconButton
+            transparent
+            accessibilityHint={closeAccessibilityHint}
+            accessibilityLabel={closeAccessibilityLabel}
+            name="close"
+            onClick={onRequestClose}
+            testID="modal-close-button"
+          />
+        </Box>
+      )}
+    </HStack>
+  );
+};

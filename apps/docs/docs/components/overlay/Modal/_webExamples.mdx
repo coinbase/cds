@@ -1,0 +1,215 @@
+### Basic example
+
+```jsx live
+function Example() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal onRequestClose={() => setVisible(false)} visible={visible}>
+        <ModalHeader
+          backAccessibilityLabel="Back"
+          closeAccessibilityLabel="Close"
+          onBackButtonClick={() => setVisible(false)}
+          testID="Basic Modal Test ID"
+          title="Basic Modal"
+        />
+        <ModalBody tabIndex={0} testID="modal-body">
+          Body contents go here
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={() => setVisible(false)}>Save</Button>}
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
+
+### Portal Modal
+
+:::warning This approach is deprecated
+Use the `visible` and `onRequestClose` props as outlined above
+:::
+
+```jsx live
+function Example() {
+  const { openModal, closeModal } = useModal();
+
+  const handlePress = useCallback(
+    () =>
+      openModal(
+        <Modal visible onRequestClose={closeModal}>
+          <ModalHeader closeAccessibilityLabel="Close" title="Default Modal" />
+          <ModalBody>Body contents go here</ModalBody>
+          <ModalFooter
+            primaryAction={<Button onClick={closeModal}>Save</Button>}
+            secondaryAction={
+              <Button onClick={closeModal} variant="secondary">
+                Cancel
+              </Button>
+            }
+          />
+        </Modal>,
+      ),
+    [openModal, closeModal],
+  );
+
+  return <Button onClick={handlePress}>Open Modal</Button>;
+}
+```
+
+### Chained Modals
+
+:::tip Accessibility tip
+For chained modals, set `restoreFocusOnUnmount={false}` on each one and return focus to the opener when exiting the chain (e.g., `triggerRef.current?.focus()`) to keep tab order predictable.
+:::
+
+```jsx live
+function ChainedModalsExample() {
+  const triggerRef = useRef(null);
+  const [isFirstModalOpen, setIsFirstModalOpen] = useState(false);
+  const [isSecondModalOpen, setIsSecondModalOpen] = useState(false);
+
+  const closeFirstModal = () => {
+    setIsFirstModalOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const openSecondModal = () => {
+    setIsFirstModalOpen(false);
+    setIsSecondModalOpen(true);
+  };
+
+  const closeSecondModal = () => {
+    setIsSecondModalOpen(false);
+    triggerRef.current?.focus();
+  };
+
+  const goBackToFirstModal = () => {
+    setIsSecondModalOpen(false);
+    setIsFirstModalOpen(true);
+  };
+
+  return (
+    <>
+      <Button ref={triggerRef} onClick={() => setIsFirstModalOpen(true)}>
+        Open Modal
+      </Button>
+      <Modal
+        onRequestClose={closeFirstModal}
+        restoreFocusOnUnmount={false}
+        visible={isFirstModalOpen}
+      >
+        <ModalHeader
+          closeAccessibilityLabel="Close"
+          onBackButtonClick={closeFirstModal}
+          title="First Modal"
+        />
+        <ModalBody tabIndex={0} testID="first-modal-body">
+          <Text>First modal content</Text>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={openSecondModal}>Next</Button>}
+          secondaryAction={
+            <Button onClick={closeFirstModal} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+      <Modal
+        onRequestClose={closeSecondModal}
+        restoreFocusOnUnmount={false}
+        visible={isSecondModalOpen}
+      >
+        <ModalHeader
+          closeAccessibilityLabel="Close"
+          onBackButtonClick={goBackToFirstModal}
+          title="Second Modal"
+        />
+        <ModalBody tabIndex={0} testID="second-modal-body">
+          <Text>Second modal content</Text>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={closeSecondModal}>Close</Button>}
+          secondaryAction={
+            <Button onClick={closeSecondModal} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```
+
+### Scrollable Modal Content
+
+If the Modal has content which is expected to overflow and doesn't have focusable elements, set the following props to ensure the scrollable content can be navigated using keyboard arrows:
+
+- `focusTabIndexElements`: `true`
+- `disableArrowKeyNavigation`: `true`
+
+As well, assign a `tabIndex` greater than or equal to `0` to the ModalBody so that the overflow can be reached via keyboard.
+
+```jsx live
+function Example() {
+  const [visible, setVisible] = useState(false);
+  return (
+    <>
+      <Button onClick={() => setVisible(true)}>Open Modal</Button>
+      <Modal
+        focusTabIndexElements
+        disableArrowKeyNavigation
+        onRequestClose={() => setVisible(false)}
+        visible={visible}
+      >
+        <ModalHeader
+          backAccessibilityLabel="Back"
+          closeAccessibilityLabel="Close"
+          onBackButtonClick={() => setVisible(false)}
+          testID="Basic Modal Test ID"
+          title="Basic Modal"
+        />
+        <ModalBody tabIndex={0} testID="modal-body">
+          <VStack>
+            <Text font="title1" paddingBottom={10}>
+              This tray has content which will overflow.
+            </Text>
+            <Text font="title1" paddingBottom={10}>
+              To enable keyboard scrolling, certain props have to be set.
+            </Text>
+            <Text font="title1" paddingBottom={10}>
+              Otherwise, the content won't be viewable to users who navigate using a keyboard.
+            </Text>
+            <Text font="title1" paddingBottom={10}>
+              It's important to account for this to ensure an accessible experience.
+            </Text>
+            <Text font="title1" paddingBottom={10}>
+              Here's some text that is in the overflow and needs to be scrolled to.
+            </Text>
+            <Text font="title1" paddingBottom={10}>
+              Here's some more text to help more easily showcase scrolling.
+            </Text>
+          </VStack>
+        </ModalBody>
+        <ModalFooter
+          primaryAction={<Button onClick={() => setVisible(false)}>Save</Button>}
+          secondaryAction={
+            <Button onClick={() => setVisible(false)} variant="secondary">
+              Cancel
+            </Button>
+          }
+        />
+      </Modal>
+    </>
+  );
+}
+```

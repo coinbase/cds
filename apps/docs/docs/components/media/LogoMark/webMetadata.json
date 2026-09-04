@@ -1,0 +1,21 @@
+{
+  "import": "import { LogoMark } from '@coinbase/cds-web/icons/LogoMark'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/icons/LogoMark.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-logo-sheet--logo-sheet",
+  "description": "The Coinbase logo mark for branding.",
+  "relatedComponents": [
+    {
+      "label": "LogoWordMark",
+      "url": "/components/media/LogoWordMark/"
+    },
+    {
+      "label": "SubBrandLogoMark",
+      "url": "/components/media/SubBrandLogoMark/"
+    },
+    {
+      "label": "SubBrandLogoWordMark",
+      "url": "/components/media/SubBrandLogoWordMark/"
+    }
+  ],
+  "dependencies": []
+}

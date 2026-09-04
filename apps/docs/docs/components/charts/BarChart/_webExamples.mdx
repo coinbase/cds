@@ -1,0 +1,1289 @@
+BarChart is a wrapper for [CartesianChart](/components/charts/CartesianChart) for comparing discrete categories, with a default value-axis minimum that follows the baseline (`0` when baseline is not set).
+
+## Basics
+
+Bar charts are a useful component for comparing discrete categories of data.
+They are helpful for highlighting trends to users or allowing them to compare proportions at a glance.
+
+To start, pass in a series of data to the chart.
+
+```jsx live
+<BarChart
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'prices',
+      data: [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58],
+    },
+  ]}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+### Layout
+
+You can set `layout` to `horizontal` to render the chart horizontally.
+
+```jsx live
+function HorizontalBars() {
+  const dataset = [
+    { month: 'Jan', seoul: 21 },
+    { month: 'Feb', seoul: 28 },
+    { month: 'Mar', seoul: 41 },
+    { month: 'Apr', seoul: 73 },
+    { month: 'May', seoul: 99 },
+    { month: 'June', seoul: 144 },
+    { month: 'July', seoul: 319 },
+    { month: 'Aug', seoul: 249 },
+    { month: 'Sept', seoul: 131 },
+    { month: 'Oct', seoul: 55 },
+    { month: 'Nov', seoul: 48 },
+    { month: 'Dec', seoul: 25 },
+  ];
+
+  return (
+    <BarChart
+      height={400}
+      layout="horizontal"
+      series={[
+        {
+          id: 'seoul',
+          label: 'Seoul rainfall',
+          data: dataset.map((d) => d.seoul),
+          color: 'var(--color-accentBoldBlue)',
+        },
+      ]}
+      borderRadius={2}
+      showXAxis
+      showYAxis
+      xAxis={{
+        label: 'rainfall (mm)',
+        GridLineComponent: (props) => <SolidLine {...props} strokeWidth={1} />,
+        showGrid: true,
+        showLine: true,
+        showTickMarks: true,
+      }}
+      yAxis={{
+        position: 'left',
+        data: dataset.map((d) => d.month),
+        showLine: true,
+        showTickMarks: true,
+        bandTickMarkPlacement: 'edges',
+      }}
+    />
+  );
+}
+```
+
+## Multiple Series
+
+You can also provide multiple series of data to the chart. Series will have their bars for each data point rendered side by side.
+
+```jsx live
+<BarChart
+  height={400}
+  series={[
+    { id: 'series1', data: [5, 1, 3], color: 'rgb(var(--blue40))', label: 'Series 1' },
+    { id: 'series2', data: [2, 4, 6], color: 'rgb(var(--yellow40))', label: 'Series 2' },
+    { id: 'series3', data: [1, 2, 3], color: 'rgb(var(--red40))', label: 'Series 3' },
+  ]}
+  legend
+  showXAxis
+  showYAxis
+  xAxis={{
+    data: ['Group A', 'Group B', 'Group C'],
+    showLine: true,
+    showTickMarks: true,
+  }}
+  yAxis={{
+    showLine: true,
+    showGrid: true,
+    showTickMarks: true,
+  }}
+/>
+```
+
+## Series Stacking
+
+You can also configure stacking for your chart using the `stacked` prop.
+
+```jsx live
+<BarChart
+  stacked
+  height={400}
+  series={[
+    { id: 'series1', data: [5, 1, 3, 3, 0, 2, 1], color: 'rgb(var(--blue40))', label: 'Series 1' },
+    {
+      id: 'series2',
+      data: [2, 4, 6, 0, 3, 1, 2],
+      color: 'rgb(var(--yellow40))',
+      label: 'Series 2',
+    },
+    { id: 'series3', data: [1, 2, 3, 1, 0, 2, 3], color: 'rgb(var(--red40))', label: 'Series 3' },
+  ]}
+  legend
+  showXAxis
+  showYAxis
+  xAxis={{
+    data: ['Group A', 'Group B', 'Group C', 'Group D', 'Group E', 'Group F', 'Group G'],
+    showLine: true,
+    showTickMarks: true,
+  }}
+  yAxis={{
+    showLine: true,
+    showGrid: true,
+    showTickMarks: true,
+  }}
+/>
+```
+
+You can also configure multiple stacks by setting the `stackId` prop on each series.
+
+```jsx live
+<BarChart
+  height={400}
+  series={[
+    { id: 'series1', data: [5, 1, 3], color: 'rgb(var(--blue40))', stackId: 'stack1' },
+    { id: 'series2', data: [2, 4, 6], color: 'rgb(var(--yellow40))', stackId: 'stack1' },
+    { id: 'series3', data: [1, 2, 3], color: 'rgb(var(--red40))', stackId: 'stack1' },
+    { id: 'series4', data: [3, 0, 2], color: 'rgb(var(--purple40))', stackId: 'stack2' },
+    { id: 'series5', data: [0, 3, 1], color: 'rgb(var(--teal40))', stackId: 'stack2' },
+    { id: 'series6', data: [1, 0, 2], color: 'rgb(var(--green40))', stackId: 'stack2' },
+  ]}
+  showXAxis
+  showYAxis
+  xAxis={{
+    data: ['Group A', 'Group B', 'Group C'],
+    showLine: true,
+    showTickMarks: true,
+  }}
+  yAxis={{
+    showLine: true,
+    showGrid: true,
+    showTickMarks: true,
+  }}
+/>
+```
+
+### Stack Gap
+
+```jsx live
+<BarChart
+  height={400}
+  series={[
+    { id: 'series1', data: [5, 1, 3], color: 'rgb(var(--blue40))', stackId: 'stack1' },
+    { id: 'series2', data: [2, 4, 6], color: 'rgb(var(--yellow40))', stackId: 'stack1' },
+    { id: 'series3', data: [1, 2, 3], color: 'rgb(var(--red40))', stackId: 'stack1' },
+    { id: 'series4', data: [3, 0, 2], color: 'rgb(var(--purple40))', stackId: 'stack2' },
+    { id: 'series5', data: [0, 3, 1], color: 'rgb(var(--teal40))', stackId: 'stack2' },
+    { id: 'series6', data: [1, 0, 2], color: 'rgb(var(--green40))', stackId: 'stack2' },
+  ]}
+  stackGap={4}
+  barMinSize={8}
+  showXAxis
+  showYAxis
+  xAxis={{
+    data: ['Group A', 'Group B', 'Group C'],
+    showLine: true,
+    showTickMarks: true,
+  }}
+  yAxis={{
+    showLine: true,
+    showGrid: true,
+    showTickMarks: true,
+  }}
+/>
+```
+
+## Border Radius
+
+Bars have a default `borderRadius` of `4`. You can change this by setting the `borderRadius` prop on the chart.
+
+Stacks will only round the top corners of touching bars.
+
+```jsx live
+<BarChart
+  stacked
+  borderRadius={1000}
+  height={300}
+  maxWidth={384}
+  padding={0}
+  series={[
+    {
+      id: 'purple',
+      data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4],
+      color: 'rgb(var(--purple30))',
+    },
+    {
+      id: 'blue',
+      data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18],
+      color: 'rgb(var(--blue30))',
+    },
+    {
+      id: 'cyan',
+      data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9],
+      color: 'rgb(var(--teal30))',
+    },
+    {
+      id: 'green',
+      data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
+      color: 'rgb(var(--green30))',
+    },
+  ]}
+  showXAxis
+  xAxis={{
+    data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+    tickLabelFormatter: (value) => {
+      if (value === 'D') {
+        return <tspan style={{ fontWeight: 'bold' }}>{value}</tspan>;
+      }
+      return value;
+    },
+    categoryPadding: 0.25,
+  }}
+  style={{ margin: '0 auto' }}
+/>
+```
+
+### Round Baseline
+
+You can also round the baseline of the bars by setting the `roundBaseline` prop on the chart.
+
+```jsx live
+function MonthlyRewards() {
+  const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+
+  return (
+    <BarChart
+      roundBaseline
+      stacked
+      borderRadius={1000}
+      height={300}
+      maxWidth={384}
+      inset={0}
+      series={[
+        {
+          id: 'purple',
+          data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4],
+          color: 'rgb(var(--purple30))',
+        },
+        {
+          id: 'blue',
+          data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18],
+          color: 'rgb(var(--blue30))',
+        },
+        {
+          id: 'cyan',
+          data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9],
+          color: 'rgb(var(--teal30))',
+        },
+        {
+          id: 'green',
+          data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
+          color: 'rgb(var(--green30))',
+        },
+      ]}
+      showXAxis
+      xAxis={{
+        data: months,
+        tickLabelFormatter: (value) => {
+          if (value === 11) {
+            return <tspan style={{ fontWeight: 'bold' }}>{months[value]}</tspan>;
+          }
+          return months[value];
+        },
+        categoryPadding: 0.25,
+      }}
+      stackMinSize={24}
+      style={{ margin: '0 auto' }}
+    />
+  );
+}
+```
+
+## Data
+
+### Negative
+
+```jsx live
+function PositiveAndNegativeCashFlow() {
+  const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
+
+  const categories = Array.from({ length: 31 }, (_, i) => `3/${i + 1}`);
+  const gains = [
+    5, 0, 6, 18, 0, 5, 12, 0, 12, 22, 28, 18, 0, 12, 6, 0, 0, 24, 0, 0, 4, 0, 18, 0, 0, 14, 10, 16,
+    0, 0, 0,
+  ];
+
+  const losses = [
+    -4, 0, -8, -12, -6, 0, 0, 0, -18, 0, -12, 0, -9, -6, 0, 0, 0, 0, -22, -8, 0, 0, -10, -14, 0, 0,
+    0, 0, 0, -12, -10,
+  ];
+  const series = [
+    { id: 'gains', data: gains, color: 'var(--color-fgPositive)' },
+    { id: 'losses', data: losses, color: 'var(--color-fgNegative)' },
+  ];
+
+  return (
+    <BarChart
+      height={{ base: 150, tablet: 200, desktop: 250 }}
+      inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+      series={series}
+      xAxis={{ data: categories }}
+      stacked
+      showXAxis
+      showYAxis
+      yAxis={{
+        showGrid: true,
+        GridLineComponent: ThinSolidLine,
+        tickLabelFormatter: (value) => `$${value}M`,
+      }}
+    />
+  );
+}
+```
+
+### Null
+
+You can pass in `null` or `0` values to not render a bar for that data point.
+
+```jsx live
+<BarChart
+  showXAxis
+  showYAxis
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'weekly-data',
+      data: [45, null, 38, 0, 19, null, 32],
+    },
+  ]}
+  xAxis={{
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    showTickMarks: true,
+    showLine: true,
+  }}
+  yAxis={{
+    requestedTickCount: 5,
+    tickLabelFormatter: (value) => `$${value}k`,
+    showGrid: true,
+    showTickMarks: true,
+    showLine: true,
+    tickMarkSize: 1.5,
+    domain: { max: 50 },
+  }}
+/>
+```
+
+You can also use the `BarStackComponent` prop to render an empty circle for zero values.
+
+```jsx live
+function MonthlyRewards() {
+  const months = ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+  const currentMonth = 7;
+  const purple = [null, 6, 8, 10, 7, 6, 6, 8, null, null, null, null];
+  const blue = [null, 10, 12, 11, 10, 9, 10, 11, null, null, null, null];
+  const cyan = [null, 7, 10, 12, 11, 10, 8, 11, null, null, null, null];
+  const green = [10, null, null, null, 1, null, null, 6, null, null, null, null];
+
+  const series = [
+    { id: 'purple', data: purple, color: 'rgb(var(--purple30))' },
+    { id: 'blue', data: blue, color: 'rgb(var(--blue30))' },
+    { id: 'cyan', data: cyan, color: 'rgb(var(--teal30))' },
+    { id: 'green', data: green, color: 'rgb(var(--green30))' },
+  ];
+
+  const CustomBarStackComponent = ({ children, ...props }) => {
+    if (props.height === 0) {
+      const diameter = props.width;
+      return (
+        <Bar
+          roundBottom
+          roundTop
+          borderRadius={1000}
+          fill="var(--color-bgTertiary)"
+          height={diameter}
+          width={diameter}
+          x={props.x}
+          y={props.y - diameter}
+        />
+      );
+    }
+
+    return <DefaultBarStack {...props}>{children}</DefaultBarStack>;
+  };
+
+  return (
+    <BarChart
+      roundBaseline
+      showXAxis
+      stacked
+      BarStackComponent={CustomBarStackComponent}
+      borderRadius={1000}
+      height={300}
+      inset={0}
+      series={series}
+      showYAxis={false}
+      stackMinSize={3}
+      width={384}
+      xAxis={{
+        tickLabelFormatter: (index) => {
+          if (index == currentMonth) {
+            return <tspan style={{ fontWeight: 'bold' }}>{months[index]}</tspan>;
+          }
+          return months[index];
+        },
+        categoryPadding: 0.25,
+      }}
+    />
+  );
+}
+```
+
+### Range
+
+You can pass in `[min, max]` tuples as data points to render bars that span a range of values.
+
+```jsx live
+function PriceRange() {
+  const candles = [...btcCandles].reverse().slice(0, 180);
+  const data = candles.map((candle) => [parseFloat(candle.low), parseFloat(candle.high)]);
+
+  const min = Math.min(...data.map(([low]) => low));
+  const max = Math.max(...data.map(([, high]) => high));
+
+  const tickFormatter = useCallback(
+    (value) =>
+      new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        notation: 'compact',
+        maximumFractionDigits: 0,
+      }).format(value),
+    [],
+  );
+
+  return (
+    <BarChart
+      series={[{ id: 'prices', data, color: assets.btc.color }]}
+      showYAxis
+      yAxis={{ domain: { min, max }, showGrid: true, tickLabelFormatter: tickFormatter }}
+      height={250}
+    />
+  );
+}
+```
+
+## Customization
+
+### Bar Spacing
+
+There are two ways to control the spacing between bars. You can set the `barPadding` prop to control the spacing between bars within a series. You can also set the `categoryPadding` prop to control the spacing between stacks of bars.
+
+```jsx live
+<BarChart
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'pageViews',
+      data: [24, 13, 98, 39, 48, 38, 43],
+      color: 'var(--color-fgPositive)',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [12, 15, 18, 21, 24, 27, 30],
+      color: 'var(--color-fgNegative)',
+    },
+  ]}
+  borderRadius={0}
+  barPadding={0}
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+  xAxis={{
+    categoryPadding: 0.2,
+  }}
+/>
+```
+
+### Minimum Size
+
+To better emphasize small values, you can set the `stackMinSize` or `barMinSize` prop to control the minimum size for entire stacks or individual bar.
+
+#### Minimum Stack Size
+
+You can set the `stackMinSize` prop to control the minimum size for entire stacks. This will only apply to stacks that have a value that is not `null` or `0`. It will proportionally scale the values of each bar in the stack to reach the minimum size.
+
+```jsx live
+<BarChart
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'pageViews',
+      data: [24, 3, 98, null, 48, null, 43],
+      color: 'var(--color-fgPositive)',
+    },
+    {
+      id: 'uniqueVisitors',
+      data: [12, 1, 18, null, 24, 1, 30],
+      color: 'var(--color-fgNegative)',
+    },
+  ]}
+  stackMinSize={2}
+  stacked
+  showYAxis
+  yAxis={{
+    showGrid: true,
+  }}
+/>
+```
+
+#### Minimum Bar Size
+
+You can also set the `barMinSize` prop to control the minimum size for individual bars. This will only apply to bars that have a value that is not `null` or `0`.
+
+```jsx live
+<BarChart
+  showXAxis
+  showYAxis
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  series={[
+    {
+      id: 'weekly-data',
+      data: [45, 52, 0, 45, null, 1, 32],
+    },
+  ]}
+  xAxis={{
+    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    showTickMarks: true,
+    showLine: true,
+  }}
+  yAxis={{
+    requestedTickCount: 5,
+    tickLabelFormatter: (value) => `$${value}k`,
+    showGrid: true,
+    showTickMarks: true,
+    showLine: true,
+    tickMarkSize: 1.5,
+    domain: { max: 50 },
+  }}
+  barMinSize={4}
+/>
+```
+
+### Multiple Axes
+
+You can render bars from separate y axes in one `BarPlot`, however they aren't able to be stacked.
+
+```jsx live
+<CartesianChart
+  legend
+  height={{ base: 150, tablet: 200, desktop: 250 }}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  legendPosition="bottom"
+  series={[
+    {
+      id: 'revenue',
+      label: 'Revenue ($)',
+      data: [455, 520, 380, 455, 285, 235],
+      yAxisId: 'revenue',
+      color: 'var(--color-accentBoldYellow)',
+    },
+    {
+      id: 'profitMargin',
+      label: 'Profit Margin (%)',
+      data: [23, 20, 16, 38, 12, 9],
+      yAxisId: 'profitMargin',
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+  xAxis={{
+    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    scaleType: 'band',
+  }}
+  yAxis={[
+    {
+      id: 'revenue',
+      domain: { min: 0 },
+    },
+    {
+      id: 'profitMargin',
+      domain: { min: 0, max: 100 },
+    },
+  ]}
+>
+  <XAxis showLine showTickMarks />
+  <YAxis
+    showGrid
+    showLine
+    showTickMarks
+    axisId="revenue"
+    position="left"
+    requestedTickCount={5}
+    width={60}
+    tickLabelFormatter={(value) => `$${value}k`}
+  />
+  <YAxis
+    showLine
+    showTickMarks
+    axisId="profitMargin"
+    position="right"
+    requestedTickCount={5}
+    tickLabelFormatter={(value) => `${value}%`}
+  />
+  <BarPlot />
+</CartesianChart>
+```
+
+When using horizontal layout, you can use multiple x axes.
+
+```jsx live
+<CartesianChart
+  layout="horizontal"
+  legend
+  height={400}
+  inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+  legendPosition="bottom"
+  series={[
+    {
+      id: 'revenue',
+      label: 'Revenue ($)',
+      data: [455, 520, 380, 455, 285, 235],
+      xAxisId: 'revenue',
+      color: 'var(--color-accentBoldYellow)',
+    },
+    {
+      id: 'profitMargin',
+      label: 'Profit Margin (%)',
+      data: [23, 20, 16, 38, 12, 9],
+      xAxisId: 'profitMargin',
+      color: 'var(--color-fgPositive)',
+    },
+  ]}
+  xAxis={[
+    {
+      id: 'revenue',
+      domain: { min: 0 },
+    },
+    {
+      id: 'profitMargin',
+      domain: { min: 0, max: 100 },
+    },
+  ]}
+  yAxis={{
+    data: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+    scaleType: 'band',
+  }}
+>
+  <YAxis showLine showTickMarks position="left" />
+  <XAxis
+    showGrid
+    showLine
+    showTickMarks
+    axisId="revenue"
+    position="top"
+    requestedTickCount={5}
+    height={60}
+    tickLabelFormatter={(value) => `$${value}k`}
+  />
+  <XAxis
+    showLine
+    showTickMarks
+    axisId="profitMargin"
+    position="bottom"
+    requestedTickCount={5}
+    tickLabelFormatter={(value) => `${value}%`}
+  />
+  <BarPlot />
+</CartesianChart>
+```
+
+### Custom Components
+
+#### Outlined Stacks
+
+You can set the `BarStackComponent` prop to render a custom component for stacks.
+
+```jsx live
+function MonthlyRewards() {
+  const CustomBarStackComponent = ({ children, ...props }) => {
+    return (
+      <>
+        <Bar
+          roundBottom
+          roundTop
+          borderRadius={1000}
+          stroke="var(--color-fg)"
+          strokeWidth={4}
+          height={props.height}
+          width={props.width}
+          x={props.x}
+          y={props.y}
+          clip
+        />
+        <DefaultBarStack {...props}>{children}</DefaultBarStack>
+      </>
+    );
+  };
+
+  return (
+    <BarChart
+      roundBaseline
+      stacked
+      BarStackComponent={CustomBarStackComponent}
+      borderRadius={1000}
+      height={300}
+      maxWidth={384}
+      padding={0}
+      series={[
+        {
+          id: 'purple',
+          data: [null, 6, 8, 10, 7, 6, 6, 8, 9, 12, 10, 4],
+          color: 'rgb(var(--purple30))',
+        },
+        {
+          id: 'blue',
+          data: [null, 10, 12, 11, 10, 9, 10, 11, 7, 4, 12, 18],
+          color: 'rgb(var(--blue30))',
+        },
+        {
+          id: 'cyan',
+          data: [null, 7, 10, 12, 11, 10, 8, 11, 5, 12, 2, 9],
+          color: 'rgb(var(--teal30))',
+        },
+        {
+          id: 'green',
+          data: [10, null, null, null, 1, null, null, 6, null, null, null, null],
+          color: 'rgb(var(--green30))',
+        },
+      ]}
+      showXAxis
+      xAxis={{
+        data: ['J', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'],
+        tickLabelFormatter: (value) => {
+          if (value === 'D') {
+            return <tspan style={{ fontWeight: 'bold' }}>{value}</tspan>;
+          }
+          return value;
+        },
+        categoryPadding: 0.25,
+      }}
+      yAxis={{ range: ({ min, max }) => ({ min, max: max - 4 }) }}
+      style={{ margin: '0 auto' }}
+    />
+  );
+}
+```
+
+## Animations
+
+You can configure chart transitions using the `transitions` prop. Also, you can toggle animations by setting `animate` to `true` or `false`.
+
+```jsx live
+function AnimatedStackedBars() {
+  const dataCount = 12;
+  const minValue = 20;
+  const maxValue = 100;
+  const minStep = 10;
+  const maxStep = 40;
+  const updateInterval = 600;
+  const seriesSpacing = 30;
+
+  const seriesConfig = [
+    { id: 'red', label: 'Red', color: 'rgb(var(--red40))' },
+    { id: 'orange', label: 'Orange', color: 'rgb(var(--orange40))' },
+    { id: 'yellow', label: 'Yellow', color: 'rgb(var(--yellow40))' },
+    { id: 'green', label: 'Green', color: 'rgb(var(--green40))' },
+    { id: 'blue', label: 'Blue', color: 'rgb(var(--blue40))' },
+    { id: 'indigo', label: 'Indigo', color: 'rgb(var(--indigo40))' },
+    { id: 'purple', label: 'Purple', color: 'rgb(var(--purple40))' },
+  ];
+
+  const domainLimit = maxValue + seriesConfig.length * seriesSpacing;
+
+  function generateNextValue(previousValue) {
+    const range = maxStep - minStep;
+    const offset = Math.random() * range + minStep;
+
+    let direction;
+    if (previousValue >= maxValue) {
+      direction = -1;
+    } else if (previousValue <= minValue) {
+      direction = 1;
+    } else {
+      direction = Math.random() < 0.5 ? -1 : 1;
+    }
+
+    let newValue = previousValue + offset * direction;
+    newValue = Math.max(minValue, Math.min(maxValue, newValue));
+    return newValue;
+  }
+
+  function generateInitialData() {
+    const data = [];
+
+    let previousValue = minValue + Math.random() * (maxValue - minValue);
+    data.push(previousValue);
+
+    for (let i = 1; i < dataCount; i++) {
+      const newValue = generateNextValue(previousValue);
+      data.push(newValue);
+      previousValue = newValue;
+    }
+
+    return data;
+  }
+
+  function AnimatedChart(props) {
+    const [data, setData] = useState(generateInitialData);
+
+    useEffect(() => {
+      const intervalId = setInterval(() => {
+        setData((currentData) => {
+          const lastValue = currentData[currentData.length - 1] ?? minValue;
+          const newValue = generateNextValue(lastValue);
+
+          return [...currentData.slice(1), newValue];
+        });
+      }, updateInterval);
+
+      return () => clearInterval(intervalId);
+    }, []);
+
+    const series = seriesConfig.map((config, index) => ({
+      id: config.id,
+      label: config.label,
+      color: config.color,
+      data: index === 0 ? data : Array(dataCount).fill(seriesSpacing),
+    }));
+
+    return (
+      <BarChart
+        stacked
+        height={{ base: 200, tablet: 250, desktop: 300 }}
+        series={series}
+        transitions={{
+          enter: { type: 'spring', stiffness: 700, damping: 80 },
+          update: { type: 'spring', stiffness: 700, damping: 20 },
+        }}
+        inset={0}
+        showYAxis
+        yAxis={{
+          showGrid: true,
+          width: 0,
+          tickLabelFormatter: () => '',
+          domain: { min: 0, max: domainLimit },
+        }}
+        {...props}
+      />
+    );
+  }
+
+  function AnimatedChartExample() {
+    const animatedStates = [
+      { id: 'on', label: 'On' },
+      { id: 'off', label: 'Off' },
+    ];
+    const [animatedState, setAnimatedState] = useState(animatedStates[0]);
+
+    return (
+      <VStack gap={2}>
+        <HStack justifyContent="flex-end" gap={2} alignItems="center">
+          <Text as="h3" font="headline">
+            Animations
+          </Text>
+          <SegmentedTabs
+            activeTab={animatedState}
+            onChange={setAnimatedState}
+            tabs={animatedStates}
+          />
+        </HStack>
+        <AnimatedChart animate={animatedState.id === 'on'} />
+      </VStack>
+    );
+  }
+
+  return <AnimatedChartExample />;
+}
+```
+
+## Composed Examples
+
+### Candlesticks
+
+You can render a candlestick chart by setting the `BarComponent` prop to a custom candlestick component.
+
+```jsx live
+function Candlesticks() {
+  const infoTextId = useId();
+  const infoTextRef = React.useRef(null);
+  const selectedIndexRef = React.useRef(null);
+  const stockData = [...btcCandles].reverse().slice(0, 90);
+  const min = Math.min(...stockData.map((data) => parseFloat(data.low)));
+
+  const ThinSolidLine = memo((props) => <SolidLine {...props} strokeWidth={1} />);
+
+  // Custom line component that renders a rect to highlight the entire bandwidth
+  const BandwidthHighlight = memo(({ d, stroke }) => {
+    const { getXScale, drawingArea, getXAxis } = useCartesianChartContext();
+    const { scrubberPosition } = useScrubberContext();
+    const xScale = getXScale();
+    const xAxis = getXAxis();
+
+    if (!xScale || scrubberPosition === undefined) return;
+
+    const xPos = xScale(scrubberPosition);
+
+    if (xPos === undefined) return;
+
+    return (
+      <rect
+        fill={stroke}
+        height={drawingArea.height}
+        width={xScale.bandwidth()}
+        x={xPos}
+        y={drawingArea.y}
+      />
+    );
+  });
+
+  const candlesData = stockData.map((data) => [parseFloat(data.low), parseFloat(data.high)]);
+
+  const staggerDelay = 0.25;
+
+  const CandlestickBarComponent = memo(({ x, y, width, height, originY, dataX, ...props }) => {
+    const { getYScale, drawingArea } = useCartesianChartContext();
+    const yScale = getYScale();
+
+    const normalizedX = React.useMemo(
+      () => (drawingArea.width > 0 ? (x - drawingArea.x) / drawingArea.width : 0),
+      [x, drawingArea.x, drawingArea.width],
+    );
+
+    const transition = React.useMemo(
+      () => ({
+        type: 'tween',
+        duration: 0.325,
+        delay: normalizedX * staggerDelay,
+      }),
+      [normalizedX],
+    );
+
+    const wickX = x + width / 2;
+
+    const timePeriodValue = stockData[dataX];
+
+    const open = parseFloat(timePeriodValue.open);
+    const close = parseFloat(timePeriodValue.close);
+
+    const bullish = open < close;
+    const color = bullish ? 'var(--color-fgPositive)' : 'var(--color-fgNegative)';
+    const openY = yScale?.(open) ?? 0;
+    const closeY = yScale?.(close) ?? 0;
+
+    const bodyHeight = Math.abs(openY - closeY);
+    const bodyY = openY < closeY ? openY : closeY;
+
+    return (
+      <m.g animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 12 }} transition={transition}>
+        <line stroke={color} strokeWidth={1} x1={wickX} x2={wickX} y1={y} y2={y + height} />
+        <rect fill={color} height={bodyHeight} width={width} x={x} y={bodyY} />
+      </m.g>
+    );
+  });
+
+  const formatPrice = React.useCallback((price) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(parseFloat(price));
+  }, []);
+
+  const formatThousandsPrice = React.useCallback((price) => {
+    const formattedPrice = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(parseFloat(price) / 1000);
+
+    return `${formattedPrice}k`;
+  }, []);
+
+  const formatVolume = React.useCallback((volume) => {
+    const volumeInThousands = parseFloat(volume) / 1000;
+    return (
+      new Intl.NumberFormat('en-US', {
+        style: 'decimal',
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+      }).format(volumeInThousands) + 'k'
+    );
+  }, []);
+
+  const formatTime = React.useCallback(
+    (index) => {
+      if (index === null || index === undefined || index >= stockData.length) return '';
+      const ts = parseInt(stockData[index].start);
+      return new Date(ts * 1000).toLocaleDateString('en-US', {
+        month: 'short',
+        day: 'numeric',
+      });
+    },
+    [stockData],
+  );
+
+  const updateInfoText = React.useCallback(
+    (index) => {
+      if (!infoTextRef.current) return;
+
+      const text =
+        index !== null && index !== undefined
+          ? `Open: ${formatThousandsPrice(stockData[index].open)}, Close: ${formatThousandsPrice(
+              stockData[index].close,
+            )}, Volume: ${(parseFloat(stockData[index].volume) / 1000).toFixed(2)}k`
+          : formatPrice(stockData[stockData.length - 1].close);
+
+      infoTextRef.current.textContent = text;
+      selectedIndexRef.current = index;
+    },
+    [stockData, formatPrice, formatVolume],
+  );
+  const initialInfo = formatPrice(stockData[stockData.length - 1].close);
+
+  return (
+    <VStack gap={2}>
+      <Text font="headline" id={infoTextId} aria-live="polite">
+        <span ref={infoTextRef}>{initialInfo}</span>
+      </Text>
+      <BarChart
+        enableScrubbing
+        showXAxis
+        showYAxis
+        BarComponent={CandlestickBarComponent}
+        BarStackComponent={({ children }) => <g>{children}</g>}
+        borderRadius={0}
+        height={{ base: 150, tablet: 200, desktop: 250 }}
+        inset={{ top: 8, bottom: 8, left: 0, right: 0 }}
+        onScrubberPositionChange={updateInfoText}
+        series={[
+          {
+            id: 'stock-prices',
+            data: candlesData,
+          },
+        ]}
+        xAxis={{
+          tickLabelFormatter: formatTime,
+        }}
+        yAxis={{
+          domain: { min },
+          tickLabelFormatter: formatThousandsPrice,
+          width: 40,
+          showGrid: true,
+          GridLineComponent: ThinSolidLine,
+        }}
+        aria-labelledby={infoTextId}
+      >
+        <Scrubber
+          hideOverlay
+          LineComponent={BandwidthHighlight}
+          lineStroke="var(--color-fgMuted)"
+          seriesIds={[]}
+        />
+      </BarChart>
+    </VStack>
+  );
+}
+```
+
+### Monthly Sunlight
+
+You can combine custom and BarPlot components and transitions to create a springy sunlight chart.
+
+```tsx live
+function SunlightChartExample() {
+  const dayLength = 1440;
+  type SunlightChartData = Array<{
+    label: string;
+    value: number;
+  }>;
+  const sunlightData: SunlightChartData = [
+    { label: 'Jan', value: 598 },
+    { label: 'Feb', value: 635 },
+    { label: 'Mar', value: 688 },
+    { label: 'Apr', value: 753 },
+    { label: 'May', value: 812 },
+    { label: 'Jun', value: 855 },
+    { label: 'Jul', value: 861 },
+    { label: 'Aug', value: 828 },
+    { label: 'Sep', value: 772 },
+    { label: 'Oct', value: 710 },
+    { label: 'Nov', value: 648 },
+    { label: 'Dec', value: 605 },
+  ];
+
+  function SunlightChart({
+    data,
+    height = 300,
+    ...props
+  }: Omit<CartesianChartProps, 'series' | 'children'> & { data: SunlightChartData }) {
+    return (
+      <CartesianChart
+        {...props}
+        height={height}
+        series={[
+          {
+            id: 'sunlight',
+            data: data.map(({ value }) => value),
+            yAxisId: 'sunlight',
+            color: 'rgb(var(--yellow40))',
+          },
+          {
+            id: 'day',
+            data: data.map(() => dayLength),
+            yAxisId: 'day',
+            color: 'rgb(var(--blue100))',
+          },
+        ]}
+        xAxis={{
+          ...props.xAxis,
+          scaleType: 'band',
+          data: data.map(({ label }) => label),
+        }}
+        yAxis={[
+          {
+            id: 'day',
+            domain: { min: 0, max: dayLength },
+            domainLimit: 'strict',
+          },
+          {
+            id: 'sunlight',
+            domain: { min: 0, max: dayLength },
+            domainLimit: 'strict',
+          },
+        ]}
+      >
+        <YAxis axisId="day" showGrid showLine position="left" label="Minutes of sunlight" />
+        <XAxis showLine />
+        <BarPlot seriesIds={['day']} transitions={{ enter: null }} />
+        <BarPlot
+          borderRadius={0}
+          seriesIds={['sunlight']}
+          transitions={{ enter: { type: 'spring', stiffness: 700, damping: 40, staggerDelay: 1 } }}
+        />
+      </CartesianChart>
+    );
+  }
+
+  function Example() {
+    return (
+      <VStack gap={2}>
+        <SunlightChart data={sunlightData} />
+        <Text color="fgMuted" font="legal" textAlign="center">
+          2026 sunlight data for the first day of each month in Atlanta, Georgia, provided by{' '}
+          <Link
+            href="https://gml.noaa.gov/grad/solcalc/table.php?lat=33.733&lon=-84.383&year=2026"
+            target="_blank"
+          >
+            NOAA
+          </Link>
+          .
+        </Text>
+      </VStack>
+    );
+  }
+
+  return <Example />;
+}
+```
+
+### Buy vs Sell
+
+You can combine a horizontal BarChart with a custom legend to create a buy vs sell chart.
+
+```tsx live
+function BuyVsSellExample() {
+  function BuyVsSellLegend({ buy, sell }: { buy: number; sell: number }) {
+    return (
+      <HStack gap={1} justifyContent="space-between">
+        <DefaultLegendEntry
+          label={
+            <Text font="legal" color="fgMuted">
+              {buy}% bought
+            </Text>
+          }
+          color="var(--color-fgPositive)"
+        />
+        <DefaultLegendEntry
+          label={
+            <Text font="legal" color="fgMuted">
+              {sell}% sold
+            </Text>
+          }
+          color="var(--color-fgNegative)"
+        />
+      </HStack>
+    );
+  }
+
+  function BuyVsSellChart({
+    buy,
+    sell,
+    animate = true,
+    borderRadius = 3,
+    height = 6,
+    inset = 0,
+    layout = 'horizontal',
+    stackGap = 4,
+    xAxis,
+    yAxis,
+    barMinSize = height,
+    ...props
+  }: Omit<BarChartProps, 'series'> & { buy: number; sell: number }) {
+    return (
+      <VStack gap={1.5}>
+        <BarChart
+          animate={animate}
+          roundBaseline
+          stacked
+          barMinSize={barMinSize}
+          borderRadius={borderRadius}
+          height={height}
+          inset={inset}
+          layout={layout}
+          series={[
+            {
+              id: 'buy',
+              data: [buy],
+              color: 'var(--color-fgPositive)',
+              legendShape: 'circle',
+            },
+            {
+              id: 'sell',
+              data: [sell],
+              color: 'var(--color-fgNegative)',
+              legendShape: 'circle',
+            },
+          ]}
+          stackGap={stackGap}
+          xAxis={{ domainLimit: 'strict', ...xAxis }}
+          yAxis={{ categoryPadding: 0, ...yAxis }}
+          {...props}
+        />
+        <BuyVsSellLegend buy={buy} sell={sell} />
+      </VStack>
+    );
+  }
+
+  return <BuyVsSellChart buy={76} sell={24} />;
+}
+```

@@ -1,0 +1,132 @@
+{
+  "name": "docs",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/docs",
+  "projectType": "application",
+  "tags": [
+    "toolchain:node"
+  ],
+  "targets": {
+    "dev": {
+      "command": "docusaurus start --port 3000",
+      "dependsOn": [
+        {
+          "projects": [
+            "docusaurus-plugin-docgen",
+            "docusaurus-plugin-kbar",
+            "docusaurus-plugin-llm-dev-server"
+          ],
+          "target": "build"
+        }
+      ],
+      "options": {
+        "cwd": "apps/docs",
+        "env": {
+          "NODE_ENV": "development"
+        }
+      }
+    },
+    "start": {
+      "command": "docusaurus serve --dir dist --port 3000",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "cwd": "apps/docs"
+      }
+    },
+    "serve": {
+      "command": "docusaurus serve --dir dist --port 3000",
+      "dependsOn": [
+        "build"
+      ],
+      "options": {
+        "cwd": "apps/docs"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "dependsOn": [
+        "^build",
+        "^typecheck",
+        "peer-dependencies-check"
+      ],
+      "options": {
+        "commands": [
+          "docusaurus build --out-dir dist",
+          "node ai-doc-generator/generator.cjs",
+          "node ai-doc-generator/validate.cjs dist"
+        ],
+        "cwd": "apps/docs",
+        "parallel": false
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.js"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "clear": {
+      "command": "docusaurus clear",
+      "options": {
+        "cwd": "apps/docs"
+      }
+    },
+    "typecheck": {
+      "command": "tsc --build --pretty --verbose"
+    },
+    "lint-styles": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "stylelint \"**/*.{css,ts,tsx,js,jsx}\" --formatter string",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "build-llm-docs": {
+      "command": "node {projectRoot}/ai-doc-generator/generator.cjs",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "validate-llm-docs-dist": {
+      "command": "node {projectRoot}/ai-doc-generator/validate.cjs dist",
+      "dependsOn": [
+        "build-llm-docs"
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "concatenate-llm-docs": {
+      "command": "node {projectRoot}/ai-doc-generator/concatenate-docs.cjs",
+      "dependsOn": [
+        "build-llm-docs"
+      ],
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "generate-site-directory": {
+      "command": "node {projectRoot}/ai-doc-generator/generate-site-directory.cjs",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "peer-dependencies": {
+      "command": "tsx {projectRoot}/utils/generateComponentPeerDeps.ts",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    },
+    "peer-dependencies-check": {
+      "command": "tsx {projectRoot}/utils/generateComponentPeerDeps.ts --fail-on-changes",
+      "options": {
+        "cwd": "{workspaceRoot}"
+      }
+    }
+  }
+}

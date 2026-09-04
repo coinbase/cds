@@ -1,0 +1,66 @@
+### Basic usage
+
+```tsx live
+function CheckboxCellExample() {
+  const [checked, setChecked] = React.useState(false);
+  return (
+    <CheckboxCell
+      title="Enable notifications"
+      description="Get updates on your account activity."
+      checked={checked}
+      onChange={(e) => setChecked(e.target.checked)}
+      value="notifications"
+    />
+  );
+}
+```
+
+### States
+
+```tsx live
+<VStack gap={2}>
+  <CheckboxCell
+    title="Disabled and unchecked"
+    value="disabled-unchecked"
+    checked={false}
+    disabled
+  />
+  <CheckboxCell title="Disabled and checked" value="disabled-checked" checked disabled />
+</VStack>
+```
+
+### With Custom Content
+
+```tsx live
+function CustomCheckboxCellExample() {
+  const [checked, setChecked] = React.useState(true);
+  return (
+    <CheckboxCell
+      checked={checked}
+      description={
+        <VStack gap={1}>
+          <Text color="fgMuted" font="body">
+            Stay updated with important information
+          </Text>
+          <Text color="fgPrimary" font="label1">
+            • Security alerts
+          </Text>
+          <Text color="fgPrimary" font="label1">
+            • Account updates
+          </Text>
+        </VStack>
+      }
+      onChange={(e) => setChecked(e.target.checked)}
+      title={
+        <VStack gap={0}>
+          <Text font="headline">Email Notifications</Text>
+          <Text color="fgPositive" font="caption">
+            Recommended
+          </Text>
+        </VStack>
+      }
+      value="notifications"
+    />
+  );
+}
+```

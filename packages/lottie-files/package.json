@@ -1,0 +1,89 @@
+{
+  "name": "@coinbase/cds-lottie-files",
+  "version": "3.3.4",
+  "description": "Coinbase Design System - Lottie Files",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "packages/lottie-files"
+  },
+  "react-native": "./esm/index.js",
+  "type": "module",
+  "main": "./esm/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./esm/index.js"
+    },
+    "./activityIndicator": {
+      "types": "./dts/activityIndicator/index.d.ts",
+      "default": "./esm/activityIndicator/index.js"
+    },
+    "./chartFallbackNegative": {
+      "types": "./dts/chartFallbackNegative/index.d.ts",
+      "default": "./esm/chartFallbackNegative/index.js"
+    },
+    "./chartFallbackPositive": {
+      "types": "./dts/chartFallbackPositive/index.d.ts",
+      "default": "./esm/chartFallbackPositive/index.js"
+    },
+    "./dappWallet": {
+      "types": "./dts/dappWallet/index.d.ts",
+      "default": "./esm/dappWallet/index.js"
+    },
+    "./earnComplete": {
+      "types": "./dts/earnComplete/index.d.ts",
+      "default": "./esm/earnComplete/index.js"
+    },
+    "./earnTask": {
+      "types": "./dts/earnTask/index.d.ts",
+      "default": "./esm/earnTask/index.js"
+    },
+    "./gift": {
+      "types": "./dts/gift/index.d.ts",
+      "default": "./esm/gift/index.js"
+    },
+    "./giftingZoom": {
+      "types": "./dts/giftingZoom/index.d.ts",
+      "default": "./esm/giftingZoom/index.js"
+    },
+    "./globalTradeButton": {
+      "types": "./dts/globalTradeButton/index.d.ts",
+      "default": "./esm/globalTradeButton/index.js"
+    },
+    "./nux": {
+      "types": "./dts/nux/index.d.ts",
+      "default": "./esm/nux/index.js"
+    },
+    "./splash": {
+      "types": "./dts/splash/index.d.ts",
+      "default": "./esm/splash/index.js"
+    },
+    "./tradeStatus": {
+      "types": "./dts/tradeStatus/index.d.ts",
+      "default": "./esm/tradeStatus/index.js"
+    },
+    "./watchListStar": {
+      "types": "./dts/watchListStar/index.d.ts",
+      "default": "./esm/watchListStar/index.js"
+    },
+    "./*": {
+      "types": "./dts/*/index.d.ts",
+      "default": "./esm/*/index.js"
+    }
+  },
+  "sideEffects": false,
+  "files": [
+    "dts",
+    "esm",
+    "CHANGELOG"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1"
+  }
+}

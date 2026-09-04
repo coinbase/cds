@@ -1,0 +1,76 @@
+### Basic Collapsible
+
+```jsx
+function BasicCollapsible() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <VStack gap={3}>
+      <Button onPress={() => setCollapsed(!collapsed)}>Click me!</Button>
+      <Collapsible collapsed={collapsed} padding={3}>
+        <VStack>Send a crypto gift! Share the gift of crypto this holiday season.</VStack>
+      </Collapsible>
+    </VStack>
+  );
+}
+```
+
+### Expand Top
+
+Place `Collapsible` above the trigger to expand top.
+
+```jsx
+function ExpandTop() {
+  const [collapsed, setCollapsed] = useState(true);
+  return (
+    <VStack gap={3}>
+      <Collapsible collapsed={collapsed}>
+        <VStack>Send a crypto gift! Share the gift of crypto this holiday season.</VStack>
+      </Collapsible>
+      <Button onPress={() => setCollapsed(!collapsed)}>Click me!</Button>
+    </VStack>
+  );
+}
+```
+
+### Scroll Content
+
+Enable scroll by setting `maxHeight`.
+
+```jsx
+function Scroll() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <VStack gap={3}>
+      <Button onPress={() => setCollapsed(!collapsed)}>Click me!</Button>
+      <Collapsible collapsed={collapsed} maxHeight={400}>
+        <Text font="body" as="p">
+          {loremIpsum.repeat(50)}
+        </Text>
+      </Collapsible>
+    </VStack>
+  );
+}
+```
+
+### Horizontal (Experimental)
+
+Set `direction="horizontal"` for horizontal expand/collapse.
+
+```jsx
+function Horizontal() {
+  const [collapsed, setCollapsed] = useState(true);
+
+  return (
+    <HStack gap={2} alignItems="center">
+      <Button onPress={() => setCollapsed(!collapsed)}>Click me!</Button>
+      <Collapsible collapsed={collapsed} direction="horizontal">
+        <DotCount count={100} />
+        <DotCount count={1} />
+        <DotCount count={99} />
+      </Collapsible>
+    </HStack>
+  );
+}
+```

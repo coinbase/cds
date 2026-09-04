@@ -1,0 +1,35 @@
+---
+id: slideButton
+title: SlideButton
+platform_switcher_options: { web: false, mobile: true }
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+import { SlideButtonBanner } from '@site/src/components/page/ComponentBanner/SlideButtonBanner';
+
+import mobilePropsToc from ':docgen/mobile/buttons/SlideButton/toc-props';
+
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import MobileStyles, { toc as mobileStylesToc } from './_mobileStyles.mdx';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader
+    title="SlideButton"
+    mobileMetadata={mobileMetadata}
+    banner={<SlideButtonBanner />}
+  />
+  <ComponentTabsContainer
+    mobilePropsTable={<MobilePropsTable />}
+    mobileStyles={<MobileStyles />}
+    mobileExamples={<MobileExamples />}
+    mobileExamplesToc={mobileExamplesToc}
+    mobilePropsToc={mobilePropsToc}
+    mobileStylesToc={mobileStylesToc}
+  />
+</VStack>

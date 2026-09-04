@@ -1,0 +1,18 @@
+{
+  "import": "import { Calendar } from '@coinbase/cds-web/dates/Calendar'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/dates/Calendar.tsx",
+  "description": "Calendar is a flexible, accessible date grid component for selecting dates, supporting keyboard navigation, disabled/highlighted dates, and custom rendering.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-dates-calendar--examples",
+  "relatedComponents": [
+    {
+      "label": "DatePicker",
+      "url": "/components/other/DatePicker"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "react-dom",
+      "version": "^18.0.0 || ~19.1.2"
+    }
+  ]
+}

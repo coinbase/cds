@@ -1,0 +1,40 @@
+High-quality illustration animations powered by [Lottie](https://airbnb.design/lottie/).
+
+### Basic usage
+
+```jsx live
+function BasicExample() {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const lottieRef = useRef();
+
+  const handlePlay = useCallback(() => {
+    lottieRef.current?.play();
+    setIsPlaying(true);
+  }, []);
+
+  const handleReset = useCallback(() => {
+    lottieRef.current?.reset();
+    setIsPlaying(false);
+  }, []);
+
+  return (
+    <VStack gap={3} alignItems="center">
+      <Lottie
+        ref={lottieRef}
+        source={activityIndicator}
+        width={200}
+        height={200}
+        onAnimationFinish={handleReset}
+      />
+      <HStack gap={2}>
+        <Button onClick={handlePlay} disabled={isPlaying}>
+          Play
+        </Button>
+        <Button onClick={handleReset} variant="secondary">
+          Reset
+        </Button>
+      </HStack>
+    </VStack>
+  );
+}
+```

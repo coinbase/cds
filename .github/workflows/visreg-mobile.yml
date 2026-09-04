@@ -1,0 +1,232 @@
+name: Mobile Visreg
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled, ready_for_review]
+    branches: [master]
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: 'Percy branch name override (defaults to current git branch)'
+        required: false
+        default: ''
+
+concurrency:
+  group: Visreg-Mobile-${{ github.ref_name }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+  actions: read
+  pull-requests: write
+
+env:
+  CI: true
+
+jobs:
+  check:
+    uses: ./.github/workflows/visreg-check.yml
+    with:
+      source-paths: packages/mobile/src
+      cache-key-prefix: mobile-visreg-v1
+      has-label: ${{ contains(github.event.pull_request.labels.*.name, 'visreg-mobile') }}
+
+  # iOS visreg runs entirely on ubuntu-latest: the committed device .ipa is
+  # JS-bundle-patched (unzip -> swap main.jsbundle -> rezip), uploaded to
+  # BrowserStack App Automate, and run on a real device. BrowserStack re-signs
+  # the .ipa on upload, so no macOS runner or Apple signing is needed here.
+  ios:
+    name: Visreg iOS
+    needs: [check]
+    if: needs.check.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    # Backstop only. The run script enforces its own queue/execution budgets and
+    # exits with a diagnosis; this exists so a hang that escapes those budgets
+    # fails in an hour instead of burning the 6h GitHub default.
+    timeout-minutes: 75
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 1
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - uses: ./.github/actions/setup-node-ci
+
+      - name: Set Percy branch
+        env:
+          BRANCH_INPUT: ${{ inputs.branch }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [[ -n "$BRANCH_INPUT" ]]; then
+            echo "PERCY_BRANCH=$BRANCH_INPUT" >> "$GITHUB_ENV"
+          elif [[ "$EVENT_NAME" == "pull_request" ]]; then
+            echo "PERCY_BRANCH=$HEAD_REF" >> "$GITHUB_ENV"
+          else
+            echo "PERCY_BRANCH=$REF_NAME" >> "$GITHUB_ENV"
+          fi
+
+      - name: Prepare iOS app (patch JS bundle into device .ipa)
+        run: yarn nx run expo-app:patch-bundle --configuration=ios-device
+
+      - name: Run visreg on BrowserStack
+        run: yarn nx run mobile-visreg:browserstack-ios
+        env:
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+
+      - name: Upload screenshots artifact
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: screenshots-ios
+          path: packages/mobile-visreg/maestro-test-output/screenshots/
+          if-no-files-found: ignore
+
+      - name: Upload to Percy
+        id: percy-upload
+        if: always()
+        run: |
+          # `set +e` around the capture: the step runs under `bash -e`, where a
+          # failing command substitution aborts before the echo below, hiding
+          # the Percy output that explains the failure.
+          set +e
+          OUTPUT=$(yarn nx run mobile-visreg:upload 2>&1)
+          EXIT_CODE=$?
+          set -e
+          echo "$OUTPUT"
+          PERCY_URL=$(echo "$OUTPUT" | grep -oE 'https://percy\.io[^[:space:]]+' | head -1)
+          echo "percy_url=$PERCY_URL" >> "$GITHUB_OUTPUT"
+          exit $EXIT_CODE
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN_MOBILE }}
+          PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
+          PERCY_PARALLEL_NONCE: ${{ github.run_id }}
+          PERCY_PARALLEL_TOTAL: 2
+      - name: Comment Percy link on PR
+        if: always() && github.event_name == 'pull_request' && steps.percy-upload.outputs.percy_url != ''
+        uses: ./.github/actions/visreg-comment-percy
+        with:
+          percy_url: ${{ steps.percy-upload.outputs.percy_url }}
+
+  # Android visreg runs on ubuntu-latest. The committed release .apk is
+  # JS-bundle-patched (zip splice + zipalign + apksigner debug re-sign), then
+  # uploaded to BrowserStack App Automate and run on a real device.
+  android:
+    name: Visreg Android
+    needs: [check]
+    if: needs.check.outputs.should_run == 'true'
+    runs-on: ubuntu-latest
+    # See the iOS job — backstop only.
+    timeout-minutes: 75
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 1
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || github.sha }}
+
+      - uses: ./.github/actions/setup-node-ci
+
+      - name: Set Percy branch
+        env:
+          BRANCH_INPUT: ${{ inputs.branch }}
+          EVENT_NAME: ${{ github.event_name }}
+          HEAD_REF: ${{ github.head_ref }}
+          REF_NAME: ${{ github.ref_name }}
+        run: |
+          if [[ -n "$BRANCH_INPUT" ]]; then
+            echo "PERCY_BRANCH=$BRANCH_INPUT" >> "$GITHUB_ENV"
+          elif [[ "$EVENT_NAME" == "pull_request" ]]; then
+            echo "PERCY_BRANCH=$HEAD_REF" >> "$GITHUB_ENV"
+          else
+            echo "PERCY_BRANCH=$REF_NAME" >> "$GITHUB_ENV"
+          fi
+
+      - name: Setup Android build tools
+        run: |
+          # zipalign + apksigner (used by patch-bundle android) live in build-tools
+          BUILD_TOOLS_DIR="$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)"
+          echo "$BUILD_TOOLS_DIR" >> "$GITHUB_PATH"
+          # The APK is re-signed with the standard Android debug keystore; create
+          # it if the runner doesn't already have one.
+          if [ ! -f "$HOME/.android/debug.keystore" ]; then
+            mkdir -p "$HOME/.android"
+            keytool -genkeypair -v -keystore "$HOME/.android/debug.keystore" \
+              -storepass android -alias androiddebugkey -keypass android \
+              -keyalg RSA -keysize 2048 -validity 10000 \
+              -dname "CN=Android Debug,O=Android,C=US"
+          fi
+
+      - name: Prepare Android app (patch JS bundle into .apk)
+        run: yarn nx run expo-app:patch-bundle --configuration=android
+
+      - name: Run visreg on BrowserStack
+        run: yarn nx run mobile-visreg:browserstack-android
+        env:
+          BROWSERSTACK_USERNAME: ${{ secrets.BROWSERSTACK_USERNAME }}
+          BROWSERSTACK_ACCESS_KEY: ${{ secrets.BROWSERSTACK_ACCESS_KEY }}
+
+      - name: Upload screenshots artifact
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: screenshots-android
+          path: packages/mobile-visreg/maestro-test-output/screenshots/
+          if-no-files-found: ignore
+
+      - name: Upload to Percy
+        id: percy-upload
+        if: always()
+        run: |
+          # `set +e` around the capture: the step runs under `bash -e`, where a
+          # failing command substitution aborts before the echo below, hiding
+          # the Percy output that explains the failure.
+          set +e
+          OUTPUT=$(yarn nx run mobile-visreg:upload 2>&1)
+          EXIT_CODE=$?
+          set -e
+          echo "$OUTPUT"
+          PERCY_URL=$(echo "$OUTPUT" | grep -oE 'https://percy\.io[^[:space:]]+' | head -1)
+          echo "percy_url=$PERCY_URL" >> "$GITHUB_OUTPUT"
+          exit $EXIT_CODE
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN_MOBILE }}
+          PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
+          PERCY_PARALLEL_NONCE: ${{ github.run_id }}
+          PERCY_PARALLEL_TOTAL: 2
+      - name: Comment Percy link on PR
+        if: always() && github.event_name == 'pull_request' && steps.percy-upload.outputs.percy_url != ''
+        uses: ./.github/actions/visreg-comment-percy
+        with:
+          percy_url: ${{ steps.percy-upload.outputs.percy_url }}
+
+  # Persist the visreg result cache only when BOTH platforms pass, so a partial
+  # failure doesn't let a later run skip via the content-hash cache.
+  finalize:
+    name: Save visreg result cache
+    needs: [check, ios, android]
+    if: github.event_name == 'pull_request' && needs.ios.result == 'success' && needs.android.result == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@fa2e9d605c4eeb9fcad4c99c224cee0c6c7f3594 # v2.16.0
+        with:
+          egress-policy: audit
+      - name: Create visreg cache marker
+        run: touch .visreg-cache-marker
+      - name: Save visreg result cache
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: .visreg-cache-marker
+          key: mobile-visreg-v1-${{ needs.check.outputs.content_hash }}

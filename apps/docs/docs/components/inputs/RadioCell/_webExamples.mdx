@@ -1,0 +1,79 @@
+### Basic usage
+
+```tsx live
+function RadioCellExample() {
+  const [value, setValue] = React.useState('one');
+  return (
+    <VStack gap={2}>
+      <RadioCell
+        title="Option one"
+        description="With a description"
+        checked={value === 'one'}
+        onChange={() => setValue('one')}
+        value="one"
+        name="radio-cell-example"
+      />
+      <RadioCell
+        title="Option two"
+        checked={value === 'two'}
+        onChange={() => setValue('two')}
+        value="two"
+        name="radio-cell-example"
+      />
+      <RadioCell
+        title="Disabled option"
+        checked={false}
+        onChange={() => {}}
+        value="three"
+        name="radio-cell-example"
+        disabled
+      />
+    </VStack>
+  );
+}
+```
+
+### With Custom Content and Styling
+
+```tsx live
+function CustomRadioCellExample() {
+  const [selectedPlan, setSelectedPlan] = useState('pro');
+  return (
+    <VStack gap={2}>
+      <RadioCell
+        checked={selectedPlan === 'basic'}
+        description={
+          <VStack gap={1}>
+            <Text color="fgMuted" font="body">
+              Perfect for individuals getting started
+            </Text>
+            <Text font="label1">$9/month • Up to 5 projects • 1GB storage</Text>
+          </VStack>
+        }
+        onChange={(e) => setSelectedPlan(e.target.value)}
+        title="Basic Plan"
+        value="basic"
+        name="subscription-plan"
+      />
+      <RadioCell
+        checked={selectedPlan === 'pro'}
+        description={
+          <VStack gap={1}>
+            <Text color="fgMuted" font="body">
+              Great for growing teams and businesses
+            </Text>
+            <Text font="label1">$29/month • Unlimited projects • 10GB storage</Text>
+            <Text color="fgPositive" font="caption">
+              • Most Popular
+            </Text>
+          </VStack>
+        }
+        onChange={(e) => setSelectedPlan(e.target.value)}
+        title="Pro Plan"
+        value="pro"
+        name="subscription-plan"
+      />
+    </VStack>
+  );
+}
+```

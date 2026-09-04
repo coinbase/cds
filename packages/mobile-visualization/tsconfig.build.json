@@ -1,0 +1,34 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "sourceMap": false
+  },
+  "include": [
+    "src/**/*"
+  ],
+  "exclude": [
+    "**/__stories__/**",
+    "**/__tests__/**",
+    "**/__mocks__/**",
+    "**/__fixtures__/**",
+    "**/__figma__/**",
+    "**/*.stories.*",
+    "**/*.test.*",
+    "**/*.spec.*",
+    "**/*.figma.*"
+  ],
+  "references": [
+    {
+      "path": "../../packages/common"
+    },
+    {
+      "path": "../../packages/lottie-files"
+    },
+    {
+      "path": "../../packages/mobile"
+    },
+    {
+      "path": "../../packages/utils"
+    }
+  ]
+}

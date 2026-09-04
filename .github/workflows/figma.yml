@@ -1,0 +1,143 @@
+name: Figma Operations
+
+permissions:
+  contents: read
+
+on:
+  workflow_dispatch:
+  push:
+    branches: master
+  pull_request:
+    branches: master
+
+jobs:
+  # Validate web Figma Code Connect mappings on PRs
+  validate-code-connect-web:
+    name: Validate Code Connect (Web)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: ./.github/actions/setup-node-ci
+      - name: Check Figma Token
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$FIGMA_ACCESS_TOKEN" ]; then
+            echo "Error: FIGMA_ACCESS_TOKEN environment variable is not set or is empty."
+            echo ""
+            echo "To fix this:"
+            echo "  1. Ensure FIGMA_ACCESS_TOKEN is set in your GitHub repository secrets"
+            echo "  2. Verify the secret is being passed to the workflow step via the env block"
+            echo ""
+            exit 1
+          fi
+          echo "✓ FIGMA_ACCESS_TOKEN is set"
+      - name: Validate Code Connect (dry-run)
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: yarn code-connect:publish:web --dry-run
+
+  # Validate mobile Figma Code Connect mappings on PRs
+  validate-code-connect-mobile:
+    name: Validate Code Connect (Mobile)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name == github.repository
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: ./.github/actions/setup-node-ci
+      - name: Check Figma Token
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$FIGMA_ACCESS_TOKEN" ]; then
+            echo "Error: FIGMA_ACCESS_TOKEN environment variable is not set or is empty."
+            echo ""
+            echo "To fix this:"
+            echo "  1. Ensure FIGMA_ACCESS_TOKEN is set in your GitHub repository secrets"
+            echo "  2. Verify the secret is being passed to the workflow step via the env block"
+            echo ""
+            exit 1
+          fi
+          echo "✓ FIGMA_ACCESS_TOKEN is set"
+      - name: Validate Code Connect (dry-run)
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: yarn code-connect:publish:mobile --dry-run
+
+  # Publish Figma Code Connect mappings for affected packages
+  publish-code-connect:
+    name: Publish Code Connect
+    runs-on: ubuntu-latest
+    if: github.ref_name == 'master' && github.event_name == 'push'
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup-node-ci
+      - name: Check Figma Token
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: |
+          if [ -z "$FIGMA_ACCESS_TOKEN" ]; then
+            echo "Error: FIGMA_ACCESS_TOKEN environment variable is not set or is empty."
+            echo ""
+            echo "To fix this:"
+            echo "  1. Ensure FIGMA_ACCESS_TOKEN is set in your GitHub repository secrets"
+            echo "  2. Verify the secret is being passed to the workflow step via the env block"
+            echo ""
+            exit 1
+          fi
+          echo "✓ FIGMA_ACCESS_TOKEN is set"
+      - name: Publish Code Connect
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: yarn code-connect:publish
+
+  audit-figma-integrations:
+    name: Audit Figma Integrations
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || (github.ref_name == 'master' && github.event_name == 'push')
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100 # TODO: This needs to include the merge-base
+      - uses: ./.github/actions/setup-node-ci
+      - name: Run Audit
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+        run: yarn audit-figma-integration --html
+      - name: Prepare Pages directory
+        run: find temp/ -name "figma-audit-*.html" -exec cp {} temp/index.html \;
+      - name: Setup Pages
+        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
+      - name: Upload audit report
+        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+        with:
+          path: temp/
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5

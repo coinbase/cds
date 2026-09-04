@@ -1,0 +1,512 @@
+import React, { createRef, useCallback, useState } from 'react';
+import { Animated, Dimensions, Modal as RNModal, StyleSheet, View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { loremIpsum } from '@coinbase/cds-common/internal/data/loremIpsum';
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react-native';
+
+import type { ButtonProps } from '../../../buttons';
+import { Button } from '../../../buttons';
+import { Text } from '../../../typography/Text';
+import { DefaultThemeProvider, SAFE_AREA_METRICS } from '../../../utils/testHelpers';
+import { Modal, type ModalRefBaseProps } from '../Modal';
+import { ModalBody } from '../ModalBody';
+import { ModalFooter } from '../ModalFooter';
+import { ModalHeader, type ModalHeaderProps } from '../ModalHeader';
+
+type LoremIpsumProps = {
+  title?: string;
+  concise?: boolean;
+  repeat?: number;
+};
+
+const LoremIpsum = ({ title, concise, repeat }: LoremIpsumProps) => {
+  return (
+    <>
+      {title && (
+        <Text font="label1" paddingBottom={1}>
+          {title}
+        </Text>
+      )}
+      {concise ? null : (
+        <Text font="body" paddingBottom={3}>
+          {repeat ? loremIpsum.repeat(repeat) : loremIpsum}
+        </Text>
+      )}
+    </>
+  );
+};
+
+/*
+  This is a wrapper for the Button component that maps the onClick event to the onPress event. Ensures
+  modalBuilder converts <Button onClick={() => setVisible(true)}>Open Modal</Button> to <Button onPress={() => setVisible(true)}>Open Modal</Button>
+*/
+const ButtonWrapperWithEventMapping = ({
+  onClick,
+  ...props
+}: { onClick?: () => void } & ButtonProps) => <Button {...props} onPress={onClick} />;
+
+type ModalA11yProps = {
+  accessibilityLabelledBy?: string;
+  accessibilityLabel?: string;
+};
+
+const MockModal = ({
+  onRequestClose,
+  onDidClose,
+  onBackButtonClick,
+  font,
+  textTransform,
+  title = 'Basic Modal',
+  visible: externalVisible = false,
+  testID,
+  accessibilityLabelledBy,
+  accessibilityLabel,
+  backAccessibilityLabel,
+  backAccessibilityHint,
+  closeAccessibilityLabel,
+  closeAccessibilityHint,
+  hideDividers,
+}: Partial<{
+  onRequestClose?: () => void;
+  onDidClose?: () => void;
+  visible?: boolean;
+  testID?: string;
+  hideDividers?: boolean;
+}> &
+  ModalA11yProps &
+  ModalHeaderProps) => {
+  const [visible, setVisible] = useState(externalVisible);
+  const setVisibleOn = useCallback(() => setVisible(true), [setVisible]);
+  const setVisibleOff = useCallback(() => setVisible(false), [setVisible]);
+
+  const handleClose = useCallback(() => {
+    onRequestClose?.();
+    setVisibleOff();
+  }, [onRequestClose, setVisibleOff]);
+
+  const handleDidClose = useCallback(() => {
+    onDidClose?.();
+  }, [onDidClose]);
+
+  return (
+    <>
+      <ButtonWrapperWithEventMapping onClick={setVisibleOn} testID="modal-trigger">
+        Open Modal
+      </ButtonWrapperWithEventMapping>
+      <Modal
+        accessibilityLabel={accessibilityLabel}
+        accessibilityLabelledBy={accessibilityLabelledBy}
+        hideDividers={hideDividers}
+        onDidClose={handleDidClose}
+        onRequestClose={handleClose}
+        testID={testID}
+        visible={visible}
+      >
+        <ModalHeader
+          backAccessibilityHint={backAccessibilityHint}
+          backAccessibilityLabel={backAccessibilityLabel}
+          closeAccessibilityHint={closeAccessibilityHint}
+          closeAccessibilityLabel={closeAccessibilityLabel}
+          font={font}
+          onBackButtonClick={onBackButtonClick}
+          textTransform={textTransform}
+          title={title}
+        />
+        <ModalBody>
+          <LoremIpsum />
+        </ModalBody>
+        <ModalFooter
+          primaryAction={
+            <ButtonWrapperWithEventMapping onClick={setVisibleOff} testID="modal-footer-save">
+              Save
+            </ButtonWrapperWithEventMapping>
+          }
+          secondaryAction={
+            <ButtonWrapperWithEventMapping onClick={setVisibleOff} variant="secondary">
+              Cancel
+            </ButtonWrapperWithEventMapping>
+          }
+          testID="modal-footer"
+        />
+      </Modal>
+    </>
+  );
+};
+
+describe('Modal', () => {
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.runOnlyPendingTimers();
+    jest.useRealTimers();
+    cleanup();
+  });
+
+  it('passes a11y', () => {
+    render(
+      <DefaultThemeProvider>
+        <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+          <MockModal visible testID="mock-modal" />
+        </SafeAreaProvider>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId('mock-modal')).toBeAccessible();
+  });
+
+  it('passes a11y when title is not provided', () => {
+    render(
+      <DefaultThemeProvider>
+        <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+          <MockModal visible testID="mock-modal" title="" />
+        </SafeAreaProvider>
+      </DefaultThemeProvider>,
+    );
+    expect(screen.getByTestId('mock-modal')).toBeAccessible();
+  });
+
+  it('renders React Native Modal', () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    expect(screen.UNSAFE_queryAllByType(RNModal)).toHaveLength(1);
+  });
+
+  it('show modal on press', () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal visible={false} />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    expect(screen.UNSAFE_queryByProps({ visible: false })).toBeTruthy();
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    expect(screen.UNSAFE_queryByProps({ visible: true })).toBeTruthy();
+  });
+
+  it('triggers close on close button press', () => {
+    const onRequestClose = jest.fn();
+    const onDidClose = jest.fn();
+
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal
+            closeAccessibilityLabel="Close"
+            onDidClose={onDidClose}
+            onRequestClose={onRequestClose}
+          />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+    fireEvent.press(screen.getByLabelText('Close'));
+
+    expect(onRequestClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('triggers onDidClose after animation finished', () => {
+    const onDidClose = jest.fn();
+
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal closeAccessibilityLabel="Close" onDidClose={onDidClose} />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+    fireEvent.press(screen.getByLabelText('Close'));
+
+    act(() => {
+      jest.advanceTimersByTime(100);
+      expect(onDidClose).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  it('triggers back action on back button press', () => {
+    const onBackButtonClick = jest.fn();
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal backAccessibilityLabel="Back" onBackButtonClick={onBackButtonClick} />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+    fireEvent.press(screen.getByLabelText('Back'));
+
+    expect(onBackButtonClick).toHaveBeenCalledTimes(1);
+  });
+
+  it('renders modal title', async () => {
+    const title = 'Modal Title';
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal title={title} />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    expect(await screen.findByText(title)).toBeTruthy();
+  });
+
+  it('renders ReactNode title', async () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal title={<Text testID="custom-title">Custom Title</Text>} />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    expect(await screen.findByTestId('custom-title')).toBeTruthy();
+    expect(screen.getByText('Custom Title')).toBeTruthy();
+  });
+
+  it('applies custom font prop to title text', async () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal font="title1" textTransform="uppercase" title="Styled Title" />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    const title = await screen.findByText('Styled Title');
+    expect(title).toBeTruthy();
+    expect(title).toHaveStyle({ textTransform: 'uppercase' });
+  });
+
+  it('renders modal body', async () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    expect(await screen.findByText(loremIpsum)).toBeTruthy();
+  });
+
+  it('renders modal body without dividers', async () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal hideDividers />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    expect(await screen.findByText(loremIpsum)).toBeTruthy();
+  });
+
+  it('renders modal footer', () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    expect(screen.getByTestId('modal-footer')).toBeTruthy();
+  });
+
+  it('triggers close animation on footer action press', () => {
+    const onRequestClose = jest.fn();
+    const animationParallelSpy = jest.spyOn(Animated, 'parallel');
+    const animationTimingSpy = jest.spyOn(Animated, 'timing');
+
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal visible onRequestClose={onRequestClose} />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    // press on footer action
+    fireEvent.press(screen.getByTestId('modal-footer-save'));
+
+    expect(animationParallelSpy).toHaveBeenCalled();
+    expect(animationTimingSpy).toHaveBeenCalled();
+  });
+
+  it('sets accessible labels on close button', () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal closeAccessibilityHint="Close button hint" closeAccessibilityLabel="Close" />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    expect(screen.getByLabelText('Close')).toBeTruthy();
+    expect(screen.getByHintText('Close button hint')).toBeTruthy();
+  });
+
+  it('sets accessible labels on back button', () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <MockModal
+            backAccessibilityHint="Back button hint"
+            backAccessibilityLabel="Back"
+            onBackButtonClick={jest.fn()}
+          />
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    fireEvent.press(screen.getByText('Open Modal'));
+
+    expect(screen.getByLabelText('Back')).toBeTruthy();
+    expect(screen.getByHintText('Back button hint')).toBeTruthy();
+  });
+
+  it('forwards the modal styles slot to the modal card', () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <Modal visible onRequestClose={jest.fn()} styles={{ modal: { borderTopWidth: 7 } }}>
+            <Text testID="modal-content">Content</Text>
+          </Modal>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    const hasForwardedStyle = screen.UNSAFE_getAllByType(Animated.View).some((node) => {
+      const flattened = StyleSheet.flatten(node.props.style);
+      return flattened?.borderTopWidth === 7;
+    });
+
+    expect(hasForwardedStyle).toBe(true);
+  });
+
+  it('sizes the modal container to the full window so it cannot collapse to 0x0 under Fabric', () => {
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <Modal visible onRequestClose={jest.fn()}>
+            <Text testID="modal-content">Content</Text>
+          </Modal>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    const { width, height } = Dimensions.get('window');
+    const hasFullWindowSize = screen.UNSAFE_getAllByType(Animated.View).some((node) => {
+      const flattened = StyleSheet.flatten(node.props.style);
+      return flattened?.width === width && flattened?.height === height;
+    });
+
+    expect(hasFullWindowSize).toBe(true);
+  });
+
+  it('exposes imperative onRequestClose via ref', () => {
+    const ref = createRef<ModalRefBaseProps>();
+    const onRequestClose = jest.fn();
+
+    render(
+      <SafeAreaProvider initialMetrics={SAFE_AREA_METRICS}>
+        <DefaultThemeProvider>
+          <Modal ref={ref} visible onRequestClose={onRequestClose}>
+            <ModalHeader title="Test Modal" />
+            <ModalBody>
+              <Text font="body">Modal content</Text>
+            </ModalBody>
+          </Modal>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    expect(ref.current).not.toBeNull();
+    expect(typeof ref.current?.onRequestClose).toBe('function');
+  });
+
+  it('applies root safe-area insets as padding inside the native modal window', () => {
+    const notchedSafeAreaMetrics = {
+      frame: { x: 0, y: 0, width: 390, height: 844 },
+      insets: { top: 59, left: 0, right: 0, bottom: 34 },
+    };
+
+    render(
+      <SafeAreaProvider initialMetrics={notchedSafeAreaMetrics}>
+        <DefaultThemeProvider>
+          <Modal visible onRequestClose={jest.fn()}>
+            <Text testID="modal-content">Content</Text>
+          </Modal>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    const hasSafeAreaPadding = screen.UNSAFE_getAllByType(View).some((node) => {
+      const flattened = StyleSheet.flatten(node.props.style);
+      return (
+        flattened?.paddingTop === notchedSafeAreaMetrics.insets.top &&
+        flattened?.paddingBottom === notchedSafeAreaMetrics.insets.bottom &&
+        flattened?.paddingLeft === notchedSafeAreaMetrics.insets.left &&
+        flattened?.paddingRight === notchedSafeAreaMetrics.insets.right
+      );
+    });
+
+    expect(hasSafeAreaPadding).toBe(true);
+  });
+
+  it('lets styles.safeArea override the default inset padding', () => {
+    const notchedSafeAreaMetrics = {
+      frame: { x: 0, y: 0, width: 390, height: 844 },
+      insets: { top: 59, left: 0, right: 0, bottom: 34 },
+    };
+
+    render(
+      <SafeAreaProvider initialMetrics={notchedSafeAreaMetrics}>
+        <DefaultThemeProvider>
+          <Modal visible onRequestClose={jest.fn()} styles={{ safeArea: { paddingTop: 0 } }}>
+            <Text testID="modal-content">Content</Text>
+          </Modal>
+        </DefaultThemeProvider>
+      </SafeAreaProvider>,
+    );
+
+    const hasOverriddenPadding = screen.UNSAFE_getAllByType(View).some((node) => {
+      const flattened = StyleSheet.flatten(node.props.style);
+      return (
+        flattened?.paddingTop === 0 &&
+        flattened?.paddingBottom === notchedSafeAreaMetrics.insets.bottom
+      );
+    });
+
+    expect(hasOverriddenPadding).toBe(true);
+  });
+});

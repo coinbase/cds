@@ -1,0 +1,489 @@
+import { memo, useEffect, useMemo } from 'react';
+import { useDerivedValue, useSharedValue } from 'react-native-reanimated';
+import type { Rect } from '@coinbase/cds-common/types/Rect';
+import {
+  type AnimatedProp,
+  Group,
+  Path as SkiaPath,
+  type PathProps as SkiaPathProps,
+  Skia,
+  usePathInterpolation,
+} from '@shopify/react-native-skia';
+
+import { unwrapAnimatedValue } from './utils/chart';
+import { defaultPathEnterTransition } from './utils/path';
+import {
+  buildTransition,
+  defaultTransition,
+  getTransition,
+  type Transition,
+  usePathTransition,
+} from './utils/transition';
+import { useCartesianChartContext } from './ChartProvider';
+
+/**
+ * Duration in milliseconds for path enter transition.
+ */
+export const pathEnterTransitionDuration = 500;
+
+export type PathBaseProps = {
+  /**
+   * Whether to animate this path. Overrides the animate prop on the Chart component.
+   */
+  animate?: boolean;
+  /**
+   * Initial path for enter animation.
+   * When provided, the first animation will go from initialPath to d.
+   * If not provided, defaults to d (no enter animation).
+   */
+  initialPath?: string;
+  /**
+   * Fill color for the path.
+   * When provided, will render a fill with the given color.
+   * If not provided, will not render a fill.
+   */
+  fill?: string;
+  /**
+   * Opacity for the path fill.
+   */
+  fillOpacity?: number;
+  /**
+   * Stroke color for the path.
+   * When provided, will render a fill with the given color.
+   * If not provided, will not render a fill.
+   */
+  stroke?: string;
+  /**
+   * Opacity for the path stroke.
+   */
+  strokeOpacity?: AnimatedProp<number>;
+};
+
+export type PathProps = PathBaseProps &
+  Pick<
+    SkiaPathProps,
+    | 'antiAlias'
+    | 'blendMode'
+    | 'children'
+    | 'dither'
+    | 'invertClip'
+    | 'origin'
+    | 'matrix'
+    | 'strokeCap'
+    | 'strokeJoin'
+    | 'strokeMiter'
+    | 'strokeWidth'
+    | 'style'
+    | 'transform'
+  > & {
+    /**
+     * Transition configuration for enter and update animations.
+     * @note Disable an animation by passing in null.
+     *
+     * @default transitions = {{
+     *   enter: { type: 'timing', duration: 500 },
+     *   enterOpacity: undefined,
+     *   update: { type: 'spring', stiffness: 900, damping: 120 }
+     * }}
+     *
+     * @example
+     * // Custom enter and update transitions
+     * transitions={{ enter: { type: 'timing', duration: 300 }, update: { type: 'spring', damping: 20 } }}
+     *
+     * @example
+     * // Disable enter animation
+     * transitions={{ enter: null }}
+     */
+    transitions?: {
+      /**
+       * Transition for the initial enter/reveal animation.
+       * Set to `null` to disable.
+       */
+      enter?: Transition | null;
+      /**
+       * Transition for the initial enter opacity animation.
+       * When provided, path opacity animates from 0 to 1.
+       * Set to `null` to disable.
+       */
+      enterOpacity?: Transition | null;
+      /**
+       * Transition for subsequent data update animations.
+       * Set to `null` to disable.
+       */
+      update?: Transition | null;
+    };
+    /**
+     * Transition for updates.
+     * @deprecated Use `transitions.update` instead. This will be removed in a future major release.
+     * @deprecationExpectedRemoval v4
+     */
+    transition?: Transition;
+    /**
+     * The SVG path data string.
+     * @note d only supports transitions for string values, not animated values.
+     */
+    d?: AnimatedProp<string | undefined>;
+    /**
+     * Offset added to the clip rect boundaries.
+     */
+    clipOffset?: number;
+    /**
+     * Custom clip path.
+     * When set, overrides clipRect.
+     * @note pass null to disable clipping.
+     */
+    clipPath?: string | null;
+    /**
+     * Custom clip path rect. If provided, this overrides the default chart rect for clipping.
+     * @default drawingArea of chart + clipOffset
+     * Will be overridden by clipPath if set.
+     */
+    clipRect?: Rect;
+  };
+
+const AnimatedPath = memo<
+  Omit<PathProps, 'animate' | 'clipRect' | 'clipOffset' | 'clipPath' | 'transition'>
+>(
+  ({
+    d = '',
+    initialPath,
+    fill,
+    fillOpacity,
+    stroke,
+    strokeOpacity,
+    strokeWidth,
+    strokeCap,
+    strokeJoin,
+    children,
+    transitions,
+    ...pathProps
+  }) => {
+    const isDAnimated = typeof d !== 'string';
+
+    const animatedPath = usePathTransition({
+      currentPath: isDAnimated ? '' : d,
+      initialPath,
+      transitions,
+    });
+
+    const isFilled = fill !== undefined && fill !== 'none';
+    const isStroked = stroke !== undefined && stroke !== 'none';
+
+    const activePath = useDerivedValue(() => {
+      if (isDAnimated) {
+        return d.value ?? Skia.Path.Make();
+      }
+      return animatedPath.value;
+    });
+
+    return (
+      <>
+        {isFilled && (
+          <SkiaPath
+            color={fill}
+            opacity={fillOpacity}
+            path={activePath}
+            style="fill"
+            {...pathProps}
+          >
+            {children}
+          </SkiaPath>
+        )}
+        {isStroked && (
+          <SkiaPath
+            color={stroke}
+            opacity={strokeOpacity}
+            path={activePath}
+            strokeCap={strokeCap}
+            strokeJoin={strokeJoin}
+            strokeWidth={strokeWidth}
+            style="stroke"
+            {...pathProps}
+          >
+            {children}
+          </SkiaPath>
+        )}
+      </>
+    );
+  },
+);
+
+// Animated path: reanimated clip-reveal + shared values. Used when the chart animates (default).
+const AnimatedChartPath = memo<PathProps>((props) => {
+  const {
+    animate: animateProp,
+    clipRect,
+    clipPath: clipPathProp,
+    clipOffset = 0,
+    d = '',
+    initialPath,
+    fill,
+    fillOpacity,
+    stroke,
+    strokeOpacity,
+    strokeWidth,
+    strokeCap,
+    strokeJoin,
+    children,
+    transitions,
+    transition,
+    ...pathProps
+  } = props;
+
+  const context = useCartesianChartContext();
+  const rect = clipRect ?? context.drawingArea;
+  const animate = animateProp ?? context.animate;
+
+  const isReady = !!context.getXScale();
+
+  const enterTransition = useMemo(
+    () => getTransition(transitions?.enter, animate, defaultPathEnterTransition),
+    [animate, transitions?.enter],
+  );
+
+  const updateTransition = useMemo(
+    () =>
+      getTransition(
+        transitions?.update !== undefined ? transitions.update : transition,
+        animate,
+        defaultTransition,
+      ),
+    [animate, transitions?.update, transition],
+  );
+
+  const enterOpacityTransition = useMemo(() => {
+    if (!animate) return null;
+    return transitions?.enterOpacity;
+  }, [animate, transitions?.enterOpacity]);
+  const animateEnterOpacity = Boolean(enterOpacityTransition);
+  const enterOpacity = useSharedValue(animateEnterOpacity ? 0 : 1);
+
+  useEffect(() => {
+    if (!animateEnterOpacity) {
+      enterOpacity.value = 1;
+      return;
+    }
+
+    if (!isReady) {
+      return;
+    }
+
+    if (enterOpacityTransition === undefined || enterOpacityTransition === null) {
+      enterOpacity.value = 1;
+      return;
+    }
+
+    enterOpacity.value = buildTransition(1, enterOpacityTransition);
+  }, [animateEnterOpacity, isReady, enterOpacityTransition, enterOpacity]);
+
+  const animateClip = animate && enterTransition !== null;
+
+  // The clip offset provides extra padding to prevent path from being cut off
+  // Area charts typically use offset=0 for exact clipping, while lines use offset=2 for breathing room
+  const totalOffset = clipOffset * 2; // Applied on both sides
+
+  // Animation progress for clip path reveal
+  const clipProgress = useSharedValue(animateClip ? 0 : 1);
+
+  useEffect(() => {
+    if (animateClip && isReady) {
+      clipProgress.value = buildTransition(1, enterTransition);
+    }
+  }, [animateClip, isReady, clipProgress, enterTransition]);
+
+  // Create initial and target clip paths for animation
+  const { initialClipPath, targetClipPath } = useMemo(() => {
+    if (!rect) return { initialClipPath: null, targetClipPath: null };
+
+    const categoryAxisIsX = context.layout !== 'horizontal';
+    const fullWidth = rect.width + totalOffset;
+    const fullHeight = rect.height + totalOffset;
+
+    // Initial clip path starts collapsed on the category axis.
+    const initial = Skia.Path.Make();
+    initial.addRect({
+      x: rect.x - clipOffset,
+      y: rect.y - clipOffset,
+      width: categoryAxisIsX ? 0 : fullWidth,
+      height: categoryAxisIsX ? fullHeight : 0,
+    });
+
+    // Target clip path is fully expanded.
+    const target = Skia.Path.Make();
+    target.addRect({
+      x: rect.x - clipOffset,
+      y: rect.y - clipOffset,
+      width: fullWidth,
+      height: fullHeight,
+    });
+
+    return { initialClipPath: initial, targetClipPath: target };
+  }, [rect, clipOffset, totalOffset, context.layout]);
+
+  // Use usePathInterpolation for animated clip path
+  const animatedClipPath = usePathInterpolation(
+    clipProgress,
+    [0, 1],
+    animateClip && initialClipPath && targetClipPath
+      ? [initialClipPath, targetClipPath]
+      : targetClipPath
+        ? [targetClipPath, targetClipPath]
+        : [Skia.Path.Make(), Skia.Path.Make()],
+  );
+
+  // Resolve the final clip path:
+  // 1. If clipPath prop was explicitly provided, use it (even if null = no clipping)
+  // 2. If animating, use the interpolated clip path
+  // 3. Otherwise, use static target clip path
+  const resolvedClipPath = useMemo(() => {
+    // If clipPath was explicitly provided (null or string), use it directly
+    if (clipPathProp !== undefined) {
+      return clipPathProp;
+    }
+
+    // If not animating or paths are null, return target clip path
+    if (!animateClip || !targetClipPath) {
+      return targetClipPath;
+    }
+
+    // Return undefined here since we'll use animatedClipPath directly
+    return undefined;
+  }, [clipPathProp, animateClip, targetClipPath]);
+
+  const content = (
+    <AnimatedPath
+      d={d}
+      fill={fill}
+      fillOpacity={fillOpacity}
+      initialPath={initialPath}
+      stroke={stroke}
+      strokeCap={strokeCap}
+      strokeJoin={strokeJoin}
+      strokeOpacity={strokeOpacity}
+      strokeWidth={strokeWidth}
+      transitions={{
+        enter: enterTransition,
+        update: updateTransition,
+      }}
+    >
+      {children}
+    </AnimatedPath>
+  );
+
+  // Determine which clip path to use
+  const finalClipPath =
+    animateClip && resolvedClipPath === undefined ? animatedClipPath : resolvedClipPath;
+
+  // If finalClipPath is null, render without clipping
+  if (finalClipPath === null) {
+    return <Group opacity={animateEnterOpacity ? enterOpacity : undefined}>{content}</Group>;
+  }
+
+  return (
+    <Group clip={finalClipPath} opacity={animateEnterOpacity ? enterOpacity : undefined}>
+      {content}
+    </Group>
+  );
+});
+
+// Non-animated path: skips the clip-reveal animation and uses a cheap rectangular clip.
+const StaticChartPath = memo<
+  Omit<PathProps, 'animate' | 'initialPath' | 'transition' | 'transitions'>
+>(
+  ({
+    clipRect,
+    clipPath: clipPathProp,
+    clipOffset = 0,
+    d = '',
+    fill,
+    fillOpacity,
+    stroke,
+    strokeOpacity,
+    strokeWidth,
+    strokeCap,
+    strokeJoin,
+    children,
+    ...pathProps
+  }) => {
+    const context = useCartesianChartContext();
+    const rect = clipRect ?? context.drawingArea;
+
+    // Derived (not memoized) so an animated `d` — e.g. a reference line — still tracks scrubbing.
+    const path = useDerivedValue(() => {
+      const dValue = unwrapAnimatedValue(d);
+      if (!dValue) return Skia.Path.Make();
+      return Skia.Path.MakeFromSVGString(dValue) ?? Skia.Path.Make();
+    }, [d]);
+
+    // Rect clip routes to canvas.clipRect (a cheap GPU scissor), not the anti-aliased path clip.
+    const clip = useMemo(() => {
+      if (clipPathProp !== undefined) return clipPathProp;
+      if (!rect) return null;
+      return {
+        x: rect.x - clipOffset,
+        y: rect.y - clipOffset,
+        width: rect.width + clipOffset * 2,
+        height: rect.height + clipOffset * 2,
+      };
+    }, [clipPathProp, rect, clipOffset]);
+
+    const isFilled = fill !== undefined && fill !== 'none';
+    const isStroked = stroke !== undefined && stroke !== 'none';
+
+    const content = (
+      <>
+        {isFilled && (
+          <SkiaPath color={fill} opacity={fillOpacity} path={path} style="fill" {...pathProps}>
+            {children}
+          </SkiaPath>
+        )}
+        {isStroked && (
+          <SkiaPath
+            color={stroke}
+            opacity={strokeOpacity}
+            path={path}
+            strokeCap={strokeCap}
+            strokeJoin={strokeJoin}
+            strokeWidth={strokeWidth}
+            style="stroke"
+            {...pathProps}
+          >
+            {children}
+          </SkiaPath>
+        )}
+      </>
+    );
+
+    if (clip === null) {
+      return <Group>{content}</Group>;
+    }
+
+    return <Group clip={clip}>{content}</Group>;
+  },
+);
+
+/**
+ * Renders a chart path. Delegates to a lightweight static renderer when the chart is not
+ * animating (no reanimated hooks, cheap rect clip) and to the animated renderer otherwise.
+ */
+export const Path = memo<PathProps>(
+  ({ animate: animateProp, initialPath, transition, transitions, ...staticProps }) => {
+    const context = useCartesianChartContext();
+    const animate = animateProp ?? context.animate;
+
+    if (animate) {
+      return (
+        <AnimatedChartPath
+          animate={animateProp}
+          initialPath={initialPath}
+          transition={transition}
+          transitions={transitions}
+          {...staticProps}
+        />
+      );
+    }
+
+    // Animation-only props are omitted from the static renderer.
+    return <StaticChartPath {...staticProps} />;
+  },
+);

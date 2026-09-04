@@ -1,0 +1,33 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { media } from '@coinbase/cds-web/styles/media';
+
+<MDXArticle>
+## Parameters
+
+The `useBreakpoints` hook does not accept any parameters. It must be used within a MediaQueryProvider component.
+
+</MDXArticle>
+
+<MDXArticle hideDivider>
+## Returns
+
+Returns an object with a boolean for each breakpoint of the window.
+
+- `isPhone`: {media.phone}
+- `isPhonePortrait`: {media.phonePortrait}
+- `isPhoneLandscape`: {media.phoneLandscape}
+- `isTablet`: {media.tablet}
+- `isTabletPortrait`: {media.tabletPortrait}
+- `isTabletLandscape`: {media.tabletLandscape}
+- `isDesktop`: {media.desktop}
+- `isDesktopSmall`: {media.desktopSmall}
+- `isDesktopLarge`: {media.desktopLarge}
+- `isExtraWide`: {media.extraWide}
+
+[See how breakpoints are defined in the `media` object &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/styles/media.ts)
+
+:::tip
+Multiple breakpoint values can be true at the same time.
+:::
+
+</MDXArticle>

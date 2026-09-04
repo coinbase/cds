@@ -1,0 +1,32 @@
+---
+id: numpad
+title: Numpad
+platform_switcher_options: { mobile: true }
+hide_title: true
+---
+
+import { ComponentHeader } from '@site/src/components/page/ComponentHeader';
+import { ComponentTabsContainer } from '@site/src/components/page/ComponentTabsContainer';
+
+import MobilePropsTable from './_mobilePropsTable.mdx';
+import mobilePropsToc from ':docgen/mobile/numpad/Numpad/toc-props';
+import MobileExamples, { toc as mobileExamplesToc } from './_mobileExamples.mdx';
+
+import { sharedParentTypes } from ':docgen/_types/sharedParentTypes';
+import { sharedTypeAliases } from ':docgen/_types/sharedTypeAliases';
+import { VStack } from '@coinbase/cds-web/layout';
+import mobileMetadata from './mobileMetadata.json';
+
+<VStack gap={5}>
+  <ComponentHeader
+    title="Numpad"
+    mobileMetadata={mobileMetadata}
+  />
+
+  <ComponentTabsContainer
+    mobilePropsTable={<MobilePropsTable />}
+    mobileExamples={<MobileExamples />}
+    mobileExamplesToc={mobileExamplesToc}
+    mobilePropsToc={mobilePropsToc}
+  />
+</VStack>

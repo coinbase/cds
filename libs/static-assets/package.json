@@ -1,0 +1,16 @@
+{
+  "name": "@coinbase/static-assets",
+  "version": "0.0.0",
+  "description": "Static assets upload for CDS",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "libs/static-assets"
+  },
+  "nx": {
+    "tags": [
+      "toolchain:node"
+    ]
+  }
+}

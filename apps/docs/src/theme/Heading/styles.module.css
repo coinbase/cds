@@ -1,0 +1,30 @@
+/*
+When the navbar is sticky, ensure that on anchor click,
+the browser does not scroll that anchor behind the navbar
+See https://x.com/JoshWComeau/status/1332015868725891076
+ */
+.anchorWithStickyNavbar {
+  scroll-margin-top: calc(
+    var(--ifm-navbar-height, 0px) + var(--tabs-wrapper-height, 0px) + var(--space-2)
+  );
+}
+
+.anchorWithHideOnScrollNavbar {
+  scroll-margin-top: calc(var(--tabs-wrapper-height) + var(--space-2));
+}
+
+:global(.hash-link) {
+  opacity: 0;
+  padding-left: 0.5rem;
+  transition: opacity var(--ifm-transition-fast);
+  user-select: none;
+}
+
+:global(.hash-link::before) {
+  content: '#';
+}
+
+:global(.hash-link:focus),
+:global(*:hover > .hash-link) {
+  opacity: 1;
+}

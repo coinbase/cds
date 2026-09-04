@@ -1,0 +1,28 @@
+{
+  "name": "next-app",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "node": "^22"
+  },
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@coinbase/cds-icons": "^5",
+    "@coinbase/cds-illustrations": "^4",
+    "@coinbase/cds-web": "^9",
+    "framer-motion": "^10",
+    "next": "15.4.8",
+    "react": "19.1.2",
+    "react-dom": "19.1.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "typescript": "~5.9.2"
+  }
+}

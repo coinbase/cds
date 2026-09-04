@@ -1,0 +1,134 @@
+### Global Warning Banner
+
+The global warning banner is used to communicate important alerts or warnings to users across the entire platform, ensuring universal visibility and building trust.
+
+```tsx
+<Banner
+  showDismiss
+  startIcon="warning"
+  startIconActive
+  styleVariant="global"
+  title="Some features are temporarily unavailable"
+  variant="warning"
+  primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+  secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+>
+  <Text font="label2">
+    Your funds are safe. We’re looking into it and expect our usual service to return soon.
+    <Link to="https://www.coinbase.com">Learn more</Link>
+  </Text>
+</Banner>
+```
+
+### In-line Error Banner
+
+The In-line Error Banner is used to display specific error messages directly beneath the relevant section headers. Use in-line banners to help users identify exactly where the error or outage is located.
+
+```tsx
+<Banner
+  startIcon="info"
+  startIconActive
+  styleVariant="inline"
+  title="Some features are temporarily unavailable"
+  variant="error"
+  primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+  secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+>
+  <Text font="label2">
+    Your funds are safe. We’re looking into it and expect our usual service to return soon.
+    <Link to="https://www.coinbase.com">Learn more</Link>
+  </Text>
+</Banner>
+```
+
+### Contextual Promotional Banner
+
+The Contextual Promotional Banner is used to highlight special offers, promotions, or announcements within a specific context or section of the platform. It is used to increase user engagement and drive conversions.
+
+```tsx
+<Banner
+  startIcon="info"
+  startIconActive
+  styleVariant="contextual"
+  title="Some features are temporarily unavailable"
+  variant="promotional"
+>
+  <Text font="label2">
+    Your funds are safe. We’re looking into it and expect our usual service to return soon.
+    <Link to="https://www.coinbase.com">Learn more</Link>
+  </Text>
+</Banner>
+```
+
+### In-line Informational Banner
+
+The in-line Informational Banner is used to provide users with additional information or helpful tips directly within the content or interface, providing relevant guidance.
+
+```tsx
+<VStack gap={2}>
+  <Banner
+    startIcon="info"
+    startIconActive
+    styleVariant="inline"
+    title="Some features are temporarily unavailable"
+    variant="informational"
+    primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+    secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+  >
+    <Text font="label2">
+      Your funds are safe. We’re looking into it and expect our usual service to return soon.
+      <Link to="https://www.coinbase.com">Learn more</Link>
+    </Text>
+  </Banner>
+  <Banner
+    startIcon="warning"
+    startIconActive
+    styleVariant="inline"
+    title="Some features are temporarily unavailable"
+    variant="warning"
+  >
+    <Text font="label2">
+      <Link to="https://www.coinbase.com">Retry</Link>
+    </Text>
+  </Banner>
+</VStack>
+```
+
+### Rounded Corner Banners
+
+Customize `borderRadius` to align contextual or in-line banners with surrounding surfaces.
+
+```tsx
+<VStack gap={2}>
+  <Banner
+    borderRadius={200}
+    startIcon="info"
+    startIconActive
+    styleVariant="contextual"
+    title="Rounded contextual banner"
+    variant="informational"
+  >
+    <Text font="label2">
+      Use moderate rounding to soften banners that live within card-based layouts.
+    </Text>
+  </Banner>
+  <Banner
+    borderRadius={400}
+    primaryAction={<Link to="https://www.coinbase.com">Primary</Link>}
+    secondaryAction={<Link to="https://www.coinbase.com">Secondary</Link>}
+    startIcon="info"
+    startIconActive
+    styleVariant="inline"
+    title="Rounded inline banner"
+    variant="promotional"
+  >
+    <Text font="label2">
+      Larger radii can help inline banners feel cohesive with pill-shaped buttons or chips nearby.
+    </Text>
+  </Banner>
+</VStack>
+```
+
+:::tip
+Avoid setting `borderRadius` for `styleVariant="global"` so the vertical status bar remains aligned.
+:::

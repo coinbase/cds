@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - master
+      - 'cds-v[0-9]*'
+      - 'release-[0-9]+.x'
+  pull_request:
+    branches:
+      - master
+      - 'cds-v[0-9]+'
+      - 'cds-v9-master'
+      - 'release-[0-9]+.x'
+
+concurrency:
+  group: CI-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
+  cancel-in-progress: ${{github.event_name == 'pull_request'}}
+
+permissions:
+  contents: read
+  actions: read
+
+jobs:
+  changes:
+    name: Classify Changes
+    runs-on: ubuntu-latest
+    outputs:
+      node: ${{ steps.toolchains.outputs.node }}
+      gradle: ${{ steps.toolchains.outputs.gradle }}
+      xcode: ${{ steps.toolchains.outputs.xcode }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+      - name: Validate Nx project tags
+        run: node tools/ci/validators/validateProjectTags.mjs
+      - name: Classify affected toolchains
+        id: toolchains
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+          FORCE_ALL: ${{ github.event_name == 'workflow_dispatch' }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: node tools/ci/classifyToolchains.mjs
+
+  node:
+    name: Node
+    needs: changes
+    if: needs.changes.outputs.node == 'true'
+    uses: ./.github/workflows/node.yml
+
+  android:
+    name: Android
+    needs: changes
+    if: needs.changes.outputs.gradle == 'true'
+    uses: ./.github/workflows/android.yml
+
+  ios:
+    name: iOS
+    needs: changes
+    if: needs.changes.outputs.xcode == 'true'
+    uses: ./.github/workflows/ios.yml

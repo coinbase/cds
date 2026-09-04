@@ -1,0 +1,7 @@
+:root {
+  /*
+   * Fontsource names its variable font "Inter Variable". Keep this override
+   * Storybook-only so CDS consumers continue to provide their own Inter font.
+   */
+  --defaultFont-sans: 'Inter Variable', sans-serif !important;
+}

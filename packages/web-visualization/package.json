@@ -1,0 +1,75 @@
+{
+  "name": "@coinbase/cds-web-visualization",
+  "version": "4.0.0",
+  "description": "Coinbase Design System - Web Sparkline",
+  "deprecated": "Use @coinbase/cds-web/visualizations/chart and @coinbase/cds-web/visualizations/sparkline instead.",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "packages/web-visualization"
+  },
+  "type": "module",
+  "main": "./esm/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./esm/index.js"
+    },
+    "./chart": {
+      "types": "./dts/chart/index.d.ts",
+      "default": "./esm/chart/index.js"
+    },
+    "./sparkline": {
+      "types": "./dts/sparkline/index.d.ts",
+      "default": "./esm/sparkline/index.js"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./esm/*.js"
+    }
+  },
+  "sideEffects": [
+    "*.css"
+  ],
+  "files": [
+    "dts",
+    "esm",
+    "CHANGELOG"
+  ],
+  "peerDependencies": {
+    "@coinbase/cds-common": "workspace:^",
+    "@coinbase/cds-lottie-files": "workspace:^",
+    "@coinbase/cds-utils": "workspace:^",
+    "@coinbase/cds-web": "workspace:^",
+    "framer-motion": "^10.18.0",
+    "react": "^18.0.0 || ~19.1.2",
+    "react-dom": "^18.0.0 || ~19.1.2"
+  },
+  "dependencies": {
+    "d3-color": "^3.1.0",
+    "d3-interpolate": "^3.0.1",
+    "d3-interpolate-path": "^2.3.0",
+    "d3-selection": "^3.0.0",
+    "d3-transition": "^3.0.1",
+    "lodash": "^4.17.21"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1",
+    "@coinbase/cds-common": "workspace:^",
+    "@coinbase/cds-lottie-files": "workspace:^",
+    "@coinbase/cds-utils": "workspace:^",
+    "@coinbase/cds-web": "workspace:^",
+    "@linaria/core": "^3.0.0-beta.22",
+    "@testing-library/react": "^16.3.2",
+    "@types/react": "19.1.2",
+    "@types/react-dom": "19.1.2",
+    "framer-motion": "^10.18.0",
+    "react": "19.1.2",
+    "react-dom": "19.1.2"
+  }
+}

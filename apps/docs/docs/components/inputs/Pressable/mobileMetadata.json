@@ -1,0 +1,16 @@
+{
+  "import": "import { Pressable } from '@coinbase/cds-mobile/system/Pressable'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/system/Pressable.tsx",
+  "description": "Extends the Interactable component to add accessibility support for press interactions.",
+  "relatedComponents": [
+    {
+      "label": "Interactable",
+      "url": "/components/inputs/Interactable/"
+    },
+    {
+      "label": "Button",
+      "url": "/components/inputs/Button/"
+    }
+  ],
+  "dependencies": []
+}

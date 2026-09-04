@@ -1,0 +1,45 @@
+{
+  "name": "@coinbase/docusaurus-plugin-kbar",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Docusaurus plugin for command bar",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:coinbase/cds.git",
+    "directory": "libs/docusaurus-plugin-kbar"
+  },
+  "type": "commonjs",
+  "main": "./cjs/index.js",
+  "types": "./dts/index.d.ts",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dts/index.d.ts",
+      "default": "./cjs/index.js"
+    },
+    "./*": {
+      "types": "./dts/*.d.ts",
+      "default": "./cjs/*.js"
+    }
+  },
+  "files": [
+    "cjs",
+    "dts",
+    "CHANGELOG"
+  ],
+  "dependencies": {
+    "@coinbase/cds-common": "workspace:^",
+    "@docusaurus/logger": "~3.7.0",
+    "@docusaurus/plugin-content-docs": "~3.7.0",
+    "@docusaurus/types": "~3.7.0",
+    "kbar": "^0.1.0-beta.45",
+    "lodash": "^4.17.21",
+    "type-fest": "^2.19.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.28.0",
+    "@babel/preset-env": "^7.28.0",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/preset-typescript": "^7.27.1"
+  }
+}

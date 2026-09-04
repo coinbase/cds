@@ -1,0 +1,62 @@
+{
+  "name": "web-visualization",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/web-visualization/src",
+  "projectType": "library",
+  "tags": [
+    "toolchain:node"
+  ],
+  "targets": {
+    "build": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx"
+        },
+        "prod": {
+          "commands": [
+            "rm -rf esm && babel ./src --out-dir esm --extensions .ts,.tsx,.js,.jsx"
+          ],
+          "parallel": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "jest --runInBand",
+        "cwd": "{projectRoot}"
+      }
+    },
+    "typecheck": {
+      "executor": "nx:run-commands",
+      "defaultConfiguration": "dev",
+      "configurations": {
+        "dev": {
+          "command": "tsc --build --pretty --verbose"
+        },
+        "prod": {
+          "commands": [
+            "tsc --build ./tsconfig.build.json --pretty --verbose",
+            "prettier ./dts --write --loglevel warn"
+          ],
+          "parallel": false
+        }
+      }
+    },
+    "report-disabled-eslint-rules": {
+      "executor": "@coinbase/prevent-eslint-disable:report"
+    },
+    "lint-styles": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "stylelint \"**/*.{css,ts,tsx,js,jsx}\" --formatter string",
+        "cwd": "{projectRoot}"
+      }
+    }
+  }
+}

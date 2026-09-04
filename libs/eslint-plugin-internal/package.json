@@ -1,0 +1,22 @@
+{
+  "name": "@coinbase/eslint-plugin-internal",
+  "private": true,
+  "version": "0.0.0",
+  "main": "src/index.mjs",
+  "type": "module",
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "default": "./src/index.mjs"
+    },
+    "./*": {
+      "default": "./src/*.mjs"
+    }
+  },
+  "devDependencies": {
+    "@typescript-eslint/rule-tester": "^8.29.0",
+    "@typescript-eslint/type-utils": "^8.29.0",
+    "@typescript-eslint/utils": "^8.29.0",
+    "typescript": "~5.9.2"
+  }
+}

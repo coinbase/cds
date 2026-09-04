@@ -1,0 +1,193 @@
+### Basic Usage
+
+Radio components are typically used individually as part of a radio group. Each radio represents a single option in a mutually exclusive set.
+
+```jsx
+function BasicRadio() {
+  const [selectedValue, setSelectedValue] = useState('option1');
+
+  return (
+    <VStack gap={2}>
+      <Radio
+        name="basic-radio"
+        value="option1"
+        checked={selectedValue === 'option1'}
+        onChange={(value) => setSelectedValue(value)}
+      >
+        Option 1
+      </Radio>
+      <Radio
+        name="basic-radio"
+        value="option2"
+        checked={selectedValue === 'option2'}
+        onChange={(value) => setSelectedValue(value)}
+      >
+        Option 2
+      </Radio>
+      <Radio
+        name="basic-radio"
+        value="option3"
+        checked={selectedValue === 'option3'}
+        onChange={(value) => setSelectedValue(value)}
+      >
+        Option 3
+      </Radio>
+    </VStack>
+  );
+}
+```
+
+### Radio Groups
+
+The recommended way to use Radio components is with a ControlGroup for better accessibility and easier state management.
+
+```jsx
+function RadioGroupExample() {
+  const options = [
+    { value: 'btc', children: 'Bitcoin' },
+    { value: 'eth', children: 'Ethereum' },
+    { value: 'ltc', children: 'Litecoin' },
+  ];
+
+  const [selectedCurrency, setSelectedCurrency] = useState('btc');
+
+  return (
+    <ControlGroup
+      accessibilityRole="radiogroup"
+      ControlComponent={Radio}
+      label="Choose a cryptocurrency"
+      options={options}
+      value={selectedCurrency}
+      onChange={setSelectedCurrency}
+      name="currency-radio-group"
+    />
+  );
+}
+```
+
+### Custom Colors
+
+You can customize the radio's color using the `controlColor` prop.
+
+```jsx
+function CustomColorRadio() {
+  const [selectedColor, setSelectedColor] = useState('default');
+
+  return (
+    <VStack gap={2}>
+      <Radio
+        name="color-radio"
+        value="default"
+        checked={selectedColor === 'default'}
+        onChange={(value) => setSelectedColor(value)}
+      >
+        Default Color
+      </Radio>
+      <Radio
+        name="color-radio"
+        value="green"
+        checked={selectedColor === 'green'}
+        onChange={(value) => setSelectedColor(value)}
+        controlColor="accentBoldGreen"
+      >
+        Custom Green
+      </Radio>
+      <Radio
+        name="color-radio"
+        value="purple"
+        checked={selectedColor === 'purple'}
+        onChange={(value) => setSelectedColor(value)}
+        controlColor="accentBoldPurple"
+      >
+        Custom Purple
+      </Radio>
+    </VStack>
+  );
+}
+```
+
+### Disabled State
+
+Radio components can be disabled to prevent user interaction.
+
+```jsx
+function DisabledRadio() {
+  const [selectedValue, setSelectedValue] = useState('enabled');
+
+  return (
+    <VStack gap={2}>
+      <Radio
+        name="disabled-radio"
+        value="enabled"
+        checked={selectedValue === 'enabled'}
+        onChange={(value) => setSelectedValue(value)}
+      >
+        Enabled Radio
+      </Radio>
+      <Radio
+        name="disabled-radio"
+        value="disabled-unchecked"
+        checked={false}
+        disabled
+        onChange={(value) => setSelectedValue(value)}
+      >
+        Disabled & Unchecked
+      </Radio>
+      <Radio
+        name="disabled-radio"
+        value="disabled-checked"
+        checked={true}
+        disabled
+        onChange={(value) => setSelectedValue(value)}
+      >
+        Disabled & Checked
+      </Radio>
+    </VStack>
+  );
+}
+```
+
+### Accessibility
+
+Radio components on mobile should always include proper accessibility labels and hints.
+
+```jsx
+function AccessibleRadio() {
+  const [selectedPayment, setSelectedPayment] = useState('credit');
+
+  return (
+    <VStack gap={2}>
+      <Radio
+        name="payment-radio"
+        value="credit"
+        checked={selectedPayment === 'credit'}
+        onChange={(value) => setSelectedPayment(value)}
+        accessibilityLabel="Credit Card"
+        accessibilityHint="Pay with credit card"
+      >
+        Credit Card
+      </Radio>
+      <Radio
+        name="payment-radio"
+        value="debit"
+        checked={selectedPayment === 'debit'}
+        onChange={(value) => setSelectedPayment(value)}
+        accessibilityLabel="Debit Card"
+        accessibilityHint="Pay with debit card"
+      >
+        Debit Card
+      </Radio>
+      <Radio
+        name="payment-radio"
+        value="crypto"
+        checked={selectedPayment === 'crypto'}
+        onChange={(value) => setSelectedPayment(value)}
+        accessibilityLabel="Cryptocurrency"
+        accessibilityHint="Pay with cryptocurrency"
+      >
+        Cryptocurrency
+      </Radio>
+    </VStack>
+  );
+}
+```

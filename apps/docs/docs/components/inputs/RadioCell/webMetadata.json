@@ -1,0 +1,27 @@
+{
+  "import": "import { RadioCell } from '@coinbase/cds-web/controls/RadioCell'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/controls/RadioCell.tsx",
+  "description": "A selectable cell that pairs a radio button with a title and description for single-choice selections.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-radiocell--default",
+  "figma": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/%E2%9C%A8-CDS-Components?node-id=54927-7435&t=bB42Gj18RZGeD6DD-4",
+  "relatedComponents": [
+    {
+      "label": "CheckboxCell",
+      "url": "/components/inputs/CheckboxCell/"
+    },
+    {
+      "label": "ControlGroup",
+      "url": "/components/inputs/ControlGroup/"
+    },
+    {
+      "label": "Radio",
+      "url": "/components/inputs/Radio/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

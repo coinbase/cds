@@ -1,0 +1,21 @@
+{
+  "import": "import { Point } from '@coinbase/cds-web/visualizations/chart'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/visualizations/chart/Point.tsx",
+  "description": "Visual markers that highlight specific data values on a chart. Points can be customized with different colors, sizes, and interactivity.",
+  "relatedComponents": [
+    {
+      "label": "CartesianChart",
+      "url": "/components/charts/CartesianChart/"
+    },
+    {
+      "label": "Scrubber",
+      "url": "/components/charts/Scrubber/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+Interactable components are simple elements that define background and border styles, both of which are used in determining state styles.
+
+### Hover and pressed states
+
+These states are rather complex as they are _not_ a simple color hexcode. Instead, we dynamically blend the background/foreground color with a chosen spectrum color, coupled with an opacity change, to determine the new state color.
+
+On mobile, stacked `View`s are used to achieve this.
+
+On web, combining `background-image`, `background-color`, and CSS variables are used to achieve this.
+
+```jsx
+<Interactable
+  background="bgAlternate"
+  borderColor="fgPositive"
+  borderWidth="button"
+  borderRadius={300}
+>
+  <Box as="span" padding={1}>
+    <Text font="headline" as="span">
+      Content goes here!
+    </Text>
+  </Box>
+</Interactable>
+```
+
+### Disabled states
+
+On both platforms, interactable elements have their opacity greatly reduced when disabled.
+
+```jsx
+<Interactable
+  disabled
+  background="bgAlternate"
+  borderColor="fgNegative"
+  borderWidth="button"
+  borderRadius={500}
+>
+  <Box as="span" padding={1}>
+    <Text font="headline" as="span">
+      Content goes here!
+    </Text>
+  </Box>
+</Interactable>
+```
+
+### Block Interactable
+
+Interactables expand to 100% width when the `block` prop is passed.
+
+```jsx
+<Interactable
+  block
+  background="bgAlternate"
+  borderColor="fgNegative"
+  borderWidth="button"
+  borderRadius={500}
+>
+  <Box as="span" padding={1}>
+    <Text font="headline" as="span">
+      Content goes here!
+    </Text>
+  </Box>
+</Interactable>
+```
+
+### A11y
+
+Since this component is low-level, it doesn't require much accessibility out of the box. Instead, accessibility should be applied when composing _with_ interactable. An example of this can be found in the [Pressable](/components/inputs/Pressable) component.

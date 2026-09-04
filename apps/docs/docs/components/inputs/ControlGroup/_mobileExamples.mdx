@@ -1,0 +1,324 @@
+### Checkbox Cell Group
+
+```tsx
+function CheckboxGroupExample() {
+  const [selected, setSelected] = useState(['one', 'four']);
+  return (
+    <VStack gap={2}>
+      <ControlGroup
+        label={<Text font="headline">Checkbox Group</Text>}
+        ControlComponent={CheckboxCell}
+        value={selected}
+        onChange={(value, checked) => {
+          setSelected((prev) => (checked ? [...prev, value] : prev.filter((v) => v !== value)));
+        }}
+        options={[
+          { value: 'one', title: 'Option 1', description: 'A description for the first option.' },
+          { value: 'two', title: 'Option 2', description: 'A description for the second option.' },
+          {
+            value: 'three',
+            title: 'Option 3',
+            description: 'This option is disabled.',
+            disabled: true,
+          },
+          {
+            value: 'four',
+            title: 'Option 4',
+            description: 'This option is read-only.',
+            readOnly: true,
+          },
+        ]}
+      />
+      <Text>Selected: {selected.join(', ')}</Text>
+    </VStack>
+  );
+}
+```
+
+### Radio Cell Group
+
+```tsx
+function RadioGroupExample() {
+  const [selected, setSelected] = useState('one');
+  return (
+    <VStack gap={2}>
+      <ControlGroup
+        label={<Text font="headline">Radio Group</Text>}
+        ControlComponent={RadioCell}
+        value={selected}
+        role="radiogroup"
+        onChange={(value) => setSelected(value)}
+        options={[
+          { value: 'one', title: 'Option 1', description: 'A description for the first option.' },
+          { value: 'two', title: 'Option 2', description: 'A description for the second option.' },
+          {
+            value: 'three',
+            title: 'Option 3',
+            description: 'This option is disabled.',
+            disabled: true,
+          },
+          {
+            value: 'four',
+            title: 'Option 4',
+            description: 'This option is read-only.',
+            readOnly: true,
+          },
+        ]}
+      />
+      <Text>Selected: {selected}</Text>
+    </VStack>
+  );
+}
+```
+
+### Checkbox
+
+```tsx
+function CheckboxExample() {
+  const [selected, setSelected] = useState(['one', 'four']);
+  return (
+    <VStack gap={2}>
+      <ControlGroup
+        label={<Text font="headline">Checkbox</Text>}
+        ControlComponent={Checkbox}
+        value={selected}
+        onChange={(value, checked) => {
+          setSelected((prev) => (checked ? [...prev, value] : prev.filter((v) => v !== value)));
+        }}
+        options={[
+          { value: 'one', label: 'Option 1' },
+          { value: 'two', label: 'Option 2' },
+          { value: 'three', label: 'Option 3 (disabled)', disabled: true },
+          { value: 'four', label: 'Option 4 (read-only)', readOnly: true },
+        ]}
+      />
+      <Text>Selected: {selected.join(', ')}</Text>
+    </VStack>
+  );
+}
+```
+
+### Radio
+
+```tsx
+function RadioExample() {
+  const [selected, setSelected] = useState('one');
+  return (
+    <VStack gap={2}>
+      <ControlGroup
+        label={<Text font="headline">Radio</Text>}
+        ControlComponent={Radio}
+        value={selected}
+        role="radiogroup"
+        onChange={(value) => setSelected(value)}
+        options={[
+          { value: 'one', label: 'Option 1' },
+          { value: 'two', label: 'Option 2' },
+          { value: 'three', label: 'Option 3 (disabled)', disabled: true },
+          { value: 'four', label: 'Option 4 (read-only)', readOnly: true },
+        ]}
+      />
+      <Text>Selected: {selected}</Text>
+    </VStack>
+  );
+}
+```
+
+### Switch
+
+```tsx
+function SwitchExample() {
+  const [selected, setSelected] = useState(['one', 'four']);
+  return (
+    <VStack gap={2}>
+      <ControlGroup
+        label={<Text font="headline">Switch</Text>}
+        ControlComponent={Switch}
+        value={selected}
+        onChange={(value, checked) => {
+          setSelected((prev) => (checked ? [...prev, value] : prev.filter((v) => v !== value)));
+        }}
+        options={[
+          { value: 'one', label: 'Option 1' },
+          { value: 'two', label: 'Option 2' },
+          { value: 'three', label: 'Option 3 (disabled)', disabled: true },
+          { value: 'four', label: 'Option 4 (read-only)', readOnly: true },
+        ]}
+      />
+      <Text>Selected: {selected.join(', ')}</Text>
+    </VStack>
+  );
+}
+```
+
+### Custom Card Toggle
+
+```tsx
+function CustomCardToggleExample() {
+  // Custom component that works with ControlGroup
+  const CustomCardToggle = ({
+    checked,
+    onChange,
+    disabled,
+    children,
+    value,
+    accessibilityLabel,
+    ...props
+  }) => {
+    return (
+      <Pressable
+        onPress={() => !disabled && onChange(value, !checked)}
+        disabled={disabled}
+        accessibilityLabel={accessibilityLabel || children}
+        accessibilityRole="checkbox"
+        accessibilityState={{ checked }}
+        {...props}
+      >
+        <Box
+          background={checked ? 'bgPositive' : 'bgSecondary'}
+          borderColor={checked ? 'bgPositive' : 'bgLineHeavy'}
+          borderWidth={100}
+          borderRadius={300}
+          padding={3}
+          opacity={disabled ? 0.6 : 1}
+        >
+          <HStack gap={2} alignItems="center">
+            <Box
+              width={20}
+              height={20}
+              borderRadius={1000}
+              background={checked ? 'bg' : 'bgLineHeavy'}
+              alignItems="center"
+              justifyContent="center"
+            >
+              {checked && (
+                <Text color="fgPositive" font="body">
+                  ✓
+                </Text>
+              )}
+            </Box>
+            <Text color={checked ? 'fgInverse' : 'fg'} font="body">
+              {children}
+            </Text>
+          </HStack>
+        </Box>
+      </Pressable>
+    );
+  };
+
+  const [selected, setSelected] = useState(['premium']);
+  return (
+    <VStack gap={2}>
+      <ControlGroup
+        label={<Text font="headline">Custom Card Toggle</Text>}
+        ControlComponent={CustomCardToggle}
+        value={selected}
+        onChange={(value, checked) => {
+          setSelected((prev) => (checked ? [...prev, value] : prev.filter((v) => v !== value)));
+        }}
+        options={[
+          { value: 'basic', label: 'Basic Plan' },
+          { value: 'premium', label: 'Premium Plan' },
+          { value: 'enterprise', label: 'Enterprise Plan' },
+          { value: 'custom', label: 'Custom Plan (disabled)', disabled: true },
+        ]}
+      />
+      <Text>Selected: {selected.join(', ')}</Text>
+    </VStack>
+  );
+}
+```
+
+### Custom Radio Button
+
+```tsx
+function CustomRadioButtonExample() {
+  // Custom radio component with enhanced styling
+  const CustomRadioButton = ({
+    checked,
+    onChange,
+    disabled,
+    children,
+    value,
+    accessibilityLabel,
+    ...props
+  }) => {
+    const getDescription = (val) => {
+      switch (val) {
+        case 'starter':
+          return 'Perfect for beginners';
+        case 'professional':
+          return 'For growing businesses';
+        case 'enterprise':
+          return 'For large organizations';
+        default:
+          return '';
+      }
+    };
+
+    return (
+      <Pressable
+        onPress={() => !disabled && onChange(value)}
+        disabled={disabled}
+        accessibilityLabel={accessibilityLabel || children}
+        accessibilityRole="radio"
+        accessibilityState={{ checked }}
+        {...props}
+      >
+        <Box
+          background={checked ? 'accentBoldBlue' : 'bg'}
+          borderColor={checked ? 'accentBoldBlue' : 'bgLineHeavy'}
+          borderWidth={200}
+          borderRadius={200}
+          padding={3}
+          opacity={disabled ? 0.6 : 1}
+        >
+          <HStack gap={3} alignItems="center">
+            <Box
+              width={24}
+              height={24}
+              borderRadius={1000}
+              background={checked ? 'bg' : 'transparent'}
+              borderWidth={checked ? 0 : 200}
+              borderColor="bgLineHeavy"
+              alignItems="center"
+              justifyContent="center"
+            >
+              {checked && (
+                <Box width={12} height={12} borderRadius={1000} background="accentBoldBlue" />
+              )}
+            </Box>
+            <VStack gap={0} alignItems="flex-start">
+              <Text color={checked ? 'fgInverse' : 'fg'} font="body">
+                {children}
+              </Text>
+              <Text color={checked ? 'fgInverse' : 'fgMuted'} font="caption">
+                {getDescription(value)}
+              </Text>
+            </VStack>
+          </HStack>
+        </Box>
+      </Pressable>
+    );
+  };
+
+  const [selected, setSelected] = useState('professional');
+  return (
+    <VStack gap={2}>
+      <ControlGroup
+        label={<Text font="headline">Custom Radio Button</Text>}
+        ControlComponent={CustomRadioButton}
+        value={selected}
+        accessibilityRole="radiogroup"
+        onChange={(value) => setSelected(value)}
+        options={[
+          { value: 'starter', label: 'Starter' },
+          { value: 'professional', label: 'Professional' },
+          { value: 'enterprise', label: 'Enterprise' },
+        ]}
+      />
+      <Text>Selected: {selected}</Text>
+    </VStack>
+  );
+}
+```

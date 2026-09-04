@@ -1,0 +1,12 @@
+{
+  "import": "import { ThemeProvider } from '@coinbase/cds-mobile'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/system/ThemeProvider.tsx",
+  "description": "Provides the theme context to all child components.",
+  "relatedComponents": [
+    {
+      "label": "useTheme",
+      "url": "/hooks/useTheme/"
+    }
+  ],
+  "dependencies": []
+}

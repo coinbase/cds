@@ -1,0 +1,64 @@
+---
+id: colors
+title: Colors
+hide_title: true
+---
+
+import { VStack } from '@coinbase/cds-web/layout';
+import { ContentHeader } from '@site/src/components/page/ContentHeader';
+import { MDXSection } from '@site/src/components/page/MDXSection';
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+import { ColorSchemeProvider } from '@site/src/components/page/ColorSheet/ColorSchemeProvider';
+import { ColorSwatchGrid } from '@site/src/components/page/ColorSheet/ColorSwatchGrid';
+import { SpectrumGrid } from '@site/src/components/page/ColorSheet/SpectrumGrid';
+
+<VStack gap={5}>
+<ContentHeader
+  title="Colors"
+  description="The default CDS theme ships two sets of color values: semantic color tokens (used by components) and the raw color spectrum (the underlying palette)."
+/>
+
+<MDXSection>
+<MDXArticle>
+
+## Color Tokens
+
+Semantic tokens like `bgPrimary` or `fgMuted` automatically adapt to the active color scheme. Use these tokens when styling components so that light and dark mode work without any extra code.
+
+<ColorSchemeProvider>
+  <ColorSwatchGrid />
+</ColorSchemeProvider>
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Color Spectrum
+
+The full color palette available in the default theme, organized by family (rows) and step 0–100 (columns). Hover any swatch to see its name.
+
+<ColorSchemeProvider>
+  <SpectrumGrid />
+</ColorSchemeProvider>
+
+</MDXArticle>
+</MDXSection>
+
+<MDXSection>
+<MDXArticle>
+
+## Accessibility
+
+Every designer and engineer should uphold WCAG AA 2.1 accessibility standards. Using CDS, especially for color, gets you 90% of the way there!
+
+### Key concepts to know
+
+**Text contrast (4.5:1)** — Any text displayed on interfaces should follow a 4.5:1 color contrast between the text color and background.
+
+**Non-text contrast (3:1)** — Any graphical objects such as icons, or any shape that provides understanding like the stroke of a text input, must meet a 3:1 color contrast between the element color and its background.
+
+</MDXArticle>
+</MDXSection>
+</VStack>

@@ -1,0 +1,14 @@
+{
+  "import": "import { RollingNumber } from '@coinbase/cds-web/numbers/RollingNumber'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/numbers/RollingNumber/RollingNumber.tsx",
+  "description": "A numeric display that animates value changes with rolling digits.",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-rollingnumber--examples",
+  "figma": "",
+  "relatedComponents": [],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

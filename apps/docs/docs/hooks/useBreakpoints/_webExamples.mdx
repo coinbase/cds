@@ -1,0 +1,25 @@
+import { MDXArticle } from '@site/src/components/page/MDXArticle';
+
+<MDXArticle>
+## Basic usage
+
+Use the `useBreakpoints` hook to conditionally render components or component trees based on the current window breakpoint.
+
+[See how breakpoints are defined in the `media` object &rarr;](https://github.com/coinbase/cds/blob/master/packages/web/src/styles/media.ts)
+
+:::warning
+Do not use `useBreakpoints` for responsive styles. Use CSS media queries or [the `StyleProps` API](/getting-started/styling#responsive-styles) for responsive styles.
+:::
+
+```tsx live
+() => {
+  const breakpoints = useBreakpoints();
+  return (
+    <pre style={{ fontFamily: 'monospace', whiteSpace: 'pre-wrap' }}>
+      {JSON.stringify(breakpoints, null, 2)}
+    </pre>
+  );
+};
+```
+
+  </MDXArticle>

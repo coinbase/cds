@@ -1,0 +1,452 @@
+---
+# Publishes @coinbase/* packages to public npm registry (https://registry.npmjs.org).
+name: Publish Packages to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      packages:
+        description: >-
+          Comma-separated list of packages to publish. Leave empty to auto-detect
+          and publish only packages with new versions not yet on npm.
+        required: false
+        type: string
+      dry-run:
+        description: 'Run in dry-run mode (no actual publishing)'
+        required: true
+        type: boolean
+        default: false
+  push:
+    branches:
+      - master
+      - 'release-[0-9]+.x'
+    paths:
+      - 'packages/*/package.json'
+  pull_request:
+    paths:
+      - 'packages/*/package.json'
+
+permissions:
+  contents: read
+
+jobs:
+  # Determine which packages to build/publish
+  detect-changes:
+    # Skip on branch creation (e.g. cutting a new release-N.x branch). GitHub
+    # treats every file as changed on first push, so the paths filter above
+    # would match even though no new commits have landed on the branch yet.
+    if: ${{ !github.event.created }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    outputs:
+      packages: ${{ steps.packages.outputs.packages }}
+      has-changes: ${{ steps.packages.outputs.has-changes }}
+      skip-version-check: ${{ steps.packages.outputs.skip-version-check }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+      - uses: ./.github/actions/setup-node-ci
+
+      - name: Determine packages to publish
+        id: packages
+        run: |
+          # Define all publishable packages (those with publish.Dockerfile
+          # and not private: true)
+          ALL_PACKAGES="common,eslint-plugin-cds,icons,illustrations,lottie-files,mcp-server,migrator,mobile,mobile-visualization,utils,web,web-visualization"
+
+          # Function to convert comma-separated list to JSON array
+          csv_to_json() {
+            local csv="$1"
+            if [ -z "$csv" ]; then
+              echo "[]"
+              return
+            fi
+
+            # Split by comma and build JSON array properly
+            echo -n "["
+            local first=true
+            IFS=',' read -ra PACKAGES <<< "$csv"
+            for pkg in "${PACKAGES[@]}"; do
+              # Trim whitespace
+              pkg=$(echo "$pkg" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+              if [ -n "$pkg" ]; then
+                if [ "$first" = true ]; then
+                  first=false
+                else
+                  echo -n ","
+                fi
+                echo -n "\"$pkg\""
+              fi
+            done
+            echo "]"
+          }
+
+          # Function to validate package names
+          validate_packages() {
+            local csv="$1"
+            local invalid=""
+            IFS=',' read -ra PACKAGES <<< "$csv"
+            for pkg in "${PACKAGES[@]}"; do
+              pkg=$(echo "$pkg" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+              if [ -n "$pkg" ] && ! echo "$ALL_PACKAGES" | \
+                 grep -q "\b$pkg\b"; then
+                if [ -z "$invalid" ]; then
+                  invalid="$pkg"
+                else
+                  invalid="$invalid, $pkg"
+                fi
+              fi
+            done
+            echo "$invalid"
+          }
+
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            if [ -n "${{ github.event.inputs.packages }}" ]; then
+              PACKAGES="${{ github.event.inputs.packages }}"
+
+              # Validate input packages
+              INVALID=$(validate_packages "$PACKAGES")
+              if [ -n "$INVALID" ]; then
+                echo "::error::Invalid package names: $INVALID"
+                echo "::error::Valid packages are: $ALL_PACKAGES"
+                exit 1
+              fi
+              # User specified packages - skip version check
+              echo "skip-version-check=true" >> $GITHUB_OUTPUT
+            else
+              PACKAGES="$ALL_PACKAGES"
+              echo "skip-version-check=false" >> $GITHUB_OUTPUT
+            fi
+            PACKAGES_JSON=$(csv_to_json "$PACKAGES")
+            echo "packages=$PACKAGES_JSON" >> $GITHUB_OUTPUT
+            echo "has-changes=true" >> $GITHUB_OUTPUT
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            # For pushes to master, detect which package.json files changed
+            CHANGED_PACKAGES=""
+            echo "Detecting package.json changes in push to master..."
+            for pkg in $(echo $ALL_PACKAGES | tr ',' '\n'); do
+              if git diff --name-only HEAD~1 HEAD | \
+                 grep -q "^packages/$pkg/package.json$"; then
+                if [ -z "$CHANGED_PACKAGES" ]; then
+                  CHANGED_PACKAGES="$pkg"
+                else
+                  CHANGED_PACKAGES="$CHANGED_PACKAGES,$pkg"
+                fi
+              fi
+            done
+
+            PACKAGES_JSON=$(csv_to_json "$CHANGED_PACKAGES")
+            echo "packages=$PACKAGES_JSON" >> $GITHUB_OUTPUT
+            echo "skip-version-check=false" >> $GITHUB_OUTPUT
+
+            if [ -n "$CHANGED_PACKAGES" ]; then
+              echo "has-changes=true" >> $GITHUB_OUTPUT
+            else
+              echo "has-changes=false" >> $GITHUB_OUTPUT
+            fi
+          else
+            # For PRs, detect changed packages using NX_BASE or fallback
+            CHANGED_PACKAGES=""
+            BASE_REF="${NX_BASE:-origin/${{ github.base_ref }}}"
+            echo "Using base reference: $BASE_REF"
+            for pkg in $(echo $ALL_PACKAGES | tr ',' '\n'); do
+              if git diff --name-only $BASE_REF...HEAD | \
+                 grep -q "^packages/$pkg/"; then
+                if [ -z "$CHANGED_PACKAGES" ]; then
+                  CHANGED_PACKAGES="$pkg"
+                else
+                  CHANGED_PACKAGES="$CHANGED_PACKAGES,$pkg"
+                fi
+              fi
+            done
+
+            PACKAGES_JSON=$(csv_to_json "$CHANGED_PACKAGES")
+            echo "packages=$PACKAGES_JSON" >> $GITHUB_OUTPUT
+            echo "skip-version-check=false" >> $GITHUB_OUTPUT
+
+            if [ -n "$CHANGED_PACKAGES" ]; then
+              echo "has-changes=true" >> $GITHUB_OUTPUT
+            else
+              echo "has-changes=false" >> $GITHUB_OUTPUT
+            fi
+          fi
+
+  # Dry run publish (for PRs and manual dry-run)
+  dry-run-publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.has-changes == 'true' &&
+      needs.detect-changes.outputs.packages != '[]' &&
+      (github.event_name == 'pull_request' ||
+       github.event.inputs.dry-run == 'true')
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.detect-changes.outputs.packages) }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: ./.github/actions/setup-node-ci
+
+      - name: Update npm
+        run: |
+          # Pinned: Node 22.22.2's bundled npm breaks `npm i -g npm@latest` (promise-retry).
+          # See https://github.com/npm/cli/issues/9151 and https://github.com/nodejs/node/issues/62425
+          npm install -g npm@11.11.0
+
+      - name: Check if version exists on npm
+        id: version-check
+        run: |
+          cd packages/${{ matrix.package }}
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+
+          echo "📦 Checking $PACKAGE_NAME@$PACKAGE_VERSION"
+
+          # Skip version check if packages were manually specified
+          if [ "${{ needs.detect-changes.outputs.skip-version-check }}" = "true" ]; then
+            echo "🔧 Manual package selection - skipping npm version check"
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+          # Check if this version already exists on npm
+          elif npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>/dev/null; then
+            echo "⏭️  Version $PACKAGE_VERSION already exists on npm, skipping publish"
+            echo "should-publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Version $PACKAGE_VERSION not found on npm, proceeding with publish"
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build package
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: |
+          echo "🔍 Running typecheck for ${{ matrix.package }}..."
+          yarn nx run ${{ matrix.package }}:typecheck
+          echo "🏗️ Building ${{ matrix.package }}..."
+          yarn nx run ${{ matrix.package }}:build
+          echo "✅ Build completed for ${{ matrix.package }}"
+
+      - name: Dry run publish
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: |
+          cd packages/${{ matrix.package }}
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          CURRENT_BRANCH="${{ github.base_ref || github.ref_name }}"
+          NPM_TAG_ARGS=()
+
+          if echo "$CURRENT_BRANCH" | grep -qE '^release-[0-9]+\.x$'; then
+            MAJOR=$(echo "$CURRENT_BRANCH" | sed -E 's/release-([0-9]+)\.x/\1/')
+            NPM_TAG="v${MAJOR}-lts"
+            echo "🏷️  Dry run publishing from ${CURRENT_BRANCH}, using dist-tag: ${NPM_TAG}"
+            NPM_TAG_ARGS=(--tag "$NPM_TAG")
+          elif echo "$PACKAGE_VERSION" | grep -qE '\-'; then
+            PRERELEASE_TAG=$(echo "$PACKAGE_VERSION" | sed -E 's/.*-([^.]+).*/\1/')
+            echo "🏷️  Dry run detected prerelease version, using dist-tag: $PRERELEASE_TAG"
+            NPM_TAG_ARGS=(--tag "$PRERELEASE_TAG")
+          else
+            echo "🏷️  Dry run publishing as latest"
+          fi
+
+          npm publish --dry-run --access public \
+            "${NPM_TAG_ARGS[@]}" \
+            --registry https://registry.npmjs.org
+          echo "✅ Dry run successful for ${{ matrix.package }}"
+
+  # Actual publish (push to master or manual trigger, not dry-run)
+  publish:
+    runs-on: ubuntu-latest
+    needs: detect-changes
+    if: |
+      needs.detect-changes.outputs.has-changes == 'true' &&
+      needs.detect-changes.outputs.packages != '[]' &&
+      (github.event_name == 'push' ||
+       (github.event_name == 'workflow_dispatch' &&
+        github.event.inputs.dry-run != 'true'))
+    environment: production
+    permissions:
+      contents: read
+      actions: read
+      id-token: write
+    strategy:
+      matrix:
+        package: ${{ fromJson(needs.detect-changes.outputs.packages) }}
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      - uses: ./.github/actions/setup-node-ci
+
+      - name: Update npm
+        run: |
+          # Pinned: Node 22.22.2's bundled npm breaks `npm i -g npm@latest` (promise-retry).
+          # See https://github.com/npm/cli/issues/9151 and https://github.com/nodejs/node/issues/62425
+          npm install -g npm@11.11.0
+
+      - name: Check if version exists on npm
+        id: version-check
+        run: |
+          cd packages/${{ matrix.package }}
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+
+          echo "📦 Checking $PACKAGE_NAME@$PACKAGE_VERSION"
+
+          # Skip version check if packages were manually specified
+          if [ "${{ needs.detect-changes.outputs.skip-version-check }}" = "true" ]; then
+            echo "🔧 Manual package selection - skipping npm version check"
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+          # Check if this version already exists on npm
+          elif npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>/dev/null; then
+            echo "⏭️  Version $PACKAGE_VERSION already exists on npm, skipping publish"
+            echo "should-publish=false" >> $GITHUB_OUTPUT
+          else
+            echo "✅ Version $PACKAGE_VERSION not found on npm, proceeding with publish"
+            echo "should-publish=true" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Build package
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: |
+          echo "🔍 Running typecheck for ${{ matrix.package }}..."
+          yarn nx run ${{ matrix.package }}:typecheck:prod
+          echo "🏗️ Building ${{ matrix.package }}..."
+          yarn nx run ${{ matrix.package }}:build:prod
+          echo "✅ Build completed for ${{ matrix.package }}"
+          if [ "${{ matrix.package }}" = "mcp-server" ]; then
+            echo "🔍 Generating MCP docs for ${{ matrix.package }}..."
+            yarn nx run ${{ matrix.package }}:generate-mcp-docs
+            echo "✅ MCP docs generated for ${{ matrix.package }}"
+          fi
+
+      - name: Publish package
+        if: steps.version-check.outputs.should-publish == 'true'
+        run: |
+          cd packages/${{ matrix.package }}
+          echo "📦 Packing ${{ matrix.package }}..."
+          yarn pack
+          echo "🚀 Publishing ${{ matrix.package }} to NPM..."
+
+          # Safety check: verify package.json exists and has correct name
+          if [ ! -f "package.json" ]; then
+            echo "::error::Missing package.json in ${{ matrix.package }}"
+            exit 1
+          fi
+
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "📦 Package name from package.json: $PACKAGE_NAME"
+          echo "📦 Package version: $PACKAGE_VERSION"
+
+          # Determine dist-tag:
+          #   release-N.x branch → --tag vN-lts (e.g. release-8.x → --tag v8-lts)
+          #   prerelease version  → --tag <prerelease> (e.g. 1.0.0-beta.1 → --tag beta)
+          #   master              → no --tag flag (publishes as latest)
+          CURRENT_BRANCH="${{ github.ref_name }}"
+          if echo "$CURRENT_BRANCH" | grep -qE '^release-[0-9]+\.x$'; then
+            MAJOR=$(echo "$CURRENT_BRANCH" | sed -E 's/release-([0-9]+)\.x/\1/')
+            NPM_TAG="v${MAJOR}-lts"
+            echo "🏷️  Publishing from ${CURRENT_BRANCH}, using dist-tag: ${NPM_TAG}"
+            npm publish ./package.tgz --access public \
+              --tag "$NPM_TAG" \
+              --registry https://registry.npmjs.org
+          elif echo "$PACKAGE_VERSION" | grep -qE '\-'; then
+            # Extract prerelease tag (e.g., "beta" from "1.0.0-beta.1")
+            PRERELEASE_TAG=$(echo "$PACKAGE_VERSION" | sed -E 's/.*-([^.]+).*/\1/')
+            echo "🏷️  Detected prerelease version, using dist-tag: $PRERELEASE_TAG"
+            npm publish ./package.tgz --access public \
+              --tag "$PRERELEASE_TAG" \
+              --registry https://registry.npmjs.org
+          else
+            echo "🏷️  Publishing as latest"
+            npm publish ./package.tgz --access public \
+              --registry https://registry.npmjs.org
+          fi
+          echo "✅ Successfully published ${{ matrix.package }} ($PACKAGE_NAME@$PACKAGE_VERSION)"
+
+  # Summary job
+  summary:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      actions: read
+    needs: [detect-changes, dry-run-publish, publish]
+    if: always() && needs.detect-changes.outputs.has-changes == 'true'
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - name: Publish Summary
+        run: |
+          echo "## Publishing Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          PKG_VAR='${{ needs.detect-changes.outputs.packages }}'
+          PACKAGES_LIST=$(echo "$PKG_VAR" | \
+            sed 's/\[//g' | sed 's/\]//g' | sed 's/"//g')
+          echo "**Packages:** $PACKAGES_LIST" >> $GITHUB_STEP_SUMMARY
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            MODE="Dry Run (PR)"
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            MODE="Live Publish (PR merged to master)"
+          elif [ "${{ github.event.inputs.dry-run }}" = "true" ]; then
+            MODE="Dry Run (Manual)"
+          else
+            MODE="Live Publish (Manual)"
+          fi
+          echo "**Mode:** $MODE" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.dry-run-publish.result }}" = "success" ]; then
+            echo "✅ Dry run publish: **PASSED**" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.dry-run-publish.result }}" = "skipped" ]; then
+            echo "⏭️ Dry run publish: **SKIPPED**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Dry run publish: **FAILED**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ "${{ needs.publish.result }}" = "success" ]; then
+            echo "✅ Live publish: **PASSED**" >> $GITHUB_STEP_SUMMARY
+          elif [ "${{ needs.publish.result }}" = "skipped" ]; then
+            echo "⏭️ Live publish: **SKIPPED**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ Live publish: **FAILED**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+  notify-slack:
+    name: Notify Slack
+    runs-on: ubuntu-latest
+    needs: [detect-changes, dry-run-publish, publish]
+    if: >-
+      always() &&
+      vars.SLACK_PUBLISH_ALERTS_ENABLED == 'true' &&
+      (github.event_name == 'push' ||
+      (github.event_name == 'workflow_dispatch' &&
+      github.event.inputs.dry-run != 'true')) &&
+      (needs.detect-changes.result == 'failure' ||
+      needs.publish.result == 'failure')
+    steps:
+      - name: Post failure to Slack
+        uses: slackapi/slack-github-action@007b2c3c751a190b6f0f040e47ed024deaa72844 # v1.23.0
+        with:
+          payload: |
+            {
+              "username": "CDS Publish",
+              "text": ":red_circle: Failed to publish NPM packages, <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|see details here>.\ncc @design-systems-oncall"
+            }
+        env:
+          # Accessible from https://api.slack.com/apps
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
