@@ -1,6 +1,10 @@
 import { describe, expect, it } from '@jest/globals';
 
-import { classifyToolchains, validateProjectToolchainTags } from './toolchains.mjs';
+import {
+  classifyToolchains,
+  selectRootFormatFiles,
+  validateProjectToolchainTags,
+} from './toolchains.mjs';
 
 const projects = [
   { root: 'packages/web', tags: ['toolchain:node'] },
@@ -8,6 +12,7 @@ const projects = [
   { root: 'packages/cds-android', tags: ['toolchain:gradle'] },
   { root: 'apps/android-app', tags: ['toolchain:gradle'] },
   { root: 'packages/cds-ios', tags: ['toolchain:xcode'] },
+  { root: 'tools', tags: ['toolchain:node'] },
 ];
 
 describe('classifyToolchains', () => {
@@ -16,6 +21,7 @@ describe('classifyToolchains', () => {
       node: true,
       gradle: false,
       xcode: false,
+      docs: false,
     });
   });
 
@@ -24,6 +30,7 @@ describe('classifyToolchains', () => {
       node: false,
       gradle: true,
       xcode: false,
+      docs: false,
     });
   });
 
@@ -32,6 +39,7 @@ describe('classifyToolchains', () => {
       node: false,
       gradle: false,
       xcode: true,
+      docs: false,
     });
   });
 
@@ -45,14 +53,16 @@ describe('classifyToolchains', () => {
       node: true,
       gradle: true,
       xcode: false,
+      docs: false,
     });
   });
 
-  it('routes shared Nx configuration changes to every toolchain', () => {
+  it('routes shared Nx configuration changes to every language toolchain', () => {
     expect(classifyToolchains(['nx.json'], projects)).toEqual({
       node: true,
       gradle: true,
       xcode: true,
+      docs: false,
     });
   });
 
@@ -71,7 +81,112 @@ describe('classifyToolchains', () => {
       node: false,
       gradle: true,
       xcode: false,
+      docs: false,
     });
+  });
+
+  it('does not start Node for an Android change that also edits skills and AGENTS.md', () => {
+    expect(
+      classifyToolchains(
+        [
+          'AGENTS.md',
+          '.claude/skills/cds-rn-to-compose/SKILL.md',
+          'packages/cds-android/src/main/java/com/coinbase/cds/components/button/Button.kt',
+          'packages/cds-android/docs/button.md',
+        ],
+        projects,
+      ),
+    ).toEqual({
+      node: false,
+      gradle: true,
+      xcode: false,
+      docs: true,
+    });
+  });
+
+  it('does not treat unmatched documentation and skill files as Node', () => {
+    expect(
+      classifyToolchains(
+        [
+          'AGENTS.md',
+          'docs/ci.md',
+          '.claude/skills/cds-rn-to-compose/SKILL.md',
+          '.claude/skills/cds-rn-to-compose/evals/evals.json',
+          'skills/cds-code/SKILL.md',
+        ],
+        projects,
+      ),
+    ).toEqual({
+      node: false,
+      gradle: false,
+      xcode: false,
+      docs: true,
+    });
+  });
+
+  it('still classifies root Node config files as Node', () => {
+    expect(classifyToolchains(['package.json', 'eslint.config.mjs'], projects)).toEqual({
+      node: true,
+      gradle: false,
+      xcode: false,
+      docs: false,
+    });
+  });
+
+  it('runs docs format for markdown inside native projects without starting Node', () => {
+    expect(classifyToolchains(['packages/cds-android/docs/button.md'], projects)).toEqual({
+      node: false,
+      gradle: true,
+      xcode: false,
+      docs: true,
+    });
+  });
+
+  it('does not start Format Docs for markdown inside Node projects', () => {
+    expect(classifyToolchains(['packages/web/README.md'], projects)).toEqual({
+      node: true,
+      gradle: false,
+      xcode: false,
+      docs: false,
+    });
+  });
+
+  it('does not start a language toolchain for vendored skill references', () => {
+    expect(
+      classifyToolchains(
+        ['.claude/skills/jetpack-best-practices/references/compose-api-guidelines.md'],
+        projects,
+      ),
+    ).toEqual({
+      node: false,
+      gradle: false,
+      xcode: false,
+      docs: false,
+    });
+  });
+});
+
+describe('selectRootFormatFiles', () => {
+  it('selects leftover docs, skills, and native-package markdown', () => {
+    expect(
+      selectRootFormatFiles(
+        [
+          'AGENTS.md',
+          '.claude/skills/cds-rn-to-compose/SKILL.md',
+          '.claude/skills/cds-rn-to-compose/evals/evals.json',
+          'packages/cds-android/docs/button.md',
+          'packages/web/src/Button.tsx',
+          'packages/web/README.md',
+          '.claude/skills/cds-rn-to-compose/references/learnings.md',
+        ],
+        projects,
+      ),
+    ).toEqual([
+      'AGENTS.md',
+      '.claude/skills/cds-rn-to-compose/SKILL.md',
+      '.claude/skills/cds-rn-to-compose/evals/evals.json',
+      'packages/cds-android/docs/button.md',
+    ]);
   });
 });
 

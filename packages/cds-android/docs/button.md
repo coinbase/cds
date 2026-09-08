@@ -19,13 +19,13 @@ radius, and typography from the ambient theme automatically.
 
 The Android API is intentionally narrower than React Native in a few places:
 
-| Mobile (RN) | Android CDS | Notes |
-| ----------- | ------------- | ----- |
-| `children` (any React node) | `text: String` | Label text only; matches the iOS native API shape |
-| `start` / `end` slots | `startIcon` / `endIcon` only | Generic node slots are not supported yet |
-| `block` / `fullWidth` | `Modifier.fillMaxWidth()` | Layout is caller-controlled via [modifier] |
-| `style` / color overrides | — | Re-theme via [cdsTheme](custom-themes.md) |
-| Deprecated props (`compact`, `foregroundMuted`, …) | — | Omitted by design |
+| Mobile (RN)                                        | Android CDS                  | Notes                                             |
+| -------------------------------------------------- | ---------------------------- | ------------------------------------------------- |
+| `children` (any React node)                        | `text: String`               | Label text only; matches the iOS native API shape |
+| `start` / `end` slots                              | `startIcon` / `endIcon` only | Generic node slots are not supported yet          |
+| `block` / `fullWidth`                              | `Modifier.fillMaxWidth()`    | Layout is caller-controlled via [modifier]        |
+| `style` / color overrides                          | —                            | Re-theme via [cdsTheme](custom-themes.md)         |
+| Deprecated props (`compact`, `foregroundMuted`, …) | —                            | Omitted by design                                 |
 
 ## Variants and sizes
 

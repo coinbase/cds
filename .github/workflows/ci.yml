@@ -30,6 +30,7 @@ jobs:
       node: ${{ steps.toolchains.outputs.node }}
       gradle: ${{ steps.toolchains.outputs.gradle }}
       xcode: ${{ steps.toolchains.outputs.xcode }}
+      docs: ${{ steps.toolchains.outputs.docs }}
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -47,6 +48,23 @@ jobs:
           FORCE_ALL: ${{ github.event_name == 'workflow_dispatch' }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: node tools/ci/classifyToolchains.mjs
+
+  format-docs:
+    name: Format Docs
+    needs: changes
+    if: needs.changes.outputs.docs == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 100
+      - uses: ./.github/actions/setup-node-ci
+      - name: Format docs
+        run: node tools/ci/checkRootFormat.mjs
 
   node:
     name: Node
