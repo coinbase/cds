@@ -36,6 +36,7 @@ android {
             // no-opping. Tracing is the only Android surface the token layer reaches, so letting
             // the stubs return defaults is enough to run it on the JVM -- no Robolectric needed.
             isReturnDefaultValues = true
+            isIncludeAndroidResources = true
         }
     }
     publishing {
@@ -92,9 +93,11 @@ dependencies {
     api(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.animation.core)
 
-    // JUnit alone. Theme behavior -- inheritance through nested providers, scheme inversion --
-    // exists only inside a composition, but nothing about it needs Android or a UI tree, so the
-    // tests host a composition on `androidx.compose.runtime` directly rather than pulling in
-    // Robolectric and the UI-test artifacts. See `HeadlessComposition.kt`.
+    // Theme tests still use the headless runtime harness (`HeadlessComposition.kt`). Component
+    // behavior uses the standard Compose UI Test + Robolectric JVM stack.
     testImplementation(libs.junit)
+    testImplementation(libs.robolectric)
+    testImplementation(platform(libs.androidx.compose.bom))
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 }
