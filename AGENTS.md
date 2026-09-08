@@ -87,6 +87,7 @@ defaults remain Node-oriented, and [`docs/`](docs/README.md) for setup and CI ar
   [`packages/cds-ios/AGENTS.md`](packages/cds-ios/AGENTS.md).
 - Load the `jetpack-best-practices` skill when writing Compose.
 - Load the `swiftui-best-practices` skill when writing SwiftUI or migrating a RN component to `packages/cds-ios`.
+- Load the `cds-rn-to-compose` skill when porting mobile components to `packages/cds-android` or auditing Android/mobile parity.
 - Do not copy package-local consumer or release rules into this root file.
 
 ## Skills
