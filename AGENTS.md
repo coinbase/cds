@@ -43,7 +43,8 @@ After writing code, validate the smallest relevant scope:
   `yarn nx format:write`
 - Gradle: run the changed project's `test` and `build` targets; Prettier does not format Kotlin
 - Xcode: run `cds-ios:test` and the changed project's `build` target; Prettier does not format Swift
-- Documentation only: run `yarn nx format:write` and verify changed commands and links
+- Documentation only: run `yarn nx format:write` and verify changed commands and links.
+  Markdown and skill files are formatted by a dedicated CI job, not Node.
 
 See [`docs/testing.md`](docs/testing.md) for exact commands.
 
