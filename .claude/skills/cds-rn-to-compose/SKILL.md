@@ -26,9 +26,9 @@ Port **product behavior and visual design** from `packages/mobile` into native C
 
 Determine what the user needs before writing code:
 
-| Mode | Trigger | Output |
-|------|---------|--------|
-| **Port** | "Port X to Android", "implement X in cds-android" | Discovery notes → implementation → tests → gallery → docs |
+| Mode      | Trigger                                                 | Output                                                        |
+| --------- | ------------------------------------------------------- | ------------------------------------------------------------- |
+| **Port**  | "Port X to Android", "implement X in cds-android"       | Discovery notes → implementation → tests → gallery → docs     |
 | **Audit** | "Review the Android port", "is X done?", "parity check" | Structured audit report using `references/audit-checklist.md` |
 
 Default to **Port** when building; switch to **Audit** when reviewing existing Kotlin without a clear build ask.
@@ -45,16 +45,16 @@ Produce a short discovery artifact (markdown in the PR or a comment). Use `refer
 
 For component `<Name>` in `packages/mobile/src/.../<Name>.tsx`:
 
-| Artifact | Path pattern | Why |
-|----------|--------------|-----|
-| Implementation | `packages/mobile/src/**/<Name>.tsx` | Props, behavior, composition |
-| Base props / types | `packages/common/src/types/*<Name>*` | Shared contract, deprecations |
-| Tokens | `packages/common/src/tokens/<name>.ts` | Values to hand-port |
-| Stories | `packages/mobile/src/**/__stories__/<Name>.stories.tsx` | Variant matrix, edge cases |
-| Tests | `packages/mobile/src/**/__tests__/<Name>.test.tsx` | Behavior worth preserving |
-| Interactable | `packages/mobile/src/styles/getInteractableStyles.ts`, `system/Interactable.tsx`, `system/Pressable.tsx` | Press/hover/focus/disabled |
-| iOS parity (optional) | `packages/cds-ios/Sources/Components/<Name>.swift` | Prior native decisions |
-| Existing Android | `packages/cds-android/src/main/java/com/coinbase/cds/components/**` | POC or partial port |
+| Artifact              | Path pattern                                                                                             | Why                           |
+| --------------------- | -------------------------------------------------------------------------------------------------------- | ----------------------------- |
+| Implementation        | `packages/mobile/src/**/<Name>.tsx`                                                                      | Props, behavior, composition  |
+| Base props / types    | `packages/common/src/types/*<Name>*`                                                                     | Shared contract, deprecations |
+| Tokens                | `packages/common/src/tokens/<name>.ts`                                                                   | Values to hand-port           |
+| Stories               | `packages/mobile/src/**/__stories__/<Name>.stories.tsx`                                                  | Variant matrix, edge cases    |
+| Tests                 | `packages/mobile/src/**/__tests__/<Name>.test.tsx`                                                       | Behavior worth preserving     |
+| Interactable          | `packages/mobile/src/styles/getInteractableStyles.ts`, `system/Interactable.tsx`, `system/Pressable.tsx` | Press/hover/focus/disabled    |
+| iOS parity (optional) | `packages/cds-ios/Sources/Components/<Name>.swift`                                                       | Prior native decisions        |
+| Existing Android      | `packages/cds-android/src/main/java/com/coinbase/cds/components/**`                                      | POC or partial port           |
 
 Search deprecations: grep `@deprecated` on props/types in mobile and common. **Do not port deprecated props** — document what was skipped and why.
 
@@ -112,12 +112,12 @@ Answer explicitly in the discovery artifact:
 
 CDS components ship opinionated visual defaults from tokens. Callers override layout and extension points without a parallel RN `style` / `styles` API:
 
-| RN pattern | Compose pattern |
-|------------|-----------------|
+| RN pattern             | Compose pattern                                                                                         |
+| ---------------------- | ------------------------------------------------------------------------------------------------------- |
 | `style` / `styles.foo` | `modifier` for layout; optional parameters only where product requires (e.g. `transparent`, `maxLines`) |
-| `block` / `fullWidth` | Document `Modifier.fillMaxWidth()` — no width prop |
-| Theme colors | `CdsTheme.colors.*`, `CdsTheme.space.*`, etc. via `LocalCdsTheme` (see [Theming](#theming)) |
-| Custom interactable | `CdsInteractionDefaults.indication()` / `indication(shape)` |
+| `block` / `fullWidth`  | Document `Modifier.fillMaxWidth()` — no width prop                                                      |
+| Theme colors           | `CdsTheme.colors.*`, `CdsTheme.space.*`, etc. via `LocalCdsTheme` (see [Theming](#theming))             |
+| Custom interactable    | `CdsInteractionDefaults.indication()` / `indication(shape)`                                             |
 
 Extract pure resolvers (e.g. `resolveButtonColors()`) into testable functions in a `*Style.kt` file. **Do not use the alpha Compose Styles API** — keep a migration seam (`*Style.kt`, `CdsInteractionDefaults`) so Styles can replace internals later without public API churn.
 
@@ -139,15 +139,15 @@ For every port, classify interactions before wiring modifiers.
 
 ### Step 1 — Inventory (from RN source)
 
-| Kind | RN signals | Compose wiring |
-|------|------------|----------------|
-| Press / tap | `Pressable`, `onPress`, `onClick` | `Modifier.clickable` |
-| Long press | `onLongPress` | `combinedClickable` |
-| Toggle / select | `selected`, checkbox patterns | `toggleable` / `selectable` |
-| Hover | `Interactable`, hover styles | `hoverable` (desktop/emulator) |
-| Keyboard focus | focus styles, `accessible` | `focusable` + `CdsInteractionDefaults.indication` |
-| Drag | `draggable`, gestures | `draggable` / gesture APIs |
-| Scroll | `ScrollView` children | parent scroll; semantics for accessibility |
+| Kind            | RN signals                        | Compose wiring                                    |
+| --------------- | --------------------------------- | ------------------------------------------------- |
+| Press / tap     | `Pressable`, `onPress`, `onClick` | `Modifier.clickable`                              |
+| Long press      | `onLongPress`                     | `combinedClickable`                               |
+| Toggle / select | `selected`, checkbox patterns     | `toggleable` / `selectable`                       |
+| Hover           | `Interactable`, hover styles      | `hoverable` (desktop/emulator)                    |
+| Keyboard focus  | focus styles, `accessible`        | `focusable` + `CdsInteractionDefaults.indication` |
+| Drag            | `draggable`, gestures             | `draggable` / gesture APIs                        |
+| Scroll          | `ScrollView` children             | parent scroll; semantics for accessibility        |
 
 ### Step 2 — Produce events for customers
 
@@ -229,12 +229,12 @@ yarn nx run cds-android:build
 
 ### What to test (high value)
 
-| Layer | Tool | Examples |
-|-------|------|----------|
-| Pure resolvers | JUnit | `resolveButtonColors`, `resolveCdsInteractionVisualState` priority |
-| Composition & behavior | Robolectric + `createComposeRule()` | click invokes callback, disabled blocks click, semantics |
+| Layer                  | Tool                                     | Examples                                                               |
+| ---------------------- | ---------------------------------------- | ---------------------------------------------------------------------- |
+| Pure resolvers         | JUnit                                    | `resolveButtonColors`, `resolveCdsInteractionVisualState` priority     |
+| Composition & behavior | Robolectric + `createComposeRule()`      | click invokes callback, disabled blocks click, semantics               |
 | Interaction production | Robolectric + `MutableInteractionSource` | press emits `PressInteraction.Press`; add when component hoists source |
-| Icon slots | Capture lambda args | tint Color and size Dp passed to slots |
+| Icon slots             | Capture lambda args                      | tint Color and size Dp passed to slots                                 |
 
 ### What not to over-test
 
@@ -285,14 +285,14 @@ Skip one-off component trivia that does not generalize (e.g. "Chip uses `radius4
 
 ### What to update (by scope)
 
-| Scope | Where | Example |
-|-------|-------|---------|
-| Single port gotcha, not yet validated | `references/learnings.md` | "Outlined variants need border token even when transparent" |
-| Repeatable RN → Compose translation | `references/rn-to-compose-mapping.md` | New row in interaction or styling table |
-| Audit criterion | `references/audit-checklist.md` | New checkbox after a recurring gap |
-| Workflow step or rule | `SKILL.md` | New phase sub-step, verification item |
-| Best reference implementation | [Example section](#example-button-reference-implementation) | Point to the newest high-quality port |
-| Shared infrastructure | `packages/cds-android/docs/`, `AGENTS.md` | Interaction docs, public API list |
+| Scope                                 | Where                                                       | Example                                                     |
+| ------------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
+| Single port gotcha, not yet validated | `references/learnings.md`                                   | "Outlined variants need border token even when transparent" |
+| Repeatable RN → Compose translation   | `references/rn-to-compose-mapping.md`                       | New row in interaction or styling table                     |
+| Audit criterion                       | `references/audit-checklist.md`                             | New checkbox after a recurring gap                          |
+| Workflow step or rule                 | `SKILL.md`                                                  | New phase sub-step, verification item                       |
+| Best reference implementation         | [Example section](#example-button-reference-implementation) | Point to the newest high-quality port                       |
+| Shared infrastructure                 | `packages/cds-android/docs/`, `AGENTS.md`                   | Interaction docs, public API list                           |
 
 **Promotion path:** log in `learnings.md` first → after the pattern appears in **two or more** ports (or one port + one audit), promote it into `SKILL.md` or a reference file → trim the learning entry to point at the promoted location.
 
@@ -326,24 +326,31 @@ When reviewing an existing port, read the RN discovery sources again and walk `r
 # <Component> Android port audit
 
 ## Summary
+
 [Pass / gaps / recommendations]
 
 ## API parity
+
 | RN prop | Android | Status | Notes |
 
 ## Deprecations correctly omitted
+
 ...
 
 ## Interactions
+
 ...
 
 ## Tokens & visuals
+
 ...
 
 ## Tests
+
 ...
 
 ## Docs & demo
+
 ...
 ```
 
@@ -374,13 +381,13 @@ Before marking a port complete:
 
 ## Reference files
 
-| File | When to read |
-|------|----------------|
-| `references/learnings.md` | **Every port/audit** — accumulated gotchas; append after each port |
-| `references/discovery-template.md` | Starting a new port |
-| `references/rn-to-compose-mapping.md` | Translating RN concepts |
-| `references/audit-checklist.md` | Auditing a port |
-| `references/compose-docs.md` | Official Android doc links |
+| File                                  | When to read                                                       |
+| ------------------------------------- | ------------------------------------------------------------------ |
+| `references/learnings.md`             | **Every port/audit** — accumulated gotchas; append after each port |
+| `references/discovery-template.md`    | Starting a new port                                                |
+| `references/rn-to-compose-mapping.md` | Translating RN concepts                                            |
+| `references/audit-checklist.md`       | Auditing a port                                                    |
+| `references/compose-docs.md`          | Official Android doc links                                         |
 
 ## Example: Button (reference implementation)
 
