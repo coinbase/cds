@@ -5,6 +5,8 @@ Guides for teams building Android apps on the Coinbase Design System.
 | Guide                                       | Read it when                                                                                                                   |
 | ------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ |
 | [Using theme tokens](using-tokens.md)       | You're building UI on CDS: reading tokens in a composable, and carrying them through your own state and logic. **Start here.** |
+| [Button](button.md)                         | You're using the CDS call-to-action control: variants, sizes, states, icon slots, and layout.                                  |
+| [Interaction affordances](interaction.md)   | You're building a custom interactive composable that should match CDS press/hover/focus behavior.                              |
 | [Creating a custom theme](custom-themes.md) | You want CDS components to render in your brand's colors, spacing, type, or shape.                                             |
 | [Theme token reference](token-reference.md) | You need the full list of token names, or the default values behind them.                                                      |
 | [Publishing a version](releasing.md)        | You're cutting a GitHub Release of the AAR: version bump, changelog, build, and `gh release create`. Maintainers only.         |
