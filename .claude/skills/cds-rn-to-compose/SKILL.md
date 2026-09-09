@@ -69,9 +69,10 @@ Answer explicitly in the discovery artifact:
 5. **Interactions** — Press, long-press, hover, focus, drag, toggle? See [Interaction analysis](#interaction-analysis)
 6. **States** — enabled, loading, selected, error, transparent overlays?
 7. **Accessibility** — roles, content descriptions, loading/disabled semantics, live regions
-8. **Tokens** — Map each visual value to `CdsTheme.*`; resolve via `LocalCdsTheme` / `CdsThemeProvider`, not props. Note gaps vs `@coinbase/cds-common`
-9. **Out of scope** — `useComponentConfig`, haptics, debounce, `wrapperStyles`, RN-only style props
-10. **Reuse** — Can `CdsInteractionDefaults`, internal `Text`, or another CDS component be composed?
+8. **Test IDs** — RN `testID` on root → caller `Modifier.testTag`; Maestro needs `testTagsAsResourceId` at app root. See `references/ui-testing.md`
+9. **Tokens** — Map each visual value to `CdsTheme.*`; resolve via `LocalCdsTheme` / `CdsThemeProvider`, not props. Note gaps vs `@coinbase/cds-common`
+10. **Out of scope** — `useComponentConfig`, haptics, debounce, `wrapperStyles`, RN-only style props
+11. **Reuse** — Can `CdsInteractionDefaults`, internal `Text`, or another CDS component be composed?
 
 ---
 
@@ -212,6 +213,21 @@ Follow [Compose accessibility](https://developer.android.com/develop/ui/compose/
 - Loading: indeterminate progress + retain text label in semantics
 - Merge descendants only when it improves screen reader experience
 
+### Test IDs (Compose UI Test + Maestro)
+
+RN `testID` maps to **`modifier = Modifier.testTag("…")`** on the component root — do not add a separate `testID` parameter. Full rules: `references/ui-testing.md`.
+
+| Tool | How callers tag | How tests select |
+| ---- | --------------- | ---------------- |
+| Robolectric / `createComposeRule` | `modifier.testTag("confirm")` | `onNodeWithTag("confirm")` |
+| Maestro (black-box) | same `testTag` on composables | `tapOn: { id: "confirm" }` **after** app enables `Modifier.semantics { testTagsAsResourceId = true }` once near the root |
+
+**Maestro selector priority** ([Jetpack Compose guide](https://docs.maestro.dev/get-started/supported-platform/android/jetpack)): prefer visible **text**, then **accessibility description** (`contentDescription`), then **`id`** (`testTag`) for duplicates, lists, or visreg anchors.
+
+- Apply caller `modifier` on the **outermost interactive node** so tags share semantics with `role` and gestures.
+- `semantics(mergeDescendants = true)` hides nested `testTag`s — do not rely on child tags inside merged subtrees.
+- Tag gallery navigation and one instance per representative state (`gallery-button-loading`, etc.) for future visreg/Maestro flows; keep library components free of app-specific ids.
+
 ### Internal composition
 
 Prefer existing internal CDS pieces (`Text`, etc.) over duplicating typography. Keep internal components `internal` until promoted deliberately.
@@ -233,6 +249,7 @@ yarn nx run cds-android:build
 | ---------------------- | ---------------------------------------- | ---------------------------------------------------------------------- |
 | Pure resolvers         | JUnit                                    | `resolveButtonColors`, `resolveCdsInteractionVisualState` priority     |
 | Composition & behavior | Robolectric + `createComposeRule()`      | click invokes callback, disabled blocks click, semantics               |
+| Test tags              | Robolectric + `onNodeWithTag`              | caller `Modifier.testTag` on root is queryable                         |
 | Interaction production | Robolectric + `MutableInteractionSource` | press emits `PressInteraction.Press`; add when component hoists source |
 | Icon slots             | Capture lambda args                      | tint Color and size Dp passed to slots                                 |
 
@@ -253,6 +270,9 @@ Add or extend a gallery section in `apps/android-app`:
 - All variants, sizes, states (disabled, loading, transparent)
 - Icon slots, full width via `Modifier.fillMaxWidth()`, truncation
 - Interactive demo (click counter) where relevant
+- Stable `Modifier.testTag` on navigation chrome and representative demo instances (`gallery-*`) for visreg and Maestro — see `references/ui-testing.md`
+
+Ensure `apps/android-app` enables `testTagsAsResourceId` at the activity root so Maestro can use `id:` selectors.
 
 The demo app is a **consumer** — if it needs a non-public API, fix the API design instead of widening visibility.
 
@@ -367,6 +387,7 @@ Before marking a port complete:
 - [ ] All visuals from `CdsTheme` tokens via `LocalCdsTheme` (no hard-coded design values; no theme props)
 - [ ] Interactions classified; gesture modifiers match; `interactionSource` hoisted if observable
 - [ ] Accessibility: roles, disabled, loading semantics
+- [ ] Test IDs: RN `testID` documented as `Modifier.testTag`; Robolectric `onNodeWithTag` test; gallery tags for Maestro/visreg
 - [ ] Pure style resolvers unit-tested
 - [ ] Robolectric behavior tests for callbacks and semantics
 - [ ] Interaction event tests when component hoists `MutableInteractionSource`
@@ -388,6 +409,7 @@ Before marking a port complete:
 | `references/rn-to-compose-mapping.md` | Translating RN concepts                                            |
 | `references/audit-checklist.md`       | Auditing a port                                                    |
 | `references/compose-docs.md`          | Official Android doc links                                         |
+| `references/ui-testing.md`            | Maestro + Compose UI Test tags, selector priority, gallery naming  |
 
 ## Example: Button (reference implementation)
 

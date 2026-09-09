@@ -78,6 +78,17 @@ fun ComponentName(
 | disabled | | block input | `disabled()` |
 | loading | | block input | progress + label |
 
+## Test IDs
+
+| RN | Android CDS | Notes |
+|----|-------------|-------|
+| `testID` on root | `modifier = Modifier.testTag("…")` | No dedicated prop |
+| Maestro `id:` | same tag + app `testTagsAsResourceId` | See `references/ui-testing.md` |
+
+**Maestro selector plan:** text match / `description` / `id` for each critical flow?
+
+**Gallery tags:** stable `gallery-*` ids for visreg anchors?
+
 ## Token mapping
 
 | Visual property | cds-common token | CdsTheme accessor | Delivery |

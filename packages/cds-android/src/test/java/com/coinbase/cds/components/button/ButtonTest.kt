@@ -144,6 +144,22 @@ class ButtonTest {
     }
 
     @Test
+    fun callerTestTagIsQueryable() {
+        composeRule.setContent {
+            CdsThemeProvider(theme = CdsDefaultTheme, colorScheme = CdsColorScheme.Light) {
+                Button(
+                    text = "Confirm",
+                    onClick = {},
+                    modifier = Modifier.testTag("confirm-button"),
+                )
+            }
+        }
+
+        composeRule.onNodeWithTag("confirm-button").assertIsDisplayed()
+        composeRule.onNodeWithText("Confirm").assertIsDisplayed()
+    }
+
+    @Test
     fun callerModifierFillMaxWidthIsRespected() {
         composeRule.setContent {
             CdsThemeProvider(theme = CdsDefaultTheme, colorScheme = CdsColorScheme.Light) {

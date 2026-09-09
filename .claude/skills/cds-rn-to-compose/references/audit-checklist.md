@@ -88,9 +88,20 @@ Reference: https://developer.android.com/develop/ui/compose/accessibility
 - [ ] `yarn nx run cds-android:test` passes
 - [ ] Pure resolver tests for colors/metrics/state priority
 - [ ] Robolectric + Compose UI tests for behavior (click, disabled, semantics)
+- [ ] Caller `Modifier.testTag` queryable via `onNodeWithTag` (RN `testID` parity)
 - [ ] Interaction event tests when `MutableInteractionSource` is hoisted
 - [ ] Tests focus on regressions, not exhaustive variant grids
 - [ ] No tests that only assert framework defaults
+
+Reference: `references/ui-testing.md`, [Maestro Jetpack Compose](https://docs.maestro.dev/get-started/supported-platform/android/jetpack)
+
+## 8b. UI testing hooks
+
+- [ ] No dedicated `testID` prop — tags via `modifier.testTag` on root
+- [ ] Maestro selector priority documented: text → description → id
+- [ ] `apps/android-app` enables `testTagsAsResourceId` at activity root
+- [ ] Gallery uses stable `gallery-*` tags on navigation and representative states
+- [ ] `mergeDescendants` does not block intended tag placement
 
 **Anti-patterns:**
 

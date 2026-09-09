@@ -6,33 +6,26 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBarsPadding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicText
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import com.coinbase.cds.androidapp.gallery.ButtonGallerySection
+import com.coinbase.cds.androidapp.gallery.ButtonGalleryScreen
 import com.coinbase.cds.androidapp.gallery.CdsThemeGallery
+import com.coinbase.cds.androidapp.gallery.ComponentGalleryScreen
+import com.coinbase.cds.androidapp.gallery.GalleryRoute
+import com.coinbase.cds.androidapp.gallery.HomeGalleryScreen
 import com.coinbase.cds.androidapp.theme.AcmeTheme
-import com.coinbase.cds.components.button.Button
-import com.coinbase.cds.components.button.ButtonVariant
 import com.coinbase.cds.theme.CdsColorScheme
 import com.coinbase.cds.theme.CdsDefaultTheme
 import com.coinbase.cds.theme.CdsTheme
@@ -45,28 +38,30 @@ class MainActivity : ComponentActivity() {
         setContent {
             var darkTheme by remember { mutableStateOf(false) }
             var customBrand by remember { mutableStateOf(false) }
-            var showGallery by remember { mutableStateOf(false) }
+            var route by remember { mutableStateOf<GalleryRoute>(GalleryRoute.Home) }
 
-            val theme: CdsTheme = if (customBrand) AcmeTheme else CdsDefaultTheme
+            val theme = if (customBrand) AcmeTheme else CdsDefaultTheme
             val colorScheme = if (darkTheme) CdsColorScheme.Dark else CdsColorScheme.Light
 
-            BackHandler(enabled = showGallery) { showGallery = false }
+            BackHandler(enabled = route != GalleryRoute.Home) {
+                route = GalleryRoute.Home
+            }
 
             CdsThemeProvider(theme = theme, colorScheme = colorScheme) {
-                if (showGallery) {
-                    CdsThemeGallery(
-                        theme = theme,
-                        colorScheme = colorScheme,
-                        modifier = Modifier.fillMaxSize(),
-                        onBack = { showGallery = false },
-                    )
-                } else {
-                    CdsSampleScreen(
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .semantics { testTagsAsResourceId = true },
+                ) {
+                    GalleryApp(
+                        route = route,
+                        onRouteChange = { route = it },
                         darkTheme = darkTheme,
                         onToggleDarkTheme = { darkTheme = !darkTheme },
                         customBrand = customBrand,
                         onToggleBrand = { customBrand = !customBrand },
-                        onShowGallery = { showGallery = true },
+                        theme = theme,
+                        colorScheme = colorScheme,
                     )
                 }
             }
@@ -75,140 +70,87 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun CdsSampleScreen(
+private fun GalleryApp(
+    route: GalleryRoute,
+    onRouteChange: (GalleryRoute) -> Unit,
     darkTheme: Boolean,
     onToggleDarkTheme: () -> Unit,
     customBrand: Boolean,
     onToggleBrand: () -> Unit,
-    onShowGallery: () -> Unit,
+    theme: com.coinbase.cds.theme.CdsTheme,
+    colorScheme: CdsColorScheme,
     modifier: Modifier = Modifier,
 ) {
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-            .background(CdsTheme.colors.bg)
-            .systemBarsPadding()
-            .padding(CdsTheme.space.x3),
-    ) {
-        Column(
-            modifier = Modifier.verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(CdsTheme.space.x2),
-        ) {
-            SampleText(
-                text = "Coinbase Design System",
-                style = CdsTheme.typography.title1,
-            )
-            SampleText(
-                text = "Jetpack Compose port of the default theme.",
-                style = CdsTheme.typography.body,
-                color = CdsTheme.colors.fgMuted,
-            )
+    when (route) {
+        GalleryRoute.Home -> HomeGalleryScreen(
+            darkTheme = darkTheme,
+            onToggleDarkTheme = onToggleDarkTheme,
+            customBrand = customBrand,
+            onToggleBrand = onToggleBrand,
+            onOpenThemeTokens = { onRouteChange(GalleryRoute.ThemeTokens) },
+            onOpenComponent = { onRouteChange(GalleryRoute.Component(it)) },
+            modifier = modifier,
+        )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(CdsTheme.borderRadius.radius400))
-                    .background(CdsTheme.colors.bgSecondary)
-                    .padding(CdsTheme.space.x2),
-            ) {
-                Column(verticalArrangement = Arrangement.spacedBy(CdsTheme.space.x1_5)) {
-                    SampleText(
-                        text = "Primary action surface",
-                        style = CdsTheme.typography.headline,
-                    )
-                    SampleText(
-                        text = "This card's colors, spacing, corner radius, and type all come " +
-                            "from CdsTheme.",
-                        style = CdsTheme.typography.body,
-                        color = CdsTheme.colors.fgMuted,
-                    )
-                    Button(
-                        text = if (darkTheme) "Switch to light theme" else "Switch to dark theme",
-                        onClick = onToggleDarkTheme,
-                        modifier = Modifier.fillMaxWidth(),
-                    )
-                    Button(
-                        text = if (customBrand) {
-                            "Switch to default CDS theme"
-                        } else {
-                            "Switch to Acme brand theme"
-                        },
-                        onClick = onToggleBrand,
-                        modifier = Modifier.fillMaxWidth(),
-                        variant = ButtonVariant.Tertiary,
-                    )
-                    SampleText(
-                        text = "View theme gallery",
-                        style = CdsTheme.typography.headline,
-                        color = CdsTheme.colors.fgPrimary,
-                        modifier = Modifier
-                            .clickable(onClick = onShowGallery)
-                            .padding(vertical = CdsTheme.space.x0_5),
-                    )
-                }
-            }
+        GalleryRoute.ThemeTokens -> CdsThemeGallery(
+            theme = theme,
+            colorScheme = colorScheme,
+            modifier = modifier
+                .fillMaxSize()
+                .testTag("gallery-destination-theme-tokens"),
+            onBack = { onRouteChange(GalleryRoute.Home) },
+        )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(CdsTheme.borderRadius.radius400))
-                    .background(CdsTheme.colors.bgSecondary)
-                    .padding(CdsTheme.space.x2),
-            ) {
-                ButtonGallerySection()
-            }
-        }
-    }
-}
-
-@Composable
-private fun SampleText(
-    text: String,
-    style: TextStyle,
-    modifier: Modifier = Modifier,
-    color: Color = CdsTheme.colors.fg,
-) {
-    BasicText(text = text, modifier = modifier, style = style.copy(color = color))
-}
-
-@Preview(showBackground = true)
-@Composable
-fun CdsSampleScreenLightPreview() {
-    CdsThemeProvider(theme = CdsDefaultTheme, colorScheme = CdsColorScheme.Light) {
-        CdsSampleScreen(
-            darkTheme = false,
-            onToggleDarkTheme = {},
-            customBrand = false,
-            onToggleBrand = {},
-            onShowGallery = {},
+        is GalleryRoute.Component -> ComponentGalleryScreen(
+            destination = route.destination,
+            onBack = { onRouteChange(GalleryRoute.Home) },
+            onNavigateToComponent = { onRouteChange(GalleryRoute.Component(it)) },
+            modifier = modifier,
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun CdsSampleScreenDarkPreview() {
+fun HomeGalleryScreenLightPreview() {
+    CdsThemeProvider(theme = CdsDefaultTheme, colorScheme = CdsColorScheme.Light) {
+        HomeGalleryScreen(
+            darkTheme = false,
+            onToggleDarkTheme = {},
+            customBrand = false,
+            onToggleBrand = {},
+            onOpenThemeTokens = {},
+            onOpenComponent = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun HomeGalleryScreenDarkPreview() {
     CdsThemeProvider(theme = CdsDefaultTheme, colorScheme = CdsColorScheme.Dark) {
-        CdsSampleScreen(
+        HomeGalleryScreen(
             darkTheme = true,
             onToggleDarkTheme = {},
             customBrand = false,
             onToggleBrand = {},
-            onShowGallery = {},
+            onOpenThemeTokens = {},
+            onOpenComponent = {},
         )
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun CdsSampleScreenAcmeBrandPreview() {
+fun HomeGalleryScreenAcmeBrandPreview() {
     CdsThemeProvider(theme = AcmeTheme, colorScheme = CdsColorScheme.Light) {
-        CdsSampleScreen(
+        HomeGalleryScreen(
             darkTheme = false,
             onToggleDarkTheme = {},
             customBrand = true,
             onToggleBrand = {},
-            onShowGallery = {},
+            onOpenThemeTokens = {},
+            onOpenComponent = {},
         )
     }
 }
@@ -217,6 +159,17 @@ fun CdsSampleScreenAcmeBrandPreview() {
 @Composable
 fun CdsThemeGalleryPreview() {
     CdsThemeGallery(theme = CdsDefaultTheme, colorScheme = CdsColorScheme.Light)
+}
+
+@Preview(showBackground = true, heightDp = 1200)
+@Composable
+fun ButtonGalleryScreenPreview() {
+    CdsThemeProvider(theme = CdsDefaultTheme, colorScheme = CdsColorScheme.Light) {
+        ButtonGalleryScreen(
+            onBack = {},
+            onNavigateToComponent = {},
+        )
+    }
 }
 
 @Preview(showBackground = true, heightDp = 1200)

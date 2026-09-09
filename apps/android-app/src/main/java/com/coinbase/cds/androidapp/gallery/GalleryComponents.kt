@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -88,7 +89,33 @@ internal fun GalleryChevronLeftIcon(color: Color, iconSize: Dp, modifier: Modifi
     }
 }
 
-/** An unlabeled square swatch, used for dense grids like the spectrum ramp. */
+/** A minimal right-pointing chevron for destination rows. */
+@Composable
+internal fun GalleryChevronRightIcon(color: Color, iconSize: Dp, modifier: Modifier = Modifier) {
+    Canvas(modifier = modifier.size(iconSize)) {
+        val strokeWidth = size.minDimension * 0.14f
+        val path = Path().apply {
+            moveTo(size.width * 0.38f, size.height * 0.12f)
+            lineTo(size.width * 0.7f, size.height * 0.5f)
+            lineTo(size.width * 0.38f, size.height * 0.88f)
+        }
+        drawPath(
+            path = path,
+            color = color,
+            style = Stroke(width = strokeWidth, cap = StrokeCap.Round, join = StrokeJoin.Round),
+        )
+    }
+}
+
+@Composable
+internal fun GallerySubsectionTitle(text: String) {
+    GalleryText(
+        text = text,
+        style = CdsTheme.typography.headline,
+        color = CdsTheme.colors.fg,
+        modifier = Modifier.padding(top = CdsTheme.space.x0_5),
+    )
+}
 @Composable
 internal fun GalleryColorChip(color: Color, size: Dp) {
     Box(
