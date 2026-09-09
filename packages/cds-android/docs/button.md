@@ -81,9 +81,40 @@ Use standard Compose modifiers instead of React Native-style layout props:
 | Need               | Compose approach                                                    |
 | ------------------ | ------------------------------------------------------------------- |
 | Full width         | `modifier = Modifier.fillMaxWidth()`                                |
-| Test hook          | `modifier = Modifier.testTag("confirm")`                            |
+| Test hook (RN `testID`) | `modifier = Modifier.testTag("confirm")` on the button root    |
 | Custom semantics   | `modifier = Modifier.semantics { … }` merged with Button's defaults |
 | Offset / alignment | `Modifier.offset`, parent `Row`/`Column` arrangement                |
+
+### UI testing (Compose UI Test and Maestro)
+
+Button does not take a `testID` parameter. Pass a tag through [modifier] on the root composable — the same node that owns `Role.Button`, `contentDescription`, and click handling.
+
+**In-process tests** (Robolectric / `createComposeRule`):
+
+```kotlin
+Button(
+    text = "Confirm",
+    onClick = ::confirm,
+    modifier = Modifier.testTag("checkout-confirm"),
+)
+
+composeRule.onNodeWithTag("checkout-confirm").performClick()
+```
+
+**Maestro** (black-box) follows [Jetpack Compose guidance](https://docs.maestro.dev/get-started/supported-platform/android/jetpack): prefer visible text when unique (`tapOn: "Confirm"`), then accessibility description, then `id` for duplicates or stable anchors. For `id`, the host app must enable resource-id mapping once near the root:
+
+```kotlin
+Modifier.semantics { testTagsAsResourceId = true }
+```
+
+`apps/android-app` does this in `MainActivity`. Then Maestro can target:
+
+```yaml
+- tapOn:
+    id: checkout-confirm
+```
+
+Loading buttons keep [text] in `contentDescription`, so `tapOn: { description: "Submit" }` continues to work while the label is hidden.
 
 Raw color, padding, or style object overrides are intentionally absent. Re-theme via
 [cdsTheme](custom-themes.md).
