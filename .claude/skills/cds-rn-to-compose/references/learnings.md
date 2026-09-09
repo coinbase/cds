@@ -18,6 +18,24 @@ Append-only record of lessons from CDS RN → Compose ports. Read this at the st
 
 ---
 
+## 2026-09-09 — UI testing (Maestro + testTag)
+
+**Context:** Gallery navigation refactor + request to document test-id practices for Maestro and unit tests.
+
+**Learnings:**
+
+- RN `testID` → caller `Modifier.testTag("…")` on the component root; no dedicated CDS prop (matches internal `Text` pattern).
+- Maestro is black-box: prefers visible text and `contentDescription`, then `id:` from `testTag` — see [Maestro Jetpack Compose](https://docs.maestro.dev/get-started/supported-platform/android/jetpack).
+- Maestro requires `Modifier.semantics { testTagsAsResourceId = true }` once near the app root for `id:` selectors; enable in `apps/android-app` `MainActivity`.
+- `semantics(mergeDescendants = true)` prevents querying child `testTag`s — tag the outer interactive node only.
+- Gallery/demo screens own stable `gallery-*` tags; library components stay tag-free by default.
+
+**Skill update:** Added `references/ui-testing.md`; expanded `SKILL.md` Test IDs section, Phase 5/6, verification checklist, audit checklist.
+
+**Applies to:** All `packages/cds-android` ports, `apps/android-app` gallery.
+
+---
+
 ## 2026-09-08 — Theming via CompositionLocal
 
 **Context:** Skill review — ensure ports use the established CDS theme delivery mechanism, not RN-style theme props.

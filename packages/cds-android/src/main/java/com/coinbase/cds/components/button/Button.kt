@@ -55,8 +55,11 @@ public enum class ButtonSize {
  * [transparent], icon slots, and accessibility semantics. Raw color/background/border overrides
  * are deliberately absent — re-theme via [com.coinbase.cds.theme.CdsThemeProvider] instead.
  *
- * For full-width layout, pass `Modifier.fillMaxWidth()`; for test hooks and custom semantics,
- * pass them through [modifier].
+ * For full-width layout, pass `Modifier.fillMaxWidth()`. For test hooks (RN `testID` equivalent),
+ * pass `modifier = Modifier.testTag("confirm")` — the tag is applied on this root `Row` alongside
+ * button semantics and gestures. Maestro can select it with `id:` when the host app enables
+ * `testTagsAsResourceId` at the activity root; prefer matching visible label text when unique.
+ * See `packages/cds-android/docs/button.md` and the cds-rn-to-compose `ui-testing` reference.
  *
  * @param transparent Renders on the plain page background with variant-colored text instead of a
  * filled, variant-colored container — CDS's lower-emphasis "ghost" treatment.

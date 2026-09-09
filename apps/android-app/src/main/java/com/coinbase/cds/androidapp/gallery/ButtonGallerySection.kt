@@ -13,6 +13,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.StrokeCap
@@ -32,7 +33,6 @@ fun ButtonGallerySection(modifier: Modifier = Modifier) {
         modifier = modifier,
         verticalArrangement = Arrangement.spacedBy(CdsTheme.space.x2),
     ) {
-        GallerySectionTitle(text = "Button")
         GalleryText(
             text = "Clicks on the interactive primary button: $clickCount",
             style = CdsTheme.typography.body,
@@ -44,7 +44,11 @@ fun ButtonGallerySection(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(CdsTheme.space.x1),
             verticalArrangement = Arrangement.spacedBy(CdsTheme.space.x1),
         ) {
-            Button(text = "Primary", onClick = { clickCount++ })
+            Button(
+                text = "Primary",
+                onClick = { clickCount++ },
+                modifier = Modifier.testTag("gallery-button-primary-interactive"),
+            )
             Button(text = "Secondary", onClick = {}, variant = ButtonVariant.Secondary)
             Button(text = "Tertiary", onClick = {}, variant = ButtonVariant.Tertiary)
             Button(text = "Positive", onClick = {}, variant = ButtonVariant.Positive)
@@ -67,8 +71,18 @@ fun ButtonGallerySection(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.spacedBy(CdsTheme.space.x1),
             verticalArrangement = Arrangement.spacedBy(CdsTheme.space.x1),
         ) {
-            Button(text = "Disabled", onClick = {}, enabled = false)
-            Button(text = "Loading", onClick = {}, loading = true)
+            Button(
+                text = "Disabled",
+                onClick = {},
+                enabled = false,
+                modifier = Modifier.testTag("gallery-button-disabled"),
+            )
+            Button(
+                text = "Loading",
+                onClick = {},
+                loading = true,
+                modifier = Modifier.testTag("gallery-button-loading"),
+            )
             Button(
                 text = "Transparent loading",
                 onClick = {},
@@ -124,16 +138,6 @@ fun ButtonGallerySection(modifier: Modifier = Modifier) {
             )
         }
     }
-}
-
-@Composable
-private fun GallerySubsectionTitle(text: String) {
-    GalleryText(
-        text = text,
-        style = CdsTheme.typography.headline,
-        color = CdsTheme.colors.fg,
-        modifier = Modifier.padding(top = CdsTheme.space.x0_5),
-    )
 }
 
 @Composable
