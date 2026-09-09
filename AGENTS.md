@@ -40,11 +40,10 @@ work.
 After writing code, validate the smallest relevant scope:
 
 - Node: run tests for the modified files, typecheck and lint the modified projects, then run
-  `yarn nx format:write`
+  `yarn nx run tools:format`
 - Gradle: run the changed project's `test` and `build` targets; Prettier does not format Kotlin
 - Xcode: run `cds-ios:test` and the changed project's `build` target; Prettier does not format Swift
-- Documentation only: run `yarn nx format:write` and verify changed commands and links.
-  Markdown and skill files are formatted by a dedicated CI job, not Node.
+- Documentation only: run `yarn nx run tools:format` and verify changed commands and links
 
 See [`docs/testing.md`](docs/testing.md) for exact commands.
 
@@ -57,7 +56,7 @@ See [`docs/testing.md`](docs/testing.md) for exact commands.
 - `yarn nx run <project>:build` - Build any project through its assigned toolchain
 - `yarn nx run <project>:test` - Run tests for a specific project
 - `yarn nx run <project>:test --testNamePattern=<pattern>` - Run tests matching pattern
-- `yarn nx format:write` - Formats all files in the workspace with Prettier
+- `yarn nx run tools:format` - Formats JS, JSX, TypeScript, JSON, and Markdown with Prettier
 - `yarn nx run <project>:lint` - Lint a specific project
 - `yarn nx run <project>:typecheck` - Check for type errors in a specific project
 - `yarn nx run-many --target=<target1>,<target2>` - Run targets for all projects
