@@ -61,25 +61,6 @@ jobs:
         # paid down.
         run: yarn nx affected --exclude='*,!tag:toolchain:node' --target=lint --base=$NX_BASE --head=$NX_HEAD --max-warnings=300
 
-  format:
-    name: Format
-    runs-on: ubuntu-latest
-    steps:
-      - name: Harden the runner (Audit all outbound calls)
-        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
-        with:
-          egress-policy: audit
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-        with:
-          fetch-depth: 100 # TODO: This needs to include the merge-base
-      - uses: ./.github/actions/setup-node-ci
-      - name: Format
-        # Leave this as workspace `nx format:check` on the git diff. It can Prettier
-        # files outside Node packages when those files happen to be in the same PR
-        # (docs, native markdown, skills). That extra work is fine; the Format Docs
-        # job exists so those leftover paths can be checked *without* starting Node CI.
-        run: yarn nx format:check --verbose --base=$NX_BASE --head=$NX_HEAD
-
   test:
     name: Test
     runs-on: ubuntu-latest

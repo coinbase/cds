@@ -17,14 +17,11 @@ const gradlePathPrefixes = [
 
 const xcodePathPrefixes = ['.github/workflows/ios.yml', 'ios/'];
 
-// Trees that are documentation, agent skills, or contributor guides — not a language toolchain.
+// Language-agnostic trees. Format still runs at the workspace root; these paths
+// must not start Node, Gradle, or Xcode on their own.
 const docsOnlyPathPrefixes = ['docs/', '.claude/', '.agents/', 'skills/'];
 
 const docsMarkdownExtensions = ['.md', '.mdx'];
-const docsTreeExtensions = [...docsMarkdownExtensions, '.json', '.yml', '.yaml'];
-
-// Quoted/vendored skill material; Prettier is deliberately kept out of these (see .prettierignore).
-const vendoredSkillReferencePath = /^(?:\.claude|\.agents)\/skills\/[^/]+\/references\//;
 
 function normalizePath(file) {
   return file.replace(/^\.\//, '');
@@ -36,56 +33,12 @@ function matchesPath(file, prefixes) {
   );
 }
 
-function hasExtension(file, extensions) {
-  return extensions.some((extension) => file.endsWith(extension));
+function isDocsOnlyPath(file) {
+  return matchesPath(file, docsOnlyPathPrefixes);
 }
 
-export function isVendoredSkillReference(file) {
-  return vendoredSkillReferencePath.test(normalizePath(file));
-}
-
-export function isDocsOnlyPath(file) {
-  const normalized = normalizePath(file);
-  return matchesPath(normalized, docsOnlyPathPrefixes);
-}
-
-export function isDocsFormatFile(file) {
-  const normalized = normalizePath(file);
-
-  if (isVendoredSkillReference(normalized)) {
-    return false;
-  }
-
-  if (hasExtension(normalized, docsMarkdownExtensions)) {
-    return true;
-  }
-
-  return isDocsOnlyPath(normalized) && hasExtension(normalized, docsTreeExtensions);
-}
-
-function getProjectToolchain(file, projects) {
-  const projectsBySpecificity = [...projects].sort((a, b) => b.root.length - a.root.length);
-  const project = projectsBySpecificity.find(
-    ({ root }) => file === root || file.startsWith(`${root}/`),
-  );
-
-  return project?.tags.find((tag) => toolchainTags.includes(tag)) ?? null;
-}
-
-// Files Format Docs owns: leftover repo docs/skills, and markdown outside Node packages.
-// Markdown inside toolchain:node projects stays on `nx format:check`.
-export function isRootFormatFile(file, projects = []) {
-  const normalized = normalizePath(file);
-
-  if (!isDocsFormatFile(normalized)) {
-    return false;
-  }
-
-  return getProjectToolchain(normalized, projects) !== 'toolchain:node';
-}
-
-export function selectRootFormatFiles(changedFiles, projects = []) {
-  return changedFiles.map(normalizePath).filter((file) => isRootFormatFile(file, projects));
+function isUnmatchedMarkdown(file) {
+  return docsMarkdownExtensions.some((extension) => file.endsWith(extension));
 }
 
 function emptyClassification() {
@@ -93,7 +46,6 @@ function emptyClassification() {
     node: false,
     gradle: false,
     xcode: false,
-    docs: false,
   };
 }
 
@@ -102,7 +54,6 @@ export function allToolchains() {
     node: true,
     gradle: true,
     xcode: true,
-    docs: true,
   };
 }
 
@@ -119,10 +70,6 @@ export function classifyToolchains(changedFiles, projects = []) {
       .find((tag) => toolchainTags.includes(tag))
       ?.replace('toolchain:', '');
 
-    if (isRootFormatFile(file, projects)) {
-      result.docs = true;
-    }
-
     if (allToolchainPaths.has(file)) {
       result.node = true;
       result.gradle = true;
@@ -133,8 +80,8 @@ export function classifyToolchains(changedFiles, projects = []) {
       result.xcode = true;
     } else if (projectToolchain) {
       result[projectToolchain] = true;
-    } else if (isDocsOnlyPath(file) || isDocsFormatFile(file)) {
-      // Documentation and skill files are not a language toolchain.
+    } else if (isDocsOnlyPath(file) || isUnmatchedMarkdown(file)) {
+      // Workspace format covers these; they are not a language toolchain.
     } else {
       result.node = true;
     }

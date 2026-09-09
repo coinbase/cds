@@ -22,7 +22,7 @@ When iterating, narrow Jest tests with `--testNamePattern=<pattern>`. Before han
 format the workspace:
 
 ```sh
-yarn nx format:write
+yarn nx run tools:format
 ```
 
 To validate all affected Node projects locally, the CI-equivalent pattern is:
@@ -64,16 +64,12 @@ release validation. Prettier does not format Swift; follow Xcode's formatter.
 
 ## Documentation-only changes
 
-Run `yarn nx format:write`. CI checks leftover documentation (root guides, `docs/`, skills, and
-markdown outside Node packages) in a dedicated Format Docs job, independent of Node, Gradle, and
-Xcode. If commands, links, or setup steps changed, verify them against the relevant project
-configuration or package-local guide.
+Run `yarn nx run tools:format`. CI runs the same workspace format check on every PR, independent of
+Node, Gradle, and Xcode. If commands, links, or setup steps changed, verify them against the
+relevant project configuration or package-local guide.
 
-The CI-equivalent root format check is:
+The CI-equivalent format check is:
 
 ```sh
-node tools/ci/checkRootFormat.mjs
+yarn nx run tools:format:check
 ```
-
-That command needs `NX_BASE` / `NX_HEAD` or `BASE_SHA` / `HEAD_SHA`, matching CI. For a local
-handoff, `yarn nx format:write` is enough.

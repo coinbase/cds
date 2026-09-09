@@ -1,4 +1,6 @@
 module.exports = {
+  // Workspace format only passes JS, JSX, TypeScript, JSON, and Markdown to Prettier
+  // (`tools:format`). Chain other formatters on that Nx target when they are added.
   arrowParens: 'always',
   bracketSameLine: false,
   jsxSingleQuote: false,
