@@ -17,7 +17,8 @@ const gradlePathPrefixes = [
 
 const xcodePathPrefixes = ['.github/workflows/ios.yml', 'ios/'];
 
-// Language-agnostic trees. These paths must not start Node, Gradle, or Xcode on their own.
+// Language-agnostic trees. Format still runs at the workspace root; these paths
+// must not start Node, Gradle, or Xcode on their own.
 const docsOnlyPathPrefixes = ['docs/', '.claude/', '.agents/', 'skills/'];
 
 const docsMarkdownExtensions = ['.md', '.mdx'];
@@ -80,7 +81,7 @@ export function classifyToolchains(changedFiles, projects = []) {
     } else if (projectToolchain) {
       result[projectToolchain] = true;
     } else if (isDocsOnlyPath(file) || isUnmatchedMarkdown(file)) {
-      // Not a language toolchain.
+      // Workspace format covers these; they are not a language toolchain.
     } else {
       result.node = true;
     }
