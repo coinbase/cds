@@ -44,13 +44,13 @@ struct ButtonMetrics {
 }
 
 func buttonMetrics(_ size: ButtonSize, theme: CDSTheme) -> ButtonMetrics {
-    let space = theme.spacing
-    let radius = theme.radius
+    let space = theme.space
+    let radius = theme.borderRadius
     let icon = theme.iconSize
     switch size {
-    case .xs: return ButtonMetrics(paddingX: space.x2, paddingY: space.x0_75, radius: radius.r700, iconSize: icon.s, font: .label1)
-    case .s: return ButtonMetrics(paddingX: space.x2, paddingY: space.x1, radius: radius.r700, iconSize: icon.s, font: .headline)
-    case .m: return ButtonMetrics(paddingX: space.x3, paddingY: space.x1_5, radius: radius.r900, iconSize: icon.m, font: .headline)
-    case .l: return ButtonMetrics(paddingX: space.x4, paddingY: space.x2, radius: radius.r900, iconSize: icon.m, font: .headline)
+    case .xs: return ButtonMetrics(paddingX: space.x2, paddingY: space.x0_75, radius: radius.radius700, iconSize: icon.s, font: .label1)
+    case .s: return ButtonMetrics(paddingX: space.x2, paddingY: space.x1, radius: radius.radius700, iconSize: icon.s, font: .headline)
+    case .m: return ButtonMetrics(paddingX: space.x3, paddingY: space.x1_5, radius: radius.radius900, iconSize: icon.m, font: .headline)
+    case .l: return ButtonMetrics(paddingX: space.x4, paddingY: space.x2, radius: radius.radius900, iconSize: icon.m, font: .headline)
     }
 }

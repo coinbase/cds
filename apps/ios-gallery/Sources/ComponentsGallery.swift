@@ -9,7 +9,7 @@ struct ComponentsGallery: View {
 
     var body: some View {
         SectionCard("Components", subtitle: "Text · Button · SlideButton · ProgressCircle · inverted theme") {
-            VStack(alignment: .leading, spacing: cds.spacing.x3) {
+            VStack(alignment: .leading, spacing: cds.space.x3) {
                 text
                 buttons
                 slideButton
@@ -20,7 +20,7 @@ struct ComponentsGallery: View {
     }
 
     private var text: some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+        VStack(alignment: .leading, spacing: cds.space.x1) {
             CDSDesignSystem.Text("Text", style: .label1, color: cds.colors.fgMuted)
             CDSDesignSystem.Text("Default foreground", style: .body)
             CDSDesignSystem.Text("Muted foreground", style: .body, color: cds.colors.fgMuted)
@@ -31,7 +31,7 @@ struct ComponentsGallery: View {
     }
 
     private var buttons: some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+        VStack(alignment: .leading, spacing: cds.space.x1) {
             CDSDesignSystem.Text("Button", style: .label1, color: cds.colors.fgMuted)
             CDSDesignSystem.Button(text: "Primary", action: {})
             CDSDesignSystem.Button(text: "Secondary", action: {}, variant: .secondary)
@@ -46,7 +46,7 @@ struct ComponentsGallery: View {
     }
 
     private var slideButton: some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+        VStack(alignment: .leading, spacing: cds.space.x1) {
             CDSDesignSystem.Text("SlideButton", style: .label1, color: cds.colors.fgMuted)
             SlideButton(
                 checked: $slideChecked,
@@ -58,9 +58,9 @@ struct ComponentsGallery: View {
     }
 
     private var progressCircle: some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+        VStack(alignment: .leading, spacing: cds.space.x1) {
             CDSDesignSystem.Text("ProgressCircle", style: .label1, color: cds.colors.fgMuted)
-            HStack(spacing: cds.spacing.x3) {
+            HStack(spacing: cds.space.x3) {
                 ProgressCircle(size: .s)
                 ProgressCircle(size: .m)
                 ProgressCircle(size: .l)
@@ -70,7 +70,7 @@ struct ComponentsGallery: View {
 
     /// Same content rendered under `InvertedThemeProvider`, which flips the scheme for its subtree.
     private var invertedDemo: some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+        VStack(alignment: .leading, spacing: cds.space.x1) {
             CDSDesignSystem.Text("InvertedThemeProvider", style: .label1, color: cds.colors.fgMuted)
             InvertedThemeProvider {
                 InvertedCard()
@@ -86,9 +86,9 @@ private struct InvertedCard: View {
 
     var body: some View {
         CDSDesignSystem.Text("Content on the opposite scheme", style: .body)
-            .padding(cds.spacing.x2)
+            .padding(cds.space.x2)
             .frame(maxWidth: .infinity, alignment: .leading)
             .background(cds.colors.bg)
-            .cdsBorderedCard(radius: cds.radius.r300)
+            .cdsBorderedCard(radius: cds.borderRadius.radius300)
     }
 }

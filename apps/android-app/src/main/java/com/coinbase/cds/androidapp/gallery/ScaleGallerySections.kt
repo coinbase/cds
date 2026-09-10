@@ -24,6 +24,7 @@ import com.coinbase.cds.theme.CdsBorderRadiusToken
 import com.coinbase.cds.theme.CdsBorderWidthToken
 import com.coinbase.cds.theme.CdsIconSizeToken
 import com.coinbase.cds.theme.CdsShadow
+import com.coinbase.cds.theme.CdsShadowToken
 import com.coinbase.cds.theme.CdsSpaceToken
 import com.coinbase.cds.theme.CdsTheme
 
@@ -186,8 +187,9 @@ internal fun ShadowSection() {
     Column(verticalArrangement = Arrangement.spacedBy(CdsTheme.space.x2)) {
         GallerySectionTitle("Shadow")
         Row(horizontalArrangement = Arrangement.spacedBy(CdsTheme.space.x3)) {
-            ShadowSample("elevation1", shadows.elevation1)
-            ShadowSample("elevation2", shadows.elevation2)
+            for (token in CdsShadowToken.entries) {
+                ShadowSample(token.tokenName, shadows[token])
+            }
         }
     }
 }

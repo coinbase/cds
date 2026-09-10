@@ -225,6 +225,8 @@ CdsTheme.space[CdsSpaceToken.X2]               // Dp
 CdsTheme.borderRadius[CdsBorderRadiusToken.Radius400]  // Dp
 CdsTheme.typography[CdsFontToken.Headline]     // TextStyle
 CdsTheme.spectrum[CdsSpectrumHueToken.Blue][CdsColorRampToken.Step60]  // Color
+CdsTheme.illustrationColors[CdsIllustrationColorToken.Primary]  // Color
+CdsTheme.shadows[CdsShadowToken.Elevation1]    // CdsShadow
 ```
 
 You can also resolve against an explicit `CdsColors` instance with no composition at all, which is

@@ -17,8 +17,8 @@ final class CDSThemeProviderTests: XCTestCase {
         // Scheme-dependent axes follow the requested scheme.
         XCTAssertEqual(light.colorScheme, .light)
         XCTAssertEqual(dark.colorScheme, .dark)
-        XCTAssertEqual(light.colors, set.light)
-        XCTAssertEqual(dark.colors, set.dark)
+        XCTAssertEqual(light.colors, set.lightColors)
+        XCTAssertEqual(dark.colors, set.darkColors)
         XCTAssertEqual(light.spectrum, set.lightSpectrum)
         XCTAssertEqual(dark.spectrum, set.darkSpectrum)
         XCTAssertEqual(light.illustrationColors, set.lightIllustrationColors)
@@ -29,8 +29,8 @@ final class CDSThemeProviderTests: XCTestCase {
         XCTAssertNotEqual(light.spectrum, dark.spectrum)
 
         // Scheme-independent scales pass through unchanged.
-        XCTAssertEqual(light.spacing, dark.spacing)
-        XCTAssertEqual(light.radius, dark.radius)
+        XCTAssertEqual(light.space, dark.space)
+        XCTAssertEqual(light.borderRadius, dark.borderRadius)
         XCTAssertEqual(light.typography, dark.typography)
     }
 
@@ -87,8 +87,8 @@ final class CDSThemeProviderTests: XCTestCase {
         let brandDark = Color(cdsHex: 0x7C3AED)
         let set = cdsTheme {
             $0.id = "acme"
-            $0.dark.bgPrimary = brandDark
-            $0.spacing.x2 = 24
+            $0.darkColors.bgPrimary = brandDark
+            $0.space.x2 = 24
         }
 
         // Starting from the light theme, inverting must resolve the overridden dark tokens.
@@ -101,7 +101,7 @@ final class CDSThemeProviderTests: XCTestCase {
         XCTAssertEqual(inverted.colorScheme, .dark)
         XCTAssertEqual(inverted.colors.bgPrimary, brandDark)
         // Scheme-independent override carries through too.
-        XCTAssertEqual(inverted.spacing.x2, 24)
+        XCTAssertEqual(inverted.space.x2, 24)
     }
 
     // MARK: - (d) No-ancestor fail-loud contract

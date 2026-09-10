@@ -2,7 +2,7 @@
 
 CDS ships one theme — the built-in `cds-default` (`CDSThemeSet.default`) — and a mechanism for
 building your own from it. Once your theme is installed, every CDS view re-themes itself: it reads
-`theme.colors.bgPrimary` and `theme.spacing.x3` rather than hard-coded values, so changing those
+`theme.colors.bgPrimary` and `theme.space.x3` rather than hard-coded values, so changing those
 tokens changes the view with no per-view configuration.
 
 This guide covers how to author a theme with the `cdsTheme { }` builder. For the other half of the
@@ -33,10 +33,10 @@ story — reading tokens in your views and carrying them through your own code �
 
 Four ideas explain the whole API.
 
-**A theme carries both color schemes.** A `CDSThemeSet` holds `light` _and_ `dark` (the semantic
-`CDSColors` sets), `lightSpectrum` _and_ `darkSpectrum`, `lightIllustrationColors` _and_
+**A theme carries both color schemes.** A `CDSThemeSet` holds `lightColors` _and_ `darkColors` (the
+semantic `CDSColors` sets), `lightSpectrum` _and_ `darkSpectrum`, `lightIllustrationColors` _and_
 `darkIllustrationColors`. You author one theme set, not a light theme and a dark theme.
-Scheme-independent axes — spacing, type, radius, sizes, shadows — are stated once instead of
+Scheme-independent axes — space, type, borderRadius, sizes, shadows — are stated once instead of
 duplicated.
 
 **Choosing a scheme is the provider's job.** `CDSThemeProvider(theme:colorScheme:)` takes the two as
@@ -85,20 +85,20 @@ enum AcmeTheme {
         $0.id = "acme"
 
         // Semantic colors, per scheme. `.with { }` copies the default set and tweaks a few tokens.
-        $0.light = $0.light.with {
+        $0.lightColors = $0.lightColors.with {
             $0.fgPrimary = brandLight
             $0.bgPrimary = brandLight
             $0.bgLinePrimary = brandLight
         }
-        $0.dark = $0.dark.with {
+        $0.darkColors = $0.darkColors.with {
             $0.fgPrimary = brandDark
             $0.bgPrimary = brandDark
             $0.bgLinePrimary = brandDark
         }
 
         // Scale axes are scheme-independent: assign the fields you want to remap.
-        $0.spacing.x2 = 20
-        $0.radius.r400 = 20
+        $0.space.x2 = 20
+        $0.borderRadius.radius400 = 20
     }
 }
 ```
@@ -108,7 +108,7 @@ Two things in that example are worth copying rather than just reading.
 **Set `id`.** It participates in theme equality and is what you'll look for when debugging which theme
 is installed. Use a stable slug like `"acme"`.
 
-**Tweak semantic colors with `.with { }`.** `$0.light` and `$0.dark` are `CDSColors` values; the
+**Tweak semantic colors with `.with { }`.** `$0.lightColors` and `$0.darkColors` are `CDSColors` values; the
 `with { }` helper copies the base set and lets you override a few tokens without restating all of
 them.
 
@@ -169,8 +169,8 @@ static let themeSet: CDSThemeSet = cdsTheme {
     $0.darkSpectrum = $0.darkSpectrum.with {
         $0.blue = $0.blue.with { $0.step70 = Color(cdsHex: 0xAE8AFB) }
     }
-    $0.light = .lightDeriving(from: $0.lightSpectrum)
-    $0.dark = .darkDeriving(from: $0.darkSpectrum)
+    $0.lightColors = .lightDeriving(from: $0.lightSpectrum)
+    $0.darkColors = .darkDeriving(from: $0.darkSpectrum)
 }
 ```
 
@@ -310,18 +310,18 @@ func testNovaDefinesEveryColorItself() {
 }
 ```
 
-Every axis has a matching token enum and subscript, so the same loop works for spacing, radius,
+Every axis has a matching token enum and subscript, so the same loop works for space, borderRadius,
 typography, and the rest. One caveat: the test compares values, so a token you deliberately set to the
 same value CDS uses (white is white) will be reported — allowlist those explicitly rather than deleting
 the test.
 
 ## Pitfalls
 
-**Overriding the spectrum does not change the semantic colors.** The `light` / `dark` `CDSColors` sets
-are baked once; they don't re-derive from a spectrum override. Because views read only the semantic
-tier, remapping `lightSpectrum.blue.step60` alone changes nothing visible in any CDS view. Set `light`
-/ `dark` too — or re-derive them with `CDSColors.lightDeriving(from:)` as in
-[Approach 2](#approach-2-rebrand-from-a-custom-spectrum).
+**Overriding the spectrum does not change the semantic colors.** The `lightColors` / `darkColors`
+`CDSColors` sets are baked once; they don't re-derive from a spectrum override. Because views read
+only the semantic tier, remapping `lightSpectrum.blue.step60` alone changes nothing visible in any
+CDS view. Set `lightColors` / `darkColors` too — or re-derive them with `CDSColors.lightDeriving(from:)`
+as in [Approach 2](#approach-2-rebrand-from-a-custom-spectrum).
 
 **Check the pairing, not just the color.** Semantic tokens are used in pairs. A primary button paints
 `bgPrimary` behind `fgInverse`, so a brand color lighter than CDS's blue can leave label text

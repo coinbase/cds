@@ -50,6 +50,12 @@ public class CdsShadows internal constructor(
     public val elevation1: CdsShadow,
     public val elevation2: CdsShadow,
 ) {
+    /** Resolves a [CdsShadowToken]: `CdsTheme.shadows[CdsShadowToken.Elevation1]`. */
+    public operator fun get(token: CdsShadowToken): CdsShadow = when (token) {
+        CdsShadowToken.Elevation1 -> elevation1
+        CdsShadowToken.Elevation2 -> elevation2
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is CdsShadows) return false
@@ -78,4 +84,19 @@ public class CdsShadows internal constructor(
             ),
         )
     }
+}
+
+/**
+ * Every elevation rung in [CdsShadows] as an enumerable value. Resolve one against a theme with
+ * [CdsShadows.get]; iterate with `CdsShadowToken.entries`.
+ *
+ * Entries may be added in a minor release, so this enum is not safe to match exhaustively --
+ * include an `else` branch in any `when` over it.
+ */
+public enum class CdsShadowToken {
+    Elevation1, Elevation2,
+    ;
+
+    /** The canonical CDS spelling (`elevation1`), matching the RN `shadow` key. */
+    public val tokenName: String get() = name.replaceFirstChar { it.lowercase() }
 }

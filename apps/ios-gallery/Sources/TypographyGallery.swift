@@ -8,10 +8,10 @@ struct TypographyGallery: View {
 
     var body: some View {
         SectionCard("Typography", subtitle: "\(CDSTextStyle.allCases.count) roles · theme.typography[role]") {
-            VStack(alignment: .leading, spacing: cds.spacing.x2) {
+            VStack(alignment: .leading, spacing: cds.space.x2) {
                 ForEach(CDSTextStyle.allCases, id: \.self) { role in
                     let attrs = cds.typography[role]
-                    VStack(alignment: .leading, spacing: cds.spacing.x0_25) {
+                    VStack(alignment: .leading, spacing: cds.space.x0_25) {
                         CDSDesignSystem.Text(role.tokenName, style: role)
                         CDSDesignSystem.Text(
                             "\(Int(attrs.size))/\(Int(attrs.lineHeight)) · \(weightLabel(attrs.weight))"

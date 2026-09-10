@@ -38,12 +38,12 @@ struct SlideButtonMetrics {
 }
 
 func slideButtonMetrics(_ size: SlideButtonSize, theme: CDSTheme) -> SlideButtonMetrics {
-    let space = theme.spacing
-    let radius = theme.radius
+    let space = theme.space
+    let radius = theme.borderRadius
     let icon = theme.iconSize
     switch size {
-    case .s: return SlideButtonMetrics(paddingY: space.x1, labelPaddingX: space.x2, radius: radius.r700, iconSize: icon.s, font: .headline)
-    case .m: return SlideButtonMetrics(paddingY: space.x1_5, labelPaddingX: space.x2, radius: radius.r900, iconSize: icon.m, font: .headline)
-    case .l: return SlideButtonMetrics(paddingY: space.x2, labelPaddingX: space.x2, radius: radius.r900, iconSize: icon.m, font: .headline)
+    case .s: return SlideButtonMetrics(paddingY: space.x1, labelPaddingX: space.x2, radius: radius.radius700, iconSize: icon.s, font: .headline)
+    case .m: return SlideButtonMetrics(paddingY: space.x1_5, labelPaddingX: space.x2, radius: radius.radius900, iconSize: icon.m, font: .headline)
+    case .l: return SlideButtonMetrics(paddingY: space.x2, labelPaddingX: space.x2, radius: radius.radius900, iconSize: icon.m, font: .headline)
     }
 }

@@ -6,12 +6,12 @@ struct SpacingGallery: View {
     @Environment(\.cdsTheme) private var cds
 
     private var items: [(String, CGFloat)] {
-        CDSSpacingToken.allCases.map { ($0.rawValue, cds.spacing[$0]) }
+        CDSSpaceToken.allCases.map { ($0.rawValue, cds.space[$0]) }
     }
 
     var body: some View {
-        SectionCard("Spacing", subtitle: "theme.spacing") {
-            VStack(alignment: .leading, spacing: cds.spacing.x0_75) {
+        SectionCard("Spacing", subtitle: "theme.space") {
+            VStack(alignment: .leading, spacing: cds.space.x0_75) {
                 ForEach(items, id: \.0) { name, value in
                     SampleRow(label: "\(name) · \(Int(value))") {
                         Rectangle()
@@ -30,19 +30,19 @@ struct RadiusGallery: View {
     @Environment(\.cdsTheme) private var cds
 
     private var items: [(String, CGFloat)] {
-        CDSRadiusToken.allCases.map { ($0.rawValue, cds.radius[$0]) }
+        CDSBorderRadiusToken.allCases.map { ($0.rawValue, cds.borderRadius[$0]) }
     }
 
     var body: some View {
-        SectionCard("Radius", subtitle: "theme.radius") {
-            VStack(alignment: .leading, spacing: cds.spacing.x0_75) {
+        SectionCard("Radius", subtitle: "theme.borderRadius") {
+            VStack(alignment: .leading, spacing: cds.space.x0_75) {
                 ForEach(items, id: \.0) { name, value in
                     SampleRow(label: name) {
                         RoundedRectangle(cornerRadius: min(value, 28))
                             .fill(cds.colors.bgSecondary)
                             .overlay(
                                 RoundedRectangle(cornerRadius: min(value, 28))
-                                    .strokeBorder(cds.colors.bgLinePrimary, lineWidth: cds.borderWidth.w200)
+                                    .strokeBorder(cds.colors.bgLinePrimary, lineWidth: cds.borderWidth.borderWidth200)
                             )
                             .frame(width: 56, height: 40)
                     }
@@ -62,7 +62,7 @@ struct BorderWidthGallery: View {
 
     var body: some View {
         SectionCard("Border width", subtitle: "theme.borderWidth") {
-            VStack(alignment: .leading, spacing: cds.spacing.x0_75) {
+            VStack(alignment: .leading, spacing: cds.space.x0_75) {
                 ForEach(items, id: \.0) { name, value in
                     SampleRow(label: "\(name) · \(Int(value))") {
                         Rectangle()
@@ -81,7 +81,7 @@ struct SizesGallery: View {
 
     var body: some View {
         SectionCard("Sizes", subtitle: "theme.iconSize · avatarSize · controlSize") {
-            VStack(alignment: .leading, spacing: cds.spacing.x1_5) {
+            VStack(alignment: .leading, spacing: cds.space.x1_5) {
                 sizeRow("Icon", CDSIconSizeToken.allCases.map { ($0.rawValue, cds.iconSize[$0]) })
                 sizeRow("Avatar", CDSAvatarSizeToken.allCases.map { ($0.rawValue, cds.avatarSize[$0]) })
                 sizeRow("Control", CDSControlSizeToken.allCases.map { ($0.tokenName, cds.controlSize[$0]) })
@@ -90,11 +90,11 @@ struct SizesGallery: View {
     }
 
     private func sizeRow(_ title: String, _ items: [(String, CGFloat)]) -> some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x0_5) {
+        VStack(alignment: .leading, spacing: cds.space.x0_5) {
             CDSDesignSystem.Text(title, style: .label1)
-            HStack(alignment: .bottom, spacing: cds.spacing.x1_5) {
+            HStack(alignment: .bottom, spacing: cds.space.x1_5) {
                 ForEach(items, id: \.0) { name, value in
-                    VStack(spacing: cds.spacing.x0_25) {
+                    VStack(spacing: cds.space.x0_25) {
                         RoundedRectangle(cornerRadius: 4)
                             .fill(cds.colors.accentBoldBlue)
                             .frame(width: value, height: value)
@@ -112,19 +112,19 @@ struct ShadowGallery: View {
     @Environment(\.cdsTheme) private var cds
 
     var body: some View {
-        SectionCard("Shadows", subtitle: "theme.shadow · .cdsShadow()") {
-            HStack(spacing: cds.spacing.x3) {
+        SectionCard("Shadows", subtitle: "theme.shadows · .cdsShadow()") {
+            HStack(spacing: cds.space.x3) {
                 ForEach(CDSShadowToken.allCases, id: \.self) { token in
-                    shadowCard(token.rawValue, cds.shadow[token])
+                    shadowCard(token.rawValue, cds.shadows[token])
                 }
             }
-            .padding(.vertical, cds.spacing.x1)
+            .padding(.vertical, cds.space.x1)
         }
     }
 
     private func shadowCard(_ label: String, _ shadow: CDSShadow) -> some View {
-        VStack(spacing: cds.spacing.x1) {
-            RoundedRectangle(cornerRadius: cds.radius.r300)
+        VStack(spacing: cds.space.x1) {
+            RoundedRectangle(cornerRadius: cds.borderRadius.radius300)
                 .fill(cds.colors.bgElevation2)
                 .frame(width: 96, height: 64)
                 .cdsShadow(shadow)
