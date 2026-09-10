@@ -20,7 +20,7 @@ It aims for parity with the React Native `ThemeProvider` (`packages/mobile/src/c
 
 | Path                                | Purpose                                                                                                                                                                                                                                                                                                                   |
 | ----------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `Theme/Tokens.swift`                | Enumerable, addressable token names for every scale (`CDSColorToken`, `CDSSpectrumHueToken`, `CDSColorRampToken`, `CDSRadiusToken`, `CDSSpacingToken`, `CDSBorderWidthToken`, `CDSIconSizeToken`, `CDSAvatarSizeToken`, `CDSControlSizeToken`, `CDSIllustrationColorToken`, `CDSShadowToken`) with canonical `tokenName`s |
+| `Theme/Tokens.swift`                | Enumerable, addressable token names for every scale (`CDSColorToken`, `CDSSpectrumHueToken`, `CDSColorRampToken`, `CDSBorderRadiusToken`, `CDSSpaceToken`, `CDSBorderWidthToken`, `CDSIconSizeToken`, `CDSAvatarSizeToken`, `CDSControlSizeToken`, `CDSIllustrationColorToken`, `CDSShadowToken`) with canonical `tokenName`s |
 | `Theme/Spectrum.swift`              | Tier-1 strongly-typed spectrum palette (`CDSSpectrum` / `CDSColorRamp`) — all 11 hues × 13 shades (light + dark)                                                                                                                                                                                                          |
 | `Theme/CDSColors.swift`             | Tier-2 semantic color tokens (fg/bg/line/elevation/accent/…) + token subscript + custom-theme factories                                                                                                                                                                                                                   |
 | `Theme/CDSIllustrationColors.swift` | Illustration color palette (light + dark)                                                                                                                                                                                                                                                                                 |
@@ -49,7 +49,7 @@ the theme (not global constants), so a consumer can override them per `CDSThemeP
 like RN.
 
 Also covered: token addressability (every scale is enumerable and addressable — `CDSColorToken` /
-`CDSSpectrumHueToken` / `CDSColorRampToken` / `CDSRadiusToken` / `CDSSpacingToken` /
+`CDSSpectrumHueToken` / `CDSColorRampToken` / `CDSBorderRadiusToken` / `CDSSpaceToken` /
 `CDSBorderWidthToken` / `CDSIconSizeToken` / `CDSAvatarSizeToken` / `CDSControlSizeToken` /
 `CDSIllustrationColorToken` / `CDSShadowToken` — with canonical `tokenName`s), `Equatable` token types (so SwiftUI skips
 re-invalidating theme readers on no-op re-renders), and a strict no-provider policy with an
@@ -87,9 +87,9 @@ CDSThemeProvider {
 // Adding a token to CDS never changes this call site (evolution-safe construction).
 let brand = cdsTheme {
     $0.id = "brand"
-    $0.light.bgPrimary = Color(cdsHex: 0x7C3AED)
-    $0.dark.bgPrimary  = Color(cdsHex: 0x7C3AED)
-    $0.spacing.x2 = 20
+    $0.lightColors.bgPrimary = Color(cdsHex: 0x7C3AED)
+    $0.darkColors.bgPrimary  = Color(cdsHex: 0x7C3AED)
+    $0.space.x2 = 20
     $0.typography[.body] = CDSTextAttributes(size: 17, lineHeight: 26, weight: .regular)
 }
 CDSThemeProvider(theme: brand) {
@@ -99,7 +99,7 @@ CDSThemeProvider(theme: brand) {
 // Rebrand from a custom palette: override the spectrum and re-derive the semantic colors.
 let paletteBrand = cdsTheme {
     $0.lightSpectrum = $0.lightSpectrum.with { $0.blue = $0.blue.with { $0.step60 = Color(cdsHex: 0x7C3AED) } }
-    $0.light = .lightDeriving(from: $0.lightSpectrum)
+    $0.lightColors = .lightDeriving(from: $0.lightSpectrum)
 }
 ```
 
@@ -125,7 +125,7 @@ Read the active theme in a view via the environment:
 ```swift
 @Environment(\.cdsTheme) private var theme
 // Static access:
-//   theme.colors.fgPrimary, theme.spacing.x2, theme.radius.r200, theme.typography[.title1]
+//   theme.colors.fgPrimary, theme.space.x2, theme.borderRadius.radius200, theme.typography[.title1]
 // Dynamic / serialized access via tokens:
 //   theme.colors[.fgPrimary]            // CDSColorToken
 //   theme.spectrum[.blue][.step60]      // CDSSpectrumHueToken + CDSColorRampToken
@@ -141,14 +141,14 @@ contract (and serialized/JSON themes) needs:
 CDSColorToken.allCases       // fg, fgMuted, …, transparent  (each has .tokenName "fgMuted")
 CDSSpectrumHueToken.allCases // blue, green, …, chartreuse
 CDSColorRampToken.allCases   // step0…step100 (.tokenName "0"…"100")
-CDSRadiusToken.allCases      // r0…r1000 (.tokenName "0"…"1000"); theme.radius[.r400]
-CDSSpacingToken.allCases     // x0…x10 (.tokenName "0"…"10", "1.5"); theme.spacing[.x2]
-CDSBorderWidthToken.allCases // w0…w500 (.tokenName "0"…"500"); theme.borderWidth[.w100]
+CDSBorderRadiusToken.allCases // radius0…radius1000 (.tokenName "0"…"1000"); theme.borderRadius[.radius400]
+CDSSpaceToken.allCases        // x0…x10 (.tokenName "0"…"10", "1.5"); theme.space[.x2]
+CDSBorderWidthToken.allCases  // borderWidth0…borderWidth500; theme.borderWidth[.borderWidth100]
 CDSIconSizeToken.allCases    // xs…l; theme.iconSize[.m]
 CDSAvatarSizeToken.allCases  // s…xxxl; theme.avatarSize[.xl]
 CDSControlSizeToken.allCases // checkboxSize…tileSize; theme.controlSize[.checkboxSize]
 CDSIllustrationColorToken.allCases // primary…invert2; theme.illustrationColors[.primary]
-CDSShadowToken.allCases      // elevation1, elevation2; theme.shadow[.elevation1]
+CDSShadowToken.allCases      // elevation1, elevation2; theme.shadows[.elevation1]
 CDSTextStyle.allCases        // display1…legal (the font token)
 ```
 

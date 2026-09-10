@@ -43,7 +43,7 @@ struct PriceCard: View {
     let price: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: theme.spacing.x0_5) {
+        VStack(alignment: .leading, spacing: theme.space.x0_5) {
             Text(label)
                 .font(theme.typography[.label2].font)
                 .foregroundStyle(theme.colors.fgMuted)
@@ -51,9 +51,9 @@ struct PriceCard: View {
                 .font(theme.typography[.title3].font)
                 .foregroundStyle(theme.colors.fg)
         }
-        .padding(theme.spacing.x2)
+        .padding(theme.space.x2)
         .background(theme.colors.bgSecondary)
-        .clipShape(RoundedRectangle(cornerRadius: theme.radius.r400))
+        .clipShape(RoundedRectangle(cornerRadius: theme.borderRadius.radius400))
     }
 }
 ```
@@ -65,21 +65,21 @@ The axes on the resolved `CDSTheme`:
 | `theme.colors`             | `CDSColors`             | `theme.colors.bgPrimary`           |
 | `theme.spectrum`           | `CDSSpectrum`           | `theme.spectrum.blue.step60`       |
 | `theme.illustrationColors` | `CDSIllustrationColors` | `theme.illustrationColors.accent1` |
-| `theme.spacing`            | `CDSSpacing`            | `theme.spacing.x2`                 |
-| `theme.borderWidth`        | `CDSBorderWidth`        | `theme.borderWidth.w100`           |
-| `theme.radius`             | `CDSRadius`             | `theme.radius.r400`                |
+| `theme.space`            | `CDSSpace`            | `theme.space.x2`                 |
+| `theme.borderWidth`        | `CDSBorderWidth`        | `theme.borderWidth.borderWidth100`           |
+| `theme.borderRadius`             | `CDSBorderRadius`             | `theme.borderRadius.radius400`                |
 | `theme.iconSize`           | `CDSIconSize`           | `theme.iconSize.m`                 |
 | `theme.avatarSize`         | `CDSAvatarSize`         | `theme.avatarSize.xl`              |
 | `theme.controlSize`        | `CDSControlSize`        | `theme.controlSize.switchWidth`    |
 | `theme.typography`         | `CDSTypography`         | `theme.typography[.body]`          |
-| `theme.shadow`             | `CDSShadowScale`        | `theme.shadow.elevation1.radius`   |
+| `theme.shadows`             | `CDSShadows`        | `theme.shadows.elevation1.blurRadius`   |
 | `theme.colorScheme`        | `ColorScheme`           | `theme.colorScheme == .dark`       |
 
 Three properties of these reads are worth knowing.
 
 **They're already scheme-resolved.** `theme.colors` is the color set for whichever scheme is ambient —
 there is no `.light`/`.dark` to pick from and no `if isDark` to write. Flipping the scheme changes what
-these return, everywhere, with no work at the call site. (Scale axes like `spacing`, `radius`, and
+these return, everywhere, with no work at the call site. (Scale axes like `space`, `borderRadius`, and
 `typography` don't vary by scheme; only `colors` and `illustrationColors` do.)
 
 **Read at the leaf; don't thread values through parameters.** Passing `bgColor: Color` down three
@@ -196,12 +196,12 @@ a name resolves against the ambient theme in one expression.
 
 ```swift
 theme.colors[.fgPositive]              // Color
-theme.spacing[.x2]                     // CGFloat
-theme.radius[.r400]                    // CGFloat
+theme.space[.x2]                     // CGFloat
+theme.borderRadius[.radius400]                    // CGFloat
 theme.typography[.headline]            // CDSTextAttributes
 theme.spectrum[.blue][.step60]         // Color
 theme.illustrationColors[.accent1]     // Color
-theme.shadow[.elevation1]              // CDSShadow
+theme.shadows[.elevation1]              // CDSShadow
 ```
 
 You can also resolve against an explicit `CDSColors` instance with no environment at all, which is how
@@ -261,10 +261,10 @@ struct StatusPill: View {
         Text(text)
             .font(theme.typography[.label1].font)
             .foregroundStyle(theme.colors[color])
-            .padding(.horizontal, theme.spacing.x1)
-            .padding(.vertical, theme.spacing.x0_5)
+            .padding(.horizontal, theme.space.x1)
+            .padding(.vertical, theme.space.x0_5)
             .background(theme.colors[color].opacity(0.12))
-            .clipShape(RoundedRectangle(cornerRadius: theme.radius.r1000))
+            .clipShape(RoundedRectangle(cornerRadius: theme.borderRadius.radius1000))
     }
 }
 ```
@@ -309,7 +309,7 @@ struct ColorSwatches: View {
         VStack(alignment: .leading) {
             ForEach(CDSColorToken.allCases, id: \.self) { token in
                 HStack {
-                    RoundedRectangle(cornerRadius: theme.radius.r100)
+                    RoundedRectangle(cornerRadius: theme.borderRadius.radius100)
                         .fill(theme.colors[token])
                         .frame(width: theme.iconSize.l, height: theme.iconSize.l)
                     Text(token.tokenName)
@@ -330,9 +330,9 @@ Every scale is enumerable and addressable the same way:
 CDSColorToken.allCases        // fg, fgMuted, …, currentColor, transparent
 CDSSpectrumHueToken.allCases  // blue, green, …, chartreuse
 CDSColorRampToken.allCases    // step0…step100 (.tokenName "0"…"100")
-CDSRadiusToken.allCases       // r0…r1000 (.tokenName "0"…"1000")
-CDSSpacingToken.allCases      // x0…x10 (.tokenName "0"…"10", "1.5")
-CDSBorderWidthToken.allCases  // w0…w500 (.tokenName "0"…"500")
+CDSBorderRadiusToken.allCases // radius0…radius1000 (.tokenName "0"…"1000")
+CDSSpaceToken.allCases        // x0…x10 (.tokenName "0"…"10", "1.5")
+CDSBorderWidthToken.allCases  // borderWidth0…borderWidth500 (.tokenName "0"…"500")
 CDSIconSizeToken.allCases     // xs…l
 CDSAvatarSizeToken.allCases   // s…xxxl
 CDSControlSizeToken.allCases  // checkboxSize…tileSize
@@ -361,12 +361,12 @@ for a theme.
 | ------------------------------ | ----------------------------------------------------------------------------- |
 | Read the theme in a view       | `@Environment(\.cdsTheme) private var theme`                                  |
 | Paint a themed color           | `.background(theme.colors.bg)` / `.foregroundStyle(theme.colors.fg)`          |
-| Pad or space something         | `.padding(theme.spacing.x2)`, `spacing: theme.spacing.x1`                     |
-| Round a corner                 | `RoundedRectangle(cornerRadius: theme.radius.r400)`                           |
+| Pad or space something         | `.padding(theme.space.x2)`, `spacing: theme.space.x1`                     |
+| Round a corner                 | `RoundedRectangle(cornerRadius: theme.borderRadius.radius400)`                           |
 | Style text                     | `.font(theme.typography[.headline].font)` — size, weight, and family together |
-| Apply a shadow                 | `.cdsShadow(theme.shadow.elevation1)`                                         |
+| Apply a shadow                 | `.cdsShadow(theme.shadows.elevation1)`                                         |
 | Know if it's dark              | `theme.colorScheme == .dark` — for assets, not for picking colors             |
 | Hold a color in state          | Store `CDSColorToken`; resolve with `theme.colors[token]`                     |
 | Resolve a token without a view | `CDSTheme.light.colors[token]`, or pass a `CDSColors` in                      |
-| Enumerate a scale              | `CDSColorToken.allCases`, `CDSSpacingToken.allCases`, …                       |
+| Enumerate a scale              | `CDSColorToken.allCases`, `CDSSpaceToken.allCases`, …                       |
 | Invert a subtree               | `InvertedThemeProvider { }` (needs a `CDSThemeProvider` ancestor)             |

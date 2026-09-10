@@ -4,7 +4,7 @@ import SwiftUI
 /// The fully-resolved theme for the current color scheme (RN's `useTheme()` result).
 ///
 /// `colors` and `illustrationColors` change with the color scheme (light/dark); the scales
-/// (`spacing`, `radius`, `typography`, …) do not. Any slice can still vary by brand theme.
+/// (`space`, `borderRadius`, `typography`, …) do not. Any slice can still vary by brand theme.
 public struct CDSTheme: Sendable, Equatable {
     public let id: String
     /// The raw spectrum palette for the resolved scheme — read `theme.spectrum[.blue][.step60]`
@@ -12,14 +12,14 @@ public struct CDSTheme: Sendable, Equatable {
     public let spectrum: CDSSpectrum
     public let colors: CDSColors
     public let illustrationColors: CDSIllustrationColors
-    public let spacing: CDSSpacing
-    public let radius: CDSRadius
+    public let space: CDSSpace
+    public let borderRadius: CDSBorderRadius
     public let borderWidth: CDSBorderWidth
     public let iconSize: CDSIconSize
     public let avatarSize: CDSAvatarSize
     public let controlSize: CDSControlSize
     public let typography: CDSTypography
-    public let shadow: CDSShadowScale
+    public let shadows: CDSShadows
     public let colorScheme: ColorScheme
 
     // Resolved themes come from ``CDSThemeSet/resolve(_:)``; a non-public init lets new tokens be
@@ -29,28 +29,28 @@ public struct CDSTheme: Sendable, Equatable {
         spectrum: CDSSpectrum,
         colors: CDSColors,
         illustrationColors: CDSIllustrationColors,
-        spacing: CDSSpacing,
-        radius: CDSRadius,
+        space: CDSSpace,
+        borderRadius: CDSBorderRadius,
         borderWidth: CDSBorderWidth,
         iconSize: CDSIconSize,
         avatarSize: CDSAvatarSize,
         controlSize: CDSControlSize,
         typography: CDSTypography,
-        shadow: CDSShadowScale,
+        shadows: CDSShadows,
         colorScheme: ColorScheme
     ) {
         self.id = id
         self.spectrum = spectrum
         self.colors = colors
         self.illustrationColors = illustrationColors
-        self.spacing = spacing
-        self.radius = radius
+        self.space = space
+        self.borderRadius = borderRadius
         self.borderWidth = borderWidth
         self.iconSize = iconSize
         self.avatarSize = avatarSize
         self.controlSize = controlSize
         self.typography = typography
-        self.shadow = shadow
+        self.shadows = shadows
         self.colorScheme = colorScheme
     }
 
@@ -63,58 +63,59 @@ public struct CDSTheme: Sendable, Equatable {
 }
 
 /// A complete theme configuration (RN's `ThemeConfig`): the light + dark color/illustration sets
-/// plus the scales. Supplied to ``CDSThemeProvider``. All fields default to the built-in CDS theme,
-/// so a consumer can override only the tokens they care about.
+/// plus the scales (`lightColors` / `darkColors`, matching Android's `CdsTheme`). Supplied to
+/// ``CDSThemeProvider``. All fields default to the built-in CDS theme, so a consumer can override
+/// only the tokens they care about.
 public struct CDSThemeSet: Sendable, Equatable {
     public var id: String
     public var lightSpectrum: CDSSpectrum
     public var darkSpectrum: CDSSpectrum
-    public var light: CDSColors
-    public var dark: CDSColors
+    public var lightColors: CDSColors
+    public var darkColors: CDSColors
     public var lightIllustrationColors: CDSIllustrationColors
     public var darkIllustrationColors: CDSIllustrationColors
-    public var spacing: CDSSpacing
-    public var radius: CDSRadius
+    public var space: CDSSpace
+    public var borderRadius: CDSBorderRadius
     public var borderWidth: CDSBorderWidth
     public var iconSize: CDSIconSize
     public var avatarSize: CDSAvatarSize
     public var controlSize: CDSControlSize
     public var typography: CDSTypography
-    public var shadow: CDSShadowScale
+    public var shadows: CDSShadows
 
     // Every parameter is defaulted, so adding a token stays source-compatible.
     public init(
         id: String = "cds-default",
         lightSpectrum: CDSSpectrum = .light,
         darkSpectrum: CDSSpectrum = .dark,
-        light: CDSColors = .light,
-        dark: CDSColors = .dark,
+        lightColors: CDSColors = .light,
+        darkColors: CDSColors = .dark,
         lightIllustrationColors: CDSIllustrationColors = .light,
         darkIllustrationColors: CDSIllustrationColors = .dark,
-        spacing: CDSSpacing = .default,
-        radius: CDSRadius = .default,
+        space: CDSSpace = .default,
+        borderRadius: CDSBorderRadius = .default,
         borderWidth: CDSBorderWidth = .default,
         iconSize: CDSIconSize = .default,
         avatarSize: CDSAvatarSize = .default,
         controlSize: CDSControlSize = .default,
         typography: CDSTypography = .default,
-        shadow: CDSShadowScale = .default
+        shadows: CDSShadows = .default
     ) {
         self.id = id
         self.lightSpectrum = lightSpectrum
         self.darkSpectrum = darkSpectrum
-        self.light = light
-        self.dark = dark
+        self.lightColors = lightColors
+        self.darkColors = darkColors
         self.lightIllustrationColors = lightIllustrationColors
         self.darkIllustrationColors = darkIllustrationColors
-        self.spacing = spacing
-        self.radius = radius
+        self.space = space
+        self.borderRadius = borderRadius
         self.borderWidth = borderWidth
         self.iconSize = iconSize
         self.avatarSize = avatarSize
         self.controlSize = controlSize
         self.typography = typography
-        self.shadow = shadow
+        self.shadows = shadows
     }
 
     /// The built-in CDS default theme.
@@ -131,16 +132,16 @@ public struct CDSThemeSet: Sendable, Equatable {
         CDSTheme(
             id: id,
             spectrum: scheme == .dark ? darkSpectrum : lightSpectrum,
-            colors: scheme == .dark ? dark : light,
+            colors: scheme == .dark ? darkColors : lightColors,
             illustrationColors: scheme == .dark ? darkIllustrationColors : lightIllustrationColors,
-            spacing: spacing,
-            radius: radius,
+            space: space,
+            borderRadius: borderRadius,
             borderWidth: borderWidth,
             iconSize: iconSize,
             avatarSize: avatarSize,
             controlSize: controlSize,
             typography: typography,
-            shadow: shadow,
+            shadows: shadows,
             colorScheme: scheme
         )
     }
@@ -152,9 +153,9 @@ public struct CDSThemeSet: Sendable, Equatable {
 /// ```swift
 /// let acme = cdsTheme {
 ///     $0.id = "acme"
-///     $0.light.bgPrimary = Color(cdsHex: 0x7C3AED)
-///     $0.dark.bgPrimary = Color(cdsHex: 0x7C3AED)
-///     $0.spacing.x2 = 24
+///     $0.lightColors.bgPrimary = Color(cdsHex: 0x7C3AED)
+///     $0.darkColors.bgPrimary = Color(cdsHex: 0x7C3AED)
+///     $0.space.x2 = 24
 /// }
 /// ```
 ///
@@ -163,7 +164,7 @@ public struct CDSThemeSet: Sendable, Equatable {
 /// ```swift
 /// let brand = cdsTheme {
 ///     $0.lightSpectrum = $0.lightSpectrum.with { $0.blue = $0.blue.with { $0.step60 = brandBlue } }
-///     $0.light = .lightDeriving(from: $0.lightSpectrum)
+///     $0.lightColors = .lightDeriving(from: $0.lightSpectrum)
 /// }
 /// ```
 public func cdsTheme(

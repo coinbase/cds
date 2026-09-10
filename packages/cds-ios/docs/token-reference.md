@@ -13,21 +13,21 @@ minor release; when that happens, a theme built with `cdsTheme` inherits the new
 | Axis                                        | Type                    | `CDSThemeSet` field(s)                              | Per scheme? | Rungs              |
 | ------------------------------------------- | ----------------------- | --------------------------------------------------- | ----------- | ------------------ |
 | [Spectrum](#spectrum)                       | `CDSSpectrum`           | `lightSpectrum`, `darkSpectrum`                     | Yes         | 11 hues × 13 steps |
-| [Colors](#colors)                           | `CDSColors`             | `light`, `dark`                                     | Yes         | 43                 |
+| [Colors](#colors)                           | `CDSColors`             | `lightColors`, `darkColors`                         | Yes         | 43                 |
 | [Illustration colors](#illustration-colors) | `CDSIllustrationColors` | `lightIllustrationColors`, `darkIllustrationColors` | Yes         | 15                 |
-| [Spacing](#spacing)                         | `CDSSpacing`            | `spacing`                                           | No          | 15                 |
-| [Radius](#radius)                           | `CDSRadius`             | `radius`                                            | No          | 11                 |
+| [Space](#space)                             | `CDSSpace`              | `space`                                             | No          | 15                 |
+| [Border radius](#border-radius)             | `CDSBorderRadius`       | `borderRadius`                                      | No          | 11                 |
 | [Border width](#border-width)               | `CDSBorderWidth`        | `borderWidth`                                       | No          | 6                  |
 | [Icon size](#icon-size)                     | `CDSIconSize`           | `iconSize`                                          | No          | 4                  |
 | [Avatar size](#avatar-size)                 | `CDSAvatarSize`         | `avatarSize`                                        | No          | 6                  |
 | [Control size](#control-size)               | `CDSControlSize`        | `controlSize`                                       | No          | 6                  |
 | [Typography](#typography)                   | `CDSTypography`         | `typography`                                        | No          | 13                 |
-| [Shadows](#shadows)                         | `CDSShadowScale`        | `shadow`                                            | No          | 2 × 5 fields       |
+| [Shadows](#shadows)                         | `CDSShadows`            | `shadows`                                           | No          | 2 × 5 fields       |
 
 Plus `id`, a stable slug identifying the theme (`"cds-default"`).
 
 Every axis also has a `CDS*Token` enum and a subscript, so you can resolve a token by value
-(`theme.spacing[.x2]`) and iterate a whole scale (`CDSSpacingToken.allCases`). Each enum case carries
+(`theme.space[.x2]`) and iterate a whole scale (`CDSSpaceToken.allCases`). Each enum case carries
 `tokenName`, the canonical CDS key shared with the web and Android token contracts — useful for labels
 and for parsing serialized themes.
 
@@ -137,13 +137,13 @@ from UI chrome. Both schemes are fully populated with concrete RGB values (in
 Tokens (`CDSIllustrationColorToken`): `primary`, `black`, `white`, `gray`, `gray2`, `gray3`, `gray4`,
 `positive`, `negative`, `accent1`, `accent2`, `accent3`, `accent4`, `invert`, `invert2`.
 
-## Spacing
+## Space
 
 An 8pt base unit. Rung names are the multiplier (`x` prefix because a Swift identifier can't start with
 a digit, `_` for the decimal point), deliberately _not_ the point value — a denser theme is free to
 remap `x2` from 16 to 12. `tokenName` is the CDS key (`x1_5` → `1.5`).
 
-| Token (`CDSSpacingToken`) | `tokenName` | Default |
+| Token (`CDSSpaceToken`) | `tokenName` | Default |
 | ------------------------- | ----------- | ------- |
 | `x0`                      | `0`         | 0       |
 | `x0_25`                   | `0.25`      | 2       |
@@ -161,39 +161,41 @@ remap `x2` from 16 to 12. `tokenName` is the CDS key (`x1_5` → `1.5`).
 | `x9`                      | `9`         | 72      |
 | `x10`                     | `10`        | 80      |
 
-## Radius
+## Border radius
 
-Abstract rungs; the numeric suffix is the CDS scale key (`r400` → `tokenName` `400`).
+Abstract rungs; the numeric suffix is the CDS scale key (`radius400` → `tokenName` `400`). Names
+match Android's `CdsBorderRadius`.
 
-| Token (`CDSRadiusToken`) | Default                                                                   |
-| ------------------------ | ------------------------------------------------------------------------- |
-| `r0`                     | 0                                                                         |
-| `r100`                   | 4                                                                         |
-| `r200`                   | 8                                                                         |
-| `r300`                   | 12                                                                        |
-| `r400`                   | 16                                                                        |
-| `r500`                   | 24                                                                        |
-| `r600`                   | 32                                                                        |
-| `r700`                   | 40                                                                        |
-| `r800`                   | 48                                                                        |
-| `r900`                   | 56                                                                        |
-| `r1000`                  | 100000 — the pill rung, oversized so it renders fully rounded at any size |
+| Token (`CDSBorderRadiusToken`) | Default                                                                   |
+| ------------------------------ | ------------------------------------------------------------------------- |
+| `radius0`                      | 0                                                                         |
+| `radius100`                    | 4                                                                         |
+| `radius200`                    | 8                                                                         |
+| `radius300`                    | 12                                                                        |
+| `radius400`                    | 16                                                                        |
+| `radius500`                    | 24                                                                        |
+| `radius600`                    | 32                                                                        |
+| `radius700`                    | 40                                                                        |
+| `radius800`                    | 48                                                                        |
+| `radius900`                    | 56                                                                        |
+| `radius1000`                   | 100000 — the pill rung, oversized so it renders fully rounded at any size |
 
-Keep `r1000` absurd if you override the scale. A "large but plausible" value stops looking like a pill
-as soon as a view grows past it.
+Keep `radius1000` absurd if you override the scale. A "large but plausible" value stops looking like a
+pill as soon as a view grows past it.
 
 ## Border width
 
-Abstract rungs, not multipliers, so the numeric suffix is the CDS scale key (`w100` → `100`).
+Abstract rungs, not multipliers, so the numeric suffix is the CDS scale key (`borderWidth100` →
+`100`). Names match Android's `CdsBorderWidth`.
 
 | Token (`CDSBorderWidthToken`) | Default |
 | ----------------------------- | ------- |
-| `w0`                          | 0       |
-| `w100`                        | 1       |
-| `w200`                        | 2       |
-| `w300`                        | 4       |
-| `w400`                        | 6       |
-| `w500`                        | 8       |
+| `borderWidth0`                | 0       |
+| `borderWidth100`              | 1       |
+| `borderWidth200`              | 2       |
+| `borderWidth300`              | 4       |
+| `borderWidth400`              | 6       |
+| `borderWidth500`              | 8       |
 
 ## Icon size
 
@@ -260,19 +262,19 @@ yourself if you render caption text with SwiftUI's own `Text`.
 
 ## Shadows
 
-Two elevation shadows (`CDSShadowScale`), identical across light and dark (so they live outside the
-per-scheme axes). A `CDSShadow` is five fields — `color`, `opacity`, `radius`, `x`, `y` — rather than a
-single elevation value, so the call site can render it precisely. Apply one with the `.cdsShadow(_:)`
-view modifier.
+Two elevation shadows (`CDSShadows`), identical across light and dark (so they live outside the
+per-scheme axes). A `CDSShadow` is five fields — `color`, `opacity`, `blurRadius`, `offsetX`,
+`offsetY` — matching Android's `CdsShadow` plus `offsetX` for SwiftUI. Apply one with the
+`.cdsShadow(_:)` view modifier.
 
-| Field     | `elevation1` | `elevation2` |
-| --------- | ------------ | ------------ |
-| `color`   | `.black`     | `.black`     |
-| `opacity` | 0.12         | 0.12         |
-| `radius`  | 12           | 24           |
-| `x`       | 0            | 0            |
-| `y`       | 8            | 8            |
+| Field        | `elevation1` | `elevation2` |
+| ------------ | ------------ | ------------ |
+| `color`      | `.black`     | `.black`     |
+| `opacity`    | 0.12         | 0.12         |
+| `blurRadius` | 12           | 24           |
+| `offsetX`    | 0            | 0            |
+| `offsetY`    | 8            | 8            |
 
 ```swift
-$0.shadow.elevation1 = CDSShadow(opacity: 0.08, radius: 16, y: 8)
+$0.shadows.elevation1 = CDSShadow(opacity: 0.08, blurRadius: 16, offsetY: 8)
 ```
