@@ -7,29 +7,6 @@
     "toolchain:node"
   ],
   "targets": {
-    "format": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          "yarn prettier --write --cache \"**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,json,md,mdx}\""
-        ],
-        "parallel": false,
-        "cwd": "."
-      },
-      "configurations": {
-        "check": {
-          "commands": [
-            "yarn prettier --check \"**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,json,md,mdx}\""
-          ]
-        }
-      },
-      "inputs": [
-        "{workspaceRoot}/**/*.{js,jsx,mjs,cjs,ts,tsx,mts,cts,json,md,mdx}",
-        "{workspaceRoot}/prettier.config.js",
-        "{workspaceRoot}/.prettierignore"
-      ],
-      "cache": true
-    },
     "test": {
       "executor": "@nx/jest:jest",
       "options": {
