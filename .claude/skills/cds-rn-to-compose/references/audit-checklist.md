@@ -112,8 +112,7 @@ Reference: `references/ui-testing.md`, [Maestro Jetpack Compose](https://docs.ma
 ## 9. Demo & documentation
 
 - [ ] Gallery section covers variants, states, sizes, edge cases
-- [ ] `packages/cds-android/docs/<component>.md` exists and matches API
-- [ ] `docs/README.md` index updated
+- [ ] KDoc on public composable and types matches API (no per-component `docs/*.md`)
 - [ ] `CHANGELOG.md` mentions public API changes
 - [ ] `AGENTS.md` public surface list accurate
 - [ ] `interactionSource` documented if hoisted

@@ -280,8 +280,8 @@ The demo app is a **consumer** — if it needs a non-public API, fix the API des
 
 ## Phase 7: Documentation & changelog
 
-- `packages/cds-android/docs/<name>.md` — public API, examples, modifier usage, interaction hoisting
-- Update `packages/cds-android/docs/README.md` index
+- **KDoc** on the public `@Composable` and its types — API, modifier usage, interaction hoisting, test tags
+- Do **not** add per-component files under `packages/cds-android/docs/` — that folder is for cross-cutting guides (tokens, themes, interaction, releasing) only
 - `packages/cds-android/CHANGELOG.md` under the Gradle version
 - Update `packages/cds-android/AGENTS.md` if public surface changes
 
@@ -392,7 +392,7 @@ Before marking a port complete:
 - [ ] Robolectric behavior tests for callbacks and semantics
 - [ ] Interaction event tests when component hoists `MutableInteractionSource`
 - [ ] Gallery section in `android-app`
-- [ ] `docs/<name>.md` + CHANGELOG
+- [ ] KDoc on public API + CHANGELOG
 - [ ] `yarn nx run cds-android:test` and `cds-android:build` pass
 - [ ] No Compose Styles API; no `@coinbase/cds-common` imports
 - [ ] Public API reviewed for Hyrum's Law — no leaked style types or assembly composables
@@ -418,4 +418,4 @@ Before marking a port complete:
 - Interaction: `CdsInteractionDefaults.indication(shape)` + hoisted `interactionSource`
 - Tests: `ButtonTest.kt`, `ButtonStyleTest.kt`, `CdsInteractionStateTest.kt`
 - Gallery: `apps/android-app/.../ButtonGallerySection.kt`
-- Docs: `packages/cds-android/docs/button.md`, `interaction.md`
+- KDoc: `Button.kt`; package docs: `interaction.md`
