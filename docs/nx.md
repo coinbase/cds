@@ -13,8 +13,8 @@ executor does not solve the problem because both Node and native projects primar
 
 Nx 20 cannot use the tags to select `targetDefaults`, but CI already depends on them:
 
-1. The change classifier maps a changed project root to its `toolchain:*` tag and selects the Node,
-   Gradle, or Xcode workflow.
+1. The change classifier maps a changed project root to its `toolchain:*` tag and decides which
+   of the Node, Gradle, or Xcode workflows should execute work.
 2. The Node workflow positively filters `nx affected` to `toolchain:node`, preventing native
    `build` and `test` targets from running on Node-only Linux jobs.
 3. The validator rejects missing or conflicting tags so a new project cannot silently enter the
