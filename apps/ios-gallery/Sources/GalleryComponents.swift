@@ -17,7 +17,7 @@ private struct BorderedCard: ViewModifier {
             .clipShape(RoundedRectangle(cornerRadius: radius))
             .overlay(
                 RoundedRectangle(cornerRadius: radius)
-                    .strokeBorder(cds.colors.bgLine, lineWidth: cds.borderWidth.w100)
+                    .strokeBorder(cds.colors.bgLine, lineWidth: cds.borderWidth.borderWidth100)
             )
     }
 }
@@ -36,8 +36,8 @@ struct SectionCard<Content: View>: View {
     }
 
     var body: some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x1_5) {
-            VStack(alignment: .leading, spacing: cds.spacing.x0_5) {
+        VStack(alignment: .leading, spacing: cds.space.x1_5) {
+            VStack(alignment: .leading, spacing: cds.space.x0_5) {
                 CDSDesignSystem.Text(title, style: .title4)
                 if let subtitle {
                     CDSDesignSystem.Text(subtitle, style: .label2, color: cds.colors.fgMuted)
@@ -45,10 +45,10 @@ struct SectionCard<Content: View>: View {
             }
             content
         }
-        .padding(cds.spacing.x2)
+        .padding(cds.space.x2)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(cds.colors.bgElevation1)
-        .cdsBorderedCard(radius: cds.radius.r300)
+        .cdsBorderedCard(radius: cds.borderRadius.radius300)
     }
 }
 
@@ -59,11 +59,11 @@ struct Swatch: View {
     let label: String
 
     var body: some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x0_5) {
-            RoundedRectangle(cornerRadius: cds.radius.r200)
+        VStack(alignment: .leading, spacing: cds.space.x0_5) {
+            RoundedRectangle(cornerRadius: cds.borderRadius.radius200)
                 .fill(color)
                 .frame(height: 44)
-                .cdsBorderedCard(radius: cds.radius.r200)
+                .cdsBorderedCard(radius: cds.borderRadius.radius200)
             CDSDesignSystem.Text(label, style: .legal, color: cds.colors.fgMuted)
                 .lineLimit(1)
         }
@@ -77,7 +77,7 @@ struct SampleRow<Sample: View>: View {
     @ViewBuilder let sample: Sample
 
     var body: some View {
-        HStack(alignment: .center, spacing: cds.spacing.x2) {
+        HStack(alignment: .center, spacing: cds.space.x2) {
             CDSDesignSystem.Text(label, style: .label2)
                 .frame(width: 96, alignment: .leading)
             sample

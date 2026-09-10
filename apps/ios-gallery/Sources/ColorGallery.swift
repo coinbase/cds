@@ -10,7 +10,7 @@ struct ColorGallery: View {
 
     var body: some View {
         SectionCard("Semantic colors", subtitle: "\(CDSColorToken.allCases.count) tokens · theme.colors[token]") {
-            LazyVGrid(columns: columns, alignment: .leading, spacing: cds.spacing.x1_5) {
+            LazyVGrid(columns: columns, alignment: .leading, spacing: cds.space.x1_5) {
                 ForEach(CDSColorToken.allCases, id: \.self) { token in
                     Swatch(color: cds.colors[token], label: token.tokenName)
                 }
@@ -28,7 +28,7 @@ struct IllustrationGallery: View {
 
     var body: some View {
         SectionCard("Illustration colors", subtitle: "\(CDSIllustrationColorToken.allCases.count) tokens · theme.illustrationColors[token]") {
-            LazyVGrid(columns: columns, alignment: .leading, spacing: cds.spacing.x1_5) {
+            LazyVGrid(columns: columns, alignment: .leading, spacing: cds.space.x1_5) {
                 ForEach(CDSIllustrationColorToken.allCases, id: \.self) { token in
                     Swatch(color: cds.illustrationColors[token], label: token.tokenName)
                 }
@@ -44,9 +44,9 @@ struct SpectrumGallery: View {
 
     var body: some View {
         SectionCard("Spectrum", subtitle: "11 hues × 13 steps · theme.spectrum[hue][step]") {
-            VStack(alignment: .leading, spacing: cds.spacing.x1_5) {
+            VStack(alignment: .leading, spacing: cds.space.x1_5) {
                 ForEach(CDSSpectrumHueToken.allCases, id: \.self) { hue in
-                    VStack(alignment: .leading, spacing: cds.spacing.x0_5) {
+                    VStack(alignment: .leading, spacing: cds.space.x0_5) {
                         CDSDesignSystem.Text(hue.tokenName, style: .legal, color: cds.colors.fgMuted)
                         HStack(spacing: 2) {
                             ForEach(CDSColorRampToken.allCases, id: \.self) { step in
@@ -58,7 +58,7 @@ struct SpectrumGallery: View {
                         }
                         .overlay(
                             RoundedRectangle(cornerRadius: 3)
-                                .strokeBorder(cds.colors.bgLine, lineWidth: cds.borderWidth.w100)
+                                .strokeBorder(cds.colors.bgLine, lineWidth: cds.borderWidth.borderWidth100)
                         )
                     }
                 }

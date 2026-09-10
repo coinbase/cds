@@ -1,10 +1,10 @@
 import CoreGraphics
 
-/// Spacing scale, mirroring `theme.space` in `defaultTheme.ts`.
+/// Spacing scale, mirroring `theme.space` in `defaultTheme.ts` and Android's `CdsSpace`.
 ///
 /// Token names map to the RN scale (e.g. `x1 == 8`, `x0_5 == 4`). Carried on the theme so
 /// consumers can override the scale per ``CDSThemeProvider`` (RN parity: `space` is themeable).
-public struct CDSSpacing: Sendable, Equatable {
+public struct CDSSpace: Sendable, Equatable {
     public var x0: CGFloat
     public var x0_25: CGFloat
     public var x0_5: CGFloat
@@ -33,14 +33,14 @@ public struct CDSSpacing: Sendable, Equatable {
         self.x8 = x8; self.x9 = x9; self.x10 = x10
     }
 
-    public func with(_ mutate: (inout CDSSpacing) -> Void) -> CDSSpacing {
+    public func with(_ mutate: (inout CDSSpace) -> Void) -> CDSSpace {
         var copy = self
         mutate(&copy)
         return copy
     }
 
-    /// Resolve a spacing token: `theme.spacing[.x2]`. Pairs with ``CDSSpacingToken``.
-    public subscript(_ token: CDSSpacingToken) -> CGFloat {
+    /// Resolve a space token: `theme.space[.x2]`. Pairs with ``CDSSpaceToken``.
+    public subscript(_ token: CDSSpaceToken) -> CGFloat {
         switch token {
         case .x0: return x0
         case .x0_25: return x0_25
@@ -60,77 +60,81 @@ public struct CDSSpacing: Sendable, Equatable {
         }
     }
 
-    public static let `default` = CDSSpacing()
+    public static let `default` = CDSSpace()
 }
 
-/// Border radius scale, mirroring `theme.borderRadius` in `defaultTheme.ts`.
-public struct CDSRadius: Sendable, Equatable {
-    public var r0: CGFloat
-    public var r100: CGFloat
-    public var r200: CGFloat
-    public var r300: CGFloat
-    public var r400: CGFloat
-    public var r500: CGFloat
-    public var r600: CGFloat
-    public var r700: CGFloat
-    public var     r800: CGFloat
-    public var r900: CGFloat
+/// Border radius scale, mirroring `theme.borderRadius` in `defaultTheme.ts` and Android's
+/// `CdsBorderRadius`.
+public struct CDSBorderRadius: Sendable, Equatable {
+    public var radius0: CGFloat
+    public var radius100: CGFloat
+    public var radius200: CGFloat
+    public var radius300: CGFloat
+    public var radius400: CGFloat
+    public var radius500: CGFloat
+    public var radius600: CGFloat
+    public var radius700: CGFloat
+    public var radius800: CGFloat
+    public var radius900: CGFloat
     /// The pill rung (`borderRadius["1000"]` in RN, `radius1000` on Android): deliberately
     /// oversized (1e5) so it always renders fully rounded at any size.
-    public var r1000: CGFloat
+    public var radius1000: CGFloat
 
     public init(
-        r0: CGFloat = 0, r100: CGFloat = 4, r200: CGFloat = 8, r300: CGFloat = 12,
-        r400: CGFloat = 16, r500: CGFloat = 24, r600: CGFloat = 32, r700: CGFloat = 40,
-        r800: CGFloat = 48, r900: CGFloat = 56, r1000: CGFloat = 100_000
+        radius0: CGFloat = 0, radius100: CGFloat = 4, radius200: CGFloat = 8, radius300: CGFloat = 12,
+        radius400: CGFloat = 16, radius500: CGFloat = 24, radius600: CGFloat = 32, radius700: CGFloat = 40,
+        radius800: CGFloat = 48, radius900: CGFloat = 56, radius1000: CGFloat = 100_000
     ) {
-        self.r0 = r0; self.r100 = r100; self.r200 = r200; self.r300 = r300
-        self.r400 = r400; self.r500 = r500; self.r600 = r600; self.r700 = r700
-        self.r800 = r800; self.r900 = r900; self.r1000 = r1000
+        self.radius0 = radius0; self.radius100 = radius100; self.radius200 = radius200; self.radius300 = radius300
+        self.radius400 = radius400; self.radius500 = radius500; self.radius600 = radius600; self.radius700 = radius700
+        self.radius800 = radius800; self.radius900 = radius900; self.radius1000 = radius1000
     }
 
-    public func with(_ mutate: (inout CDSRadius) -> Void) -> CDSRadius {
+    public func with(_ mutate: (inout CDSBorderRadius) -> Void) -> CDSBorderRadius {
         var copy = self
         mutate(&copy)
         return copy
     }
 
-    /// Resolve a border-radius token: `theme.radius[.r400]`. Pairs with ``CDSRadiusToken`` for
-    /// dynamic, data-driven, and serialized lookups (mirrors ``CDSColors/subscript(_:)``).
-    public subscript(_ token: CDSRadiusToken) -> CGFloat {
+    /// Resolve a border-radius token: `theme.borderRadius[.radius400]`. Pairs with
+    /// ``CDSBorderRadiusToken`` for dynamic, data-driven, and serialized lookups.
+    public subscript(_ token: CDSBorderRadiusToken) -> CGFloat {
         switch token {
-        case .r0: return r0
-        case .r100: return r100
-        case .r200: return r200
-        case .r300: return r300
-        case .r400: return r400
-        case .r500: return r500
-        case .r600: return r600
-        case .r700: return r700
-        case .r800: return r800
-        case .r900: return r900
-        case .r1000: return r1000
+        case .radius0: return radius0
+        case .radius100: return radius100
+        case .radius200: return radius200
+        case .radius300: return radius300
+        case .radius400: return radius400
+        case .radius500: return radius500
+        case .radius600: return radius600
+        case .radius700: return radius700
+        case .radius800: return radius800
+        case .radius900: return radius900
+        case .radius1000: return radius1000
         }
     }
 
-    public static let `default` = CDSRadius()
+    public static let `default` = CDSBorderRadius()
 }
 
-/// Border width scale, mirroring `theme.borderWidth` in `defaultTheme.ts`.
+/// Border width scale, mirroring `theme.borderWidth` in `defaultTheme.ts` and Android's
+/// `CdsBorderWidth`.
 public struct CDSBorderWidth: Sendable, Equatable {
-    public var w0: CGFloat
-    public var w100: CGFloat
-    public var w200: CGFloat
-    public var w300: CGFloat
-    public var w400: CGFloat
-    public var w500: CGFloat
+    public var borderWidth0: CGFloat
+    public var borderWidth100: CGFloat
+    public var borderWidth200: CGFloat
+    public var borderWidth300: CGFloat
+    public var borderWidth400: CGFloat
+    public var borderWidth500: CGFloat
 
     public init(
-        w0: CGFloat = 0, w100: CGFloat = 1, w200: CGFloat = 2,
-        w300: CGFloat = 4, w400: CGFloat = 6, w500: CGFloat = 8
+        borderWidth0: CGFloat = 0, borderWidth100: CGFloat = 1, borderWidth200: CGFloat = 2,
+        borderWidth300: CGFloat = 4, borderWidth400: CGFloat = 6, borderWidth500: CGFloat = 8
     ) {
-        self.w0 = w0; self.w100 = w100; self.w200 = w200
-        self.w300 = w300; self.w400 = w400; self.w500 = w500
+        self.borderWidth0 = borderWidth0; self.borderWidth100 = borderWidth100
+        self.borderWidth200 = borderWidth200
+        self.borderWidth300 = borderWidth300; self.borderWidth400 = borderWidth400
+        self.borderWidth500 = borderWidth500
     }
 
     public func with(_ mutate: (inout CDSBorderWidth) -> Void) -> CDSBorderWidth {
@@ -139,15 +143,16 @@ public struct CDSBorderWidth: Sendable, Equatable {
         return copy
     }
 
-    /// Resolve a border-width token: `theme.borderWidth[.w100]`. Pairs with ``CDSBorderWidthToken``.
+    /// Resolve a border-width token: `theme.borderWidth[.borderWidth100]`. Pairs with
+    /// ``CDSBorderWidthToken``.
     public subscript(_ token: CDSBorderWidthToken) -> CGFloat {
         switch token {
-        case .w0: return w0
-        case .w100: return w100
-        case .w200: return w200
-        case .w300: return w300
-        case .w400: return w400
-        case .w500: return w500
+        case .borderWidth0: return borderWidth0
+        case .borderWidth100: return borderWidth100
+        case .borderWidth200: return borderWidth200
+        case .borderWidth300: return borderWidth300
+        case .borderWidth400: return borderWidth400
+        case .borderWidth500: return borderWidth500
         }
     }
 

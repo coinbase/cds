@@ -41,35 +41,35 @@ final class ComponentStyleTests: XCTestCase {
     }
 
     func testButtonMetricsBySize() {
-        let space = theme.spacing
-        let radius = theme.radius
+        let space = theme.space
+        let radius = theme.borderRadius
         let icon = theme.iconSize
 
         let xs = buttonMetrics(.xs, theme: theme)
         XCTAssertEqual(xs.paddingX, space.x2)
         XCTAssertEqual(xs.paddingY, space.x0_75)
-        XCTAssertEqual(xs.radius, radius.r700)
+        XCTAssertEqual(xs.radius, radius.radius700)
         XCTAssertEqual(xs.iconSize, icon.s)
         XCTAssertEqual(xs.font, .label1)
 
         let s = buttonMetrics(.s, theme: theme)
         XCTAssertEqual(s.paddingX, space.x2)
         XCTAssertEqual(s.paddingY, space.x1)
-        XCTAssertEqual(s.radius, radius.r700)
+        XCTAssertEqual(s.radius, radius.radius700)
         XCTAssertEqual(s.iconSize, icon.s)
         XCTAssertEqual(s.font, .headline)
 
         let m = buttonMetrics(.m, theme: theme)
         XCTAssertEqual(m.paddingX, space.x3)
         XCTAssertEqual(m.paddingY, space.x1_5)
-        XCTAssertEqual(m.radius, radius.r900)
+        XCTAssertEqual(m.radius, radius.radius900)
         XCTAssertEqual(m.iconSize, icon.m)
         XCTAssertEqual(m.font, .headline)
 
         let l = buttonMetrics(.l, theme: theme)
         XCTAssertEqual(l.paddingX, space.x4)
         XCTAssertEqual(l.paddingY, space.x2)
-        XCTAssertEqual(l.radius, radius.r900)
+        XCTAssertEqual(l.radius, radius.radius900)
         XCTAssertEqual(l.iconSize, icon.m)
         XCTAssertEqual(l.font, .headline)
     }
@@ -96,28 +96,28 @@ final class ComponentStyleTests: XCTestCase {
     }
 
     func testSlideButtonMetricsBySize() {
-        let space = theme.spacing
-        let radius = theme.radius
+        let space = theme.space
+        let radius = theme.borderRadius
         let icon = theme.iconSize
 
         let s = slideButtonMetrics(.s, theme: theme)
         XCTAssertEqual(s.paddingY, space.x1)
         XCTAssertEqual(s.labelPaddingX, space.x2)
-        XCTAssertEqual(s.radius, radius.r700)
+        XCTAssertEqual(s.radius, radius.radius700)
         XCTAssertEqual(s.iconSize, icon.s)
         XCTAssertEqual(s.font, .headline)
 
         let m = slideButtonMetrics(.m, theme: theme)
         XCTAssertEqual(m.paddingY, space.x1_5)
         XCTAssertEqual(m.labelPaddingX, space.x2)
-        XCTAssertEqual(m.radius, radius.r900)
+        XCTAssertEqual(m.radius, radius.radius900)
         XCTAssertEqual(m.iconSize, icon.m)
         XCTAssertEqual(m.font, .headline)
 
         let l = slideButtonMetrics(.l, theme: theme)
         XCTAssertEqual(l.paddingY, space.x2)
         XCTAssertEqual(l.labelPaddingX, space.x2)
-        XCTAssertEqual(l.radius, radius.r900)
+        XCTAssertEqual(l.radius, radius.radius900)
         XCTAssertEqual(l.iconSize, icon.m)
         XCTAssertEqual(l.font, .headline)
     }

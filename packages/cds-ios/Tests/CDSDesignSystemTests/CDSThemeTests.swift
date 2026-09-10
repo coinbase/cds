@@ -23,12 +23,12 @@ final class CDSThemeTests: XCTestCase {
         XCTAssertEqual(CDSSpectrumHueToken.blue.tokenName, "blue")
         XCTAssertEqual(CDSColorRampToken.step60.tokenName, "60")
         XCTAssertEqual(CDSColorRampToken.step0.tokenName, "0")
-        XCTAssertEqual(CDSRadiusToken.r400.tokenName, "400")
-        XCTAssertEqual(CDSRadiusToken.r1000.tokenName, "1000")
-        XCTAssertEqual(CDSSpacingToken.x1_5.tokenName, "1.5")
-        XCTAssertEqual(CDSSpacingToken.x0_25.tokenName, "0.25")
-        XCTAssertEqual(CDSSpacingToken.x2.tokenName, "2")
-        XCTAssertEqual(CDSBorderWidthToken.w100.tokenName, "100")
+        XCTAssertEqual(CDSBorderRadiusToken.radius400.tokenName, "400")
+        XCTAssertEqual(CDSBorderRadiusToken.radius1000.tokenName, "1000")
+        XCTAssertEqual(CDSSpaceToken.x1_5.tokenName, "1.5")
+        XCTAssertEqual(CDSSpaceToken.x0_25.tokenName, "0.25")
+        XCTAssertEqual(CDSSpaceToken.x2.tokenName, "2")
+        XCTAssertEqual(CDSBorderWidthToken.borderWidth100.tokenName, "100")
         XCTAssertEqual(CDSIconSizeToken.m.tokenName, "m")
         XCTAssertEqual(CDSAvatarSizeToken.xl.tokenName, "xl")
         XCTAssertEqual(CDSControlSizeToken.checkboxSize.tokenName, "checkboxSize")
@@ -38,16 +38,16 @@ final class CDSThemeTests: XCTestCase {
     }
 
     func testScaleSubscriptsMatchStoredProperties() {
-        let radius = CDSRadius.default
-        XCTAssertEqual(radius[.r200], radius.r200)
-        XCTAssertEqual(radius[.r1000], radius.r1000)
+        let radius = CDSBorderRadius.default
+        XCTAssertEqual(radius[.radius200], radius.radius200)
+        XCTAssertEqual(radius[.radius1000], radius.radius1000)
 
-        let spacing = CDSSpacing.default
+        let spacing = CDSSpace.default
         XCTAssertEqual(spacing[.x2], spacing.x2)
         XCTAssertEqual(spacing[.x1_5], spacing.x1_5)
 
         let borderWidth = CDSBorderWidth.default
-        XCTAssertEqual(borderWidth[.w100], borderWidth.w100)
+        XCTAssertEqual(borderWidth[.borderWidth100], borderWidth.borderWidth100)
 
         let iconSize = CDSIconSize.default
         XCTAssertEqual(iconSize[.m], iconSize.m)
@@ -62,13 +62,13 @@ final class CDSThemeTests: XCTestCase {
         XCTAssertEqual(illustration[.primary], illustration.primary)
         XCTAssertEqual(illustration[.gray4], illustration.gray4)
 
-        let shadow = CDSShadowScale.default
+        let shadow = CDSShadows.default
         XCTAssertEqual(shadow[.elevation1], shadow.elevation1)
         XCTAssertEqual(shadow[.elevation2], shadow.elevation2)
 
         // Every subscript is exhaustive over its token enum.
-        for t in CDSRadiusToken.allCases { _ = radius[t] }
-        for t in CDSSpacingToken.allCases { _ = spacing[t] }
+        for t in CDSBorderRadiusToken.allCases { _ = radius[t] }
+        for t in CDSSpaceToken.allCases { _ = spacing[t] }
         for t in CDSBorderWidthToken.allCases { _ = borderWidth[t] }
         for t in CDSIconSizeToken.allCases { _ = iconSize[t] }
         for t in CDSAvatarSizeToken.allCases { _ = avatarSize[t] }
@@ -76,8 +76,8 @@ final class CDSThemeTests: XCTestCase {
         for t in CDSIllustrationColorToken.allCases { _ = illustration[t] }
         for t in CDSShadowToken.allCases { _ = shadow[t] }
 
-        XCTAssertEqual(CDSRadiusToken.allCases.count, 11)
-        XCTAssertEqual(CDSSpacingToken.allCases.count, 15)
+        XCTAssertEqual(CDSBorderRadiusToken.allCases.count, 11)
+        XCTAssertEqual(CDSSpaceToken.allCases.count, 15)
         XCTAssertEqual(CDSBorderWidthToken.allCases.count, 6)
         XCTAssertEqual(CDSIconSizeToken.allCases.count, 4)
         XCTAssertEqual(CDSAvatarSizeToken.allCases.count, 6)
@@ -123,13 +123,13 @@ final class CDSThemeTests: XCTestCase {
 
     func testDefaultThemeCarriesAllScales() {
         let theme = CDSThemeSet.default.resolve(.light)
-        XCTAssertEqual(theme.spacing.x2, 16)
-        XCTAssertEqual(theme.radius.r200, 8)
-        XCTAssertEqual(theme.borderWidth.w100, 1)
+        XCTAssertEqual(theme.space.x2, 16)
+        XCTAssertEqual(theme.borderRadius.radius200, 8)
+        XCTAssertEqual(theme.borderWidth.borderWidth100, 1)
         XCTAssertEqual(theme.iconSize.m, 24)
         XCTAssertEqual(theme.avatarSize.xl, 40)
         XCTAssertEqual(theme.controlSize.switchWidth, 52)
-        XCTAssertEqual(theme.shadow.elevation2.radius, 24)
+        XCTAssertEqual(theme.shadows.elevation2.blurRadius, 24)
     }
 
     func testTypographyIsThemeableAndDefaults() {
@@ -144,7 +144,7 @@ final class CDSThemeTests: XCTestCase {
 
     func testCustomColorThemeOverridesSelectively() {
         let brand = CDSColors.light.with { $0.bgPrimary = Color(cdsHex: 0x7C3AED) }
-        let set = CDSThemeSet(light: brand)
+        let set = CDSThemeSet(lightColors: brand)
         let resolved = set.resolve(.light).colors.bgPrimary.resolve(in: .init())
         XCTAssertEqual(Double(resolved.red), 124.0 / 255.0, accuracy: 0.01)
         XCTAssertEqual(Double(resolved.green), 58.0 / 255.0, accuracy: 0.01)
@@ -166,14 +166,14 @@ final class CDSThemeTests: XCTestCase {
     func testCdsThemeBuilderOverridesFromBase() {
         let acme = cdsTheme {
             $0.id = "acme"
-            $0.light.bgPrimary = Color(cdsHex: 0x7C3AED)
-            $0.spacing.x2 = 24
+            $0.lightColors.bgPrimary = Color(cdsHex: 0x7C3AED)
+            $0.space.x2 = 24
         }
         XCTAssertEqual(acme.id, "acme")
-        XCTAssertEqual(acme.spacing.x2, 24)
+        XCTAssertEqual(acme.space.x2, 24)
         // Untouched axes inherit the default theme.
-        XCTAssertEqual(acme.radius.r200, CDSRadius.default.r200)
-        XCTAssertEqual(acme.dark.bgPrimary, CDSColors.dark.bgPrimary)
+        XCTAssertEqual(acme.borderRadius.radius200, CDSBorderRadius.default.radius200)
+        XCTAssertEqual(acme.darkColors.bgPrimary, CDSColors.dark.bgPrimary)
 
         let resolved = acme.resolve(.light).colors.bgPrimary.resolve(in: .init())
         XCTAssertEqual(Double(resolved.red), 124.0 / 255.0, accuracy: 0.01)
@@ -190,10 +190,10 @@ final class CDSThemeTests: XCTestCase {
     func testChangingAnyTokenBreaksThemeEquality() {
         let base = CDSThemeSet.default.resolve(.light)
 
-        let colorChanged = cdsTheme { $0.light.bgPrimary = Color(cdsHex: 0x010203) }.resolve(.light)
+        let colorChanged = cdsTheme { $0.lightColors.bgPrimary = Color(cdsHex: 0x010203) }.resolve(.light)
         XCTAssertNotEqual(base, colorChanged)
 
-        let spacingChanged = cdsTheme { $0.spacing.x2 = 999 }.resolve(.light)
+        let spacingChanged = cdsTheme { $0.space.x2 = 999 }.resolve(.light)
         XCTAssertNotEqual(base, spacingChanged)
 
         let typographyChanged = cdsTheme {
@@ -210,12 +210,12 @@ final class CDSThemeTests: XCTestCase {
         XCTAssertNotEqual(CDSColors.light, CDSColors.dark)
         XCTAssertEqual(CDSSpectrum.light, CDSSpectrum.light)
         XCTAssertEqual(CDSTypography.default, CDSTypography.default)
-        XCTAssertEqual(CDSSpacing.default, CDSSpacing.default)
-        XCTAssertEqual(CDSShadowScale.default, CDSShadowScale.default)
+        XCTAssertEqual(CDSSpace.default, CDSSpace.default)
+        XCTAssertEqual(CDSShadows.default, CDSShadows.default)
     }
 
     func testProviderValueTakesPrecedenceOverFallback() {
-        let brand = cdsTheme { $0.light.bgPrimary = Color(cdsHex: 0x010203) }.resolve(.light)
+        let brand = cdsTheme { $0.lightColors.bgPrimary = Color(cdsHex: 0x010203) }.resolve(.light)
         let resolved = CDSThemeEnvironment.resolved(stored: brand, scheme: .light, isPreview: false)
         XCTAssertEqual(resolved, brand)
     }
@@ -225,7 +225,7 @@ final class CDSThemeTests: XCTestCase {
         // These must stay split: injecting through the trapping `cdsTheme` getter crashes SwiftUI's
         // writable-key-path materialization at runtime.
         var env = EnvironmentValues()
-        let brand = cdsTheme { $0.light.bgPrimary = Color(cdsHex: 0x040506) }.resolve(.light)
+        let brand = cdsTheme { $0.lightColors.bgPrimary = Color(cdsHex: 0x040506) }.resolve(.light)
         env.cdsThemeStorage = brand
         XCTAssertEqual(env.cdsTheme, brand)
     }

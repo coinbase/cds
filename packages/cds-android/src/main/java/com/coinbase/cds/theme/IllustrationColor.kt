@@ -27,6 +27,25 @@ public class CdsIllustrationColors internal constructor(
     public val invert: Color,
     public val invert2: Color,
 ) {
+    /** Resolves a [CdsIllustrationColorToken]: `CdsTheme.illustrationColors[CdsIllustrationColorToken.Primary]`. */
+    public operator fun get(token: CdsIllustrationColorToken): Color = when (token) {
+        CdsIllustrationColorToken.Primary -> primary
+        CdsIllustrationColorToken.Black -> black
+        CdsIllustrationColorToken.White -> white
+        CdsIllustrationColorToken.Gray -> gray
+        CdsIllustrationColorToken.Gray2 -> gray2
+        CdsIllustrationColorToken.Gray3 -> gray3
+        CdsIllustrationColorToken.Gray4 -> gray4
+        CdsIllustrationColorToken.Positive -> positive
+        CdsIllustrationColorToken.Negative -> negative
+        CdsIllustrationColorToken.Accent1 -> accent1
+        CdsIllustrationColorToken.Accent2 -> accent2
+        CdsIllustrationColorToken.Accent3 -> accent3
+        CdsIllustrationColorToken.Accent4 -> accent4
+        CdsIllustrationColorToken.Invert -> invert
+        CdsIllustrationColorToken.Invert2 -> invert2
+    }
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other !is CdsIllustrationColors) return false
@@ -111,4 +130,20 @@ public class CdsIllustrationColors internal constructor(
             )
         }
     }
+}
+
+/**
+ * Every color in [CdsIllustrationColors] as an enumerable value. Resolve one against a theme with
+ * [CdsIllustrationColors.get]; iterate the palette with `CdsIllustrationColorToken.entries`.
+ *
+ * Entries may be added in a minor release, so this enum is not safe to match exhaustively --
+ * include an `else` branch in any `when` over it.
+ */
+public enum class CdsIllustrationColorToken {
+    Primary, Black, White, Gray, Gray2, Gray3, Gray4,
+    Positive, Negative, Accent1, Accent2, Accent3, Accent4, Invert, Invert2,
+    ;
+
+    /** The canonical CDS spelling (`gray4`), matching the RN `illustrationColor` key. */
+    public val tokenName: String get() = name.replaceFirstChar { it.lowercase() }
 }

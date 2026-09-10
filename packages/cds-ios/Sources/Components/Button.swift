@@ -115,7 +115,7 @@ private struct ButtonInnerStyle<Leading: View, Trailing: View>: ButtonStyle {
         let scrim: Color = theme.colorScheme == .dark ? .white : .black
         let shape = RoundedRectangle(cornerRadius: metrics.radius)
 
-        return HStack(spacing: theme.spacing.x1) {
+        return HStack(spacing: theme.space.x1) {
             if loading {
                 ProgressCircle(color: colors.content, diameter: metrics.iconSize)
             } else {

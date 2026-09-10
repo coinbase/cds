@@ -17,10 +17,10 @@ together: when you add or touch a declaration, decide its visibility on purpose.
   symbol is meant for customers.
 - The public surface is the **theme layer** in `Sources/Theme/`: `CDSTheme`, `CDSThemeSet`,
   `cdsTheme(base:_:)`, `CDSThemeProvider`, `InvertedThemeProvider`, the token types
-  (`CDSColors`, `CDSSpectrum`, `CDSColorRamp`, `CDSIllustrationColors`, `CDSSpacing`, `CDSRadius`,
+  (`CDSColors`, `CDSSpectrum`, `CDSColorRamp`, `CDSIllustrationColors`, `CDSSpace`, `CDSBorderRadius`,
   `CDSBorderWidth`, `CDSIconSize`, `CDSAvatarSize`, `CDSControlSize`, `CDSTypography`,
-  `CDSTextAttributes`, `CDSShadowScale`, `CDSShadow`), the token enums (`CDSColorToken`,
-  `CDSSpectrumHueToken`, `CDSColorRampToken`, `CDSRadiusToken`, `CDSSpacingToken`,
+  `CDSTextAttributes`, `CDSShadows`, `CDSShadow`), the token enums (`CDSColorToken`,
+  `CDSSpectrumHueToken`, `CDSColorRampToken`, `CDSBorderRadiusToken`, `CDSSpaceToken`,
   `CDSBorderWidthToken`, `CDSIconSizeToken`, `CDSAvatarSizeToken`, `CDSControlSizeToken`,
   `CDSIllustrationColorToken`, `CDSShadowToken`, `CDSTextStyle`), and the `\.cdsTheme` environment
   accessor plus the `Color(cdsHex:)` helper.
@@ -43,7 +43,7 @@ together: when you add or touch a declaration, decide its visibility on purpose.
 
 - **Reading tokens:** read the resolved theme from the environment with
   `@Environment(\.cdsTheme) private var theme`, then reach a token by property (`theme.colors.fgPrimary`,
-  `theme.spacing.x2`, `theme.radius.r400`, `theme.typography[.title1]`) or by token
+  `theme.space.x2`, `theme.borderRadius.radius400`, `theme.typography[.title1]`) or by token
   (`theme.colors[.fgPrimary]`, `theme.spectrum[.blue][.step60]`). See [`docs/using-tokens.md`](docs/using-tokens.md).
 - **Authoring a theme:** the `cdsTheme { }` builder, which returns a `CDSThemeSet`. Token types have
   `internal` memberwise initializers on purpose — do not add public ones. Build custom values through

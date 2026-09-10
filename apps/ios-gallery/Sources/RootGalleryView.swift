@@ -55,7 +55,7 @@ struct GalleryScreen: View {
 
     var body: some View {
         ScrollView {
-            VStack(alignment: .leading, spacing: cds.spacing.x3) {
+            VStack(alignment: .leading, spacing: cds.space.x3) {
                 controls
 
                 ColorGallery()
@@ -69,14 +69,14 @@ struct GalleryScreen: View {
                 ShadowGallery()
                 ComponentsGallery()
             }
-            .padding(cds.spacing.x2)
+            .padding(cds.space.x2)
             .frame(maxWidth: .infinity, alignment: .leading)
         }
         .background(cds.colors.bg)
     }
 
     private var controls: some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x1) {
+        VStack(alignment: .leading, spacing: cds.space.x1) {
             CDSDesignSystem.Text("CDS iOS — Theme Gallery", style: .title2)
             CDSDesignSystem.Text("Live view of every token scale in the active theme.", style: .label2, color: cds.colors.fgMuted)
 
@@ -90,9 +90,9 @@ struct GalleryScreen: View {
             }
             .pickerStyle(.segmented)
         }
-        .padding(cds.spacing.x2)
+        .padding(cds.space.x2)
         .frame(maxWidth: .infinity, alignment: .leading)
         .background(cds.colors.bgSecondary)
-        .clipShape(RoundedRectangle(cornerRadius: cds.radius.r300))
+        .clipShape(RoundedRectangle(cornerRadius: cds.borderRadius.radius300))
     }
 }

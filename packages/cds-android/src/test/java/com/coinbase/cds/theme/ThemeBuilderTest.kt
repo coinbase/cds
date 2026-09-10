@@ -73,4 +73,22 @@ class ThemeBuilderTest {
         assertEquals(build(brandBlue).hashCode(), build(brandBlue).hashCode())
         assertNotEquals(build(brandBlue), build(brandOrange))
     }
+
+    @Test
+    fun `illustration and shadow tokens resolve the same values as properties`() {
+        val colors = CdsIllustrationColors.Light
+        assertEquals(colors.primary, colors[CdsIllustrationColorToken.Primary])
+        assertEquals(colors.gray4, colors[CdsIllustrationColorToken.Gray4])
+        assertEquals("gray4", CdsIllustrationColorToken.Gray4.tokenName)
+        assertEquals(CdsIllustrationColorToken.entries.size, 15)
+        for (token in CdsIllustrationColorToken.entries) {
+            colors[token]
+        }
+
+        val shadows = CdsShadows.Default
+        assertEquals(shadows.elevation1, shadows[CdsShadowToken.Elevation1])
+        assertEquals(shadows.elevation2, shadows[CdsShadowToken.Elevation2])
+        assertEquals("elevation1", CdsShadowToken.Elevation1.tokenName)
+        assertEquals(CdsShadowToken.entries.size, 2)
+    }
 }

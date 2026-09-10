@@ -12,18 +12,18 @@ extension CDSThemeSet {
         let brandLight = Color(cdsHex: 0x7C3AED)
         let brandDark = Color(cdsHex: 0xA78BFA)
 
-        $0.light.bgPrimary = brandLight
-        $0.light.fgPrimary = brandLight
-        $0.light.bgLinePrimary = brandLight
-        $0.light.accentBoldBlue = brandLight
+        $0.lightColors.bgPrimary = brandLight
+        $0.lightColors.fgPrimary = brandLight
+        $0.lightColors.bgLinePrimary = brandLight
+        $0.lightColors.accentBoldBlue = brandLight
 
-        $0.dark.bgPrimary = brandDark
-        $0.dark.fgPrimary = brandDark
-        $0.dark.bgLinePrimary = brandDark
-        $0.dark.accentBoldBlue = brandDark
+        $0.darkColors.bgPrimary = brandDark
+        $0.darkColors.fgPrimary = brandDark
+        $0.darkColors.bgLinePrimary = brandDark
+        $0.darkColors.accentBoldBlue = brandDark
 
         // Rounder corners and a touch more breathing room, to make the brand visibly distinct.
-        $0.radius.r300 = 20
-        $0.spacing.x2 = 20
+        $0.borderRadius.radius300 = 20
+        $0.space.x2 = 20
     }
 }
