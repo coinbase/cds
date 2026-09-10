@@ -33,8 +33,7 @@ export type HelperTextProps = {
 } & TextProps<TextDefaultElement>;
 
 const iconCss = css`
-  display: inline-block;
-  padding-inline-end: var(--space-0_5);
+  vertical-align: middle;
 `;
 
 export const HelperText = memo(function HelperTex({
@@ -72,7 +71,7 @@ export const HelperText = memo(function HelperTex({
       {...props}
     >
       {color === 'fgNegative' && (
-        <Box as="span" className={iconCss}>
+        <Box as="span" className={iconCss} display="inline-flex" paddingEnd={0.5}>
           <Icon
             active
             accessibilityLabel={errorIconAccessibilityLabel}

@@ -43,15 +43,15 @@ export const HelperText = memo(function HelperText({
   const sourceSize = getIconSourceSize(iconSize);
   const glyphKey = `info-${sourceSize}-active` as const;
   const glyph = glyphMap[glyphKey];
+  const iconGap = theme.space[0.5];
 
   const iconStyle = useMemo(
     () => [
       {
         fontFamily: 'CoinbaseIcons',
         fontSize: iconSize,
-        height: iconSize,
-        width: iconSize,
-        letterSpacing: 4,
+        lineHeight: iconSize,
+        paddingEnd: iconGap,
       },
       // TODO: when we actually remove dangerouslySetColor:
       // when migrating from dangerouslySetColor to style.color,
@@ -60,7 +60,7 @@ export const HelperText = memo(function HelperText({
       // We need to have a migrator handle this or document in future migration guide.
       styles?.icon,
     ],
-    [iconSize, styles?.icon],
+    [iconGap, iconSize, styles?.icon],
   );
 
   return (
@@ -77,10 +77,8 @@ export const HelperText = memo(function HelperText({
           accessible
           accessibilityLabel={errorIconAccessibilityLabel}
           accessibilityRole="image"
-          align={align}
           color={color}
           dangerouslySetColor={dangerouslySetColor}
-          font="label2"
           style={iconStyle}
           testID={errorIconTestID}
         >

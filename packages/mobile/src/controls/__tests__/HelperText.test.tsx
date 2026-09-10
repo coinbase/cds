@@ -33,6 +33,21 @@ describe('HelperText.test', () => {
     expect(screen.getByTestId('error-icon')).toHaveStyle({ color: 'yellow' });
   });
 
+  it('sizes the error icon to the xs icon token without a clipped box', () => {
+    render(
+      <DefaultThemeProvider>
+        <HelperText color="fgNegative" errorIconTestID="error-icon">
+          Test text
+        </HelperText>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('error-icon')).toHaveStyle({
+      fontSize: 12,
+      lineHeight: 12,
+    });
+  });
+
   it('renders custom spacing', () => {
     render(
       <DefaultThemeProvider>
