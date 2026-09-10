@@ -217,10 +217,10 @@ Follow [Compose accessibility](https://developer.android.com/develop/ui/compose/
 
 RN `testID` maps to **`modifier = Modifier.testTag("…")`** on the component root — do not add a separate `testID` parameter. Full rules: `references/ui-testing.md`.
 
-| Tool | How callers tag | How tests select |
-| ---- | --------------- | ---------------- |
-| Robolectric / `createComposeRule` | `modifier.testTag("confirm")` | `onNodeWithTag("confirm")` |
-| Maestro (black-box) | same `testTag` on composables | `tapOn: { id: "confirm" }` **after** app enables `Modifier.semantics { testTagsAsResourceId = true }` once near the root |
+| Tool                              | How callers tag               | How tests select                                                                                                         |
+| --------------------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| Robolectric / `createComposeRule` | `modifier.testTag("confirm")` | `onNodeWithTag("confirm")`                                                                                               |
+| Maestro (black-box)               | same `testTag` on composables | `tapOn: { id: "confirm" }` **after** app enables `Modifier.semantics { testTagsAsResourceId = true }` once near the root |
 
 **Maestro selector priority** ([Jetpack Compose guide](https://docs.maestro.dev/get-started/supported-platform/android/jetpack)): prefer visible **text**, then **accessibility description** (`contentDescription`), then **`id`** (`testTag`) for duplicates, lists, or visreg anchors.
 
@@ -249,7 +249,7 @@ yarn nx run cds-android:build
 | ---------------------- | ---------------------------------------- | ---------------------------------------------------------------------- |
 | Pure resolvers         | JUnit                                    | `resolveButtonColors`, `resolveCdsInteractionVisualState` priority     |
 | Composition & behavior | Robolectric + `createComposeRule()`      | click invokes callback, disabled blocks click, semantics               |
-| Test tags              | Robolectric + `onNodeWithTag`              | caller `Modifier.testTag` on root is queryable                         |
+| Test tags              | Robolectric + `onNodeWithTag`            | caller `Modifier.testTag` on root is queryable                         |
 | Interaction production | Robolectric + `MutableInteractionSource` | press emits `PressInteraction.Press`; add when component hoists source |
 | Icon slots             | Capture lambda args                      | tint Color and size Dp passed to slots                                 |
 
