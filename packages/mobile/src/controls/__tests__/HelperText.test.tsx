@@ -33,6 +33,44 @@ describe('HelperText.test', () => {
     expect(screen.getByTestId('error-icon')).toHaveStyle({ color: 'yellow' });
   });
 
+  it('sizes the error icon to the xs icon token', () => {
+    render(
+      <DefaultThemeProvider>
+        <HelperText
+          color="fgNegative"
+          errorIconAccessibilityLabel="Error"
+          errorIconTestID="error-icon"
+        >
+          Test text
+        </HelperText>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('error-icon')).toBeTruthy();
+    expect(screen.getByLabelText('Error')).toHaveStyle({
+      fontSize: 12,
+    });
+  });
+
+  it('passes dangerouslySetColor to the helper text and error icon', () => {
+    render(
+      <DefaultThemeProvider>
+        <HelperText
+          color="fgNegative"
+          dangerouslySetColor="red"
+          errorIconAccessibilityLabel="Error"
+          errorIconTestID="error-icon"
+          testID="helper-text"
+        >
+          Test text
+        </HelperText>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('helper-text')).toHaveStyle({ color: 'red' });
+    expect(screen.getByLabelText('Error')).toHaveStyle({ color: 'red' });
+  });
+
   it('renders custom spacing', () => {
     render(
       <DefaultThemeProvider>

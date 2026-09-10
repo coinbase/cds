@@ -81,4 +81,16 @@ describe('HelperText.test', () => {
 
     expect(screen.getByTestId('helper-text-test').className).toContain('4');
   });
+
+  it('keeps the error icon and message together when textAlign is end', () => {
+    render(
+      <DefaultThemeProvider>
+        <HelperText color="fgNegative" errorIconTestID="error-icon" textAlign="end">
+          Test text
+        </HelperText>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('error-icon').parentElement?.className).toContain('flex-end');
+  });
 });

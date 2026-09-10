@@ -37,7 +37,14 @@ export const TextAlign = () => {
   return (
     <div>
       {alignments.map((alignment) => (
-        <HelperText textAlign={alignment}>{`${alignment} message`}</HelperText>
+        <HelperText key={alignment} textAlign={alignment}>
+          {`${alignment} message`}
+        </HelperText>
+      ))}
+      {alignments.map((alignment) => (
+        <HelperText key={`${alignment}-error`} color="fgNegative" textAlign={alignment}>
+          {`${alignment} error message that can wrap onto multiple lines to check icon alignment`}
+        </HelperText>
       ))}
     </div>
   );
