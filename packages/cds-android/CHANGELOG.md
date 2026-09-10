@@ -15,8 +15,11 @@ Its versions are independent of the `@coinbase/cds-*` npm packages.
 
 - Initial public theme API: `CdsTheme`, the `cdsTheme` builder, `CdsThemeProvider`,
   `LocalCdsTheme`, `CdsDefaultTheme`, and the token types under `com.coinbase.cds.theme`.
-- Components (`Button`, `Text`, `SlideButton`, and friends) ship in the AAR but are `internal`
-  and not customer API yet.
+- Public `Button` component with variants, sizes, transparent mode, loading/disabled states, and
+  start/end icon slots under `com.coinbase.cds.components.button`.
+- Public `CdsInteractionDefaults` indication primitive under `com.coinbase.cds.interaction` for
+  shared press, hover, drag, and keyboard-focus affordances.
+- Other components (`Text`, `SlideButton`) ship in the AAR but remain `internal`.
 
 #### Requirements
 

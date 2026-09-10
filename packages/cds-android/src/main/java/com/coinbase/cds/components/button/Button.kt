@@ -1,63 +1,77 @@
 package com.coinbase.cds.components.button
 
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
+import androidx.compose.foundation.hoverable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicText
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.lerp
+import androidx.compose.ui.semantics.ProgressBarRangeInfo
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.disabled
+import androidx.compose.ui.semantics.progressBarRangeInfo
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import com.coinbase.cds.components.internal.Spinner
-import com.coinbase.cds.theme.CdsColorScheme
+import com.coinbase.cds.interaction.CdsInteractionDefaults
 import com.coinbase.cds.theme.CdsTheme
-import com.coinbase.cds.theme.CdsThemeProvider
 
-/** Visual/semantic variant -- the five in the current Figma Button spec. */
-internal enum class ButtonVariant { Primary, Secondary, Tertiary, Positive, Negative }
+/** Visual/semantic variant for [Button]. */
+public enum class ButtonVariant {
+    Primary,
+    Secondary,
+    Tertiary,
+    Positive,
+    Negative,
+    Inverse,
+}
 
-/** Size tier. The four sizes (`xs`/`s`/`m`/`l`) in the Figma Button spec. */
-internal enum class ButtonSize { Xs, S, M, L }
-
-private const val PressedScale = 0.98f
-private const val DisabledAlpha = 0.4f
-private const val PressedBlendFraction = 0.15f
+/** Size tier for [Button]. */
+public enum class ButtonSize {
+    Xs,
+    S,
+    M,
+    L,
+}
 
 /**
  * CDS's primary call-to-action control. Covers [variant], [size], [enabled]/[loading] state,
- * [transparent], [fullWidth], and leading/trailing icon slots. Raw color/background/border
- * overrides are deliberately absent -- re-theme via [CdsThemeProvider] instead, so the override
- * applies consistently rather than one call site at a time.
+ * [transparent], icon slots, and accessibility semantics. Raw color/background/border overrides
+ * are deliberately absent — re-theme via [com.coinbase.cds.theme.CdsThemeProvider] instead.
  *
- * Temporarily `internal` for the first AAR release — this was an experiment and is not customer
- * API yet.
- *
- * Reads colors and metrics from the ambient [CdsTheme], so wrapping a subtree in a
- * [CdsThemeProvider] override -- e.g. a customer brand theme -- is picked up automatically with no
- * extra wiring.
+ * For full-width layout, pass `Modifier.fillMaxWidth()`. For test hooks (RN `testID` equivalent),
+ * pass `modifier = Modifier.testTag("confirm")` — the tag is applied on this root `Row` alongside
+ * button semantics and gestures. Maestro can select it with `id:` when the host app enables
+ * `testTagsAsResourceId` at the activity root; prefer matching visible label text when unique.
+ * For shared interaction patterns see `packages/cds-android/docs/interaction.md`. For Maestro and
+ * `testTag` conventions see the cds-rn-to-compose `ui-testing` reference.
  *
  * @param transparent Renders on the plain page background with variant-colored text instead of a
- * filled, variant-colored container -- CDS's lower-emphasis "ghost" treatment.
- * @param leadingIcon Called with the button's resolved content color so an icon's tint
- * automatically matches the label and stays correct across variants and themes.
+ * filled, variant-colored container — CDS's lower-emphasis "ghost" treatment.
+ * @param interactionSource Hoisted source for press, hover, and focus interactions. Pass the same
+ * instance you observe via `collectIsPressedAsState()` or `interactions.collect`.
+ * @param startIcon Called with the button's resolved content color and icon size so an icon's tint
+ * and dimensions automatically match the label across variants and themes.
+ * @param endIcon Same contract as [startIcon], rendered after the label.
  */
 @Composable
-internal fun Button(
+public fun Button(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -66,54 +80,62 @@ internal fun Button(
     enabled: Boolean = true,
     loading: Boolean = false,
     transparent: Boolean = false,
-    fullWidth: Boolean = false,
-    leadingIcon: (@Composable (tint: Color) -> Unit)? = null,
-    trailingIcon: (@Composable (tint: Color) -> Unit)? = null,
+    maxLines: Int = 1,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    startIcon: (@Composable (tint: Color, size: Dp) -> Unit)? = null,
+    endIcon: (@Composable (tint: Color, size: Dp) -> Unit)? = null,
 ) {
     val colors = buttonColors(variant, transparent)
     val metrics = buttonMetrics(size)
-
-    val interactionSource = remember { MutableInteractionSource() }
-    val pressed by interactionSource.collectIsPressedAsState()
-    val active = pressed && enabled && !loading
-
-    val scale by animateFloatAsState(if (active) PressedScale else 1f, label = "cdsButtonScale")
-    val containerColor = if (active) {
-        val scrim = if (CdsTheme.colorScheme == CdsColorScheme.Dark) Color.White else Color.Black
-        lerp(colors.container, scrim, PressedBlendFraction)
-    } else {
-        colors.container
-    }
+    val shape = RoundedCornerShape(metrics.radius)
+    val interactive = enabled && !loading
 
     Row(
         modifier = modifier
-            .then(if (fullWidth) Modifier.fillMaxWidth() else Modifier)
-            .scale(scale)
-            .alpha(if (enabled) 1f else DisabledAlpha)
-            .clip(RoundedCornerShape(metrics.radius))
-            .background(containerColor)
+            .alpha(if (enabled) 1f else CdsInteractionDefaults.DisabledAlpha)
+            .semantics(mergeDescendants = true) {
+                role = Role.Button
+                contentDescription = text
+                if (loading) {
+                    stateDescription = "Loading"
+                    progressBarRangeInfo = ProgressBarRangeInfo.Indeterminate
+                }
+                if (!enabled) {
+                    disabled()
+                }
+            }
+            .clip(shape)
+            .background(colors.container)
+            .hoverable(interactionSource = interactionSource, enabled = interactive)
+            .focusable(enabled = interactive, interactionSource = interactionSource)
             .clickable(
                 interactionSource = interactionSource,
-                indication = null,
-                enabled = enabled && !loading,
+                indication = CdsInteractionDefaults.indication(shape),
+                enabled = interactive,
                 role = Role.Button,
                 onClick = onClick,
             )
             .padding(horizontal = metrics.paddingX, vertical = metrics.paddingY),
-        horizontalArrangement = Arrangement.spacedBy(CdsTheme.space.x1, Alignment.CenterHorizontally),
+        horizontalArrangement = Arrangement.spacedBy(
+            CdsTheme.space.x1,
+            Alignment.CenterHorizontally,
+        ),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (loading) {
             Spinner(color = colors.content, diameter = metrics.iconSize)
         } else {
-            leadingIcon?.invoke(colors.content)
+            startIcon?.invoke(colors.content, metrics.iconSize)
             BasicText(
                 text = text,
-                style = metrics.font.copy(color = colors.content),
-                maxLines = 1,
+                style = metrics.font.copy(
+                    color = colors.content,
+                    textAlign = TextAlign.Center,
+                ),
+                maxLines = maxLines,
                 overflow = TextOverflow.Ellipsis,
             )
-            trailingIcon?.invoke(colors.content)
+            endIcon?.invoke(colors.content, metrics.iconSize)
         }
     }
 }

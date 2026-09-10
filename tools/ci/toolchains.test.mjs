@@ -48,7 +48,7 @@ describe('classifyToolchains', () => {
     });
   });
 
-  it('routes shared Nx configuration changes to every toolchain', () => {
+  it('routes shared Nx configuration changes to every language toolchain', () => {
     expect(classifyToolchains(['nx.json'], projects)).toEqual({
       node: true,
       gradle: true,
@@ -70,6 +70,51 @@ describe('classifyToolchains', () => {
     ).toEqual({
       node: false,
       gradle: true,
+      xcode: false,
+    });
+  });
+
+  it('does not start Node for an Android change that also edits skills and AGENTS.md', () => {
+    expect(
+      classifyToolchains(
+        [
+          'AGENTS.md',
+          '.claude/skills/cds-rn-to-compose/SKILL.md',
+          'packages/cds-android/src/main/java/com/coinbase/cds/components/button/Button.kt',
+          'packages/cds-android/docs/interaction.md',
+        ],
+        projects,
+      ),
+    ).toEqual({
+      node: false,
+      gradle: true,
+      xcode: false,
+    });
+  });
+
+  it('does not treat unmatched documentation and skill files as Node', () => {
+    expect(
+      classifyToolchains(
+        [
+          'AGENTS.md',
+          'docs/ci.md',
+          '.claude/skills/cds-rn-to-compose/SKILL.md',
+          '.claude/skills/cds-rn-to-compose/evals/evals.json',
+          'skills/cds-code/SKILL.md',
+        ],
+        projects,
+      ),
+    ).toEqual({
+      node: false,
+      gradle: false,
+      xcode: false,
+    });
+  });
+
+  it('still classifies root Node config files as Node', () => {
+    expect(classifyToolchains(['package.json', 'eslint.config.mjs'], projects)).toEqual({
+      node: true,
+      gradle: false,
       xcode: false,
     });
   });

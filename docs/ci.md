@@ -20,6 +20,7 @@ The orchestrator determines whether Node, Gradle, or Xcode paths changed:
 
 - Node changes call the reusable [Node workflow](../.github/workflows/node.yml). Its Linux jobs use
   `nx affected` plus `toolchain:node`, so only affected Node projects with the requested target run.
+  Format (`yarn nx format:check`) runs in that workflow when Node is selected.
 - Gradle changes call the reusable [Android workflow](../.github/workflows/android.yml), which
   builds and tests the Android library and demo app with JDK 21 and the Android SDK.
 - Xcode changes call the reusable [iOS workflow](../.github/workflows/ios.yml), which builds
@@ -32,6 +33,8 @@ This keeps toolchains isolated while preserving dependency-aware validation:
   web and React Native packages.
 - An Android-only change runs the Gradle lane without Node or Xcode jobs.
 - An iOS-only change runs the Xcode lane without Node or Gradle jobs.
+- Changes under `docs/`, `.claude/`, `.agents/`, `skills/`, and root-level markdown that do not
+  belong to a Node project do not start Node, Gradle, or Xcode on their own.
 - Changes to centralized CI or Nx classification files safely enable all toolchains.
 
 Manually dispatching `ci.yml` enables every toolchain. The reusable Android and iOS workflows can
