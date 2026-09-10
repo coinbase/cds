@@ -101,4 +101,4 @@ Wire every interaction type you want customers to observe to the **same** `Mutab
 | React Native | Jetpack Compose |
 |--------------|-----------------|
 | Storybook stories | `android-app` gallery section |
-| Component docsite (web) | `packages/cds-android/docs/<name>.md` |
+| Component docsite (web) | KDoc on public composable (no per-component `docs/*.md` in cds-android) |

@@ -81,7 +81,7 @@ describe('classifyToolchains', () => {
           'AGENTS.md',
           '.claude/skills/cds-rn-to-compose/SKILL.md',
           'packages/cds-android/src/main/java/com/coinbase/cds/components/button/Button.kt',
-          'packages/cds-android/docs/button.md',
+          'packages/cds-android/docs/interaction.md',
         ],
         projects,
       ),

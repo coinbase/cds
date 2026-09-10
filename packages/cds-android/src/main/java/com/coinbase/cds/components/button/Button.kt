@@ -59,7 +59,8 @@ public enum class ButtonSize {
  * pass `modifier = Modifier.testTag("confirm")` — the tag is applied on this root `Row` alongside
  * button semantics and gestures. Maestro can select it with `id:` when the host app enables
  * `testTagsAsResourceId` at the activity root; prefer matching visible label text when unique.
- * See `packages/cds-android/docs/button.md` and the cds-rn-to-compose `ui-testing` reference.
+ * For shared interaction patterns see `packages/cds-android/docs/interaction.md`. For Maestro and
+ * `testTag` conventions see the cds-rn-to-compose `ui-testing` reference.
  *
  * @param transparent Renders on the plain page background with variant-colored text instead of a
  * filled, variant-colored container — CDS's lower-emphasis "ghost" treatment.

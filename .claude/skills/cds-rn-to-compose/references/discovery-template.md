@@ -129,7 +129,7 @@ fun ComponentName(
 ## Demo & docs
 
 - Gallery section: `apps/android-app/.../<Component>GallerySection.kt`
-- Doc: `packages/cds-android/docs/<component>.md`
+- KDoc on public composable and types (no per-component `docs/*.md`)
 - CHANGELOG entry
 
 ## Open questions
