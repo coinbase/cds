@@ -100,7 +100,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'base',
     'walletLogo',
     'coinbaseOneLogo',
-    'diamondIncentives'
+    'diamondIncentives',
+    'spot'
   ],
   'speciality': [
     'hiddenEye',
@@ -148,7 +149,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'dashboard',
     'application',
     'addPeople',
-    'coinbaseOne'
+    'coinbaseOne',
+    'spot'
   ],
   'closed': [
     'hiddenEye',
@@ -201,7 +203,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'advancedTradeProduct',
     'candlesticks',
     'orderBook',
-    'advanced'
+    'advanced',
+    'spot'
   ],
   'math': [
     'trading',
@@ -216,7 +219,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'chartBar',
     'chartVolume',
     'pyramid',
-    'continuous'
+    'continuous',
+    'portfolio',
+    'spot'
   ],
   'mean': [
     'trading',
@@ -309,7 +314,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'paperclip',
     'list',
     'document',
-    'birthcertificate'
+    'birthcertificate',
+    'orders'
   ],
   '📄': [
     'taxes',
@@ -317,7 +323,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'application',
     'smartContract',
     'list',
-    'document'
+    'document',
+    'orders'
   ],
   '📃': [
     'taxes',
@@ -1033,7 +1040,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'learningCenter',
     'predictions',
     'inviteFriends',
-    'advisor'
+    'advisor',
+    'trade',
+    'paypalLogo'
   ],
   'profile': [
     'account',
@@ -1441,7 +1450,8 @@ export const descriptionMap: Record<string, IconName[]> = {
   'items': [
     'crystalBall',
     'list',
-    'nft'
+    'nft',
+    'orders'
   ],
   '🪄': [
     'crystalBall',
@@ -1500,7 +1510,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'comment'
   ],
   'chart pie': [
-    'chartPie'
+    'chartPie',
+    'portfolio'
   ],
   'data': [
     'chartPie',
@@ -1515,14 +1526,18 @@ export const descriptionMap: Record<string, IconName[]> = {
     'dataStack',
     'beaker',
     'allocation',
-    'config'
+    'config',
+    'portfolio',
+    'spot'
   ],
   'visualization': [
     'chartPie',
     'chartCandles',
     'chartBar',
     'chartVolume',
-    'pyramid'
+    'pyramid',
+    'portfolio',
+    'spot'
   ],
   'numbers': [
     'chartPie',
@@ -1540,7 +1555,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'chartVolume',
     'pyramid',
     'step9',
-    'calculator'
+    'calculator',
+    'portfolio',
+    'spot'
   ],
   '📊': [
     'chartPie',
@@ -1549,7 +1566,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'fib',
     'chartVolume',
     'crossTrade',
-    'pyramid'
+    'pyramid',
+    'portfolio',
+    'spot'
   ],
   '📉': [
     'chartPie',
@@ -1561,7 +1580,9 @@ export const descriptionMap: Record<string, IconName[]> = {
     'chartVolume',
     'crossTrade',
     'pyramid',
-    'chartLine'
+    'chartLine',
+    'portfolio',
+    'spot'
   ],
   '📈': [
     'chartPie',
@@ -1573,10 +1594,13 @@ export const descriptionMap: Record<string, IconName[]> = {
     'chartVolume',
     'crossTrade',
     'pyramid',
-    'chartLine'
+    'chartLine',
+    'portfolio',
+    'spot'
   ],
   '🥧': [
-    'chartPie'
+    'chartPie',
+    'portfolio'
   ],
   'chart': [
     'chartCandles',
@@ -1587,10 +1611,12 @@ export const descriptionMap: Record<string, IconName[]> = {
     'candlesticks',
     'leadChart',
     'ipoChart',
-    'lineChartPoints'
+    'lineChartPoints',
+    'spot'
   ],
   'candles': [
-    'chartCandles'
+    'chartCandles',
+    'spot'
   ],
   'passive': [
     'royalty'
@@ -1729,7 +1755,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'smartContract',
     'list',
     'staggeredList',
-    'orderBook'
+    'orderBook',
+    'orders'
   ],
   'agreement': [
     'documentation',
@@ -3597,16 +3624,20 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'bullet point': [
     'list',
-    'dot'
+    'dot',
+    'orders'
   ],
   'actions': [
-    'list'
+    'list',
+    'orders'
   ],
   'tasks': [
-    'list'
+    'list',
+    'orders'
   ],
   '•': [
-    'list'
+    'list',
+    'orders'
   ],
   'computer': [
     'laptop',
