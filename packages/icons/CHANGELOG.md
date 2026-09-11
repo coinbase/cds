@@ -1,3 +1,16 @@
+## 5.23.0 (2026-09-11)
+
+### 🚀 Features
+
+- Publish icons 2026-09-11
+
+  ##### ⭐️ Added (5)
+  - orders
+  - portfolio
+  - trade
+  - spot
+  - paypalLogo
+
 ## 5.22.0 (8/20/2026 PST)
 
 #### 🚀 Updates
