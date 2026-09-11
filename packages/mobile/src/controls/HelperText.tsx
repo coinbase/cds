@@ -30,15 +30,11 @@ export const HelperText = memo(function HelperText({
   color,
   errorIconAccessibilityLabel,
   errorIconTestID,
-  children,
-  align,
-  dangerouslySetColor,
-  style,
   styles,
   ...props
 }: HelperTextProps) {
   const theme = useTheme();
-  const rootStyle = [style, styles?.root];
+  const rootStyle = [props.style, styles?.root];
   // TODO: when we actually remove dangerouslySetColor:
   // when migrating from dangerouslySetColor to style.color,
   // root style/className color will not automatically style the error icon like dangerouslySetColor.
@@ -55,7 +51,7 @@ export const HelperText = memo(function HelperText({
     [styles?.icon, theme.iconSize.xs, theme.lineHeight.label2],
   );
   const justifyContent =
-    align === 'end' ? 'flex-end' : align === 'center' ? 'center' : 'flex-start';
+    props.align === 'end' ? 'flex-end' : props.align === 'center' ? 'center' : 'flex-start';
 
   if (color === 'fgNegative') {
     return (
@@ -66,37 +62,17 @@ export const HelperText = memo(function HelperText({
           allowFontScaling={false}
           color="fgNegative"
           dangerouslySetColor={
-            typeof dangerouslySetColor === 'string' ? dangerouslySetColor : undefined
+            typeof props.dangerouslySetColor === 'string' ? props.dangerouslySetColor : undefined
           }
           name="info"
           size="xs"
           style={iconStyle}
           testID={errorIconTestID}
         />
-        <Text
-          color={color}
-          dangerouslySetColor={dangerouslySetColor}
-          flexShrink={1}
-          font="label2"
-          style={rootStyle}
-          {...props}
-        >
-          {children}
-        </Text>
+        <Text color={color} font="label2" {...props} flexShrink={1} style={rootStyle} />
       </HStack>
     );
   }
 
-  return (
-    <Text
-      align={align}
-      color={color}
-      dangerouslySetColor={dangerouslySetColor}
-      font="label2"
-      style={rootStyle}
-      {...props}
-    >
-      {children}
-    </Text>
-  );
+  return <Text color={color} font="label2" {...props} style={rootStyle} />;
 });
