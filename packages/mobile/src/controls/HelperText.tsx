@@ -1,9 +1,9 @@
 import React, { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { glyphMap } from '@coinbase/cds-icons/glyphMap';
 
 import { useTheme } from '../hooks/useTheme';
-import { getIconSourceSize } from '../icons/Icon';
+import { Icon } from '../icons/Icon';
+import { HStack } from '../layout/HStack';
 import type { TextProps } from '../typography/Text';
 import { Text } from '../typography/Text';
 
@@ -38,30 +38,54 @@ export const HelperText = memo(function HelperText({
   ...props
 }: HelperTextProps) {
   const theme = useTheme();
-  // Get info icon for negative variant
-  const iconSize = theme.iconSize.xs;
-  const sourceSize = getIconSourceSize(iconSize);
-  const glyphKey = `info-${sourceSize}-active` as const;
-  const glyph = glyphMap[glyphKey];
-  const iconGap = theme.space[0.5];
-
+  const rootStyle = [style, styles?.root];
+  // TODO: when we actually remove dangerouslySetColor:
+  // when migrating from dangerouslySetColor to style.color,
+  // root style/className color will not automatically style the error icon like dangerouslySetColor.
+  // Consumers must set both styles.root and styles.icon (or classNames equivalents).
+  // We need to have a migrator handle this or document in future migration guide.
   const iconStyle = useMemo(
     () => [
       {
-        fontFamily: 'CoinbaseIcons',
-        fontSize: iconSize,
-        lineHeight: iconSize,
-        paddingEnd: iconGap,
+        // Sit on the first line of label2, matching nested-text alignment.
+        marginTop: (theme.lineHeight.label2 - theme.iconSize.xs) / 2,
       },
-      // TODO: when we actually remove dangerouslySetColor:
-      // when migrating from dangerouslySetColor to style.color,
-      // root style/className color will not automatically style the error icon like dangerouslySetColor.
-      // Consumers must set both styles.root and styles.icon (or classNames equivalents).
-      // We need to have a migrator handle this or document in future migration guide.
       styles?.icon,
     ],
-    [iconGap, iconSize, styles?.icon],
+    [styles?.icon, theme.iconSize.xs, theme.lineHeight.label2],
   );
+  const justifyContent =
+    align === 'end' ? 'flex-end' : align === 'center' ? 'center' : 'flex-start';
+
+  if (color === 'fgNegative') {
+    return (
+      <HStack alignItems="flex-start" gap={0.5} justifyContent={justifyContent}>
+        <Icon
+          active
+          accessibilityLabel={errorIconAccessibilityLabel}
+          allowFontScaling={false}
+          color="fgNegative"
+          dangerouslySetColor={
+            typeof dangerouslySetColor === 'string' ? dangerouslySetColor : undefined
+          }
+          name="info"
+          size="xs"
+          style={iconStyle}
+          testID={errorIconTestID}
+        />
+        <Text
+          color={color}
+          dangerouslySetColor={dangerouslySetColor}
+          flexShrink={1}
+          font="label2"
+          style={rootStyle}
+          {...props}
+        >
+          {children}
+        </Text>
+      </HStack>
+    );
+  }
 
   return (
     <Text
@@ -69,22 +93,9 @@ export const HelperText = memo(function HelperText({
       color={color}
       dangerouslySetColor={dangerouslySetColor}
       font="label2"
-      style={[style, styles?.root]}
+      style={rootStyle}
       {...props}
     >
-      {color === 'fgNegative' && (
-        <Text
-          accessible
-          accessibilityLabel={errorIconAccessibilityLabel}
-          accessibilityRole="image"
-          color={color}
-          dangerouslySetColor={dangerouslySetColor}
-          style={iconStyle}
-          testID={errorIconTestID}
-        >
-          {glyph}
-        </Text>
-      )}
       {children}
     </Text>
   );

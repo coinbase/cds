@@ -1,11 +1,10 @@
 import React, { memo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { Icon } from '../icons/Icon';
-import { Box } from '../layout/Box';
 import { Text, type TextDefaultElement, type TextProps } from '../typography/Text';
+import { HStack } from '../layout/HStack';
 
 export type HelperTextProps = {
   /** Color of helper text. negative color will render an icon */
@@ -32,10 +31,6 @@ export type HelperTextProps = {
   };
 } & TextProps<TextDefaultElement>;
 
-const iconCss = css`
-  vertical-align: middle;
-`;
-
 export const HelperText = memo(function HelperTex({
   color,
   id,
@@ -58,6 +53,37 @@ export const HelperText = memo(function HelperTex({
   // We need to have a migrator handle this or document in future migration guide.
   const iconStyle = styles?.icon;
 
+  if (color === 'fgNegative') {
+    return (
+      <HStack gap={0.5} alignItems="center">
+        <Icon
+          active
+          accessibilityLabel={errorIconAccessibilityLabel}
+          className={classNames?.icon}
+          color="fgNegative"
+          dangerouslySetColor={dangerouslySetColor}
+          name="info"
+          size="xs"
+          style={iconStyle}
+          testID={errorIconTestID}
+        />
+        <Text
+          className={cx(className, classNames?.root)}
+          color={color}
+          dangerouslySetColor={dangerouslySetColor}
+          display="block"
+          font="label2"
+          id={id}
+          style={rootStyle}
+          textAlign={textAlign}
+          {...props}
+        >
+          {children}
+        </Text>
+      </HStack>
+    );
+  }
+
   return (
     <Text
       className={cx(className, classNames?.root)}
@@ -70,21 +96,6 @@ export const HelperText = memo(function HelperTex({
       textAlign={textAlign}
       {...props}
     >
-      {color === 'fgNegative' && (
-        <Box as="span" className={iconCss} display="inline-flex" paddingEnd={0.5}>
-          <Icon
-            active
-            accessibilityLabel={errorIconAccessibilityLabel}
-            className={classNames?.icon}
-            color="fgNegative"
-            dangerouslySetColor={dangerouslySetColor}
-            name="info"
-            size="xs"
-            style={iconStyle}
-            testID={errorIconTestID}
-          />
-        </Box>
-      )}
       {children}
     </Text>
   );
