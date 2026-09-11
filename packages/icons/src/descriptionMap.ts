@@ -101,7 +101,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'walletLogo',
     'coinbaseOneLogo',
     'diamondIncentives',
-    'spot'
+    'spot',
+    'history'
   ],
   'speciality': [
     'hiddenEye',
@@ -150,7 +151,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'application',
     'addPeople',
     'coinbaseOne',
-    'spot'
+    'spot',
+    'history'
   ],
   'closed': [
     'hiddenEye',
@@ -315,7 +317,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'list',
     'document',
     'birthcertificate',
-    'orders'
+    'orders',
+    'history'
   ],
   '📄': [
     'taxes',
@@ -324,28 +327,32 @@ export const descriptionMap: Record<string, IconName[]> = {
     'smartContract',
     'list',
     'document',
-    'orders'
+    'orders',
+    'history'
   ],
   '📃': [
     'taxes',
     'documentation',
     'application',
     'smartContract',
-    'document'
+    'document',
+    'history'
   ],
   '📜': [
     'taxes',
     'documentation',
     'application',
     'smartContract',
-    'document'
+    'document',
+    'history'
   ],
   '📑': [
     'taxes',
     'documentation',
     'application',
     'smartContract',
-    'document'
+    'document',
+    'history'
   ],
   'switcher': [
     'appSwitcher'
@@ -1731,23 +1738,27 @@ export const descriptionMap: Record<string, IconName[]> = {
   'smart': [
     'documentation',
     'application',
-    'smartContract'
+    'smartContract',
+    'history'
   ],
   'contract': [
     'documentation',
     'application',
     'smartContract',
-    'document'
+    'document',
+    'history'
   ],
   'rules': [
     'documentation',
     'application',
-    'smartContract'
+    'smartContract',
+    'history'
   ],
   'policy': [
     'documentation',
     'application',
-    'smartContract'
+    'smartContract',
+    'history'
   ],
   'list': [
     'documentation',
@@ -1756,27 +1767,32 @@ export const descriptionMap: Record<string, IconName[]> = {
     'list',
     'staggeredList',
     'orderBook',
-    'orders'
+    'orders',
+    'history'
   ],
   'agreement': [
     'documentation',
     'application',
-    'smartContract'
+    'smartContract',
+    'history'
   ],
   'commitment': [
     'documentation',
     'application',
-    'smartContract'
+    'smartContract',
+    'history'
   ],
   'arrangement': [
     'documentation',
     'application',
-    'smartContract'
+    'smartContract',
+    'history'
   ],
   'settlement': [
     'documentation',
     'application',
-    'smartContract'
+    'smartContract',
+    'history'
   ],
   'settings': [
     'settings',
