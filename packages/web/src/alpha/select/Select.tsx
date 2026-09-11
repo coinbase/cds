@@ -21,7 +21,7 @@ import {
   type SelectProps,
   type SelectType,
 } from './types';
-import { useTypeahead } from './useTypeahead';
+import { useTypeahead } from './typeahead';
 
 // Re-export all types for backward compatibility
 export type {
