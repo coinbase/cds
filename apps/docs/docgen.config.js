@@ -176,6 +176,7 @@ module.exports = {
     'tabs/TabLabel',
     'tabs/TabNavigation',
     'tabs/Tabs',
+    'tabs/TabsScrollArea',
     'tag/Tag',
     'tour/Tour',
     'typography/Link',

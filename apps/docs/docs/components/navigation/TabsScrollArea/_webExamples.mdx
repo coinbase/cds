@@ -1,0 +1,119 @@
+TabsScrollArea is the recommended wrapper when a [Tabs](/components/navigation/Tabs/) row may overflow horizontally. Pass a **function child** that receives `onActiveTabElementChange` and spread that onto **`Tabs`** (along with shared accessibility props) so the scroll region can measure tab positions and scroll the active tab into view.
+
+## Basics
+
+Pair **`TabsScrollArea`** with **`Tabs`**, **`DefaultTab`**, and **`DefaultTabsActiveIndicator`**. Set **`width`** / **`maxWidth`** on **`TabsScrollArea`** so the row overflows on smaller viewports; chevron controls and edge gradients appear when there is offscreen content.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 't1', label: 'Overview' },
+    { id: 't2', label: 'Markets' },
+    { id: 't3', label: 'Trade' },
+    { id: 't4', label: 'Earn' },
+    { id: 't5', label: 'Learn' },
+    { id: 't6', label: 'More' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <TabsScrollArea accessibilityLabel="Scrollable tab list" maxWidth={320} width="100%">
+      {({ onActiveTabElementChange }) => (
+        <Tabs
+          TabComponent={DefaultTab}
+          TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
+          accessibilityLabel="Tabs"
+          activeBackground="bgPrimary"
+          activeTab={activeTab}
+          background="bg"
+          gap={4}
+          onActiveTabElementChange={onActiveTabElementChange}
+          onChange={setActiveTab}
+          tabs={tabs}
+        />
+      )}
+    </TabsScrollArea>
+  );
+}
+```
+
+## Overflow indicator
+
+On web, the default **`TabsScrollAreaOverflowIndicator`** combines a fade gradient with chevron controls.
+
+### Custom `OverflowIndicatorComponent`
+
+Provide your own component that matches **`TabsScrollAreaOverflowIndicatorProps`**: **`direction`** (`'left'` \| `'right'`), **`show`**, **`onClick`**, plus optional **`styles`** / **`classNames`** slots. **`TabsScrollArea`** passes **`accessibilityLabel`** for the side control—forward it to a button or **`IconButton`** when you build a custom control.
+
+```jsx live
+function Example() {
+  const tabs = [
+    { id: 't1', label: 'Overview' },
+    { id: 't2', label: 'Markets' },
+    { id: 't3', label: 'Trade' },
+    { id: 't4', label: 'Earn' },
+    { id: 't5', label: 'Learn' },
+    { id: 't6', label: 'More' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const CustomOverflowIndicator = useCallback(
+    ({ accessibilityLabel, direction, show, onClick, style, className }) => {
+      if (!show) {
+        return null;
+      }
+      return (
+        <Box
+          as="span"
+          className={className}
+          position="absolute"
+          zIndex={3}
+          style={{
+            top: '50%',
+            transform: 'translateY(-50%)',
+            ...(direction === 'left' ? { left: 0 } : { right: 0 }),
+            ...style,
+          }}
+        >
+          <IconButton
+            accessibilityLabel={accessibilityLabel}
+            name={direction === 'left' ? 'caretLeft' : 'caretRight'}
+            onClick={onClick}
+            variant="primary"
+          />
+        </Box>
+      );
+    },
+    [],
+  );
+  return (
+    <TabsScrollArea
+      OverflowIndicatorComponent={CustomOverflowIndicator}
+      accessibilityLabel="Scrollable tab list"
+      maxWidth={320}
+      width="100%"
+    >
+      {({ onActiveTabElementChange }) => (
+        <Tabs
+          TabComponent={DefaultTab}
+          TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
+          accessibilityLabel="Tabs"
+          activeBackground="bgPrimary"
+          activeTab={activeTab}
+          background="bg"
+          gap={4}
+          onActiveTabElementChange={onActiveTabElementChange}
+          onChange={setActiveTab}
+          tabs={tabs}
+        />
+      )}
+    </TabsScrollArea>
+  );
+}
+```
+
+## Styling
+
+Use **`styles`** / **`classNames`** to target the root, scroll container, and overflow controls (`overflowIndicator`, `overflowIndicatorButton`, `overflowIndicatorButtonContainer`, `overflowIndicatorGradient`, and related slots on web).
+
+## Accessibility
+
+Set **`accessibilityLabel`** on **`TabsScrollArea`** for the scrollable tab list region. On web, customize **`previousArrowAccessibilityLabel`** and **`nextArrowAccessibilityLabel`** for the default overflow controls. Ensure **`Tabs`** also has a meaningful **`accessibilityLabel`** for the tablist, as in the [Tabs](/components/navigation/Tabs/) examples.
