@@ -492,14 +492,20 @@ export const Cell: CellComponent = memo(
         };
         if (isAnchor)
           return (
-            <Pressable as="a" href={href} target={target} {...pressableSharedProps}>
+            <Pressable
+              aria-current={selected ? 'true' : undefined}
+              as="a"
+              href={href}
+              target={target}
+              {...pressableSharedProps}
+            >
               {content}
             </Pressable>
           );
 
         if (isButton)
           return (
-            <Pressable as="button" {...pressableSharedProps}>
+            <Pressable aria-pressed={selected} as="button" {...pressableSharedProps}>
               {content}
             </Pressable>
           );
@@ -516,6 +522,7 @@ export const Cell: CellComponent = memo(
         onClick,
         onKeyDown,
         onKeyUp,
+        selected,
         tabIndex,
         testID,
         styles?.pressable,
