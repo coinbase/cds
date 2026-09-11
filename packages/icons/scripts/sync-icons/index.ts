@@ -29,13 +29,6 @@ let commitMessage = `feat: Publish icons ${todaysDate}`;
 const firstAllowedUnicode = 0xf0000; // U+F0000
 const lastAllowedUnicode = 0xffffd; // U+FFFFD
 
-/** Pixel sizes for Figma size tokens used by some icon component sets instead of 12/16/24. */
-const sizeTokenToPx: Record<string, number> = {
-  s: 12,
-  m: 16,
-  l: 24,
-};
-
 // TO DO: Update this when "ui" and "nav" prefixes are removed from the Figma file
 type FigmaIconNodeName = `${'ui' | 'nav'}/${string}`;
 
@@ -254,11 +247,7 @@ const main = async () => {
       if (iconNode.type !== 'COMPONENT') continue;
       console.log(`  Downloading svg asset: "${iconNode.name}" "${iconNode.id}"`);
       // The name of the icon asset node in Figma contains the props of the icon asset
-      const { size: rawSize, active } = stringToObject(iconNode.name) as FigmaIconProps & {
-        size?: number | string;
-      };
-      const size =
-        typeof rawSize === 'string' && rawSize in sizeTokenToPx ? sizeTokenToPx[rawSize] : rawSize;
+      const { size, active } = stringToObject(iconNode.name) as FigmaIconProps;
       // Enforce that all icon assets have valid "size" and "active" props
       if (size === undefined) throw Error(`Icon "${iconName}" is missing a "size" prop`);
       if (typeof size !== 'number') throw Error(`Icon "${iconName}" has an invalid "size" prop`);
