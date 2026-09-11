@@ -1,3 +1,14 @@
+## 9.26.2 (2026-09-11)
+
+### 🩹 Fixes
+
+- Fix: vertically align the helper-text error icon with the text in web and mobile inputs.
+- Fix: dismiss the Android soft keyboard when the mobile `TextInput` unmounts while focused.
+
+### 🧱 Updated Dependencies
+
+- Updated illustrations to 4.48.1
+
 ## 9.26.1 (2026-09-03)
 
 ### 🩹 Fixes

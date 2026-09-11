@@ -1,10 +1,9 @@
-import React, { memo } from 'react';
+import React, { memo, useMemo } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import { css } from '@linaria/core';
 
 import { cx } from '../cx';
 import { Icon } from '../icons/Icon';
-import { Box } from '../layout/Box';
+import { HStack } from '../layout/HStack';
 import { Text, type TextDefaultElement, type TextProps } from '../typography/Text';
 
 export type HelperTextProps = {
@@ -32,61 +31,66 @@ export type HelperTextProps = {
   };
 } & TextProps<TextDefaultElement>;
 
-const iconCss = css`
-  display: inline-block;
-  padding-inline-end: var(--space-0_5);
-`;
-
 export const HelperText = memo(function HelperTex({
   color,
-  id,
   errorIconAccessibilityLabel,
   errorIconTestID,
-  children,
-  dangerouslySetColor,
-  textAlign = 'start',
-  style,
   styles,
-  className,
   classNames,
   ...props
 }: HelperTextProps) {
-  const rootStyle = { ...style, ...styles?.root };
+  const rootStyle = { ...props.style, ...styles?.root };
   // TODO: when we actually remove dangerouslySetColor:
   // when migrating from dangerouslySetColor to style.color,
   // root style/className color will not automatically style the error icon like dangerouslySetColor.
   // Consumers must set both styles.root and styles.icon (or classNames equivalents).
   // We need to have a migrator handle this or document in future migration guide.
-  const iconStyle = styles?.icon;
+  const iconStyle = useMemo(
+    () => ({
+      // Sit on the first line of label2, matching nested-text alignment.
+      marginTop: 'calc((var(--lineHeight-label2) - var(--iconSize-xs)) / 2)',
+      ...styles?.icon,
+    }),
+    [styles?.icon],
+  );
+  const justifyContent =
+    props.textAlign === 'end' ? 'flex-end' : props.textAlign === 'center' ? 'center' : 'flex-start';
+
+  if (color === 'fgNegative') {
+    return (
+      <HStack alignItems="flex-start" gap={0.5} justifyContent={justifyContent}>
+        <Icon
+          active
+          accessibilityLabel={errorIconAccessibilityLabel}
+          className={classNames?.icon}
+          color="fgNegative"
+          dangerouslySetColor={props.dangerouslySetColor}
+          name="info"
+          size="xs"
+          style={iconStyle}
+          testID={errorIconTestID}
+        />
+        <Text
+          color={color}
+          display="block"
+          font="label2"
+          {...props}
+          className={cx(props.className, classNames?.root)}
+          flexShrink={1}
+          style={rootStyle}
+        />
+      </HStack>
+    );
+  }
 
   return (
     <Text
-      className={cx(className, classNames?.root)}
       color={color}
-      dangerouslySetColor={dangerouslySetColor}
       display="block"
       font="label2"
-      id={id}
-      style={rootStyle}
-      textAlign={textAlign}
       {...props}
-    >
-      {color === 'fgNegative' && (
-        <Box as="span" className={iconCss}>
-          <Icon
-            active
-            accessibilityLabel={errorIconAccessibilityLabel}
-            className={classNames?.icon}
-            color="fgNegative"
-            dangerouslySetColor={dangerouslySetColor}
-            name="info"
-            size="xs"
-            style={iconStyle}
-            testID={errorIconTestID}
-          />
-        </Box>
-      )}
-      {children}
-    </Text>
+      className={cx(props.className, classNames?.root)}
+      style={rootStyle}
+    />
   );
 });
