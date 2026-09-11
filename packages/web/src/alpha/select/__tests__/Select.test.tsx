@@ -6,6 +6,7 @@ import userEvent from '@testing-library/user-event';
 import { ComponentConfigProvider } from '../../../system';
 import { DefaultThemeProvider } from '../../../utils/test';
 import { Select, type SelectDropdownComponent, type SelectProps } from '../Select';
+import { TYPEAHEAD_RESET_MS } from '../typeahead';
 
 const mockOptions = [
   { value: 'option1', label: 'Option 1' },
@@ -712,6 +713,94 @@ describe('Select', () => {
       await user.keyboard('{Control>}a{/Control}');
 
       expect(screen.queryByRole('listbox')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Typeahead', () => {
+    const typeAheadOptions = [
+      { value: 'apple', label: 'Apple' },
+      { value: 'banana', label: 'Banana' },
+      { value: 'blueberry', label: 'Blueberry' },
+      { value: 'cherry', label: 'Cherry' },
+    ];
+
+    const getOption = (name: string) => {
+      const option = screen.getAllByRole('option').find((opt) => opt.textContent?.includes(name));
+      if (!option) throw new Error(`Option "${name}" not found`);
+      return option;
+    };
+
+    it('matches a multi-character buffer while the dropdown is open', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} defaultOpen options={typeAheadOptions} />
+        </DefaultThemeProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      screen.getByRole('button').focus();
+      await user.keyboard('bl');
+
+      await waitFor(() => {
+        expect(getOption('Blueberry')).toHaveFocus();
+      });
+    });
+
+    it('cycles through options that share a first letter on repeated key presses', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} defaultOpen options={typeAheadOptions} />
+        </DefaultThemeProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      screen.getByRole('button').focus();
+
+      await user.keyboard('b');
+      await waitFor(() => {
+        expect(getOption('Banana')).toHaveFocus();
+      });
+
+      await user.keyboard('b');
+      await waitFor(() => {
+        expect(getOption('Blueberry')).toHaveFocus();
+      });
+
+      await user.keyboard('b');
+      await waitFor(() => {
+        expect(getOption('Banana')).toHaveFocus();
+      });
+    });
+
+    it('resets the search buffer after the reset timeout elapses', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select {...defaultProps} defaultOpen options={typeAheadOptions} />
+        </DefaultThemeProvider>,
+      );
+
+      screen.getByRole('button').focus();
+
+      await user.keyboard('b');
+      await waitFor(() => {
+        expect(getOption('Banana')).toHaveFocus();
+      });
+
+      // Let the buffer reset. Typing "l" afterwards is a fresh, unmatched buffer ("l"), so focus
+      // must stay on Banana. Without the reset the accumulated "bl" would jump to Blueberry.
+      await new Promise((resolve) => setTimeout(resolve, TYPEAHEAD_RESET_MS + 100));
+
+      await user.keyboard('l');
+      expect(getOption('Banana')).toHaveFocus();
     });
   });
 
