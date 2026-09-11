@@ -3398,5 +3398,11 @@ export const glyphMap = {
   'paypalLogo-16-active': '󰴯',
   'paypalLogo-16-inactive': '󰴰',
   'paypalLogo-24-active': '󰴱',
-  'paypalLogo-24-inactive': '󰴲'
+  'paypalLogo-24-inactive': '󰴲',
+  'history-12-active': '󰵅',
+  'history-12-inactive': '󰵆',
+  'history-16-active': '󰵇',
+  'history-16-inactive': '󰵈',
+  'history-24-active': '󰵉',
+  'history-24-inactive': '󰵊'
 };

@@ -291,6 +291,7 @@ export type IconName =
  | 'helpCenterProduct'
  | 'helpCenterQuestionMark'
  | 'hiddenEye'
+ | 'history'
  | 'hockey'
  | 'home'
  | 'horizontalLine'

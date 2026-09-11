@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-09-11T14:42:42.523Z",
-  "lastUnicode": 986436,
+  "lastUpdated": "2026-09-11T17:07:46.576Z",
+  "lastUnicode": 986442,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -26601,6 +26601,53 @@
           "active": true,
           "size": 12,
           "unicode": 986413
+        }
+      ]
+    },
+    {
+      "nodeId": "7943:4",
+      "name": "history",
+      "description": "navigation, speciality, smart, contract, rules, policy, list, document, agreement, commitment, arrangement, settlement, 📄, 📃, 📜, 📑",
+      "assetsHash": "PMbjj+GTHEOXx3JFUhfuEDsruji5a8h3lunO1zBCK6I=",
+      "nameHash": "RF3QSX+CwcA77Is0qmSWv+1wGCZtIR4Tkp2+XwShrXk=",
+      "createdAt": "2026-09-11T17:04:13.376Z",
+      "lastUpdated": "2026-09-11T17:04:13.376Z",
+      "svgs": [
+        {
+          "name": "history-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986442
+        },
+        {
+          "name": "history-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986441
+        },
+        {
+          "name": "history-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986440
+        },
+        {
+          "name": "history-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986439
+        },
+        {
+          "name": "history-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986438
+        },
+        {
+          "name": "history-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986437
         }
       ]
     }
