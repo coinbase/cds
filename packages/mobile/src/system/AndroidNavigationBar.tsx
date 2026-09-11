@@ -1,6 +1,6 @@
 import { memo, useCallback, useLayoutEffect, useRef } from 'react';
 import { Platform } from 'react-native';
-import changeNavigationBarColor from 'react-native-navigation-bar-color';
+import SystemNavigationBar from 'react-native-system-navigation-bar';
 import { colorToHex } from '@coinbase/cds-common/color/colorToHex';
 
 import type { Theme } from '../core/theme';
@@ -23,12 +23,14 @@ export const useAndroidNavigationBarUpdater = ({
     // On these versions, Android doesn't support changing the color of the navigation bar icons, meaning
     // we risk having a light colored navigation bar with the default white icons.
     if (Platform.OS === 'android' && Platform.Version > 25) {
-      return changeNavigationBarColor(
+      return SystemNavigationBar.setNavigationColor(
         // All palette values are in rgba and color has to be converted to hex.
         colorToHex(bg),
-        // dark-content means light background
-        statusBarStyle === 'dark-content',
-        true,
+        // dark-content means a light background, which needs a light-appearance
+        // navigation bar (dark icons). Scope to the navigation bar only so the
+        // status bar style (managed separately) is left untouched.
+        statusBarStyle === 'dark-content' ? 'light' : 'dark',
+        'navigation',
       );
     }
     return undefined;
