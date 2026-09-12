@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-08-20T15:26:31.294Z",
-  "lastUnicode": 986406,
+  "lastUpdated": "2026-09-11T17:07:46.576Z",
+  "lastUnicode": 986442,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -26366,6 +26366,288 @@
           "active": true,
           "size": 12,
           "unicode": 986401
+        }
+      ]
+    },
+    {
+      "nodeId": "7861:96",
+      "name": "orders",
+      "description": "list, bullet point, items, actions, tasks, document, •, 📄",
+      "assetsHash": "Lvd78hcagyPl8sNExoUF02iOMQzAHXEgmLamjOVielY=",
+      "nameHash": "ifHVl1bp2BgxBjlH22ePRH1L92ClI7h+X9iYsuXnmo4=",
+      "createdAt": "2026-08-27T14:59:16.849Z",
+      "lastUpdated": "2026-08-27T14:59:16.849Z",
+      "svgs": [
+        {
+          "name": "orders-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986412
+        },
+        {
+          "name": "orders-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986411
+        },
+        {
+          "name": "orders-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986410
+        },
+        {
+          "name": "orders-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986409
+        },
+        {
+          "name": "orders-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986408
+        },
+        {
+          "name": "orders-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986407
+        }
+      ]
+    },
+    {
+      "nodeId": "7861:55",
+      "name": "portfolio",
+      "description": "chart pie, data, visualization, numbers, graph, 📊, 📉, 📈, 🥧",
+      "assetsHash": "IQB39UFzCwn/sgA660ogz3poyA15EPaq1gwfjYEraNU=",
+      "nameHash": "MrvNML8hne8yF6dM+FDkONWc7k3YxWMYu1NuK6lF1d0=",
+      "createdAt": "2026-08-27T14:59:16.856Z",
+      "lastUpdated": "2026-08-27T14:59:16.856Z",
+      "svgs": [
+        {
+          "name": "portfolio-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986424
+        },
+        {
+          "name": "portfolio-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986423
+        },
+        {
+          "name": "portfolio-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986422
+        },
+        {
+          "name": "portfolio-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986421
+        },
+        {
+          "name": "portfolio-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986420
+        },
+        {
+          "name": "portfolio-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986419
+        }
+      ]
+    },
+    {
+      "nodeId": "7861:82",
+      "name": "trade",
+      "description": "",
+      "assetsHash": "pSKX9trVHywATQXxGT9TzPc+YGCqozYUk8dFul6ANKE=",
+      "nameHash": "gGWPXQPnSNbs+UopiZliukV6v6QY+NwUYnUdZLHut7o=",
+      "createdAt": "2026-08-27T14:59:16.859Z",
+      "lastUpdated": "2026-08-27T14:59:16.859Z",
+      "svgs": [
+        {
+          "name": "trade-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986436
+        },
+        {
+          "name": "trade-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986435
+        },
+        {
+          "name": "trade-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986434
+        },
+        {
+          "name": "trade-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986433
+        },
+        {
+          "name": "trade-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986432
+        },
+        {
+          "name": "trade-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986431
+        }
+      ]
+    },
+    {
+      "nodeId": "7861:68",
+      "name": "spot",
+      "description": "navigation, speciality, chart, trading, candles, graph, numbers, data, visualization, 📈, 📉, 📊",
+      "assetsHash": "3HwI9ibkAXLVcjb5oq60i/SQPHsfLvpFnmkOtD2h1tI=",
+      "nameHash": "88jxLGOm2q+hJd0pSwJLvC4YzhcuzfCPHkbTtIg1iRg=",
+      "createdAt": "2026-08-27T14:59:16.863Z",
+      "lastUpdated": "2026-08-27T14:59:16.863Z",
+      "svgs": [
+        {
+          "name": "spot-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986430
+        },
+        {
+          "name": "spot-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986429
+        },
+        {
+          "name": "spot-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986428
+        },
+        {
+          "name": "spot-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986427
+        },
+        {
+          "name": "spot-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986426
+        },
+        {
+          "name": "spot-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986425
+        }
+      ]
+    },
+    {
+      "nodeId": "7888:17",
+      "name": "paypalLogo",
+      "description": "",
+      "assetsHash": "tzLxvILOCEAondMogHxeWa6fSDrCsg+r3pokACzO+sU=",
+      "nameHash": "qGoP9d+7R7H7rBuvx2lBvcBy4fa5I6+h7tukylBPJvg=",
+      "createdAt": "2026-08-27T14:59:16.867Z",
+      "lastUpdated": "2026-08-27T14:59:16.867Z",
+      "svgs": [
+        {
+          "name": "paypalLogo-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986418
+        },
+        {
+          "name": "paypalLogo-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986417
+        },
+        {
+          "name": "paypalLogo-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986416
+        },
+        {
+          "name": "paypalLogo-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986415
+        },
+        {
+          "name": "paypalLogo-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986414
+        },
+        {
+          "name": "paypalLogo-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986413
+        }
+      ]
+    },
+    {
+      "nodeId": "7943:4",
+      "name": "history",
+      "description": "navigation, speciality, smart, contract, rules, policy, list, document, agreement, commitment, arrangement, settlement, 📄, 📃, 📜, 📑",
+      "assetsHash": "PMbjj+GTHEOXx3JFUhfuEDsruji5a8h3lunO1zBCK6I=",
+      "nameHash": "RF3QSX+CwcA77Is0qmSWv+1wGCZtIR4Tkp2+XwShrXk=",
+      "createdAt": "2026-09-11T17:04:13.376Z",
+      "lastUpdated": "2026-09-11T17:04:13.376Z",
+      "svgs": [
+        {
+          "name": "history-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986442
+        },
+        {
+          "name": "history-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986441
+        },
+        {
+          "name": "history-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986440
+        },
+        {
+          "name": "history-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986439
+        },
+        {
+          "name": "history-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986438
+        },
+        {
+          "name": "history-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986437
         }
       ]
     }
