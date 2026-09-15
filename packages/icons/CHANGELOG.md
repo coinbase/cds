@@ -1,3 +1,12 @@
+## 5.25.0 (2026-09-15)
+
+### 🚀 Features
+
+- Publish icons 2026-09-15
+
+  ##### ⭐️ Added (1)
+  - linkedInLogo
+
 ## 5.24.0 (2026-09-11)
 
 ### 🚀 Features
