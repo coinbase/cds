@@ -325,6 +325,7 @@ export type IconName =
  | 'lightningBolt'
  | 'lineChartCrypto'
  | 'lineChartPoints'
+ | 'linkedInLogo'
  | 'list'
  | 'liveEvents'
  | 'location'

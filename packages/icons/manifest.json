@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-09-11T17:07:46.576Z",
-  "lastUnicode": 986442,
+  "lastUpdated": "2026-09-15T00:10:11.757Z",
+  "lastUnicode": 986448,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -26648,6 +26648,53 @@
           "active": true,
           "size": 12,
           "unicode": 986437
+        }
+      ]
+    },
+    {
+      "nodeId": "7951:4",
+      "name": "linkedInLogo",
+      "description": "unfollow, People",
+      "assetsHash": "quChYpLEmFeS82s/qY5NGwacxhf4ILKnoJ1Jqpq/Lz8=",
+      "nameHash": "LN/33qSNvmqS2naFRtnCwXBhvBS8t/eZNr8KAUSMMqA=",
+      "createdAt": "2026-09-14T14:59:18.449Z",
+      "lastUpdated": "2026-09-14T15:01:11.730Z",
+      "svgs": [
+        {
+          "name": "linkedInLogo-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986448
+        },
+        {
+          "name": "linkedInLogo-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986447
+        },
+        {
+          "name": "linkedInLogo-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986446
+        },
+        {
+          "name": "linkedInLogo-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986445
+        },
+        {
+          "name": "linkedInLogo-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986444
+        },
+        {
+          "name": "linkedInLogo-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986443
         }
       ]
     }

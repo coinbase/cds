@@ -3404,5 +3404,11 @@ export const glyphMap = {
   'history-16-active': '󰵇',
   'history-16-inactive': '󰵈',
   'history-24-active': '󰵉',
-  'history-24-inactive': '󰵊'
+  'history-24-inactive': '󰵊',
+  'linkedInLogo-12-active': '󰵋',
+  'linkedInLogo-12-inactive': '󰵌',
+  'linkedInLogo-16-active': '󰵍',
+  'linkedInLogo-16-inactive': '󰵎',
+  'linkedInLogo-24-active': '󰵏',
+  'linkedInLogo-24-inactive': '󰵐'
 };

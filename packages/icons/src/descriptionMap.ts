@@ -5861,10 +5861,12 @@ export const descriptionMap: Record<string, IconName[]> = {
     'location'
   ],
   'unfollow': [
-    'unfollowPeople'
+    'unfollowPeople',
+    'linkedInLogo'
   ],
   'People': [
-    'unfollowPeople'
+    'unfollowPeople',
+    'linkedInLogo'
   ],
   'token': [
     'tokenSales'
