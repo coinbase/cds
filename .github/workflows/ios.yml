@@ -1,19 +1,16 @@
 name: iOS
 
-# Reusable native iOS pipeline. ci.yml always calls this workflow; jobs skip when
-# the Xcode toolchain is unaffected so required checks still report.
-
 on:
   workflow_call:
     inputs:
       affected:
-        description: When false, jobs skip so required iOS checks still report a passing status
+        description: Skip jobs when this toolchain is unaffected
         type: boolean
         default: true
   workflow_dispatch:
     inputs:
       affected:
-        description: When false, jobs skip so required iOS checks still report a passing status
+        description: Skip jobs when this toolchain is unaffected
         type: boolean
         default: true
 

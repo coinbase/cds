@@ -1,19 +1,16 @@
 name: Android
 
-# Reusable native Android pipeline. ci.yml always calls this workflow; jobs skip
-# when the Gradle toolchain is unaffected so required checks still report.
-
 on:
   workflow_call:
     inputs:
       affected:
-        description: When false, jobs skip so required Android checks still report a passing status
+        description: Skip jobs when this toolchain is unaffected
         type: boolean
         default: true
   workflow_dispatch:
     inputs:
       affected:
-        description: When false, jobs skip so required Android checks still report a passing status
+        description: Skip jobs when this toolchain is unaffected
         type: boolean
         default: true
 

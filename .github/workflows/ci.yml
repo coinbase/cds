@@ -48,9 +48,7 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: node tools/ci/classifyToolchains.mjs
 
-  # Always call each toolchain workflow so required checks are reported. Jobs
-  # inside skip when that toolchain is unaffected; GitHub treats skipped jobs
-  # as passing.
+  # Always call so required checks report; jobs skip when unaffected.
   node:
     name: Node
     needs: changes

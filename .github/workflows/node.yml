@@ -4,13 +4,13 @@ on:
   workflow_call:
     inputs:
       affected:
-        description: When false, jobs skip so required Node checks still report a passing status
+        description: Skip jobs when this toolchain is unaffected
         type: boolean
         default: true
   workflow_dispatch:
     inputs:
       affected:
-        description: When false, jobs skip so required Node checks still report a passing status
+        description: Skip jobs when this toolchain is unaffected
         type: boolean
         default: true
 
