@@ -14,7 +14,8 @@ executor does not solve the problem because both Node and native projects primar
 Nx 20 cannot use the tags to select `targetDefaults`, but CI already depends on them:
 
 1. The change classifier maps a changed project root to its `toolchain:*` tag and decides which
-   of the Node, Gradle, or Xcode workflows should execute work. Documentation and skill files do
+   of the Node, Gradle, or Xcode workflows should execute work. Every lane is still invoked so
+   required checks report; unaffected lanes skip their jobs. Documentation and skill files do
    not start a language toolchain. See [`docs/ci.md`](ci.md).
 2. The Node workflow positively filters `nx affected` to `toolchain:node`, preventing native
    `build` and `test` targets from running on Node-only Linux jobs.

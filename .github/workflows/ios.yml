@@ -1,10 +1,21 @@
 name: iOS
 
-# Reusable native iOS pipeline. ci.yml decides whether the Xcode toolchain is affected.
+# Reusable native iOS pipeline. ci.yml always calls this workflow; jobs skip when
+# the Xcode toolchain is unaffected so required checks still report.
 
 on:
   workflow_call:
+    inputs:
+      affected:
+        description: When false, jobs skip so required iOS checks still report a passing status
+        type: boolean
+        default: true
   workflow_dispatch:
+    inputs:
+      affected:
+        description: When false, jobs skip so required iOS checks still report a passing status
+        type: boolean
+        default: true
 
 concurrency:
   group: iOS-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
@@ -21,6 +32,7 @@ env:
 jobs:
   test:
     name: Build & Test (theme library)
+    if: ${{ inputs.affected == true }}
     runs-on: macos-15
     timeout-minutes: 30
     steps:
@@ -36,6 +48,7 @@ jobs:
 
   simulator-build:
     name: iOS Simulator build (gallery app)
+    if: ${{ inputs.affected == true }}
     runs-on: macos-15
     timeout-minutes: 30
     steps:

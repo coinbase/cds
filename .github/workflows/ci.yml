@@ -48,8 +48,9 @@ jobs:
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: node tools/ci/classifyToolchains.mjs
 
-  # Always call Node so required `Node / *` checks are reported. Jobs inside
-  # skip when Node is unaffected; GitHub treats skipped jobs as passing.
+  # Always call each toolchain workflow so required checks are reported. Jobs
+  # inside skip when that toolchain is unaffected; GitHub treats skipped jobs
+  # as passing.
   node:
     name: Node
     needs: changes
@@ -60,11 +61,13 @@ jobs:
   android:
     name: Android
     needs: changes
-    if: needs.changes.outputs.gradle == 'true'
     uses: ./.github/workflows/android.yml
+    with:
+      affected: ${{ needs.changes.outputs.gradle == 'true' }}
 
   ios:
     name: iOS
     needs: changes
-    if: needs.changes.outputs.xcode == 'true'
     uses: ./.github/workflows/ios.yml
+    with:
+      affected: ${{ needs.changes.outputs.xcode == 'true' }}
