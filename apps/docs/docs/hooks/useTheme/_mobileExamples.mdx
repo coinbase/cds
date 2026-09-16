@@ -88,6 +88,48 @@ function Example() {
 
 </MDXArticle>
 
+<MDXArticle>
+## Styling with a `boxShadow` shadow token
+
+The example above reads the legacy `shadow*` fields, which is what the built-in CDS themes provide.
+A theme may instead author its `shadow` tokens with the cross-platform `boxShadow` form, in which
+case the whole token can be spread and neither a `Platform.select` nor a native `elevation` is
+needed:
+
+```tsx
+function Example() {
+  const theme = useTheme();
+
+  const styles = StyleSheet.create({
+    container: {
+      padding: theme.space[3],
+      backgroundColor: theme.color.bgAlternate,
+      borderRadius: theme.borderRadius[300],
+      ...theme.shadow.elevation1,
+    },
+  });
+
+  return (
+    <Box style={styles.container}>
+      <Text>Styled using a boxShadow token</Text>
+    </Box>
+  );
+}
+```
+
+To handle either form, narrow on `boxShadow` first:
+
+```tsx
+const shadow = theme.shadow.elevation1;
+
+const shadowStyle =
+  shadow.boxShadow !== undefined
+    ? { boxShadow: shadow.boxShadow }
+    : Platform.select({ ios: shadow, android: {} });
+```
+
+</MDXArticle>
+
 <MDXArticle hideDivider>
 ## Color scheme detection
 

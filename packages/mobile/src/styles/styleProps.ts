@@ -1,6 +1,5 @@
 import type { DimensionValue, TextStyle, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
-import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
 import type { TypeOrNumber } from '@coinbase/cds-common/types/TypeOrNumber';
 
 import type { Theme } from '../core/theme';
@@ -64,7 +63,6 @@ export type StyleProps = {
   marginBottom?: NegativeSpace;
   marginStart?: NegativeSpace;
   marginEnd?: NegativeSpace;
-  elevation?: ElevationLevels;
   textAlign?: TextStyle['textAlign'];
   width?: DimensionValue;
   height?: DimensionValue;

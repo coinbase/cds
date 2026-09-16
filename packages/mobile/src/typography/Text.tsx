@@ -8,6 +8,7 @@ import {
   type TextStyle,
 } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
 import { accessibleOpacityDisabled } from '@coinbase/cds-common/tokens/interactable';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
@@ -71,6 +72,11 @@ export type TextBaseProps = StyleProps & {
    * @deprecationExpectedRemoval v10
    */
   dangerouslySetBackground?: TextStyle['backgroundColor'];
+  /**
+   * @deprecated Has no effect. `Text` never rendered an elevation shadow — it only emitted a raw native `elevation` on Android. Wrap the text in an elevated `Box` instead. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v11
+   */
+  elevation?: ElevationLevels;
   /**
    * @deprecated Do not use this prop, it is a migration escape hatch. This will be removed in a future major release.
    * @deprecationExpectedRemoval v9
@@ -148,9 +154,10 @@ export const Text = memo(
       borderEndWidth,
       borderBottomWidth,
       borderStartWidth,
-      elevation,
       borderWidth,
       borderRadius,
+      // Swallowed: a deprecated no-op kept for type compatibility, never forwarded to the host view.
+      elevation: _elevation,
       font = 'inherit',
       fontFamily = font,
       fontSize = font,
@@ -259,7 +266,6 @@ export const Text = memo(
             borderEndWidth,
             borderBottomWidth,
             borderStartWidth,
-            elevation,
             fontFamily,
             fontSize,
             fontWeight,
@@ -332,7 +338,6 @@ export const Text = memo(
         borderEndWidth,
         borderBottomWidth,
         borderStartWidth,
-        elevation,
         fontFamily,
         fontSize,
         fontWeight,

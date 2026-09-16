@@ -6,6 +6,7 @@ export type PlaygroundStackParamList = {
   DebugExamples: { routeKeys: string[] };
   DebugIconSheet: undefined;
   DebugCustomerComponentConfig: undefined;
+  DebugBoxShadow: undefined;
 } & {
   [key: string]: RouteParams;
 };

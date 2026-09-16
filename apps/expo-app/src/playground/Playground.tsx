@@ -12,6 +12,7 @@ import { Text } from '@coinbase/cds-mobile/typography/Text';
 import type { NativeStackNavigationOptions } from '@react-navigation/native-stack';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
+import { BoxShadowScreen } from './BoxShadowScreen';
 import { CustomerComponentConfigScreen } from './CustomerComponentConfigScreen';
 import { ExamplesListScreen } from './ExamplesListScreen';
 import { ExamplesSearchProvider, SearchContext } from './ExamplesSearchProvider';
@@ -248,6 +249,11 @@ const PlaygroundContent = memo(
           component={CustomerComponentConfigScreen}
           name="DebugCustomerComponentConfig"
           options={{ title: 'Retail Theme / Config' }}
+        />
+        <Stack.Screen
+          component={BoxShadowScreen}
+          name="DebugBoxShadow"
+          options={{ title: 'boxShadow' }}
         />
         {exampleScreens}
       </Stack.Navigator>

@@ -21,6 +21,7 @@ import {
 
 import type { Theme } from '../../../core/theme';
 import { useTheme } from '../../../hooks/useTheme';
+import { getSkiaShadowParams } from '../../../styles/shadow';
 import { useCartesianChartContext } from '../ChartProvider';
 import { type ChartInset, getChartInset, unwrapAnimatedValue } from '../utils/chart';
 import { getColorWithOpacity } from '../utils/gradient';
@@ -474,7 +475,16 @@ export const ChartText = memo<ChartTextProps>(
       [backgroundRectWithOffset],
     );
 
-    const elevationShadow = elevated ? theme.shadow.elevation1 : undefined;
+    const elevationShadow = useMemo(() => {
+      const shadow = elevated ? getSkiaShadowParams(theme.shadow.elevation1) : undefined;
+      if (!shadow) return undefined;
+
+      // getColorWithOpacity replaces the color's alpha rather than composing with it, so it is only
+      // correct for legacy tokens, where the opacity is authored as a separate value.
+      return shadow.opacity === undefined
+        ? shadow
+        : { ...shadow, color: getColorWithOpacity(shadow.color, shadow.opacity) };
+    }, [elevated, theme.shadow.elevation1]);
 
     // Calculate the paragraph's internal x offset from line metrics based on text alignment
     const paragraphTransform = useDerivedValue<Transforms3d>(() => {
@@ -516,13 +526,10 @@ export const ChartText = memo<ChartTextProps>(
           >
             {elevationShadow && (
               <Shadow
-                blur={Number(elevationShadow.shadowRadius ?? 0)}
-                color={getColorWithOpacity(
-                  String(elevationShadow.shadowColor ?? '#000000'),
-                  Number(elevationShadow.shadowOpacity ?? 1),
-                )}
-                dx={Number(elevationShadow.shadowOffset?.width ?? 0)}
-                dy={Number(elevationShadow.shadowOffset?.height ?? 0)}
+                blur={elevationShadow.blur}
+                color={elevationShadow.color}
+                dx={elevationShadow.dx}
+                dy={elevationShadow.dy}
               />
             )}
           </RoundedRect>
