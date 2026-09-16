@@ -17,6 +17,11 @@ const gradlePathPrefixes = [
 
 const xcodePathPrefixes = ['.github/workflows/ios.yml', 'ios/'];
 
+// Language-agnostic trees. These paths must not start Node, Gradle, or Xcode on their own.
+const docsOnlyPathPrefixes = ['docs/', '.claude/', '.agents/', 'skills/'];
+
+const docsMarkdownExtensions = ['.md', '.mdx'];
+
 function normalizePath(file) {
   return file.replace(/^\.\//, '');
 }
@@ -27,12 +32,32 @@ function matchesPath(file, prefixes) {
   );
 }
 
-export function classifyToolchains(changedFiles, projects = []) {
-  const result = {
+function isDocsOnlyPath(file) {
+  return matchesPath(file, docsOnlyPathPrefixes);
+}
+
+function isUnmatchedMarkdown(file) {
+  return docsMarkdownExtensions.some((extension) => file.endsWith(extension));
+}
+
+function emptyClassification() {
+  return {
     node: false,
     gradle: false,
     xcode: false,
   };
+}
+
+export function allToolchains() {
+  return {
+    node: true,
+    gradle: true,
+    xcode: true,
+  };
+}
+
+export function classifyToolchains(changedFiles, projects = []) {
+  const result = emptyClassification();
   const projectsBySpecificity = [...projects].sort((a, b) => b.root.length - a.root.length);
 
   for (const changedFile of changedFiles) {
@@ -54,6 +79,8 @@ export function classifyToolchains(changedFiles, projects = []) {
       result.xcode = true;
     } else if (projectToolchain) {
       result[projectToolchain] = true;
+    } else if (isDocsOnlyPath(file) || isUnmatchedMarkdown(file)) {
+      // Not a language toolchain.
     } else {
       result.node = true;
     }

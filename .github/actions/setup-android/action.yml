@@ -19,4 +19,8 @@ runs:
         # compileSdk for :cds. AGP can download platforms on its own once licenses
         # are accepted; installing 36 here makes a missing-platform failure obvious
         # instead of a mid-build SDK fetch.
-        packages: 'tools platform-tools platforms;android-36'
+        #
+        # No legacy `tools` package: Google removed it from the SDK repository, so
+        # requesting it fails the whole setup step. Its contents moved to
+        # `cmdline-tools` (preinstalled on the runner) and `platform-tools`.
+        packages: 'platform-tools platforms;android-36'
