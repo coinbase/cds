@@ -60,20 +60,20 @@ struct PriceCard: View {
 
 The axes on the resolved `CDSTheme`:
 
-| Property                   | Type                    | Example read                       |
-| -------------------------- | ----------------------- | ---------------------------------- |
-| `theme.colors`             | `CDSColors`             | `theme.colors.bgPrimary`           |
-| `theme.spectrum`           | `CDSSpectrum`           | `theme.spectrum.blue.step60`       |
-| `theme.illustrationColors` | `CDSIllustrationColors` | `theme.illustrationColors.accent1` |
-| `theme.space`            | `CDSSpace`            | `theme.space.x2`                 |
-| `theme.borderWidth`        | `CDSBorderWidth`        | `theme.borderWidth.borderWidth100`           |
-| `theme.borderRadius`             | `CDSBorderRadius`             | `theme.borderRadius.radius400`                |
-| `theme.iconSize`           | `CDSIconSize`           | `theme.iconSize.m`                 |
-| `theme.avatarSize`         | `CDSAvatarSize`         | `theme.avatarSize.xl`              |
-| `theme.controlSize`        | `CDSControlSize`        | `theme.controlSize.switchWidth`    |
-| `theme.typography`         | `CDSTypography`         | `theme.typography[.body]`          |
-| `theme.shadows`             | `CDSShadows`        | `theme.shadows.elevation1.blurRadius`   |
-| `theme.colorScheme`        | `ColorScheme`           | `theme.colorScheme == .dark`       |
+| Property                   | Type                    | Example read                          |
+| -------------------------- | ----------------------- | ------------------------------------- |
+| `theme.colors`             | `CDSColors`             | `theme.colors.bgPrimary`              |
+| `theme.spectrum`           | `CDSSpectrum`           | `theme.spectrum.blue.step60`          |
+| `theme.illustrationColors` | `CDSIllustrationColors` | `theme.illustrationColors.accent1`    |
+| `theme.space`              | `CDSSpace`              | `theme.space.x2`                      |
+| `theme.borderWidth`        | `CDSBorderWidth`        | `theme.borderWidth.borderWidth100`    |
+| `theme.borderRadius`       | `CDSBorderRadius`       | `theme.borderRadius.radius400`        |
+| `theme.iconSize`           | `CDSIconSize`           | `theme.iconSize.m`                    |
+| `theme.avatarSize`         | `CDSAvatarSize`         | `theme.avatarSize.xl`                 |
+| `theme.controlSize`        | `CDSControlSize`        | `theme.controlSize.switchWidth`       |
+| `theme.typography`         | `CDSTypography`         | `theme.typography[.body]`             |
+| `theme.shadows`            | `CDSShadows`            | `theme.shadows.elevation1.blurRadius` |
+| `theme.colorScheme`        | `ColorScheme`           | `theme.colorScheme == .dark`          |
 
 Three properties of these reads are worth knowing.
 
@@ -361,12 +361,12 @@ for a theme.
 | ------------------------------ | ----------------------------------------------------------------------------- |
 | Read the theme in a view       | `@Environment(\.cdsTheme) private var theme`                                  |
 | Paint a themed color           | `.background(theme.colors.bg)` / `.foregroundStyle(theme.colors.fg)`          |
-| Pad or space something         | `.padding(theme.space.x2)`, `spacing: theme.space.x1`                     |
-| Round a corner                 | `RoundedRectangle(cornerRadius: theme.borderRadius.radius400)`                           |
+| Pad or space something         | `.padding(theme.space.x2)`, `spacing: theme.space.x1`                         |
+| Round a corner                 | `RoundedRectangle(cornerRadius: theme.borderRadius.radius400)`                |
 | Style text                     | `.font(theme.typography[.headline].font)` — size, weight, and family together |
-| Apply a shadow                 | `.cdsShadow(theme.shadows.elevation1)`                                         |
+| Apply a shadow                 | `.cdsShadow(theme.shadows.elevation1)`                                        |
 | Know if it's dark              | `theme.colorScheme == .dark` — for assets, not for picking colors             |
 | Hold a color in state          | Store `CDSColorToken`; resolve with `theme.colors[token]`                     |
 | Resolve a token without a view | `CDSTheme.light.colors[token]`, or pass a `CDSColors` in                      |
-| Enumerate a scale              | `CDSColorToken.allCases`, `CDSSpaceToken.allCases`, …                       |
+| Enumerate a scale              | `CDSColorToken.allCases`, `CDSSpaceToken.allCases`, …                         |
 | Invert a subtree               | `InvertedThemeProvider { }` (needs a `CDSThemeProvider` ancestor)             |
