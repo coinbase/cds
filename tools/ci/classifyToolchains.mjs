@@ -1,7 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { appendFileSync } from 'node:fs';
 
-import { classifyToolchains } from './toolchains.mjs';
+import { allToolchains, classifyToolchains } from './toolchains.mjs';
 import { readWorkspaceProjects } from './workspaceProjects.mjs';
 
 const {
@@ -11,14 +11,6 @@ const {
   GITHUB_OUTPUT: githubOutput,
   HEAD_SHA: headSha,
 } = process.env;
-
-function allToolchains() {
-  return {
-    node: true,
-    gradle: true,
-    xcode: true,
-  };
-}
 
 function getChangedFiles() {
   if (forceAll === 'true' || !baseSha || !headSha || /^0+$/.test(baseSha)) {
