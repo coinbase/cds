@@ -161,7 +161,35 @@ export class IOSBuilder extends PlatformBuilder {
 
     console.log(`Booting ${deviceName}...`);
     await run('xcrun', ['simctl', 'boot', deviceUDID]);
-    await run('open', ['-a', 'Simulator']);
+    await this.#openSimulatorUi(deviceUDID);
+  }
+
+  // Bring the simulator window to the front. Xcode 27 deleted Simulator.app and replaced it
+  // with Device Hub, so Device Hub is tried first - that is the version the team is on, and
+  // it is the branch we expect to take. We probe rather than sniff the Xcode version because
+  // a half-upgraded machine can keep a stale LaunchServices entry for the old Simulator.app
+  // path, which makes the version a less reliable signal than what actually resolves.
+  //
+  // Device Hub needs a different invocation, not just a different app name: it ignores the
+  // legacy `-CurrentDeviceUDID` argument, so its `devices://` URL scheme is the only way to
+  // focus the device we just booted.
+  //
+  // Simulator.app is the Xcode <= 26 fallback. Nothing claims `devices://` before Xcode 27,
+  // so `open` exits non-zero there and we land in the second branch. Probe output is
+  // suppressed either way so an expected miss does not read as a real error in the build log.
+  //
+  // Both are best-effort. Booting and installing go through simctl, and `waitForSimulator()`
+  // polls `simctl bootstatus` rather than the window, so a UI that refuses to come forward
+  // should not fail the run.
+  async #openSimulatorUi(deviceUDID) {
+    try {
+      await run('open', [`devices://device/open?id=${deviceUDID}`], { stdio: 'ignore' });
+      return;
+    } catch {
+      console.log('Device Hub not available (Xcode 26 or older), using Simulator.app...');
+    }
+
+    await run('open', ['-a', 'Simulator'], { stdio: 'ignore', ignoreError: true });
   }
 
   async waitForSimulator() {

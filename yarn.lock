@@ -4531,7 +4531,7 @@ __metadata:
 
 "@expo/cli@patch:@expo/cli@npm:54.0.22#.yarn/patches/@expo-cli-npm-54.0.22-eb5155f2b5.patch::locator=design-system%40workspace%3A.":
   version: 54.0.22
-  resolution: "@expo/cli@patch:@expo/cli@npm%3A54.0.22#.yarn/patches/@expo-cli-npm-54.0.22-eb5155f2b5.patch::version=54.0.22&hash=72ff90&locator=design-system%40workspace%3A."
+  resolution: "@expo/cli@patch:@expo/cli@npm%3A54.0.22#.yarn/patches/@expo-cli-npm-54.0.22-eb5155f2b5.patch::version=54.0.22&hash=d934cb&locator=design-system%40workspace%3A."
   dependencies:
     "@0no-co/graphql.web": "npm:^1.0.8"
     "@expo/code-signing-certificates": "npm:^0.0.6"
@@ -4607,7 +4607,7 @@ __metadata:
       optional: true
   bin:
     expo-internal: build/bin/cli
-  checksum: 10c0/87c11be13373426f6f92e8eadd8000e1b46b48553470e1d3087e48a06624b6b254b6ea6f1ad93be54cb00dec2e54dcd1f9acbea7ccf12c908bf3d643e8414929
+  checksum: 10c0/8a628fdeae3c03459410724d9be15f9edb173e7451ce85014b2589e7de0e3e5a385fba0d4f79086693a48f2ef65ae78957026bbc8ac2ba593823c2f3430286a3
   languageName: node
   linkType: hard
 
