@@ -156,11 +156,11 @@ const SelectBase = memo(
       const optionRole = accessibilityRoles?.option ?? 'option';
 
       const { onControlKeyDown } = useTypeahead({
-        open,
-        setOpen,
-        referenceRef: refs.reference as React.MutableRefObject<HTMLElement | null>,
-        floatingRef: refs.floating,
-        optionRole,
+        areItemsVisible: open,
+        setAreItemsVisible: setOpen,
+        triggerRef: refs.reference as React.MutableRefObject<HTMLElement | null>,
+        itemsContainerRef: refs.floating,
+        itemRole: optionRole,
         disabled,
         readOnly,
       });

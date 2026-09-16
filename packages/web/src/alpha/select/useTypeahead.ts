@@ -50,16 +50,16 @@ export function getTypeaheadMatchIndex(
 type ElementRef = { current: HTMLElement | null };
 
 export type UseTypeaheadOptions = {
-  /** Open state of the Select. */
-  open: boolean;
-  /** Setter used to open the Select when typing while closed. */
-  setOpen: (open: boolean) => void;
-  /** Ref to the control (reference) element. */
-  referenceRef: ElementRef;
-  /** Ref to the floating dropdown element that hosts the options. */
-  floatingRef: ElementRef;
-  /** Role used to query option elements within the dropdown. */
-  optionRole: string;
+  /** Whether the items container is visible (open). */
+  areItemsVisible: boolean;
+  /** Setter used to reveal items when typing while hidden. */
+  setAreItemsVisible: (visible: boolean) => void;
+  /** Ref to the trigger element. */
+  triggerRef: ElementRef;
+  /** Ref to the container element that hosts the items. */
+  itemsContainerRef: ElementRef;
+  /** Role used to query item elements within the container. */
+  itemRole: string;
   disabled?: boolean;
   readOnly?: boolean;
 };
@@ -74,11 +74,11 @@ export type UseTypeaheadResult = {
  * buffer that focuses the matching option, both while closed (type-to-open) and open.
  */
 export function useTypeahead({
-  open,
-  setOpen,
-  referenceRef,
-  floatingRef,
-  optionRole,
+  areItemsVisible,
+  setAreItemsVisible,
+  triggerRef,
+  itemsContainerRef,
+  itemRole,
   disabled,
   readOnly,
 }: UseTypeaheadOptions): UseTypeaheadResult {
@@ -98,11 +98,11 @@ export function useTypeahead({
     const search = typeaheadBufferRef.current;
     if (!search) return;
 
-    const floatingEl = floatingRef.current;
-    if (!floatingEl) return;
+    const containerEl = itemsContainerRef.current;
+    if (!containerEl) return;
 
     const optionElements = Array.from(
-      floatingEl.querySelectorAll<HTMLElement>(`[role="${optionRole}"]`),
+      containerEl.querySelectorAll<HTMLElement>(`[role="${itemRole}"]`),
     ).filter(
       (option) =>
         !(option as HTMLButtonElement).disabled && option.getAttribute('aria-disabled') !== 'true',
@@ -115,30 +115,30 @@ export function useTypeahead({
 
     const matchIndex = getTypeaheadMatchIndex(labels, search, currentIndex);
     if (matchIndex >= 0) optionElements[matchIndex].focus();
-  }, [floatingRef, optionRole]);
+  }, [itemsContainerRef, itemRole]);
 
   const onControlKeyDown = useCallback(
     (event: React.KeyboardEvent) => {
-      // When open, the window listener owns typeahead.
-      if (disabled || readOnly || open || !isTypeaheadKeyEvent(event)) return;
+      // When items are visible, the window listener owns typeahead.
+      if (disabled || readOnly || areItemsVisible || !isTypeaheadKeyEvent(event)) return;
 
       appendToTypeaheadBuffer(event.key);
       pendingTypeaheadRef.current = true;
-      setOpen(true);
+      setAreItemsVisible(true);
     },
-    [disabled, readOnly, open, setOpen, appendToTypeaheadBuffer],
+    [disabled, readOnly, areItemsVisible, setAreItemsVisible, appendToTypeaheadBuffer],
   );
 
   // After a type-to-open, focus the match once the dropdown (and its options) have rendered.
   useEffect(() => {
-    if (!open || !pendingTypeaheadRef.current) return;
+    if (!areItemsVisible || !pendingTypeaheadRef.current) return;
     pendingTypeaheadRef.current = false;
     focusTypeaheadMatch();
-  }, [open, focusTypeaheadMatch]);
+  }, [areItemsVisible, focusTypeaheadMatch]);
 
   // Window listener needed: focus moves into the portaled dropdown, past the control's handler.
   useEffect(() => {
-    if (!open || disabled || readOnly) return;
+    if (!areItemsVisible || disabled || readOnly) return;
     const globals = getBrowserGlobals();
     if (!globals) return;
     const { window: browserWindow, document: browserDocument } = globals;
@@ -146,12 +146,12 @@ export function useTypeahead({
     const handleWindowKeyDown = (event: KeyboardEvent) => {
       if (!isTypeaheadKeyEvent(event)) return;
 
-      const controlElement = referenceRef.current;
-      const floatingElement = floatingRef.current;
+      const triggerElement = triggerRef.current;
+      const containerElement = itemsContainerRef.current;
       const activeElement = browserDocument.activeElement;
       const withinSelect =
-        (!!controlElement && controlElement.contains(activeElement)) ||
-        (!!floatingElement && floatingElement.contains(activeElement));
+        (!!triggerElement && triggerElement.contains(activeElement)) ||
+        (!!containerElement && containerElement.contains(activeElement));
       if (!withinSelect) return;
 
       appendToTypeaheadBuffer(event.key);
@@ -166,11 +166,11 @@ export function useTypeahead({
       if (typeaheadResetTimeoutRef.current) clearTimeout(typeaheadResetTimeoutRef.current);
     };
   }, [
-    open,
+    areItemsVisible,
     disabled,
     readOnly,
-    referenceRef,
-    floatingRef,
+    triggerRef,
+    itemsContainerRef,
     appendToTypeaheadBuffer,
     focusTypeaheadMatch,
   ]);
