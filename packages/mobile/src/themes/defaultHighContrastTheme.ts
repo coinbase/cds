@@ -552,7 +552,7 @@ export const defaultHighContrastTheme = {
   },
   shadow: {
     elevation1: {
-      shadowColor: '#000000',
+      shadowColor: '#5B616E',
       shadowOffset: { width: 0, height: 8 },
       shadowOpacity: 0.12,
       shadowRadius: 12,

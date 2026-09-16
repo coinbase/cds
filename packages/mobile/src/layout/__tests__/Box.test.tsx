@@ -114,7 +114,7 @@ describe('Box', () => {
     expect(screen.getByTestId('parent')).toBeAccessible();
 
     expect(screen.getByTestId('parent')).toHaveStyle({
-      shadowColor: '#000000',
+      shadowColor: '#5B616E',
       shadowOpacity: 0.12,
       shadowRadius: 12,
     });
