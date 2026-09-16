@@ -38,61 +38,45 @@ enum ThemeChoice: String, CaseIterable, Identifiable {
 struct RootGalleryView: View {
     @State private var scheme: SchemeChoice = .system
     @State private var theme: ThemeChoice = .cds
+    @State private var route: GalleryRoute = .home
 
     var body: some View {
         CDSThemeProvider(theme: theme.set, colorScheme: scheme.colorScheme) {
-            GalleryScreen(scheme: $scheme, theme: $theme)
+            GalleryApp(
+                route: route,
+                onRouteChange: { route = $0 },
+                scheme: $scheme,
+                theme: $theme
+            )
         }
     }
 }
 
-/// The scrolling gallery itself, plus the theme/scheme controls. Lives under the provider so
-/// `@Environment(\.cdsTheme)` resolves to the current selection.
-struct GalleryScreen: View {
+private struct GalleryApp: View {
+    let route: GalleryRoute
+    let onRouteChange: (GalleryRoute) -> Void
     @Binding var scheme: SchemeChoice
     @Binding var theme: ThemeChoice
-    @Environment(\.cdsTheme) private var cds
 
     var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: cds.spacing.x3) {
-                controls
-
-                ColorGallery()
-                IllustrationGallery()
-                SpectrumGallery()
-                TypographyGallery()
-                SpacingGallery()
-                RadiusGallery()
-                BorderWidthGallery()
-                SizesGallery()
-                ShadowGallery()
-                ComponentsGallery()
+        Group {
+            switch route {
+            case .home:
+                HomeGalleryView(
+                    scheme: $scheme,
+                    theme: $theme,
+                    onOpenThemeTokens: { onRouteChange(.themeTokens) },
+                    onOpenComponent: { onRouteChange(.component($0)) }
+                )
+            case .themeTokens:
+                ThemeTokensGalleryView(onBack: { onRouteChange(.home) })
+            case .component(let destination):
+                ComponentGalleryView(
+                    destination: destination,
+                    onBack: { onRouteChange(.home) },
+                    onNavigateToComponent: { onRouteChange(.component($0)) }
+                )
             }
-            .padding(cds.spacing.x2)
-            .frame(maxWidth: .infinity, alignment: .leading)
         }
-        .background(cds.colors.bg)
-    }
-
-    private var controls: some View {
-        VStack(alignment: .leading, spacing: cds.spacing.x1) {
-            CDSDesignSystem.Text("CDS iOS — Theme Gallery", style: .title2)
-            CDSDesignSystem.Text("Live view of every token scale in the active theme.", style: .label2, color: cds.colors.fgMuted)
-
-            Picker("Theme", selection: $theme) {
-                ForEach(ThemeChoice.allCases) { SwiftUI.Text($0.label).tag($0) }
-            }
-            .pickerStyle(.segmented)
-
-            Picker("Color scheme", selection: $scheme) {
-                ForEach(SchemeChoice.allCases) { SwiftUI.Text($0.label).tag($0) }
-            }
-            .pickerStyle(.segmented)
-        }
-        .padding(cds.spacing.x2)
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .background(cds.colors.bgSecondary)
-        .clipShape(RoundedRectangle(cornerRadius: cds.radius.r300))
     }
 }
