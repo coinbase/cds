@@ -2,7 +2,17 @@ name: Node
 
 on:
   workflow_call:
+    inputs:
+      affected:
+        description: When false, jobs skip so required Node checks still report a passing status
+        type: boolean
+        default: true
   workflow_dispatch:
+    inputs:
+      affected:
+        description: When false, jobs skip so required Node checks still report a passing status
+        type: boolean
+        default: true
 
 concurrency:
   group: Node-${{github.ref_name}}-${{github.event_name == 'pull_request' && github.event.pull_request.number || github.sha}}
@@ -20,6 +30,7 @@ env:
 jobs:
   validate:
     name: Validate
+    if: ${{ inputs.affected == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -43,6 +54,7 @@ jobs:
 
   lint:
     name: Lint
+    if: ${{ inputs.affected == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -63,6 +75,7 @@ jobs:
 
   format:
     name: Format
+    if: ${{ inputs.affected == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -78,6 +91,7 @@ jobs:
 
   test:
     name: Test
+    if: ${{ inputs.affected == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -93,6 +107,7 @@ jobs:
 
   typecheck:
     name: Typecheck
+    if: ${{ inputs.affected == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -108,6 +123,7 @@ jobs:
 
   build:
     name: Build
+    if: ${{ inputs.affected == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
@@ -125,7 +141,7 @@ jobs:
     name: Depcheck
     runs-on: ubuntu-latest
     # Only run on master pushes (to cache baseline) or PRs targeting master (to compare)
-    if: github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master')
+    if: ${{ inputs.affected == true && (github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master')) }}
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -171,7 +187,7 @@ jobs:
     name: Bundle Stats
     runs-on: ubuntu-latest
     # Only run on master pushes (to cache baseline) or PRs targeting master (to compare)
-    if: github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master')
+    if: ${{ inputs.affected == true && (github.ref_name == 'master' || (github.event_name == 'pull_request' && github.base_ref == 'master')) }}
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -220,6 +236,7 @@ jobs:
 
   lint-styles:
     name: Lint Styles
+    if: ${{ inputs.affected == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
