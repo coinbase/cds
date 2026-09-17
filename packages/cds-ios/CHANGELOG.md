@@ -10,7 +10,7 @@ Its versions are independent of the `@coinbase/cds-*` npm packages and of `com.c
 
 <!-- template-start -->
 
-## 0.1.0 (9/17/2026 PST)
+## 0.0.2 (9/17/2026 PST)
 
 #### 💥 Breaking
 
