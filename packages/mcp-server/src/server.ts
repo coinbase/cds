@@ -2,7 +2,6 @@
 
 import { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js';
 import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
@@ -10,23 +9,14 @@ import { z } from 'zod';
 import pkg from '../package.json' with { type: 'json' };
 
 import { postMetric } from './analytics.js';
+import { fetchRoute } from './fetchRoute.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DOCS_PATH = path.join(__dirname, '../mcp-docs');
+const DOCS_PATH = path.resolve(__dirname, '../mcp-docs');
 
 const log = (...message: string[]) => {
   // Using console.error to prevent conflicts with the mcp server which uses stdio to communicate with the client
   console.error('[CDS MCP]', ...message);
-};
-
-const fetchRoute = (route: string) => {
-  const filePath = path.join(DOCS_PATH, route);
-
-  try {
-    return fs.readFileSync(filePath, 'utf-8');
-  } catch {
-    return null;
-  }
 };
 
 const server = new McpServer({
@@ -51,7 +41,7 @@ server.tool(
   ({ platform }) => {
     postMetric('cdsMcp', { command: 'list-cds-routes' });
 
-    const content = fetchRoute(path.join(platform, 'routes.txt'));
+    const content = fetchRoute(DOCS_PATH, path.join(platform, 'routes.txt'));
 
     if (!content) {
       return {
@@ -79,7 +69,7 @@ server.tool(
   ({ route }) => {
     postMetric('cdsMcp', { command: 'get-cds-doc', arguments: route });
 
-    const content = fetchRoute(route);
+    const content = fetchRoute(DOCS_PATH, route);
 
     if (!content) {
       return {
