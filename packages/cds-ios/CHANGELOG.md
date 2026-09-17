@@ -10,15 +10,16 @@ Its versions are independent of the `@coinbase/cds-*` npm packages and of `com.c
 
 <!-- template-start -->
 
-## Unreleased
+## 0.1.0 (9/17/2026 PST)
 
 #### 💥 Breaking
 
-- Align the theme object shape with Android: `space` (was `spacing`), `borderRadius` (was `radius`),
-  `shadows` (was `shadow`), `lightColors` / `darkColors` (was `light` / `dark`). Radius rungs are
-  `radius400` (was `r400`); border-width rungs are `borderWidth100` (was `w100`). Shadow fields are
-  `blurRadius` / `offsetX` / `offsetY` (was `radius` / `x` / `y`). Token types follow the same names
-  (`CDSSpace`, `CDSBorderRadius`, `CDSShadows`, `CDSSpaceToken`, `CDSBorderRadiusToken`).
+- Breaking: align the theme object shape with Android: `space` (was `spacing`), `borderRadius`
+  (was `radius`), `shadows` (was `shadow`), `lightColors` / `darkColors` (was `light` / `dark`).
+  Radius rungs are `radius400` (was `r400`); border-width rungs are `borderWidth100` (was `w100`).
+  Shadow fields are `blurRadius` / `offsetX` / `offsetY` (was `radius` / `x` / `y`). Token types
+  follow the same names (`CDSSpace`, `CDSBorderRadius`, `CDSShadows`, `CDSSpaceToken`,
+  `CDSBorderRadiusToken`). [[#878](https://github.com/coinbase/cds/pull/878)]
 
 ## 0.0.1 (8/27/2026 PST)
 
