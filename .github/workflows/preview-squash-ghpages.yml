@@ -1,0 +1,54 @@
+name: Squash gh-pages History
+
+# Safety net that squashes the gh-pages branch to a single root commit weekly.
+# Under normal operation the deploy/cleanup workflows already produce orphan commits,
+# so this workflow is essentially a no-op. It handles any history that accumulated
+# before the orphan-commit strategy was adopted.
+on:
+  schedule:
+    - cron: '0 2 * * 0' # Sundays at 02:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  squash:
+    name: Squash gh-pages history
+    # Only run on the public repo, so this stays inert on any synced mirror
+    # (the repo string is not rewritten during sync).
+    if: github.repository == 'coinbase/cds'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout gh-pages
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: gh-pages
+          fetch-depth: 0 # full history needed to count commits
+
+      - name: Squash to single root commit
+        run: |
+          set -e
+
+          COMMIT_COUNT=$(git rev-list --count HEAD)
+          echo "Current commit count: $COMMIT_COUNT"
+
+          if [ "$COMMIT_COUNT" -le 1 ]; then
+            echo "Already a single commit — nothing to squash."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          SQUASHED=$(git commit-tree HEAD^{tree} -m "Squash gh-pages history [$(date -u +%Y-%m-%dT%H:%M:%SZ)]")
+          git push --force origin "${SQUASHED}:refs/heads/gh-pages"
+
+          echo "✅ Squashed $COMMIT_COUNT commits into 1"
+          echo "## gh-pages History Squashed" >> $GITHUB_STEP_SUMMARY
+          echo "Reduced from **$COMMIT_COUNT** commits to **1**." >> $GITHUB_STEP_SUMMARY
