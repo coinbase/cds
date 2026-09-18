@@ -1,4 +1,3 @@
-import spotIconSvgEsmMap from '@coinbase/cds-illustrations/__generated__/spotIcon/data/svgEsmMap';
 import spotIconVersionMap from '@coinbase/cds-illustrations/__generated__/spotIcon/data/versionMap';
 
 import {
@@ -8,7 +7,15 @@ import {
   type IllustrationDimensionsMap,
 } from './createIllustration';
 
-export const SpotIcon = createIllustration('spotIcon', spotIconVersionMap, spotIconSvgEsmMap);
+// Loaded lazily — only fetched once a SpotIcon with applyTheme actually mounts — so the
+// generated per-name svgEsmMap never lands in the static import graph of consumers that don't
+// use theming.
+const loadSpotIconSvgEsmMap = () =>
+  import('@coinbase/cds-illustrations/__generated__/spotIcon/data/svgEsmMap').then(
+    (mod) => mod.default,
+  );
+
+export const SpotIcon = createIllustration('spotIcon', spotIconVersionMap, loadSpotIconSvgEsmMap);
 
 export type SpotIconBaseProps = IllustrationBaseProps<'spotIcon'> &
   IllustrationA11yProps & {

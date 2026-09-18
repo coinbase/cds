@@ -1,4 +1,3 @@
-import pictogramSvgEsmMap from '@coinbase/cds-illustrations/__generated__/pictogram/data/svgEsmMap';
 import pictogramVersionMap from '@coinbase/cds-illustrations/__generated__/pictogram/data/versionMap';
 
 import {
@@ -8,7 +7,19 @@ import {
   type IllustrationDimensionsMap,
 } from './createIllustration';
 
-export const Pictogram = createIllustration('pictogram', pictogramVersionMap, pictogramSvgEsmMap);
+// Loaded lazily — only fetched once a Pictogram with applyTheme actually mounts — so the
+// generated per-name svgEsmMap never lands in the static import graph of consumers that don't
+// use theming.
+const loadPictogramSvgEsmMap = () =>
+  import('@coinbase/cds-illustrations/__generated__/pictogram/data/svgEsmMap').then(
+    (mod) => mod.default,
+  );
+
+export const Pictogram = createIllustration(
+  'pictogram',
+  pictogramVersionMap,
+  loadPictogramSvgEsmMap,
+);
 
 export type PictogramBaseProps = IllustrationBaseProps<'pictogram'> &
   IllustrationA11yProps & {
