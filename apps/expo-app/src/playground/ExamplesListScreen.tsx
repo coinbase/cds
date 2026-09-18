@@ -13,8 +13,6 @@ import type { ExamplesListScreenProps } from './types';
 
 const innerSpacingConfig: CellSpacing = { paddingX: 1 };
 const pinnedRouteKeys = ['CustomerComponentConfig'];
-// Hand-written playground screens that are not produced by the route codegen.
-const standaloneRouteKeys = ['IconSheet', 'BoxShadow'];
 // Friendly display labels for pinned route keys that don't read well as raw PascalCase.
 const pinnedRouteLabels: Record<string, string> = {
   CustomerComponentConfig: 'Retail Theme / Config',
@@ -36,7 +34,7 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
   // Shown as a shortcut button above the filtered list when search is active.
   const exactMatch = useMemo(() => {
     if (!isOpen || filter.length === 0) return null;
-    const searchableKeys = [...routeKeys, ...standaloneRouteKeys, ...pinnedRouteKeys];
+    const searchableKeys = [...routeKeys, 'IconSheet', ...pinnedRouteKeys];
     return searchableKeys.find((key) => key.toLowerCase() === filter.toLowerCase()) ?? null;
   }, [isOpen, filter, routeKeys]);
 
@@ -71,7 +69,7 @@ export function ExamplesListScreen({ route }: ExamplesListScreenProps) {
     };
 
     const pinnedData = pinnedRouteKeys.filter(filterBySearch);
-    const sortedData = [...routeKeys, ...standaloneRouteKeys]
+    const sortedData = [...routeKeys, 'IconSheet']
       .sort()
       .filter((key) => key !== 'Examples')
       .filter((key) => !pinnedRouteKeys.includes(key))
