@@ -1,4 +1,3 @@
-import heroSquareSvgEsmMap from '@coinbase/cds-illustrations/__generated__/heroSquare/data/svgEsmMap';
 import heroSquareVersionMap from '@coinbase/cds-illustrations/__generated__/heroSquare/data/versionMap';
 
 import {
@@ -19,10 +18,18 @@ export type HeroSquareBaseProps = IllustrationBaseProps<'heroSquare'> &
 
 export type HeroSquareProps = HeroSquareBaseProps;
 
+// Loaded lazily — only fetched once a HeroSquare with applyTheme actually mounts — so the
+// generated per-name svgEsmMap never lands in the static import graph of consumers that don't
+// use theming.
+const loadHeroSquareSvgEsmMap = () =>
+  import('@coinbase/cds-illustrations/__generated__/heroSquare/data/svgEsmMap').then(
+    (mod) => mod.default,
+  );
+
 export const HeroSquare = createIllustration(
   'heroSquare',
   heroSquareVersionMap,
-  heroSquareSvgEsmMap,
+  loadHeroSquareSvgEsmMap,
 );
 
 export type { HeroSquareName } from '@coinbase/cds-illustrations/__generated__/heroSquare/types/HeroSquareName';
