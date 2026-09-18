@@ -16,8 +16,6 @@ export type BoxBaseProps = SharedProps &
     children?: React.ReactNode;
     style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
     animated?: boolean;
-    /** Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. */
-    elevation?: ElevationLevels;
     font?: ThemeVars.FontFamily | 'inherit';
     /** Direction in which to absolutely pin the box. */
     pin?: PinningDirection;

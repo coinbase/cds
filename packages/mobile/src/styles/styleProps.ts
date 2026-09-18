@@ -1,5 +1,6 @@
 import type { DimensionValue, TextStyle, ViewStyle } from 'react-native';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
+import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
 import type { TypeOrNumber } from '@coinbase/cds-common/types/TypeOrNumber';
 
 import type { Theme } from '../core/theme';
@@ -63,6 +64,8 @@ export type StyleProps = {
   marginBottom?: NegativeSpace;
   marginStart?: NegativeSpace;
   marginEnd?: NegativeSpace;
+  /** Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. */
+  elevation?: ElevationLevels;
   textAlign?: TextStyle['textAlign'];
   width?: DimensionValue;
   height?: DimensionValue;
