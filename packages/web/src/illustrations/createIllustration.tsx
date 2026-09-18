@@ -82,6 +82,17 @@ type SvgEsmConfigShape<Variant extends IllustrationVariant> = Partial<
   Record<IllustrationNamesMap[Variant], { themeable?: () => Promise<string> }>
 >;
 
+/**
+ * A loader for a variant's full svgEsmMap module, or an already-resolved map (for callers that
+ * still import it eagerly). Accepting a loader lets `createIllustration` defer the entire
+ * per-name map — not just the SVG bodies it points to — out of the static import graph of every
+ * consumer, since the map is only ever read inside a post-mount `useEffect` when `applyTheme` is
+ * set.
+ */
+type SvgEsmConfigSource<Variant extends IllustrationVariant> =
+  | SvgEsmConfigShape<Variant>
+  | (() => Promise<SvgEsmConfigShape<Variant>>);
+
 export type IllustrationA11yProps = {
   /** Alt tag to apply to the img
    * @default "" will identify the image as decorative
@@ -95,7 +106,7 @@ export type IllustrationBasePropsWithA11y<Type extends IllustrationVariant> =
 export function createIllustration<Variant extends IllustrationVariant>(
   variant: Variant,
   versionMap: IllustrationVersionMapShape<Variant>,
-  svgEsmConfig?: SvgEsmConfigShape<Variant>,
+  svgEsmConfig?: SvgEsmConfigSource<Variant>,
 ) {
   const defaultSize = getDefaultSizeObjectForIllustration(variant);
 
@@ -118,12 +129,21 @@ export function createIllustration<Variant extends IllustrationVariant>(
 
     useEffect(() => {
       let cancelled = false;
-      const themeableLoader = svgEsmConfig?.[name]?.themeable;
 
-      if (applyTheme && themeableLoader) {
-        themeableLoader()
+      if (applyTheme && svgEsmConfig) {
+        // svgEsmConfig may be the resolved map, or a loader for it — resolve either shape to the
+        // map before looking up this illustration's themeable loader.
+        const resolvedConfig =
+          typeof svgEsmConfig === 'function' ? svgEsmConfig() : Promise.resolve(svgEsmConfig);
+
+        resolvedConfig
+          .then((config) => {
+            if (cancelled) return undefined;
+            const themeableLoader = config[name]?.themeable;
+            return themeableLoader?.();
+          })
           .then((svg) => {
-            if (!cancelled) setSvgMarkup(svg);
+            if (!cancelled && svg) setSvgMarkup(svg);
           })
           .catch((err) => {
             if (isDevelopment()) {

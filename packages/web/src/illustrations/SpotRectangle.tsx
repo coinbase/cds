@@ -1,4 +1,3 @@
-import spotRectangleSvgEsmMap from '@coinbase/cds-illustrations/__generated__/spotRectangle/data/svgEsmMap';
 import spotRectangleVersionMap from '@coinbase/cds-illustrations/__generated__/spotRectangle/data/versionMap';
 
 import {
@@ -19,10 +18,18 @@ export type SpotRectangleBaseProps = IllustrationBaseProps<'spotRectangle'> &
 
 export type SpotRectangleProps = SpotRectangleBaseProps;
 
+// Loaded lazily — only fetched once a SpotRectangle with applyTheme actually mounts — so the
+// generated per-name svgEsmMap never lands in the static import graph of consumers that don't
+// use theming.
+const loadSpotRectangleSvgEsmMap = () =>
+  import('@coinbase/cds-illustrations/__generated__/spotRectangle/data/svgEsmMap').then(
+    (mod) => mod.default,
+  );
+
 export const SpotRectangle = createIllustration(
   'spotRectangle',
   spotRectangleVersionMap,
-  spotRectangleSvgEsmMap,
+  loadSpotRectangleSvgEsmMap,
 );
 
 export type { SpotRectangleName } from '@coinbase/cds-illustrations';
