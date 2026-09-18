@@ -1,3 +1,13 @@
+## 9.27.0 (2026-09-18)
+
+### 🚀 Features
+
+- Feat: add native-style typeahead keyboard selection to the web `Select (Alpha)`, supporting a multi-character search buffer, repeated-key cycling, and matching both when the listbox is open and closed.
+
+### 🩹 Fixes
+
+- Fix: constrain the MCP server's `get-cds-doc` tool to files inside its bundled `mcp-docs` directory. Routes that resolve outside of it are now reported as not found.
+
 ## 9.26.2 (2026-09-11)
 
 ### 🩹 Fixes
