@@ -216,6 +216,48 @@ While it is possible to customize the `space` values in any way, deviating from 
 
 </MDXArticle>
 <MDXArticle>
+### Shadow tokens
+
+Each `shadow` token is authored in one of two forms — never both.
+
+Prefer `boxShadow`, which renders on iOS and Android. It takes the array form of React Native's
+[`boxShadow`](https://reactnative.dev/docs/view-style-props#boxshadow) view style, and requires
+React Native 0.76+ on the New Architecture. Only the array form is accepted; the CSS string
+shorthand is not:
+
+```tsx
+const myTheme = {
+  ...defaultTheme,
+  shadow: {
+    elevation1: {
+      boxShadow: [{ offsetX: 0, offsetY: 8, blurRadius: 24, color: 'rgba(0, 0, 0, 0.12)' }],
+    },
+    elevation2: {
+      boxShadow: [{ offsetX: 0, offsetY: 8, blurRadius: 48, color: 'rgba(0, 0, 0, 0.12)' }],
+    },
+  },
+} as const satisfies ThemeConfig;
+```
+
+The legacy form uses the `shadowColor`, `shadowOffset`, `shadowOpacity`, and `shadowRadius` props.
+These only render on iOS, and are deprecated. The built-in themes ship this form.
+
+:::note
+On Android, a `boxShadow` token renders on its own, so CDS emits no native `elevation` alongside it.
+Legacy `shadow*` tokens only render on iOS, so CDS still emits a native `elevation` for them to give
+Android a shadow. Native `elevation` does not affect draw order in React Native — use document order
+or `zIndex` to control stacking.
+:::
+
+:::tip
+A `blurRadius` is roughly twice the `shadowRadius` it replaces, because React Native renders
+`boxShadow` on iOS as
+[`shadowRadius = blurRadius / 2`](https://github.com/facebook/react-native/blob/v0.81.5/packages/react-native/React/Fabric/Utils/RCTBoxShadow.mm#L67).
+Porting `shadowRadius: 12` means `blurRadius: 24`.
+:::
+
+</MDXArticle>
+<MDXArticle>
 ### Example new theme
 
 In this example we'll start with the `defaultTheme` and customize a couple values.

@@ -84,7 +84,7 @@
     "@testing-library/user-event@^14.0.4": "Create subpath export for types.",
     "framer-motion@^10.18.0": "Export missing types",
     "react-native-navigation-bar-color": "[Managed by CMR] Promisify react-native-navigation-bar-color.",
-    "@expo/cli": "[Managed by CMR] Necessary to use the proper appId when opening the app via Expo CLI shortcuts `i` or `a`",
+    "@expo/cli": "[Managed by CMR] Necessary to use the proper appId when opening the app via Expo CLI shortcuts `i` or `a`. Also teaches the iOS simulator launcher about Device Hub, which replaced Simulator.app in Xcode 27; Device Hub is preferred and Simulator.app is kept as a fallback for anyone still on Xcode 26. Drop that half of the patch on Expo SDK 57+, which fixes it upstream.",
     "@expo/metro-config": "[Managed by CMR] Fixes Expo serializer to pick up custom defined env variables to be used in the app",
     "react-native": "[Managed by CMR] Fixes bug presenting a modal on iOS (See https://github.cbhq.net/consumer/react-native/pull/30568). Allows to use React 19.1.2 due to a high severity security vulnerability.",
     "expo-modules-core": "[Managed by CMR] Avoid initializing EXJavaScriptRuntimeManager runtimeFromBridge from the main thread on iOS to avoid JSI crash",

@@ -191,12 +191,27 @@ Returns a `Theme` object containing the following categories of design tokens:
 
 #### Shadows
 
-- `shadow`: React Native shadow styles
+- `shadow`: React Native shadow styles. A token is authored in one of two forms — never both.
+
+  The cross-platform `boxShadow` form, which renders on iOS and Android:
 
   ```tsx
   {
     elevation1: {
-      shadowColor: '#000000',
+      boxShadow: [{ offsetX: 0, offsetY: 8, blurRadius: 24, color: 'rgba(0, 0, 0, 0.12)' }]
+    },
+    elevation2: {
+      boxShadow: [{ offsetX: 0, offsetY: 8, blurRadius: 48, color: 'rgba(0, 0, 0, 0.12)' }]
+    }
+  }
+  ```
+
+  The legacy `shadow*` form, which only renders on iOS. This is what the built-in themes ship:
+
+  ```tsx
+  {
+    elevation1: {
+      shadowColor: '#5B616E',
       shadowOffset: { width: 0, height: 8 },
       shadowOpacity: 0.02,
       shadowRadius: 12
@@ -210,6 +225,13 @@ Returns a `Theme` object containing the following categories of design tokens:
   }
   ```
 
+  `boxShadow` requires React Native 0.76+ on the New Architecture. Only the array form is accepted;
+  the CSS string shorthand (`'0px 8px 24px rgba(0,0,0,0.12)'`) is not.
+
+  A `blurRadius` is roughly twice the `shadowRadius` it replaces, because React Native renders
+  `boxShadow` on iOS as
+  [`shadowRadius = blurRadius / 2`](https://github.com/facebook/react-native/blob/v0.81.5/packages/react-native/React/Fabric/Utils/RCTBoxShadow.mm#L67).
+
 </MDXArticle>
 
 <MDXArticle hideDivider>
@@ -218,7 +240,7 @@ Returns a `Theme` object containing the following categories of design tokens:
 1. The hook must be used within a `ThemeProvider` component, or it will throw an error.
 2. All numeric values are in points (pt) rather than rem units, optimized for React Native.
 3. Colors are provided in RGB format for text and background colors, allowing for opacity adjustments.
-4. Shadow values are provided as React Native shadow style objects, including platform-specific implementations.
+4. Shadow values are provided as React Native shadow style objects. Prefer the cross-platform `boxShadow` form; the `shadowColor`/`shadowOffset`/`shadowOpacity`/`shadowRadius` props are iOS-only and are deprecated.
 5. Font families are platform-specific font names that should be properly linked in your React Native project.
 
 </MDXArticle>

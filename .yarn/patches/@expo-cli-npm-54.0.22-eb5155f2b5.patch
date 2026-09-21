@@ -1,3 +1,102 @@
+diff --git a/build/src/start/doctor/apple/SimulatorAppPrerequisite.js b/build/src/start/doctor/apple/SimulatorAppPrerequisite.js
+index 71d8ff814b4c4d63508e7b90f807b80980714526..e5f6a46c8b69063d6a6c84e5de3bdb088190efd5 100644
+--- a/build/src/start/doctor/apple/SimulatorAppPrerequisite.js
++++ b/build/src/start/doctor/apple/SimulatorAppPrerequisite.js
+@@ -71,24 +71,89 @@ function _interop_require_wildcard(obj, nodeInterop) {
+     return newObj;
+ }
+ const debug = require('debug')('expo:doctor:apple:simulatorApp');
+-async function getSimulatorAppIdAsync() {
++// Xcode 27 deleted Simulator.app outright and replaced it with Device Hub, so every
++// lookup below has to work against two different app names and two different layouts:
++//
++//   Xcode >= 27   <xcode>/Contents/Applications/DeviceHub.app             com.apple.dt.Devices
++//   Xcode <= 26   <xcode>/Contents/Developer/Applications/Simulator.app   com.apple.iphonesimulator
++//
++// Device Hub is tried first because the team is on Xcode 27; Simulator.app is kept purely
++// as a safety net for anyone who has not upgraded yet. Device Hub did not exist before
++// Xcode 27, so on those machines the Device Hub probe simply finds nothing and falls
++// through - there is no risk of it shadowing a working Simulator.app.
++//
++// We probe rather than sniff the Xcode version because a half-upgraded machine can keep a
++// stale LaunchServices entry for the old Simulator.app path, which makes the version a
++// less reliable signal than what actually resolves.
++// See: https://developer.apple.com/documentation/xcode/device-hub
++//
++// Paths are relative to `xcode-select --print-path` (which points at `Contents/Developer`),
++// hence the `../` on the Device Hub path — Xcode 27 moved these apps up one level.
++const XCODE_DEVICE_HUB_INFO_PLIST = '../Applications/DeviceHub.app/Contents/Info.plist';
++const XCODE_SIMULATOR_INFO_PLIST = './Applications/Simulator.app/Contents/Info.plist';
++async function getAppIdAsync(appName) {
+     try {
+-        return (await (0, _osascript().execAsync)('id of app "Simulator"')).trim();
++        return (await (0, _osascript().execAsync)(`id of app "${appName}"`)).trim() || null;
+     } catch  {
+     // This error may occur in CI where the users intends to install just the simulators but no Xcode.
+     }
+     return null;
+ }
++async function getXcodeSelectPathAsync() {
++    try {
++        return (await (0, _spawnasync().default)('xcode-select', [
++            '--print-path'
++        ])).stdout.trim() || null;
++    } catch  {
++        return null;
++    }
++}
++async function getInfoPlistBundleIdAsync(infoPlistPath) {
++    try {
++        return (await (0, _spawnasync().default)('defaults', [
++            'read',
++            infoPlistPath,
++            'CFBundleIdentifier'
++        ])).stdout.trim() || null;
++    } catch  {
++        return null;
++    }
++}
++/**
++ * Resolve the bundle id of whichever simulator UI this Xcode ships, trying three sources in
++ * order. Each fallback covers a case the previous one cannot, so none of them is redundant:
++ *
++ *   1. `id of app "DeviceHub"`  - Xcode >= 27, the version the team is on, so this is the
++ *      expected hit and the one we want to pay for first.
++ *   2. `id of app "Simulator"`  - Xcode <= 26. Only reached on a machine that has not
++ *      upgraded, since Device Hub does not exist there.
++ *   3. Reading Info.plist off disk - both of the above go through LaunchServices, which does
++ *      not always know about Device Hub yet: it is nested inside Xcode.app rather than sitting
++ *      in /Applications, so it is only registered once Xcode has been launched or re-scanned.
++ *      A fresh `xcode-select` with no GUI launch is exactly the CI/first-boot case where the
++ *      osascript lookups both return null but the app is plainly there.
++ */ async function getSimulatorAppIdAsync() {
++    const appId = await getAppIdAsync('DeviceHub') ?? await getAppIdAsync('Simulator');
++    if (appId) {
++        return appId;
++    }
++    const xcodePath = await getXcodeSelectPathAsync();
++    if (!xcodePath) {
++        return null;
++    }
++    const path = require('path');
++    return await getInfoPlistBundleIdAsync(path.join(xcodePath, XCODE_DEVICE_HUB_INFO_PLIST)) ?? await getInfoPlistBundleIdAsync(path.join(xcodePath, XCODE_SIMULATOR_INFO_PLIST));
++}
+ class SimulatorAppPrerequisite extends _Prerequisite.Prerequisite {
+     static #_ = this.instance = new SimulatorAppPrerequisite();
+     async assertImplementation() {
+         const result = await getSimulatorAppIdAsync();
+         if (!result) {
+             // This error may occur in CI where the users intends to install just the simulators but no Xcode.
+-            throw new _Prerequisite.PrerequisiteCommandError('SIMULATOR_APP', "Can't determine id of Simulator app; the Simulator is most likely not installed on this machine. Run `sudo xcode-select -s /Applications/Xcode.app`");
++            throw new _Prerequisite.PrerequisiteCommandError('SIMULATOR_APP', "Can't determine id of Device Hub or Simulator app; neither is installed on this machine. Run `sudo xcode-select -s /Applications/Xcode.app`");
+         }
+-        if (result !== 'com.apple.iphonesimulator' && result !== 'com.apple.CoreSimulator.SimulatorTrampoline') {
+-            throw new _Prerequisite.PrerequisiteCommandError('SIMULATOR_APP', "Simulator is installed but is identified as '" + result + "'; don't know what that is.");
++        if (result !== 'com.apple.dt.Devices' && result !== 'com.apple.iphonesimulator' && result !== 'com.apple.CoreSimulator.SimulatorTrampoline') {
++            throw new _Prerequisite.PrerequisiteCommandError('SIMULATOR_APP', "Device Hub or Simulator is installed but is identified as '" + result + "'; don't know what that is.");
+         }
+         debug(`Simulator app id: ${result}`);
+         try {
 diff --git a/build/src/start/platforms/android/AndroidAppIdResolver.js b/build/src/start/platforms/android/AndroidAppIdResolver.js
 index eedb068830f3d5869bfc594671c254f48cd9ab8a..38b728b747bc8974ad8ab0fd38f271c771b0519a 100644
 --- a/build/src/start/platforms/android/AndroidAppIdResolver.js
@@ -24,3 +123,69 @@ index 96cc53df6109e3b62ede2e79bf4093598a24fa5b..9ec60b4477480128f28c5eb1394caf60
              if (bundleId) {
                  return bundleId;
              }
+diff --git a/build/src/start/platforms/ios/ensureSimulatorAppRunning.js b/build/src/start/platforms/ios/ensureSimulatorAppRunning.js
+index 31296bcbc7a079acf2e5cd5020881fb001897d7d..5d3f8cfc5193af79265f64fb0794a0d2eef1451f 100644
+--- a/build/src/start/platforms/ios/ensureSimulatorAppRunning.js
++++ b/build/src/start/platforms/ios/ensureSimulatorAppRunning.js
+@@ -95,7 +95,12 @@ async function waitForSimulatorAppToStart({ maxWaitTime } = {}) {
+ // I think the app can be open while no simulators are booted.
+ async function isSimulatorAppRunningAsync() {
+     try {
+-        const zeroMeansNo = (await _osascript().execAsync('tell app "System Events" to count processes whose name is "Simulator"')).trim();
++        // Two process names because the UI app differs by Xcode version: "DeviceHub" on
++        // Xcode >= 27, "Simulator" on Xcode <= 26. Counting only "Simulator" on Xcode 27
++        // always returns 0, so the caller would re-open the app and then time out waiting
++        // for a process that is never going to appear under that name. Order is irrelevant
++        // here - this is a single count over both names, not a fallback chain.
++        const zeroMeansNo = (await _osascript().execAsync('tell app "System Events" to count processes whose name is "Simulator" or name is "DeviceHub"')).trim();
+         if (zeroMeansNo === '0') {
+             return false;
+         }
+@@ -108,15 +113,38 @@ async function isSimulatorAppRunningAsync() {
+     return true;
+ }
+ async function openSimulatorAppAsync(device) {
+-    const args = [
+-        '-a',
+-        'Simulator'
+-    ];
+-    if (device.udid) {
+-        // This has no effect if the app is already running.
+-        args.push('--args', '-CurrentDeviceUDID', device.udid);
++    try {
++        // Xcode 27+ path, tried first because that is what the team runs. Device Hub needs a
++        // different invocation, not just a different app name: it ignores the legacy
++        // `-CurrentDeviceUDID` argument, so its `devices://` URL scheme is the only way to
++        // focus a specific device. `open -a DeviceHub` can only bring the app forward, so it
++        // is used just when we have no UDID to aim at.
++        //
++        // On Xcode <= 26 nothing claims the `devices://` scheme and there is no DeviceHub.app,
++        // so `open` exits non-zero and we drop into the legacy branch below.
++        const deviceHubArgs = device.udid ? [
++            `devices://device/open?id=${device.udid}`
++        ] : [
++            '-a',
++            'DeviceHub'
++        ];
++        await (0, _spawnasync().default)('open', deviceHubArgs);
++    } catch  {
++        // Xcode <= 26 fallback: the original Simulator.app invocation, unchanged.
++        const args = [
++            '-a',
++            'Simulator'
++        ];
++        if (device.udid) {
++            // This has no effect if the app is already running.
++            args.push('--args', '-CurrentDeviceUDID', device.udid);
++        }
++        // Best-effort: booting and installing happen over simctl regardless, so a UI that
++        // refuses to come forward should not fail the run.
++        await (0, _spawnasync().default)('open', args).catch(()=>{
++        // Noop - we can't do much more here
++        });
+     }
+-    await (0, _spawnasync().default)('open', args);
+ }
+ 
+ //# sourceMappingURL=ensureSimulatorAppRunning.js.map
+\ No newline at end of file

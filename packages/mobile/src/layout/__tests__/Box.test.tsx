@@ -1,4 +1,4 @@
-import { Animated, Text, View } from 'react-native';
+import { Animated, StyleSheet, Text, View } from 'react-native';
 import { zIndex } from '@coinbase/cds-common/tokens/zIndex';
 import { render, screen } from '@testing-library/react-native';
 
@@ -114,7 +114,8 @@ describe('Box', () => {
     expect(screen.getByTestId('parent')).toBeAccessible();
 
     expect(screen.getByTestId('parent')).toHaveStyle({
-      shadowColor: '#000000',
+      elevation: 2,
+      shadowColor: '#5B616E',
       shadowOpacity: 0.12,
       shadowRadius: 12,
     });
@@ -132,10 +133,43 @@ describe('Box', () => {
     expect(screen.getByTestId('parent')).toBeAccessible();
 
     expect(screen.getByTestId('parent')).toHaveStyle({
+      elevation: 8,
       shadowColor: '#000000',
       shadowOpacity: 0.12,
       shadowRadius: 24,
     });
+  });
+
+  it('renders a boxShadow token without a native elevation', async () => {
+    const boxShadow = [
+      { offsetX: 0, offsetY: 8, blurRadius: 24, color: 'rgba(0, 0, 0, 0.12)' },
+    ] as const;
+
+    render(
+      <ThemeProvider
+        activeColorScheme="light"
+        theme={{
+          ...defaultTheme,
+          shadow: { elevation1: { boxShadow }, elevation2: { boxShadow } },
+        }}
+      >
+        <BoxComponent elevation={1} testID="parent">
+          <Text>Child</Text>
+        </BoxComponent>
+      </ThemeProvider>,
+    );
+
+    await screen.findByTestId('parent');
+
+    const style = StyleSheet.flatten(screen.getByTestId('parent').props.style);
+
+    expect(style.boxShadow).toEqual(boxShadow);
+    // A boxShadow renders on Android by itself; a native elevation would draw a second shadow.
+    expect(style).not.toHaveProperty('elevation');
+    expect(style).not.toHaveProperty('shadowColor');
+    expect(style).not.toHaveProperty('shadowRadius');
+    expect(style).not.toHaveProperty('shadowOpacity');
+    expect(style).not.toHaveProperty('shadowOffset');
   });
 
   it('renders width styles', async () => {

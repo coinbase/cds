@@ -5,9 +5,10 @@ import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
 import type { ElevationLevels } from '@coinbase/cds-common/types/ElevationLevels';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
-import type { Theme } from '../core/theme';
+import type { Shadow, Theme } from '../core/theme';
 import { useTheme } from '../hooks/useTheme';
 import { pinStyles } from '../styles/pinStyles';
+import { isBoxShadowToken } from '../styles/shadow';
 import { getStyles, type StyleProps } from '../styles/styleProps';
 
 export type BoxBaseProps = SharedProps &
@@ -15,8 +16,6 @@ export type BoxBaseProps = SharedProps &
     children?: React.ReactNode;
     style?: Animated.WithAnimatedValue<StyleProp<ViewStyle>>;
     animated?: boolean;
-    /** Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. */
-    elevation?: ElevationLevels;
     font?: ThemeVars.FontFamily | 'inherit';
     /** Direction in which to absolutely pin the box. */
     pin?: PinningDirection;
@@ -43,6 +42,22 @@ export type BoxBaseProps = SharedProps &
 
 export type BoxProps = BoxBaseProps & Omit<ViewProps, 'style'>;
 
+/** The native Android elevation that paints each CDS elevation level's shadow. */
+const androidElevationByLevel: Record<ElevationLevels, number> = {
+  0: 0,
+  1: 2,
+  2: 8,
+};
+
+/**
+ * Legacy `shadow*` tokens only render on iOS, so Android needs a native elevation to paint anything.
+ * A `boxShadow` token renders on Android by itself, and a native elevation on top of it draws a
+ * second, offset shadow. Native elevation does not influence draw order in react-native — z-order
+ * follows document order and `zIndex` — so dropping it costs nothing beyond the duplicate shadow.
+ */
+const getAndroidElevationStyle = (shadow: Shadow, elevation: ElevationLevels): ViewStyle =>
+  isBoxShadowToken(shadow) ? {} : { elevation: androidElevationByLevel[elevation] };
+
 export const getElevationStyles = (
   elevation: ElevationLevels,
   theme: Theme,
@@ -51,12 +66,12 @@ export const getElevationStyles = (
   const elevationStyles: Record<ElevationLevels, ViewStyle> = {
     0: {},
     1: {
-      elevation: 2,
+      ...getAndroidElevationStyle(theme.shadow.elevation1, 1),
       ...(background === undefined ? { backgroundColor: theme.color.bgElevation1 } : {}),
       ...theme.shadow.elevation1,
     },
     2: {
-      elevation: 8,
+      ...getAndroidElevationStyle(theme.shadow.elevation2, 2),
       ...(background === undefined ? { backgroundColor: theme.color.bgElevation2 } : {}),
       ...theme.shadow.elevation2,
     },
@@ -270,7 +285,6 @@ export const Box = memo(
             borderEndWidth,
             borderBottomWidth,
             borderStartWidth,
-            elevation,
             fontFamily,
             fontSize,
             fontWeight,

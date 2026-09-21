@@ -585,7 +585,7 @@ export const defaultTheme = {
     legal: 'none',
   },
   shadow: {
-    elevation1: '0px 8px 12px rgba(0, 0, 0, 0.12)',
+    elevation1: '0px 8px 12px rgba(91, 97, 110, 0.12)',
     elevation2: '0px 8px 24px rgba(0, 0, 0, 0.12)',
   },
 } as const satisfies ThemeConfig;

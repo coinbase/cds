@@ -64,6 +64,7 @@ export type StyleProps = {
   marginBottom?: NegativeSpace;
   marginStart?: NegativeSpace;
   marginEnd?: NegativeSpace;
+  /** Determines box shadow styles. Parent should have overflow set to visible to ensure styles are not clipped. */
   elevation?: ElevationLevels;
   textAlign?: TextStyle['textAlign'];
   width?: DimensionValue;

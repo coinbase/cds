@@ -1,3 +1,13 @@
+## 9.28.0 (2026-09-18)
+
+### 🚀 Features
+
+- Support React Native boxShadow property on mobile theme and deprecates individual shadow properties - no default theme changes in this release
+
+### 🩹 Fixes
+
+- Fix: the `shadow.elevation1` token now uses a lighter color than `shadow.elevation2` across every built-in theme on web and mobile.
+
 ## 9.27.0 (2026-09-18)
 
 ### 🚀 Features

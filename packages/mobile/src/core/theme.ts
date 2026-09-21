@@ -1,12 +1,60 @@
 import type { TextStyle, ViewStyle } from 'react-native';
 import type { ColorScheme, ThemeVars } from '@coinbase/cds-common/core/theme';
 
-type Shadow = {
+/**
+ * The array form of react-native's `boxShadow` view style.
+ *
+ * The CSS string form is intentionally excluded: react-native parses it in JS and silently drops
+ * every shadow in the value when any one unit fails to parse, and the Skia chart text path needs
+ * discrete numbers. Accepting strings later would be a non-breaking widening.
+ *
+ * @note This inherits a known react-native typing bug where `BoxShadowValue.color` is declared
+ * `string` (should be `ColorValue`) and `blurRadius` is declared `ColorValue | number` (should be
+ * `number | string`). Fixed upstream in react-native 0.84; it self-corrects on upgrade.
+ */
+export type BoxShadowStyle = Extract<NonNullable<ViewStyle['boxShadow']>, readonly unknown[]>;
+
+export type LegacyShadowToken = {
+  /**
+   * @deprecated Author shadow tokens with `boxShadow` instead. The `shadow*` props only render on iOS. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v11
+   */
   shadowColor?: ViewStyle['shadowColor'];
+  /**
+   * @deprecated Author shadow tokens with `boxShadow` instead. The `shadow*` props only render on iOS. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v11
+   */
   shadowOpacity?: ViewStyle['shadowOpacity'];
+  /**
+   * @deprecated Author shadow tokens with `boxShadow` instead. The `shadow*` props only render on iOS. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v11
+   */
   shadowOffset?: ViewStyle['shadowOffset'];
+  /**
+   * @deprecated Author shadow tokens with `boxShadow` instead. The `shadow*` props only render on iOS. This will be removed in a future major release.
+   * @deprecationExpectedRemoval v11
+   */
   shadowRadius?: ViewStyle['shadowRadius'];
+  boxShadow?: never;
 };
+
+export type BoxShadowToken = {
+  /** Cross-platform shadow. Renders on both iOS and Android under the New Architecture. */
+  boxShadow: BoxShadowStyle;
+  shadowColor?: never;
+  shadowOpacity?: never;
+  shadowOffset?: never;
+  shadowRadius?: never;
+};
+
+/**
+ * A single shadow token. Author either the cross-platform `boxShadow` form or the legacy iOS-only
+ * `shadow*` form, never both.
+ *
+ * Both arms declare the same property names (the unused ones as `never`) so that reading an
+ * individual field off a token stays valid without narrowing first.
+ */
+export type Shadow = LegacyShadowToken | BoxShadowToken;
 
 export type ThemeConfig = {
   /** A unique identifier for the theme. */

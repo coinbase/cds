@@ -47,7 +47,14 @@ print(best or "")
   xcrun simctl boot "$DEVICE_UDID"
 fi
 
-open -a Simulator
+# Bring up the simulator UI. Xcode 27 deleted Simulator.app and replaced it with Device Hub,
+# so we try Device Hub first (the version the team is on) and keep Simulator.app only as a
+# fallback for anyone still on Xcode 26. Device Hub ignores the legacy `-CurrentDeviceUDID`
+# argument, so its `devices://` URL scheme is the only way to focus the device we just booted.
+# Nothing claims that scheme before Xcode 27, so `open` exits non-zero there and we fall
+# through. Best-effort throughout: the build and install below go through simctl, so a UI that
+# refuses to come forward must not abort the run under `set -e`.
+open "devices://device/open?id=$DEVICE_UDID" 2>/dev/null || open -a Simulator 2>/dev/null || true
 
 echo "==> Building $SCHEME for the simulator"
 xcodebuild -project "$PROJECT" -scheme "$SCHEME" \
