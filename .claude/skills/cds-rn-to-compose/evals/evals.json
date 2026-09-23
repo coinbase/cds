@@ -1,0 +1,23 @@
+{
+  "skill_name": "cds-rn-to-compose",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Port the CDS Chip component from packages/mobile to packages/cds-android as a full Jetpack Compose implementation. Match mobile variants and states, add tests and a gallery section in android-app.",
+      "expected_output": "Discovery artifact, public Chip composable with modifier-first API, CdsTheme tokens, interaction wiring if pressable, Robolectric tests, gallery, docs, passing cds-android:test and build",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Audit the Android Button port in packages/cds-android against packages/mobile/src/buttons/Button.tsx. Tell me what's missing or wrong and whether we're ready to ship.",
+      "expected_output": "Structured audit report using audit checklist: API parity table, deprecated props omitted, interaction/semantics/tests/docs gaps, verdict",
+      "files": []
+    },
+    {
+      "id": 3,
+      "prompt": "I'm adding a new ToggleRow to mobile — should we also add it to cds-android now? Walk me through what the Android port would need without writing all the code yet.",
+      "expected_output": "Discovery-style plan: source files to read, interaction analysis, API sketch, token mapping, test plan, explicit out-of-scope items, no Compose Styles API",
+      "files": []
+    }
+  ]
+}

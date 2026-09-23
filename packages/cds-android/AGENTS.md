@@ -13,16 +13,18 @@ so the compiler rejects any declaration whose visibility was inherited rather th
 
 - Default to `internal` or `private`. Reach for `public` only when the symbol is meant for
   customers.
+- **Hyrum's Law applies:** consumers will depend on any `public` symbol even if undocumented.
+  Style resolvers (`*Colors`, `*Metrics`), assembly composables, and helpers stay `internal`.
 - When the compiler tells you to add a visibility modifier, that is the moment to decide whether
   the symbol belongs on the customer API - not a formality to satisfy with `public`.
 - **Never widen visibility to make `apps/android-app` compile.** The demo app is a consumer. If it
   cannot express something with the public API, either the API is genuinely missing something or
   the app is doing something it should not.
 - Changing the signature of an existing `public` declaration is a breaking change.
-- The public surface lives in `com.coinbase.cds.theme`. Components under
-  `com.coinbase.cds.components.*` are temporarily `internal` for the first release — they were
-  experiments and are not customer API yet. Anything under `components/internal/` stays off-limits
-  to consumers by construction.
+- The public surface lives in `com.coinbase.cds.theme` and `com.coinbase.cds.components.button`,
+  `com.coinbase.cds.interaction`. Components such as `Text` and `SlideButton` are temporarily
+  `internal` for the first release — they were experiments and are not customer API yet. Anything
+  under `components/internal/` stays off-limits to consumers by construction.
 
 ## Theming
 
@@ -43,6 +45,10 @@ consumer-facing guides are in `docs/`.
 Follow the `jetpack-best-practices` skill (the official AOSP Compose API guidelines). The rules
 that get violated most often here: every element accepts and respects a `Modifier` parameter,
 `Modifier` is the first optional parameter, and composables that emit UI return `Unit`.
+
+When porting a component from `packages/mobile` or auditing an existing Android port for mobile
+parity, load the `cds-rn-to-compose` skill. It covers discovery, RN→Compose mapping, interaction
+hoisting, token usage, testing, and the audit checklist.
 
 ## Boundaries with the rest of the monorepo
 
