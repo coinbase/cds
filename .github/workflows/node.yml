@@ -75,6 +75,7 @@ jobs:
 
   format:
     name: Format
+    if: ${{ inputs.affected == true }}
     runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Audit all outbound calls)
