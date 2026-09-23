@@ -74,6 +74,14 @@ CDS ships on four platforms:
 | Native Android (Compose) | `packages/cds-android` |
 | Native iOS (SwiftUI)     | `packages/cds-ios`     |
 
+## PR Preview Deployments
+
+All pull requests automatically get a live preview of the documentation site deployed to GitHub Pages. This makes it easy to review documentation changes before merging.
+
+**For PR Authors:** No setup required! Just open a PR and check the comments for your preview link.
+
+**For Maintainers:** See [docs/pr-preview/](docs/pr-preview/) for setup and configuration.
+
 ## Contributing
 
 We welcome contributions to the Coinbase Design System. Read [CONTRIBUTING.md](CONTRIBUTING.md) for
