@@ -3,127 +3,65 @@ import SwiftUI
 private let pressedScale = 0.98
 private let pressedScrimOpacity = 0.15
 
-/// CDS's primary call-to-action control. Covers `variant`, `size`, `enabled`/`loading`,
-/// `transparent`, `fullWidth`, and leading/trailing icon slots. Colors and metrics come from the
-/// ambient ``CDSTheme``; icon slots receive the resolved content color so an icon's tint matches
-/// the label across variants and themes.
-///
-/// The icon slots are generic (`Leading`/`Trailing` default to `EmptyView`) so an icon keeps its
-/// concrete view type instead of being erased through `AnyView`.
-struct Button<Leading: View, Trailing: View>: View {
-    @Environment(\.cdsTheme) private var theme
+// MARK: - Environment
 
-    let text: String
-    let action: () -> Void
+private struct CDSButtonMetricsKey: EnvironmentKey {
+    static let defaultValue: ButtonMetrics? = nil
+}
+
+extension EnvironmentValues {
+    /// Set by ``CDSButtonStyle`` so ``CDSButtonLabel`` can pick up icon size and label spacing
+    /// for the active button size. `nil` outside a CDS-styled button (the label then falls back
+    /// to size `.l` from the ambient theme).
+    var cdsButtonMetrics: ButtonMetrics? {
+        get { self[CDSButtonMetricsKey.self] }
+        set { self[CDSButtonMetricsKey.self] = newValue }
+    }
+}
+
+// MARK: - ButtonStyle (chrome)
+
+/// CDS look for a SwiftUI `Button`. Owns fill, radius, padding, press, loading, and the
+/// content color / metrics environment. Does **not** own the label — pass title and icons as
+/// the button's content (plain `Text`, or ``CDSButtonLabel`` for consistent icon spacing).
+///
+/// ```swift
+/// Button("Save") { save() }
+///     .buttonStyle(.cds(.primary))
+///
+/// Button(action: next) {
+///     CDSButtonLabel("Continue", trailing: Image(systemName: "chevron.right"))
+/// }
+/// .buttonStyle(.cds(.primary, size: .l))
+/// ```
+struct CDSButtonStyle: ButtonStyle {
+    @Environment(\.cdsTheme) private var theme
+    @Environment(\.isEnabled) private var isEnabled
+
     var variant: ButtonVariant = .primary
     var size: ButtonSize = .l
-    var isEnabled: Bool = true
     var loading: Bool = false
     var transparent: Bool = false
     var fullWidth: Bool = false
-    let leadingIcon: (Color) -> Leading
-    let trailingIcon: (Color) -> Trailing
-
-    init(
-        text: String,
-        action: @escaping () -> Void,
-        variant: ButtonVariant = .primary,
-        size: ButtonSize = .l,
-        isEnabled: Bool = true,
-        loading: Bool = false,
-        transparent: Bool = false,
-        fullWidth: Bool = false,
-        @ViewBuilder leadingIcon: @escaping (Color) -> Leading,
-        @ViewBuilder trailingIcon: @escaping (Color) -> Trailing
-    ) {
-        self.text = text
-        self.action = action
-        self.variant = variant
-        self.size = size
-        self.isEnabled = isEnabled
-        self.loading = loading
-        self.transparent = transparent
-        self.fullWidth = fullWidth
-        self.leadingIcon = leadingIcon
-        self.trailingIcon = trailingIcon
-    }
-
-    var body: some View {
-        let colors = buttonColors(variant, transparent: transparent, theme: theme)
-        let metrics = buttonMetrics(size, theme: theme)
-        return SwiftUI.Button(action: action) { EmptyView() }
-            .buttonStyle(
-                ButtonInnerStyle(
-                    text: text,
-                    theme: theme,
-                    colors: colors,
-                    metrics: metrics,
-                    isEnabled: isEnabled,
-                    loading: loading,
-                    fullWidth: fullWidth,
-                    leadingIcon: leadingIcon,
-                    trailingIcon: trailingIcon
-                )
-            )
-            .disabled(!isEnabled || loading)
-    }
-}
-
-extension Button where Leading == EmptyView, Trailing == EmptyView {
-    /// The common icon-less button — the general initializer's icon slots default to `EmptyView`.
-    init(
-        text: String,
-        action: @escaping () -> Void,
-        variant: ButtonVariant = .primary,
-        size: ButtonSize = .l,
-        isEnabled: Bool = true,
-        loading: Bool = false,
-        transparent: Bool = false,
-        fullWidth: Bool = false
-    ) {
-        self.init(
-            text: text,
-            action: action,
-            variant: variant,
-            size: size,
-            isEnabled: isEnabled,
-            loading: loading,
-            transparent: transparent,
-            fullWidth: fullWidth,
-            leadingIcon: { _ in EmptyView() },
-            trailingIcon: { _ in EmptyView() }
-        )
-    }
-}
-
-/// Draws the whole button. Lives in a `ButtonStyle` because `configuration.isPressed` — needed for
-/// the press scale + scrim — is only available there.
-private struct ButtonInnerStyle<Leading: View, Trailing: View>: ButtonStyle {
-    let text: String
-    let theme: CDSTheme
-    let colors: ButtonColors
-    let metrics: ButtonMetrics
-    let isEnabled: Bool
-    let loading: Bool
-    let fullWidth: Bool
-    let leadingIcon: (Color) -> Leading
-    let trailingIcon: (Color) -> Trailing
 
     func makeBody(configuration: Configuration) -> some View {
+        let colors = buttonColors(variant, transparent: transparent, theme: theme)
+        let metrics = buttonMetrics(size, theme: theme)
         let active = configuration.isPressed && isEnabled && !loading
-        // Darken (light scheme) or lighten (dark scheme) the container while pressed.
         let scrim: Color = theme.colorScheme == .dark ? .white : .black
         let shape = RoundedRectangle(cornerRadius: metrics.radius)
 
-        return HStack(spacing: theme.space.x1) {
+        return Group {
             if loading {
-                ProgressCircle(color: colors.content, diameter: metrics.iconSize)
+                ProgressView()
+                    .progressViewStyle(.cds(diameter: metrics.iconSize, color: colors.content))
             } else {
-                leadingIcon(colors.content)
-                Text(text, style: metrics.font, color: colors.content, lineLimit: 1)
-                trailingIcon(colors.content)
+                configuration.label
+                    .font(theme.typography[metrics.font].font)
+                    .foregroundStyle(colors.content)
             }
         }
+        .environment(\.cdsButtonMetrics, metrics)
         .padding(.horizontal, metrics.paddingX)
         .padding(.vertical, metrics.paddingY)
         .frame(maxWidth: fullWidth ? .infinity : nil)
@@ -133,26 +71,149 @@ private struct ButtonInnerStyle<Leading: View, Trailing: View>: ButtonStyle {
         .scaleEffect(active ? pressedScale : 1)
         .opacity(isEnabled ? 1 : cdsDisabledAlpha)
         .animation(.easeOut(duration: 0.12), value: active)
+        .allowsHitTesting(!loading)
+    }
+}
+
+extension ButtonStyle where Self == CDSButtonStyle {
+    static func cds(
+        _ variant: ButtonVariant = .primary,
+        size: ButtonSize = .l,
+        loading: Bool = false,
+        transparent: Bool = false,
+        fullWidth: Bool = false
+    ) -> CDSButtonStyle {
+        CDSButtonStyle(
+            variant: variant,
+            size: size,
+            loading: loading,
+            transparent: transparent,
+            fullWidth: fullWidth
+        )
+    }
+}
+
+// MARK: - Label helper (icons + spacing)
+
+/// Standard CDS button label: leading icon, title, trailing icon. Reads icon size and
+/// spacing from ``CDSButtonStyle`` via the environment so every call site stays consistent
+/// without a CDS `Button` type. Tint comes from the style's `foregroundStyle`.
+///
+/// Custom layouts can skip this and compose `configuration.label` themselves.
+struct CDSButtonLabel<Leading: View, Trailing: View>: View {
+    @Environment(\.cdsTheme) private var theme
+    @Environment(\.cdsButtonMetrics) private var environmentMetrics
+
+    private let title: String
+    private let leading: Leading
+    private let trailing: Trailing
+
+    init(_ title: String, leading: Leading, trailing: Trailing) {
+        self.title = title
+        self.leading = leading
+        self.trailing = trailing
+    }
+
+    var body: some View {
+        let metrics = environmentMetrics ?? buttonMetrics(.l, theme: theme)
+        HStack(spacing: metrics.labelSpacing) {
+            if Leading.self != EmptyView.self {
+                leading
+                    .font(.system(size: metrics.iconSize, weight: .semibold))
+                    .frame(width: metrics.iconSize, height: metrics.iconSize)
+            }
+            SwiftUI.Text(title)
+                .font(theme.typography[metrics.font].font)
+                .lineLimit(1)
+            if Trailing.self != EmptyView.self {
+                trailing
+                    .font(.system(size: metrics.iconSize, weight: .semibold))
+                    .frame(width: metrics.iconSize, height: metrics.iconSize)
+            }
+        }
+    }
+}
+
+extension CDSButtonLabel where Leading == EmptyView, Trailing == EmptyView {
+    init(_ title: String) {
+        self.init(title, leading: EmptyView(), trailing: EmptyView())
+    }
+}
+
+extension CDSButtonLabel where Leading == EmptyView {
+    init(_ title: String, trailing: Trailing) {
+        self.init(title, leading: EmptyView(), trailing: trailing)
+    }
+}
+
+extension CDSButtonLabel where Trailing == EmptyView {
+    init(_ title: String, leading: Leading) {
+        self.init(title, leading: leading, trailing: EmptyView())
     }
 }
 
 #if DEBUG
-#Preview("Button — variants & states") {
+#Preview("ButtonStyle — variants & states") {
     CDSThemeProvider {
         VStack(spacing: 12) {
-            Button(text: "Primary", action: {})
-            Button(text: "Secondary", action: {}, variant: .secondary)
-            Button(text: "Tertiary", action: {}, variant: .tertiary)
-            Button(text: "Positive", action: {}, variant: .positive)
-            Button(text: "Negative", action: {}, variant: .negative)
-            Button(text: "Transparent", action: {}, transparent: true)
-            Button(text: "Disabled", action: {}, isEnabled: false)
-            Button(text: "Loading", action: {}, loading: true)
-            Button(text: "Full width", action: {}, fullWidth: true)
+            Button("Primary") {}
+                .buttonStyle(.cds(.primary))
+            Button("Secondary") {}
+                .buttonStyle(.cds(.secondary))
+            Button("Tertiary") {}
+                .buttonStyle(.cds(.tertiary))
+            Button("Positive") {}
+                .buttonStyle(.cds(.positive))
+            Button("Negative") {}
+                .buttonStyle(.cds(.negative))
+            Button("Transparent") {}
+                .buttonStyle(.cds(.primary, transparent: true))
+            Button("Disabled") {}
+                .buttonStyle(.cds(.primary))
+                .disabled(true)
+            Button("Loading") {}
+                .buttonStyle(.cds(.primary, loading: true))
+            Button("Full width") {}
+                .buttonStyle(.cds(.primary, fullWidth: true))
             HStack {
-                Button(text: "Small", action: {}, size: .s)
-                Button(text: "XSmall", action: {}, size: .xs)
+                Button("Small") {}
+                    .buttonStyle(.cds(.primary, size: .s))
+                Button("XSmall") {}
+                    .buttonStyle(.cds(.primary, size: .xs))
             }
+        }
+        .padding()
+    }
+}
+
+#Preview("ButtonStyle — CDSButtonLabel icons") {
+    CDSThemeProvider {
+        VStack(spacing: 12) {
+            Button(action: {}) {
+                CDSButtonLabel("Continue", trailing: Image(systemName: "chevron.right"))
+            }
+            .buttonStyle(.cds(.primary))
+
+            Button(action: {}) {
+                CDSButtonLabel("Add", leading: Image(systemName: "plus"))
+            }
+            .buttonStyle(.cds(.secondary))
+
+            Button(action: {}) {
+                CDSButtonLabel("Wallet", leading: Image(systemName: "creditcard"), trailing: Image(systemName: "chevron.right"))
+            }
+            .buttonStyle(.cds(.tertiary))
+
+            Button(action: {}) {
+                CDSButtonLabel("Continue", trailing: Image(systemName: "chevron.right"))
+            }
+            .buttonStyle(.cds(.primary, size: .s))
+
+            Button(action: {}) {
+                CDSButtonLabel("Disabled", trailing: Image(systemName: "chevron.right"))
+            }
+            .buttonStyle(.cds(.primary))
+            .disabled(true)
         }
         .padding()
     }

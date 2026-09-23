@@ -12,13 +12,12 @@ struct TypographyGallery: View {
                 ForEach(CDSTextStyle.allCases, id: \.self) { role in
                     let attrs = cds.typography[role]
                     VStack(alignment: .leading, spacing: cds.space.x0_25) {
-                        CDSDesignSystem.Text(role.tokenName, style: role)
-                        CDSDesignSystem.Text(
+                        Text(role.tokenName).cdsText(role)
+                        Text(
                             "\(Int(attrs.size))/\(Int(attrs.lineHeight)) · \(weightLabel(attrs.weight))"
-                                + (attrs.uppercased ? " · uppercased" : ""),
-                            style: .legal,
-                            color: cds.colors.fgMuted
+                                + (attrs.uppercased ? " · uppercased" : "")
                         )
+                        .cdsText(.legal, color: cds.colors.fgMuted)
                     }
                 }
             }

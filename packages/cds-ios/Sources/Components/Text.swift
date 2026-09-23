@@ -1,78 +1,75 @@
 import SwiftUI
 
-/// CDS's text primitive. `style` drives family/size/weight/line-height (read from
-/// `theme.typography`); `color` defaults to `fg`. Roles whose typography marks `uppercased`
-/// (e.g. `.caption`) are uppercased automatically.
-struct Text: View {
+private let cdsUppercaseTracking: CGFloat = 0.5
+
+/// CDS typography for a SwiftUI `Text` (or any text-bearing view). Owns font, default `fg` color,
+/// line-height spacing, and uppercase tracking. Does **not** replace `Text` — the caller still
+/// owns the string.
+///
+/// ```swift
+/// Text("Balance")
+///     .cdsText(.title3)
+/// Text("Muted")
+///     .cdsText(.body, color: theme.colors.fgMuted)
+/// ```
+///
+/// Caption roles that mark `uppercased` on the theme apply `.textCase(.uppercase)` — there is no
+/// CDS `Text` type that mutates the string.
+struct CDSTextModifier: ViewModifier {
     @Environment(\.cdsTheme) private var theme
+    @Environment(\.isEnabled) private var isEnabled
 
-    private let text: String
-    private let style: CDSTextStyle
-    private let color: Color?
-    private let alignment: TextAlignment
-    private let lineLimit: Int?
-    private let underline: Bool
-    private let mono: Bool
-    private let isEnabled: Bool
+    var style: CDSTextStyle = .body
+    var color: Color?
+    var underline: Bool = false
+    var mono: Bool = false
 
-    init(
-        _ text: String,
-        style: CDSTextStyle = .body,
-        color: Color? = nil,
-        alignment: TextAlignment = .leading,
-        lineLimit: Int? = nil,
-        underline: Bool = false,
-        mono: Bool = false,
-        enabled: Bool = true
-    ) {
-        self.text = text
-        self.style = style
-        self.color = color
-        self.alignment = alignment
-        self.lineLimit = lineLimit
-        self.underline = underline
-        self.mono = mono
-        self.isEnabled = enabled
-    }
-
-    var body: some View {
+    func body(content: Content) -> some View {
         let attrs = theme.typography[style]
-        let displayed = attrs.uppercased ? text.uppercased() : text
         let font: Font = mono
             ? .system(size: attrs.size, weight: attrs.weight, design: .monospaced)
             : attrs.font
-        return SwiftUI.Text(displayed)
+        content
             .font(font)
-            .tracking(attrs.uppercased ? 0.5 : 0)
+            .tracking(attrs.uppercased ? cdsUppercaseTracking : 0)
             .underline(underline)
             .lineSpacing(max(0, attrs.lineHeight - attrs.size))
             .foregroundStyle(color ?? theme.colors.fg)
-            .multilineTextAlignment(alignment)
-            .lineLimit(lineLimit)
+            .textCase(attrs.uppercased ? .uppercase : nil)
             .opacity(isEnabled ? 1 : cdsDisabledAlpha)
     }
 }
 
+extension View {
+    func cdsText(
+        _ style: CDSTextStyle = .body,
+        color: Color? = nil,
+        underline: Bool = false,
+        mono: Bool = false
+    ) -> some View {
+        modifier(CDSTextModifier(style: style, color: color, underline: underline, mono: mono))
+    }
+}
+
 #if DEBUG
-// No provider on purpose: renders the default theme via the preview fallback instead of trapping.
-#Preview("Text — preview fallback (no provider)") {
+#Preview("cdsText — preview fallback (no provider)") {
     VStack(alignment: .leading, spacing: 8) {
-        Text("Display 3", style: .display3)
-        Text("Headline", style: .headline)
-        Text("Body", style: .body)
-        Text("Underlined", style: .body, underline: true)
-        Text("Monospace 123", style: .body, mono: true)
-        Text("Disabled", style: .body, enabled: false)
-        Text("Caption", style: .caption)
+        Text("Display 3").cdsText(.display3)
+        Text("Headline").cdsText(.headline)
+        Text("Body").cdsText(.body)
+        Text("Underlined").cdsText(.body, underline: true)
+        Text("Monospace 123").cdsText(.body, mono: true)
+        Text("Disabled").cdsText(.body).disabled(true)
+        Text("Caption").cdsText(.caption)
     }
     .padding()
 }
 
-#Preview("Text — with CDSThemeProvider") {
+#Preview("cdsText — with CDSThemeProvider") {
     CDSThemeProvider {
         VStack(alignment: .leading, spacing: 8) {
-            Text("Title 2", style: .title2)
-            Text("Body", style: .body)
+            Text("Title 2").cdsText(.title2)
+            Text("Body").cdsText(.body)
         }
         .padding()
     }

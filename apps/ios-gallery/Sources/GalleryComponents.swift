@@ -38,9 +38,9 @@ struct SectionCard<Content: View>: View {
     var body: some View {
         VStack(alignment: .leading, spacing: cds.space.x1_5) {
             VStack(alignment: .leading, spacing: cds.space.x0_5) {
-                CDSDesignSystem.Text(title, style: .title4)
+                Text(title).cdsText(.title4)
                 if let subtitle {
-                    CDSDesignSystem.Text(subtitle, style: .label2, color: cds.colors.fgMuted)
+                    Text(subtitle).cdsText(.label2, color: cds.colors.fgMuted)
                 }
             }
             content
@@ -64,7 +64,7 @@ struct Swatch: View {
                 .fill(color)
                 .frame(height: 44)
                 .cdsBorderedCard(radius: cds.borderRadius.radius200)
-            CDSDesignSystem.Text(label, style: .legal, color: cds.colors.fgMuted)
+            Text(label).cdsText(.legal, color: cds.colors.fgMuted)
                 .lineLimit(1)
         }
     }
@@ -78,7 +78,7 @@ struct SampleRow<Sample: View>: View {
 
     var body: some View {
         HStack(alignment: .center, spacing: cds.space.x2) {
-            CDSDesignSystem.Text(label, style: .label2)
+            Text(label).cdsText(.label2)
                 .frame(width: 96, alignment: .leading)
             sample
             Spacer(minLength: 0)

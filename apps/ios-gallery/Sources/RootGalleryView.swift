@@ -68,6 +68,10 @@ struct GalleryScreen: View {
                 SizesGallery()
                 ShadowGallery()
                 ComponentsGallery()
+                TextGallery()
+                ToggleGallery()
+                AlertGallery()
+                ProgressGallery()
             }
             .padding(cds.space.x2)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -77,8 +81,8 @@ struct GalleryScreen: View {
 
     private var controls: some View {
         VStack(alignment: .leading, spacing: cds.space.x1) {
-            CDSDesignSystem.Text("CDS iOS — Theme Gallery", style: .title2)
-            CDSDesignSystem.Text("Live view of every token scale in the active theme.", style: .label2, color: cds.colors.fgMuted)
+            Text("CDS iOS — Theme Gallery").cdsText(.title2)
+            Text("Live view of every token scale in the active theme.").cdsText(.label2, color: cds.colors.fgMuted)
 
             Picker("Theme", selection: $theme) {
                 ForEach(ThemeChoice.allCases) { SwiftUI.Text($0.label).tag($0) }

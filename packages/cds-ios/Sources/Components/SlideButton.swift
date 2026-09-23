@@ -45,12 +45,18 @@ struct SlideButton: View {
             ZStack(alignment: .leading) {
                 shape.fill(theme.colors.bgSecondary)
 
-                Text(uncheckedLabel, style: metrics.font, color: theme.colors.fg, alignment: .center, lineLimit: 1)
+                Text(uncheckedLabel)
+                    .cdsText(metrics.font, color: theme.colors.fg)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.horizontal, metrics.labelPaddingX)
                     .opacity((1 - displayedFraction) * (1 - checkedAlpha))
 
-                Text(checkedLabel, style: metrics.font, color: colors.content, alignment: .center, lineLimit: 1)
+                Text(checkedLabel)
+                    .cdsText(metrics.font, color: colors.content)
+                    .multilineTextAlignment(.center)
+                    .lineLimit(1)
                     .frame(maxWidth: .infinity, alignment: .center)
                     .padding(.horizontal, metrics.labelPaddingX)
                     .opacity(checkedAlpha)
@@ -62,7 +68,8 @@ struct SlideButton: View {
                             .stroke(colors.content, style: StrokeStyle(lineWidth: metrics.iconSize * 0.12, lineCap: .round, lineJoin: .round))
                             .frame(width: metrics.iconSize, height: metrics.iconSize)
                             .opacity(1 - checkedAlpha)
-                        ProgressCircle(color: colors.content, diameter: metrics.iconSize)
+                        ProgressView()
+                            .progressViewStyle(.cds(diameter: metrics.iconSize, color: colors.content))
                             .opacity(checkedAlpha)
                     }
                     .padding(.trailing, handleInset)
