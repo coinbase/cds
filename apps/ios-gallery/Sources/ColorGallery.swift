@@ -47,7 +47,7 @@ struct SpectrumGallery: View {
             VStack(alignment: .leading, spacing: cds.space.x1_5) {
                 ForEach(CDSSpectrumHueToken.allCases, id: \.self) { hue in
                     VStack(alignment: .leading, spacing: cds.space.x0_5) {
-                        CDSDesignSystem.Text(hue.tokenName, style: .legal, color: cds.colors.fgMuted)
+                        Text(hue.tokenName).cdsText(.legal, color: cds.colors.fgMuted)
                         HStack(spacing: 2) {
                             ForEach(CDSColorRampToken.allCases, id: \.self) { step in
                                 RoundedRectangle(cornerRadius: 3)

@@ -342,6 +342,6 @@ spacing and type override across both, and they'd drift.
 Value equality means the provider won't re-invalidate its subtree over it, so this is waste rather than
 a bug — but a top-level `let` (or `static let`) is free.
 
-**`caption` is uppercased for you.** The `caption` role carries `uppercased: true`, and CDS's internal
-`Text` applies the transform. If you render caption text with SwiftUI's own `Text`, uppercase it
+**`caption` is uppercased for you.** The `caption` role carries `uppercased: true`, and `.cdsText(.caption)`
+applies `.textCase(.uppercase)`. If you render caption text without that modifier, uppercase it
 yourself.

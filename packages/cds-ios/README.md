@@ -4,7 +4,7 @@ Native SwiftUI implementation of the CDS theme system, the foundation for the
 `native-rewrite` initiative (moving CDS off React Native toward native iOS).
 
 This package contains the **theme provider and theming layer** plus a small set of experimental
-**components** (`Text`, `Button`, `SlideButton`, `ProgressCircle`). The components are `internal` — they
+**components** (`CDSButtonStyle` / `CDSButtonLabel`, `CDSToggleStyle`, `.cdsText`, circular `ProgressViewStyle`, `SlideButton`). The components are `internal` — they
 compile into the artifact but are **not customer API yet** — mirroring how Android ships `Button`,
 `Text`, and `SlideButton` as `internal` for the first release. It is a Swift Package
 (`CDSDesignSystem`) that builds standalone with `swift build` / `swift test`.
@@ -30,7 +30,7 @@ It aims for parity with the React Native `ThemeProvider` (`packages/mobile/src/c
 | `Theme/Shadow.swift`                | Shadow (elevation) tokens + `.cdsShadow()` modifier                                                                                                                                                                                                                                                                           |
 | `Theme/Typography.swift`            | Themeable typography (`CDSTypography`, `CDSTextAttributes`, `CDSTextStyle` font token)                                                                                                                                                                                                                                        |
 | `Theme/CDSTheme.swift`              | `CDSTheme`, `CDSThemeSet`, `cdsTheme { }` builder, `CDSThemeProvider`, `InvertedThemeProvider`                                                                                                                                                                                                                                |
-| `Components/`                       | **Internal** (not customer API): `Text`, `Button` (+ variants/sizes), `SlideButton` (drag-to-confirm), and `ProgressCircle` (indeterminate progress indicator). Ships in the artifact; kept off the public surface until stabilized. `Components/internal/` holds the sole shared helper, `ComponentMetrics`                  |
+| `Components/`                       | **Internal** (not customer API): `CDSButtonStyle` + `CDSButtonLabel` (SwiftUI `Button` + `.buttonStyle(.cds)`; not a CDS `Button` view), `CDSToggleStyle` (SwiftUI `Toggle` + `.toggleStyle(.cds)`; not a CDS `Toggle` view), `.cdsText` (SwiftUI `Text` + modifier; not a CDS `Text` view), circular `ProgressViewStyle` (SwiftUI `ProgressView` + `.progressViewStyle(.cds)`; not a CDS `ProgressCircle` view), `Alert.swift` (docs + preview only — use SwiftUI `.alert`, no CDS `Alert` view), and `SlideButton` (drag-to-confirm). Ships in the artifact; kept off the public surface until stabilized. `Components/internal/` holds the sole shared helper, `ComponentMetrics` |
 
 The demo gallery that consumes this library lives in [`apps/ios-gallery/`](../../apps/ios-gallery/).
 Because the components are `internal`, the gallery reaches them with `@testable import
@@ -187,7 +187,7 @@ controls to switch **theme** (CDS default vs. the sample `AcmeTheme` brand) and 
 - **Spectrum** — all 11 hues × 13 steps (`theme.spectrum[hue][step]`)
 - **Typography** — every `CDSTextStyle` role with its size / line-height / weight
 - **Spacing / Radius / Border width / Sizes / Shadows** — each themeable scale, drawn to size
-- **Components** — the real (internal) `Text`, `Button`, `SlideButton`, and `ProgressCircle`, plus an `InvertedThemeProvider` demo
+- **Components** — the real (internal) `CDSButtonStyle` / `CDSButtonLabel`, `SlideButton`, plus dedicated **Text** (`.cdsText`), **Toggle** (`.toggleStyle(.cds)`), **Alert** (SwiftUI `.alert`), and **ProgressView** (`.progressViewStyle(.cds)`) sections, and an `InvertedThemeProvider` demo
 
 Run it on a Simulator:
 

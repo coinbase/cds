@@ -24,13 +24,20 @@ together: when you add or touch a declaration, decide its visibility on purpose.
   `CDSBorderWidthToken`, `CDSIconSizeToken`, `CDSAvatarSizeToken`, `CDSControlSizeToken`,
   `CDSIllustrationColorToken`, `CDSShadowToken`, `CDSTextStyle`), and the `\.cdsTheme` environment
   accessor plus the `Color(cdsHex:)` helper.
-- Components under `Sources/Components/` — `Text`, `Button` (+ its variants/sizes),
-  `SlideButton`, and `ProgressCircle` (the indeterminate progress indicator) — are deliberately
-  **`internal`**. They were experiments and are **not customer API yet**, exactly like Android
-  shipping `Text`, `Button`, and `SlideButton` as `internal` for the first release. Ship them in the
-  artifact; keep them off the public surface until they stabilize. Do not add `public` to a component
-  to make a consumer compile. `Sources/Components/internal/` holds `ComponentMetrics` — the only
-  shared, non-component internal helper left there.
+- Components under `Sources/Components/` — `CDSButtonStyle` + `CDSButtonLabel`, `CDSToggleStyle`,
+  `CDSTextModifier` (`.cdsText`), `CDSCircularProgressViewStyle` (`.progressViewStyle(.cds)`),
+  `SlideButton` — are deliberately **`internal`**. They were experiments and are **not customer API
+  yet**, exactly like Android shipping `Text`, `Button`, and `SlideButton` as `internal` for the first
+  release. Ship them in the artifact; keep them off the public surface until they stabilize. Do not
+  add `public` to a component to make a consumer compile. `Sources/Components/internal/` holds
+  `ComponentMetrics` — the only shared, non-component internal helper left there.
+  iOS buttons are a SwiftUI `Button` plus `.buttonStyle(.cds(…))`; do not reintroduce a CDS `Button`
+  view. Icon spacing/size live on `CDSButtonLabel`, which reads metrics from the style.
+  Toggles are a SwiftUI `Toggle` plus `.toggleStyle(.cds(…))`; do not add a CDS `Toggle` view.
+  Text is SwiftUI `Text` plus `.cdsText(…)`; do not add a CDS `Text` view.
+  Circular progress is SwiftUI `ProgressView` plus `.progressViewStyle(.cds(…))`; do not add a CDS
+  `ProgressCircle` view.
+  Alerts are SwiftUI `.alert` (see `Alert.swift`); do not add a CDS `Alert` view.
 - **Never widen visibility to make `apps/ios-gallery` compile.** The gallery is a consumer. It reaches
   the internal components with `@testable import CDSDesignSystem` (Debug builds enable testability),
   so it can demo the _real_ components rather than reimplementing stand-ins — an iOS advantage over
