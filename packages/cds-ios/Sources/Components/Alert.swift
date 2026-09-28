@@ -1,13 +1,14 @@
 import SwiftUI
 
-/// There is **no** CDS `Alert` view and no `AlertStyle`.
+/// RN `Alert` (`packages/mobile/src/overlays/Alert.tsx`) is a **custom modal** (pictogram, CDS
+/// buttons, action layout). Visual spec is that RN chrome — not SwiftUI `.alert`.
 ///
-/// RN ships a custom modal (`packages/mobile/src/overlays/Alert.tsx`). On iOS that is the wrong
-/// primitive: a blocking choice is a system dialog, presented with SwiftUI `.alert` (or
-/// `UIAlertController`). CDS does not restyle those chrome buttons — action roles are
-/// `ButtonRole.destructive` / `.cancel`, not ``CDSButtonStyle``.
+/// SwiftUI `.alert` is OS dialog chrome. Action roles are `ButtonRole.destructive` / `.cancel`.
+/// CDS does not restyle those buttons. Keep `.alert` for true system dialogs; do **not** treat it
+/// as the CDS Alert component. The CDS port is a CDS view (not yet shipped).
 ///
 /// ```swift
+/// // OS dialog — not CDS Alert
 /// .alert("Delete wallet?", isPresented: $showAlert) {
 ///     Button("Delete", role: .destructive) { delete() }
 ///     Button("Cancel", role: .cancel) {}
@@ -15,12 +16,9 @@ import SwiftUI
 ///     Text("This cannot be undone.")
 /// }
 /// ```
-///
-/// Contrast with ``CDSToggleStyle``: there the SwiftUI control stays (`Toggle`) and CDS only
-/// supplies a `ToggleStyle`. Alert has nothing to style — the system owns the dialog.
 
 #if DEBUG
-#Preview("Alert — use SwiftUI .alert, not a CDS view") {
+#Preview("System .alert — not CDS Alert") {
     CDSThemeProvider {
         AlertUsagePreview()
             .padding()
@@ -37,7 +35,7 @@ private struct AlertUsagePreview: View {
                 Button("Delete", role: .destructive) {}
                 Button("Cancel", role: .cancel) {}
             } message: {
-                SwiftUI.Text("This cannot be undone. There is no CDS Alert view.")
+                SwiftUI.Text("OS .alert. CDS Alert is the RN modal — a separate CDS view.")
             }
     }
 }

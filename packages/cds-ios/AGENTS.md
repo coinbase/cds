@@ -3,6 +3,10 @@
 Native iOS CDS: Swift 6 + SwiftUI, distributed as the binary XCFramework `CDSDesignSystem`. Swift
 package `packages/cds-ios/` (module `CDSDesignSystem`), Nx project `cds-ios`.
 
+When migrating a RN component or adding a Style/modifier/view, load `.claude/skills/swiftui-best-practices`
+and follow [CDS SwiftUI Best Practices](https://linear.app/coinbase/document/cds-swiftui-best-practices-fff9ce770a56)
+(parallel to [CDS Compose Best Practices](https://linear.app/coinbase/document/cds-compose-best-practices-8810460c4b23)).
+
 This is a **library**, not application code. Everything public here is a promise to consumers that
 is expensive to take back, so the default answer to "should this be public?" is no.
 
@@ -37,7 +41,10 @@ together: when you add or touch a declaration, decide its visibility on purpose.
   Text is SwiftUI `Text` plus `.cdsText(…)`; do not add a CDS `Text` view.
   Circular progress is SwiftUI `ProgressView` plus `.progressViewStyle(.cds(…))`; do not add a CDS
   `ProgressCircle` view.
-  Alerts are SwiftUI `.alert` (see `Alert.swift`); do not add a CDS `Alert` view.
+  **Visual spec is RN, not HIG.** Overlay components whose RN chrome is not system chrome (`Alert`,
+  `Accordion`, `Tooltip`) are CDS views. Do not ship SwiftUI `.alert` / `DisclosureGroup` /
+  `.popover` as those CDS components. OS `.alert` may still appear in the gallery as contrast, but
+  it is not CDS Alert. See `.claude/skills/swiftui-best-practices`.
 - **Never widen visibility to make `apps/ios-gallery` compile.** The gallery is a consumer. It reaches
   the internal components with `@testable import CDSDesignSystem` (Debug builds enable testability),
   so it can demo the _real_ components rather than reimplementing stand-ins — an iOS advantage over
@@ -66,6 +73,13 @@ together: when you add or touch a declaration, decide its visibility on purpose.
   learn the current scheme, so using it with no provider above traps just like any other reader
   (matching Android). Install a `CDSThemeProvider` at the root and nest `InvertedThemeProvider` beneath
   it.
+- **Whole-app CDS is environment inheritance, not wrapper views.** `CDSThemeProvider` is the place
+  that should install SwiftUI defaults (`.tint`, body `.font`, `.foregroundStyle`, `.toggleStyle(.cds)`,
+  `.progressViewStyle(.cds)`, a **non-filled-primary** default `.buttonStyle(.cds)`). Unstyled
+  `Button` / `Toggle` / `Text` then look like CDS because they sit under the provider. Do not add
+  `CDSButton` / `CDSText` types to “enforce” this — those make the unstyled HIG control the leak.
+  Filled CTAs still set an explicit variant (`.buttonStyle(.cds(.primary))`). Toolbar/list chrome
+  that must stay HIG opts out with `.buttonStyle(.plain)`. See `.claude/skills/swiftui-best-practices`.
 
 Rationale for the theme design and the RN parity notes are in [`README.md`](README.md); the
 consumer-facing guides are in [`docs/`](docs/).

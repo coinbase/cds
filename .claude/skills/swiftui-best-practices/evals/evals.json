@@ -1,0 +1,36 @@
+{
+  "skill_name": "swiftui-best-practices",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Migrate the CDS React Native Button in packages/mobile to iOS. Follow cds-ios conventions.",
+      "expected_output": "Uses SwiftUI Button + CDSButtonStyle via .buttonStyle(.cds). Does not add a CDSButton or CDS.Button view. Tokens via CDSTheme. Stays internal. Gallery shows Button { }.buttonStyle(.cds). Visual chrome matches RN via the Style, not a wrapper.",
+      "expectations": [
+        "No struct named CDSButton or type wrapping SwiftUI.Button as the public/internal component API",
+        "Call site is Button plus .buttonStyle(.cds(...))",
+        "Does not default every Button to filled .cds(.primary) on CDSThemeProvider",
+        "Components remain internal"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "We need the entire app in CDS style. Wrap Button, Toggle, Text, and ProgressView into CDS components so nobody can forget the modifier.",
+      "expected_output": "Refuses control wrappers for Button/Toggle/Text/ProgressView. Recommends CDSThemeProvider environment defaults (tint, body font, fg, toggleStyle, progressViewStyle, a non-primary default buttonStyle). Explicit .buttonStyle(.cds(.primary)) remains for CTAs. Typography roles still use .cdsText.",
+      "expectations": [
+        "Does not create CDSButton, CDSToggle, CDSText, or CDSProgressCircle views",
+        "Puts whole-app enforcement on CDSThemeProvider environment inheritance, not a wrapper type",
+        "Does not default every Button to filled .cds(.primary) at the app root"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Port RN Accordion and Alert to packages/cds-ios. Visual design must stay as similar to the RN source as possible.",
+      "expected_output": "Ships CDS views that match RN chrome (custom Alert modal; Accordion with exclusive-open/caret). Does not treat SwiftUI .alert or DisclosureGroup as the CDS component. Does not wrap Button in CDSButton.",
+      "expectations": [
+        "Alert is a CDS view matching RN overlay chrome, not SwiftUI .alert as the CDS Alert",
+        "Accordion is a CDS view matching RN, not DisclosureGroup as the CDS Accordion",
+        "Does not create a CDSButton wrapper for the Button control"
+      ]
+    }
+  ]
+}

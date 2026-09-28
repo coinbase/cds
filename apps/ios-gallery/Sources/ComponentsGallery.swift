@@ -162,15 +162,15 @@ struct ToggleGallery: View {
     }
 }
 
-/// Use SwiftUI `.alert`. There is no CDS Alert view to construct.
+/// OS `.alert` demo. CDS Alert (RN modal) is a separate CDS view — not this.
 struct AlertGallery: View {
     @Environment(\.cdsTheme) private var cds
     @State private var showDeleteAlert = false
 
     var body: some View {
-        SectionCard("Alert", subtitle: "SwiftUI .alert — no CDS.Alert view") {
+        SectionCard("Alert", subtitle: "OS .alert (not CDS Alert — RN modal is a CDS view)") {
             VStack(alignment: .leading, spacing: cds.space.x1) {
-                Text("The system dialog is the component. Action roles are ButtonRole, not CDSButtonStyle.")
+                Text("System dialog chrome. CDS Alert matches the RN overlay (pictogram, CDS buttons), not this.")
                     .cdsText(.body, color: cds.colors.fgMuted)
                 Button("Show system alert") { showDeleteAlert = true }
                     .buttonStyle(.cds(.negative))

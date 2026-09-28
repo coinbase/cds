@@ -26,8 +26,8 @@ func toggleThumbColor(theme: CDSTheme) -> Color {
 ///     .toggleStyle(.cds(.primary))
 /// ```
 ///
-/// Contrast with Alert: there is no `AlertStyle`. Alerts are presented with `.alert`, not a
-/// CDS view. See the gallery "Alert" section.
+/// Contrast with Alert: RN Alert is a custom modal, so it is a CDS view (not `.alert`). Toggle
+/// still has a Style protocol, so the control stays `Toggle`. See the gallery "Alert" section.
 struct CDSToggleStyle: ToggleStyle {
     @Environment(\.cdsTheme) private var theme
     @Environment(\.isEnabled) private var isEnabled
