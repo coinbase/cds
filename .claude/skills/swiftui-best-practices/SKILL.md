@@ -13,8 +13,8 @@ controls in a CDS view.
 [CDS SwiftUI Best Practices](https://linear.app/coinbase/document/cds-swiftui-best-practices-fff9ce770a56)
 is the working reference (parallel to
 [CDS Compose Best Practices](https://linear.app/coinbase/document/cds-compose-best-practices-8810460c4b23)).
-**Read it before porting a component**, and add new port learnings there, not here. If Linear is
-unavailable, rely on this file and [references/hig-map.md](references/hig-map.md).
+**Read it before porting a component**, and add new port learnings there, not here. It includes
+the full RN component → iOS map. If Linear is unavailable, rely on this file.
 
 Also read:
 
@@ -196,5 +196,3 @@ UIColor that duplicates a token.
 - [ ] Gallery shows the real call site
 - [ ] `internal` visibility
 - [ ] `yarn nx run cds-ios:test` passes
-
-Full RN → SwiftUI map: [references/hig-map.md](references/hig-map.md)
