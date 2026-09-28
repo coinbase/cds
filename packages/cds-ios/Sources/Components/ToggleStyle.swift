@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// Semantic color of a CDS-styled SwiftUI `Toggle` when on. Matches RN `Switch` variants.
+/// Semantic color of a CDS-styled SwiftUI `Toggle` when on.
 enum ToggleVariant { case primary, positive, negative }
 
 /// Track fill for ``CDSToggleStyle``. Off is always `bgTertiary`; on follows ``ToggleVariant``.
@@ -18,16 +18,12 @@ func toggleThumbColor(theme: CDSTheme) -> Color {
     theme.colorScheme == .dark ? theme.colors.fg : theme.colors.fgInverse
 }
 
-/// CDS look for a SwiftUI `Toggle`. Owns track/thumb colors and control-size metrics.
-/// Does **not** replace `Toggle` — the caller still owns the label and `isOn` binding.
+/// CDS track and thumb for a SwiftUI `Toggle`.
 ///
 /// ```swift
 /// Toggle("Notifications", isOn: $on)
 ///     .toggleStyle(.cds(.primary))
 /// ```
-///
-/// Contrast with Alert: RN Alert is a custom modal, so it is a CDS view (not `.alert`). Toggle
-/// still has a Style protocol, so the control stays `Toggle`. See the gallery "Alert" section.
 struct CDSToggleStyle: ToggleStyle {
     @Environment(\.cdsTheme) private var theme
     @Environment(\.isEnabled) private var isEnabled

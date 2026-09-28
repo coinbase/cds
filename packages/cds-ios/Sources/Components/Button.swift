@@ -10,9 +10,8 @@ private struct CDSButtonMetricsKey: EnvironmentKey {
 }
 
 extension EnvironmentValues {
-    /// Set by ``CDSButtonStyle`` so ``CDSButtonLabel`` can pick up icon size and label spacing
-    /// for the active button size. `nil` outside a CDS-styled button (the label then falls back
-    /// to size `.l` from the ambient theme).
+    /// Metrics of the enclosing ``CDSButtonStyle``, read by ``CDSButtonLabel``. `nil` outside a
+    /// CDS-styled button, where the label falls back to size `.l`.
     var cdsButtonMetrics: ButtonMetrics? {
         get { self[CDSButtonMetricsKey.self] }
         set { self[CDSButtonMetricsKey.self] = newValue }
@@ -21,14 +20,10 @@ extension EnvironmentValues {
 
 // MARK: - ButtonStyle (chrome)
 
-/// CDS look for a SwiftUI `Button`. Owns fill, radius, padding, press, loading, and the
-/// content color / metrics environment. Does **not** own the label — pass title and icons as
-/// the button's content (plain `Text`, or ``CDSButtonLabel`` for consistent icon spacing).
+/// CDS fill, shape, padding, press, and loading states for a SwiftUI `Button`. Use
+/// ``CDSButtonLabel`` as the content for icons.
 ///
 /// ```swift
-/// Button("Save") { save() }
-///     .buttonStyle(.cds(.primary))
-///
 /// Button(action: next) {
 ///     CDSButtonLabel("Continue", trailing: Image(systemName: "chevron.right"))
 /// }
@@ -95,11 +90,8 @@ extension ButtonStyle where Self == CDSButtonStyle {
 
 // MARK: - Label helper (icons + spacing)
 
-/// Standard CDS button label: leading icon, title, trailing icon. Reads icon size and
-/// spacing from ``CDSButtonStyle`` via the environment so every call site stays consistent
-/// without a CDS `Button` type. Tint comes from the style's `foregroundStyle`.
-///
-/// Custom layouts can skip this and compose `configuration.label` themselves.
+/// CDS button label with optional leading and trailing icons, sized and spaced by the enclosing
+/// ``CDSButtonStyle``.
 struct CDSButtonLabel<Leading: View, Trailing: View>: View {
     @Environment(\.cdsTheme) private var theme
     @Environment(\.cdsButtonMetrics) private var environmentMetrics

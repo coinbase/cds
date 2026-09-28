@@ -5,11 +5,9 @@ private let settleSpring = Animation.spring(response: 0.35, dampingFraction: 0.6
 // handle alone already exceeds `checkThreshold`.
 private let minConfirmProgress: CGFloat = 0.01
 
-/// A "slide to confirm" control for actions that shouldn't trigger on an accidental tap. Covers
-/// `variant`, `size`, `enabled`, `checkThreshold`, and `onSlideComplete`. Height emerges from the
-/// size's padding plus the theme's line height, and the collapsed handle is a square derived from
-/// that height. `checked` is controlled — this view never resets itself; set it back to `false` to
-/// re-enable dragging.
+/// A "slide to confirm" control for actions that shouldn't trigger on an accidental tap.
+/// `checked` is controlled — this view never resets itself; set it back to `false` to re-enable
+/// dragging.
 struct SlideButton: View {
     @Environment(\.cdsTheme) private var theme
 

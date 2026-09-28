@@ -8,8 +8,7 @@ private let cdsIndeterminateSpinDuration: Double = 0.7
 /// icon-size scale.
 enum ProgressCircleSize { case s, m, l }
 
-/// Resolve a ``ProgressCircleSize`` to a concrete diameter from the theme's icon-size scale.
-/// Pure and deterministic so the tier → diameter mapping is unit-testable.
+/// Resolves a ``ProgressCircleSize`` to a diameter from the theme's icon-size scale.
 func progressCircleDiameter(_ size: ProgressCircleSize, theme: CDSTheme) -> CGFloat {
     switch size {
     case .s: return theme.iconSize.s
@@ -18,18 +17,13 @@ func progressCircleDiameter(_ size: ProgressCircleSize, theme: CDSTheme) -> CGFl
     }
 }
 
-/// CDS circular look for a SwiftUI `ProgressView`. Owns stroke color and diameter.
-/// Does **not** replace `ProgressView` — indeterminate is `ProgressView()`, determinate is
-/// `ProgressView(value:)`.
+/// CDS circular spinner for a SwiftUI `ProgressView`: indeterminate for `ProgressView()`,
+/// determinate for `ProgressView(value:)`.
 ///
 /// ```swift
-/// ProgressView()
-///     .progressViewStyle(.cds(.m))
 /// ProgressView(value: 0.6)
 ///     .progressViewStyle(.cds(.l, color: theme.colors.fgPrimary))
 /// ```
-///
-/// Contrast with the old `ProgressCircle` view: the spinner lives inside this style's `makeBody`.
 struct CDSCircularProgressViewStyle: ProgressViewStyle {
     var size: ProgressCircleSize = .m
     var color: Color?

@@ -2,19 +2,13 @@ import SwiftUI
 
 private let cdsUppercaseTracking: CGFloat = 0.5
 
-/// CDS typography for a SwiftUI `Text` (or any text-bearing view). Owns font, default `fg` color,
-/// line-height spacing, and uppercase tracking. Does **not** replace `Text` — the caller still
-/// owns the string.
+/// Applies a CDS text style (font, color, line height, uppercase tracking) to a SwiftUI `Text` or
+/// any text-bearing view.
 ///
 /// ```swift
-/// Text("Balance")
-///     .cdsText(.title3)
 /// Text("Muted")
 ///     .cdsText(.body, color: theme.colors.fgMuted)
 /// ```
-///
-/// Caption roles that mark `uppercased` on the theme apply `.textCase(.uppercase)` — there is no
-/// CDS `Text` type that mutates the string.
 struct CDSTextModifier: ViewModifier {
     @Environment(\.cdsTheme) private var theme
     @Environment(\.isEnabled) private var isEnabled

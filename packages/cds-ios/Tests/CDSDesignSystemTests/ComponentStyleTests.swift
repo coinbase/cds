@@ -2,9 +2,7 @@ import SwiftUI
 import XCTest
 @testable import CDSDesignSystem
 
-/// Covers the pure style-mapping functions behind ``CDSButtonStyle``, ``CDSToggleStyle``,
-/// ``CDSCircularProgressViewStyle``, and ``SlideButton``: given a resolved theme they must map each
-/// variant/size to the expected theme tokens.
+/// Checks that component variants and sizes map to the expected theme tokens.
 final class ComponentStyleTests: XCTestCase {
     private let theme = CDSTheme.resolve(.light)
 
@@ -35,7 +33,6 @@ final class ComponentStyleTests: XCTestCase {
         ]
         for (variant, content) in expected {
             let colors = buttonColors(variant, transparent: true, theme: theme)
-            // Transparent variants read correctly on any surface via a true `.clear` container.
             XCTAssertEqual(colors.container, .clear)
             XCTAssertEqual(colors.content, content)
         }

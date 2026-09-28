@@ -1,13 +1,13 @@
 import SwiftUI
 
-/// Visual/semantic variant — the five in the current Figma Button spec.
+/// Visual/semantic variant of a CDS button.
 enum ButtonVariant { case primary, secondary, tertiary, positive, negative }
 
-/// Size tier — the four sizes (`xs`/`s`/`m`/`l`) in the Figma Button spec.
+/// Size tier of a CDS button.
 enum ButtonSize { case xs, s, m, l }
 
-/// Resolved container/content colors for a ``ButtonVariant``. Transparent variants use a true
-/// `.clear` container so the button reads correctly on any surface.
+/// Resolved container/content colors for a ``ButtonVariant``. Transparent variants use a `.clear`
+/// container.
 struct ButtonColors {
     let container: Color
     let content: Color
@@ -33,9 +33,8 @@ func buttonColors(_ variant: ButtonVariant, transparent: Bool, theme: CDSTheme) 
     }
 }
 
-/// Resolved size-derived metrics for a ``ButtonSize``. There is no `height` field: height falls
-/// out of `paddingY` plus the font's line height. ``labelSpacing`` is the gap ``CDSButtonLabel``
-/// uses between leading icon, title, and trailing icon.
+/// Resolved size-derived metrics for a ``ButtonSize``. Height comes from `paddingY` plus the
+/// font's line height.
 struct ButtonMetrics: Sendable, Equatable {
     let paddingX: CGFloat
     let paddingY: CGFloat

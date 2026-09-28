@@ -1,10 +1,8 @@
 @testable import CDSDesignSystem
 import SwiftUI
 
-/// The component surface. `CDSButtonStyle`, `CDSButtonLabel`, `CDSToggleStyle`, and
-/// `SlideButton` are `internal`, so the gallery reaches them via `@testable import` (Debug enables
-/// testability). Typography is SwiftUI `Text` + `.cdsText`; progress is `ProgressView` +
-/// `.progressViewStyle(.cds)` — see ``TextGallery`` and ``ProgressGallery``.
+/// Button styles, SlideButton, and the inverted theme. The components are `internal`, reached via
+/// `@testable import`.
 struct ComponentsGallery: View {
     @Environment(\.cdsTheme) private var cds
     @State private var slideChecked = false
@@ -99,12 +97,12 @@ struct ComponentsGallery: View {
     }
 }
 
-/// Style SwiftUI `Text`. CDS owns typography tokens; the caller still owns the string.
+/// SwiftUI `Text` styled with `.cdsText`.
 struct TextGallery: View {
     @Environment(\.cdsTheme) private var cds
 
     var body: some View {
-        SectionCard("Text", subtitle: "SwiftUI Text + .cdsText — no CDS.Text view") {
+        SectionCard("Text", subtitle: "Text + .cdsText") {
             VStack(alignment: .leading, spacing: cds.space.x1) {
                 Text("Default foreground").cdsText(.body)
                 Text("Muted foreground").cdsText(.body, color: cds.colors.fgMuted)
@@ -117,13 +115,12 @@ struct TextGallery: View {
     }
 }
 
-/// Style a SwiftUI `ProgressView`. CDS owns stroke color and diameter; the caller still owns
-/// `ProgressView()` (indeterminate) or `ProgressView(value:)` (determinate).
+/// SwiftUI `ProgressView` styled with `.progressViewStyle(.cds)`.
 struct ProgressGallery: View {
     @Environment(\.cdsTheme) private var cds
 
     var body: some View {
-        SectionCard("ProgressView", subtitle: "SwiftUI ProgressView + .progressViewStyle(.cds) — no CDS.ProgressCircle") {
+        SectionCard("ProgressView", subtitle: "ProgressView + .progressViewStyle(.cds)") {
             HStack(spacing: cds.space.x3) {
                 ProgressView()
                     .progressViewStyle(.cds(.s))
@@ -138,7 +135,7 @@ struct ProgressGallery: View {
     }
 }
 
-/// Style a SwiftUI `Toggle`. CDS owns track/thumb colors; the caller still owns `Toggle` + `isOn`.
+/// SwiftUI `Toggle` styled with `.toggleStyle(.cds)`.
 struct ToggleGallery: View {
     @Environment(\.cdsTheme) private var cds
     @State private var notificationsOn = true
@@ -146,7 +143,7 @@ struct ToggleGallery: View {
     @State private var sellOn = true
 
     var body: some View {
-        SectionCard("Toggle", subtitle: "SwiftUI Toggle + .toggleStyle(.cds) — no CDS.Toggle view") {
+        SectionCard("Toggle", subtitle: "Toggle + .toggleStyle(.cds)") {
             VStack(alignment: .leading, spacing: cds.space.x1) {
                 Toggle("Notifications (primary)", isOn: $notificationsOn)
                     .toggleStyle(.cds(.primary))
@@ -162,15 +159,15 @@ struct ToggleGallery: View {
     }
 }
 
-/// OS `.alert` demo. CDS Alert (RN modal) is a separate CDS view — not this.
+/// SwiftUI `.alert`, the OS dialog, shown for contrast with CDS styling.
 struct AlertGallery: View {
     @Environment(\.cdsTheme) private var cds
     @State private var showDeleteAlert = false
 
     var body: some View {
-        SectionCard("Alert", subtitle: "OS .alert (not CDS Alert — RN modal is a CDS view)") {
+        SectionCard("Alert", subtitle: "System .alert") {
             VStack(alignment: .leading, spacing: cds.space.x1) {
-                Text("System dialog chrome. CDS Alert matches the RN overlay (pictogram, CDS buttons), not this.")
+                Text("OS dialog, not the CDS Alert component.")
                     .cdsText(.body, color: cds.colors.fgMuted)
                 Button("Show system alert") { showDeleteAlert = true }
                     .buttonStyle(.cds(.negative))
