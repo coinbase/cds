@@ -10,11 +10,15 @@ truth (public theme only; components stay `internal` until they stabilize). This
 **migration workflow**: take one RN component and produce the iOS equivalent without wrapping HIG
 controls in a CDS view.
 
+[CDS SwiftUI Best Practices](https://linear.app/coinbase/document/cds-swiftui-best-practices-fff9ce770a56)
+is the working reference (parallel to
+[CDS Compose Best Practices](https://linear.app/coinbase/document/cds-compose-best-practices-8810460c4b23)).
+**Read it before porting a component**, and add new port learnings there, not here. If Linear is
+unavailable, rely on this file and [references/hig-map.md](references/hig-map.md).
+
 Also read:
 
-- Native rewrite goals: Linear doc Native CDS Rewrite Goals
-- [CDS SwiftUI Best Practices](https://linear.app/coinbase/document/cds-swiftui-best-practices-fff9ce770a56)
-  (working reference, parallel to [CDS Compose Best Practices](https://linear.app/coinbase/document/cds-compose-best-practices-8810460c4b23); add new port learnings there. Local copy: [references/swiftui-best-practices.md](references/swiftui-best-practices.md))
+- [Native CDS: Rewrite Goals](https://linear.app/coinbase/document/native-cds-rewrite-goals-5b664fab3b30)
 - The component's Linear issue in [Migrate CDS components to native](https://linear.app/coinbase/project/migrate-cds-components-to-native-f5911543a456/issues)
 - RN source under `packages/mobile/` (capability, not view tree)
 
