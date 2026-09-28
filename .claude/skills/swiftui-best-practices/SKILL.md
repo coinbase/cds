@@ -170,8 +170,10 @@ UIColor that duplicates a token.
 5. Third-party (Lottie): wrap in a CDS type. Call sites never import `Lottie` for a CDS animation.
 6. Accessibility: keep system traits from the HIG control. Don't replace `Button` with a `onTapGesture`
    `View` just to draw chrome — that's what `ButtonStyle.makeBody` is for.
-7. Add a gallery section in `apps/ios-gallery/Sources/ComponentsGallery.swift` using the **real
-   call site** (HIG control + Style, or the CDS view for overlays).
+7. Add a gallery section — a new `<Name>GalleryView.swift` registered in `GalleryDestination` and
+   `ComponentGalleryView`, or a section inside `OtherComponentsGalleryView.swift` for components
+   without their own destination — using the **real call site** (HIG control + Style, or the CDS
+   view for overlays).
 8. Tests: `yarn nx run cds-ios:test`. Then `yarn nx run cds-ios:build` if the gallery or package
    graph changed. Do not run unscoped `yarn test`.
 
