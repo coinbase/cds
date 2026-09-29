@@ -1,3 +1,15 @@
+## 5.26.0 (2026-09-29)
+
+### 🚀 Features
+
+- Publish icons 2026-09-29
+
+  ##### ⭐️ Added (4)
+  - orderShapeUp
+  - orderShapeDown
+  - orderShapeFlat
+  - agentic
+
 ## 5.25.0 (2026-09-15)
 
 ### 🚀 Features
