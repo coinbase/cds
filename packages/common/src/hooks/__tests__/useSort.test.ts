@@ -108,4 +108,20 @@ describe('useSort', () => {
     const { result } = renderHook(() => useSort({ data: EXPECTED.ascending }));
     expect(result.current).not.toBe(EXPECTED.ascending);
   });
+
+  it('Preserves the original order of tied values', () => {
+    const tied = [
+      { name: 'punks', floor: 5 },
+      { name: 'apes', floor: 5 },
+      { name: 'zombies', floor: 5 },
+    ];
+
+    const { result: ascending } = renderHook(() => useSort({ data: tied, sortBy: 'floor' }));
+    expect(ascending.current.map(({ name }) => name)).toEqual(['punks', 'apes', 'zombies']);
+
+    const { result: descending } = renderHook(() =>
+      useSort({ data: tied, sortBy: 'floor', sortDirection: 'descending' }),
+    );
+    expect(descending.current.map(({ name }) => name)).toEqual(['punks', 'apes', 'zombies']);
+  });
 });
