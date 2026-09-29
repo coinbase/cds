@@ -2150,6 +2150,24 @@
       "component": "Icon"
     },
     {
+      "name": "orderShapeDown",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=87124-17",
+      "source": "packages/web/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "orderShapeFlat",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=87124-4",
+      "source": "packages/web/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
+      "name": "orderShapeUp",
+      "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=87124-30",
+      "source": "packages/web/src/icons/Icon.tsx",
+      "component": "Icon"
+    },
+    {
       "name": "outline",
       "url": "https://www.figma.com/design/k5CtyJccNQUGMI5bI4lJ2g/CDS-Components?node-id=29452-16174",
       "source": "packages/web/src/icons/Icon.tsx",

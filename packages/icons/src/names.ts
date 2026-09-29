@@ -572,5 +572,9 @@ export const names: IconName[] = [
   'spot',
   'paypalLogo',
   'history',
-  'linkedInLogo'
+  'linkedInLogo',
+  'orderShapeUp',
+  'orderShapeDown',
+  'orderShapeFlat',
+  'agentic'
 ];

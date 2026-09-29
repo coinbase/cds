@@ -1049,7 +1049,10 @@ export const descriptionMap: Record<string, IconName[]> = {
     'inviteFriends',
     'advisor',
     'trade',
-    'paypalLogo'
+    'paypalLogo',
+    'orderShapeUp',
+    'orderShapeDown',
+    'orderShapeFlat'
   ],
   'profile': [
     'account',
@@ -4443,7 +4446,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'chatBotAgent'
   ],
   'agent': [
-    'chatBotAgent'
+    'chatBotAgent',
+    'agentic'
   ],
   '👩‍💼': [
     'chatBotAgent'
@@ -6804,5 +6808,11 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'dots': [
     'lineChartPoints'
+  ],
+  'agentic': [
+    'agentic'
+  ],
+  'ai': [
+    'agentic'
   ]
 };

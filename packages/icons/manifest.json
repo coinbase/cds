@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-09-15T00:10:11.757Z",
-  "lastUnicode": 986448,
+  "lastUpdated": "2026-09-29T18:36:17.981Z",
+  "lastUnicode": 986472,
   "iconSets": [
     {
       "nodeId": "4:39245",
@@ -26695,6 +26695,194 @@
           "active": true,
           "size": 12,
           "unicode": 986443
+        }
+      ]
+    },
+    {
+      "nodeId": "7979:281",
+      "name": "orderShapeUp",
+      "description": "",
+      "assetsHash": "LgeFvd9pmQpsaR0BrC+lbZv2DJTdrVD98OAj1ZH4nmQ=",
+      "nameHash": "Sbs7Zqah0qXvck+drGta6WcUD1MwN2uBAUp9kTWjDIc=",
+      "createdAt": "2026-09-22T18:38:20.420Z",
+      "lastUpdated": "2026-09-22T18:38:20.420Z",
+      "svgs": [
+        {
+          "name": "orderShapeUp-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986472
+        },
+        {
+          "name": "orderShapeUp-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986471
+        },
+        {
+          "name": "orderShapeUp-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986470
+        },
+        {
+          "name": "orderShapeUp-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986469
+        },
+        {
+          "name": "orderShapeUp-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986468
+        },
+        {
+          "name": "orderShapeUp-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986467
+        }
+      ]
+    },
+    {
+      "nodeId": "7979:274",
+      "name": "orderShapeDown",
+      "description": "",
+      "assetsHash": "WnM7xLoZwsLORgcwMYloF4tYkG0B82cU1gQDD5Zjn2I=",
+      "nameHash": "smKvPJGzyH37Xk6YsmwdTN7jsPcjn4HOmwOVyfXvG2Y=",
+      "createdAt": "2026-09-22T18:38:20.428Z",
+      "lastUpdated": "2026-09-22T18:38:20.428Z",
+      "svgs": [
+        {
+          "name": "orderShapeDown-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986460
+        },
+        {
+          "name": "orderShapeDown-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986459
+        },
+        {
+          "name": "orderShapeDown-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986458
+        },
+        {
+          "name": "orderShapeDown-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986457
+        },
+        {
+          "name": "orderShapeDown-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986456
+        },
+        {
+          "name": "orderShapeDown-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986455
+        }
+      ]
+    },
+    {
+      "nodeId": "7979:267",
+      "name": "orderShapeFlat",
+      "description": "",
+      "assetsHash": "BI6Tno5py0Cdlb8fPV4PxpB0+nchMUXPCyxRPVbUBZE=",
+      "nameHash": "Nxo2S/UhVDGUuNZA37qPB9pU7VPvgQmH6sNdRrij9oc=",
+      "createdAt": "2026-09-22T18:38:20.433Z",
+      "lastUpdated": "2026-09-22T18:38:20.433Z",
+      "svgs": [
+        {
+          "name": "orderShapeFlat-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986466
+        },
+        {
+          "name": "orderShapeFlat-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986465
+        },
+        {
+          "name": "orderShapeFlat-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986464
+        },
+        {
+          "name": "orderShapeFlat-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986463
+        },
+        {
+          "name": "orderShapeFlat-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986462
+        },
+        {
+          "name": "orderShapeFlat-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986461
+        }
+      ]
+    },
+    {
+      "nodeId": "8004:4",
+      "name": "agentic",
+      "description": "agentic, ai, agent",
+      "assetsHash": "+rRNaSoowrpvD+sGRCMCJkkc32aTXh+6DpUefLLmVJg=",
+      "nameHash": "cbeXP//so+k231Vtcp/JplPB2XV6zd4XWm1NCw89HNo=",
+      "createdAt": "2026-09-29T16:55:36.358Z",
+      "lastUpdated": "2026-09-29T16:58:19.189Z",
+      "svgs": [
+        {
+          "name": "agentic-24-inactive",
+          "active": false,
+          "size": 24,
+          "unicode": 986454
+        },
+        {
+          "name": "agentic-24-active",
+          "active": true,
+          "size": 24,
+          "unicode": 986453
+        },
+        {
+          "name": "agentic-16-inactive",
+          "active": false,
+          "size": 16,
+          "unicode": 986452
+        },
+        {
+          "name": "agentic-16-active",
+          "active": true,
+          "size": 16,
+          "unicode": 986451
+        },
+        {
+          "name": "agentic-12-inactive",
+          "active": false,
+          "size": 12,
+          "unicode": 986450
+        },
+        {
+          "name": "agentic-12-active",
+          "active": true,
+          "size": 12,
+          "unicode": 986449
         }
       ]
     }
