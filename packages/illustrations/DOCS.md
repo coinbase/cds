@@ -45,10 +45,10 @@ nvm use
 yarn install
 ```
 
-4. Run the illustration sync script. The script will create a new `illustrations/YYYY-MM-DD` branch from `origin/master`, sync the illustrations from Figma, regenerate the docsite stories, then commit and push the branch automatically
+4. Run the illustration sync workflow from the repo root. It creates a new `illustrations/YYYY-MM-DD` branch from `origin/master`, runs `illustrations:sync-illustrations` (assets, manifest, version plan), runs `web:generate-illustration-stories` (the docsite stories built from the new names), then commits and pushes the branch. If a step fails or nothing changed, the branch is deleted again
 
 ```sh
-yarn nx run illustrations:sync-illustrations
+yarn sync-illustrations
 ```
 
 5. Open a PR in [github.com/coinbase/cds](https://github.com/coinbase/cds). Title the PR exactly the same as the commit message: `feat: Publish illustrations YYYY-MM-DD`. Take note of the PR number for the next step
@@ -89,21 +89,55 @@ You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 **Force a full re-sync** — If you need to re-sync all illustrations regardless of when they were last updated, pass the `--sync-all` flag:
 
 ```sh
-yarn nx run illustrations:sync-illustrations -- --sync-all
+yarn sync-illustrations --sync-all
 ```
 
-**Repo is not clean** — The script requires a clean working tree. Stash or commit any pending changes before running the sync.
+**Repo is not clean** — The workflow requires a clean working tree. Stash or commit any pending changes before running the sync.
+
+**Running the pieces separately** — `yarn nx run illustrations:sync-illustrations` only syncs (no git); `yarn nx run web:generate-illustration-stories` only regenerates web's stories from the current illustrations. The workflow script chains them.
 
 **An illustration's light and dark variants look identical** — The illustration uses a color that the Variables API did not return a dark value for, so the sync fell back to the light fill. Ask design to bind the layer to a published illustration color variable rather than a raw hex value.
 
-**"Cannot read properties of undefined (reading 'styles')"** — The Figma token is missing the scopes the sync needs. Retrieve a current token from the Config Service.
+**"No published color variables named "illustration/..." found"** or a 403 from the variables endpoints — The Figma token is missing the `file_variables:read` scope or Enterprise access the sync needs. Retrieve a current token from the Config Service. The sync refuses to run without the palette rather than silently publishing light-only assets.
 
 **Names must be `[type]/[name]` in camelCase** — The sync derives an illustration's type and name by splitting its Figma name on `/`, and rejects anything that is not camelCase, or a rename that only changes case. Fix the name in Figma and re-run.
 
+**"Skipping components whose type/name is already taken"** — Two published components share a `[type]/[name]`. The sync keeps the one the manifest already knows (otherwise the oldest) and lists the rest; remove or rename the duplicates in Figma.
+
+## How the sync works
+
+The sync's design — the source/engine/sinks structure, the `Illustration` record, reconciliation
+rules, sinks and artifacts, and the testing strategy — is documented in
+[`scripts/sync-illustrations/README.md`](scripts/sync-illustrations/README.md). Read it before
+changing the sync or adding an output destination.
+
 ## Testing
 
-The sync's helpers and its version plan generator are unit tested:
+The sync's behaviour (add, update, rename, delete, duplicates, incremental runs) is tested end to
+end against an in-memory source with the real package sink, and its formats are pinned byte
+for byte to recorded Figma responses and the files previous syncs published:
 
 ```sh
 yarn nx run illustrations:test
 ```
+
+### Scratch runs against the test fixture file
+
+[CDS Illustrations — sync-illustrations test fixture](https://www.figma.com/design/qtdIR0QTyK0NZcZoAeJmS8)
+(Design Systems/Eng) is a published library laid out like the real file, one page per type with a
+handful of `mock*` components, that can be freely edited to exercise additions, deletions, renames,
+artwork and description changes. Point the sync target at it and at a scratch directory; nothing
+under the package is touched:
+
+```sh
+export FIGMA_ACCESS_TOKEN=VALUE-FROM-CONFIG-SERVICE
+export SYNC_ILLUSTRATIONS_SCRATCH_DIR=/tmp/illustrations-scratch
+export SYNC_ILLUSTRATIONS_FIGMA_FILE_ID=qtdIR0QTyK0NZcZoAeJmS8
+yarn nx run illustrations:sync-illustrations
+```
+
+The scratch directory receives `__generated__/`, `manifest.json` and `version-plans/`; run again
+after editing and re-publishing the library to see the incremental diff. Omit
+`SYNC_ILLUSTRATIONS_FIGMA_FILE_ID` to scratch-run against the real file (reads only). Remember that
+the `/components` endpoint only lists _published_ components, so publish the library after each
+edit.

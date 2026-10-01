@@ -1,10 +1,10 @@
-import type { IllustrationSyncResults } from './tools/Manifest';
+import type { SyncResults } from './diffIllustrations';
 
 /**
  * Renaming or deleting an illustration breaks consumers, so it forces a major bump. See DOCS.md.
  */
-const isBreaking = (syncResults: IllustrationSyncResults) =>
-  syncResults.renamedIllustrationSets.length > 0 || syncResults.deletedIllustrationSets.length > 0;
+const isBreaking = (syncResults: SyncResults) =>
+  syncResults.renamed.length > 0 || syncResults.deleted.length > 0;
 
 /**
  * The illustration types in the order they have always appeared in the changelog. Types outside
@@ -64,26 +64,26 @@ const section = (heading: string, entries: Entry[]) => {
  * writing straight into CHANGELOG.md: `nx release` consumes it to derive both the version bump and
  * the changelog entry.
  */
-export const generateVersionPlan = (syncResults: IllustrationSyncResults, date: string) => {
+export const generateVersionPlan = (syncResults: SyncResults, date: string) => {
   const sections = [
     section(
       '⭐️ Added',
-      syncResults.newIllustrationSets.map(({ type, name }) => ({ type, label: name })),
+      syncResults.added.map(({ type, name }) => ({ type, label: name })),
     ),
     section(
       '⭐️ Updated',
-      syncResults.updatedIllustrationSets.map(({ type, name }) => ({ type, label: name })),
+      syncResults.updated.map(({ type, name }) => ({ type, label: name })),
     ),
     section(
       '☠️ Renamed',
-      syncResults.renamedIllustrationSets.map(({ type, name, oldName }) => ({
+      syncResults.renamed.map(({ type, name, oldName }) => ({
         type,
         label: `${oldName} → ${name}`,
       })),
     ),
     section(
       '☠️ Deleted',
-      syncResults.deletedIllustrationSets.map(({ type, name }) => ({ type, label: name })),
+      syncResults.deleted.map(({ type, name }) => ({ type, label: name })),
     ),
   ].filter(Boolean);
 

@@ -1,0 +1,229 @@
+{
+  "error": false,
+  "status": 200,
+  "meta": {
+    "components": [
+      {
+        "key": "e4a45be29996c0bc23684b460a8b3e87df462d30",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "18659:672",
+        "thumbnail_url": "",
+        "name": "Spot Square/baseErrorMedium",
+        "description": "",
+        "description_rt": "",
+        "created_at": "2025-07-03T14:26:31.348Z",
+        "updated_at": "2025-11-03T15:18:53.017Z",
+        "containing_frame": {
+          "pageId": "2:400",
+          "pageName": "SpotSquare (96x96)"
+        },
+        "user": {
+          "id": "983799620438478071",
+          "handle": "Terran Washington",
+          "img_url": "https://www.gravatar.com/avatar/30a8f1826641221f90210257ab5e6260?size=240&default=https%3A%2F%2Fs3-alpha.figma.com%2Fstatic%2Fuser_t_v2.png"
+        }
+      },
+      {
+        "key": "54ba387d5c771cf7c96d0e9bd45cea00cf205535",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "18659:266",
+        "thumbnail_url": "",
+        "name": "Spot Square/baseCheckMedium",
+        "description": "",
+        "description_rt": "",
+        "created_at": "2025-07-03T14:26:31.382Z",
+        "updated_at": "2025-07-03T14:26:31.382Z",
+        "containing_frame": {
+          "pageId": "2:400",
+          "pageName": "SpotSquare (96x96)"
+        },
+        "user": {
+          "id": "983799620438478071",
+          "handle": "Terran Washington",
+          "img_url": "https://www.gravatar.com/avatar/30a8f1826641221f90210257ab5e6260?size=240&default=https%3A%2F%2Fs3-alpha.figma.com%2Fstatic%2Fuser_t_v2.png"
+        }
+      },
+      {
+        "key": "a21b3809334baa8944a68f67f53f184ad43b07c2",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "11488:73",
+        "thumbnail_url": "",
+        "name": "Pictogram/futures",
+        "description": "futures, trading, future, buy, sell, put, short, hedge, balance, risk, clock, coin, plus, arrow",
+        "description_rt": "<p>futures, trading, future, buy, sell, put, short, hedge, balance, risk, clock, coin, plus, arrow</p>",
+        "created_at": "2024-09-13T15:01:37.925Z",
+        "updated_at": "2026-06-08T19:45:53.840Z",
+        "containing_frame": {
+          "pageId": "4:17947",
+          "pageName": "ProductIcons (40x40)"
+        },
+        "user": {
+          "id": "608438309244319908",
+          "handle": "Dominic Flask",
+          "img_url": "https://s3-alpha.figma.com/profile/c33e56e2-eeaf-492a-a2a2-73cb81eaed06"
+        }
+      },
+      {
+        "key": "d80bba7c0704a764f3b3378fedf8eb5854b93bd6",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "2:33979",
+        "thumbnail_url": "",
+        "name": "Hero Square/leverage",
+        "description": "leverage, trading, add, stack, more, lever, up, buy, sell, put, options, trade, risk",
+        "description_rt": "leverage, trading, add, stack, more, lever, up, buy, sell, put, options, trade, risk",
+        "created_at": "2022-08-05T05:36:47.837Z",
+        "updated_at": "2026-06-08T19:49:43.974Z",
+        "containing_frame": {
+          "pageId": "2:2",
+          "pageName": "HeroSquare (240x240)"
+        },
+        "user": {
+          "id": "608438309244319908",
+          "handle": "Dominic Flask",
+          "img_url": "https://s3-alpha.figma.com/profile/c33e56e2-eeaf-492a-a2a2-73cb81eaed06"
+        }
+      },
+      {
+        "key": "6c0d42cb77167f61774e81b36078a910c8cf266e",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "4390:695",
+        "thumbnail_url": "",
+        "name": "SpotIcon/2fa",
+        "description": "trust, true, genuine, actual, verification, 2fa, authenticate, device",
+        "description_rt": "<p>trust, true, genuine, actual, verification, 2fa, authenticate, device</p>",
+        "created_at": "2023-11-07T19:19:47.073Z",
+        "updated_at": "2026-06-08T19:45:06.046Z",
+        "containing_frame": {
+          "pageId": "3668:22",
+          "pageName": "SpotIcon (32x32)"
+        },
+        "user": {
+          "id": "608438309244319908",
+          "handle": "Dominic Flask",
+          "img_url": "https://s3-alpha.figma.com/profile/c33e56e2-eeaf-492a-a2a2-73cb81eaed06"
+        }
+      },
+      {
+        "key": "df25ab156e230e197cca4fe2540d2e506a5a3868",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "6971:1443",
+        "thumbnail_url": "",
+        "name": "Pictogram/futures",
+        "description": "futures, trading, future, buy, sell, put, short, hedge, balance, risk, clock, coin, plus, arrow",
+        "description_rt": "<p>futures, trading, future, buy, sell, put, short, hedge, balance, risk, clock, coin, plus, arrow</p>",
+        "created_at": "2024-03-21T15:02:32.396Z",
+        "updated_at": "2026-06-08T19:47:41.159Z",
+        "containing_frame": {
+          "pageId": "2:401",
+          "pageName": "Pictogram (48x48)"
+        },
+        "user": {
+          "id": "608438309244319908",
+          "handle": "Dominic Flask",
+          "img_url": "https://s3-alpha.figma.com/profile/c33e56e2-eeaf-492a-a2a2-73cb81eaed06"
+        }
+      },
+      {
+        "key": "0889ceb129c7ac00c7b4489c9c8b450b2f79a7dd",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "2:41651",
+        "thumbnail_url": "",
+        "name": "Pictogram/hardwareWallet",
+        "description": "hardware, device, wallet",
+        "description_rt": "hardware, device, wallet",
+        "created_at": "2022-08-05T05:37:08.676Z",
+        "updated_at": "2026-06-08T19:49:26.190Z",
+        "containing_frame": {
+          "pageId": "2:401",
+          "pageName": "Pictogram (48x48)"
+        },
+        "user": {
+          "id": "608438309244319908",
+          "handle": "Dominic Flask",
+          "img_url": "https://s3-alpha.figma.com/profile/c33e56e2-eeaf-492a-a2a2-73cb81eaed06"
+        }
+      },
+      {
+        "key": "a302bf5a39250b5e38f10320ff3593859dac1b3f",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "28806:106",
+        "thumbnail_url": "",
+        "name": "Pictogram/instoDecentralizedExchange",
+        "description": "insto, prime, negroni, orange, institutional, institutional investor,",
+        "description_rt": "<p>insto, prime, negroni, orange, institutional, institutional investor, </p>",
+        "created_at": "2026-03-16T14:55:20.615Z",
+        "updated_at": "2026-06-09T20:31:54.136Z",
+        "containing_frame": {
+          "pageId": "25523:16",
+          "pageName": "Insto themed illustrations"
+        },
+        "user": {
+          "id": "608438309244319908",
+          "handle": "Dominic Flask",
+          "img_url": "https://s3-alpha.figma.com/profile/c33e56e2-eeaf-492a-a2a2-73cb81eaed06"
+        }
+      },
+      {
+        "key": "2d6613d99599665c88577e2c17ad256646f23be5",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "28897:213",
+        "thumbnail_url": "",
+        "name": "Pictogram/instoDecentralizedExchange",
+        "description": "insto, prime, negroni, orange, institutional, institutional investor,",
+        "description_rt": "<p>insto, prime, negroni, orange, institutional, institutional investor, </p>",
+        "created_at": "2026-03-18T17:25:34.655Z",
+        "updated_at": "2026-06-11T19:38:49.272Z",
+        "containing_frame": {
+          "pageId": "25523:16",
+          "pageName": "Insto themed illustrations"
+        },
+        "user": {
+          "id": "608438309244319908",
+          "handle": "Dominic Flask",
+          "img_url": "https://s3-alpha.figma.com/profile/c33e56e2-eeaf-492a-a2a2-73cb81eaed06"
+        }
+      },
+      {
+        "key": "b024d05d33666a8afcce31a1e27eaeb0a6a9c25d",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "28806:51",
+        "thumbnail_url": "",
+        "name": "HeroSquare/instoWeb3MobileSetupStart",
+        "description": "insto, prime, negroni, orange, institutional, institutional investor,",
+        "description_rt": "<p>insto, prime, negroni, orange, institutional, institutional investor, </p>",
+        "created_at": "2026-03-16T14:55:20.807Z",
+        "updated_at": "2026-06-09T20:31:54.157Z",
+        "containing_frame": {
+          "pageId": "25523:16",
+          "pageName": "Insto themed illustrations"
+        },
+        "user": {
+          "id": "608438309244319908",
+          "handle": "Dominic Flask",
+          "img_url": "https://s3-alpha.figma.com/profile/c33e56e2-eeaf-492a-a2a2-73cb81eaed06"
+        }
+      },
+      {
+        "key": "91735d43d8f29a314abceeeb14d9eb8c8cd3479e",
+        "file_key": "LmkJatvMRVzNgfiIkJDb99",
+        "node_id": "6843:16",
+        "thumbnail_url": "",
+        "name": " Spot Square/walletQuestsTrophy",
+        "description": "wallet, wallet quests, trophy, star, coin, 🏆, ⭐",
+        "description_rt": "<p>wallet, wallet quests, trophy, star, coin, 🏆, ⭐</p>",
+        "created_at": "2024-03-13T18:25:33.924Z",
+        "updated_at": "2025-12-01T18:14:46.326Z",
+        "containing_frame": {
+          "pageId": "2:400",
+          "pageName": "SpotSquare (96x96)"
+        },
+        "user": {
+          "id": "1250520575382222110",
+          "handle": "Chris Kaufman",
+          "img_url": "https://s3-alpha.figma.com/profile/d32ba94f-83fc-4be5-9694-a77385e1d904"
+        }
+      }
+    ]
+  },
+  "i18n": null
+}

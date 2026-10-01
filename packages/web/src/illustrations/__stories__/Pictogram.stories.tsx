@@ -1,6 +1,6 @@
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustrations:generate-stories
+ * Generated from yarn nx run web:generate-illustration-stories
  */
 
 import { Pictogram } from '../Pictogram';

@@ -2047,9 +2047,7 @@ __metadata:
     "@cds/figma-api": "workspace:^"
     "@figma/rest-api-spec": "npm:^0.34.0"
     "@types/lodash": "npm:^4.14.178"
-    chalk: "npm:^4.1.2"
     lodash: "npm:^4.17.21"
-    prettier: "npm:^3.6.2"
     sharp: "npm:^0.35.4"
     svgo: "npm:^3.0.2"
   languageName: unknown
