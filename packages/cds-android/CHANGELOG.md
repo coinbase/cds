@@ -9,14 +9,14 @@ Its versions are independent of the `@coinbase/cds-*` npm packages.
 
 <!-- template-start -->
 
-## 0.0.2 (9/17/2026 PST)
+## Unreleased
 
 #### 🚀 Updates
 
-- Feat: add `CdsIllustrationColorToken` and `CdsShadowToken` so every theme axis is enumerable,
-  matching iOS. Resolve with `CdsTheme.illustrationColors[CdsIllustrationColorToken.Primary]` and
+- Add `CdsIllustrationColorToken` and `CdsShadowToken` so every theme axis is enumerable, matching
+  iOS (`CDSIllustrationColorToken`, `CDSShadowToken`). Resolve with
+  `CdsTheme.illustrationColors[CdsIllustrationColorToken.Primary]` and
   `CdsTheme.shadows[CdsShadowToken.Elevation1]`.
-  [[#878](https://github.com/coinbase/cds/pull/878)]
 
 ## 0.0.1 (8/25/2026 PST)
 
