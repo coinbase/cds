@@ -1,6 +1,6 @@
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:sync-illustrations
+ * Generated from yarn nx run illustrations:sync-illustrations
  */
 
 import type { HeroSquareName } from '../types/HeroSquareName';
@@ -455,6 +455,7 @@ const versionMap: Record<HeroSquareName, number> = {
   arrowsUpDown: 0,
   cbzec: 0,
   cbhype: 0,
+  usdj: 0,
 };
 
 export default versionMap;

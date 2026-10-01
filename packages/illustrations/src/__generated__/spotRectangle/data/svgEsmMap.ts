@@ -2,7 +2,7 @@ import type { SpotRectangleName } from '../types/SpotRectangleName';
 
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:sync-illustrations
+ * Generated from yarn nx run illustrations:sync-illustrations
  */
 
 const svgEsmMap = {

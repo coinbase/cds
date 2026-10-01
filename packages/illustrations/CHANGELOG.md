@@ -1,3 +1,14 @@
+## 4.49.0 (2026-10-01)
+
+### 🚀 Features
+
+- Publish illustrations 2026-10-01
+
+  ##### ⭐️ Added (1)
+
+  ###### HeroSquare (1)
+  - usdj
+
 ## 4.48.1 (2026-09-11)
 
 ### 🩹 Fixes

@@ -2,7 +2,7 @@ import type { HeroSquareName } from '../types/HeroSquareName';
 
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:sync-illustrations
+ * Generated from yarn nx run illustrations:sync-illustrations
  */
 
 const svgJsMap = {
@@ -2062,6 +2062,11 @@ const svgJsMap = {
     light: () => require('../svgJs/cjs/light/usdAndUsdc-0.js').content,
     dark: () => require('../svgJs/cjs/dark/usdAndUsdc-0.js').content,
     themeable: () => require('../svgJs/cjs/themeable/usdAndUsdc-0.js').content,
+  },
+  usdj: {
+    light: () => require('../svgJs/cjs/light/usdj-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/usdj-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/usdj-0.js').content,
   },
   usdl: {
     light: () => require('../svgJs/cjs/light/usdl-0.js').content,
