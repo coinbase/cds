@@ -2,7 +2,7 @@ import type { SpotSquareName } from '../types/SpotSquareName';
 
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:sync-illustrations
+ * Generated from yarn nx run illustrations:sync-illustrations
  */
 
 const svgJsMap = {

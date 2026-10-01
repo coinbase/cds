@@ -5,10 +5,20 @@ import { defaultSvgoConfig } from './helpers/image/svgoConfig';
 /** https://github.com/svg/svgo/blob/main/plugins/_collections.js#L2161 */
 const colorsProps = ['color', 'fill', 'stroke', 'stop-color', 'flood-color', 'lighting-color'];
 
+const namedCssColors: Record<string, string> = {
+  black: '#000000',
+  white: '#FFFFFF',
+};
+
 function colorTo6DigitUppercaseHex(val: string) {
-  if (val === 'none') return null;
-  if (!val.startsWith('#'))
-    throw Error('Unexpected color format in sync-illustrations colorTo6DigitUppercaseHex');
+  if (val === 'none' || val.startsWith('url(')) return null;
+  const named = namedCssColors[val.toLowerCase()];
+  if (named) return named;
+  if (!val.startsWith('#')) {
+    throw Error(
+      `Unexpected color format in sync-illustrations colorTo6DigitUppercaseHex: "${val}"`,
+    );
+  }
   const hex = val.substring(1);
   if (hex.length === 3) return `#${hex}${hex}`.toUpperCase();
   return val.toUpperCase();

@@ -2,7 +2,7 @@ import type { HeroSquareName } from '../types/HeroSquareName';
 
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run illustration-tasks:sync-illustrations
+ * Generated from yarn nx run illustrations:sync-illustrations
  */
 
 const svgEsmMap = {
@@ -1671,6 +1671,9 @@ const svgEsmMap = {
   usdAndUsdc: {
     themeable: () =>
       import('../svgJs/esm/themeable/usdAndUsdc-0.js').then((m) => m.default as string),
+  },
+  usdj: {
+    themeable: () => import('../svgJs/esm/themeable/usdj-0.js').then((m) => m.default as string),
   },
   usdl: {
     themeable: () => import('../svgJs/esm/themeable/usdl-0.js').then((m) => m.default as string),

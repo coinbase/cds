@@ -1,77 +1,14 @@
 {
   "executor": "sync-illustrations",
-  "lastUpdated": "2026-08-12T17:36:20.703Z",
+  "lastUpdated": "2026-10-01T18:08:19.339Z",
   "colors": {
     "light": [
-      {
-        "key": "592325b92a60f7eac42c181b82a1882b2830b46b",
-        "name": "gray-3",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DC"
-        },
-        "cssVarSetter": "--illustration-gray-3",
-        "cssVarGetter": "var(--illustration-gray-3)"
-      },
-      {
-        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
-        "name": "positive",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#3CC28A"
-        },
-        "cssVarSetter": "--illustration-positive",
-        "cssVarGetter": "var(--illustration-positive)"
-      },
-      {
-        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
-        "name": "negative",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#E13947"
-        },
-        "cssVarSetter": "--illustration-negative",
-        "cssVarGetter": "var(--illustration-negative)"
-      },
-      {
-        "key": "fce273f0c64220566930049a74153f19612ecb11",
-        "name": "gray-4",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#C8CBD2"
-        },
-        "cssVarSetter": "--illustration-gray-4",
-        "cssVarGetter": "var(--illustration-gray-4)"
-      },
-      {
-        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
-        "name": "invert-2",
-        "type": "light",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFE"
-        },
-        "cssVarSetter": "--illustration-invert-2",
-        "cssVarGetter": "var(--illustration-invert-2)"
-      },
       {
         "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
         "name": "primary",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0052FF"
-        },
+        "paint": { "type": "solid", "value": "#0052FF" },
         "cssVarSetter": "--illustration-primary",
         "cssVarGetter": "var(--illustration-primary)"
       },
@@ -80,10 +17,7 @@
         "name": "invert",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0E"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0E" },
         "cssVarSetter": "--illustration-invert",
         "cssVarGetter": "var(--illustration-invert)"
       },
@@ -92,10 +26,7 @@
         "name": "gray",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#CED2DB"
-        },
+        "paint": { "type": "solid", "value": "#CED2DB" },
         "cssVarSetter": "--illustration-gray",
         "cssVarGetter": "var(--illustration-gray)"
       },
@@ -104,10 +35,7 @@
         "name": "accent-2",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#5DE2F8"
-        },
+        "paint": { "type": "solid", "value": "#5DE2F8" },
         "cssVarSetter": "--illustration-accent-2",
         "cssVarGetter": "var(--illustration-accent-2)"
       },
@@ -116,10 +44,7 @@
         "name": "accent-3",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ED702F"
-        },
+        "paint": { "type": "solid", "value": "#ED702F" },
         "cssVarSetter": "--illustration-accent-3",
         "cssVarGetter": "var(--illustration-accent-3)"
       },
@@ -128,22 +53,52 @@
         "name": "white",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
+      },
+      {
+        "key": "592325b92a60f7eac42c181b82a1882b2830b46b",
+        "name": "gray-3",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#CED2DC" },
+        "cssVarSetter": "--illustration-gray-3",
+        "cssVarGetter": "var(--illustration-gray-3)"
+      },
+      {
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "name": "invert-2",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#FFFFFE" },
+        "cssVarSetter": "--illustration-invert-2",
+        "cssVarGetter": "var(--illustration-invert-2)"
+      },
+      {
+        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
+        "name": "positive",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#3CC28A" },
+        "cssVarSetter": "--illustration-positive",
+        "cssVarGetter": "var(--illustration-positive)"
+      },
+      {
+        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
+        "name": "negative",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#E13947" },
+        "cssVarSetter": "--illustration-negative",
+        "cssVarGetter": "var(--illustration-negative)"
       },
       {
         "key": "932552c58e590ee79409364aad163a6ae566f46f",
         "name": "accent-4",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#73A2FF"
-        },
+        "paint": { "type": "solid", "value": "#73A2FF" },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
       },
@@ -152,22 +107,25 @@
         "name": "accent-1",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFD200"
-        },
+        "paint": { "type": "solid", "value": "#FFD200" },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
+      },
+      {
+        "key": "fce273f0c64220566930049a74153f19612ecb11",
+        "name": "gray-4",
+        "type": "light",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#C8CBD2" },
+        "cssVarSetter": "--illustration-gray-4",
+        "cssVarGetter": "var(--illustration-gray-4)"
       },
       {
         "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
         "name": "black",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-black",
         "cssVarGetter": "var(--illustration-black)"
       },
@@ -176,84 +134,18 @@
         "name": "gray-2",
         "type": "light",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0F"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0F" },
         "cssVarSetter": "--illustration-gray-2",
         "cssVarGetter": "var(--illustration-gray-2)"
       }
     ],
     "dark": [
       {
-        "key": "592325b92a60f7eac42c181b82a1882b2830b46b",
-        "name": "gray-3",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
-        "cssVarSetter": "--illustration-gray-3",
-        "cssVarGetter": "var(--illustration-gray-3)"
-      },
-      {
-        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
-        "name": "positive",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#44C28D"
-        },
-        "cssVarSetter": "--illustration-positive",
-        "cssVarGetter": "var(--illustration-positive)"
-      },
-      {
-        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
-        "name": "negative",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F0616D"
-        },
-        "cssVarSetter": "--illustration-negative",
-        "cssVarGetter": "var(--illustration-negative)"
-      },
-      {
-        "key": "fce273f0c64220566930049a74153f19612ecb11",
-        "name": "gray-4",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
-        "cssVarSetter": "--illustration-gray-4",
-        "cssVarGetter": "var(--illustration-gray-4)"
-      },
-      {
-        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
-        "name": "invert-2",
-        "type": "dark",
-        "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
-        "cssVarSetter": "--illustration-invert-2",
-        "cssVarGetter": "var(--illustration-invert-2)"
-      },
-      {
         "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
         "name": "primary",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#578BFA"
-        },
+        "paint": { "type": "solid", "value": "#578BFA" },
         "cssVarSetter": "--illustration-primary",
         "cssVarGetter": "var(--illustration-primary)"
       },
@@ -262,10 +154,7 @@
         "name": "invert",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-invert",
         "cssVarGetter": "var(--illustration-invert)"
       },
@@ -274,10 +163,7 @@
         "name": "gray",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
+        "paint": { "type": "solid", "value": "#464B55" },
         "cssVarSetter": "--illustration-gray",
         "cssVarGetter": "var(--illustration-gray)"
       },
@@ -286,10 +172,7 @@
         "name": "accent-2",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#45D9F5"
-        },
+        "paint": { "type": "solid", "value": "#45D9F5" },
         "cssVarSetter": "--illustration-accent-2",
         "cssVarGetter": "var(--illustration-accent-2)"
       },
@@ -298,10 +181,7 @@
         "name": "accent-3",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#F07836"
-        },
+        "paint": { "type": "solid", "value": "#F07836" },
         "cssVarSetter": "--illustration-accent-3",
         "cssVarGetter": "var(--illustration-accent-3)"
       },
@@ -310,22 +190,52 @@
         "name": "white",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#FFFFFF"
-        },
+        "paint": { "type": "solid", "value": "#FFFFFF" },
         "cssVarSetter": "--illustration-white",
         "cssVarGetter": "var(--illustration-white)"
+      },
+      {
+        "key": "592325b92a60f7eac42c181b82a1882b2830b46b",
+        "name": "gray-3",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#FFFFFF" },
+        "cssVarSetter": "--illustration-gray-3",
+        "cssVarGetter": "var(--illustration-gray-3)"
+      },
+      {
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "name": "invert-2",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#0A0B0D" },
+        "cssVarSetter": "--illustration-invert-2",
+        "cssVarGetter": "var(--illustration-invert-2)"
+      },
+      {
+        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
+        "name": "positive",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#44C28D" },
+        "cssVarSetter": "--illustration-positive",
+        "cssVarGetter": "var(--illustration-positive)"
+      },
+      {
+        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
+        "name": "negative",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#F0616D" },
+        "cssVarSetter": "--illustration-negative",
+        "cssVarGetter": "var(--illustration-negative)"
       },
       {
         "key": "932552c58e590ee79409364aad163a6ae566f46f",
         "name": "accent-4",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#84AAFD"
-        },
+        "paint": { "type": "solid", "value": "#84AAFD" },
         "cssVarSetter": "--illustration-accent-4",
         "cssVarGetter": "var(--illustration-accent-4)"
       },
@@ -334,22 +244,25 @@
         "name": "accent-1",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#ECD069"
-        },
+        "paint": { "type": "solid", "value": "#ECD069" },
         "cssVarSetter": "--illustration-accent-1",
         "cssVarGetter": "var(--illustration-accent-1)"
+      },
+      {
+        "key": "fce273f0c64220566930049a74153f19612ecb11",
+        "name": "gray-4",
+        "type": "dark",
+        "prefix": "illustration",
+        "paint": { "type": "solid", "value": "#FFFFFF" },
+        "cssVarSetter": "--illustration-gray-4",
+        "cssVarGetter": "var(--illustration-gray-4)"
       },
       {
         "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
         "name": "black",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#0A0B0D"
-        },
+        "paint": { "type": "solid", "value": "#0A0B0D" },
         "cssVarSetter": "--illustration-black",
         "cssVarGetter": "var(--illustration-black)"
       },
@@ -358,10 +271,7 @@
         "name": "gray-2",
         "type": "dark",
         "prefix": "illustration",
-        "paint": {
-          "type": "solid",
-          "value": "#464B55"
-        },
+        "paint": { "type": "solid", "value": "#464B55" },
         "cssVarSetter": "--illustration-gray-2",
         "cssVarGetter": "var(--illustration-gray-2)"
       }
@@ -9280,7 +9190,7 @@
       "height": 48,
       "description": "check, checkmark, coin, crypto, token, 🪙, ✅, 🧺, ✔️",
       "createdAt": "2022-08-05T05:37:08.852Z",
-      "lastUpdated": "2025-12-01T18:17:44.385Z",
+      "lastUpdated": "2026-10-01T16:27:00.216Z",
       "outputs": {
         "svgLight": "./pictogram/svg/light/tokenBaskets-4.svg",
         "svgDark": "./pictogram/svg/dark/tokenBaskets-4.svg",
@@ -33881,6 +33791,27 @@
         "svgEsmThemed": "./pictogram/svgJs/esm/themeable/chfTrade-0.js",
         "pngLight": "./pictogram/png/light/chfTrade-0.png",
         "pngDark": "./pictogram/png/dark/chfTrade-0.png"
+      },
+      "version": 0
+    },
+    "31587:43": {
+      "type": "heroSquare",
+      "name": "usdj",
+      "hash": "bm77yPpDcSFZvAIBLnOojHVmFaRmnXGb/KGmguwXfwg=",
+      "width": 240,
+      "height": 240,
+      "description": "coin, conversion, convert, yellow, blue, usdr, stable, stablecoin, usd, rain",
+      "createdAt": "2026-10-01T16:27:00.202Z",
+      "lastUpdated": "2026-10-01T16:27:00.202Z",
+      "outputs": {
+        "svgLight": "./heroSquare/svg/light/usdj-0.svg",
+        "svgDark": "./heroSquare/svg/dark/usdj-0.svg",
+        "svgJsLight": "./heroSquare/svgJs/cjs/light/usdj-0.js",
+        "svgJsDark": "./heroSquare/svgJs/cjs/dark/usdj-0.js",
+        "svgJsThemed": "./heroSquare/svgJs/cjs/themeable/usdj-0.js",
+        "svgEsmThemed": "./heroSquare/svgJs/esm/themeable/usdj-0.js",
+        "pngLight": "./heroSquare/png/light/usdj-0.png",
+        "pngDark": "./heroSquare/png/dark/usdj-0.png"
       },
       "version": 0
     }
