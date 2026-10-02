@@ -4,6 +4,10 @@ import type { PublishedComponent } from '@figma/rest-api-spec';
 import type { Component } from '../illustration';
 import { parseComponentName } from '../parseComponentName';
 
+/** The URL Figma itself uses to link to a node: the node id with `:` replaced by `-`. */
+export const figmaNodeUrl = (fileKey: string, nodeId: string) =>
+  `https://www.figma.com/design/${fileKey}?node-id=${nodeId.replace(':', '-')}`;
+
 /** Maps a component as the Figma REST API reports it to the sync's own record. */
 export const toComponent = (component: PublishedComponent): Component => ({
   nodeId: component.node_id,
@@ -11,6 +15,7 @@ export const toComponent = (component: PublishedComponent): Component => ({
   description: component.description,
   createdAt: component.created_at,
   updatedAt: component.updated_at,
+  url: figmaNodeUrl(component.file_key, component.node_id),
 });
 
 /**

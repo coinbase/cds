@@ -54,11 +54,34 @@ describe('optimizeSvg', () => {
     );
   });
 
+  it('refuses colors theming cannot handle, naming the attribute and the fix', () => {
+    const svg = (fill: string) =>
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8" fill="${fill}"/></svg>`;
+    expect(() => optimizeSvg(svg('#0052FF80'))).toThrow(
+      'fill="#0052FF80" cannot be themed: only 6-digit hex colors, "none" and url(#id) are supported; express transparency with fill-opacity instead of an alpha channel',
+    );
+    expect(() => optimizeSvg(svg('#05F8'))).toThrow('fill="#05F8" cannot be themed');
+    expect(() => optimizeSvg(svg('currentColor'))).toThrow('fill="currentColor" cannot be themed');
+    expect(() => optimizeSvg(svg('rgba(0, 82, 255, 0.5)'))).toThrow('cannot be themed');
+    expect(() => optimizeSvg(svg('var(--x)'))).toThrow('cannot be themed');
+    expect(() =>
+      optimizeSvg(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><linearGradient id="g"><stop stop-color="#FFFFFF80"/></linearGradient><rect width="8" height="8" fill="url(#g)"/></svg>',
+      ),
+    ).toThrow('stop-color="#FFFFFF80" cannot be themed');
+
+    // The accepted vocabulary, including what svgo converts for us.
+    for (const fill of ['#0052FF', '#05f', 'rgb(0, 82, 255)', 'white', 'rebeccapurple', 'none']) {
+      expect(() => optimizeSvg(svg(fill))).not.toThrow();
+    }
+  });
+
   it('normalizes every color to uppercase 6-digit hex and leaves non-colors alone', () => {
     expect(normalizeHexColor('#abc')).toBe('#AABBCC');
     expect(normalizeHexColor('#a1b2c3')).toBe('#A1B2C3');
     expect(normalizeHexColor('none')).toBe('none');
     expect(normalizeHexColor('url(#gradient)')).toBe('url(#gradient)');
+    expect(normalizeHexColor('#0052FF80')).toBe('#0052FF80');
 
     const gradient = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><defs><linearGradient id="g"><stop stop-color="white"/><stop offset="1" stop-color="#abc"/></linearGradient></defs><rect width="8" height="8" fill="url(#g)"/></svg>`;
     const optimized = optimizeSvg(gradient);

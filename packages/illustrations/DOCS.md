@@ -96,6 +96,13 @@ yarn sync-illustrations --sync-all
 
 **Running the pieces separately** — `yarn nx run illustrations:sync-illustrations` only syncs (no git); `yarn nx run web:generate-illustration-stories` only regenerates web's stories from the current illustrations. The workflow script chains them.
 
+**"`<type>/<name>` has an SVG the sync cannot publish"** — A layer uses a color theming cannot
+handle (an alpha hex such as `#0052FF80`, `currentColor`, `rgba()`, `var()`); the message names the
+attribute, the value and links to the node in Figma. Nothing was published. Figma itself never
+exports these forms, so the usual cause is a pasted or hand-edited SVG; express transparency with a
+layer opacity (exported as `fill-opacity`) rather than a color alpha, republish the library and
+re-run.
+
 **An illustration's light and dark variants look identical** — The illustration uses a color that the Variables API did not return a dark value for, so the sync fell back to the light fill. Ask design to bind the layer to a published illustration color variable rather than a raw hex value.
 
 **"No published color variables named "illustration/..." found"** or a 403 from the variables endpoints — The Figma token is missing the `file_variables:read` scope or Enterprise access the sync needs. Retrieve a current token from the Config Service. The sync refuses to run without the palette rather than silently publishing light-only assets.

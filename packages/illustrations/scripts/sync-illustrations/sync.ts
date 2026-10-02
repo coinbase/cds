@@ -49,6 +49,20 @@ async function sinksMissing(illustration: Illustration, sinks: Sink[]) {
   return missing;
 }
 
+/** Optimizes one export, pointing at the offending component in Figma when it cannot be used. */
+function optimizeComponentSvg(component: Component, rawSvg: string) {
+  try {
+    return optimizeSvg(rawSvg);
+  } catch (error) {
+    throw new Error(
+      `${component.type}/${component.name} has an SVG the sync cannot publish.\n` +
+        `  Reason: ${error instanceof Error ? error.message : String(error)}\n` +
+        `  Fix it in Figma: ${component.url}`,
+      { cause: error },
+    );
+  }
+}
+
 /**
  * Brings every sink in line with the source: fetches what changed, reconciles it with the manifest
  * of the previous sync, plans each sink's changes and applies them. Idempotent: a second run finds
@@ -115,7 +129,7 @@ export async function runSync({
 
   const svgs = new Map<string, string>();
   const fetched: FetchedIllustration[] = toSync.map((component) => {
-    const svg = optimizeSvg(rawSvgs.get(component.nodeId) as string);
+    const svg = optimizeComponentSvg(component, rawSvgs.get(component.nodeId) as string);
     svgs.set(component.nodeId, svg);
     return { ...component, hash: hashSvg(component.nodeId, svg), ...getSvgSize(svg) };
   });

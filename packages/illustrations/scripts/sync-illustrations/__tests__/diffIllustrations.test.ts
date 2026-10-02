@@ -25,6 +25,7 @@ const fetched = (overrides: Partial<FetchedIllustration> = {}): FetchedIllustrat
   height: 32,
   createdAt: '2022-11-22T17:37:19.370Z',
   updatedAt: '2026-09-01T00:00:00.000Z',
+  url: 'https://www.figma.com/design/file?node-id=4390-695',
   ...overrides,
 });
 

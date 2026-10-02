@@ -18,6 +18,7 @@ describe('FigmaSource component mapping', () => {
       description: 'trust, true, genuine, actual, verification, 2fa, authenticate, device',
       createdAt: '2023-11-07T19:19:47.073Z',
       updatedAt: '2026-06-08T19:45:06.046Z',
+      url: 'https://www.figma.com/design/LmkJatvMRVzNgfiIkJDb99?node-id=4390-695',
     });
   });
 

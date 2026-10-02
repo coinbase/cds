@@ -11,6 +11,8 @@ export type Component = {
   description: string;
   createdAt: string;
   updatedAt: string;
+  /** Deep link to the node in Figma, for error messages and review. */
+  url: string;
 };
 
 /** One illustration as persisted in the manifest and handed to output connectors. */

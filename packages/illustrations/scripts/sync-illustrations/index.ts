@@ -98,9 +98,11 @@ const main = async () => {
   }
 };
 
-process.on('exit', (code) => {
-  if (code !== 0) return console.log('\n❌ Error: Something went wrong with the illustration sync');
-  console.log('\n✅ Success: Illustration sync completed successfully!');
-});
-
-main();
+main().then(
+  () => console.log('\n✅ Success: Illustration sync completed successfully!'),
+  (error: unknown) => {
+    console.error(`\n❌ Illustration sync failed, nothing was published.\n`);
+    console.error(error instanceof Error ? error.message : error);
+    process.exitCode = 1;
+  },
+);

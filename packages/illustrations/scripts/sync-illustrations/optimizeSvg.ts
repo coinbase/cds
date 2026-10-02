@@ -15,6 +15,32 @@ export function normalizeHexColor(value: string) {
   return `#${expanded.toUpperCase()}`;
 }
 
+/**
+ * What a color attribute may hold once svgo has converted names and `rgb()` to hex: a 6-digit hex
+ * color, `none`, or a reference to a gradient or pattern. Theming only recognizes 6-digit hex, so
+ * anything else (alpha hex, `currentColor`, `rgba()`, `hsl()`, `var()`) would be published with its
+ * light color in every variant and nobody would notice until it shipped. Figma never exports those
+ * forms; seeing one means the SVG did not come straight from Figma, or Figma changed.
+ */
+const supportedColor = /^(#[0-9A-F]{6}|none|url\(#[^)]+\))$/;
+
+export class UnsupportedColorError extends Error {
+  constructor(attribute: string, value: string) {
+    super(
+      `${attribute}="${value}" cannot be themed: only 6-digit hex colors, "none" and url(#id) ` +
+        'are supported' +
+        (/^#[0-9A-F]{8}$|^#[0-9A-F]{4}$/.test(value)
+          ? `; express transparency with ${attribute === 'stop-color' ? 'stop' : attribute}-opacity instead of an alpha channel`
+          : ''),
+    );
+    this.name = 'UnsupportedColorError';
+  }
+}
+
+function assertSupportedColor(attribute: string, value: string) {
+  if (!supportedColor.test(value)) throw new UnsupportedColorError(attribute, value);
+}
+
 export const svgoConfig: Config = {
   multipass: true,
   /** https://github.com/svg/svgo#built-in-plugins */
@@ -40,7 +66,9 @@ export const svgoConfig: Config = {
           enter: (node) => {
             for (const attribute of colorAttributes) {
               if (attribute in node.attributes) {
-                node.attributes[attribute] = normalizeHexColor(node.attributes[attribute]);
+                const normalized = normalizeHexColor(node.attributes[attribute]);
+                assertSupportedColor(attribute, normalized);
+                node.attributes[attribute] = normalized;
               }
             }
           },

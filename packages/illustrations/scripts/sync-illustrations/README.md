@@ -217,9 +217,15 @@ oldest, and warns about the rest.
 ## SVG processing
 
 - `optimizeSvg`: svgo with `preset-default`, 2-decimal precision, and `convertColors` configured
-  so every color comes out as an **uppercase 6-digit hex**. A custom plugin normalizes 3-digit hex
-  (`#abc` → `#AABBCC`) and leaves non-hex values (`none`, `url(#gradient)`, `currentColor`) alone;
-  earlier versions threw on gradients, which made `--sync-all` crash on the real file.
+  so every color comes out as an **uppercase 6-digit hex** (CSS color names and `rgb()` included).
+  A custom plugin then normalizes 3-digit hex (`#abc` → `#AABBCC`) and **rejects** any color
+  attribute that is not 6-digit hex, `none` or `url(#id)`. Theming only recognizes 6-digit hex, so
+  an alpha hex (`#0052FF80`), `currentColor`, `rgba()` or `var()` would otherwise be published with
+  its light color in every variant, and nothing downstream (hash, diff, review of a one-line SVG,
+  tests pinned to known exports) would notice until the versioned asset was on the CDN. Figma never
+  exports those forms, so the check costs nothing on a healthy file; it fails the run before any
+  sink is touched, naming the attribute, the value, the component and its Figma URL. Gradients are
+  fine: `url(#…)` passes through and gradient stops are themed like any fill.
 - `artifacts/paletteColors`: a single regex pass replaces every palette color with whatever the sink
   asks for (dark value, CSS variable, anything else). Single pass matters: chained `replace` calls
   could re-replace a value an earlier substitution produced (the palette contains near-duplicates

@@ -26,7 +26,7 @@ export const hasChanges = ({ results }: IllustrationDiff) =>
   Object.values(results).some((changes) => changes.length > 0);
 
 const toIllustration = (fetched: FetchedIllustration, version: number, createdAt: string) => {
-  const { updatedAt, ...rest } = fetched;
+  const { updatedAt, url: _url, ...rest } = fetched;
   const illustration: Illustration = { ...rest, version, createdAt, lastUpdated: updatedAt };
   return illustration;
 };

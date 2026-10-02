@@ -63,6 +63,7 @@ const twoFactor: Component = {
   description: 'trust, 2fa, authenticate',
   createdAt: '2023-11-07T19:19:47.073Z',
   updatedAt: '2024-01-01T00:00:00.000Z',
+  url: 'https://www.figma.com/design/file?node-id=4390-695',
 };
 
 const leverage: Component = {
@@ -72,6 +73,7 @@ const leverage: Component = {
   description: 'leverage, trading',
   createdAt: '2022-01-01T00:00:00.000Z',
   updatedAt: '2024-01-01T00:00:00.000Z',
+  url: 'https://www.figma.com/design/file?node-id=2-33979',
 };
 
 const twoFactorSvg = fixture('figma-export-spotIcon-2fa.svg');
@@ -260,6 +262,26 @@ describe('runSync, end to end against an in-memory source', () => {
     expect(outcome.status).toBe('nothing-to-sync');
     expect(entry('twoFactor')?.nodeId).toBe('9000:1');
     source.components.pop();
+  });
+
+  it('halts before touching any sink when an export cannot be themed, pointing at the node in Figma', async () => {
+    const before = [...files('spotIcon'), ...files('heroSquare')];
+    const alphaHex = { ...leverage, nodeId: '7000:1', name: 'alphaHex', updatedAt: later() };
+    source.components.push(alphaHex);
+    source.svgs[alphaHex.nodeId] = leverageSvg.replace('fill="#0052FF"', 'fill="#0052FF80"');
+
+    await expect(sync()).rejects.toThrow(
+      [
+        'heroSquare/alphaHex has an SVG the sync cannot publish.',
+        '  Reason: fill="#0052FF80" cannot be themed: only 6-digit hex colors, "none" and url(#id) are supported; express transparency with fill-opacity instead of an alpha channel',
+        '  Fix it in Figma: https://www.figma.com/design/file?node-id=2-33979',
+      ].join('\n'),
+    );
+    expect([...files('spotIcon'), ...files('heroSquare')]).toEqual(before);
+    expect(entry('alphaHex')).toBeUndefined();
+
+    source.components.pop();
+    delete source.svgs[alphaHex.nodeId];
   });
 
   it('removes every file of a component that was deleted from the source', async () => {
