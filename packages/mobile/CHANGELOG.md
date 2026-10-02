@@ -1,3 +1,7 @@
+## 9.29.0 (2026-10-02)
+
+This is an artificial version bump with no new change.
+
 ## 9.28.0 (2026-09-18)
 
 ### 🚀 Features
