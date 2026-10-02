@@ -46,27 +46,6 @@
         "cwd": "packages/illustrations"
       }
     },
-    "generate-stories": {
-      "command": "tsx ./scripts/generateStories.ts",
-      "dependsOn": [
-        "^build"
-      ],
-      "options": {
-        "cwd": "packages/illustrations"
-      }
-    },
-    "release": {
-      "executor": "nx:run-commands",
-      "dependsOn": [
-        "^build"
-      ],
-      "options": {
-        "commands": [
-          "nx run illustrations:generate-stories"
-        ],
-        "parallel": false
-      }
-    },
     "typecheck": {
       "executor": "nx:run-commands",
       "defaultConfiguration": "dev",

@@ -1,93 +1,65 @@
 import { execSync, type ExecSyncOptions } from 'node:child_process';
-import path from 'node:path';
 
-export const todaysDate = new Date().toISOString().slice(0, 10);
-const targetBranchName = `illustrations/${todaysDate}`;
+/**
+ * The git side of a release: a fresh `illustrations/YYYY-MM-DD` branch from the default branch,
+ * committed and pushed when the sync changed something, deleted again when it did not or failed.
+ * Only the shell (`index.ts`) uses this; the engine never touches git.
+ */
+export class ReleaseBranch {
+  private readonly repoRoot: string;
+  private readonly branchName: string;
+  private defaultBranch = '';
 
-const createExec = (dirname: string) => {
-  return (command: string, options: ExecSyncOptions = {}) =>
-    execSync(command, { cwd: dirname, encoding: 'utf-8', ...options })
+  constructor(repoRoot: string, date: string) {
+    this.repoRoot = repoRoot;
+    this.branchName = `illustrations/${date}`;
+  }
+
+  private exec(command: string, options: ExecSyncOptions = {}) {
+    return execSync(command, { cwd: this.repoRoot, encoding: 'utf-8', ...options })
       .toString()
       .trim();
-};
-
-const error = (message: string, ...args: unknown[]) => {
-  console.error('\nERROR:', message, ...args);
-  console.log('');
-  process.exit(1);
-};
-
-/**
- * Resolves the default remote branch name (master or main) by checking which
- * one exists on origin.
- */
-const resolveDefaultBranch = (exec: ReturnType<typeof createExec>, repoName: string): string => {
-  const remoteBranches = exec('git branch -r');
-  if (remoteBranches.includes('origin/master')) return 'master';
-  if (remoteBranches.includes('origin/main')) return 'main';
-  error(`Could not find "master" or "main" branch on origin for the "${repoName}" repo`);
-  throw new Error('unreachable');
-};
-
-/**
- * Validates that the repo has a clean working tree, then creates a new
- * `illustrations/YYYY-MM-DD` branch from the latest `origin/<defaultBranch>`.
- * The caller does not need to be on master/main first.
- */
-export const ensureCleanBranch = (dirname: string) => {
-  const repoName = path.basename(dirname);
-  const exec = createExec(dirname);
-
-  console.log(`Checking the status of the "${repoName}" repo...`);
-  const gitStatus = exec('git status --short');
-  if (gitStatus.length > 0) error(`The "${repoName}" repo is not clean`);
-
-  console.log(`Checking the diff of the "${repoName}" repo...`);
-  const gitDiff = exec('git diff --exit-code');
-  if (gitDiff.length > 0) error(`The "${repoName}" repo has changes`);
-
-  try {
-    console.log(`Checking the "origin" remote for the "${repoName}" repo...`);
-    exec('git remote show origin');
-  } catch (err) {
-    error(`There was an error checking the "origin" remote for the "${repoName}" repo:`, err);
   }
 
-  try {
-    console.log(`Fetching the "origin" remote for the "${repoName}" repo...`);
-    exec('git fetch origin');
-  } catch (err) {
-    error(`There was an error fetching the "origin" remote for the "${repoName}" repo:`, err);
+  private resolveDefaultBranch() {
+    const remoteBranches = this.exec('git branch -r');
+    if (remoteBranches.includes('origin/master')) return 'master';
+    if (remoteBranches.includes('origin/main')) return 'main';
+    throw new Error('Could not find a "master" or "main" branch on origin');
   }
 
-  const defaultBranch = resolveDefaultBranch(exec, repoName);
-  console.log(`Using "${defaultBranch}" as the default branch for the "${repoName}" repo...`);
-
-  // Create the target branch from the latest origin/<defaultBranch>
-  try {
-    console.log(`Attempting to delete branch ${targetBranchName}...`);
-    exec(`git branch -D ${targetBranchName}`);
-  } catch {
-    // Branch may not exist, that's ok
+  /** Requires a clean tree, then creates the release branch from the latest default branch. */
+  start() {
+    if (this.exec('git status --short')) {
+      throw new Error('The working tree is not clean; commit or stash first');
+    }
+    console.log('Fetching origin...');
+    this.exec('git fetch origin');
+    this.defaultBranch = this.resolveDefaultBranch();
+    try {
+      this.exec(`git branch -D ${this.branchName}`);
+    } catch {
+      // The branch did not exist yet.
+    }
+    console.log(`Creating ${this.branchName} from origin/${this.defaultBranch}...`);
+    this.exec(`git checkout -b ${this.branchName} origin/${this.defaultBranch}`);
   }
-  console.log(`Creating new branch ${targetBranchName} from origin/${defaultBranch}...`);
-  exec(`git checkout -b ${targetBranchName} origin/${defaultBranch}`);
-  return { branchName: targetBranchName, defaultBranch };
-};
 
-export const commitAndPushChanges = (dirname: string, commitMessage: string) => {
-  const exec = createExec(dirname);
-  exec('git add .');
-  const status = exec('git status --short');
-  if (!status) {
-    console.log('No changes to commit, skipping push.');
-    return;
+  /** Commits and pushes what the sync produced; returns false when there was nothing to commit. */
+  publish(commitMessage: string) {
+    this.exec('git add .');
+    if (!this.exec('git status --short')) return false;
+    this.exec(`git commit -m "${commitMessage}"`);
+    this.exec(`git push origin ${this.branchName}`);
+    console.log(`\nPushed ${this.branchName}. Open a PR titled "${commitMessage}".`);
+    return true;
   }
-  exec(`git commit -m "${commitMessage}"`);
-  exec(`git push origin ${targetBranchName}`);
-};
 
-export const deleteBranch = (dirname: string, defaultBranch: string, branchName: string) => {
-  const exec = createExec(dirname);
-  exec(`git checkout ${defaultBranch} && git branch -D ${branchName}`);
-};
+  /** Discards everything the run produced; safe because the tree was clean at `start`. */
+  abandon() {
+    this.exec('git reset --hard');
+    this.exec('git clean -fd');
+    this.exec(`git checkout ${this.defaultBranch}`);
+    this.exec(`git branch -D ${this.branchName}`);
+  }
+}

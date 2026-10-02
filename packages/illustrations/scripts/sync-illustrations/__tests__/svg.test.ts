@@ -1,0 +1,147 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
+import { ColorPalette } from '../colorPalette';
+import { hashSvg } from '../hashSvg';
+import { getSvgSize, normalizeHexColor, optimizeSvg } from '../optimizeSvg';
+
+const fixture = (name: string) =>
+  fs.readFileSync(path.join(__dirname, '__fixtures__', name), 'utf-8').trimEnd();
+
+/** The palette recorded in manifest.json at the time the expected fixtures were generated. */
+const palette = new ColorPalette([
+  { name: 'accent-1', light: '#FFD200', dark: '#ECD069' },
+  { name: 'accent-2', light: '#5DE2F8', dark: '#45D9F5' },
+  { name: 'black', light: '#0A0B0D', dark: '#0A0B0D' },
+  { name: 'gray', light: '#CED2DB', dark: '#464B55' },
+  { name: 'gray-3', light: '#CED2DC', dark: '#FFFFFF' },
+  { name: 'invert', light: '#0A0B0E', dark: '#FFFFFF' },
+  { name: 'positive', light: '#3CC28A', dark: '#44C28D' },
+  { name: 'primary', light: '#0052FF', dark: '#578BFA' },
+  { name: 'white', light: '#FFFFFF', dark: '#FFFFFF' },
+]);
+
+describe('optimizeSvg', () => {
+  it('produces the exact light SVG previous syncs published', () => {
+    expect(optimizeSvg(fixture('figma-export-spotIcon-2fa.svg'))).toBe(
+      fixture('expected-spotIcon-2fa-1-light.svg'),
+    );
+    expect(optimizeSvg(fixture('figma-export-heroSquare-leverage.svg'))).toBe(
+      fixture('expected-heroSquare-leverage-4-light.svg'),
+    );
+  });
+
+  it('handles gradients: url() fills pass through, named stop colors become hex and get themed', () => {
+    // usdj is the first illustration with gradient fills; its raw export uses `white` as a
+    // fill and stop-color and references gradients with url(#paint0_linear_…).
+    const raw = fixture('figma-export-heroSquare-usdj.svg');
+    expect(raw).toContain('stop-color="white"');
+    expect(raw).toContain('fill="url(#paint0_linear_31587_43)"');
+
+    const light = optimizeSvg(raw);
+    expect(light).toBe(fixture('expected-heroSquare-usdj-0-light.svg'));
+    expect(light).toContain('fill="url(#b)"');
+    expect(light).toContain('stop-color="#FFFFFF"');
+    expect(light).not.toMatch(/"white"/);
+
+    const dark = palette.toDarkSvg(light);
+    expect(dark).toBe(fixture('expected-heroSquare-usdj-0-dark.svg'));
+    // Gradient stops outside the palette are left alone; palette stops are themed like any fill.
+    expect(dark).toContain('stop-color="#8585AD"');
+    expect(palette.recolor(light, ({ name }) => `var(--${name})`)).toContain(
+      'stop-color="var(--white)"',
+    );
+  });
+
+  it('refuses colors theming cannot handle, naming the attribute and the fix', () => {
+    const svg = (fill: string) =>
+      `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><rect width="8" height="8" fill="${fill}"/></svg>`;
+    expect(() => optimizeSvg(svg('#0052FF80'))).toThrow(
+      'fill="#0052FF80" cannot be themed: only 6-digit hex colors, "none" and url(#id) are supported; express transparency with fill-opacity instead of an alpha channel',
+    );
+    expect(() => optimizeSvg(svg('#05F8'))).toThrow('fill="#05F8" cannot be themed');
+    expect(() => optimizeSvg(svg('currentColor'))).toThrow('fill="currentColor" cannot be themed');
+    expect(() => optimizeSvg(svg('rgba(0, 82, 255, 0.5)'))).toThrow('cannot be themed');
+    expect(() => optimizeSvg(svg('var(--x)'))).toThrow('cannot be themed');
+    expect(() =>
+      optimizeSvg(
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><linearGradient id="g"><stop stop-color="#FFFFFF80"/></linearGradient><rect width="8" height="8" fill="url(#g)"/></svg>',
+      ),
+    ).toThrow('stop-color="#FFFFFF80" cannot be themed');
+
+    // The accepted vocabulary, including what svgo converts for us.
+    for (const fill of ['#0052FF', '#05f', 'rgb(0, 82, 255)', 'white', 'rebeccapurple', 'none']) {
+      expect(() => optimizeSvg(svg(fill))).not.toThrow();
+    }
+  });
+
+  it('normalizes every color to uppercase 6-digit hex and leaves non-colors alone', () => {
+    expect(normalizeHexColor('#abc')).toBe('#AABBCC');
+    expect(normalizeHexColor('#a1b2c3')).toBe('#A1B2C3');
+    expect(normalizeHexColor('none')).toBe('none');
+    expect(normalizeHexColor('url(#gradient)')).toBe('url(#gradient)');
+    expect(normalizeHexColor('#0052FF80')).toBe('#0052FF80');
+
+    const gradient = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8"><defs><linearGradient id="g"><stop stop-color="white"/><stop offset="1" stop-color="#abc"/></linearGradient></defs><rect width="8" height="8" fill="url(#g)"/></svg>`;
+    const optimized = optimizeSvg(gradient);
+    expect(optimized).toContain('fill="url(#a)"');
+    expect(optimized).toContain('stop-color="#FFFFFF"');
+    expect(optimized).toContain('stop-color="#AABBCC"');
+  });
+
+  it('reads the intrinsic size from the viewBox', () => {
+    expect(getSvgSize(fixture('expected-spotIcon-2fa-1-light.svg'))).toEqual({
+      width: 32,
+      height: 32,
+    });
+    expect(() => getSvgSize('<svg/>')).toThrow('viewBox');
+  });
+});
+
+describe('ColorPalette', () => {
+  const light = fixture('expected-spotIcon-2fa-1-light.svg');
+
+  it('derives the dark variant by swapping palette colors for their dark values', () => {
+    expect(palette.toDarkSvg(light)).toBe(fixture('expected-spotIcon-2fa-1-dark.svg'));
+  });
+
+  it('lets a sink choose any representation for a palette color', () => {
+    expect(palette.recolor('<svg fill="#0052FF"/>', ({ name }) => `@color/${name}`)).toBe(
+      '<svg fill="@color/primary"/>',
+    );
+  });
+
+  it('leaves colors outside the palette untouched', () => {
+    const svg = '<svg><path fill="#123456"/><path fill="#0052FF"/></svg>';
+    expect(palette.toDarkSvg(svg)).toBe('<svg><path fill="#123456"/><path fill="#578BFA"/></svg>');
+  });
+
+  it('does not re-replace a color produced by another substitution', () => {
+    const chained = new ColorPalette([
+      { name: 'a', light: '#111111', dark: '#222222' },
+      { name: 'b', light: '#222222', dark: '#333333' },
+    ]);
+    expect(chained.toDarkSvg('<svg fill="#111111"/>')).toBe('<svg fill="#222222"/>');
+  });
+
+  it('does not touch 8-digit hex colors that merely start with a palette color', () => {
+    expect(palette.toDarkSvg('<svg fill="#0052FF80"/>')).toBe('<svg fill="#0052FF80"/>');
+  });
+
+  it('serializes to the manifest shape', () => {
+    expect(
+      new ColorPalette([{ name: 'primary', light: '#0052FF', dark: '#578BFA' }]).toRecord(),
+    ).toEqual({ primary: { light: '#0052FF', dark: '#578BFA' } });
+  });
+});
+
+describe('hashSvg', () => {
+  it('reproduces the hashes recorded in manifest.json by previous syncs', () => {
+    expect(hashSvg('4390:695', fixture('expected-spotIcon-2fa-1-light.svg'))).toBe(
+      '+HFlT7G2zpSP0fCciMg4XqPz/Dokzg+/VBntWB6dnwY=',
+    );
+    expect(hashSvg('2:33979', fixture('expected-heroSquare-leverage-4-light.svg'))).toBe(
+      'gPwBO7SxTvDffKHFIemCqEqQ+q1QX2Ux4M95p9R8zvE=',
+    );
+  });
+});

@@ -1,0 +1,297 @@
+{
+  "error": false,
+  "status": 200,
+  "meta": {
+    "variableCollections": {
+      "VariableCollectionId:1223:58": {
+        "id": "VariableCollectionId:1223:58",
+        "subscribed_id": "VariableCollectionId:a1b12220347b995e4857e511daa1f74f5fc11fc2/9580:1645",
+        "name": "CDS Colors",
+        "key": "a1b12220347b995e4857e511daa1f74f5fc11fc2",
+        "updatedAt": "2026-08-31T00:54:20.285Z"
+      }
+    },
+    "variables": {
+      "VariableID:1229:63": {
+        "id": "VariableID:1229:63",
+        "subscribed_id": "VariableID:aac519506c360513d4b1298f70d3ab9e45b08226/9580:1655",
+        "name": "spectrum/blue/70",
+        "key": "aac519506c360513d4b1298f70d3ab9e45b08226",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.878Z"
+      },
+      "VariableID:1412:298": {
+        "id": "VariableID:1412:298",
+        "subscribed_id": "VariableID:f8181841e39e27aeb9974a05cf9b873b898e572f/9580:1821",
+        "name": "illustration/primary",
+        "key": "f8181841e39e27aeb9974a05cf9b873b898e572f",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:19.258Z"
+      },
+      "VariableID:1412:311": {
+        "id": "VariableID:1412:311",
+        "subscribed_id": "VariableID:2712067c08bfd1c738125b79013b576ed4193c24/9580:1833",
+        "name": "illustration/invert",
+        "key": "2712067c08bfd1c738125b79013b576ed4193c24",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.295Z"
+      },
+      "VariableID:1412:301": {
+        "id": "VariableID:1412:301",
+        "subscribed_id": "VariableID:27a4cd1f761fca1eca513d75da0a2b90e02191bf/11254:5919",
+        "name": "illustration/gray",
+        "key": "27a4cd1f761fca1eca513d75da0a2b90e02191bf",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.299Z"
+      },
+      "VariableID:1229:64": {
+        "id": "VariableID:1229:64",
+        "subscribed_id": "VariableID:03a3168d76520ff84ec0afaa2379aa17d096ead5/9580:1656",
+        "name": "spectrum/blue/80",
+        "key": "03a3168d76520ff84ec0afaa2379aa17d096ead5",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.104Z"
+      },
+      "VariableID:1229:58": {
+        "id": "VariableID:1229:58",
+        "subscribed_id": "VariableID:14e146cd80cd46668a43e6c69e80a4994f50a32c/9580:1650",
+        "name": "spectrum/blue/20",
+        "key": "14e146cd80cd46668a43e6c69e80a4994f50a32c",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.198Z"
+      },
+      "VariableID:1229:582": {
+        "id": "VariableID:1229:582",
+        "subscribed_id": "VariableID:18b27de11c0284647e4cf7700522a60870960c4a/9580:1711",
+        "name": "spectrum/green/70",
+        "key": "18b27de11c0284647e4cf7700522a60870960c4a",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.226Z"
+      },
+      "VariableID:1412:307": {
+        "id": "VariableID:1412:307",
+        "subscribed_id": "VariableID:1ac216af08ff0ebd5e8da96c3e434984df58a3cf/9580:1830",
+        "name": "illustration/accent 2",
+        "key": "1ac216af08ff0ebd5e8da96c3e434984df58a3cf",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.234Z"
+      },
+      "VariableID:1229:578": {
+        "id": "VariableID:1229:578",
+        "subscribed_id": "VariableID:1ccd1e86b4a63f28b3a070db7a54ac0b305eec11/9580:1707",
+        "name": "spectrum/green/30",
+        "key": "1ccd1e86b4a63f28b3a070db7a54ac0b305eec11",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.255Z"
+      },
+      "VariableID:1412:308": {
+        "id": "VariableID:1412:308",
+        "subscribed_id": "VariableID:3d45bc2dca486cbc8a7780ca07372258524f9a6a/9580:1831",
+        "name": "illustration/accent 3",
+        "key": "3d45bc2dca486cbc8a7780ca07372258524f9a6a",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.359Z"
+      },
+      "VariableID:1229:627": {
+        "id": "VariableID:1229:627",
+        "subscribed_id": "VariableID:4470c1e025f4d7230f5fd77b1e3e139ccfa644d3/9580:1753",
+        "name": "spectrum/gray/100",
+        "key": "4470c1e025f4d7230f5fd77b1e3e139ccfa644d3",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.385Z"
+      },
+      "VariableID:1229:615": {
+        "id": "VariableID:1229:615",
+        "subscribed_id": "VariableID:45dcfcce99213db440aabce9e6c7ff542894d103/9580:1741",
+        "name": "spectrum/gray/0",
+        "key": "45dcfcce99213db440aabce9e6c7ff542894d103",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.389Z"
+      },
+      "VariableID:1412:300": {
+        "id": "VariableID:1412:300",
+        "subscribed_id": "VariableID:4becda743977862f9f06956487546d564ff3fc45/9580:1823",
+        "name": "illustration/white",
+        "key": "4becda743977862f9f06956487546d564ff3fc45",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.420Z"
+      },
+      "VariableID:1412:303": {
+        "id": "VariableID:1412:303",
+        "subscribed_id": "VariableID:592325b92a60f7eac42c181b82a1882b2830b46b/9580:1826",
+        "name": "illustration/gray 3",
+        "key": "592325b92a60f7eac42c181b82a1882b2830b46b",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.489Z"
+      },
+      "VariableID:1412:312": {
+        "id": "VariableID:1412:312",
+        "subscribed_id": "VariableID:6d603dc0c1e32aa67037676c713be658df0f8253/9580:1834",
+        "name": "illustration/invert 2",
+        "key": "6d603dc0c1e32aa67037676c713be658df0f8253",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.588Z"
+      },
+      "VariableID:1229:684": {
+        "id": "VariableID:1229:684",
+        "subscribed_id": "VariableID:7a62c177b42e999f83c564580b9cb51465ad5d33/9580:1809",
+        "name": "spectrum/teal/15",
+        "key": "7a62c177b42e999f83c564580b9cb51465ad5d33",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.672Z"
+      },
+      "VariableID:1412:304": {
+        "id": "VariableID:1412:304",
+        "subscribed_id": "VariableID:8cb121d50b28232dadda51db614569e92e8ab7bb/9580:1827",
+        "name": "illustration/positive",
+        "key": "8cb121d50b28232dadda51db614569e92e8ab7bb",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.731Z"
+      },
+      "VariableID:1412:305": {
+        "id": "VariableID:1412:305",
+        "subscribed_id": "VariableID:8d049ee1f2731ffa0dd9c5711883d6b837ab58d9/9580:1828",
+        "name": "illustration/negative",
+        "key": "8d049ee1f2731ffa0dd9c5711883d6b837ab58d9",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.735Z"
+      },
+      "VariableID:1412:310": {
+        "id": "VariableID:1412:310",
+        "subscribed_id": "VariableID:932552c58e590ee79409364aad163a6ae566f46f/9580:1832",
+        "name": "illustration/accent 4",
+        "key": "932552c58e590ee79409364aad163a6ae566f46f",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.758Z"
+      },
+      "VariableID:1412:306": {
+        "id": "VariableID:1412:306",
+        "subscribed_id": "VariableID:974bc31241e76aea4443eb5efb21326e45ca8c8e/9580:1829",
+        "name": "illustration/accent 1",
+        "key": "974bc31241e76aea4443eb5efb21326e45ca8c8e",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.777Z"
+      },
+      "VariableID:1229:596": {
+        "id": "VariableID:1229:596",
+        "subscribed_id": "VariableID:b61fe67e0fe8c9cd114026b828e4c10d6c44a30a/9580:1723",
+        "name": "spectrum/orange/60",
+        "key": "b61fe67e0fe8c9cd114026b828e4c10d6c44a30a",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.923Z"
+      },
+      "VariableID:11913:4633": {
+        "id": "VariableID:11913:4633",
+        "subscribed_id": "VariableID:fce273f0c64220566930049a74153f19612ecb11/11947:1331",
+        "name": "illustration/gray 4",
+        "key": "fce273f0c64220566930049a74153f19612ecb11",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:19.273Z"
+      },
+      "VariableID:1229:675": {
+        "id": "VariableID:1229:675",
+        "subscribed_id": "VariableID:f1b63307cc30e9fb074d3fc975675d1836774c42/9580:1800",
+        "name": "spectrum/red/50",
+        "key": "f1b63307cc30e9fb074d3fc975675d1836774c42",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:19.206Z"
+      },
+      "VariableID:1229:594": {
+        "id": "VariableID:1229:594",
+        "subscribed_id": "VariableID:7187c281299158f46f1108965c5f9da61b352141/9580:1721",
+        "name": "spectrum/orange/40",
+        "key": "7187c281299158f46f1108965c5f9da61b352141",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.619Z"
+      },
+      "VariableID:1229:676": {
+        "id": "VariableID:1229:676",
+        "subscribed_id": "VariableID:627b9828b6f74c7383d7bd092eafbdb4154f40ae/9580:1801",
+        "name": "spectrum/red/60",
+        "key": "627b9828b6f74c7383d7bd092eafbdb4154f40ae",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.529Z"
+      },
+      "VariableID:1229:620": {
+        "id": "VariableID:1229:620",
+        "subscribed_id": "VariableID:8eb544b667196ebcd9b0783d831203d4d0b967be/9580:1746",
+        "name": "spectrum/gray/30",
+        "key": "8eb544b667196ebcd9b0783d831203d4d0b967be",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.744Z"
+      },
+      "VariableID:1412:299": {
+        "id": "VariableID:1412:299",
+        "subscribed_id": "VariableID:01d83da3e4f139c0249979b16b57bbfcd8800b42/9580:1822",
+        "name": "illustration/black",
+        "key": "01d83da3e4f139c0249979b16b57bbfcd8800b42",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.089Z"
+      },
+      "VariableID:1412:302": {
+        "id": "VariableID:1412:302",
+        "subscribed_id": "VariableID:c2ef06ba096398830f782147e47b9825cf016e6e/9580:1825",
+        "name": "illustration/gray 2",
+        "key": "c2ef06ba096398830f782147e47b9825cf016e6e",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.993Z"
+      },
+      "VariableID:1229:62": {
+        "id": "VariableID:1229:62",
+        "subscribed_id": "VariableID:c73b1fe930b92d0e4d49ad7fd2b683aebc33350c/9580:1654",
+        "name": "spectrum/blue/60",
+        "key": "c73b1fe930b92d0e4d49ad7fd2b683aebc33350c",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:19.003Z"
+      },
+      "VariableID:1229:619": {
+        "id": "VariableID:1229:619",
+        "subscribed_id": "VariableID:c7a97ad717f90cdd615b7ba5f1b67312128e2c15/9580:1745",
+        "name": "spectrum/gray/20",
+        "key": "c7a97ad717f90cdd615b7ba5f1b67312128e2c15",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:19.007Z"
+      },
+      "VariableID:1229:691": {
+        "id": "VariableID:1229:691",
+        "subscribed_id": "VariableID:6bd7aa3049330bfbfb7bc8880d18cd39a49d9de9/9580:1816",
+        "name": "spectrum/teal/80",
+        "key": "6bd7aa3049330bfbfb7bc8880d18cd39a49d9de9",
+        "variableCollectionId": "VariableCollectionId:1223:58",
+        "resolvedDataType": "COLOR",
+        "updatedAt": "2026-08-31T00:54:18.573Z"
+      }
+    }
+  },
+  "i18n": null
+}
