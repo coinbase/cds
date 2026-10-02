@@ -1,3 +1,10 @@
+## 9.29.0 (2026-10-02)
+
+### 🚀 Features
+
+- Feat: lazy-load framer-motion's `domAnimation` features in `ThemeProvider`, keeping them out of the initial bundle. Pass `motionFeatures={domAnimation}` to load them eagerly.
+- Feat: lazy-load the illustration `svgEsmMap` modules, keeping them out of the initial bundle. Themed illustrations (`applyTheme`) now fetch one extra chunk before rendering.
+
 ## 9.28.0 (2026-09-18)
 
 ### 🚀 Features
