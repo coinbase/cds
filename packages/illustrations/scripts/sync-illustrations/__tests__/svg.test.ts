@@ -1,16 +1,15 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { replacePaletteColors, toCssVariableSvg, toDarkSvg } from '../artifacts/paletteColors';
+import { ColorPalette } from '../colorPalette';
 import { hashSvg } from '../hashSvg';
-import type { ColorPalette } from '../illustration';
 import { getSvgSize, normalizeHexColor, optimizeSvg } from '../optimizeSvg';
 
 const fixture = (name: string) =>
   fs.readFileSync(path.join(__dirname, '__fixtures__', name), 'utf-8').trimEnd();
 
 /** The palette recorded in manifest.json at the time the expected fixtures were generated. */
-const palette: ColorPalette = [
+const palette = new ColorPalette([
   { name: 'accent-1', light: '#FFD200', dark: '#ECD069' },
   { name: 'accent-2', light: '#5DE2F8', dark: '#45D9F5' },
   { name: 'black', light: '#0A0B0D', dark: '#0A0B0D' },
@@ -20,7 +19,7 @@ const palette: ColorPalette = [
   { name: 'positive', light: '#3CC28A', dark: '#44C28D' },
   { name: 'primary', light: '#0052FF', dark: '#578BFA' },
   { name: 'white', light: '#FFFFFF', dark: '#FFFFFF' },
-];
+]);
 
 describe('optimizeSvg', () => {
   it('produces the exact light SVG previous syncs published', () => {
@@ -45,12 +44,12 @@ describe('optimizeSvg', () => {
     expect(light).toContain('stop-color="#FFFFFF"');
     expect(light).not.toMatch(/"white"/);
 
-    const dark = toDarkSvg(light, palette);
+    const dark = palette.toDarkSvg(light);
     expect(dark).toBe(fixture('expected-heroSquare-usdj-0-dark.svg'));
     // Gradient stops outside the palette are left alone; palette stops are themed like any fill.
     expect(dark).toContain('stop-color="#8585AD"');
-    expect(toCssVariableSvg(light, palette, 'illustration')).toContain(
-      'stop-color="var(--illustration-white)"',
+    expect(palette.recolor(light, ({ name }) => `var(--${name})`)).toContain(
+      'stop-color="var(--white)"',
     );
   });
 
@@ -99,41 +98,40 @@ describe('optimizeSvg', () => {
   });
 });
 
-describe('palette color replacement', () => {
+describe('ColorPalette', () => {
   const light = fixture('expected-spotIcon-2fa-1-light.svg');
 
-  it('swaps palette colors for their dark counterparts', () => {
-    expect(toDarkSvg(light, palette)).toBe(fixture('expected-spotIcon-2fa-1-dark.svg'));
-  });
-
-  it('swaps palette colors for CSS variables', () => {
-    const themeable = toCssVariableSvg(light, palette, 'illustration');
-    expect(fixture('expected-spotIcon-2fa-1-themeable.cjs.js')).toContain(themeable);
-    expect(themeable).toContain('fill="var(--illustration-primary)"');
-    expect(themeable).not.toMatch(/#0052FF/);
+  it('derives the dark variant by swapping palette colors for their dark values', () => {
+    expect(palette.toDarkSvg(light)).toBe(fixture('expected-spotIcon-2fa-1-dark.svg'));
   });
 
   it('lets a sink choose any representation for a palette color', () => {
-    expect(
-      replacePaletteColors('<svg fill="#0052FF"/>', palette, ({ name }) => `@color/${name}`),
-    ).toBe('<svg fill="@color/primary"/>');
+    expect(palette.recolor('<svg fill="#0052FF"/>', ({ name }) => `@color/${name}`)).toBe(
+      '<svg fill="@color/primary"/>',
+    );
   });
 
   it('leaves colors outside the palette untouched', () => {
     const svg = '<svg><path fill="#123456"/><path fill="#0052FF"/></svg>';
-    expect(toDarkSvg(svg, palette)).toBe('<svg><path fill="#123456"/><path fill="#578BFA"/></svg>');
+    expect(palette.toDarkSvg(svg)).toBe('<svg><path fill="#123456"/><path fill="#578BFA"/></svg>');
   });
 
   it('does not re-replace a color produced by another substitution', () => {
-    const chained: ColorPalette = [
+    const chained = new ColorPalette([
       { name: 'a', light: '#111111', dark: '#222222' },
       { name: 'b', light: '#222222', dark: '#333333' },
-    ];
-    expect(toDarkSvg('<svg fill="#111111"/>', chained)).toBe('<svg fill="#222222"/>');
+    ]);
+    expect(chained.toDarkSvg('<svg fill="#111111"/>')).toBe('<svg fill="#222222"/>');
   });
 
   it('does not touch 8-digit hex colors that merely start with a palette color', () => {
-    expect(toDarkSvg('<svg fill="#0052FF80"/>', palette)).toBe('<svg fill="#0052FF80"/>');
+    expect(palette.toDarkSvg('<svg fill="#0052FF80"/>')).toBe('<svg fill="#0052FF80"/>');
+  });
+
+  it('serializes to the manifest shape', () => {
+    expect(
+      new ColorPalette([{ name: 'primary', light: '#0052FF', dark: '#578BFA' }]).toRecord(),
+    ).toEqual({ primary: { light: '#0052FF', dark: '#578BFA' } });
   });
 });
 

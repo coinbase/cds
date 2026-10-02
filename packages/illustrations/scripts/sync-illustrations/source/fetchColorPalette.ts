@@ -7,7 +7,7 @@ import type {
   VariableAlias,
 } from '@figma/rest-api-spec';
 
-import type { ColorPalette, PaletteColor } from '../illustration';
+import { ColorPalette, type PaletteColor } from '../colorPalette';
 
 type ColorMode = 'light' | 'dark';
 
@@ -98,7 +98,7 @@ export function buildColorPalette(
     return { name: toColorName(variable.name), light: hexFor('light'), dark: hexFor('dark') };
   });
 
-  return palette.sort((a, b) => a.name.localeCompare(b.name));
+  return new ColorPalette(palette.sort((a, b) => a.name.localeCompare(b.name)));
 }
 
 /**
@@ -114,7 +114,7 @@ export async function fetchColorPalette(fileId: string, prefix: string): Promise
   ]);
 
   const palette = buildColorPalette(local, published, prefix);
-  if (palette.length === 0) {
+  if (palette.size === 0) {
     throw new Error(`No published color variables named "${prefix}/..." found in file ${fileId}`);
   }
   return palette;

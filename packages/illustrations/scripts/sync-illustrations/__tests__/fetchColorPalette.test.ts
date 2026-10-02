@@ -15,7 +15,7 @@ describe('buildColorPalette', () => {
   const palette = buildColorPalette(local, published, 'illustration');
 
   it('resolves every published illustration variable to its light and dark hex values', () => {
-    expect(palette).toEqual([
+    expect(palette.colors).toEqual([
       { name: 'accent-1', light: '#FFD200', dark: '#ECD069' },
       { name: 'accent-2', light: '#5DE2F8', dark: '#45D9F5' },
       { name: 'accent-3', light: '#ED702F', dark: '#F07836' },
@@ -40,14 +40,14 @@ describe('buildColorPalette', () => {
       type: 'VARIABLE_ALIAS',
       id: 'VariableID:1229:62',
     });
-    expect(palette.find(({ name }) => name === 'primary')?.light).toBe('#0052FF');
+    expect(palette.colors.find(({ name }) => name === 'primary')?.light).toBe('#0052FF');
   });
 
   it('ignores variables outside the prefix, including the remote "illo/" collection', () => {
     expect(Object.values(local.meta.variables).some(({ name }) => name.startsWith('illo/'))).toBe(
       true,
     );
-    expect(palette.map(({ name }) => name)).not.toContain(expect.stringMatching(/^illo/));
+    expect(palette.colors.map(({ name }) => name)).not.toContain(expect.stringMatching(/^illo/));
   });
 
   it('ignores unpublished variables', () => {
@@ -61,7 +61,7 @@ describe('buildColorPalette', () => {
       },
     };
     expect(
-      buildColorPalette(local, unpublished, 'illustration').map(({ name }) => name),
+      buildColorPalette(local, unpublished, 'illustration').colors.map(({ name }) => name),
     ).not.toContain('primary');
   });
 

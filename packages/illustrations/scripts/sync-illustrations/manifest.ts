@@ -1,7 +1,8 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import type { ColorPalette, Illustration } from './illustration';
+import type { ColorPalette, PaletteRecord } from './colorPalette';
+import type { Illustration } from './illustration';
 
 /** A manifest entry: an illustration minus the node id, which is the entry's key. */
 export type ManifestItem = Omit<Illustration, 'nodeId'>;
@@ -11,7 +12,7 @@ export type Manifest = {
   /** When the manifest was last written. Only components updated in Figma after this are re-fetched. */
   lastUpdated: string;
   /** The palette used to derive dark and themeable variants, recorded so palette changes show up in review. */
-  colors: Record<string, { light: string; dark: string }>;
+  colors: PaletteRecord;
   /**
    * Every illustration currently published, keyed by Figma node id so that a rename or a version
    * bump diffs as a change to one stable entry. Written in type, then name order; JSON keeps that
@@ -54,7 +55,7 @@ export function writeManifest(
 ) {
   const manifest: Manifest = {
     lastUpdated: new Date().toISOString(),
-    colors: Object.fromEntries(palette.map(({ name, light, dark }) => [name, { light, dark }])),
+    colors: palette.toRecord(),
     items: Object.fromEntries(
       [...illustrations]
         .sort(byTypeThenName)

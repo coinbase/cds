@@ -1,4 +1,5 @@
-import type { ColorPalette, Component } from '../illustration';
+import { ColorPalette } from '../colorPalette';
+import type { Component } from '../illustration';
 
 import type { IllustrationSource, ProgressCallback } from './IllustrationSource';
 
@@ -15,7 +16,7 @@ export class InMemorySource implements IllustrationSource {
   constructor({
     components = [],
     svgs = {},
-    palette = [],
+    palette = new ColorPalette([]),
   }: Partial<Pick<InMemorySource, 'components' | 'svgs' | 'palette'>> = {}) {
     this.components = components;
     this.svgs = svgs;
@@ -38,6 +39,6 @@ export class InMemorySource implements IllustrationSource {
   }
 
   async fetchPalette() {
-    return [...this.palette];
+    return this.palette;
   }
 }

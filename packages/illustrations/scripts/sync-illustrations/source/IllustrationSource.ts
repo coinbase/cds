@@ -1,4 +1,5 @@
-import type { ColorPalette, Component } from '../illustration';
+import type { ColorPalette } from '../colorPalette';
+import type { Component } from '../illustration';
 
 export type ProgressCallback = (completed: number, total: number) => void;
 

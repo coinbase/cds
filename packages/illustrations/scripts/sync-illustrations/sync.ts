@@ -7,7 +7,8 @@ import {
   type IllustrationDiff,
 } from './diffIllustrations';
 import { hashSvg } from './hashSvg';
-import type { ColorPalette, Component, Illustration } from './illustration';
+import type { ColorPalette } from './colorPalette';
+import type { Component, Illustration } from './illustration';
 import { type Manifest, manifestIllustrations } from './manifest';
 import { mapConcurrently } from './mapConcurrently';
 import { getSvgSize, optimizeSvg } from './optimizeSvg';

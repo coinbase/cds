@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
+import { ColorPalette } from '../colorPalette';
 import type { Illustration } from '../illustration';
 import { manifestIllustrations, readManifest, writeManifest } from '../manifest';
 
@@ -48,7 +49,7 @@ describe('manifest', () => {
 
     const written = writeManifest(manifestPath, {
       illustrations,
-      palette: [{ name: 'primary', light: '#0052FF', dark: '#578BFA' }],
+      palette: new ColorPalette([{ name: 'primary', light: '#0052FF', dark: '#578BFA' }]),
     });
 
     expect(written.lastUpdated).toMatch(/^\d{4}-\d{2}-\d{2}T/);
@@ -66,7 +67,10 @@ describe('manifest', () => {
 
   it('writes entry fields in a fixed order so edits never reorder them', () => {
     const manifestPath = path.join(dir, 'manifest.json');
-    writeManifest(manifestPath, { illustrations: [illustration({})], palette: [] });
+    writeManifest(manifestPath, {
+      illustrations: [illustration({})],
+      palette: new ColorPalette([]),
+    });
     expect(Object.keys(JSON.parse(fs.readFileSync(manifestPath, 'utf-8')).items['1:1'])).toEqual([
       'type',
       'name',

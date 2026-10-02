@@ -3,7 +3,8 @@ import os from 'node:os';
 import path from 'node:path';
 import sharp from 'sharp';
 
-import type { ColorPalette, Illustration } from '../illustration';
+import { ColorPalette } from '../colorPalette';
+import type { Illustration } from '../illustration';
 import { IllustrationsPackageSink } from '../sinks/IllustrationsPackageSink';
 import { includeTypes } from '../sinks/Sink';
 
@@ -37,12 +38,12 @@ const wallet: Illustration = {
   createdAt: '2021-01-01T00:00:00.000Z',
 };
 
-const palette: ColorPalette = [
+const palette = new ColorPalette([
   { name: 'black', light: '#0A0B0D', dark: '#0A0B0D' },
   { name: 'gray', light: '#CED2DB', dark: '#464B55' },
   { name: 'primary', light: '#0052FF', dark: '#578BFA' },
   { name: 'white', light: '#FFFFFF', dark: '#FFFFFF' },
-];
+]);
 
 const lightSvg = fixture('expected-spotIcon-2fa-1-light.svg');
 

@@ -1,4 +1,5 @@
-import type { ColorPalette, Illustration } from '../illustration';
+import type { ColorPalette } from '../colorPalette';
+import type { Illustration } from '../illustration';
 
 export type SinkOptions = {
   /**

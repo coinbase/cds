@@ -6,7 +6,6 @@ import {
   renderSvgEsmMap,
   renderSvgJsMap,
 } from '../artifacts/modules';
-import { toCssVariableSvg, toDarkSvg } from '../artifacts/paletteColors';
 import { rasterizePng } from '../artifacts/png';
 import {
   nameTypeOf,
@@ -15,7 +14,8 @@ import {
   renderNameType,
   renderVersionMap,
 } from '../artifacts/typescriptData';
-import { byName, type ColorPalette, groupByType, type Illustration } from '../illustration';
+import type { ColorPalette } from '../colorPalette';
+import { byName, groupByType, type Illustration } from '../illustration';
 import { mapConcurrently } from '../mapConcurrently';
 
 import { allFilesExist, relativeImport, removeFile, writeFile } from './files';
@@ -133,8 +133,11 @@ export class IllustrationsPackageSink extends Sink {
   private async writeAssets(illustration: Illustration, lightSvg: string, palette: ColorPalette) {
     const svg: Record<Theme, string> = {
       light: lightSvg,
-      dark: toDarkSvg(lightSvg, palette),
-      themeable: toCssVariableSvg(lightSvg, palette, this.cssVariablePrefix),
+      dark: palette.toDarkSvg(lightSvg),
+      themeable: palette.recolor(
+        lightSvg,
+        ({ name }) => `var(--${this.cssVariablePrefix}-${name})`,
+      ),
     };
 
     await Promise.all([

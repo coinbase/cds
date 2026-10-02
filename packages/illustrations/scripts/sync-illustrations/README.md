@@ -42,12 +42,14 @@ The **color palette** is what makes the dark and themeable derivations possible.
 drawn with a fixed set of 15 `illustration/*` color variables (`primary`, `gray`, `positive`,
 `accent-1`, …), each with a light and a dark value, defined in the
 [CDS colors Figma file](https://www.figma.com/design/AH4N0fma2EvI30IltjBGPy) and read through the
-Variables API on every run (`source/fetchColorPalette`). Because a light SVG only ever contains
-palette colors as uppercase 6-digit hex, deriving the dark variant is a single text substitution of
-each light hex for its dark counterpart, and the themeable variant the same substitution for a CSS
-variable. The palette is recorded in the manifest so a color change in Figma shows up in the same
-PR as the assets it recolors. If the palette cannot be read the run fails; publishing light-only
-assets silently would be worse.
+Variables API on every run (`source/fetchColorPalette`). In code it is the `ColorPalette` value
+object (`colorPalette.ts`): the colors plus `recolor(lightSvg, replacement)`, a single-pass
+substitution of every palette color in a light SVG. Because a light SVG only ever contains palette
+colors as uppercase 6-digit hex, the dark variant is `recolor` with each color's dark value
+(`toDarkSvg`) and the themeable variant is `recolor` with a CSS variable. The palette is recorded
+in the manifest (`toRecord`) so a color change in Figma shows up in the same PR as the assets it
+recolors. If the palette cannot be read the run fails; publishing light-only assets silently would
+be worse.
 
 Two consequences follow. Colors that are not in the palette are left as they are in every variant,
 which is intended (a brand logo stays its brand color in dark mode). And a color written in any
@@ -65,8 +67,8 @@ The sync is an **engine between a source and a set of sinks**, wrapped in a shel
   CLI;
 - a `Sink` is a destination (a package, a repository, a directory) and owns how illustrations appear
   there. `IllustrationsPackageSink` is the one that exists today;
-- `artifacts/` are pure helpers sinks build files from: palette-color replacement, PNG
-  rasterization, module wrappers, TypeScript data files, a prettier-style printer;
+- `artifacts/` are pure helpers sinks build files from: PNG rasterization, module wrappers,
+  TypeScript data files, a prettier-style printer;
 - `index.ts`, the shell, is the nx target: config, CLI args, writing the manifest and version plan,
   the summary. Git and other packages' concerns live in the repo-level script.
 
@@ -81,7 +83,8 @@ sync.ts                  engine: runSync(source, manifest, sinks) -> SyncOutcome
   optimizeSvg.ts           svgo config, color normalization and check, viewBox size
   hashSvg.ts               the manifest hash of the light SVG
   diffIllustrations.ts     reconcile fetched vs manifest -> IllustrationDiff
-illustration.ts          the domain records: Component, Illustration, ColorPalette, sort orders
+illustration.ts          the domain records: Component, Illustration, sort orders
+colorPalette.ts          ColorPalette: the colors, recolor(svg, fn), toDarkSvg, toRecord
 manifest.ts              read/write manifest.json
 generateVersionPlan.ts   nx version plan markdown
 mapConcurrently.ts       bounded-concurrency map
@@ -94,7 +97,6 @@ sinks/
   IllustrationsPackageSink.ts   src/__generated__ of this package
   files.ts                 write / remove / exists / relative import helpers
 artifacts/
-  paletteColors.ts         replacePaletteColors, toDarkSvg, toCssVariableSvg
   png.ts                   rasterizePng
   modules.ts               renderCjsModule, renderEsmModule, renderSvgJsMap, renderSvgEsmMap
   typescriptData.ts        renderNameType, renderNames, renderDescriptionMap, renderVersionMap
@@ -246,10 +248,10 @@ and warns about the rest.
   costs nothing on a healthy file; when it fires, the run stops before any sink is touched and the
   error names the attribute, the value, the component and its Figma URL. Gradients are fine:
   `url(#…)` passes through and gradient stops are substituted like any fill.
-- `artifacts/paletteColors`: one regex pass replaces every palette color with whatever the sink asks
-  for (dark value, CSS variable, anything else). One pass matters: chained `replace` calls could
-  re-replace a value an earlier substitution produced (the palette has near-duplicates such as
-  `#FFFFFF`/`#FFFFFE`).
+- `ColorPalette.recolor`: one regex pass replaces every palette color with whatever the caller
+  returns for it (dark value, CSS variable, anything else). One pass matters: chained `replace`
+  calls could re-replace a value an earlier substitution produced (the palette has near-duplicates
+  such as `#FFFFFF`/`#FFFFFE`).
 
 ## Sinks (`sinks/`) and artifacts (`artifacts/`)
 
@@ -282,11 +284,13 @@ description-only change. Sinks are independent and nothing after the source's th
 the network, so they are applied concurrently.
 
 A sink receives only the **light SVG** and the **palette**. How a destination expresses a theme is
-its own business: the package sink derives dark and CSS-variable SVGs because its consumers are web
-and React Native; a native asset catalog would derive something else. `artifacts/` holds the shared
-pure helpers for those derivations. They return content; sinks decide paths. Two sinks wanting the
-same artifact compute it twice, which is cheap for everything except PNG; a per-run memo in
-`rasterizePng` is the fix if a second PNG consumer appears.
+its own business: the package sink uses `palette.toDarkSvg` for its dark files and
+`palette.recolor` with `var(--<prefix>-<name>)` for its themeable ones, because its consumers are
+web and React Native; a native asset catalog would recolor to something else. The CSS-variable
+naming is therefore the sink's detail, not a shared helper. `artifacts/` holds the shared pure
+helpers for the rest (PNG, module wrappers, data files). They return content; sinks decide paths.
+Two sinks wanting the same artifact compute it twice, which is cheap for everything except PNG; a
+per-run memo in `rasterizePng` is the fix if a second PNG consumer appears.
 
 ### `IllustrationsPackageSink`
 

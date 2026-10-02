@@ -1,8 +1,4 @@
 /** One illustration color: its CSS-variable name and its hex value in each color mode. */
-export type PaletteColor = { name: string; light: string; dark: string };
-
-export type ColorPalette = PaletteColor[];
-
 /** A published illustration component as the source reports it, before its SVG is downloaded. */
 export type Component = {
   nodeId: string;
