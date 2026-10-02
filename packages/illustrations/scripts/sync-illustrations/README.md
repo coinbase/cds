@@ -7,12 +7,12 @@ scratch runs, see [`packages/illustrations/DOCS.md`](../../DOCS.md).
 
 Designers publish illustration components in the
 [CDS Illustrations Figma library](https://www.figma.com/design/LmkJatvMRVzNgfiIkJDb99). The sync
-turns that library into `packages/illustrations/src/__generated__`: SVG and PNG assets for the CDN,
-JS modules for web and mobile, and the TypeScript data (`names`, `versionMap`, `descriptionMap`,
-`<Type>Name` unions) the components and the docsite are built on. It also writes an nx version plan
-so the package is released with the right semver bump. It is run by hand through
-`yarn sync-illustrations`, which wraps it in a git workflow and regenerates web's stories afterwards
-(see _Around the sync_).
+turns that library into everything the repo derives from it: `packages/illustrations/src/__generated__`
+(SVG and PNG assets for the CDN, JS modules for web and mobile, and the TypeScript data (`names`,
+`versionMap`, `descriptionMap`, `<Type>Name` unions) the components and the docsite are built on)
+and web's illustration stories. It also writes an nx version plan so the package is released with
+the right semver bump. It is run by hand with `yarn nx run illustrations:sync-illustrations`, which
+does its work on a fresh `illustrations/YYYY-MM-DD` branch and pushes it (see _The shell_).
 
 Three facts shape the design:
 
@@ -66,18 +66,20 @@ The sync is an **engine between a source and a set of sinks**, wrapped in a shel
   sink's changes and applies them. It knows nothing about Figma, file formats, theming, git or the
   CLI;
 - a `Sink` is a destination (a package, a repository, a directory) and owns how illustrations appear
-  there. `IllustrationsPackageSink` is the one that exists today;
+  there. `IllustrationsPackageSink` fills `src/__generated__`; `WebStoriesSink` fills web's
+  `__stories__`;
 - `artifacts/` are pure helpers sinks build files from: PNG rasterization, module wrappers,
   TypeScript data files, a prettier-style printer;
 - `index.ts`, the shell, is the nx target: config, CLI args, writing the manifest and version plan,
-  the summary. Git and other packages' concerns live in the repo-level script.
+  the summary, and the release branch (`git.ts`).
 
 Inside the engine the steps are plain functions over plain data, one module each. The two
 abstractions, source and sink, sit at the two places where the outside world varies.
 
 ```
-index.ts                 shell: CLI args, version plan, manifest, summary
+index.ts                 shell: CLI args, release branch, version plan, manifest, summary
 config.ts                the source, the sinks, paths, flags
+git.ts                   ReleaseBranch: start / publish / abandon illustrations/YYYY-MM-DD
 sync.ts                  engine: runSync(source, manifest, sinks) -> SyncOutcome
   selectComponents.ts      dedupe, incremental filter    -> which nodes to download
   optimizeSvg.ts           svgo config, color normalization and check, viewBox size
@@ -95,6 +97,7 @@ source/
 sinks/
   Sink.ts                  the sink contract: accepts, has, apply(SinkChanges)
   IllustrationsPackageSink.ts   src/__generated__ of this package
+  WebStoriesSink.ts        packages/web/src/illustrations/__stories__
   files.ts                 write / remove / exists / relative import helpers
 artifacts/
   png.ts                   rasterizePng
@@ -307,8 +310,24 @@ Fills `src/__generated__`, the one package every CDS platform consumes:
 Asset files carry the version so the CDN can cache them forever. `has()` checks all eight asset
 files; the data files are rebuilt from the full set on every `apply`.
 
-A second destination is a new `Sink` subclass plus one line in `config.sinks`; the e2e test's
-`MirrorSink` (flat, light-only SVGs in another directory, about 20 lines) shows the shape.
+### `WebStoriesSink`
+
+Writes web's `<Type>.stories.tsx` (the example illustration and the percy sheets) into
+`packages/web/src/illustrations/__stories__`. The stories depend only on each type's set of names,
+so the sink is the minimal set-derived sink: `has()` is always true (there is no per-illustration
+file to restore, so it never triggers a download) and `apply` rewrites every type's file from
+`illustrations`, ignoring `remove`, `write` and `palette`. The template is emitted already in
+prettier's style; a test asserts the committed stories are exactly what the committed manifest
+renders to, so the two cannot drift.
+
+This used to be a separate script that the sync shelled out to, and briefly a web nx target chained
+by a repo-level workflow script. Both needed a second step to run after the sync; as a sink it is
+one more line in `config.sinks` and shares the sync's guarantees (nothing written on failure, all
+destinations updated by one run). The trade-off is that tooling in this package knows web's story
+API (`getIllustrationSheet`, `IllustrationExample`, the per-type scale), confined to this one file.
+
+A further destination is another `Sink` subclass plus one line in `config.sinks`; the e2e test's
+`MirrorSink` (flat, light-only SVGs in another directory, about 20 lines) is the smallest example.
 
 ### Generated TypeScript is printed, not formatted
 
@@ -348,29 +367,24 @@ fixed field order, so unrelated edits never reorder the file. Entries hold no fi
 
 `colors` is the palette the assets were derived with (see _The light SVG and the color palette_).
 
-## Around the sync
+## The shell (`index.ts`, `git.ts`)
 
-The sync target writes files and exits. Everything around it is owned elsewhere:
-
-- **Git workflow** — `scripts/syncIllustrations.ts` at the repo root (`yarn sync-illustrations`)
-  creates the `illustrations/YYYY-MM-DD` branch from the default branch, runs the sync target, runs
-  `web:generate-illustration-stories`, then commits and pushes, or deletes the branch when a step
-  failed or nothing changed.
-- **Docsite stories** — `packages/web/scripts/generateIllustrationStories.ts` renders web's
-  `<Type>.stories.tsx` from the `names` the illustrations package publishes. It is web's artifact,
-  derived from web's dependency, so it lives in web with its own nx target. It used to be shelled out
-  to from here, which tied the sync to one destination.
-
-This keeps the sync free of knowledge about git or other packages, and makes each piece runnable on
-its own: the sync target for a scratch run, the stories target after a manual edit, the workflow
-script for a release.
+`index.ts` is the only module with side effects on the repository. It reads the manifest, calls
+`runSync`, writes the version plan and the new manifest when the diff has changes, and prints the
+summary. Around that, `ReleaseBranch` (`git.ts`) gives a release its git workflow: `start` requires
+a clean tree and creates `illustrations/YYYY-MM-DD` from the latest default branch, `publish`
+commits and pushes what the run produced, `abandon` discards the run and deletes the branch. The
+branch is abandoned when the sync throws, when Figma had nothing new, or when nothing changed, so a
+failed or empty run never leaves a half-written tree behind. Scratch runs and `--no-git` skip the
+branch and just write files.
 
 ## Configuration and scratch runs
 
 `config.ts` is one object: the `source` (a `FigmaSource` over the illustrations and colors file
-ids), the `sinks` (an `IllustrationsPackageSink` with its CSS variable prefix) and the paths. Two
-environment variables redirect a run for testing: `SYNC_ILLUSTRATIONS_SCRATCH_DIR` writes
-everything (generated files, manifest, version plan) under a scratch directory;
+ids), the `sinks` (an `IllustrationsPackageSink` with its CSS variable prefix and a `WebStoriesSink`),
+the paths and the `git` flag. Two environment variables redirect a run for testing:
+`SYNC_ILLUSTRATIONS_SCRATCH_DIR` writes everything (generated files, stories, manifest, version
+plan) under a scratch directory and turns the git workflow off;
 `SYNC_ILLUSTRATIONS_FIGMA_FILE_ID` points the source at another file, normally the test fixture
 library that mirrors the real file's layout. Scratch runs are the integration check for
 `FigmaSource` against the real API; the engine's behaviour is tested in memory.
@@ -380,7 +394,8 @@ library that mirrors the real file's layout. Scratch runs are the integration ch
 Three layers, none of which mocks a module:
 
 1. **End to end in memory** (`sync.test.ts`): `runSync` with an `InMemorySource`, the real
-   `IllustrationsPackageSink` and a small `MirrorSink` writing to temp directories, run repeatedly
+   `IllustrationsPackageSink` and `WebStoriesSink` and a small `MirrorSink` writing to temp
+   directories, run repeatedly
    while the source is mutated: first publish, no-op run, description-only change, artwork change,
    rename, case-only rename (rejected), node re-created under the same name, duplicate name,
    deletion, an export with an unsupported color (rejected, nothing written), `syncAll`, a sink
@@ -393,9 +408,10 @@ Three layers, none of which mocks a module:
 3. **Adapters and formats against recorded production data**: the real `/components` response
    (trimmed, keeping duplicate names, both `Hero Square/` and `HeroSquare/` prefixes and a name with
    a leading space), the real variables responses, raw SVG exports exactly as Figma returns them
-   (including the first gradient illustration), and the exact files a previous sync committed to
-   `src/__generated__`. Optimization, palette substitution, hashing and every output format are
-   asserted byte-for-byte against those artefacts.
+   (including the first gradient illustration), the exact files a previous sync committed to
+   `src/__generated__`, and the committed web stories against the committed manifest. Optimization,
+   palette substitution, hashing and every output format are asserted byte-for-byte against those
+   artefacts.
 
 What the tests cannot cover is the Figma API itself; that is what scratch runs against the test
 fixture library are for.
@@ -408,6 +424,10 @@ fixture library are for.
 - **No stored output paths** in the manifest (see _The `Illustration` record_).
 - **No per-item retry or partial-failure handling.** A failed download or a rejected SVG fails the
   run before anything is written; rerun it after the fix. A half-written `__generated__` would be
-  worse than a clean failure, and the workflow deletes the branch on a non-zero exit.
+  worse than a clean failure, and the shell abandons the release branch on failure.
+- **No "refresh sinks without Figma" command.** Set-derived files (data files, stories) are only
+  rewritten by a run that found work, so a template change in a sink needs a Figma change or
+  `--sync-all` to propagate. Applying every sink from the manifest's set with no download would be a
+  small addition to the shell if that becomes frequent.
 - **No deletion of a type's index files when its last illustration is deleted.** `src/index.ts`
   statically exports every type, so an empty type would already be a hand-edit.

@@ -55,21 +55,6 @@
         "command": "stylelint \"**/*.{css,ts,tsx,js,jsx}\" --formatter string",
         "cwd": "{projectRoot}"
       }
-    },
-    "generate-illustration-stories": {
-      "executor": "nx:run-commands",
-      "dependsOn": [
-        {
-          "projects": [
-            "illustrations"
-          ],
-          "target": "build"
-        }
-      ],
-      "options": {
-        "command": "tsx ./scripts/generateIllustrationStories.ts",
-        "cwd": "{projectRoot}"
-      }
     }
   }
 }

@@ -50,10 +50,10 @@ nvm use
 yarn install
 ```
 
-4. Run the illustration sync workflow from the repo root. It creates a new `illustrations/YYYY-MM-DD` branch from `origin/master`, runs `illustrations:sync-illustrations` (assets, manifest, version plan), runs `web:generate-illustration-stories` (the docsite stories built from the new names), then commits and pushes the branch. If a step fails or nothing changed, the branch is deleted again
+4. Run the illustration sync. It creates a new `illustrations/YYYY-MM-DD` branch from `origin/master`, writes the generated assets, web's illustration stories, the manifest and a version plan, then commits and pushes the branch. If it fails or nothing changed, the branch is deleted again
 
 ```sh
-yarn sync-illustrations
+yarn nx run illustrations:sync-illustrations
 ```
 
 5. Open a PR in [github.com/coinbase/cds](https://github.com/coinbase/cds). Title the PR exactly the same as the commit message: `feat: Publish illustrations YYYY-MM-DD`. Take note of the PR number for the next step
@@ -94,12 +94,12 @@ You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 **Force a full re-sync** — If you need to re-sync all illustrations regardless of when they were last updated, pass the `--sync-all` flag:
 
 ```sh
-yarn sync-illustrations --sync-all
+yarn nx run illustrations:sync-illustrations --sync-all
 ```
 
-**Repo is not clean** — The workflow requires a clean working tree. Stash or commit any pending changes before running the sync.
+**Repo is not clean** — The sync requires a clean working tree so that it can create the release branch. Stash or commit any pending changes before running it.
 
-**Running the pieces separately** — `yarn nx run illustrations:sync-illustrations` only syncs (no git); `yarn nx run web:generate-illustration-stories` only regenerates web's stories from the current illustrations. The workflow script chains them.
+**Syncing without the release branch** — Pass `--no-git` to write into the current branch instead of creating and pushing `illustrations/YYYY-MM-DD`, for example to inspect a `--sync-all` locally. Scratch runs (below) never touch git.
 
 **"`<type>/<name>` has an SVG the sync cannot publish"** — A layer uses a color theming cannot
 handle (an alpha hex such as `#0052FF80`, `currentColor`, `rgba()`, `var()`); the message names the
@@ -148,7 +148,8 @@ export SYNC_ILLUSTRATIONS_FIGMA_FILE_ID=qtdIR0QTyK0NZcZoAeJmS8
 yarn nx run illustrations:sync-illustrations
 ```
 
-The scratch directory receives `__generated__/`, `manifest.json` and `version-plans/`; run again
+The scratch directory receives `__generated__/`, `web-stories/`, `manifest.json` and
+`version-plans/`; run again
 after editing and re-publishing the library to see the incremental diff. Omit
 `SYNC_ILLUSTRATIONS_FIGMA_FILE_ID` to scratch-run against the real file (reads only). Remember that
 the `/components` endpoint only lists _published_ components, so publish the library after each

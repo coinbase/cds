@@ -4,13 +4,17 @@ import path from 'node:path';
 import { config } from './config';
 import { hasChanges, type SyncResults } from './diffIllustrations';
 import { generateVersionPlan } from './generateVersionPlan';
+import { ReleaseBranch } from './git';
 import { type Component, type Illustration, illustrationKey } from './illustration';
 import { readManifest, writeManifest } from './manifest';
 import { runSync } from './sync';
 
 const args = process.argv.slice(2);
 const syncAll = config.syncAll || args.includes('--sync-all');
+const useGit = config.git && !args.includes('--no-git');
 const todaysDate = new Date().toISOString().slice(0, 10);
+/** Only date-derived content: illustration names come from Figma and must never reach the shell. */
+const commitMessage = `feat: Publish illustrations ${todaysDate}`;
 
 const logTable = (heading: string, illustrations: (Illustration | Component)[]) => {
   console.log(`\n${heading} (${illustrations.length}):`);
@@ -46,9 +50,8 @@ const logSummary = (results: SyncResults) => {
   }
 };
 
-const main = async () => {
-  console.log('Starting illustration sync...');
-
+/** Runs the sync and records it; returns whether anything was produced. */
+const sync = async () => {
   if (!fs.existsSync(config.versionPlansPath))
     fs.mkdirSync(config.versionPlansPath, { recursive: true });
 
@@ -70,11 +73,11 @@ const main = async () => {
 
   if (outcome.status === 'nothing-to-sync') {
     console.log(`Figma file has no updates since ${manifest.lastUpdated}, skipping sync...`);
-    return;
+    return false;
   }
   if (outcome.status === 'no-changes') {
     console.log('Downloaded illustrations are identical to the last sync, skipping sync...');
-    return;
+    return false;
   }
 
   if (hasChanges(outcome.diff)) {
@@ -95,6 +98,31 @@ const main = async () => {
 
   if (outcome.backfilled.length) {
     logTable('Restored illustrations a destination was missing', outcome.backfilled);
+  }
+  return true;
+};
+
+/**
+ * With git, the sync runs on a fresh `illustrations/YYYY-MM-DD` branch that is pushed when it
+ * produced something and deleted when it did not or failed, so a failed run never leaves a
+ * half-written tree behind.
+ */
+const main = async () => {
+  console.log('Starting illustration sync...');
+  if (!useGit) return sync();
+
+  const release = new ReleaseBranch(config.repoRoot, todaysDate);
+  release.start();
+  let produced = false;
+  try {
+    produced = await sync();
+  } catch (error) {
+    release.abandon();
+    throw error;
+  }
+  if (!produced || !release.publish(commitMessage)) {
+    console.log('Nothing to publish; deleting the release branch.');
+    release.abandon();
   }
 };
 

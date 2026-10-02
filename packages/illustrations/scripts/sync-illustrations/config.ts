@@ -2,6 +2,7 @@ import path from 'node:path';
 
 import { IllustrationsPackageSink } from './sinks/IllustrationsPackageSink';
 import type { Sink } from './sinks/Sink';
+import { WebStoriesSink } from './sinks/WebStoriesSink';
 import { FigmaSource } from './source/FigmaSource';
 import type { IllustrationSource } from './source/IllustrationSource';
 
@@ -18,6 +19,8 @@ type SyncIllustrationsConfig = {
   sinks: Sink[];
   /* Whether to force sync all illustrations regardless of when they were last updated. Can also be passed as an argument to the script with --sync-all. */
   syncAll: boolean;
+  /* Whether to run on a fresh `illustrations/YYYY-MM-DD` branch and push it. Off for scratch runs; `--no-git` turns it off for a run. */
+  git: boolean;
 };
 
 const MONOREPO_ROOT = process.env.PROJECT_CWD ?? process.env.NX_MONOREPO_ROOT;
@@ -36,6 +39,9 @@ const GENERATED_DIR = path.resolve(
   OUTPUT_ROOT,
   SCRATCH_DIR ? '__generated__' : 'src/__generated__',
 );
+const WEB_STORIES_DIR = SCRATCH_DIR
+  ? path.resolve(OUTPUT_ROOT, 'web-stories')
+  : path.resolve(MONOREPO_ROOT, 'packages/web/src/illustrations/__stories__');
 
 export const config: SyncIllustrationsConfig = {
   source: new FigmaSource({
@@ -48,6 +54,10 @@ export const config: SyncIllustrationsConfig = {
     ? path.resolve(OUTPUT_ROOT, 'version-plans')
     : path.resolve(MONOREPO_ROOT, '.nx/version-plans'),
   manifestPath: path.resolve(OUTPUT_ROOT, 'manifest.json'),
-  sinks: [new IllustrationsPackageSink({ dir: GENERATED_DIR, cssVariablePrefix: 'illustration' })],
+  sinks: [
+    new IllustrationsPackageSink({ dir: GENERATED_DIR, cssVariablePrefix: 'illustration' }),
+    new WebStoriesSink({ dir: WEB_STORIES_DIR }),
+  ],
   syncAll: false,
+  git: !SCRATCH_DIR,
 };

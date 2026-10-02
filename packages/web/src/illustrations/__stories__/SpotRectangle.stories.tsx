@@ -1,6 +1,6 @@
 /**
  * DO NOT MODIFY
- * Generated from yarn nx run web:generate-illustration-stories
+ * Generated from yarn nx run illustrations:sync-illustrations
  */
 
 import { SpotRectangle } from '../SpotRectangle';

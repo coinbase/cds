@@ -11,6 +11,7 @@ import { type Manifest, manifestIllustrations, readManifest, writeManifest } fro
 import { allFilesExist, removeFile, writeFile } from '../sinks/files';
 import { IllustrationsPackageSink } from '../sinks/IllustrationsPackageSink';
 import { includeTypes, Sink, type SinkChanges } from '../sinks/Sink';
+import { WebStoriesSink } from '../sinks/WebStoriesSink';
 import { buildColorPalette } from '../source/fetchColorPalette';
 import { InMemorySource } from '../source/InMemorySource';
 import { runSync, type SyncOutcome } from '../sync';
@@ -121,6 +122,7 @@ const sync = async (syncAll = false) => {
       new IllustrationsPackageSink({ dir }),
       // Exercises `include`: the mirror only wants spot icons.
       ...(mirrorDir ? [new MirrorSink(mirrorDir, { include: includeTypes('spotIcon') })] : []),
+      new WebStoriesSink({ dir: path.join(dir, 'stories') }),
     ],
     syncAll,
   });
@@ -173,6 +175,9 @@ describe('runSync, end to end against an in-memory source', () => {
 
     expect(read('spotIcon/types/SpotIconName.ts')).toContain(`export type SpotIconName = '2fa';`);
     expect(read('spotIcon/data/versionMap.ts')).toContain(`{ '2fa': 0 }`);
+    expect(read('stories/SpotIcon.stories.tsx')).toContain(
+      `<SpotIcon name="2fa" scaleMultiplier={3} />`,
+    );
     expect(Object.keys(manifest.items)).toEqual(['2:33979', '4390:695']);
     expect(entry('2fa')).toMatchObject({ nodeId: '4390:695', version: 0, width: 32, height: 32 });
     expect(Object.keys(manifest.colors)).toHaveLength(15);
@@ -219,6 +224,9 @@ describe('runSync, end to end against an in-memory source', () => {
     );
     expect(read('spotIcon/data/svgEsmMap.ts')).toContain(
       `import('../svgJs/esm/themeable/twoFactor-0.js')`,
+    );
+    expect(read('stories/SpotIcon.stories.tsx')).toContain(
+      `<SpotIcon name="twoFactor" scaleMultiplier={3} />`,
     );
   });
 
