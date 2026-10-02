@@ -31,6 +31,13 @@
 
 ### Testing instructions
 
+## Preview deployment
+
+Check to deploy previews for this PR. Leave unchecked to skip.
+
+- [ ] Deploy documentation preview
+- [ ] Deploy Storybook preview
+
 ## Illustrations/Icons Checklist
 
 Required if this PR changes files under `packages/illustrations/**` or `packages/icons/**`
