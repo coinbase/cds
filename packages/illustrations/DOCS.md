@@ -2,23 +2,28 @@
 
 ## Illustration Assets
 
-Each illustration is published in several forms, all generated from one Figma component:
+Each illustration is drawn once in Figma, as a light-mode component in the
+[CDS Illustrations library](https://www.figma.com/design/LmkJatvMRVzNgfiIkJDb99). That light SVG is
+the canonical artifact; every other form is derived from it by the sync:
 
-- **SVG** — light and dark variants, plus a themeable variant whose fills are CSS variables
+- **SVG** — the light original, a dark variant, and a themeable variant whose fills are CSS variables
 - **PNG** — light and dark rasterizations, used where SVG is not an option
-- **JS/ESM maps** — lazily-required SVG strings consumed by the web and mobile packages
+- **JS/ESM modules** — the SVG strings wrapped for the web and mobile packages, with lazy maps
 
-Assets are versioned per illustration rather than per release: an illustration's files are named
-`<name>-<version>` and the version increments whenever its artwork changes. `versionMap.ts` records
-the current version for each name, which is how consumers build CDN URLs such as
+The dark and themeable variants are produced by color substitution. Illustrations use a fixed
+palette of 15 `illustration/*` color variables, each with a light and a dark value, defined in the
+[CDS colors Figma file](https://www.figma.com/design/AH4N0fma2EvI30IltjBGPy) and read through the
+[Variables API](https://developers.figma.com/docs/rest-api/#variables) on every run (this needs
+Enterprise org access and the `file_variables:read` scope on the token). The sync swaps each light
+palette color in the SVG for its dark value to make the dark variant, and for
+`var(--illustration-<name>)` to make the themeable one. Colors outside the palette are left as
+drawn in every variant.
+
+Assets are versioned per illustration, not per release: files are named `<name>-<version>` and the
+version increments whenever the artwork changes. `versionMap.ts` records the current version of each
+name, which is how consumers build CDN URLs such as
 `https://static-assets.coinbase.com/design-system/illustrations/pictogram/light/someIllustration-2.svg`.
 This is also why renaming an illustration resets its version to `0`.
-
-Colors come from a separate Figma file through the
-[Variables API](https://developers.figma.com/docs/rest-api/#variables), which supplies the light and
-dark value of every illustration color. The sync uses those pairs to derive the dark variant from
-the light artwork design provides, and to substitute CSS variables for the themeable variant.
-Reading them requires Enterprise org access and the `file_variables:read` scope on the token.
 
 ## Syncing Illustrations
 
@@ -103,7 +108,7 @@ exports these forms, so the usual cause is a pasted or hand-edited SVG; express 
 layer opacity (exported as `fill-opacity`) rather than a color alpha, republish the library and
 re-run.
 
-**An illustration's light and dark variants look identical** — The illustration uses a color that the Variables API did not return a dark value for, so the sync fell back to the light fill. Ask design to bind the layer to a published illustration color variable rather than a raw hex value.
+**An illustration's light and dark variants look identical** — Its layers use colors outside the illustration palette, which the sync leaves as drawn in every variant. Ask design to bind the layers to the published `illustration/*` color variables rather than raw hex values.
 
 **"No published color variables named "illustration/..." found"** or a 403 from the variables endpoints — The Figma token is missing the `file_variables:read` scope or Enterprise access the sync needs. Retrieve a current token from the Config Service. The sync refuses to run without the palette rather than silently publishing light-only assets.
 

@@ -1,60 +1,84 @@
 # sync-illustrations: design
 
-This document explains how the illustration sync is built and why. For how to run it, token setup,
-troubleshooting and scratch runs against the test fixture file, see
-[`packages/illustrations/DOCS.md`](../../DOCS.md).
+How the illustration sync is built and why. For running it, token setup, troubleshooting and
+scratch runs, see [`packages/illustrations/DOCS.md`](../../DOCS.md).
 
 ## What the sync does
 
-Designers publish illustration components in a Figma library. The sync turns that library into the
-contents of `packages/illustrations/src/__generated__`: SVG and PNG assets for the CDN, JS modules
-for web and mobile, and the TypeScript data (`names`, `versionMap`, `descriptionMap`, `<Type>Name`
-unions) the components and the docsite are built on. It writes an nx version plan so the package is
-released with the right semver bump. It is run by hand, through the repo-level
-`yarn sync-illustrations`, which wraps it in the git workflow and regenerates web's illustration
-stories afterwards (see _Around the sync_ below).
+Designers publish illustration components in the
+[CDS Illustrations Figma library](https://www.figma.com/design/LmkJatvMRVzNgfiIkJDb99). The sync
+turns that library into `packages/illustrations/src/__generated__`: SVG and PNG assets for the CDN,
+JS modules for web and mobile, and the TypeScript data (`names`, `versionMap`, `descriptionMap`,
+`<Type>Name` unions) the components and the docsite are built on. It also writes an nx version plan
+so the package is released with the right semver bump. It is run by hand through
+`yarn sync-illustrations`, which wraps it in a git workflow and regenerates web's stories afterwards
+(see _Around the sync_).
 
 Three facts shape the design:
 
-1. **Consumers address assets by `type/name/version`.** Web builds CDN URLs from
-   `versionMap` (`.../spotIcon/light/wallet-3.svg`), mobile requires `svgJs/cjs/light/wallet-3.js`
-   through `svgJsMap`. Every file path is therefore a pure function of an illustration's `type`,
-   `name` and `version`, and the version must change whenever the artwork changes so that CDN
-   caches never serve stale content.
-2. **Figma is the source of truth, the manifest is the memory.** Figma only tells us what exists
-   now. To know what was added, changed, renamed or deleted since the last sync, and to keep version
-   numbers monotonic, the sync persists `manifest.json` and reconciles against it.
-3. **There is one light design; everything else is derived.** Design provides a light SVG using a
-   fixed palette of 15 `illustration/*` color variables. Each destination derives what it needs from
-   that SVG and the palette: the illustrations package makes a dark variant by swapping each palette
-   color for its dark value and a themeable one by swapping it for `var(--illustration-<name>)`;
-   another destination may want neither.
+1. **Consumers address assets by `type/name/version`.** Web builds CDN URLs from `versionMap`
+   (`.../spotIcon/light/wallet-3.svg`); mobile requires `svgJs/cjs/light/wallet-3.js` through
+   `svgJsMap`. Every file path is a function of `type`, `name` and `version`, and the version must
+   change whenever the artwork changes so CDN caches never serve stale content.
+2. **Figma is the source of truth; the manifest is the memory.** Figma only says what exists now.
+   To know what was added, changed, renamed or deleted since the last sync, and to keep versions
+   monotonic, the sync persists `manifest.json` and reconciles against it.
+3. **The light SVG is canonical; everything else is derived from it.** See the next section.
+
+## The light SVG and the color palette
+
+Design draws one version of each illustration: the light one. Its SVG export, after optimization, is
+the **canonical artifact**. The manifest hash is computed from it, so a change to it (and only to it)
+bumps the version. Every other form of the illustration is derived from it at sync time and never
+drawn or stored separately:
+
+- **dark SVG** — the light SVG with each palette color replaced by that color's dark value;
+- **themeable SVG** — the light SVG with each palette color replaced by `var(--illustration-<name>)`,
+  so web and mobile can theme it at runtime;
+- **PNGs** — rasterizations of the light and dark SVGs;
+- **JS modules** — the SVG strings wrapped for CommonJS and ESM.
+
+The **color palette** is what makes the dark and themeable derivations possible. Illustrations are
+drawn with a fixed set of 15 `illustration/*` color variables (`primary`, `gray`, `positive`,
+`accent-1`, …), each with a light and a dark value, defined in the
+[CDS colors Figma file](https://www.figma.com/design/AH4N0fma2EvI30IltjBGPy) and read through the
+Variables API on every run (`source/fetchColorPalette`). Because a light SVG only ever contains
+palette colors as uppercase 6-digit hex, deriving the dark variant is a single text substitution of
+each light hex for its dark counterpart, and the themeable variant the same substitution for a CSS
+variable. The palette is recorded in the manifest so a color change in Figma shows up in the same
+PR as the assets it recolors. If the palette cannot be read the run fails; publishing light-only
+assets silently would be worse.
+
+Two consequences follow. Colors that are not in the palette are left as they are in every variant,
+which is intended (a brand logo stays its brand color in dark mode). And a color written in any
+form other than 6-digit hex would escape the substitution and ship with its light value, which is
+why `optimizeSvg` rejects such colors (see _SVG processing_).
 
 ## Shape of the code
 
-The sync is an **engine between a source and a set of sinks**, wrapped in a release workflow:
+The sync is an **engine between a source and a set of sinks**, wrapped in a shell:
 
-- an `IllustrationSource` answers three questions (what is published, give me these SVGs, what is
-  the palette); Figma is the production implementation;
-- `runSync` (the engine) reconciles what the source reports with the manifest of the previous run,
-  plans each sink's changes and applies them; it knows nothing about Figma, file formats, theming,
-  git or the CLI;
-- a `Sink` is a destination — a package, a repository, a directory — and owns everything about how
-  illustrations appear there; `IllustrationsPackageSink` is the one that exists today;
-- `artifacts/` are pure helpers sinks build their files from: palette-color replacement, PNG
-  rasterization, module wrappers, the TypeScript data files, a prettier-style printer;
-- `index.ts` (the shell) is the nx target: config, CLI args, recording the run (manifest, version
-  plan) and the summary. Git and other packages' concerns live outside, in the repo-level script.
+- an `IllustrationSource` answers three questions: what is published, give me these SVGs, what is
+  the palette. Figma is the production implementation;
+- `runSync`, the engine, reconciles what the source reports with the previous manifest, plans each
+  sink's changes and applies them. It knows nothing about Figma, file formats, theming, git or the
+  CLI;
+- a `Sink` is a destination (a package, a repository, a directory) and owns how illustrations appear
+  there. `IllustrationsPackageSink` is the one that exists today;
+- `artifacts/` are pure helpers sinks build files from: palette-color replacement, PNG
+  rasterization, module wrappers, TypeScript data files, a prettier-style printer;
+- `index.ts`, the shell, is the nx target: config, CLI args, writing the manifest and version plan,
+  the summary. Git and other packages' concerns live in the repo-level script.
 
 Inside the engine the steps are plain functions over plain data, one module each. The two
-abstractions, source and sink, sit exactly at the two places where the outside world varies.
+abstractions, source and sink, sit at the two places where the outside world varies.
 
 ```
 index.ts                 shell: CLI args, version plan, manifest, summary
 config.ts                the source, the sinks, paths, flags
 sync.ts                  engine: runSync(source, manifest, sinks) -> SyncOutcome
   selectComponents.ts      dedupe, incremental filter    -> which nodes to download
-  optimizeSvg.ts           svgo config, hex normalization, viewBox size
+  optimizeSvg.ts           svgo config, color normalization and check, viewBox size
   hashSvg.ts               the manifest hash of the light SVG
   diffIllustrations.ts     reconcile fetched vs manifest -> IllustrationDiff
 illustration.ts          the domain records: Component, Illustration, ColorPalette, sort orders
@@ -107,35 +131,33 @@ type IllustrationSource = {
 };
 ```
 
-This is the complete surface the sync needs from the outside world. `FigmaSource` implements it
-with three thin modules over `@cds/figma-api` (`/components`, `/images` + download, the Variables
-API); nothing outside `source/` imports Figma types or clients.
+This is everything the sync needs from the outside world. `FigmaSource` implements it with three
+thin modules over `@cds/figma-api` (`/components`, `/images` + download, the Variables API); nothing
+outside `source/` imports Figma types or clients.
 
-The interface exists for testability, not polymorphism. With `InMemorySource` the **entire
-pipeline runs inside jest**: a test constructs components and raw SVGs, runs `runSync` with the
-real package sink into a temp directory, mutates the source the way a designer would (rename, delete,
-re-draw, re-create a node, publish a duplicate name) and runs it again. Before the interface, those
-behaviours could only be exercised against a published Figma library, which meant a manual
-publish step between every mutation. The source returns _raw_ exports so that optimization, which
-is part of the sync's behaviour, is covered by those tests too.
+The interface exists for testability, not polymorphism. With `InMemorySource` the whole pipeline
+runs inside jest: a test builds components and raw SVGs, runs `runSync` with the real package sink
+into a temp directory, mutates the source the way a designer would (rename, delete, redraw,
+re-create a node, publish a duplicate name) and runs it again. Before the interface, those cases
+could only be exercised against a published Figma library, with a manual publish between each
+mutation. The source returns _raw_ exports so that optimization is covered by the same tests.
 
 ## The engine (`sync.ts`)
 
 ```ts
-runSync({ source, manifest, outputs, cssVariablePrefix, syncAll, log }): Promise<SyncOutcome>
+runSync({ source, manifest, sinks, syncAll, log }): Promise<SyncOutcome>
 
 type SyncOutcome = { duplicates: Component[] } & (
-  | { status: 'nothing-to-sync' } // no component updated since manifest.lastUpdated
+  | { status: 'nothing-to-sync' } // no component updated since manifest.lastUpdated, nothing missing
   | { status: 'no-changes' } // downloaded, but every hash and description matched
-  | { status: 'synced'; diff: IllustrationDiff; palette: ColorPalette }
+  | { status: 'synced'; diff: IllustrationDiff; palette: ColorPalette; backfilled: Illustration[] }
 );
 ```
 
-The engine fetches, reconciles, plans and applies each sink, then hands back everything the caller
-needs to record the run. It deliberately does **not** write the manifest or the version plan, touch
-git, or read `process`: that keeps it callable from a test (or from another tool) with nothing but a
-source, a manifest object and some sinks, and it makes `index.ts` the only module with side
-effects on the repository.
+The engine fetches, reconciles, plans and applies each sink, then returns what the caller needs to
+record the run. It does **not** write the manifest or the version plan, touch git, or read
+`process`. That keeps it callable from a test with nothing but a source, a manifest object and some
+sinks, and makes `index.ts` the only module with side effects on the repository.
 
 ## The `Illustration` record
 
@@ -154,15 +176,15 @@ type Illustration = {
 };
 ```
 
-This is the only record that moves through the system: `diffIllustrations` produces it, the
-manifest stores it, and sinks receive it. Notably it contains **no file paths**. Earlier
-versions of the sync stored every output path in the manifest and rewrote those strings on rename
-and re-version, which is where the rename bug lived (the string replacement never matched the real
-paths). Deriving paths from `type/name/version` at the point of writing removes that whole class of
-bug and lets a destination change its layout without a manifest migration.
+This is the one record that moves through the system: `diffIllustrations` produces it, the manifest
+stores it, sinks receive it. It contains **no file paths**. Earlier versions stored every output path
+in the manifest and rewrote those strings on rename and re-version; that is where the rename bug
+lived (the replacement never matched the real paths). Deriving paths from `type/name/version` at
+write time removes that class of bug and lets a destination change its layout without a manifest
+migration.
 
-`type/name` (`illustrationKey`) is the identity consumers see; `nodeId` is the identity Figma
-sees. The diff uses both (below).
+`type/name` (`illustrationKey`) is the identity consumers see; `nodeId` is the identity Figma sees.
+The diff uses both.
 
 ## Reconciliation (`diffIllustrations`)
 
@@ -178,8 +200,8 @@ type IllustrationDiff = {
 };
 ```
 
-For each fetched component, the previous entry is looked up by `nodeId`, falling back to
-`type/name` (designers sometimes delete and re-create a component; it keeps its version history and
+For each fetched component the previous entry is looked up by `nodeId`, falling back to `type/name`
+(designers sometimes delete and re-create a component; it keeps its version history and
 `createdAt`). Then, in order:
 
 | Situation                 | Outcome                                                                    |
@@ -193,52 +215,47 @@ For each fetched component, the previous entry is looked up by `nodeId`, falling
 | unchanged                 | carried forward                                                            |
 | previous entry, node gone | **deleted**, files removed                                                 |
 
-Previous entries that were not downloaded this run (incremental sync) but still exist in Figma are
-carried forward untouched. Renames and deletions are breaking changes; the version plan marks the
-release `major`.
+Previous entries not downloaded this run (incremental sync) but still in Figma are carried forward
+untouched. Renames and deletions are breaking changes; the version plan marks the release `major`.
 
 ### Why the hash formula looks odd
 
-`hash = sha256(JSON.stringify({ [nodeId]: lightSvg }))`. This is exactly what earlier versions of
-the sync computed, kept on purpose: a different formula would make every illustration's hash
-"change" on the first run and bump 1,600 versions at once, invalidating every CDN URL.
+`hash = sha256(JSON.stringify({ [nodeId]: lightSvg }))` is exactly what earlier versions computed,
+kept on purpose: a different formula would make every hash "change" on the first run and bump 1,600
+versions at once, invalidating every CDN URL.
 
 ## Incremental sync (`selectComponents`)
 
-Figma's `/components` endpoint returns every published component with its `updated_at` in one
-cheap call. The sync downloads only the components updated after `manifest.lastUpdated`, so a
-normal run touches a handful of SVGs; `--sync-all` downloads everything and is the way to pick up
-pipeline changes (a new svgo setting, a palette change) across the whole set.
+Figma's `/components` endpoint returns every published component with its `updated_at` in one cheap
+call. The sync downloads only components updated after `manifest.lastUpdated`, so a normal run
+touches a handful of SVGs. `--sync-all` downloads everything and is how pipeline changes (a new svgo
+setting, a palette change) are applied across the whole set.
 
-The same step drops **duplicate `type/name`** components, which the real file does contain. It
-keeps the node the manifest already knows (so the choice is stable run to run), otherwise the
-oldest, and warns about the rest.
+The same step drops **duplicate `type/name`** components, which the real file does contain. It keeps
+the node the manifest already knows (so the choice is stable from run to run), otherwise the oldest,
+and warns about the rest.
 
 ## SVG processing
 
-- `optimizeSvg`: svgo with `preset-default`, 2-decimal precision, and `convertColors` configured
-  so every color comes out as an **uppercase 6-digit hex** (CSS color names and `rgb()` included).
-  A custom plugin then normalizes 3-digit hex (`#abc` → `#AABBCC`) and **rejects** any color
-  attribute that is not 6-digit hex, `none` or `url(#id)`. Theming only recognizes 6-digit hex, so
-  an alpha hex (`#0052FF80`), `currentColor`, `rgba()` or `var()` would otherwise be published with
-  its light color in every variant, and nothing downstream (hash, diff, review of a one-line SVG,
-  tests pinned to known exports) would notice until the versioned asset was on the CDN. Figma never
-  exports those forms, so the check costs nothing on a healthy file; it fails the run before any
-  sink is touched, naming the attribute, the value, the component and its Figma URL. Gradients are
-  fine: `url(#…)` passes through and gradient stops are themed like any fill.
-- `artifacts/paletteColors`: a single regex pass replaces every palette color with whatever the sink
-  asks for (dark value, CSS variable, anything else). Single pass matters: chained `replace` calls
-  could re-replace a value an earlier substitution produced (the palette contains near-duplicates
-  such as `#FFFFFF`/`#FFFFFE`). Colors outside the palette pass through unchanged.
-- `source/fetchColorPalette` (part of `FigmaSource`): reads the published `illustration/*` variables from the colors file via the
-  Variables API (local + published, following aliases), and fails hard if a mode or the variables
-  are missing. Publishing light-only assets silently would be worse than a failed run.
+- `optimizeSvg`: svgo with `preset-default`, 2-decimal precision, and `convertColors` set so every
+  color (CSS names and `rgb()` included) comes out as **uppercase 6-digit hex**. A custom plugin then
+  expands 3-digit hex (`#abc` → `#AABBCC`) and **rejects** any color attribute that is not 6-digit
+  hex, `none` or `url(#id)`. An alpha hex (`#0052FF80`), `currentColor`, `rgba()` or `var()` would
+  escape palette substitution and ship with its light color in every variant, and nothing downstream
+  (hash, diff, review of a one-line SVG) would notice. Figma never exports those forms, so the check
+  costs nothing on a healthy file; when it fires, the run stops before any sink is touched and the
+  error names the attribute, the value, the component and its Figma URL. Gradients are fine:
+  `url(#…)` passes through and gradient stops are substituted like any fill.
+- `artifacts/paletteColors`: one regex pass replaces every palette color with whatever the sink asks
+  for (dark value, CSS variable, anything else). One pass matters: chained `replace` calls could
+  re-replace a value an earlier substitution produced (the palette has near-duplicates such as
+  `#FFFFFF`/`#FFFFFE`).
 
 ## Sinks (`sinks/`) and artifacts (`artifacts/`)
 
-A sink is a **destination**, not a file format: the illustrations package today, a mirror in
-another repository tomorrow. It owns the layout, the set of files and the theming of that
-destination, and is handed its resolved work once per run:
+A sink is a **destination**, not a file format: the illustrations package today, a mirror in another
+repository tomorrow. It owns the layout, the set of files and the theming of that destination, and
+receives its work once per run:
 
 ```ts
 abstract class Sink {
@@ -255,23 +272,21 @@ type SinkChanges = {
 };
 ```
 
-The engine owns the planning so that the invariants hold for every sink without each re-deriving
-them: removal before write, version bumps replacing old files, and **backfill** — before
-downloading, the engine asks each sink `has()` for every illustration and adds the missing ones to
-the download set and to that sink's `write`. Adding a sink (or wiping its directory) is therefore
-repaired by the next ordinary run, and a run with nothing updated and nothing missing does nothing.
-`apply` must be idempotent: on any run that found work, every sink is applied, possibly with empty
-`remove`/`write`, so that set-derived files refresh after e.g. a description-only change.
+The engine owns the planning so the invariants hold for every sink: removal before write, version
+bumps replacing old files, and **backfill**. Before downloading, the engine asks each sink `has()`
+for every illustration and adds the missing ones to the download set and to that sink's `write`.
+Adding a sink, or wiping its directory, is repaired by the next ordinary run; a run with nothing
+updated and nothing missing does nothing. `apply` must be idempotent: on any run that found work,
+every sink is applied, possibly with empty `remove`/`write`, so set-derived files refresh after a
+description-only change. Sinks are independent and nothing after the source's three calls touches
+the network, so they are applied concurrently.
 
-What a sink receives is deliberately minimal. The **light SVG** is design's source of truth and
-what the hash is computed from; the **palette** is a fact about the design system. How a
-destination expresses a theme is its own business: the package sink derives a dark SVG and a
-CSS-variable SVG because its consumers are web and React Native; a native asset catalog would
-derive something else. `artifacts/` holds the shared, pure helpers for those derivations
-(`replacePaletteColors` and its two common cases, `rasterizePng`, module wrappers, the data-file
-renderers). They return content; sinks decide paths. Two sinks wanting the same artifact compute it
-twice, which is cheap for all of them except PNG; a per-run memo in `rasterizePng` is the fix if a
-second PNG consumer ever appears.
+A sink receives only the **light SVG** and the **palette**. How a destination expresses a theme is
+its own business: the package sink derives dark and CSS-variable SVGs because its consumers are web
+and React Native; a native asset catalog would derive something else. `artifacts/` holds the shared
+pure helpers for those derivations. They return content; sinks decide paths. Two sinks wanting the
+same artifact compute it twice, which is cheap for everything except PNG; a per-run memo in
+`rasterizePng` is the fix if a second PNG consumer appears.
 
 ### `IllustrationsPackageSink`
 
@@ -293,16 +308,16 @@ A second destination is a new `Sink` subclass plus one line in `config.sinks`; t
 
 ### Generated TypeScript is printed, not formatted
 
-The data-file renderers print TypeScript with `artifacts/source.ts`, a small printer that
-follows the repo's prettier rules (100-column width, single quotes with prettier's quote
-preference, `quoteProps: as-needed` with Unicode-aware identifiers, prettier's arrow-function
-breaking). Running prettier at sync time was dropped because prettier 3 cannot load under jest's
-CommonJS environment, and `__generated__` is prettier-ignored anyway. The printer's output is
-verified byte-for-byte against the prettier-formatted files previous syncs committed.
+The data-file renderers print TypeScript with `artifacts/source.ts`, a small printer that follows
+the repo's prettier rules (100-column width, prettier's quote preference, `quoteProps: as-needed`
+with Unicode-aware identifiers, prettier's arrow-function breaking). Running prettier at sync time
+was dropped because prettier 3 cannot load under jest's CommonJS environment, and `__generated__` is
+prettier-ignored anyway. The printer's output is verified byte-for-byte against the
+prettier-formatted files previous syncs committed.
 
 ### Sort orders are part of the contract
 
-- `versionMap` and `descriptionMap`: by `createdAt` — the percy stories iterate `versionMap`, so a
+- `versionMap` and `descriptionMap`: by `createdAt`. The percy stories iterate `versionMap`, so a
   new illustration must append rather than shift every snapshot.
 - `svgJsMap` / `svgEsmMap`: by name, numeric-aware (`a1, a2, a10`).
 - `names` and `<Type>Name`: default string sort.
@@ -320,28 +335,27 @@ verified byte-for-byte against the prettier-formatted files previous syncs commi
 ```
 
 `items` is keyed by Figma node id, the one identity that survives everything the sync tracks: a
-rename or a version bump diffs as a change to a single stable entry (`name` or `version` and
-`hash` lines), a deleted component as a removed entry, and a node design re-created as a new key.
-An array sorted by name would show a rename as one entry removed and another added, which is
-exactly what a rename is not. Entries are written in `type`, then `name` order (JSON preserves it
-because node ids are never integer-like keys) with a fixed field order, so unrelated edits never
-reorder the file. The entry holds no file paths; see _The `Illustration` record_.
+rename or version bump diffs as a change to one stable entry, a deleted component as a removed
+entry, a node design re-created as a new key. An array sorted by name would show a rename as one
+entry removed and another added, which is exactly what a rename is not. Entries are written in
+`type`, then `name` order (JSON preserves it because node ids are never integer-like keys) with a
+fixed field order, so unrelated edits never reorder the file. Entries hold no file paths (see _The
+`Illustration` record_).
 
-`colors` is recorded so a palette change in Figma shows up in the same PR as the assets it recolors.
-Earlier versions stored the Figma style metadata per color; only the two hex values are needed.
+`colors` is the palette the assets were derived with (see _The light SVG and the color palette_).
 
 ## Around the sync
 
-The sync target writes files and exits. Everything that happens around it is owned elsewhere:
+The sync target writes files and exits. Everything around it is owned elsewhere:
 
 - **Git workflow** — `scripts/syncIllustrations.ts` at the repo root (`yarn sync-illustrations`)
   creates the `illustrations/YYYY-MM-DD` branch from the default branch, runs the sync target, runs
-  `web:generate-illustration-stories`, then commits and pushes, or deletes the branch again when a
-  step failed or nothing changed.
+  `web:generate-illustration-stories`, then commits and pushes, or deletes the branch when a step
+  failed or nothing changed.
 - **Docsite stories** — `packages/web/scripts/generateIllustrationStories.ts` renders web's
-  `<Type>.stories.tsx` from the `names` the illustrations package publishes. It is web's artifact
-  derived from web's dependency, so it lives in web with its own nx target, not in this sync. It used
-  to be shelled out to from here, which tied the sync to one specific destination.
+  `<Type>.stories.tsx` from the `names` the illustrations package publishes. It is web's artifact,
+  derived from web's dependency, so it lives in web with its own nx target. It used to be shelled out
+  to from here, which tied the sync to one destination.
 
 This keeps the sync free of knowledge about git or other packages, and makes each piece runnable on
 its own: the sync target for a scratch run, the stories target after a manual edit, the workflow
@@ -349,13 +363,13 @@ script for a release.
 
 ## Configuration and scratch runs
 
-`config.ts` is a single object: the `source` (a `FigmaSource` over the two Figma file ids), the
-`sinks` (an `IllustrationsPackageSink` with its CSS variable prefix) and the paths. Two environment variables redirect the whole run
-for testing: `SYNC_ILLUSTRATIONS_SCRATCH_DIR` writes everything (generated files, manifest, version
-plan) under a scratch directory; `SYNC_ILLUSTRATIONS_FIGMA_FILE_ID` points the source at another
-file, normally the test fixture library that mirrors the real file's layout. Scratch runs are the
-integration check for `FigmaSource` and the real API; behavioural testing of the engine belongs in
-the in-memory tests below.
+`config.ts` is one object: the `source` (a `FigmaSource` over the illustrations and colors file
+ids), the `sinks` (an `IllustrationsPackageSink` with its CSS variable prefix) and the paths. Two
+environment variables redirect a run for testing: `SYNC_ILLUSTRATIONS_SCRATCH_DIR` writes
+everything (generated files, manifest, version plan) under a scratch directory;
+`SYNC_ILLUSTRATIONS_FIGMA_FILE_ID` points the source at another file, normally the test fixture
+library that mirrors the real file's layout. Scratch runs are the integration check for
+`FigmaSource` against the real API; the engine's behaviour is tested in memory.
 
 ## Testing strategy
 
@@ -365,17 +379,19 @@ Three layers, none of which mocks a module:
    `IllustrationsPackageSink` and a small `MirrorSink` writing to temp directories, run repeatedly
    while the source is mutated: first publish, no-op run, description-only change, artwork change,
    rename, case-only rename (rejected), node re-created under the same name, duplicate name,
-   deletion, `syncAll`, a sink added mid-way (backfilled on an incremental run), a wiped sink
-   directory, idempotence. Assertions cover the files on disk, the generated TypeScript, the
-   returned diff and the manifest. This is where the sync's behaviour is specified.
+   deletion, an export with an unsupported color (rejected, nothing written), `syncAll`, a sink
+   added mid-way (backfilled on an incremental run), a wiped sink directory, idempotence.
+   Assertions cover the files on disk, the generated TypeScript, the returned diff and the
+   manifest. This is where the sync's behaviour is specified.
 2. **Pure modules on their own inputs** (`selectComponents`, `diffIllustrations`, the artifact
-   helpers and printer, `generateVersionPlan`, `manifest`), including the reconciliation table
-   above case by case.
+   helpers and printer, `generateVersionPlan`, `manifest`), including the reconciliation table above
+   case by case.
 3. **Adapters and formats against recorded production data**: the real `/components` response
    (trimmed, keeping duplicate names, both `Hero Square/` and `HeroSquare/` prefixes and a name with
-   a leading space), the real variables responses, raw SVG exports exactly as Figma returns them,
-   and the exact files a previous sync committed to `src/__generated__`. Optimization, theming,
-   hashing and every output format are asserted byte-for-byte against those artefacts.
+   a leading space), the real variables responses, raw SVG exports exactly as Figma returns them
+   (including the first gradient illustration), and the exact files a previous sync committed to
+   `src/__generated__`. Optimization, palette substitution, hashing and every output format are
+   asserted byte-for-byte against those artefacts.
 
 What the tests cannot cover is the Figma API itself; that is what scratch runs against the test
 fixture library are for.
@@ -383,11 +399,11 @@ fixture library are for.
 ## Things deliberately not done
 
 - **No `getFileNodes` call.** The previous sync fetched every node's full tree to read the frame
-  size. Width and height now come from the SVG viewBox, which is what actually renders, and the
-  slowest Figma call is gone.
+  size. Width and height now come from the SVG viewBox, which is what renders, and the slowest Figma
+  call is gone.
 - **No stored output paths** in the manifest (see _The `Illustration` record_).
-- **No per-item retry/partial-failure handling.** A failed download fails the run; CI reruns it. A
-  half-written `__generated__` would be worse than a clean failure, and the branch is deleted on
-  non-zero exit.
+- **No per-item retry or partial-failure handling.** A failed download or a rejected SVG fails the
+  run before anything is written; rerun it after the fix. A half-written `__generated__` would be
+  worse than a clean failure, and the workflow deletes the branch on a non-zero exit.
 - **No deletion of a type's index files when its last illustration is deleted.** `src/index.ts`
   statically exports every type, so an empty type would already be a hand-edit.
