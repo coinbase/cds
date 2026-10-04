@@ -749,6 +749,11 @@ export const routes = [
     getComponent: () => require('@coinbase/cds-mobile/tabs/__stories__/Tabs.stories').default,
   },
   {
+    key: 'TabsScrollArea',
+    getComponent: () =>
+      require('@coinbase/cds-mobile/tabs/__stories__/TabsScrollArea.stories').default,
+  },
+  {
     key: 'Tag',
     getComponent: () => require('@coinbase/cds-mobile/tag/__stories__/Tag.stories').default,
   },

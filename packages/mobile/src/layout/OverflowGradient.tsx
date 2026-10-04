@@ -1,6 +1,6 @@
 import React, { memo, useMemo } from 'react';
 import { StyleSheet } from 'react-native';
-import type { ViewStyle } from 'react-native';
+import type { StyleProp, ViewStyle } from 'react-native';
 import type { PinningDirection } from '@coinbase/cds-common/types/BoxBaseProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
@@ -10,7 +10,7 @@ import { pinStyles } from '../styles/pinStyles';
 
 export type OverflowGradientProps = {
   pin?: Exclude<PinningDirection, 'all'>;
-  style?: ViewStyle;
+  style?: StyleProp<ViewStyle>;
 } & SharedProps;
 
 const gradient = {

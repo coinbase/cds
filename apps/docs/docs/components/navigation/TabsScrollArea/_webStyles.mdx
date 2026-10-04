@@ -1,0 +1,55 @@
+import { useMemo, useState } from 'react';
+import { ComponentStylesTable } from '@site/src/components/page/ComponentStylesTable';
+import { StylesExplorer } from '@site/src/components/page/StylesExplorer';
+import {
+  DefaultTab,
+  DefaultTabsActiveIndicator,
+  Tabs,
+  TabsScrollArea,
+} from '@coinbase/cds-web/tabs';
+
+import webStylesData from ':docgen/web/tabs/TabsScrollArea/styles-data';
+
+export const TabsScrollAreaStylesExample = ({ classNames }) => {
+  const longTabs = useMemo(
+    () =>
+      Array.from({ length: 9 }, (_, i) => ({
+        id: `tab-${i}`,
+        label: `Section ${i + 1}`,
+      })),
+    [],
+  );
+  const [activeTab, setActiveTab] = useState(longTabs[0]);
+  return (
+    <TabsScrollArea
+      accessibilityLabel="Scrollable tab list"
+      classNames={classNames}
+      maxWidth={320}
+      width="100%"
+    >
+      {({ onActiveTabElementChange }) => (
+        <Tabs
+          TabComponent={DefaultTab}
+          TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
+          accessibilityLabel="Tabs"
+          activeBackground="bgPrimary"
+          activeTab={activeTab}
+          gap={4}
+          onActiveTabElementChange={onActiveTabElementChange}
+          onChange={setActiveTab}
+          tabs={longTabs}
+        />
+      )}
+    </TabsScrollArea>
+  );
+};
+
+## Explorer
+
+<StylesExplorer selectors={webStylesData.selectors}>
+  {(classNames) => <TabsScrollAreaStylesExample classNames={classNames} />}
+</StylesExplorer>
+
+## Selectors
+
+<ComponentStylesTable componentName="TabsScrollArea" styles={webStylesData} />
