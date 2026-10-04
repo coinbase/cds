@@ -56,8 +56,8 @@ export type Series = {
   label?: string;
   /**
    * Color for the series.
-   * If gradient is provided, that will be used for chart components
-   * Color will still be used by scrubber beacon labels
+   * If gradient is provided, that will be used for chart components.
+   * Color will still be used by scrubber beacon labels.
    */
   color?: string;
   /**
@@ -397,18 +397,12 @@ export const defaultHorizontalLayoutChartInset: ChartInset = {
 };
 
 /**
- * @deprecated Use `defaultVerticalLayoutChartInset` for vertical layout charts or. This will be removed in a future major release.
+ * @deprecated Use `defaultVerticalLayoutChartInset` for vertical layout charts, or
+ * `defaultHorizontalLayoutChartInset` for horizontal layout charts. This will be removed in a future major release.
  * @deprecationExpectedRemoval v4
- * `defaultHorizontalLayoutChartInset` for horizontal layout charts.
  */
 export const defaultChartInset: ChartInset = defaultVerticalLayoutChartInset;
 
-/**
- * Normalize padding to include all sides with a value.
- * @param padding - The padding to get.
- * @param defaults - Optional complete default values to use instead of 0.
- * @returns The calculated padding.
- */
 /**
  * Normalize inset to include all sides with a value.
  * @param inset - The inset to get.

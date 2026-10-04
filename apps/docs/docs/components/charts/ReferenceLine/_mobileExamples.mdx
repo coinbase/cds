@@ -223,7 +223,7 @@ function CustomLabelExample() {
 
     return (
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         areaType="dotted"
         height={300}
@@ -264,7 +264,12 @@ You can also optionally hide the label based on user scrubbing.
 function StartPriceReferenceLine() {
   const StartPriceLabel = memo((props) => {
     const theme = useTheme();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight, enabled } = useHighlightContext();
+    const scrubberPosition = useDerivedValue(() => {
+      if (!enabled) return undefined;
+      const idx = highlight.value[0]?.dataIndex;
+      return typeof idx === 'number' ? idx : undefined;
+    }, [highlight, enabled]);
     const { getXSerializableScale, drawingArea } = useCartesianChartContext();
     const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
 
@@ -311,7 +316,7 @@ function StartPriceReferenceLine() {
 
     return (
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         areaType="dotted"
         height={300}

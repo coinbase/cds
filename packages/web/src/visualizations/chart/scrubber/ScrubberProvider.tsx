@@ -4,6 +4,10 @@ import { useCartesianChartContext } from '../ChartProvider';
 import { ScrubberContext, type ScrubberContextValue } from '../utils/context';
 import { type ChartScaleFunction, isCategoricalScale } from '../utils/scale';
 
+/**
+ * @deprecated Use `HighlightProvider` props (`enableHighlighting`, `svgRef`, `onHighlightChange`, etc.) instead. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
+ */
 export type ScrubberProviderProps = Partial<
   Pick<ScrubberContextValue, 'enableScrubbing' | 'onScrubberPositionChange'>
 > & {
@@ -17,6 +21,9 @@ export type ScrubberProviderProps = Partial<
 /**
  * A component which encapsulates the ScrubberContext.
  * It depends on a ChartContext in order to provide accurate mouse tracking.
+ *
+ * @deprecated Use `HighlightProvider` with `enableHighlighting`, `svgRef`, and `onHighlightChange` instead of `ScrubberProvider`. This will be removed in a future major release.
+ * @deprecationExpectedRemoval v4
  */
 export const ScrubberProvider: React.FC<ScrubberProviderProps> = ({
   children,

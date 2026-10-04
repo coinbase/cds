@@ -83,7 +83,7 @@ const CustomBaseline = () => {
 
   return (
     <AreaChart
-      enableScrubbing
+      enableHighlighting
       showLines
       showYAxis
       fillOpacity={0.5}
@@ -132,7 +132,7 @@ export const All = () => {
       <VStack gap={2}>
         <Example title="Basic">
           <AreaChart
-            enableScrubbing
+            enableHighlighting
             showYAxis
             height={400}
             series={[
@@ -151,7 +151,7 @@ export const All = () => {
         </Example>
         <Example title="Stacked">
           <AreaChart
-            enableScrubbing
+            enableHighlighting
             showLines
             stacked
             curve="natural"
@@ -183,7 +183,7 @@ export const All = () => {
         </Example>
         <Example title="Negative Values">
           <AreaChart
-            enableScrubbing
+            enableHighlighting
             showLines
             showYAxis
             height={400}
@@ -203,7 +203,7 @@ export const All = () => {
         </Example>
         <Example title="Styles">
           <AreaChart
-            enableScrubbing={false}
+            enableHighlighting={false}
             height={350}
             series={[
               {
@@ -231,7 +231,7 @@ export const All = () => {
         </Example>
         <Example title="Horizontal Layout">
           <AreaChart
-            enableScrubbing
+            enableHighlighting
             showLines
             showXAxis
             showYAxis

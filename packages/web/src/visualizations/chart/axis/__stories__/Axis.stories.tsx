@@ -83,7 +83,7 @@ const Simple = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showXAxis
       showYAxis
       height={400}
@@ -177,7 +177,7 @@ const TimeOfDayAxesExample = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       height={400}
       series={[
         {
@@ -216,7 +216,7 @@ const TimeOfDayAxesExample = () => {
 
 const MultipleYAxesExample = () => (
   <CartesianChart
-    enableScrubbing
+    enableHighlighting
     height={512}
     series={[
       {
@@ -446,7 +446,7 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       height={400}
       series={[
         {

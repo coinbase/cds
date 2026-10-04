@@ -3,7 +3,7 @@ import { useRefMap } from '@coinbase/cds-common/hooks/useRefMap';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
 
 import { useCartesianChartContext } from '../ChartProvider';
-import { useScrubberContext } from '../utils/context';
+import { useHighlightContext } from '../utils/context';
 import { evaluateGradientAtValue, getGradientAxis, getGradientConfig } from '../utils/gradient';
 import { type ChartScaleFunction } from '../utils/scale';
 
@@ -148,6 +148,11 @@ export type ScrubberBeaconGroupBaseProps = SharedProps & {
    */
   seriesIds: string[];
   /**
+   * Which touch index to follow.
+   * @default 0
+   */
+  highlightIndex?: number;
+  /**
    * Pulse the beacons while at rest.
    */
   idlePulse?: boolean;
@@ -183,6 +188,7 @@ export const ScrubberBeaconGroup = memo(
     (
       {
         seriesIds,
+        highlightIndex = 0,
         idlePulse,
         transitions,
         BeaconComponent = DefaultScrubberBeacon,
@@ -194,7 +200,11 @@ export const ScrubberBeaconGroup = memo(
       ref,
     ) => {
       const ScrubberBeaconRefs = useRefMap<ScrubberBeaconRef>();
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberPosition = useMemo(
+        () => highlight[highlightIndex]?.dataIndex ?? undefined,
+        [highlight, highlightIndex],
+      );
       const { layout, getXScale, getYScale, getXAxis, getYAxis, dataLength, series, animate } =
         useCartesianChartContext();
 

@@ -25,6 +25,11 @@ export type PercentageBarChartBaseProps = Omit<
   | 'inset'
   | 'enableScrubbing'
   | 'onScrubberPositionChange'
+  | 'enableHighlighting'
+  | 'onHighlightChange'
+  | 'highlight'
+  | 'highlightScope'
+  | 'fadeOnHighlight'
 > & {
   /**
    * Configuration objects that define how to visualize the data.
@@ -74,6 +79,11 @@ export type PercentageBarChartProps = PercentageBarChartBaseProps &
     | 'inset'
     | 'enableScrubbing'
     | 'onScrubberPositionChange'
+    | 'enableHighlighting'
+    | 'onHighlightChange'
+    | 'highlight'
+    | 'highlightScope'
+    | 'fadeOnHighlight'
   >;
 
 export const PercentageBarChart = memo(

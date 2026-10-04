@@ -455,6 +455,10 @@ function Example() {
       [data, activeTab.id, getFormattingConfigForPeriod],
     );
 
+    const onHighlightChange = useCallback((items) => {
+      setScrubIndex(items[0]?.dataIndex ?? undefined);
+    }, []);
+
     const isMobile = breakpoints.isPhone || breakpoints.isTabletPortrait;
 
     return (
@@ -484,9 +488,9 @@ function Example() {
           }
         />
         <LineChart
-          enableScrubbing
+          enableHighlighting
           height={{ base: 200, tablet: 250, desktop: 300 }}
-          onScrubberPositionChange={setScrubIndex}
+          onHighlightChange={onHighlightChange}
           series={seriesData}
           yAxis={{
             domainLimit: 'strict',

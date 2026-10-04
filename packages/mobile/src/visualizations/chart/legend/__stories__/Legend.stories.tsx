@@ -12,6 +12,7 @@ import { BarChart, BarPlot, DefaultBar } from '../../bar';
 import { CartesianChart } from '../../CartesianChart';
 import { LineChart } from '../../line';
 import { Scrubber } from '../../scrubber';
+import type { HighlightedItem } from '../../utils';
 import type { LegendShapeVariant, Series } from '../../utils/chart';
 import { getDottedAreaPath } from '../../utils/path';
 import { DefaultLegendShape } from '../DefaultLegendShape';
@@ -71,7 +72,7 @@ const BasicLegend = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       legend
       showArea
       accessibilityLabel={chartAccessibilityLabel}
@@ -280,15 +281,19 @@ const DynamicData = () => {
     [seriesConfig, dataIndex],
   );
 
+  const onHighlightChange = useCallback((items: HighlightedItem[]) => {
+    setScrubberPosition(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       height={250}
       legend={<Legend EntryComponent={ValueLegendEntry} justifyContent="flex-start" paddingX={2} />}
       legendPosition="top"
-      onScrubberPositionChange={setScrubberPosition}
+      onHighlightChange={onHighlightChange}
       series={seriesConfig}
       width="100%"
       xAxis={{

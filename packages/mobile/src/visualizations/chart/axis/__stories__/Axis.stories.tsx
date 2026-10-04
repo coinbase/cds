@@ -75,7 +75,7 @@ const Simple = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showXAxis
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
@@ -180,7 +180,7 @@ const TimeOfDayAxesExample = () => {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={defaultChartHeight}
@@ -230,7 +230,7 @@ const MultipleYAxesExample = () => {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel="Chart with linear and log axes. 7 data points. Swipe to navigate."
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={defaultChartHeight}
@@ -368,7 +368,7 @@ const DomainLimitType = ({ limit }: { limit: 'nice' | 'strict' }) => {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={`Exponential growth chart with ${exponentialData.length} data points. Swipe to navigate.`}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={defaultChartHeight}

@@ -169,7 +169,7 @@ export const PlaygroundContent = memo(function PlaygroundContent({
                   </HStack>
                 </Box>
                 <LineChart
-                  enableScrubbing
+                  enableHighlighting
                   accessibilityLabel="Sample line chart"
                   height={110}
                   series={[

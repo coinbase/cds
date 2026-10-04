@@ -28,17 +28,31 @@ export type PathBaseProps = SharedProps & {
   initialPath?: string;
   /**
    * Fill color for the path.
+   * When omitted, standard SVG fill defaults apply.
    */
   fill?: string;
   /**
    * Opacity for the path fill.
    */
   fillOpacity?: number;
+  /**
+   * Stroke color for the path.
+   * When omitted, standard SVG stroke defaults apply.
+   */
+  stroke?: string;
+  /**
+   * Opacity for the path stroke.
+   */
+  strokeOpacity?: number;
 };
 
 export type PathProps = PathBaseProps &
   Omit<
     SVGProps<SVGPathElement>,
+    | 'fill'
+    | 'fillOpacity'
+    | 'stroke'
+    | 'strokeOpacity'
     | 'onAnimationStart'
     | 'onAnimationEnd'
     | 'onAnimationIteration'

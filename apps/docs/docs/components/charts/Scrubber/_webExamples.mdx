@@ -4,7 +4,7 @@ Scrubber can be used to provide horizontal interaction with a chart. As your mou
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   showArea
   showYAxis
   height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -30,7 +30,7 @@ All series will be scrubbed by default. You can set `seriesIds` to show only spe
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
@@ -79,7 +79,7 @@ In `layout="horizontal"`, beacon labels are intentionally hidden to avoid overla
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
@@ -102,7 +102,7 @@ Set `idlePulse` to cause scrubber beacons to pulse when the user is not actively
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   showArea
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
@@ -130,7 +130,7 @@ function ImperativeHandle() {
   return (
     <VStack gap={2}>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         height={{ base: 150, tablet: 200, desktop: 250 }}
         series={[
           {
@@ -157,7 +157,7 @@ You can use the `beaconStroke` prop to customize the stroke color of the scrubbe
 ```jsx live
 <Box borderRadius={300} padding={2} style={{ background: 'rgb(var(--red40))' }}>
   <LineChart
-    enableScrubbing
+    enableHighlighting
     showArea
     height={{ base: 150, tablet: 200, desktop: 250 }}
     series={[
@@ -249,7 +249,7 @@ function OutlineBeacon() {
 
     return (
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         showYAxis
         height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -286,7 +286,8 @@ function CustomBeaconLabel() {
   // This custom component label shows the percentage value of the data at the scrubber position.
   const MyScrubberBeaconLabel = memo(({ seriesId, color, label, ...props }) => {
     const { getSeriesData, dataLength } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = highlight[0]?.dataIndex;
 
     const seriesData = useMemo(
       () => getLineData(getSeriesData(seriesId)),
@@ -318,7 +319,7 @@ function CustomBeaconLabel() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
         {
@@ -363,7 +364,7 @@ You can use `hideBeaconLabels` to hide beacon labels, while still being able to 
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   legend
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
@@ -391,7 +392,7 @@ Using `labelElevated` will elevate the Scrubber's reference line label with a sh
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
@@ -429,7 +430,7 @@ function CustomLabelComponent() {
   });
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 150, tablet: 200, desktop: 250 }}
       inset={{ top: 16, bottom: 64 }}
@@ -455,7 +456,7 @@ You can use `labelFont` to customize the font of the scrubber line label and `be
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   showArea
   showYAxis
   height={{ base: 150, tablet: 200, desktop: 250 }}
@@ -492,7 +493,7 @@ Use `labelBoundsInset` to prevent the scrubber line label from getting too close
 ```jsx live
 <Box marginX={-3}>
   <LineChart
-    enableScrubbing
+    enableHighlighting
     showArea
     height={{ base: 150, tablet: 200, desktop: 250 }}
     inset={{ left: 0, right: 0 }}
@@ -511,7 +512,7 @@ Use `labelBoundsInset` to prevent the scrubber line label from getting too close
 ```jsx live
 <Box marginX={-3}>
   <LineChart
-    enableScrubbing
+    enableHighlighting
     showArea
     height={{ base: 150, tablet: 200, desktop: 250 }}
     inset={{ left: 0, right: 0 }}
@@ -536,7 +537,7 @@ You can use `LineComponent` to customize Scrubber's line. In this case, as a use
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
@@ -558,7 +559,8 @@ You can use `BeaconComponent` and `BeaconLabelComponent` with the `opacity` prop
 function HiddenScrubberWhenIdle() {
   const MyScrubberBeacon = memo(
     forwardRef((props, ref) => {
-      const { scrubberPosition } = useScrubberContext();
+      const { highlight } = useHighlightContext();
+      const scrubberPosition = highlight[0]?.dataIndex;
       const isScrubbing = scrubberPosition !== undefined;
 
       return <DefaultScrubberBeacon ref={ref} {...props} opacity={isScrubbing ? 1 : 0} />;
@@ -566,7 +568,8 @@ function HiddenScrubberWhenIdle() {
   );
 
   const MyScrubberBeaconLabel = memo((props) => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = highlight[0]?.dataIndex;
     const isScrubbing = scrubberPosition !== undefined;
 
     return <DefaultScrubberBeaconLabel {...props} opacity={isScrubbing ? 1 : 0} />;
@@ -574,7 +577,7 @@ function HiddenScrubberWhenIdle() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       height={{ base: 150, tablet: 200, desktop: 250 }}
       series={[
@@ -597,7 +600,7 @@ By default, Scrubber will show an overlay to de-emphasize future data. You can h
 
 ```jsx live
 <LineChart
-  enableScrubbing
+  enableHighlighting
   height={{ base: 150, tablet: 200, desktop: 250 }}
   series={[
     {
@@ -621,7 +624,8 @@ You can use `BeaconLabelComponent` to display a label with the percentage value 
 function PercentageBeaconLabels() {
   const PercentageScrubberBeaconLabel = memo(({ seriesId, color, label, ...props }) => {
     const { getSeriesData, dataLength } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = highlight[0]?.dataIndex;
 
     const seriesData = useMemo(
       () => getLineData(getSeriesData(seriesId)),
@@ -680,7 +684,7 @@ function PercentageBeaconLabels() {
 
     return (
       <PercentageBeaconLabelChart
-        enableScrubbing
+        enableHighlighting
         showArea
         areaType="dotted"
         height={250}
@@ -825,7 +829,8 @@ function MatchupBeaconLabels() {
 
   const MatchupScrubberBeaconLabel = memo(({ seriesId, color, ...props }) => {
     const { getSeriesData, dataLength } = useCartesianChartContext();
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = highlight[0]?.dataIndex;
 
     const seriesData = useMemo(
       () => getLineData(getSeriesData(seriesId)),
@@ -859,7 +864,7 @@ function MatchupBeaconLabels() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       areaType="dotted"
       height={250}

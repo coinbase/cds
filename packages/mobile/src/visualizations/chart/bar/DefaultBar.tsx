@@ -1,4 +1,6 @@
-import { memo, useMemo } from 'react';
+import { memo, useEffect, useMemo } from 'react';
+import { Easing, useDerivedValue } from 'react-native-reanimated';
+import { Group } from '@shopify/react-native-skia';
 
 import { useTheme } from '../../../hooks/useTheme';
 import { useCartesianChartContext } from '../ChartProvider';
@@ -9,15 +11,28 @@ import {
   withStaggerDelayTransition,
 } from '../utils/bar';
 import { type BarTransition, getNormalizedStagger } from '../utils/bar';
+import { useHighlightContext } from '../utils/context';
 import { getBarPath } from '../utils/path';
-import { defaultTransition, getTransition } from '../utils/transition';
+import {
+  buildTransition,
+  defaultTransition,
+  getTransition,
+  type Transition,
+} from '../utils/transition';
 
 import type { BarComponentProps } from './Bar';
 
 export type DefaultBarProps = BarComponentProps;
 
+const fadeOpacity = 0.3;
+const fadeTransition: Transition = {
+  type: 'timing',
+  duration: 100,
+  easing: Easing.out(Easing.ease),
+};
+
 /**
- * Default bar component that renders a solid bar with animation support.
+ * Default bar component that renders a solid bar with animation and highlighting support.
  */
 export const DefaultBar = memo<DefaultBarProps>(
   ({
@@ -31,17 +46,91 @@ export const DefaultBar = memo<DefaultBarProps>(
     d,
     fill,
     fillOpacity = 1,
+    dataX,
+    dataY,
+    seriesId,
     stroke,
     strokeWidth,
     origin,
     minSize = 1,
     transitions,
     transition,
+    fadeOnHighlight,
   }) => {
     const { animate, drawingArea, layout } = useCartesianChartContext();
+    const highlightContext = useHighlightContext();
     const theme = useTheme();
+    const { enabled: highlightEnabled, scope, registerBar, unregisterBar } = highlightContext;
+
+    const dataIndex = useMemo(() => {
+      if (typeof dataX === 'number') return dataX;
+      if (typeof dataY === 'number') return dataY;
+      return null;
+    }, [dataX, dataY]);
 
     const defaultFill = fill || theme.color.fgPrimary;
+
+    // Register bar bounds for hit testing when series highlighting is enabled.
+    useEffect(() => {
+      if (!highlightEnabled || !scope.series || !seriesId) return;
+
+      const index = dataIndex ?? 0;
+
+      registerBar({
+        x,
+        y,
+        width,
+        height,
+        dataIndex: index,
+        seriesId,
+      });
+
+      return () => {
+        unregisterBar(seriesId, index);
+      };
+    }, [
+      highlightEnabled,
+      scope.series,
+      seriesId,
+      registerBar,
+      unregisterBar,
+      x,
+      y,
+      width,
+      height,
+      dataIndex,
+    ]);
+
+    const highlightByDataIndex = scope.dataIndex ?? false;
+    const highlightBySeries = scope.series ?? false;
+
+    const highlightOpacity = useDerivedValue(() => {
+      if (!fadeOnHighlight || !highlightEnabled) return 1;
+
+      const items = highlightContext.highlight.value;
+      let opacity = 1;
+
+      if (items.length > 0) {
+        const isHighlighted = items.some((item) => {
+          const indexMatch =
+            !highlightByDataIndex ||
+            (typeof item.dataIndex === 'number' && item.dataIndex === dataIndex);
+          const seriesMatch =
+            !highlightBySeries || item.seriesId == null || item.seriesId === seriesId;
+          return indexMatch && seriesMatch;
+        });
+        opacity = isHighlighted ? 1 : fadeOpacity;
+      }
+
+      return buildTransition(opacity, fadeTransition);
+    }, [
+      fadeOnHighlight,
+      highlightEnabled,
+      highlightByDataIndex,
+      highlightBySeries,
+      dataIndex,
+      seriesId,
+    ]);
 
     const normalizedStagger = useMemo(
       () => getNormalizedStagger(layout, x, y, drawingArea),
@@ -129,7 +218,7 @@ export const DefaultBar = memo<DefaultBarProps>(
       minSize,
     ]);
 
-    return (
+    const path = (
       <Path
         animate={animate}
         clipPath={null}
@@ -146,5 +235,9 @@ export const DefaultBar = memo<DefaultBarProps>(
         }}
       />
     );
+
+    if (fadeOnHighlight) return <Group opacity={highlightOpacity}>{path}</Group>;
+
+    return path;
   },
 );

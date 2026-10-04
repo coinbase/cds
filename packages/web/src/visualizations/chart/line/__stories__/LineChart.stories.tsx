@@ -42,11 +42,12 @@ import {
   type ScrubberBeaconProps,
   type ScrubberRef,
   useCartesianChartContext,
-  useScrubberContext,
+  useHighlightContext,
 } from '../..';
 import { Area, DottedArea, type DottedAreaProps, GradientArea } from '../../area';
 import { DefaultAxisTickLabel, XAxis, YAxis } from '../../axis';
 import { CartesianChart } from '../../CartesianChart';
+import type { HighlightedItem } from '../../utils';
 import {
   DottedLine,
   type DottedLineProps,
@@ -102,7 +103,7 @@ function MultipleLine() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -193,7 +194,7 @@ function HorizontalLineGradientImplicitAxis() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -236,7 +237,7 @@ function DataFormat() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       points
       showArea
       showXAxis
@@ -333,7 +334,7 @@ function LiveUpdates() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       height={{ base: 200, tablet: 225, desktop: 250 }}
@@ -367,7 +368,7 @@ function MissingData() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       points
       showArea
       showXAxis
@@ -407,6 +408,10 @@ function MissingData() {
 function Interaction() {
   const [scrubberPosition, setScrubberPosition] = useState<number | undefined>();
 
+  const onHighlightChange = useCallback((items: HighlightedItem[]) => {
+    setScrubberPosition(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <VStack gap={2}>
       <Text font="label1">
@@ -415,10 +420,10 @@ function Interaction() {
           : 'Not scrubbing'}
       </Text>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         height={{ base: 200, tablet: 225, desktop: 250 }}
-        onScrubberPositionChange={setScrubberPosition}
+        onHighlightChange={onHighlightChange}
         series={[
           {
             id: 'prices',
@@ -482,7 +487,7 @@ function BasicAccessible() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
@@ -522,7 +527,7 @@ function AccessibleWithHeader() {
         {displayLabel}
       </Text>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         showYAxis
         aria-labelledby={headerId}
@@ -690,7 +695,7 @@ function GainLossChart() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
@@ -761,7 +766,7 @@ function StylingScrubber() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -919,7 +924,7 @@ function Compact() {
     <Box style={{ padding: 1 }}>
       <LineChart
         {...dimensions}
-        enableScrubbing={false}
+        enableHighlighting={false}
         inset={0}
         series={[
           {
@@ -1156,7 +1161,7 @@ function AssetPriceWithDottedArea() {
           title={<Text font="title1">Bitcoin</Text>}
         />
         <LineChart
-          enableScrubbing
+          enableHighlighting
           showArea
           accessibilityLabel={chartAccessibilityLabel}
           areaType="dotted"
@@ -1327,7 +1332,7 @@ function ServiceAvailability() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       height={{ base: 200, tablet: 225, desktop: 250 }}
       series={[
@@ -1463,7 +1468,8 @@ function ForecastAssetPrice() {
   });
 
   const CustomScrubber = memo(() => {
-    const { scrubberPosition } = useScrubberContext();
+    const { highlight } = useHighlightContext();
+    const scrubberPosition = useMemo(() => highlight[0]?.dataIndex ?? undefined, [highlight]);
     const isScrubbing = scrubberPosition !== undefined;
     // We need a fade in animation for the Scrubber
     return (
@@ -1484,7 +1490,7 @@ function ForecastAssetPrice() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       height={{ base: 200, tablet: 225, desktop: 250 }}
       maxWidth={512}
       series={[{ id: 'price', data, color: assets.btc.color }]}
@@ -1604,7 +1610,7 @@ function MonotoneAssetPrice() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showYAxis
       height={{ base: 200, tablet: 250, desktop: 300 }}
       inset={{ top: 64 }}
@@ -1789,7 +1795,7 @@ export const All = () => {
         </Example>
         <Example title="Styling Reference Lines">
           <LineChart
-            enableScrubbing
+            enableHighlighting
             showArea
             height={{ base: 200, tablet: 225, desktop: 250 }}
             series={[

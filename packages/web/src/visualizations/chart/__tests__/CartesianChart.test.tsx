@@ -1,5 +1,5 @@
 import type { ComponentProps, ReactNode } from 'react';
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 
 import { DefaultThemeProvider } from '../../../utils/test';
 import { Area } from '../area/Area';
@@ -515,24 +515,147 @@ describe('CartesianChart', () => {
       expect(labelledBy).toBe('chart-heading');
     });
 
-    it('adds keyboard focus tabIndex when enableScrubbing is true', () => {
+    it('adds keyboard focus tabIndex when enableHighlighting is true', () => {
       const root = renderCartesianChart({
         testID: 'cartesian-scrubbing-focus',
-        chartProps: { enableScrubbing: true },
+        chartProps: { enableHighlighting: true },
       });
       const svg = root.querySelector('svg');
       expect(svg).toBeInTheDocument();
       expect(svg?.getAttribute('tabindex')).toBe('0');
     });
 
-    it('does not add keyboard focus tabIndex when enableScrubbing is false', () => {
+    it('does not add keyboard focus tabIndex when enableHighlighting is false', () => {
       const root = renderCartesianChart({
         testID: 'cartesian-no-scrubbing-focus',
-        chartProps: { enableScrubbing: false },
+        chartProps: { enableHighlighting: false },
       });
       const svg = root.querySelector('svg');
       expect(svg).toBeInTheDocument();
       expect(svg?.getAttribute('tabindex')).toBeNull();
+    });
+
+    it('cycles series in prop order when highlightScope is series-only', () => {
+      const onHighlightChange = jest.fn();
+      const root = renderCartesianChart({
+        testID: 'cartesian-series-keyboard',
+        series: [
+          { id: 'series1', data: [5, 1, 3], label: 'Series 1' },
+          { id: 'series2', data: [2, 4, 6], label: 'Series 2' },
+          { id: 'series3', data: [1, 2, 3], label: 'Series 3' },
+        ],
+        chartProps: {
+          enableHighlighting: true,
+          highlightScope: { series: true },
+          onHighlightChange,
+        },
+      });
+      const svg = root.querySelector('svg');
+      expect(svg).toBeInTheDocument();
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowRight' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ seriesId: 'series1' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowRight' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ seriesId: 'series2' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowRight' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ seriesId: 'series3' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowRight' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ seriesId: 'series3' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'Home' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ seriesId: 'series1' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'Escape' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([]);
+    });
+
+    it('starts series-only keyboard at the first series on ArrowLeft', () => {
+      const onHighlightChange = jest.fn();
+      const root = renderCartesianChart({
+        testID: 'cartesian-series-keyboard-left',
+        series: [
+          { id: 'series1', data: [5, 1, 3], label: 'Series 1' },
+          { id: 'series2', data: [2, 4, 6], label: 'Series 2' },
+          { id: 'series3', data: [1, 2, 3], label: 'Series 3' },
+        ],
+        chartProps: {
+          enableHighlighting: true,
+          highlightScope: { series: true },
+          onHighlightChange,
+        },
+      });
+      const svg = root.querySelector('svg');
+      expect(svg).toBeInTheDocument();
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowLeft' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ seriesId: 'series1' }]);
+    });
+
+    it('moves by data index, not series, with the default highlight scope', () => {
+      const onHighlightChange = jest.fn();
+      const root = renderCartesianChart({
+        testID: 'cartesian-data-index-keyboard',
+        series: [
+          { id: 'series1', data: [5, 1, 3], label: 'Series 1' },
+          { id: 'series2', data: [2, 4, 6], label: 'Series 2' },
+        ],
+        chartProps: {
+          enableHighlighting: true,
+          onHighlightChange,
+        },
+      });
+      const svg = root.querySelector('svg');
+      expect(svg).toBeInTheDocument();
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowRight' });
+      const lastCall = onHighlightChange.mock.calls.at(-1)?.[0];
+      expect(lastCall).toEqual([expect.objectContaining({ dataIndex: expect.any(Number) })]);
+      expect(lastCall[0].seriesId).toBeUndefined();
+    });
+
+    it('navigates data index and series when both highlight scopes are enabled', () => {
+      const onHighlightChange = jest.fn();
+      const root = renderCartesianChart({
+        testID: 'cartesian-both-keyboard',
+        series: [
+          { id: 'series1', data: [5, 1, 3], label: 'Series 1' },
+          { id: 'series2', data: [2, 4, 6], label: 'Series 2' },
+          { id: 'series3', data: [1, 2, 3], label: 'Series 3' },
+        ],
+        chartProps: {
+          enableHighlighting: true,
+          highlightScope: { series: true, dataIndex: true },
+          onHighlightChange,
+          xAxis: { scaleType: 'band', data: ['Group A', 'Group B', 'Group C'] },
+        },
+        children: <BarPlot seriesIds={['series1', 'series2', 'series3']} />,
+      });
+      const svg = root.querySelector('svg');
+      expect(svg).toBeInTheDocument();
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowRight' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ dataIndex: 0, seriesId: 'series1' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowRight' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ dataIndex: 0, seriesId: 'series2' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowRight' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ dataIndex: 0, seriesId: 'series3' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowRight' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ dataIndex: 1, seriesId: 'series1' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowDown' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ dataIndex: 2, seriesId: 'series1' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowUp' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ dataIndex: 1, seriesId: 'series1' }]);
+
+      fireEvent.keyDown(svg as SVGSVGElement, { key: 'ArrowLeft' });
+      expect(onHighlightChange).toHaveBeenLastCalledWith([{ dataIndex: 0, seriesId: 'series3' }]);
     });
   });
 
@@ -682,7 +805,7 @@ describe('CartesianChart', () => {
       const svg = renderCartesianChart({
         testID: 'cartesian-scrubber-default',
         chartProps: {
-          enableScrubbing: true,
+          enableHighlighting: true,
         },
         children: (
           <>
@@ -700,7 +823,7 @@ describe('CartesianChart', () => {
       const svg = renderCartesianChart({
         testID: 'cartesian-scrubber-no-overlay',
         chartProps: {
-          enableScrubbing: true,
+          enableHighlighting: true,
         },
         children: (
           <>
@@ -717,7 +840,7 @@ describe('CartesianChart', () => {
         testID: 'cartesian-scrubber-series-filter',
         series: multiSeries,
         chartProps: {
-          enableScrubbing: true,
+          enableHighlighting: true,
         },
         children: (
           <>
@@ -737,7 +860,7 @@ describe('CartesianChart', () => {
         testID: 'cartesian-scrubber-all-series',
         series: multiSeries,
         chartProps: {
-          enableScrubbing: true,
+          enableHighlighting: true,
         },
         children: (
           <>

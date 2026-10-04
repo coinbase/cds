@@ -81,7 +81,7 @@ function MultipleLine() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -125,7 +125,7 @@ function DataFormat() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -214,7 +214,7 @@ function LiveUpdates() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -268,7 +268,7 @@ function MissingData() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -356,7 +356,7 @@ LineChart uses `linear` scaling on axes by default, but you can also use other t
 
 ## Interaction
 
-Charts have built in functionality enabled through scrubbing, which can be used by setting `enableScrubbing` to true. You can listen to value changes through `onScrubberPositionChange`. Adding `Scrubber` to LineChart showcases the current scrubber position.
+Charts support interaction when `enableHighlighting` is true. Use `onHighlightChange` to listen for updates; it supports multiple highlighted items. Adding `Scrubber` to LineChart shows the visual scrubber for the current position.
 
 ```tsx
 function Interaction() {
@@ -369,20 +369,24 @@ function Interaction() {
     [data],
   );
 
+  const onHighlightChange = useCallback((items) => {
+    setScrubberPosition(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <VStack gap={2}>
       <Text font="label1">
         {scrubberPosition !== undefined
-          ? `Scrubber position: ${scrubberPosition}`
-          : 'Not scrubbing'}
+          ? `Highlighted index: ${scrubberPosition}`
+          : 'Not interacting'}
       </Text>
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         accessibilityLabel={chartAccessibilityLabel}
         getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
         height={200}
-        onScrubberPositionChange={setScrubberPosition}
+        onHighlightChange={onHighlightChange}
         series={[{ id: 'prices', data }]}
       >
         <Scrubber />
@@ -436,6 +440,8 @@ function Points() {
 Renders are done on JS thread, other code is in UI
 
 ```tsx
+import type { HighlightedItem } from '@coinbase/cds-mobile-visualization/chart';
+
 function Performance() {
   const tabs = useMemo(
     () => [
@@ -466,13 +472,17 @@ function Performance() {
     [tabs],
   );
 
+  const onHighlightChange = useCallback((items) => {
+    setScrubberPosition(items[0]?.dataIndex ?? undefined);
+  }, []);
+
   return (
     <VStack gap={2} style={{ marginLeft: -8, marginRight: -8 }}>
       <PerformanceHeader
         scrubberPosition={scrubberPosition}
         sparklineTimePeriodDataValues={sparklineTimePeriodDataValues}
       />
-      <PerformanceChart onScrubberPositionChange={setScrubberPosition} timePeriod={timePeriod} />
+      <PerformanceChart onHighlightChange={onHighlightChange} timePeriod={timePeriod} />
       <PeriodSelector activeTab={timePeriod} onChange={onPeriodChange} tabs={tabs} />
     </VStack>
   );
@@ -525,10 +535,10 @@ const PerformanceHeader = memo(
 const PerformanceChart = memo(
   ({
     timePeriod,
-    onScrubberPositionChange,
+    onHighlightChange,
   }: {
     timePeriod: TabValue;
-    onScrubberPositionChange: (position: number | undefined) => void;
+    onHighlightChange: (items: HighlightedItem[]) => void;
   }) => {
     const theme = useTheme();
 
@@ -592,7 +602,7 @@ const PerformanceChart = memo(
 
     return (
       <LineChart
-        enableScrubbing
+        enableHighlighting
         showArea
         showYAxis
         accessibilityLabel={chartAccessibilityLabel}
@@ -600,7 +610,7 @@ const PerformanceChart = memo(
         areaType="dotted"
         height={300}
         inset={{ top: 52, left: 0, right: 0 }}
-        onScrubberPositionChange={onScrubberPositionChange}
+        onHighlightChange={onHighlightChange}
         series={[
           {
             id: 'high',
@@ -637,7 +647,7 @@ By default, charts will not track gestures that go outside of the chart bounds. 
 
 ```jsx
 <LineChart
-  enableScrubbing
+  enableHighlighting
   allowOverflowGestures
   accessibilityLabel="Chart with overflow gestures. Swipe to navigate."
   getScrubberAccessibilityLabel={(index) => `Point ${index + 1}`}
@@ -681,26 +691,29 @@ Use `accessibilityLabel` on `LineChart` (or `CartesianChart`) to provide both:
 function BasicAccessible() {
   const data = useMemo(() => [10, 22, 29, 45, 98, 45, 22, 52, 21, 4, 68, 20, 21, 58], []);
 
-  // Chart-level accessibility label provides overview when focus lands on the chart
-  const chartAccessibilityLabel = useMemo(
-    () =>
-      `Price chart showing trend over ${data.length} data points. Current value: ${data[data.length - 1]}. Swipe to navigate.`,
-    [data],
-  );
-
-  // Per-segment label announced when screen reader user taps or swipes to a segment
-  const getScrubberAccessibilityLabel = useCallback(
-    (index: number) => `Price at position ${index + 1} of ${data.length}: ${data[index]}`,
+  const accessibilityLabel = useCallback(
+    (items: HighlightedItem[]) => {
+      if (items.length === 0) {
+        return `Price chart, ${data.length} points. Swipe to navigate.`;
+      }
+      const parts = items
+        .map((item) =>
+          typeof item.dataIndex === 'number'
+            ? `Price at position ${item.dataIndex + 1} of ${data.length}: ${data[item.dataIndex]}`
+            : null,
+        )
+        .filter((line): line is string => line !== null);
+      return parts.join('; ') || `Price chart, ${data.length} points. Swipe to navigate.`;
+    },
     [data],
   );
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
+      accessibilityLabel={accessibilityLabel}
       showArea
       showYAxis
-      accessibilityLabel={chartAccessibilityLabel}
-      getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
       series={[
         {
@@ -711,9 +724,7 @@ function BasicAccessible() {
       yAxis={{
         showGrid: true,
       }}
-    >
-      <Scrubber />
-    </LineChart>
+    />
   );
 }
 ```
@@ -954,7 +965,7 @@ function GainLossChart() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
       height={200}
@@ -1077,7 +1088,7 @@ function ReferenceLineExample() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -1176,7 +1187,7 @@ function StylingScrubber() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       showXAxis
       showYAxis
@@ -1254,7 +1265,7 @@ function Compact() {
     <Box style={{ padding: 1 }}>
       <LineChart
         {...dimensions}
-        enableScrubbing={false}
+        enableHighlighting={false}
         inset={0}
         series={[
           {
@@ -1468,7 +1479,7 @@ function AssetPriceWithDottedArea() {
           title={<Text font="title1">Bitcoin</Text>}
         />
         <LineChart
-          enableScrubbing
+          enableHighlighting
           showArea
           accessibilityLabel={chartAccessibilityLabel}
           getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -1679,7 +1690,7 @@ function MonotoneAssetPrice() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showYAxis
       accessibilityLabel={chartAccessibilityLabel}
       getScrubberAccessibilityLabel={getScrubberAccessibilityLabel}
@@ -1743,7 +1754,7 @@ function ServiceAvailability() {
 
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
       height={200}
       series={[
         {
@@ -1798,17 +1809,118 @@ function ServiceAvailability() {
 
 ### Forecast Asset Price
 
-You can combine multiple lines within a series to change styles dynamically.
+You can combine multiple lines within a series to change styles dynamically. You can also control highlight state to keep the scrubber on the forecast boundary at rest and follows the pointer while scrubbing.
 
 ```tsx
+import type { HighlightedItem } from '@coinbase/cds-mobile-visualization/chart';
+
+const MOBILE_FORECAST_EXAMPLE_STROKE_WIDTH = 3;
+const MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET = MOBILE_FORECAST_EXAMPLE_STROKE_WIDTH;
+const MOBILE_FORECAST_EXAMPLE_SPLIT_INDEX = 6;
+const MOBILE_FORECAST_EXAMPLE_CHART_DATA: number[] = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];
+
+const MobileForecastAssetPriceHistoricalLine = memo((props: SolidLineProps) => {
+  const { drawingArea, getXScale } = useCartesianChartContext();
+  const xScale = getXScale();
+
+  const historicalClipPath = useMemo(() => {
+    if (!xScale || !drawingArea) return null;
+
+    const currentX = xScale(MOBILE_FORECAST_EXAMPLE_SPLIT_INDEX);
+    if (currentX === undefined) return null;
+
+    const clip = Skia.Path.Make();
+    clip.addRect({
+      x: drawingArea.x - MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET,
+      y: drawingArea.y - MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET,
+      width: currentX + MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET - drawingArea.x,
+      height: drawingArea.height + MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET * 2,
+    });
+    return clip;
+  }, [xScale, drawingArea]);
+
+  if (!historicalClipPath) return null;
+
+  return (
+    <Group clip={historicalClipPath}>
+      <SolidLine strokeWidth={MOBILE_FORECAST_EXAMPLE_STROKE_WIDTH} {...props} />
+    </Group>
+  );
+});
+MobileForecastAssetPriceHistoricalLine.displayName = 'MobileForecastAssetPriceHistoricalLine';
+
+const MobileForecastAssetPriceFutureLine = memo((props: DottedLineProps) => {
+  const { drawingArea, getXScale } = useCartesianChartContext();
+  const xScale = getXScale();
+
+  const forecastClipPath = useMemo(() => {
+    if (!xScale || !drawingArea) return null;
+
+    const currentX = xScale(MOBILE_FORECAST_EXAMPLE_SPLIT_INDEX);
+    if (currentX === undefined) return null;
+
+    const clip = Skia.Path.Make();
+    clip.addRect({
+      x: currentX,
+      y: drawingArea.y - MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET,
+      width: drawingArea.x + drawingArea.width - currentX + MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET * 2,
+      height: drawingArea.height + MOBILE_FORECAST_EXAMPLE_CLIP_OFFSET * 2,
+    });
+    return clip;
+  }, [xScale, drawingArea]);
+
+  if (!forecastClipPath) return null;
+
+  return (
+    <Group clip={forecastClipPath}>
+      <DottedLine
+        dashIntervals={[0, MOBILE_FORECAST_EXAMPLE_STROKE_WIDTH * 2]}
+        strokeWidth={MOBILE_FORECAST_EXAMPLE_STROKE_WIDTH}
+        {...props}
+      />
+    </Group>
+  );
+});
+MobileForecastAssetPriceFutureLine.displayName = 'MobileForecastAssetPriceFutureLine';
+
+const MobileForecastScrubberWrap = memo(function MobileForecastScrubberWrap({
+  hideLine,
+}: {
+  hideLine: boolean;
+}) {
+  const fadeInOpacity = useSharedValue(0);
+
+  useEffect(() => {
+    fadeInOpacity.value = withDelay(350, withTiming(1, { duration: 150 }));
+  }, [fadeInOpacity]);
+
+  return (
+    <Group opacity={fadeInOpacity}>
+      <Scrubber hideLine={hideLine} hideOverlay />
+    </Group>
+  );
+});
+
 function ForecastAssetPrice() {
   const startYear = 2020;
-  const data = [50, 45, 47, 46, 54, 54, 60, 61, 63, 66, 70];
-  const currentIndex = 6;
+  const [userHighlight, setUserHighlight] = useState<HighlightedItem[]>([]);
 
-  const strokeWidth = 3;
-  // To prevent cutting off the edge of our lines
-  const clipOffset = strokeWidth;
+  const defaultHighlight = useMemo(
+    () => [{ dataIndex: MOBILE_FORECAST_EXAMPLE_SPLIT_INDEX } satisfies HighlightedItem],
+    [],
+  );
+  const effectiveHighlight = useMemo(
+    () => (userHighlight.length > 0 ? userHighlight : defaultHighlight),
+    [userHighlight, defaultHighlight],
+  );
+  const alwaysHideScrubberLine = false;
+  const isUserScrubbing = userHighlight.length > 0;
+  const hideScrubberLine = alwaysHideScrubberLine || !isUserScrubbing;
+
+  const series = useMemo(
+    () => [{ id: 'price', data: MOBILE_FORECAST_EXAMPLE_CHART_DATA, color: assets.btc.color }],
+    [],
+  );
 
   const axisFormatter = useCallback(
     (dataIndex: number) => {
@@ -1817,115 +1929,27 @@ function ForecastAssetPrice() {
     [startYear],
   );
 
-  const HistoricalLineComponent = memo((props: SolidLineProps) => {
-    const { drawingArea, getXScale } = useCartesianChartContext();
-    const xScale = getXScale();
-
-    const historicalClipPath = useMemo(() => {
-      if (!xScale || !drawingArea) return null;
-
-      const currentX = xScale(currentIndex);
-      if (currentX === undefined) return null;
-
-      // Create clip path for historical data (left side)
-      const clip = Skia.Path.Make();
-      clip.addRect({
-        x: drawingArea.x - clipOffset,
-        y: drawingArea.y - clipOffset,
-        width: currentX + clipOffset - drawingArea.x,
-        height: drawingArea.height + clipOffset * 2,
-      });
-      return clip;
-    }, [xScale, drawingArea]);
-
-    if (!historicalClipPath) return null;
-
-    return (
-      <Group clip={historicalClipPath}>
-        <SolidLine strokeWidth={strokeWidth} {...props} />
-      </Group>
-    );
-  });
-
-  // Since the solid and dotted line have different curves,
-  // we need two separate line components. Otherwise we could
-  // have one line component with SolidLine and DottedLine inside
-  // of it and two clipPaths.
-  const ForecastLineComponent = memo((props: DottedLineProps) => {
-    const { drawingArea, getXScale } = useCartesianChartContext();
-    const xScale = getXScale();
-
-    const forecastClipPath = useMemo(() => {
-      if (!xScale || !drawingArea) return null;
-
-      const currentX = xScale(currentIndex);
-      if (currentX === undefined) return null;
-
-      // Create clip path for forecast data (right side)
-      const clip = Skia.Path.Make();
-      clip.addRect({
-        x: currentX,
-        y: drawingArea.y - clipOffset,
-        width: drawingArea.x + drawingArea.width - currentX + clipOffset * 2,
-        height: drawingArea.height + clipOffset * 2,
-      });
-      return clip;
-    }, [xScale, drawingArea]);
-
-    if (!forecastClipPath) return null;
-
-    return (
-      <Group clip={forecastClipPath}>
-        <DottedLine dashIntervals={[0, strokeWidth * 2]} strokeWidth={strokeWidth} {...props} />
-      </Group>
-    );
-  });
-  const CustomScrubber = memo(() => {
-    const { scrubberPosition } = useScrubberContext();
-
-    const idleScrubberOpacity = useDerivedValue(
-      () => (scrubberPosition.value === undefined ? 1 : 0),
-      [scrubberPosition],
-    );
-    const scrubberOpacity = useDerivedValue(
-      () => (scrubberPosition.value !== undefined ? 1 : 0),
-      [scrubberPosition],
-    );
-
-    // Fade in animation for the Scrubber
-    const fadeInOpacity = useSharedValue(0);
-
-    useEffect(() => {
-      fadeInOpacity.value = withDelay(350, withTiming(1, { duration: 150 }));
-    }, [fadeInOpacity]);
-
-    return (
-      <Group opacity={fadeInOpacity}>
-        <Group opacity={scrubberOpacity}>
-          <Scrubber hideOverlay />
-        </Group>
-        <Group opacity={idleScrubberOpacity}>
-          <DefaultScrubberBeacon
-            isIdle
-            dataX={currentIndex}
-            dataY={data[currentIndex]}
-            seriesId="price"
-          />
-        </Group>
-      </Group>
-    );
-  });
-
   return (
     <CartesianChart
-      enableScrubbing
+      enableHighlighting
+      highlight={effectiveHighlight}
+      onHighlightChange={setUserHighlight}
       height={200}
-      series={[{ id: 'price', data, color: assets.btc.color }]}
+      series={series}
     >
-      <Line LineComponent={HistoricalLineComponent} curve="linear" seriesId="price" />
-      <Line LineComponent={ForecastLineComponent} curve="monotone" seriesId="price" type="dotted" />
+      <Line
+        LineComponent={MobileForecastAssetPriceHistoricalLine}
+        curve="linear"
+        seriesId="price"
+      />
+      <Line
+        LineComponent={MobileForecastAssetPriceFutureLine}
+        curve="monotone"
+        seriesId="price"
+        type="dotted"
+      />
       <XAxis position="bottom" requestedTickCount={3} tickLabelFormatter={axisFormatter} />
-      <CustomScrubber />
+      <MobileForecastScrubberWrap hideLine={hideScrubberLine} />
     </CartesianChart>
   );
 }

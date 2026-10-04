@@ -7,7 +7,7 @@ import { useTheme } from '../../../../index';
 import { VStack } from '../../../../layout';
 import { useCartesianChartContext } from '../../ChartProvider';
 import { Scrubber } from '../../scrubber';
-import { getPointOnSerializableScale, useScrubberContext } from '../../utils';
+import { getPointOnSerializableScale, useHighlightContext } from '../../utils';
 import {
   DefaultReferenceLineLabel,
   type DefaultReferenceLineLabelProps,
@@ -158,7 +158,12 @@ const FADE_ZONE = 128;
 
 const StartPriceLabel = memo((props: DefaultReferenceLineLabelProps) => {
   const theme = useTheme();
-  const { scrubberPosition } = useScrubberContext();
+  const { highlight, enabled } = useHighlightContext();
+  const scrubberPosition = useDerivedValue(() => {
+    if (!enabled) return undefined;
+    const idx = highlight.value[0]?.dataIndex;
+    return typeof idx === 'number' ? idx : undefined;
+  }, [highlight, enabled]);
   const { getXSerializableScale, drawingArea } = useCartesianChartContext();
   const xScale = useMemo(() => getXSerializableScale(), [getXSerializableScale]);
 
@@ -194,7 +199,7 @@ function StartPriceReferenceLine() {
 
   return (
     <LineChart
-      enableScrubbing
+      enableHighlighting
       showArea
       areaType="dotted"
       height={300}
