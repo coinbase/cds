@@ -31,9 +31,11 @@ export const useTimer = () => {
 
   const pause = useCallback(() => {
     if (!isPausedRef.current) {
-      const currentTime = new Date().getTime();
+      // Elapsed time is only meaningful while a timer is running, and a timer can never
+      // have negative time remaining. Clamping keeps `pause` from storing a negative value.
+      const elapsedTime = timerRef.current ? Date.now() - startTimeRef.current : 0;
       clear();
-      remainingTimeRef.current -= currentTime - startTimeRef.current;
+      remainingTimeRef.current = Math.max(0, remainingTimeRef.current - elapsedTime);
       isPausedRef.current = true;
     }
     return remainingTimeRef.current;
