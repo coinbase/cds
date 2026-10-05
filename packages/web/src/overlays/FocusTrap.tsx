@@ -270,13 +270,16 @@ export const FocusTrap = memo((_props: FocusTrapProps) => {
       if (
         !disableTypeFocus &&
         activeElementIsMenuItemOrOption &&
-        ALPHABET_KEYS.includes(event.key)
+        // `event.key` reflects the character produced, so Shift/CapsLock yield uppercase
+        // keys. ALPHABET_KEYS is lowercase, so normalize before matching.
+        ALPHABET_KEYS.includes(event.key.toLowerCase())
       ) {
         event.preventDefault();
 
+        const eventKeyLowerCase = event.key.toLowerCase();
+
         const elementWithMatchingFirstLetter = focusableElements.find((el: Element) => {
           const textContentFirstLetter = el.textContent?.[0]?.toLowerCase();
-          const eventKeyLowerCase = event.key.toLowerCase();
 
           return textContentFirstLetter === eventKeyLowerCase;
         });
@@ -328,7 +331,7 @@ export const FocusTrap = memo((_props: FocusTrapProps) => {
 
       if (
         !disableFocusTrap &&
-        (NAVIGATION_KEYS.includes(event.key) || ALPHABET_KEYS.includes(event.key))
+        (NAVIGATION_KEYS.includes(event.key) || ALPHABET_KEYS.includes(event.key.toLowerCase()))
       ) {
         handleKeyboardNavigation(event, childrenRef.current);
       }
