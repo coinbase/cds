@@ -10,6 +10,11 @@ the canonical artifact; every other form is derived from it by the sync:
 - **PNG** — light and dark rasterizations, used where SVG is not an option
 - **JS/ESM modules** — the SVG strings wrapped for the web and mobile packages, with lazy maps
 
+When a native checkout is configured, the sync also exports every illustration to the native CDS
+packages in mobile-skunkworks (`CDSDesignSystem` on iOS, `:cds` on Android) as fixed light and dark
+vector assets in each platform's format (an asset catalog with SVG appearances, vector drawables)
+plus generated name types. See _Syncing the native packages_ below.
+
 The dark and themeable variants are produced by color substitution. Illustrations use a fixed
 palette of 15 `illustration/*` color variables, each with a light and a dark value, defined in the
 [CDS colors Figma file](https://www.figma.com/design/AH4N0fma2EvI30IltjBGPy) and read through the
@@ -87,6 +92,35 @@ You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 
 11. DO NOT MERGE until the illustrations DRI has carefully reviewed and signed off on the changelog and the visual regression test results.
 
+### Syncing the native packages
+
+The same run can update the illustrations of the native CDS packages. Point it at a local checkout
+of mobile-skunkworks, which must have no uncommitted changes either:
+
+```sh
+export SYNC_ILLUSTRATIONS_NATIVE_REPO=/path/to/mobile-skunkworks
+yarn nx run illustrations:sync-illustrations
+```
+
+The run first checks that the path is a git checkout with `modules/ios/CDS/CDSDesignSystem` and
+`modules/android/cds`, then creates an `illustrations/YYYY-MM-DD` branch from `origin/main` there
+as well. It writes `Sources/CDSDesignSystem/Illustrations/{Resources/Illustrations.xcassets,Generated}`
+and `src/main/{res/drawable,kotlin/com/coinbase/cds/illustrations/generated}` and commits and pushes
+the branch when anything changed. Each repository is published on its own: if only the native
+checkout was missing files, only its branch is pushed.
+
+Open the native PR by hand in mobile-skunkworks with the title the run prints
+(`feat: Sync CDS illustrations YYYY-MM-DD`), next to the cds PR from step 5. The native files are
+generated: review them like `src/__generated__`, never edit them. The run ends by printing the
+illustrations the native packages draw with a known difference (the approximation list in the sync
+README); check that nothing new appeared there.
+
+A checkout that missed a run is repaired by the next one: every native asset is stamped with the
+illustration's version and hash, and the sync rewrites any that are missing or stale. To export
+the full set into a new checkout, run once with the variable set; there is nothing else to do.
+
+Without `SYNC_ILLUSTRATIONS_NATIVE_REPO` the sync behaves exactly as before.
+
 ### Syncing Illustrations Troubleshooting
 
 **"There are no changes since the last update on XX/XX/XXXX"** — The script detected no illustration changes in Figma since the last sync. Verify this is expected with design.
@@ -99,6 +133,17 @@ yarn nx run illustrations:sync-illustrations --sync-all
 
 **Repo is not clean** — The sync requires a clean working tree so that it can create the release branch. Stash or commit any pending changes before running it.
 
+**Writing to some destinations only** — Pass `--select-sinks` to be asked, before anything is
+fetched, which of the configured destinations (the illustrations package, the web stories, the
+native packages when `SYNC_ILLUSTRATIONS_NATIVE_REPO` is set) this run writes to; answer with the
+listed numbers or names, or press enter for all. Without the flag every destination is written, as
+usual. The manifest records the run either way, so a destination left out is repaired by backfill on
+the next run that includes it:
+
+```sh
+yarn nx run illustrations:sync-illustrations --select-sinks
+```
+
 **Syncing without the release branch** — Pass `--no-git` to write into the current branch instead of creating and pushing `illustrations/YYYY-MM-DD`, for example to inspect a `--sync-all` locally. Scratch runs (below) never touch git.
 
 **"`<type>/<name>` has an SVG the sync cannot publish"** — A layer uses a color theming cannot
@@ -107,6 +152,18 @@ attribute, the value and links to the node in Figma. Nothing was published. Figm
 exports these forms, so the usual cause is a pasted or hand-edited SVG; express transparency with a
 layer opacity (exported as `fill-opacity`) rather than a color alpha, republish the library and
 re-run.
+
+**"`<type>/<name>` cannot be exported to the native packages"** or **"cannot be drawn as an
+Android vector drawable"** — The illustration uses something the native renderers do not support
+(a radial gradient, a filter, an image, a blend mode, dashes, a mask that is not a plain opaque
+shape, a skewing transform, …); the message names the reason and links to the node in Figma.
+Nothing was published. Ask design to flatten it in Figma, or, if the difference is acceptable, add
+the illustration to the approximation list in `scripts/sync-illustrations/artifacts/nativeSvg.ts`
+(see _What the native renderers draw_ in the sync README).
+
+**"SYNC_ILLUSTRATIONS_NATIVE_REPO=… is not a native CDS checkout"** — The path is wrong, not a git
+checkout, or missing one of the native modules. Fix the path, or unset the variable to sync without
+the native packages.
 
 **An illustration's light and dark variants look identical** — Its layers use colors outside the illustration palette, which the sync leaves as drawn in every variant. Ask design to bind the layers to the published `illustration/*` color variables rather than raw hex values.
 
@@ -149,7 +206,9 @@ yarn nx run illustrations:sync-illustrations
 ```
 
 The scratch directory receives `__generated__/`, `web-stories/`, `manifest.json` and
-`version-plans/`; run again
+`version-plans/`, plus `native/` (laid out like mobile-skunkworks) when
+`SYNC_ILLUSTRATIONS_NATIVE_REPO` is set; the native checkout itself is not touched in a scratch
+run. Run again
 after editing and re-publishing the library to see the incremental diff. Omit
 `SYNC_ILLUSTRATIONS_FIGMA_FILE_ID` to scratch-run against the real file (reads only). Remember that
 the `/components` endpoint only lists _published_ components, so publish the library after each

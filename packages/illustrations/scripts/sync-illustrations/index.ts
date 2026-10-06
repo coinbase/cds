@@ -1,20 +1,26 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+import { approximationSummary } from './artifacts/nativeSvg';
+import { type Sink } from './sinks/Sink';
 import { config } from './config';
 import { hasChanges, type SyncResults } from './diffIllustrations';
 import { generateVersionPlan } from './generateVersionPlan';
-import { ReleaseBranch } from './git';
+import { type Release, ReleaseBranch, runOnReleaseBranches } from './git';
 import { type Component, type Illustration, illustrationKey } from './illustration';
 import { readManifest, writeManifest } from './manifest';
+import { assertNativeCheckout } from './nativeRepo';
+import { chooseSinks } from './selectSinks';
 import { runSync } from './sync';
 
 const args = process.argv.slice(2);
 const syncAll = config.syncAll || args.includes('--sync-all');
 const useGit = config.git && !args.includes('--no-git');
+const selectSinks = args.includes('--select-sinks');
 const todaysDate = new Date().toISOString().slice(0, 10);
 /** Only date-derived content: illustration names come from Figma and must never reach the shell. */
 const commitMessage = `feat: Publish illustrations ${todaysDate}`;
+const nativeCommitMessage = `feat: Sync CDS illustrations ${todaysDate}`;
 
 const logTable = (heading: string, illustrations: (Illustration | Component)[]) => {
   console.log(`\n${heading} (${illustrations.length}):`);
@@ -50,8 +56,8 @@ const logSummary = (results: SyncResults) => {
   }
 };
 
-/** Runs the sync and records it; returns whether anything was produced. */
-const sync = async () => {
+/** Runs the sync into `sinks` and records it; returns whether anything was produced. */
+const sync = async (sinks: Sink[]) => {
   if (!fs.existsSync(config.versionPlansPath))
     fs.mkdirSync(config.versionPlansPath, { recursive: true });
 
@@ -61,7 +67,7 @@ const sync = async () => {
   const outcome = await runSync({
     source: config.source,
     manifest,
-    sinks: config.sinks,
+    sinks,
     syncAll,
     log: console.log,
   });
@@ -99,31 +105,50 @@ const sync = async () => {
   if (outcome.backfilled.length) {
     logTable('Restored illustrations a destination was missing', outcome.backfilled);
   }
+  if (sinks.some((sink) => config.nativeSinks.includes(sink))) {
+    console.log('\nIllustrations the native packages draw with a known difference:');
+    for (const line of approximationSummary()) console.log(`  ${line}`);
+  }
   return true;
 };
 
 /**
- * With git, the sync runs on a fresh `illustrations/YYYY-MM-DD` branch that is pushed when it
- * produced something and deleted when it did not or failed, so a failed run never leaves a
- * half-written tree behind.
+ * With git, the sync runs on a fresh `illustrations/YYYY-MM-DD` branch in this repo, and in the
+ * native checkout when one is configured. Each is pushed when the run changed it and deleted when
+ * it did not or the run failed, so a failed run never leaves a half-written tree behind. Pull
+ * requests are opened by hand; `publish` prints the branch and the title to use.
+ *
+ * `--select-sinks` asks which configured sinks to write to before anything starts; the native
+ * checkout is only touched when one of its sinks is selected.
  */
 const main = async () => {
   console.log('Starting illustration sync...');
-  if (!useGit) return sync();
+  if (config.nativeRepo) assertNativeCheckout(config.nativeRepo);
+  const sinks = selectSinks ? await chooseSinks(config.sinks) : config.sinks;
+  const writesNative = sinks.some((sink) => config.nativeSinks.includes(sink));
+  if (!useGit) {
+    await sync(sinks);
+    return;
+  }
 
-  const release = new ReleaseBranch(config.repoRoot, todaysDate);
-  release.start();
-  let produced = false;
-  try {
-    produced = await sync();
-  } catch (error) {
-    release.abandon();
-    throw error;
-  }
-  if (!produced || !release.publish(commitMessage)) {
-    console.log('Nothing to publish; deleting the release branch.');
-    release.abandon();
-  }
+  // The native checkout starts first, so a dirty native tree fails before this repo is touched.
+  const releases: Release[] = [
+    ...(config.nativeRepo && writesNative
+      ? [
+          {
+            label: config.nativeRepo,
+            branch: new ReleaseBranch(config.nativeRepo, todaysDate),
+            commitMessage: nativeCommitMessage,
+          },
+        ]
+      : []),
+    {
+      label: config.repoRoot,
+      branch: new ReleaseBranch(config.repoRoot, todaysDate),
+      commitMessage,
+    },
+  ];
+  await runOnReleaseBranches(releases, () => sync(sinks));
 };
 
 main().then(

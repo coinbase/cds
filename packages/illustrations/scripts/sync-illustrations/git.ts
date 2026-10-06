@@ -63,3 +63,45 @@ export class ReleaseBranch {
     this.exec(`git branch -D ${this.branchName}`);
   }
 }
+
+/** A repository the run releases into: its branch and the commit message for it. */
+export type Release = {
+  /** Shown in logs, e.g. `cds` or `native`. */
+  label: string;
+  branch: Pick<ReleaseBranch, 'start' | 'publish' | 'abandon'>;
+  commitMessage: string;
+};
+
+/**
+ * Runs `produce` with every release branch started, then publishes each repository that changed
+ * and abandons the others. Repositories are independent: a run that only backfilled the native
+ * checkout publishes there and abandons the cds branch. If any branch fails to start, or
+ * `produce` throws or produced nothing, every started branch is abandoned.
+ */
+export async function runOnReleaseBranches(
+  releases: Release[],
+  produce: () => Promise<boolean>,
+  log: (message: string) => void = console.log,
+) {
+  const started: Release[] = [];
+  const abandonStarted = () => started.forEach(({ branch }) => branch.abandon());
+
+  let produced: boolean;
+  try {
+    for (const release of releases) {
+      release.branch.start();
+      started.push(release);
+    }
+    produced = await produce();
+  } catch (error) {
+    abandonStarted();
+    throw error;
+  }
+
+  for (const { label, branch, commitMessage } of releases) {
+    if (!produced || !branch.publish(commitMessage)) {
+      log(`Nothing to publish in ${label}; deleting its release branch.`);
+      branch.abandon();
+    }
+  }
+}

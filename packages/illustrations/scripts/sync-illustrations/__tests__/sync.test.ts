@@ -6,10 +6,13 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
+import { parseStamp } from '../artifacts/nativeSvg';
 import type { Component, Illustration } from '../illustration';
 import { type Manifest, manifestIllustrations, readManifest, writeManifest } from '../manifest';
+import { AndroidVectorDrawableSink } from '../sinks/AndroidVectorDrawableSink';
 import { allFilesExist, removeFile, writeFile } from '../sinks/files';
 import { IllustrationsPackageSink } from '../sinks/IllustrationsPackageSink';
+import { IosAssetCatalogSink } from '../sinks/IosAssetCatalogSink';
 import { includeTypes, Sink, type SinkChanges } from '../sinks/Sink';
 import { WebStoriesSink } from '../sinks/WebStoriesSink';
 import { buildColorPalette } from '../source/fetchColorPalette';
@@ -18,6 +21,7 @@ import { runSync, type SyncOutcome } from '../sync';
 
 import localFixture from './__fixtures__/getLocalVariables.json';
 import publishedFixture from './__fixtures__/getPublishedVariables.json';
+import { readTree } from './__fixtures__/nativeSinkHarness';
 
 /**
  * Drives the whole pipeline, from component list to files on disk, against an in-memory source
@@ -91,6 +95,8 @@ let source: InMemorySource;
 let manifest: Manifest;
 /** A second destination, added part way through the sequence. */
 let mirrorDir: string | undefined;
+/** The native checkout, added last: both native sinks write under it. */
+let nativeDir: string | undefined;
 
 const files = (type: string) =>
   fs.existsSync(path.join(dir, type))
@@ -123,6 +129,12 @@ const sync = async (syncAll = false) => {
       // Exercises `include`: the mirror only wants spot icons.
       ...(mirrorDir ? [new MirrorSink(mirrorDir, { include: includeTypes('spotIcon') })] : []),
       new WebStoriesSink({ dir: path.join(dir, 'stories') }),
+      ...(nativeDir
+        ? [
+            new IosAssetCatalogSink({ dir: path.join(nativeDir, 'ios') }),
+            new AndroidVectorDrawableSink({ dir: path.join(nativeDir, 'android') }),
+          ]
+        : []),
     ],
     syncAll,
   });
@@ -156,6 +168,7 @@ beforeAll(() => {
 afterAll(() => {
   fs.rmSync(dir, { recursive: true, force: true });
   if (mirrorDir) fs.rmSync(mirrorDir, { recursive: true, force: true });
+  if (nativeDir) fs.rmSync(nativeDir, { recursive: true, force: true });
 });
 
 describe('runSync, end to end against an in-memory source', () => {
@@ -353,6 +366,72 @@ describe('runSync, end to end against an in-memory source', () => {
     expect(fs.readFileSync(path.join(mirrorDir as string, 'spotIcon/twoFactor.svg'), 'utf-8')).toBe(
       read('spotIcon/svg/light/twoFactor-2.svg'),
     );
+    expect((await sync()).status).toBe('nothing-to-sync');
+  });
+
+  it('fills the native sinks added later on an ordinary incremental run, then leaves them alone', async () => {
+    nativeDir = fs.mkdtempSync(path.join(os.tmpdir(), 'sync-illustrations-native-'));
+    const outcome = await sync();
+
+    if (outcome.status !== 'synced') throw new Error(outcome.status);
+    expect(outcome.backfilled.map((item) => item.name)).toEqual(['twoFactor']);
+    expect(outcome.diff.results).toEqual({ added: [], updated: [], renamed: [], deleted: [] });
+    const native = readTree(nativeDir);
+    expect(Object.keys(native)).toEqual([
+      'android/kotlin/com/coinbase/cds/illustrations/generated/SpotIconNames.kt',
+      'android/res/drawable/cds_spot_icon_two_factor_dark.xml',
+      'android/res/drawable/cds_spot_icon_two_factor_light.xml',
+      'ios/Generated/SpotIconName.swift',
+      'ios/Resources/Illustrations.xcassets/Contents.json',
+      'ios/Resources/Illustrations.xcassets/spotIcon/Contents.json',
+      'ios/Resources/Illustrations.xcassets/spotIcon/twoFactor.imageset/Contents.json',
+      'ios/Resources/Illustrations.xcassets/spotIcon/twoFactor.imageset/twoFactor-dark.svg',
+      'ios/Resources/Illustrations.xcassets/spotIcon/twoFactor.imageset/twoFactor-light.svg',
+    ]);
+    const lightSvg =
+      native[
+        'ios/Resources/Illustrations.xcassets/spotIcon/twoFactor.imageset/twoFactor-light.svg'
+      ];
+    expect(parseStamp(lightSvg)).toEqual({
+      type: 'spotIcon',
+      name: 'twoFactor',
+      version: 2,
+      hash: entry('twoFactor')?.hash,
+    });
+    expect(parseStamp(native['android/res/drawable/cds_spot_icon_two_factor_dark.xml'])).toEqual(
+      parseStamp(lightSvg),
+    );
+    // The same art the package publishes, with the intrinsic size the asset catalog needs.
+    expect(lightSvg.split('-->\n')[1]).toBe(
+      `${read('spotIcon/svg/light/twoFactor-2.svg').replace('<svg ', '<svg width="32" height="32" ')}\n`,
+    );
+    expect(native['android/res/drawable/cds_spot_icon_two_factor_light.xml']).toContain(
+      'android:fillColor="#E13947"',
+    );
+    expect(native['ios/Generated/SpotIconName.swift']).toContain('    case twoFactor\n');
+    expect((await sync()).status).toBe('nothing-to-sync');
+  });
+
+  it('rewrites a native asset whose stamp is stale, as in a checkout that missed a run', async () => {
+    const file = path.join(
+      nativeDir as string,
+      'android/res/drawable/cds_spot_icon_two_factor_light.xml',
+    );
+    const current = fs.readFileSync(file, 'utf-8');
+    fs.writeFileSync(
+      file,
+      current.replace(
+        'cds-illustration spotIcon twoFactor 2 ',
+        'cds-illustration spotIcon twoFactor 1 ',
+      ),
+    );
+
+    const outcome = await sync();
+
+    if (outcome.status !== 'synced') throw new Error(outcome.status);
+    expect(outcome.backfilled.map((item) => item.name)).toEqual(['twoFactor']);
+    expect(entry('twoFactor')?.version).toBe(2);
+    expect(fs.readFileSync(file, 'utf-8')).toBe(current);
     expect((await sync()).status).toBe('nothing-to-sync');
   });
 });
