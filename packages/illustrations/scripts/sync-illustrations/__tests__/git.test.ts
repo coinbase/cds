@@ -9,7 +9,7 @@ import { assertNativeCheckout, nativeModules } from '../nativeRepo';
 const release = (
   label: string,
   calls: string[],
-  { startFails = false, changed = true } = {},
+  { startFails = false, publishFails = false, changed = true } = {},
 ): Release => ({
   label,
   commitMessage: `commit ${label}`,
@@ -20,6 +20,7 @@ const release = (
     },
     publish: (message: string) => {
       calls.push(`${label}.publish(${message})`);
+      if (publishFails) throw new Error(`${label} could not be pushed`);
       return changed;
     },
     abandon: () => {
@@ -83,6 +84,23 @@ describe('runOnReleaseBranches', () => {
       ),
     ).rejects.toThrow('rejected SVG');
     expect(calls).toEqual(['native.start', 'cds.start', 'native.abandon', 'cds.abandon']);
+  });
+
+  it('abandons the repositories not yet published when one publish fails, keeping the failed one', async () => {
+    const calls: string[] = [];
+    await expect(
+      runOnReleaseBranches(
+        [release('native', calls, { publishFails: true }), release('cds', calls)],
+        async () => true,
+        quiet,
+      ),
+    ).rejects.toThrow('native could not be pushed');
+    expect(calls).toEqual([
+      'native.start',
+      'cds.start',
+      'native.publish(commit native)',
+      'cds.abandon',
+    ]);
   });
 
   it('never runs the sync when a branch cannot start, and leaves the others as they were', async () => {
