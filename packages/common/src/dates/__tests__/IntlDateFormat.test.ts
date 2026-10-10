@@ -33,7 +33,7 @@ describe('IntlDateFormat', () => {
     expect(intlDateFormat.locale).toBe('fr-CA');
     expect(intlDateFormat.separator).toBe('.');
     expect(intlDateFormat.invalidDateFormatRegex).toEqual(new RegExp(`[^0-9.]`));
-    expect(intlDateFormat.duplicateSeparatorRegex).toEqual(new RegExp(`.{2,}`, 'g'));
+    expect(intlDateFormat.duplicateSeparatorRegex).toEqual(new RegExp(`\\.{2,}`, 'g'));
     expect(intlDateFormat.dateTimeFormat).toBeInstanceOf(Intl.DateTimeFormat);
     expect(intlDateFormat.dateTimeFormat.resolvedOptions().locale).toBe('fr-CA');
     expect(intlDateFormat.dateTimeFormatParts[0].type).toBe('year');
