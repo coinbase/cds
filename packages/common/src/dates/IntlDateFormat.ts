@@ -47,7 +47,9 @@ export class IntlDateFormat {
     this.separator = props.separator;
 
     this.invalidDateFormatRegex = new RegExp(`[^0-9${this.separator}]`);
-    this.duplicateSeparatorRegex = new RegExp(`${this.separator}{2,}`, 'g');
+    // Escape the separator so that a character such as "." matches literally.
+    const escapedSeparator = this.separator.replace(/[\\^$.*+?()[\]{}|]/g, '\\$&');
+    this.duplicateSeparatorRegex = new RegExp(`${escapedSeparator}{2,}`, 'g');
     this.dateTimeFormat = new Intl.DateTimeFormat(props.locale);
     this.dateTimeFormatParts = this.dateTimeFormat.formatToParts(new Date());
 
