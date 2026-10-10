@@ -282,4 +282,48 @@ describe('Cell', () => {
 
     expect(onKeyDownSpy).toHaveBeenCalledTimes(1);
   });
+
+  it('sets aria-pressed on the button when selected', () => {
+    render(
+      <DefaultThemeProvider>
+        <Cell selected onClick={noop}>
+          {CELL_TEXT}
+        </Cell>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('does not set aria-pressed on the button when not selected', () => {
+    render(
+      <DefaultThemeProvider>
+        <Cell onClick={noop}>{CELL_TEXT}</Cell>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('button')).not.toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('sets aria-current on the link when selected', () => {
+    render(
+      <DefaultThemeProvider>
+        <Cell selected href={URL}>
+          {CELL_TEXT}
+        </Cell>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('link')).toHaveAttribute('aria-current', 'true');
+  });
+
+  it('does not set aria-current on the link when not selected', () => {
+    render(
+      <DefaultThemeProvider>
+        <Cell href={URL}>{CELL_TEXT}</Cell>
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByRole('link')).not.toHaveAttribute('aria-current');
+  });
 });
