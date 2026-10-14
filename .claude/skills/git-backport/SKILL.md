@@ -1,5 +1,5 @@
 ---
-name: git.backport
+name: git-backport
 description: Back-port a specific commit from master to a release branch via cherry-pick. Creates a dedicated backport branch, attempts the cherry-pick, pushes it, and opens a PR by default. Returns to the original branch when done (success or failure). If there are merge conflicts, diagnoses the root cause without attempting an autonomous resolution. Use when asked to "backport", "cherry-pick to release", or "port a fix to a release branch".
 allowed-tools: Bash(git log:*), Bash(git show:*), Bash(git diff:*), Bash(git rev-parse:*), Bash(git apply:*), Bash(git add:*), Bash(git commit:*), Bash(git checkout:*), Bash(git branch:*), Bash(git status:*), Bash(git fetch:*), Bash(git merge-base:*), Bash(git push:*), Bash(git remote:*), Bash(git reset:*), Bash(gh pr create:*), Bash(gh pr view:*), Bash(gh api:*), Read, Grep, Glob
 argument-hint: <commit-sha> <target-branch>

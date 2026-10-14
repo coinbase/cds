@@ -1,5 +1,5 @@
 ---
-name: dev.cds-mobile
+name: dev-cds-mobile
 description: USE THIS when asked to work on a new or existing (MOBILE) CDS React component in packages/mobile
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: figma.enumerate-component-urls
+name: figma-enumerate-component-urls
 description: >
   Enumerates every public component set in a CDS Figma file and produces a
   list of [Component Name]: [Figma URL] entries grouped by page section. Use

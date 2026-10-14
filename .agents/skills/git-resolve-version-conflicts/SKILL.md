@@ -1,5 +1,5 @@
 ---
-name: git.resolve-version-conflicts
+name: git-resolve-version-conflicts
 description: Resolve rebase/merge conflicts in CDS release-versioning files — package.json "version" fields and CHANGELOG.md entries — that arise because packages were versioned independently on master and the current branch. Recomputes each package's version by applying the branch's bump type (patch/minor/major) on top of master's latest version, rewrites CHANGELOG entries with today's date and the new version, then continues the rebase and formats. Use when the user asks to "resolve a versioning conflict", "resolve a package.json conflict", "resolve a changelog conflict", or when you organically detect conflict markers in package.json / CHANGELOG.md files during a rebase or merge. When detected organically, ALWAYS ask the user for confirmation before running this flow.
 allowed-tools: Bash(git status:*), Bash(git fetch:*), Bash(git rebase:*), Bash(git show:*), Bash(git log:*), Bash(git diff:*), Bash(git add:*), Bash(git rev-parse:*), Bash(git merge-base:*), Bash(grep:*), Bash(ls:*), Bash(yarn nx format:write), Read, Edit, Grep, Glob
 model: opus

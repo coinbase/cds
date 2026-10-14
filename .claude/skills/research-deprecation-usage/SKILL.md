@@ -1,5 +1,5 @@
 ---
-name: research.deprecation-usage
+name: research-deprecation-usage
 description: |
   Audits how often deprecated CDS exports are actively used in customer codebases using Sourcegraph MCP search tools.
   Use this skill whenever asked to assess removal readiness for deprecated CDS APIs, investigate the

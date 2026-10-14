@@ -1,5 +1,5 @@
 ---
-name: components.best-practices
+name: components-best-practices
 description: Use this skill whenever working on CDS React components in any package.
 user-invocable: false
 ---

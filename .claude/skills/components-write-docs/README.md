@@ -1,4 +1,4 @@
-# components.write-docs agent skill
+# components-write-docs agent skill
 
 This skill may be invoked by the user following the examples below.
 

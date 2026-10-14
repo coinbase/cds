@@ -1,5 +1,5 @@
 ---
-name: components.styles
+name: components-styles
 description: Guidelines writing styles API (styles, classNames, and static classNames) for a CDS component. Use this skill when adding customization options to a React component via `styles` or `classNames` props or when needing to update the docsite with component styles documentation.
 argument-hint: <ComponentName> [additional context] (e.g., "Button", "LineChart add real-time examples")
 ---
@@ -338,7 +338,7 @@ After adding the styles API to the component, update the documentation:
    yarn nx run docs:docgen
    ```
 
-2. **Create or update the styles documentation** use the `components.write-docs` SKILL for general knowledge on how to write component documentation:
+2. **Create or update the styles documentation** use the `components-write-docs` SKILL for general knowledge on how to write component documentation:
    - Create `_webStyles.mdx` with ComponentStylesTable and StylesExplorer
    - Create `_mobileStyles.mdx` with ComponentStylesTable (if mobile)
    - Update `index.mdx` to import and render the styles tables

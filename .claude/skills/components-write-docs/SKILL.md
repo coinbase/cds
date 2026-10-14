@@ -1,5 +1,5 @@
 ---
-name: components.write-docs
+name: components-write-docs
 description: Guidelines for creating or updating documentation for a CDS component on the docsite (apps/docs/). Use this skill after creating or making updates to a CDS React component to write high quality documentaiton in the CDS docsite.
 argument-hint: <ComponentName> [additional context] (e.g., "Button", "LineChart add real-time examples")
 model: claude-sonnet-4-6
@@ -38,7 +38,7 @@ Review these before writing to ensure consistency in style, structure, and depth
 When writing examples, reference these files for valid values:
 
 - **Icon names** (`packages/icons/src/IconName.ts`) - All valid icon names (e.g., `'checkmark'`, `'close'`, `'warning'`)
-- **Design tokens** - Use the `components.best-practices` SKILL for knowledge on valid CDS design token values (Color, Space, BorderRadius, Font, etc.)
+- **Design tokens** - Use the `components-best-practices` SKILL for knowledge on valid CDS design token values (Color, Space, BorderRadius, Font, etc.)
 
 ## Step 2: Research Phase (for new docs or major updates)
 
@@ -670,7 +670,7 @@ Before completing, verify:
 - [ ] All imports use correct source categories
 - [ ] Component description is clear and helpful
 - [ ] Added storybook/figma links if story files exist or links are provided
-- [ ] Design token values are valid (followed `components.best-practices` SKILL)
+- [ ] Design token values are valid (followed `components-best-practices` SKILL)
 
 ## Additional Notes
 
