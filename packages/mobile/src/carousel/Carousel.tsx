@@ -10,11 +10,17 @@ import React, {
 } from 'react';
 import { type StyleProp, type TextStyle, View, type ViewStyle } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import Animated, {
+  cancelAnimation,
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring,
+} from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { useCarouselAutoplay } from '@coinbase/cds-common/carousel/useCarouselAutoplay';
 import type { Rect } from '@coinbase/cds-common/types/Rect';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
-import { animated, useSpring } from '@react-spring/native';
 
 import { useComponentConfig } from '../hooks/useComponentConfig';
 import { useLayout } from '../hooks/useLayout';
@@ -344,6 +350,7 @@ const getItemOffsets = (itemRects: { [itemId: string]: Rect }) => {
  * @returns The nearest page index.
  */
 const getNearestPageIndexFromOffset = (scrollOffset: number, pageOffsets: number[]) => {
+  'worklet';
   let closestPageIndex = 0;
   let closestDistance = Infinity;
   pageOffsets.forEach((pageOffset, index) => {
@@ -369,10 +376,12 @@ const findNearestLoopOffset = (
   candidateOffsets: number[],
   loopLength: number,
 ): { offset: number; index: number } => {
+  'worklet';
   const currentCycle = Math.floor(currentOffset / loopLength);
   let nearest = { offset: 0, index: 0, distance: Infinity };
 
-  for (const [index, candidateOffset] of candidateOffsets.entries()) {
+  for (let index = 0; index < candidateOffsets.length; index++) {
+    const candidateOffset = candidateOffsets[index];
     for (const cycle of [currentCycle - 1, currentCycle, currentCycle + 1]) {
       const cycleOffset = cycle * loopLength + candidateOffset;
       const distance = Math.abs(currentOffset - cycleOffset);
@@ -489,6 +498,7 @@ const clampWithElasticResistance = (
   maxScrollOffset: number,
   elasticAmount = 0.5,
 ): number => {
+  'worklet';
   if (offset < 0) {
     return offset * elasticAmount;
   } else if (offset > maxScrollOffset) {
@@ -496,6 +506,59 @@ const clampWithElasticResistance = (
     return maxScrollOffset + overScroll * elasticAmount;
   }
   return offset;
+};
+
+/**
+ * Calculates where the carousel should settle after a drag is released.
+ * @param projectedOffset - The release offset including momentum.
+ * @returns The offset to animate to, the resulting page index, and the offset to compute visible items from.
+ */
+const getDragReleaseTarget = (
+  projectedOffset: number,
+  {
+    drag,
+    isLoopingActive,
+    pageOffsets,
+    loopLength,
+    maxScrollOffset,
+  }: {
+    drag: 'free' | 'snap';
+    isLoopingActive: boolean;
+    pageOffsets: number[];
+    loopLength: number;
+    maxScrollOffset: number;
+  },
+): { offset: number; pageIndex: number; visibleOffset: number } => {
+  'worklet';
+  if (pageOffsets.length === 0) {
+    return { offset: projectedOffset, pageIndex: 0, visibleOffset: projectedOffset };
+  }
+
+  if (isLoopingActive) {
+    const { offset: nearestOffset, index: pageIndex } = findNearestLoopOffset(
+      projectedOffset,
+      pageOffsets,
+      loopLength,
+    );
+
+    if (drag === 'snap') {
+      return { offset: nearestOffset, pageIndex, visibleOffset: pageOffsets[pageIndex] };
+    }
+
+    const currentCycle = Math.floor(projectedOffset / loopLength);
+    const localOffset = projectedOffset - currentCycle * loopLength;
+    return { offset: projectedOffset, pageIndex, visibleOffset: localOffset };
+  }
+
+  const clampedScrollOffset = clampWithElasticResistance(projectedOffset, maxScrollOffset, 0);
+  const pageIndex = getNearestPageIndexFromOffset(clampedScrollOffset, pageOffsets);
+
+  if (drag === 'snap') {
+    const snapOffset = pageOffsets[pageIndex];
+    return { offset: snapOffset, pageIndex, visibleOffset: snapOffset };
+  }
+
+  return { offset: projectedOffset, pageIndex, visibleOffset: clampedScrollOffset };
 };
 
 /**
@@ -588,13 +651,10 @@ export const Carousel = memo(
       autoplayInterval = 3000,
       ...props
     } = mergedProps;
-    const carouselScrollX = useRef(0);
+    const scrollX = useSharedValue(0);
+    const targetScrollX = useSharedValue(0);
+    const dragStartScrollX = useSharedValue(0);
     const hasAppliedInitialPageRef = useRef(false);
-
-    const animationApi = useSpring({
-      x: carouselScrollX.current,
-      config: animationConfig,
-    });
 
     const [activePageIndex, setActivePageIndex] = useState(() => Math.max(0, initialPage ?? 0));
     const [containerSize, onLayout] = useLayout();
@@ -650,7 +710,7 @@ export const Carousel = memo(
       return contentWidth + gap;
     }, [shouldLoop, contentWidth, gap]);
 
-    const isLoopingActive = shouldLoop && loopLength > 0;
+    const isLoopingActive = !!shouldLoop && loopLength > 0;
 
     // Calculate how many items to clone for each direction (enough to fill viewport)
     const cloneCounts = useMemo(() => {
@@ -781,16 +841,11 @@ export const Carousel = memo(
         updateVisibleCarouselItems(pageOffsets[newPage]);
 
         const targetOffset = isLoopingActive
-          ? findNearestLoopOffset(carouselScrollX.current, [pageOffsets[newPage]], loopLength)
-              .offset
+          ? findNearestLoopOffset(targetScrollX.value, [pageOffsets[newPage]], loopLength).offset
           : pageOffsets[newPage];
 
-        carouselScrollX.current = targetOffset;
-        if (shouldAnimate) {
-          animationApi.x.start({ to: targetOffset, config: animationConfig });
-        } else {
-          animationApi.x.set(targetOffset);
-        }
+        targetScrollX.value = targetOffset;
+        scrollX.value = shouldAnimate ? withSpring(targetOffset, animationConfig) : targetOffset;
         reset();
       },
       [
@@ -800,7 +855,8 @@ export const Carousel = memo(
         pageOffsets,
         isLoopingActive,
         loopLength,
-        animationApi.x,
+        targetScrollX,
+        scrollX,
         reset,
       ],
     );
@@ -851,68 +907,21 @@ export const Carousel = memo(
       pause();
     }, [onDragStart, pause]);
 
-    const handleDragEnd = useCallback(() => {
-      onDragEnd?.();
-      resume();
-    }, [onDragEnd, resume]);
-
-    const handleDragTransition = useCallback(
-      (targetOffsetScroll: number) => {
-        if (drag === 'none') return targetOffsetScroll;
-
-        if (isLoopingActive) {
-          const { offset: nearestOffset, index: pageIndex } = findNearestLoopOffset(
-            targetOffsetScroll,
-            pageOffsets,
-            loopLength,
-          );
-
-          if (pageIndex !== activePageIndex) reset();
-
-          updateActivePageIndex(pageIndex);
-
-          if (drag === 'snap') {
-            updateVisibleCarouselItems(pageOffsets[pageIndex]);
-            return nearestOffset;
-          }
-
-          const currentCycle = Math.floor(targetOffsetScroll / loopLength);
-          const localOffset = targetOffsetScroll - currentCycle * loopLength;
-          updateVisibleCarouselItems(localOffset);
-          return targetOffsetScroll;
-        } else {
-          // Non-looping logic with clamping
-          const clampedScrollOffset = clampWithElasticResistance(
-            targetOffsetScroll,
-            maxScrollOffset,
-            0,
-          );
-          const closestPageIndex = getNearestPageIndexFromOffset(clampedScrollOffset, pageOffsets);
-
-          if (closestPageIndex !== activePageIndex) reset();
-
-          updateActivePageIndex(closestPageIndex);
-
-          if (drag === 'snap') {
-            const snapOffset = pageOffsets[closestPageIndex];
-            updateVisibleCarouselItems(snapOffset);
-            return snapOffset;
-          }
-
-          updateVisibleCarouselItems(clampedScrollOffset);
-          return targetOffsetScroll;
-        }
+    const handleDragRelease = useCallback(
+      (pageIndex: number, visibleOffset: number) => {
+        if (pageIndex !== activePageIndex) reset();
+        updateActivePageIndex(pageIndex);
+        updateVisibleCarouselItems(visibleOffset);
+        onDragEnd?.();
+        resume();
       },
       [
-        drag,
-        isLoopingActive,
-        loopLength,
-        maxScrollOffset,
-        pageOffsets,
         activePageIndex,
-        updateVisibleCarouselItems,
-        updateActivePageIndex,
         reset,
+        updateActivePageIndex,
+        updateVisibleCarouselItems,
+        onDragEnd,
+        resume,
       ],
     );
 
@@ -925,33 +934,32 @@ export const Carousel = memo(
           .failOffsetY([-10, 10])
           .onStart(() => {
             if (!isDragEnabled) return;
-            handleDragStart();
+            cancelAnimation(scrollX);
+            dragStartScrollX.value = scrollX.value;
+            scheduleOnRN(handleDragStart);
           })
           .onUpdate(({ translationX }) => {
             if (!isDragEnabled) return;
 
-            let newOffset: number;
-            if (shouldLoop) {
-              newOffset = carouselScrollX.current - translationX;
+            if (isLoopingActive) {
+              scrollX.value = dragStartScrollX.value - translationX;
             } else {
-              newOffset = clampWithElasticResistance(
-                carouselScrollX.current - translationX,
+              scrollX.value = clampWithElasticResistance(
+                dragStartScrollX.value - translationX,
                 maxScrollOffset,
               );
             }
-
-            animationApi.x.set(newOffset);
           })
           .onEnd(({ translationX, velocityX }) => {
             if (!isDragEnabled) return;
 
             let projectedOffset: number;
 
-            if (shouldLoop) {
-              projectedOffset = carouselScrollX.current - translationX;
+            if (isLoopingActive) {
+              projectedOffset = dragStartScrollX.value - translationX;
             } else {
               projectedOffset = clampWithElasticResistance(
-                carouselScrollX.current - translationX,
+                dragStartScrollX.value - translationX,
                 maxScrollOffset,
               );
             }
@@ -959,7 +967,7 @@ export const Carousel = memo(
             const power = drag === 'free' ? 0.25 : 0.125;
             const momentumDistance = velocityX * power;
 
-            if (shouldLoop) {
+            if (isLoopingActive) {
               projectedOffset = projectedOffset - momentumDistance;
             } else {
               projectedOffset = clampWithElasticResistance(
@@ -969,29 +977,30 @@ export const Carousel = memo(
               );
             }
 
-            const finalOffset = handleDragTransition(projectedOffset);
-
-            carouselScrollX.current = finalOffset;
-
-            animationApi.x.start({
-              to: finalOffset,
-              config: {
-                ...animationConfig,
-              },
+            const { offset, pageIndex, visibleOffset } = getDragReleaseTarget(projectedOffset, {
+              drag,
+              isLoopingActive,
+              pageOffsets,
+              loopLength,
+              maxScrollOffset,
             });
 
-            handleDragEnd();
-          })
-          .runOnJS(true),
+            targetScrollX.value = offset;
+            scrollX.value = withSpring(offset, animationConfig);
+            scheduleOnRN(handleDragRelease, pageIndex, visibleOffset);
+          }),
       [
         isDragEnabled,
-        shouldLoop,
+        isLoopingActive,
         maxScrollOffset,
-        animationApi,
         drag,
-        handleDragTransition,
+        pageOffsets,
+        loopLength,
+        scrollX,
+        targetScrollX,
+        dragStartScrollX,
         handleDragStart,
-        handleDragEnd,
+        handleDragRelease,
       ],
     );
 
@@ -1075,30 +1084,18 @@ export const Carousel = memo(
       [styles?.carouselContainer],
     );
 
-    const animatedStyle = useMemo(
-      () => ({
-        flexDirection: 'row' as const,
-        ...(styles?.carousel as any),
-      }),
+    const carouselStyle = useMemo(
+      () => [{ flexDirection: 'row' as const }, styles?.carousel],
       [styles?.carousel],
     );
 
-    const animatedTransform = useMemo(
-      () => ({
-        transform: [
-          {
-            translateX: animationApi.x.to((value) => {
-              if (!shouldLoop || !loopLength) return -value;
-              // Wrap the value to stay within one cycle for visual continuity
-              // Ensure wrapped is always in range [0, loopLength)
-              const wrapped = ((value % loopLength) + loopLength) % loopLength;
-              return -wrapped;
-            }),
-          },
-        ],
-      }),
-      [animationApi, shouldLoop, loopLength],
-    );
+    const transformStyle = useAnimatedStyle(() => {
+      if (!isLoopingActive) return { transform: [{ translateX: -scrollX.value }] };
+      // Wrap the value to stay within one cycle for visual continuity
+      // Ensure wrapped is always in range [0, loopLength)
+      const wrapped = ((scrollX.value % loopLength) + loopLength) % loopLength;
+      return { transform: [{ translateX: -wrapped }] };
+    }, [isLoopingActive, loopLength]);
 
     const registerItem = useCallback(
       (id: string, rect: Rect) => {
@@ -1106,9 +1103,9 @@ export const Carousel = memo(
           ...prev,
           [id]: rect,
         }));
-        updateVisibleCarouselItems(carouselScrollX.current);
+        updateVisibleCarouselItems(targetScrollX.value);
       },
-      [updateVisibleCarouselItems],
+      [updateVisibleCarouselItems, targetScrollX],
     );
 
     const unregisterItem = useCallback((id: string) => {
@@ -1200,9 +1197,9 @@ export const Carousel = memo(
             )}
             <GestureDetector gesture={panGesture}>
               <View onLayout={onLayout} style={scrollViewStyle}>
-                <animated.View style={[animatedStyle, animatedTransform]}>
+                <Animated.View style={[carouselStyle, transformStyle]}>
                   {childrenWithClones}
-                </animated.View>
+                </Animated.View>
               </View>
             </GestureDetector>
             {!hidePagination && (

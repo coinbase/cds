@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import * as Worklets from 'react-native-worklets';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
 import { Box } from '../../layout/Box';
@@ -24,7 +25,6 @@ type MockPanGesture = {
   onStart: jest.Mock;
   onUpdate: jest.Mock;
   onEnd: jest.Mock;
-  runOnJS: jest.Mock;
   activeOffsetX: jest.Mock;
   activeOffsetY: jest.Mock;
   failOffsetX: jest.Mock;
@@ -46,7 +46,6 @@ const mockPanGesture: MockPanGesture = {
       return mockPanGesture;
     },
   ),
-  runOnJS: jest.fn().mockReturnThis(),
   activeOffsetX: jest.fn().mockReturnThis(),
   activeOffsetY: jest.fn().mockReturnThis(),
   failOffsetX: jest.fn().mockReturnThis(),
@@ -74,20 +73,6 @@ const simulateDragGesture = (translationX = 100, velocityX = 0): void => {
     }
   });
 };
-
-// Mock @react-spring/native
-jest.mock('@react-spring/native', () => ({
-  animated: {
-    View: ({ children, ...props }: any) => <div {...props}>{children}</div>,
-  },
-  useSpring: () => ({
-    x: {
-      start: jest.fn(),
-      set: jest.fn(),
-      to: jest.fn(() => 0),
-    },
-  }),
-}));
 
 const containerWidth = 400;
 const defaultItemWidth = 200;
@@ -149,6 +134,10 @@ const MockCarouselItem = ({ children, id, itemIndex, width = defaultItemWidth, .
 describe('Carousel', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    // Run JS-thread callbacks scheduled from gesture worklets synchronously so drag assertions can follow immediately
+    jest
+      .spyOn(Worklets, 'scheduleOnRN')
+      .mockImplementation((fn, ...args) => void (fn as (...a: unknown[]) => unknown)(...args));
   });
 
   describe('Basic Rendering', () => {
