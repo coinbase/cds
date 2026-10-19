@@ -49,6 +49,7 @@ import { DefaultCarouselPagination } from './DefaultCarouselPagination';
  * @returns The wrapped value within the range.
  */
 const wrap = (min: number, max: number, value: number): number => {
+  'worklet';
   const range = max - min;
   return min + ((((value - min) % range) + range) % range);
 };
@@ -511,54 +512,39 @@ const clampWithElasticResistance = (
 /**
  * Calculates where the carousel should settle after a drag is released.
  * @param projectedOffset - The release offset including momentum.
- * @returns The offset to animate to, the resulting page index, and the offset to compute visible items from.
+ * @returns The offset to animate to and the resulting page index.
  */
 const getDragReleaseTarget = (
   projectedOffset: number,
   {
-    drag,
+    snap,
     isLoopingActive,
     pageOffsets,
     loopLength,
     maxScrollOffset,
   }: {
-    drag: 'free' | 'snap';
+    snap: boolean;
     isLoopingActive: boolean;
     pageOffsets: number[];
     loopLength: number;
     maxScrollOffset: number;
   },
-): { offset: number; pageIndex: number; visibleOffset: number } => {
+): { offset: number; pageIndex: number } => {
   'worklet';
-  if (pageOffsets.length === 0) {
-    return { offset: projectedOffset, pageIndex: 0, visibleOffset: projectedOffset };
-  }
-
   if (isLoopingActive) {
     const { offset: nearestOffset, index: pageIndex } = findNearestLoopOffset(
       projectedOffset,
       pageOffsets,
       loopLength,
     );
-
-    if (drag === 'snap') {
-      return { offset: nearestOffset, pageIndex, visibleOffset: pageOffsets[pageIndex] };
-    }
-
-    const currentCycle = Math.floor(projectedOffset / loopLength);
-    const localOffset = projectedOffset - currentCycle * loopLength;
-    return { offset: projectedOffset, pageIndex, visibleOffset: localOffset };
+    return { offset: snap ? nearestOffset : projectedOffset, pageIndex };
   }
 
   const clampedScrollOffset = clampWithElasticResistance(projectedOffset, maxScrollOffset, 0);
+  if (pageOffsets.length === 0) return { offset: clampedScrollOffset, pageIndex: 0 };
+
   const pageIndex = getNearestPageIndexFromOffset(clampedScrollOffset, pageOffsets);
-
-  if (drag === 'snap') {
-    const snapOffset = pageOffsets[pageIndex];
-    return { offset: snapOffset, pageIndex, visibleOffset: snapOffset };
-  }
-
-  return { offset: projectedOffset, pageIndex, visibleOffset: clampedScrollOffset };
+  return { offset: snap ? pageOffsets[pageIndex] : clampedScrollOffset, pageIndex };
 };
 
 /**
@@ -731,10 +717,8 @@ export const Carousel = memo(
           return;
         }
 
-        // For original items: wrap the offset to check visibility within one cycle
-        const adjustedOffset = isLoopingActive
-          ? ((scrollOffset % loopLength) + loopLength) % loopLength
-          : scrollOffset;
+        // Wrap the offset to stay within one cycle, matching the rendered transform
+        const adjustedOffset = isLoopingActive ? wrap(0, loopLength, scrollOffset) : scrollOffset;
 
         const visibleItems = getVisibleItems(
           carouselItemRects,
@@ -742,12 +726,11 @@ export const Carousel = memo(
           adjustedOffset,
         );
 
-        // For clones: check visibility against actual (unwrapped) scroll position
         if (isLoopingActive && children) {
           const childrenArray = React.Children.toArray(children) as CarouselItemElement[];
           const items = getItemOffsets(carouselItemRects);
-          const viewportLeft = scrollOffset;
-          const viewportRight = scrollOffset + containerSize.width;
+          const viewportLeft = adjustedOffset;
+          const viewportRight = adjustedOffset + containerSize.width;
 
           // Check backward clones visibility
           const backwardStartIndex = childrenArray.length - cloneCounts.backward;
@@ -908,10 +891,10 @@ export const Carousel = memo(
     }, [onDragStart, pause]);
 
     const handleDragRelease = useCallback(
-      (pageIndex: number, visibleOffset: number) => {
+      (offset: number, pageIndex: number) => {
         if (pageIndex !== activePageIndex) reset();
         updateActivePageIndex(pageIndex);
-        updateVisibleCarouselItems(visibleOffset);
+        updateVisibleCarouselItems(offset);
         onDragEnd?.();
         resume();
       },
@@ -940,45 +923,19 @@ export const Carousel = memo(
           })
           .onUpdate(({ translationX }) => {
             if (!isDragEnabled) return;
-
-            if (isLoopingActive) {
-              scrollX.value = dragStartScrollX.value - translationX;
-            } else {
-              scrollX.value = clampWithElasticResistance(
-                dragStartScrollX.value - translationX,
-                maxScrollOffset,
-              );
-            }
+            const offset = dragStartScrollX.value - translationX;
+            scrollX.value = isLoopingActive
+              ? offset
+              : clampWithElasticResistance(offset, maxScrollOffset);
           })
-          .onEnd(({ translationX, velocityX }) => {
+          .onEnd(({ velocityX }) => {
             if (!isDragEnabled) return;
-
-            let projectedOffset: number;
-
-            if (isLoopingActive) {
-              projectedOffset = dragStartScrollX.value - translationX;
-            } else {
-              projectedOffset = clampWithElasticResistance(
-                dragStartScrollX.value - translationX,
-                maxScrollOffset,
-              );
-            }
 
             const power = drag === 'free' ? 0.25 : 0.125;
             const momentumDistance = velocityX * power;
 
-            if (isLoopingActive) {
-              projectedOffset = projectedOffset - momentumDistance;
-            } else {
-              projectedOffset = clampWithElasticResistance(
-                projectedOffset - momentumDistance,
-                maxScrollOffset,
-                0,
-              );
-            }
-
-            const { offset, pageIndex, visibleOffset } = getDragReleaseTarget(projectedOffset, {
-              drag,
+            const { offset, pageIndex } = getDragReleaseTarget(scrollX.value - momentumDistance, {
+              snap: drag === 'snap',
               isLoopingActive,
               pageOffsets,
               loopLength,
@@ -987,7 +944,7 @@ export const Carousel = memo(
 
             targetScrollX.value = offset;
             scrollX.value = withSpring(offset, animationConfig);
-            scheduleOnRN(handleDragRelease, pageIndex, visibleOffset);
+            scheduleOnRN(handleDragRelease, offset, pageIndex);
           }),
       [
         isDragEnabled,
@@ -1090,11 +1047,9 @@ export const Carousel = memo(
     );
 
     const transformStyle = useAnimatedStyle(() => {
-      if (!isLoopingActive) return { transform: [{ translateX: -scrollX.value }] };
       // Wrap the value to stay within one cycle for visual continuity
-      // Ensure wrapped is always in range [0, loopLength)
-      const wrapped = ((scrollX.value % loopLength) + loopLength) % loopLength;
-      return { transform: [{ translateX: -wrapped }] };
+      const offset = isLoopingActive ? wrap(0, loopLength, scrollX.value) : scrollX.value;
+      return { transform: [{ translateX: -offset }] };
     }, [isLoopingActive, loopLength]);
 
     const registerItem = useCallback(
