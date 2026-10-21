@@ -94,6 +94,16 @@ The in-line Informational Banner is used to provide users with additional inform
 </VStack>
 ```
 
+### Hidden Start Icon
+
+Set `hideStartIcon` to hide the start icon. The banner content shifts to the start edge.
+
+```tsx
+<Banner hideStartIcon startIcon="info" title="Banner without a start icon" variant="informational">
+  <Text font="label2">Use this when the message does not need a leading status icon.</Text>
+</Banner>
+```
+
 ### Rounded Corner Banners
 
 Customize `borderRadius` to align contextual or in-line banners with surrounding surfaces.

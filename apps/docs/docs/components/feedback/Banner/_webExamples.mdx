@@ -134,6 +134,18 @@ You can customize `borderRadius` to soften contextual and in-line banners.
 Avoid setting `borderRadius` for `styleVariant="global"` so the vertical status bar remains aligned.
 :::
 
+### Hidden Start Icon
+
+Set `hideStartIcon` to hide the start icon. The banner content shifts to the start edge.
+
+```tsx live
+<Banner hideStartIcon startIcon="info" title="Banner without a start icon" variant="informational">
+  <Text as="p" font="label2">
+    Use this when the message does not need a leading status icon.
+  </Text>
+</Banner>
+```
+
 ### Bleed with Margin Props
 
 When using negative `margin*` props to create a bleed effect, explicitly set `width` so the Banner expands beyond its container.

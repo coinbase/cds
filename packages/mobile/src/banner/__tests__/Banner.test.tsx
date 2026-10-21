@@ -25,6 +25,18 @@ const MockBanner = ({
 );
 
 describe('Banner', () => {
+  it('renders the start icon by default', () => {
+    render(<MockBanner />);
+
+    expect(screen.getByTestId(`${TEST_ID}-icon`)).toBeTruthy();
+  });
+
+  it('does not render the start icon when hideStartIcon is true', () => {
+    render(<MockBanner hideStartIcon />);
+
+    expect(screen.queryByTestId(`${TEST_ID}-icon`)).toBeNull();
+  });
+
   it('renders a Banner', () => {
     render(<MockBanner />);
 
