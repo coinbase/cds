@@ -61,6 +61,11 @@ const config: StorybookConfig = {
   }),
   viteFinal: async (config, { configType }) => {
     return mergeConfig(config, {
+      // Only override Vite's base when explicitly requested via STORYBOOK_BASE_PATH
+      // (set by the PR-preview workflow to './' so the build can be served from a
+      // sub-path like /cds/pr-<n>/storybook/). The production Storybook build sets
+      // no such env var and therefore keeps Vite's default base unchanged.
+      ...(process.env.STORYBOOK_BASE_PATH ? { base: process.env.STORYBOOK_BASE_PATH } : {}),
       optimizeDeps: {
         include: ['storybook-dark-mode'],
       },
