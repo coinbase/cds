@@ -2448,9 +2448,6 @@ __metadata:
     rollup: "npm:^4.22.4"
     typescript: "npm:~5.9.2"
   peerDependencies:
-    "@coinbase/cds-common": "workspace:^"
-    "@coinbase/cds-mobile": "workspace:^"
-    "@coinbase/cds-web": "workspace:^"
     eslint: ^8 || ^9
     eslint-plugin-jsx-a11y: ^6
     eslint-plugin-react-native-a11y: ^3
