@@ -1,3 +1,10 @@
+## 4.49.1 (2026-10-26)
+
+### 🩹 Fixes
+
+- Stop publishing declaration maps. The shared `tsconfig.project.json` enables `declarationMap`, and the illustrations build only turned off `sourceMap`, so every published `.d.ts` came with an empty `.d.ts.map` (`"mappings": ""`) pointing at `src/`, which is not published. Turning them off removes ~6,400 files from the package; `.d.ts` output and import paths are unchanged.
+- Rewrite the `sync-illustrations` tooling as source → engine → sinks, fixing the rename, gradient-fill and short-hex handling of the old script, and regenerate `manifest.json` in the new keyed format. Internal tooling and devDependency changes only; the published `esm`/`dts` output is unchanged for consumers.
+
 ## 4.49.0 (2026-10-01)
 
 ### 🚀 Features

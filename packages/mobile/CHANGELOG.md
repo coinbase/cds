@@ -1,3 +1,17 @@
+## 9.30.0 (2026-10-26)
+
+### 🚀 Features
+
+- Add `hideStartIcon` prop to `Banner` to hide the start icon.
+
+### 🩹 Fixes
+
+- Improve `Carousel` drag performance by running the pan gesture and snap animation on the UI thread with Reanimated instead of the JS thread with `@react-spring/native`, so dragging stays smooth when the JS thread is busy.
+
+### 🧱 Updated Dependencies
+
+- Updated illustrations to 4.49.1
+
 ## 9.29.0 (2026-10-02)
 
 This is an artificial version bump with no new change.
