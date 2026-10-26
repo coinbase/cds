@@ -110,13 +110,11 @@ jobs:
     name: Audit Figma Integrations
     runs-on: ubuntu-latest
     if: github.event_name == 'workflow_dispatch' || (github.ref_name == 'master' && github.event_name == 'push')
+    # Publishes into the gh-pages branch (at /figma-audit/) alongside the PR
+    # previews, so it never takes over the whole Pages site the way
+    # actions/deploy-pages would.
     permissions:
-      contents: read
-      pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      contents: write
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
@@ -130,14 +128,78 @@ jobs:
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
         run: yarn audit-figma-integration --html
-      - name: Prepare Pages directory
-        run: find temp/ -name "figma-audit-*.html" -exec cp {} temp/index.html \;
-      - name: Setup Pages
-        uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b # v5.0.0
-      - name: Upload audit report
-        uses: actions/upload-pages-artifact@56afc609e74202658d3ffba0e8f6dda462b719fa # v3.0.1
+      - name: Stage report
+        run: |
+          set -euo pipefail
+          # The audit writes temp/figma-audit-<date>.html; publish the newest as index.html.
+          mkdir -p audit-out
+          latest="$(ls -t temp/figma-audit-*.html | head -n1)"
+          cp "$latest" audit-out/index.html
+
+      # Checkout gh-pages into a nested path so we can push into /figma-audit/
+      # without disturbing the PR previews or the selector at the root.
+      - name: Checkout gh-pages
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
-          path: temp/
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
+          ref: gh-pages
+          path: gh-pages-checkout
+          fetch-depth: 1
+
+      - name: Publish audit to gh-pages/figma-audit
+        working-directory: gh-pages-checkout
+        run: |
+          set -e
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Replace only the figma-audit/ subtree; everything else on gh-pages
+          # (selector, pr-N/* previews, manifest) is preserved by the reset.
+          apply_changes() {
+            rm -rf figma-audit
+            mkdir -p figma-audit
+            cp -r ../audit-out/* figma-audit/
+            # Serve assets verbatim (no Jekyll processing) for the whole site.
+            touch .nojekyll
+          }
+
+          git fetch origin gh-pages
+          git reset --hard origin/gh-pages
+
+          apply_changes
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No audit changes to publish"
+            exit 0
+          fi
+
+          # Non-lossy concurrency handling shared with the preview-deploy workflow:
+          # each writer re-applies only its own subtree on top of the latest
+          # gh-pages and retries with --force-with-lease. Orphan commits keep the
+          # branch at a single root commit so binaries never accumulate in history.
+          MAX_ATTEMPTS=8
+          MAX_BACKOFF_SECONDS=30
+          attempt=1
+          while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+            SQUASHED=$(git commit-tree HEAD^{tree} -m "Publish Figma integration audit")
+            if git push --force-with-lease origin "${SQUASHED}:refs/heads/gh-pages"; then
+              echo "✅ Published audit to /figma-audit/ (attempt ${attempt}/${MAX_ATTEMPTS})"
+              exit 0
+            fi
+            if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+              break
+            fi
+            BACKOFF=$(( (1 << (attempt - 1)) + RANDOM % 5 ))
+            if [ "$BACKOFF" -gt "$MAX_BACKOFF_SECONDS" ]; then
+              BACKOFF=$MAX_BACKOFF_SECONDS
+            fi
+            echo "Push failed (concurrent update?), re-applying and retrying in ${BACKOFF}s (${attempt}/${MAX_ATTEMPTS})..."
+            sleep "$BACKOFF"
+            git fetch origin gh-pages
+            git reset --hard origin/gh-pages
+            apply_changes
+            git add -A
+            attempt=$((attempt + 1))
+          done
+
+          echo "❌ Failed to push audit after ${MAX_ATTEMPTS} attempts"
+          exit 1

@@ -1,0 +1,103 @@
+name: Manual Preview Cleanup
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to clean up'
+        required: true
+        type: number
+
+permissions:
+  contents: write
+
+jobs:
+  cleanup:
+    name: Manual Cleanup
+    # Only run on the public repo, so this stays inert on any synced mirror
+    # (the repo string is not rewritten during sync).
+    if: github.repository == 'coinbase/cds'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      # Checkout main branch to get scripts
+      - name: Checkout main branch
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: master
+
+      # Checkout gh-pages branch
+      - name: Checkout gh-pages
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: gh-pages
+          path: gh-pages-checkout
+          fetch-depth: 1
+
+      # Remove PR directory, update manifest, and push using an orphan commit so
+      # the branch history stays at depth 1. Retries with --force-with-lease on conflict.
+      - name: Remove preview and push to gh-pages
+        working-directory: gh-pages-checkout
+        env:
+          PR_NUMBER: ${{ github.event.inputs.pr_number }}
+        run: |
+          set -e
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          apply_changes() {
+            PR_DIR="pr-${PR_NUMBER}"
+            if [ -d "$PR_DIR" ]; then
+              rm -rf "$PR_DIR"
+              echo "✅ Directory removed"
+            else
+              echo "⚠️  Directory does not exist: $PR_DIR"
+            fi
+            if [ -f "manifest.json" ]; then
+              node ../.github/scripts/remove-from-manifest.mjs "$PR_NUMBER"
+            else
+              echo "⚠️  manifest.json does not exist, nothing to update"
+            fi
+          }
+
+          git fetch origin gh-pages
+          git reset --hard origin/gh-pages
+
+          apply_changes
+          git add -A
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          for i in 1 2 3; do
+            SQUASHED=$(git commit-tree HEAD^{tree} -m "Manual cleanup: Remove preview for PR #${PR_NUMBER}")
+            if git push --force-with-lease origin "${SQUASHED}:refs/heads/gh-pages"; then
+              echo "✅ Changes pushed to gh-pages"
+              exit 0
+            fi
+            echo "Push failed (concurrent update?), re-merging and retrying ($i/3)..."
+            sleep $((RANDOM % 10 + 1))
+            git fetch origin gh-pages
+            git reset --hard origin/gh-pages
+            apply_changes
+            git add -A
+          done
+
+          echo "❌ Failed to push after 3 retries"
+          exit 1
+
+      # Summary
+      - name: Summary
+        run: |
+          echo "## Cleanup Complete" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "✅ Cleaned up preview for PR #${{ github.event.inputs.pr_number }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Removed:** \`/cds/pr-${{ github.event.inputs.pr_number }}/\`" >> $GITHUB_STEP_SUMMARY
