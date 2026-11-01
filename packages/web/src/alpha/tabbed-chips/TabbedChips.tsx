@@ -1,35 +1,21 @@
-import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef } from 'react';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import { useTabsContext } from '@coinbase/cds-common/tabs/TabsContext';
 import type { TabValue } from '@coinbase/cds-common/tabs/useTabs';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
-import { css } from '@linaria/core';
 
 import type { ChipProps, ChipSize } from '../../chips/ChipProps';
 import { MediaChip, type MediaChipBaseProps } from '../../chips/MediaChip';
-import { cx } from '../../cx';
 import { useComponentConfig } from '../../hooks/useComponentConfig';
-import { useHorizontalScrollToTarget } from '../../hooks/useHorizontalScrollToTarget';
-import { HStack, type HStackDefaultElement, type HStackProps } from '../../layout/HStack';
-import { Paddle } from '../../tabs/Paddle';
+import type { HStackDefaultElement, HStackProps } from '../../layout/HStack';
 import {
   Tabs,
   type TabsActiveIndicatorComponent,
   type TabsBaseProps,
   type TabsProps,
 } from '../../tabs/Tabs';
-
-const containerCss = css`
-  isolation: isolate;
-`;
-
-const scrollContainerCss = css`
-  &::-webkit-scrollbar {
-    display: none;
-  }
-  scrollbar-width: none;
-`;
+import { TabsScrollArea } from '../../tabs/TabsScrollArea';
 
 const DefaultTabComponent = <TabId extends string = string>({
   label = '',
@@ -112,19 +98,20 @@ export type TabbedChipsBaseProps<TabId extends string = string> = Omit<
   TabsActiveIndicatorComponent?: TabsProps<TabId>['TabsActiveIndicatorComponent'];
   tabs: TabbedChipProps<TabId>[];
   /**
-   * Turn on to use a compact Chip component for each tab.
+   * Turn on to use a compact `MediaChip` for each tab.
    * @default false
    * @deprecated Use `size="xs"` instead. This will be removed in a future major release.
    * @deprecationExpectedRemoval v11
    */
   compact?: boolean;
   /**
-   * Set the size of each tab chip.
+   * Set the size of each tab chip. Also sizes the overflow indicator buttons rendered by
+   * {@link TabsScrollArea}.
    * @default s
    */
   size?: ChipSize;
   /**
-   * X position offset when auto-scrolling to active tab (to avoid active tab being covered by the paddle on the left side, default: 50px)
+   * X position offset when auto-scrolling to active tab (to avoid active tab being covered by the overflow indicator on the left side, default: 50px)
    * @default 50
    */
   autoScrollOffset?: number;
@@ -142,28 +129,47 @@ export type TabbedChipsProps<TabId extends string = string> = TabbedChipsBasePro
      */
     gap?: HStackProps<HStackDefaultElement>['gap'];
     /**
-     * The width of the scroll container, defaults to 100% of the parent container
-     * If the tabs are wider than the width of the container, paddles will be shown to scroll the tabs.
+     * Width of the scroll region; defaults to the full width of the parent. When the tab row is wider
+     * than this container, overflow indicators appear.
      * @default 100%
      */
     width?: HStackProps<HStackDefaultElement>['width'];
     styles?: {
       /** Root container element */
       root?: React.CSSProperties;
-      /** Scroll container element */
+      /** Horizontal scroll region wrapping the tab row (aligned with {@link TabsScrollArea}). */
       scrollContainer?: React.CSSProperties;
-      /** Paddle icon buttons */
+      /**
+       * @deprecated Use `overflowIndicatorButton` (or other `overflowIndicator*` style slots).
+       * @deprecationExpectedRemoval v10
+       */
       paddle?: React.CSSProperties;
       /** Tabs root element */
       tabs?: React.CSSProperties;
+      /** Overflow indicator root */
+      overflowIndicator?: React.CSSProperties;
+      /** Overflow indicator icon button. */
+      overflowIndicatorButton?: React.CSSProperties;
+      /** Overflow indicator icon button container. */
+      overflowIndicatorButtonContainer?: React.CSSProperties;
+      /** Overflow indicator gradient. */
+      overflowIndicatorGradient?: React.CSSProperties;
     };
     classNames?: {
       /** Root container element */
       root?: string;
-      /** Scroll container element */
+      /** Horizontal scroll region wrapping the tab row */
       scrollContainer?: string;
       /** Tabs root element */
       tabs?: string;
+      /** Overflow control outer wrapper (each side). */
+      overflowIndicator?: string;
+      /** Overflow indicator icon button. */
+      overflowIndicatorButton?: string;
+      /** Overflow indicator icon button container. */
+      overflowIndicatorButtonContainer?: string;
+      /** Overflow indicator gradient. */
+      overflowIndicatorGradient?: string;
     };
   };
 
@@ -199,19 +205,6 @@ const TabbedChipsComponent = memo(
     } = mergedProps;
     // Size is driven by `size`; deprecated `compact` falls back to its legacy `xs` size.
     const resolvedSize: ChipSize = size ?? (compact ? 'xs' : 's');
-    const [scrollTarget, setScrollTarget] = useState<HTMLElement | null>(null);
-    const { scrollRef, isScrollContentOffscreenLeft, isScrollContentOffscreenRight, handleScroll } =
-      useHorizontalScrollToTarget({ activeTarget: scrollTarget, autoScrollOffset });
-
-    const handleScrollLeft = useCallback(() => {
-      scrollRef?.current?.scrollTo({ left: 0, behavior: 'smooth' });
-    }, [scrollRef]);
-
-    const handleScrollRight = useCallback(() => {
-      if (!scrollRef.current) return;
-      const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
-      scrollRef.current.scrollTo({ left: maxScroll, behavior: 'smooth' });
-    }, [scrollRef]);
 
     const TabComponentWithSize = useCallback(
       (props: TabValue<TabId>) => {
@@ -220,60 +213,63 @@ const TabbedChipsComponent = memo(
       [TabComponent, resolvedSize],
     );
 
+    const tabsScrollAreaStyles = useMemo(
+      () => ({
+        root: styles?.root,
+        scrollContainer: styles?.scrollContainer,
+        overflowIndicator: styles?.overflowIndicator,
+        overflowIndicatorButton: {
+          ...styles?.paddle,
+          ...styles?.overflowIndicatorButton,
+        },
+        overflowIndicatorButtonContainer: styles?.overflowIndicatorButtonContainer,
+        overflowIndicatorGradient: styles?.overflowIndicatorGradient,
+      }),
+      [styles],
+    );
+
+    const tabsScrollAreaClassNames = useMemo(
+      () => ({
+        root: classNames?.root,
+        scrollContainer: classNames?.scrollContainer,
+        overflowIndicator: classNames?.overflowIndicator,
+        overflowIndicatorButton: classNames?.overflowIndicatorButton,
+        overflowIndicatorButtonContainer: classNames?.overflowIndicatorButtonContainer,
+        overflowIndicatorGradient: classNames?.overflowIndicatorGradient,
+      }),
+      [classNames],
+    );
+
     return (
-      <HStack
-        alignItems="center"
-        className={cx(containerCss, classNames?.root)}
-        position="relative"
-        style={styles?.root}
+      <TabsScrollArea
+        autoScrollOffset={autoScrollOffset}
+        background={background}
+        classNames={tabsScrollAreaClassNames}
+        nextArrowAccessibilityLabel={nextArrowAccessibilityLabel}
+        previousArrowAccessibilityLabel={previousArrowAccessibilityLabel}
+        size={resolvedSize}
+        styles={tabsScrollAreaStyles}
         testID={testID}
         width={width}
       >
-        <Paddle
-          accessibilityLabel={previousArrowAccessibilityLabel}
-          background={background}
-          direction="left"
-          onClick={handleScrollLeft}
-          paddleStyle={styles?.paddle}
-          show={isScrollContentOffscreenLeft}
-          size={resolvedSize}
-          variant="secondary"
-        />
-        <HStack
-          ref={scrollRef}
-          alignItems="center"
-          className={cx(scrollContainerCss, classNames?.scrollContainer)}
-          onScroll={handleScroll}
-          overflow="auto"
-          style={styles?.scrollContainer}
-        >
+        {({ onActiveTabElementChange }) => (
           <Tabs
             ref={ref}
             TabComponent={TabComponentWithSize}
-            TabsActiveIndicatorComponent={DefaultTabsActiveIndicatorComponent}
+            TabsActiveIndicatorComponent={TabsActiveIndicatorComponent}
             activeTab={activeTab || null}
             background={background}
             className={classNames?.tabs}
             disabled={disabled}
             gap={gap}
-            onActiveTabElementChange={setScrollTarget}
+            onActiveTabElementChange={onActiveTabElementChange}
             onChange={onChange}
             style={styles?.tabs}
             tabs={tabs}
             {...accessibilityProps}
           />
-        </HStack>
-        <Paddle
-          accessibilityLabel={nextArrowAccessibilityLabel}
-          background={background}
-          direction="right"
-          onClick={handleScrollRight}
-          paddleStyle={styles?.paddle}
-          show={isScrollContentOffscreenRight}
-          size={resolvedSize}
-          variant="secondary"
-        />
-      </HStack>
+        )}
+      </TabsScrollArea>
     );
   }),
 );

@@ -61,7 +61,7 @@ function ExampleWithPaddles() {
 ### With autoScrollOffset
 
 :::tip Auto-scroll offset
-The `autoScrollOffset` prop controls the X position offset when auto-scrolling to the active tab. This prevents the active tab from being covered by the paddle on the left side. Try clicking tabs near the edges to see the difference.
+The `autoScrollOffset` prop controls the horizontal offset when auto-scrolling the active tab into view, so it stays clear of the leading overflow control. Try selecting tabs near the edges to see the difference.
 :::
 
 ```jsx live
@@ -91,14 +91,14 @@ function ExampleAutoScrollOffset() {
 }
 ```
 
-### With custom sized paddles
+### With custom sized overflow controls
 
-:::tip Paddle styling
-You can adjust the size of the paddles via `styles.paddle`.
+:::tip Overflow control styling
+Target the chevron buttons with **`styles.overflowIndicatorButton`** (or **`overflowIndicator`** / **`overflowIndicatorGradient`**).
 :::
 
 ```jsx live
-function ExampleCustomPaddles() {
+function ExampleCustomOverflowControls() {
   const tabs = Array.from({ length: 10 }).map((_, i) => ({
     id: `t_${i + 1}`,
     label: `Item ${i + 1}`,
@@ -109,7 +109,7 @@ function ExampleCustomPaddles() {
       activeTab={activeTab}
       onChange={setActiveTab}
       tabs={tabs}
-      styles={{ paddle: { transform: 'scale(0.8)' } }}
+      styles={{ overflowIndicatorButton: { transform: 'scale(0.8)' } }}
     />
   );
 }
