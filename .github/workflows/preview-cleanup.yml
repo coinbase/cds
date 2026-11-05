@@ -1,0 +1,141 @@
+name: Cleanup PR Preview
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'PR number to clean up (for testing)'
+        required: true
+        type: number
+  pull_request:
+    types: [closed]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  cleanup:
+    name: Cleanup Preview
+    # Only run on the public repo, so this stays inert on any synced mirror
+    # (the repo string is not rewritten during sync).
+    if: github.repository == 'coinbase/cds'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      # Checkout main branch to get scripts
+      - name: Checkout main branch
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: master
+
+      # Get PR number
+      - name: Get PR number
+        id: pr-number
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "pr_number=${{ github.event.inputs.pr_number }}" >> $GITHUB_OUTPUT
+          else
+            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
+          fi
+
+      # Checkout gh-pages branch
+      - name: Checkout gh-pages
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: gh-pages
+          path: gh-pages-checkout
+          fetch-depth: 1
+
+      # Remove PR directory, update manifest, and push using an orphan commit so
+      # the branch history stays at depth 1 and doesn't accumulate binary blobs.
+      - name: Remove preview and push to gh-pages
+        working-directory: gh-pages-checkout
+        env:
+          PR_NUMBER: ${{ steps.pr-number.outputs.pr_number }}
+        run: |
+          set -e
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          apply_changes() {
+            PR_DIR="pr-${PR_NUMBER}"
+            if [ -d "$PR_DIR" ]; then
+              rm -rf "$PR_DIR"
+              echo "✅ Directory removed"
+            else
+              echo "⚠️  Directory does not exist: $PR_DIR"
+            fi
+            node ../.github/scripts/remove-from-manifest.mjs "$PR_NUMBER"
+          }
+
+          git fetch origin gh-pages
+          git reset --hard origin/gh-pages
+
+          apply_changes
+          git add -A
+
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+
+          MAX_ATTEMPTS=8
+          MAX_BACKOFF_SECONDS=30
+          attempt=1
+          while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+            SQUASHED=$(git commit-tree HEAD^{tree} -m "Remove preview for PR #${PR_NUMBER}")
+            if git push --force-with-lease origin "${SQUASHED}:refs/heads/gh-pages"; then
+              echo "✅ Changes pushed to gh-pages (attempt ${attempt}/${MAX_ATTEMPTS})"
+              exit 0
+            fi
+
+            if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+              break
+            fi
+
+            BACKOFF=$(( (1 << (attempt - 1)) + RANDOM % 5 ))
+            if [ "$BACKOFF" -gt "$MAX_BACKOFF_SECONDS" ]; then
+              BACKOFF=$MAX_BACKOFF_SECONDS
+            fi
+            echo "Push failed (concurrent update?), re-merging and retrying in ${BACKOFF}s (${attempt}/${MAX_ATTEMPTS})..."
+            sleep "$BACKOFF"
+            git fetch origin gh-pages
+            git reset --hard origin/gh-pages
+            apply_changes
+            git add -A
+            attempt=$((attempt + 1))
+          done
+
+          echo "❌ Failed to push after ${MAX_ATTEMPTS} attempts"
+          exit 1
+
+      # Comment on PR
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@60a0d83039c74a4aee543508d2ffcb1c3799cdea # v7.0.1
+        with:
+          script: |
+            const prNumber = ${{ steps.pr-number.outputs.pr_number }};
+
+            const comment = `## 🧹 Preview Cleaned Up
+
+            The documentation preview for this PR has been removed.
+
+            **Removed:** \`/cds/pr-${prNumber}/\`
+
+            ---
+
+            🕐 Cleaned up at: \`${new Date().toISOString()}\``;
+
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: prNumber,
+              body: comment,
+            });
