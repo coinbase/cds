@@ -1212,6 +1212,10 @@ const svgEsmMap = {
   explore: {
     themeable: () => import('../svgJs/esm/themeable/explore-4.js').then((m) => m.default as string),
   },
+  faceScan: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/faceScan-0.js').then((m) => m.default as string),
+  },
   fast: {
     themeable: () => import('../svgJs/esm/themeable/fast-3.js').then((m) => m.default as string),
   },
@@ -1232,6 +1236,10 @@ const svgEsmMap = {
   findYourSelection: {
     themeable: () =>
       import('../svgJs/esm/themeable/findYourSelection-3.js').then((m) => m.default as string),
+  },
+  fingerprint: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/fingerprint-0.js').then((m) => m.default as string),
   },
   formDownload: {
     themeable: () =>
@@ -1292,6 +1300,10 @@ const svgEsmMap = {
   higherLimits: {
     themeable: () =>
       import('../svgJs/esm/themeable/higherLimits-3.js').then((m) => m.default as string),
+  },
+  highRisk: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/highRisk-0.js').then((m) => m.default as string),
   },
   holdingCoin: {
     themeable: () =>
@@ -1381,7 +1393,7 @@ const svgEsmMap = {
   },
   instoCrypto101: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoCrypto101-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoCrypto101-2.js').then((m) => m.default as string),
   },
   instoDecentralizationEverything: {
     themeable: () =>
@@ -1433,7 +1445,7 @@ const svgEsmMap = {
   },
   instoGem: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoGem-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoGem-2.js').then((m) => m.default as string),
   },
   instoGlobalConnections: {
     themeable: () =>
@@ -1568,6 +1580,9 @@ const svgEsmMap = {
   },
   lowFees: {
     themeable: () => import('../svgJs/esm/themeable/lowFees-4.js').then((m) => m.default as string),
+  },
+  lowRisk: {
+    themeable: () => import('../svgJs/esm/themeable/lowRisk-0.js').then((m) => m.default as string),
   },
   manageWeb3SignersAcct: {
     themeable: () =>
@@ -1731,6 +1746,9 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/participateNavigation-6.js').then((m) => m.default as string),
   },
+  passKey: {
+    themeable: () => import('../svgJs/esm/themeable/passKey-0.js').then((m) => m.default as string),
+  },
   passport: {
     themeable: () =>
       import('../svgJs/esm/themeable/passport-2.js').then((m) => m.default as string),
@@ -1836,6 +1854,10 @@ const svgEsmMap = {
   restaking: {
     themeable: () =>
       import('../svgJs/esm/themeable/restaking-3.js').then((m) => m.default as string),
+  },
+  retakeKnowledgeQuiz: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/retakeKnowledgeQuiz-0.js').then((m) => m.default as string),
   },
   reviewAndAdd: {
     themeable: () =>
@@ -1958,6 +1980,10 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/strongWarning-4.js').then((m) => m.default as string),
   },
+  submitID: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/submitID-0.js').then((m) => m.default as string),
+  },
   successPhone: {
     themeable: () =>
       import('../svgJs/esm/themeable/successPhone-3.js').then((m) => m.default as string),
@@ -1968,6 +1994,10 @@ const svgEsmMap = {
   supportChat: {
     themeable: () =>
       import('../svgJs/esm/themeable/supportChat-5.js').then((m) => m.default as string),
+  },
+  takeKnowledgeQuiz: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/takeKnowledgeQuiz-0.js').then((m) => m.default as string),
   },
   takeQuiz: {
     themeable: () =>

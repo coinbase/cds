@@ -1,17 +1,9 @@
 {
-  "lastUpdated": "2026-10-01T18:08:19.339Z",
+  "lastUpdated": "2026-11-05T18:29:20.558Z",
   "colors": {
-    "primary": {
-      "light": "#0052FF",
-      "dark": "#578BFA"
-    },
-    "invert": {
-      "light": "#0A0B0E",
-      "dark": "#FFFFFF"
-    },
-    "gray": {
-      "light": "#CED2DB",
-      "dark": "#464B55"
+    "accent-1": {
+      "light": "#FFD200",
+      "dark": "#ECD069"
     },
     "accent-2": {
       "light": "#5DE2F8",
@@ -21,45 +13,53 @@
       "light": "#ED702F",
       "dark": "#F07836"
     },
-    "white": {
-      "light": "#FFFFFF",
-      "dark": "#FFFFFF"
+    "accent-4": {
+      "light": "#73A2FF",
+      "dark": "#84AAFD"
+    },
+    "black": {
+      "light": "#0A0B0D",
+      "dark": "#0A0B0D"
+    },
+    "gray": {
+      "light": "#CED2DB",
+      "dark": "#464B55"
+    },
+    "gray-2": {
+      "light": "#0A0B0F",
+      "dark": "#464B55"
     },
     "gray-3": {
       "light": "#CED2DC",
+      "dark": "#FFFFFF"
+    },
+    "gray-4": {
+      "light": "#C8CBD2",
+      "dark": "#FFFFFF"
+    },
+    "invert": {
+      "light": "#0A0B0E",
       "dark": "#FFFFFF"
     },
     "invert-2": {
       "light": "#FFFFFE",
       "dark": "#0A0B0D"
     },
-    "positive": {
-      "light": "#3CC28A",
-      "dark": "#44C28D"
-    },
     "negative": {
       "light": "#E13947",
       "dark": "#F0616D"
     },
-    "accent-4": {
-      "light": "#73A2FF",
-      "dark": "#84AAFD"
+    "positive": {
+      "light": "#3CC28A",
+      "dark": "#44C28D"
     },
-    "accent-1": {
-      "light": "#FFD200",
-      "dark": "#ECD069"
+    "primary": {
+      "light": "#0052FF",
+      "dark": "#578BFA"
     },
-    "gray-4": {
-      "light": "#C8CBD2",
+    "white": {
+      "light": "#FFFFFF",
       "dark": "#FFFFFF"
-    },
-    "black": {
-      "light": "#0A0B0D",
-      "dark": "#0A0B0D"
-    },
-    "gray-2": {
-      "light": "#0A0B0F",
-      "dark": "#464B55"
     }
   },
   "items": {
@@ -2662,13 +2662,13 @@
     "28806:34": {
       "type": "heroSquare",
       "name": "instoAdd2Fa",
-      "hash": "bVtE0EtcIpC2JWgiYRjG0aHv82ZwEZQ7FA4ytofjbAs=",
+      "hash": "1Q6gMbgDOaYBo7DuGLDBmj8mzYKAhXQo6ROzrAFPDB4=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, 2FA, Secure, security, two, factor, authentication, safe, safety, add, plus, lock, combination, password",
       "createdAt": "2026-03-16T14:55:21.034Z",
-      "lastUpdated": "2026-06-09T20:31:53.865Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.179Z",
+      "version": 2
     },
     "28806:33": {
       "type": "heroSquare",
@@ -2678,19 +2678,19 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.814Z",
-      "lastUpdated": "2026-06-09T20:31:54.162Z",
+      "lastUpdated": "2026-11-05T17:46:36.446Z",
       "version": 1
     },
     "28806:37": {
       "type": "heroSquare",
       "name": "instoCoinbaseOneProtectedCrypto",
-      "hash": "ttLIpGE9rY8GNURE/cLYF61QcitADIl3cxHIBfO2J4w=",
+      "hash": "lMlJ8L1ycuHEaboP4YHDsU9VxI8hxn8YYr9sBzHzzJs=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coinbaseone, one, shield, protect, protected",
       "createdAt": "2026-03-16T14:55:20.793Z",
-      "lastUpdated": "2026-06-09T20:31:54.119Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.405Z",
+      "version": 2
     },
     "28806:38": {
       "type": "heroSquare",
@@ -2700,41 +2700,41 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, Documents, reviewed, success, checkmark, confirm, complete, ✅, success state",
       "createdAt": "2026-03-16T14:55:20.800Z",
-      "lastUpdated": "2026-06-09T20:31:54.194Z",
+      "lastUpdated": "2026-11-05T17:46:36.472Z",
       "version": 2
     },
     "28806:46": {
       "type": "heroSquare",
       "name": "instoEarnGlobe",
       "hash": "Yu2NH8+bs3dGUTKJbtAKXMrBcJQAdQbVVkXZXym+Bfo=",
-      "width": 240.00250244140625,
-      "height": 239.99951171875,
+      "width": 241,
+      "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, earn, globe, coin, percent, staking, yield, assets, circle, international",
       "createdAt": "2026-03-16T14:55:20.684Z",
-      "lastUpdated": "2026-06-09T20:31:54.032Z",
+      "lastUpdated": "2026-11-05T17:46:36.324Z",
       "version": 1
     },
     "28806:53": {
       "type": "heroSquare",
       "name": "instoEnableBiometrics",
-      "hash": "cTXmZ+nB2lOquxrg9uTjPWkLKDWsD/HB9+86Jyi0qsc=",
+      "hash": "KFnWxK7Z/Gl2XKsNVjtXdCFIbSaMY4L+KrThVhtdczM=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.057Z",
-      "lastUpdated": "2026-06-09T20:31:54.149Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.435Z",
+      "version": 2
     },
     "28806:42": {
       "type": "heroSquare",
       "name": "instoEthStakingRewards",
-      "hash": "UOqKKf6v8p5GvZZjUVJ/IO2w7IkEplBguy9s1mMqZzw=",
+      "hash": "oiO/l2CQTQaHl63novWnXuZWvjXTyihvPDvjAHv8joo=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, staking, trade, coins, stars, eth2, stacks of coins, graph",
       "createdAt": "2026-03-16T14:55:20.855Z",
-      "lastUpdated": "2026-06-09T20:31:54.170Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.453Z",
+      "version": 2
     },
     "28806:41": {
       "type": "heroSquare",
@@ -2744,7 +2744,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, staking, ethereum, upsell, hand, earn, interest, eth2, 2.0, sparkles, ✨",
       "createdAt": "2026-03-16T14:55:20.711Z",
-      "lastUpdated": "2026-06-09T20:31:53.812Z",
+      "lastUpdated": "2026-11-05T17:46:36.125Z",
       "version": 1
     },
     "28806:40": {
@@ -2755,7 +2755,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, governance, vote, staking, proposal, ballot, box, yes, no, maybe, so, coin",
       "createdAt": "2026-03-16T14:55:20.705Z",
-      "lastUpdated": "2026-06-09T20:31:53.916Z",
+      "lastUpdated": "2026-11-05T17:46:36.210Z",
       "version": 1
     },
     "28806:56": {
@@ -2766,7 +2766,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.996Z",
-      "lastUpdated": "2026-06-09T20:31:53.994Z",
+      "lastUpdated": "2026-11-05T17:46:36.286Z",
       "version": 2
     },
     "28806:54": {
@@ -2777,18 +2777,18 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.848Z",
-      "lastUpdated": "2026-06-09T20:31:54.290Z",
+      "lastUpdated": "2026-11-05T17:46:36.557Z",
       "version": 1
     },
     "28806:48": {
       "type": "heroSquare",
       "name": "instoOnChain",
       "hash": "5upLHFaoticByLVVUdfAkWdl30tnIJbAflTr1t0FbuA=",
-      "width": 240,
+      "width": 241,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.765Z",
-      "lastUpdated": "2026-06-09T20:31:54.274Z",
+      "lastUpdated": "2026-11-05T17:46:36.544Z",
       "version": 3
     },
     "28806:44": {
@@ -2799,7 +2799,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, open, email, envelope, letter, 📧 📥 📤 ✉ 📩 📨",
       "createdAt": "2026-03-16T14:55:20.896Z",
-      "lastUpdated": "2026-06-09T20:31:54.278Z",
+      "lastUpdated": "2026-11-05T17:46:36.547Z",
       "version": 2
     },
     "28806:36": {
@@ -2810,19 +2810,19 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, phone, unknown, question mark, ❓ , ❔",
       "createdAt": "2026-03-16T14:55:20.772Z",
-      "lastUpdated": "2026-06-09T20:31:53.997Z",
+      "lastUpdated": "2026-11-05T17:46:36.289Z",
       "version": 1
     },
     "28806:45": {
       "type": "heroSquare",
       "name": "instoPrimeStaking",
-      "hash": "sRL4XCK2phT8E7rIw53YxSYI5O9hxcWZ8NbTOMz7ZkY=",
+      "hash": "iVMh+VU2sgnAXCxsGIosfVpjzU/+TvFYRO7iIgDcyO4=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, Prime, Staking, Stake, Crypto, Interest, Earn, Coins, Assets, Circles, Universe, sparkles, ✨",
       "createdAt": "2026-03-16T14:55:20.882Z",
-      "lastUpdated": "2026-06-09T20:31:54.077Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.371Z",
+      "version": 2
     },
     "28806:39": {
       "type": "heroSquare",
@@ -2832,19 +2832,19 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, private, key, network, access, secure, encryption, encrypted, acces",
       "createdAt": "2026-03-16T14:55:20.875Z",
-      "lastUpdated": "2026-06-09T20:31:53.946Z",
+      "lastUpdated": "2026-11-05T17:46:36.239Z",
       "version": 2
     },
     "28806:52": {
       "type": "heroSquare",
       "name": "instoRequestSent",
-      "hash": "9x0Q7P/LUOQWxFN+8NPAtkM9N2IkG7fTqWP2Mw/juUs=",
+      "hash": "QRGFL3HglygcQbq3k5quh7fhPnJYd5DXT7xr19lWqOA=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.745Z",
-      "lastUpdated": "2026-06-09T20:31:53.853Z",
-      "version": 2
+      "lastUpdated": "2026-11-05T17:46:36.169Z",
+      "version": 3
     },
     "28806:50": {
       "type": "heroSquare",
@@ -2854,7 +2854,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.752Z",
-      "lastUpdated": "2026-06-09T20:31:54.062Z",
+      "lastUpdated": "2026-11-05T17:46:36.356Z",
       "version": 0
     },
     "28806:49": {
@@ -2865,7 +2865,7 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.518Z",
-      "lastUpdated": "2026-06-09T20:31:54.232Z",
+      "lastUpdated": "2026-11-05T17:46:36.510Z",
       "version": 1
     },
     "28806:43": {
@@ -2876,18 +2876,18 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, circles, coins, yellow, blue, graph, staking",
       "createdAt": "2026-03-16T14:55:20.889Z",
-      "lastUpdated": "2026-06-09T20:31:54.283Z",
+      "lastUpdated": "2026-11-05T17:46:36.549Z",
       "version": 1
     },
     "28806:47": {
       "type": "heroSquare",
       "name": "instoStakingMissedReturns",
       "hash": "ZuMe/23NnqZR1TRjLz4yOt6fHaTZq5hwA/vAYWtw7cw=",
-      "width": 240.0001220703125,
-      "height": 240.00021362304688,
+      "width": 240,
+      "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, staking, earn, yield, interest, would, have, missed, out, on, coins, clock, time, money, grow",
       "createdAt": "2026-03-16T14:55:20.737Z",
-      "lastUpdated": "2026-06-09T20:31:53.868Z",
+      "lastUpdated": "2026-11-05T17:46:36.182Z",
       "version": 2
     },
     "28806:55": {
@@ -2898,29 +2898,29 @@
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.834Z",
-      "lastUpdated": "2026-06-09T20:31:54.048Z",
+      "lastUpdated": "2026-11-05T17:46:36.343Z",
       "version": 1
     },
     "28806:32": {
       "type": "heroSquare",
       "name": "instoWalletSecurity",
-      "hash": "pN6tOYrccHWkPlYGC7tbBvQz54qI961Fu9if/m+PMuI=",
+      "hash": "24co0b4L2or7fJuC2b6Ymh/GwI6Xw1ZkJCYsCpSfCRY=",
       "width": 240,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, lock, circle, square, blue, wallet, security",
       "createdAt": "2026-03-16T14:55:20.730Z",
-      "lastUpdated": "2026-06-09T20:31:54.146Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.431Z",
+      "version": 2
     },
     "28806:51": {
       "type": "heroSquare",
       "name": "instoWeb3MobileSetupStart",
       "hash": "rZ8mrgxOTYU4UCwGDtBYHHDOpa9bF5UCAiTqWDNrRq0=",
-      "width": 240,
+      "width": 241,
       "height": 240,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.807Z",
-      "lastUpdated": "2026-06-09T20:31:54.157Z",
+      "lastUpdated": "2026-11-05T17:46:36.443Z",
       "version": 1
     },
     "2:34144": {
@@ -8192,6 +8192,17 @@
       "lastUpdated": "2026-06-08T19:45:51.132Z",
       "version": 4
     },
+    "31752:773": {
+      "type": "pictogram",
+      "name": "faceScan",
+      "hash": "WYI8lWVGDx/927frMZGo+D11jz5AGBMSNd3j7vSz2Go=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.665Z",
+      "lastUpdated": "2026-11-05T17:46:35.665Z",
+      "version": 0
+    },
     "2:41566": {
       "type": "pictogram",
       "name": "fast",
@@ -8257,6 +8268,17 @@
       "createdAt": "2022-08-05T05:37:09.693Z",
       "lastUpdated": "2026-06-08T19:45:53.426Z",
       "version": 3
+    },
+    "31752:775": {
+      "type": "pictogram",
+      "name": "fingerprint",
+      "hash": "S4/JgBAgplOQrJ6Vh6htkg0jJ2VYAEHHFqHsrBf4JGE=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.661Z",
+      "lastUpdated": "2026-11-05T17:46:35.661Z",
+      "version": 0
     },
     "2:41555": {
       "type": "pictogram",
@@ -8434,6 +8456,17 @@
       "lastUpdated": "2026-06-08T19:45:52.028Z",
       "version": 3
     },
+    "31754:53110": {
+      "type": "pictogram",
+      "name": "highRisk",
+      "hash": "ey8fv5/MP2w0zQeI/DiOvx6bXhBhCryPh7hDXi32Z7k=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.726Z",
+      "lastUpdated": "2026-11-05T17:46:35.726Z",
+      "version": 0
+    },
     "2:41506": {
       "type": "pictogram",
       "name": "holdingCoin",
@@ -8552,7 +8585,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.607Z",
-      "lastUpdated": "2026-06-11T19:38:49.350Z",
+      "lastUpdated": "2026-11-05T17:46:36.424Z",
       "version": 1
     },
     "28806:95": {
@@ -8563,7 +8596,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, address, contacts, book, people, phone numbers, names, 📕, 📗, 📘, 📙, 📖, 📚, 📓, 📒, 📔, 📇, 📲, 📱, 🤳, 📳, 👶, 👧, 🧒, 👦, 👩, 🧑, 👨, 👩‍🦱, 🧑‍🦱, 👨‍🦱, 👩‍🦰, 🧑‍🦰, 👨‍🦰, 👱‍♀️, 👱, 👱‍♂️, 👩‍🦳, 🧑‍🦳, 👨‍🦳, 👩‍🦲, 🧑‍🦲, 👨‍🦲, 🧔, 👵,🧓, 👴, 👲, 👳‍♀️, 👳, 👳‍♂️, 🧕, 👮‍♀️, 👮, 👮‍♂️, 👷‍♀️, 👷, 👷‍♂️, 💂‍♀️, 💂, 💂‍♂️, 🕵️‍♀️, 🕵️, 🕵️‍♂️, 👩‍⚕️, 🧑‍⚕️, 👨‍⚕️, 👩‍🌾, 🧑‍🌾, 👨‍🌾, 👩‍🍳, 🧑‍🍳, 👨‍🍳, 👩‍🎓, 🧑‍🎓, 👨‍🎓, 👩‍🎤, 🧑‍🎤, 👨‍🎤, 👩‍🏫, 🧑‍🏫, 👨‍🏫, 👩‍🏭, 🧑‍🏭, 👨‍🏭, 👩‍💻, 🧑‍💻, 👨‍💻, 👩‍💼, 🧑‍💼, 👨‍💼, 👩‍🔧, 🧑‍🔧, 👨‍🔧, 👩‍🔬, 🧑‍🔬, 👨‍🔬, 👩‍🎨, 🧑‍🎨, 👨‍🎨, 👩‍🚒, 🧑‍🚒, 👨‍🚒, 👩‍✈️, 🧑‍✈️, 👨‍✈️, 👩‍🚀,🧑‍🚀, 👨‍🚀, 👩‍⚖️, 🤵‍♀️, 🤵, 🤵‍♂️, 👸, 🤴, 🥷, 🦸‍♀️, 🦸, 🦸‍♂️, 🦹‍♀️, 🦹, 🦹‍♂️, 🤶, 🧑‍🎄, 🎅, 🧙‍♀️, 🧙, 🧙‍♂️ ,🧝‍♀️ ,🧝, 🧝‍♂️, 🧛‍♀️, 🧛, 🧛‍♂️",
       "createdAt": "2026-03-16T14:55:20.917Z",
-      "lastUpdated": "2026-06-09T20:31:54.039Z",
+      "lastUpdated": "2026-11-05T17:46:36.332Z",
       "version": 0
     },
     "28806:86": {
@@ -8574,7 +8607,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, return, exchange, rebate, crypto",
       "createdAt": "2026-03-16T14:55:20.542Z",
-      "lastUpdated": "2026-06-11T19:38:49.291Z",
+      "lastUpdated": "2026-11-05T17:46:36.297Z",
       "version": 1
     },
     "28806:81": {
@@ -8585,7 +8618,7 @@
       "height": 40,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, APY, interest, growth, graph, chart, yield, coin, arrow, trending, value, increase, growing, 📈",
       "createdAt": "2026-03-16T14:55:20.960Z",
-      "lastUpdated": "2026-06-09T20:31:54.178Z",
+      "lastUpdated": "2026-11-05T17:46:36.459Z",
       "version": 3
     },
     "28806:77": {
@@ -8596,7 +8629,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, trust, true, genuine, actual, verification",
       "createdAt": "2026-03-16T14:55:20.974Z",
-      "lastUpdated": "2026-06-11T19:38:49.304Z",
+      "lastUpdated": "2026-11-05T17:46:36.363Z",
       "version": 1
     },
     "28897:153": {
@@ -8607,7 +8640,7 @@
       "height": 48,
       "description": "borrow, coins, blue, yellow",
       "createdAt": "2026-03-18T17:25:34.692Z",
-      "lastUpdated": "2026-06-09T20:31:54.044Z",
+      "lastUpdated": "2026-11-05T17:46:36.339Z",
       "version": 1
     },
     "28806:85": {
@@ -8618,7 +8651,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.691Z",
-      "lastUpdated": "2026-06-11T19:38:49.368Z",
+      "lastUpdated": "2026-11-05T17:46:36.500Z",
       "version": 1
     },
     "28806:83": {
@@ -8629,7 +8662,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, circle, blue, yellow, monitor, multiplatform, browser, app, mobile, extension",
       "createdAt": "2022-08-05T05:36:58.593Z",
-      "lastUpdated": "2026-06-09T20:31:53.960Z",
+      "lastUpdated": "2026-11-05T17:46:36.256Z",
       "version": 7
     },
     "28806:84": {
@@ -8637,10 +8670,10 @@
       "name": "instoCoinbaseOneShield",
       "hash": "8SiRgdl9WiMWti7HozosRbSSk+JCnv8FMt4+4jp6igk=",
       "width": 48,
-      "height": 48,
+      "height": 49,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coinbase, one, cb1, shield, protection, guard, defense, cover, safety, security",
       "createdAt": "2026-03-16T14:55:20.952Z",
-      "lastUpdated": "2026-06-09T20:31:53.818Z",
+      "lastUpdated": "2026-11-05T17:46:36.130Z",
       "version": 0
     },
     "28897:183": {
@@ -8651,29 +8684,29 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-03-18T17:25:34.672Z",
-      "lastUpdated": "2026-06-09T20:31:53.949Z",
+      "lastUpdated": "2026-11-05T17:46:36.242Z",
       "version": 1
     },
     "28806:87": {
       "type": "pictogram",
       "name": "instoCrypto101",
-      "hash": "9dyiX7cIovRktWTBS8C0tNQAcOK8ih3HlY5thoZCnoU=",
+      "hash": "6yjd84R1GegZvD+4elj5Fy37deMz2uXQAVlHijdWTE0=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, crypto, beginner, coin, circle, book, yellow, blue",
       "createdAt": "2026-03-16T14:55:20.938Z",
-      "lastUpdated": "2026-06-09T20:31:53.878Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.194Z",
+      "version": 2
     },
     "28806:98": {
       "type": "pictogram",
       "name": "instoDecentralizationEverything",
       "hash": "Sa7A8WjZiJ87PbMx9R6RTNE+6dUVMdoausatuHIKwuo=",
-      "width": 48,
+      "width": 49,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.563Z",
-      "lastUpdated": "2026-06-09T20:31:54.186Z",
+      "lastUpdated": "2026-11-05T17:46:36.466Z",
       "version": 1
     },
     "28897:213": {
@@ -8684,7 +8717,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.615Z",
-      "lastUpdated": "2026-06-11T19:38:49.272Z",
+      "lastUpdated": "2026-11-05T17:46:36.186Z",
       "version": 2
     },
     "28806:80": {
@@ -8695,7 +8728,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.945Z",
-      "lastUpdated": "2026-06-09T20:31:53.977Z",
+      "lastUpdated": "2026-11-05T17:46:36.269Z",
       "version": 2
     },
     "28806:88": {
@@ -8703,10 +8736,10 @@
       "name": "instoDelegate",
       "hash": "dzb4Ahk5SFq58LzoafTuxEWvyr7+tZY23wk4LaOZ9JU=",
       "width": 48,
-      "height": 48,
+      "height": 49,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, represent, envoy, agent, assign, entrust, give, person, check, checkmark, ✅, ✔️, 👶, 👧, 🧒, 👦, 👩, 🧑, 👨, 👩‍🦱, 🧑‍🦱, 👨‍🦱, 👩‍🦰, 🧑‍🦰, 👨‍🦰, 👱‍♀️, 👱, 👱‍♂️, 👩‍🦳, 🧑‍🦳, 👨‍🦳, 👩‍🦲, 🧑‍🦲, 👨‍🦲, 🧔, 👵,🧓, 👴, 👲, 👳‍♀️, 👳, 👳‍♂️, 🧕, 👮‍♀️, 👮, 👮‍♂️, 👷‍♀️, 👷, 👷‍♂️, 💂‍♀️, 💂, 💂‍♂️, 🕵️‍♀️, 🕵️, 🕵️‍♂️, 👩‍⚕️, 🧑‍⚕️, 👨‍⚕️, 👩‍🌾, 🧑‍🌾, 👨‍🌾, 👩‍🍳, 🧑‍🍳, 👨‍🍳, 👩‍🎓, 🧑‍🎓, 👨‍🎓, 👩‍🎤, 🧑‍🎤, 👨‍🎤, 👩‍🏫, 🧑‍🏫, 👨‍🏫, 👩‍🏭, 🧑‍🏭, 👨‍🏭, 👩‍💻, 🧑‍💻, 👨‍💻, 👩‍💼, 🧑‍💼, 👨‍💼, 👩‍🔧, 🧑‍🔧, 👨‍🔧, 👩‍🔬, 🧑‍🔬, 👨‍🔬, 👩‍🎨, 🧑‍🎨, 👨‍🎨, 👩‍🚒, 🧑‍🚒, 👨‍🚒, 👩‍✈️, 🧑‍✈️, 👨‍✈️, 👩‍🚀,🧑‍🚀, 👨‍🚀, 👩‍⚖️, 🤵‍♀️, 🤵, 🤵‍♂️, 👸, 🤴, 🥷, 🦸‍♀️, 🦸, 🦸‍♂️, 🦹‍♀️, 🦹, 🦹‍♂️, 🤶, 🧑‍🎄, 🎅, 🧙‍♀️, 🧙, 🧙‍♂️ ,🧝‍♀️ ,🧝, 🧝‍♂️, 🧛‍♀️, 🧛, 🧛‍♂️",
       "createdAt": "2026-03-16T14:55:20.924Z",
-      "lastUpdated": "2026-06-09T20:31:53.806Z",
+      "lastUpdated": "2026-11-05T17:46:36.120Z",
       "version": 0
     },
     "28806:103": {
@@ -8717,7 +8750,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, add, more, plus, coin, additional, crypto, 🪙, ➕",
       "createdAt": "2026-03-16T14:55:20.535Z",
-      "lastUpdated": "2026-06-09T20:31:54.286Z",
+      "lastUpdated": "2026-11-05T17:46:36.553Z",
       "version": 1
     },
     "28806:78": {
@@ -8728,7 +8761,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.698Z",
-      "lastUpdated": "2026-06-11T19:38:49.373Z",
+      "lastUpdated": "2026-11-05T17:46:36.503Z",
       "version": 1
     },
     "28897:159": {
@@ -8739,7 +8772,7 @@
       "height": 48,
       "description": "diamond, reward, sparkle, earn, crystal, 💎, 💍, ✨,  ❇️",
       "createdAt": "2026-03-18T17:25:34.682Z",
-      "lastUpdated": "2026-06-11T19:38:49.396Z",
+      "lastUpdated": "2026-11-05T17:46:36.531Z",
       "version": 1
     },
     "28806:93": {
@@ -8750,7 +8783,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.903Z",
-      "lastUpdated": "2026-06-09T20:31:54.123Z",
+      "lastUpdated": "2026-11-05T17:46:36.409Z",
       "version": 0
     },
     "28806:92": {
@@ -8761,7 +8794,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, pictogram, ribbon, star, learning, rewards, eth, ethereum, asset, staking, l2",
       "createdAt": "2026-03-16T14:55:20.910Z",
-      "lastUpdated": "2026-06-09T20:31:54.015Z",
+      "lastUpdated": "2026-11-05T17:46:36.307Z",
       "version": 1
     },
     "28806:96": {
@@ -8772,7 +8805,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, ethereum, asset, staking, l2, returns, gains, interest",
       "createdAt": "2026-03-16T14:55:20.594Z",
-      "lastUpdated": "2026-06-09T20:31:54.174Z",
+      "lastUpdated": "2026-11-05T17:46:36.456Z",
       "version": 1
     },
     "28806:104": {
@@ -8783,19 +8816,19 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, bank, fund, stock, currency, money, building, institution, 💵, 💸, 🏦, 🏧, 💴, 💶, 💷",
       "createdAt": "2026-03-16T14:55:21.050Z",
-      "lastUpdated": "2026-06-09T20:31:54.181Z",
+      "lastUpdated": "2026-11-05T17:46:36.463Z",
       "version": 1
     },
     "28806:90": {
       "type": "pictogram",
       "name": "instoGem",
-      "hash": "H2m+7d3b1D8rugQOk6srkNRERcy6RbOlM6tBiWl0Ubc=",
+      "hash": "MNGZri7i/qOP8Yovn9S6CiVCR6GRZwlx6IzQbhlKymU=",
       "width": 48,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, diamond, reward, sparkle, earn, crystal, 💎, 💍, ✨, ❇️",
       "createdAt": "2026-03-16T14:55:20.579Z",
-      "lastUpdated": "2026-06-11T19:38:49.384Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.520Z",
+      "version": 2
     },
     "28897:191": {
       "type": "pictogram",
@@ -8805,7 +8838,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-03-18T17:25:34.667Z",
-      "lastUpdated": "2026-06-09T20:31:53.862Z",
+      "lastUpdated": "2026-11-05T17:46:36.176Z",
       "version": 1
     },
     "28806:100": {
@@ -8816,7 +8849,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, lock, secure, security, protect, shield, key, protection, guard, defense, cover, safety, 🔑, 🗝, 🔐, 🔒",
       "createdAt": "2026-03-16T14:55:20.677Z",
-      "lastUpdated": "2026-06-09T20:31:54.218Z",
+      "lastUpdated": "2026-11-05T17:46:36.497Z",
       "version": 1
     },
     "28897:202": {
@@ -8827,7 +8860,7 @@
       "height": 48,
       "description": "arrow, coins, up, gain, blue, circle, portfolio",
       "createdAt": "2026-03-18T17:25:34.661Z",
-      "lastUpdated": "2026-06-09T20:31:54.299Z",
+      "lastUpdated": "2026-11-05T17:46:36.563Z",
       "version": 1
     },
     "28806:97": {
@@ -8838,7 +8871,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, square, blue, music, music note, user, play, document, digital, collectibles, nfts",
       "createdAt": "2026-03-16T14:55:20.571Z",
-      "lastUpdated": "2026-06-09T20:31:54.073Z",
+      "lastUpdated": "2026-11-05T17:46:36.366Z",
       "version": 1
     },
     "28806:79": {
@@ -8849,7 +8882,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, lock, circle, square, blue",
       "createdAt": "2026-03-16T14:55:20.841Z",
-      "lastUpdated": "2026-06-11T19:38:49.379Z",
+      "lastUpdated": "2026-11-05T17:46:36.507Z",
       "version": 1
     },
     "28806:91": {
@@ -8860,18 +8893,18 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.042Z",
-      "lastUpdated": "2026-06-09T20:31:54.127Z",
+      "lastUpdated": "2026-11-05T17:46:36.413Z",
       "version": 0
     },
     "28806:82": {
       "type": "pictogram",
       "name": "instoRestaking",
       "hash": "ZUQfQWiHNJZFRM39DTmdiViAWFnN8AqnSvgTznERtJU=",
-      "width": 48,
+      "width": 49,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coinbase, one, cb1, refresh, restore, refill, 🔄, staking",
       "createdAt": "2026-03-16T14:55:20.827Z",
-      "lastUpdated": "2026-06-09T20:31:53.980Z",
+      "lastUpdated": "2026-11-05T17:46:36.273Z",
       "version": 3
     },
     "28806:101": {
@@ -8882,7 +8915,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, exclamation, risk, caution, wrapping, ETH, staking, graph, growth, chart, value, market",
       "createdAt": "2026-03-16T14:55:20.548Z",
-      "lastUpdated": "2026-06-09T20:31:54.058Z",
+      "lastUpdated": "2026-11-05T17:46:36.353Z",
       "version": 1
     },
     "28897:135": {
@@ -8893,7 +8926,7 @@
       "height": 48,
       "description": "circle, yellow, blue, coin, secure, storage",
       "createdAt": "2026-03-18T17:25:34.687Z",
-      "lastUpdated": "2026-06-11T19:38:49.362Z",
+      "lastUpdated": "2026-11-05T17:46:36.493Z",
       "version": 1
     },
     "28806:107": {
@@ -8904,18 +8937,18 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, wallet, user, blue, circle, self custody",
       "createdAt": "2026-03-16T14:55:20.630Z",
-      "lastUpdated": "2026-06-09T20:31:53.824Z",
+      "lastUpdated": "2026-11-05T17:46:36.138Z",
       "version": 0
     },
     "28806:89": {
       "type": "pictogram",
       "name": "instoStakingGraph",
       "hash": "oRCKRlew2i92yUz6i3cK6DYEgHx2KIEpECGLLHhHHTw=",
-      "width": 48,
-      "height": 48,
+      "width": 49,
+      "height": 49,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, circles, coins, yellow, blue, graph, staking",
       "createdAt": "2026-03-16T14:55:20.600Z",
-      "lastUpdated": "2026-06-09T20:31:54.132Z",
+      "lastUpdated": "2026-11-05T17:46:36.416Z",
       "version": 1
     },
     "28806:105": {
@@ -8926,18 +8959,18 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, chart, trading, candles, graph, numbers, data, visualization, 📈, 📉, 📊, 🕯, 🪔,",
       "createdAt": "2026-03-16T14:55:20.645Z",
-      "lastUpdated": "2026-06-09T20:31:54.054Z",
+      "lastUpdated": "2026-11-05T17:46:36.349Z",
       "version": 1
     },
     "28806:99": {
       "type": "pictogram",
       "name": "instoWalletWarning",
       "hash": "jSJvnboyzWDoarrshYphcINXyeWdyhDaWSBJUqr7T6s=",
-      "width": 48,
+      "width": 49,
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, wallet, storage, crypto transactions, pay, retrieve, digital assets, exclamation mark, warning, alert, help, crucial, indication, yellow, 💰, 💵, 💸, ⚠️",
       "createdAt": "2026-03-16T14:55:20.556Z",
-      "lastUpdated": "2026-06-09T20:31:54.042Z",
+      "lastUpdated": "2026-11-05T17:46:36.336Z",
       "version": 1
     },
     "7531:628": {
@@ -9160,6 +9193,17 @@
       "lastUpdated": "2025-12-01T18:17:44.700Z",
       "version": 4
     },
+    "31754:53105": {
+      "type": "pictogram",
+      "name": "lowRisk",
+      "hash": "WgbEDMy5Ix7w7VVrL1MGWIQFfg1udmjnIroF1+GrHPw=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.689Z",
+      "lastUpdated": "2026-11-05T17:46:35.689Z",
+      "version": 0
+    },
     "1549:1794": {
       "type": "pictogram",
       "name": "manageWeb3SignersAcct",
@@ -9366,7 +9410,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-06-16T21:19:21.482Z",
-      "lastUpdated": "2026-06-16T21:19:21.482Z",
+      "lastUpdated": "2026-11-05T17:46:36.246Z",
       "version": 0
     },
     "2:41585": {
@@ -9588,6 +9632,17 @@
       "createdAt": "2022-08-05T05:37:09.657Z",
       "lastUpdated": "2026-06-08T19:45:05.774Z",
       "version": 6
+    },
+    "31752:774": {
+      "type": "pictogram",
+      "name": "passKey",
+      "hash": "xGRSePz5RuJR7tM3y5o8NuIxOHOykNMHXbmi+F13hfY=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.655Z",
+      "lastUpdated": "2026-11-05T17:46:35.655Z",
+      "version": 0
     },
     "2683:1367": {
       "type": "pictogram",
@@ -9885,6 +9940,17 @@
       "createdAt": "2022-08-05T05:37:08.989Z",
       "lastUpdated": "2025-12-01T18:17:00.169Z",
       "version": 3
+    },
+    "31754:53109": {
+      "type": "pictogram",
+      "name": "retakeKnowledgeQuiz",
+      "hash": "zVWlo8Glc9ikhsPwjzr0go8hW4dRW1S9opuf50mRpqw=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.672Z",
+      "lastUpdated": "2026-11-05T17:46:35.672Z",
+      "version": 0
     },
     "2:41447": {
       "type": "pictogram",
@@ -10227,6 +10293,17 @@
       "lastUpdated": "2026-03-16T14:55:21.103Z",
       "version": 4
     },
+    "31754:53114": {
+      "type": "pictogram",
+      "name": "submitID",
+      "hash": "nlht+40Kbpw0ukIZwqCrSE57yN1BHU/6XnagpkLfJk4=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.669Z",
+      "lastUpdated": "2026-11-05T17:46:35.669Z",
+      "version": 0
+    },
     "2:41582": {
       "type": "pictogram",
       "name": "successPhone",
@@ -10259,6 +10336,17 @@
       "createdAt": "2022-08-05T05:37:13.714Z",
       "lastUpdated": "2026-06-08T19:45:05.727Z",
       "version": 5
+    },
+    "31754:53108": {
+      "type": "pictogram",
+      "name": "takeKnowledgeQuiz",
+      "hash": "ZFPApSeadhGxtkyLIeDVA+Ejo5/j0Mgj0y3AeqadWrs=",
+      "width": 48,
+      "height": 48,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.676Z",
+      "lastUpdated": "2026-11-05T17:46:35.676Z",
+      "version": 0
     },
     "2:41657": {
       "type": "pictogram",
@@ -11489,7 +11577,7 @@
       "height": 32,
       "description": "product, icons, advanced, trade",
       "createdAt": "2026-03-19T18:41:59.409Z",
-      "lastUpdated": "2026-06-09T20:31:54.267Z",
+      "lastUpdated": "2026-11-05T17:46:36.541Z",
       "version": 0
     },
     "28932:531": {
@@ -11500,7 +11588,7 @@
       "height": 32,
       "description": "",
       "createdAt": "2026-03-19T18:41:59.327Z",
-      "lastUpdated": "2026-06-09T20:31:53.937Z",
+      "lastUpdated": "2026-11-05T17:46:36.229Z",
       "version": 0
     },
     "28932:413": {
@@ -11511,7 +11599,7 @@
       "height": 32,
       "description": "trust, true, genuine, actual, verification",
       "createdAt": "2026-03-19T18:41:59.458Z",
-      "lastUpdated": "2026-06-09T20:31:53.934Z",
+      "lastUpdated": "2026-11-05T17:46:36.225Z",
       "version": 0
     },
     "28932:473": {
@@ -11522,7 +11610,7 @@
       "height": 32,
       "description": "product, icons, borrow",
       "createdAt": "2026-03-19T18:41:59.495Z",
-      "lastUpdated": "2026-06-09T20:31:54.087Z",
+      "lastUpdated": "2026-11-05T17:46:36.382Z",
       "version": 0
     },
     "28932:489": {
@@ -11533,7 +11621,7 @@
       "height": 32,
       "description": "product, icons, advanced, trade, coinbaseone, One,",
       "createdAt": "2026-03-19T18:41:59.378Z",
-      "lastUpdated": "2026-06-09T20:31:54.051Z",
+      "lastUpdated": "2026-11-05T17:46:36.346Z",
       "version": 0
     },
     "28932:440": {
@@ -11544,7 +11632,7 @@
       "height": 32,
       "description": "chat bubble, speech, communication, social, interaction, message, 💬",
       "createdAt": "2026-03-19T18:41:59.470Z",
-      "lastUpdated": "2026-06-09T20:31:54.104Z",
+      "lastUpdated": "2026-11-05T17:46:36.395Z",
       "version": 0
     },
     "28932:518": {
@@ -11555,7 +11643,7 @@
       "height": 32,
       "description": "product, icons, cloud, developer, portal",
       "createdAt": "2026-03-19T18:41:59.334Z",
-      "lastUpdated": "2026-06-09T20:31:54.143Z",
+      "lastUpdated": "2026-11-05T17:46:36.428Z",
       "version": 0
     },
     "28932:515": {
@@ -11566,7 +11654,7 @@
       "height": 32,
       "description": "Coinbase, One, Concierge, person, attendant",
       "createdAt": "2026-03-19T18:41:59.464Z",
-      "lastUpdated": "2026-06-09T20:31:54.012Z",
+      "lastUpdated": "2026-11-05T17:46:36.304Z",
       "version": 0
     },
     "28932:475": {
@@ -11577,7 +11665,7 @@
       "height": 32,
       "description": "product, icons, commerce",
       "createdAt": "2026-03-19T18:41:59.489Z",
-      "lastUpdated": "2026-06-09T20:31:53.841Z",
+      "lastUpdated": "2026-11-05T17:46:36.157Z",
       "version": 0
     },
     "28932:477": {
@@ -11588,7 +11676,7 @@
       "height": 32,
       "description": "product, icons, custody",
       "createdAt": "2026-03-19T18:41:59.427Z",
-      "lastUpdated": "2026-06-09T20:31:54.091Z",
+      "lastUpdated": "2026-11-05T17:46:36.385Z",
       "version": 0
     },
     "28932:470": {
@@ -11599,7 +11687,7 @@
       "height": 32,
       "description": "product, icons, data, marketplace",
       "createdAt": "2026-03-19T18:41:59.403Z",
-      "lastUpdated": "2026-06-09T20:31:54.083Z",
+      "lastUpdated": "2026-11-05T17:46:36.378Z",
       "version": 0
     },
     "28932:405": {
@@ -11610,7 +11698,7 @@
       "height": 32,
       "description": "represent, envoy, agent, assign, entrust, give, person, check, checkmark, ✅, ✔️, 👶, 👧, 🧒, 👦, 👩, 🧑, 👨, 👩‍🦱, 🧑‍🦱, 👨‍🦱, 👩‍🦰, 🧑‍🦰, 👨‍🦰, 👱‍♀️, 👱, 👱‍♂️, 👩‍🦳, 🧑‍🦳, 👨‍🦳, 👩‍🦲, 🧑‍🦲, 👨‍🦲, 🧔, 👵,🧓, 👴, 👲, 👳‍♀️, 👳, 👳‍♂️, 🧕, 👮‍♀️, 👮, 👮‍♂️, 👷‍♀️, 👷, 👷‍♂️, 💂‍♀️, 💂, 💂‍♂️, 🕵️‍♀️, 🕵️, 🕵️‍♂️, 👩‍⚕️, 🧑‍⚕️, 👨‍⚕️, 👩‍🌾, 🧑‍🌾, 👨‍🌾, 👩‍🍳, 🧑‍🍳, 👨‍🍳, 👩‍🎓, 🧑‍🎓, 👨‍🎓, 👩‍🎤, 🧑‍🎤, 👨‍🎤, 👩‍🏫, 🧑‍🏫, 👨‍🏫, 👩‍🏭, 🧑‍🏭, 👨‍🏭, 👩‍💻, 🧑‍💻, 👨‍💻, 👩‍💼, 🧑‍💼, 👨‍💼, 👩‍🔧, 🧑‍🔧, 👨‍🔧, 👩‍🔬, 🧑‍🔬, 👨‍🔬, 👩‍🎨, 🧑‍🎨, 👨‍🎨, 👩‍🚒, 🧑‍🚒, 👨‍🚒, 👩‍✈️, 🧑‍✈️, 👨‍✈️, 👩‍🚀,🧑‍🚀, 👨‍🚀, 👩‍⚖️, 🤵‍♀️, 🤵, 🤵‍♂️, 👸, 🤴, 🥷, 🦸‍♀️, 🦸, 🦸‍♂️, 🦹‍♀️, 🦹, 🦹‍♂️, 🤶, 🧑‍🎄, 🎅, 🧙‍♀️, 🧙, 🧙‍♂️ ,🧝‍♀️ ,🧝, 🧝‍♂️, 🧛‍♀️, 🧛, 🧛‍♂️",
       "createdAt": "2026-03-19T18:41:59.421Z",
-      "lastUpdated": "2026-06-09T20:31:53.912Z",
+      "lastUpdated": "2026-11-05T17:46:36.205Z",
       "version": 1
     },
     "28932:480": {
@@ -11621,7 +11709,7 @@
       "height": 32,
       "description": "derivatives, pictogram, leverage, invest, prime, advanced, derive, arrow, triangles",
       "createdAt": "2026-03-19T18:41:59.512Z",
-      "lastUpdated": "2026-06-09T20:31:53.922Z",
+      "lastUpdated": "2026-11-05T17:46:36.213Z",
       "version": 0
     },
     "28932:426": {
@@ -11632,7 +11720,7 @@
       "height": 32,
       "description": "quick, time, clock, speed, lightning, 🕦, 🕐, 🕚, 🕥, 🕧, 🕙, 🕣, 🕠, 🕝, 🕢, 🕟, 🕜, 🕤, 🕡, 🕞, 🕘, 🕒, 🕗, 🕔, 🕑, 🕖, 🕓, 🕛, ⏰, ⏱, 🕰, 🔄, ⏳, ⌛️",
       "createdAt": "2026-03-19T18:41:59.476Z",
-      "lastUpdated": "2026-06-09T20:31:53.848Z",
+      "lastUpdated": "2026-11-05T17:46:36.163Z",
       "version": 1
     },
     "28932:479": {
@@ -11643,7 +11731,7 @@
       "height": 32,
       "description": "product, icons, help, center",
       "createdAt": "2026-03-19T18:41:59.384Z",
-      "lastUpdated": "2026-06-09T20:31:53.991Z",
+      "lastUpdated": "2026-11-05T17:46:36.283Z",
       "version": 0
     },
     "28932:514": {
@@ -11654,29 +11742,29 @@
       "height": 32,
       "description": "check, checkmark, secure, 2fa, protection, identity card, profile, personal, ID, human, card, 🆔, ✅, ✔️, 👶, 👧, 🧒, 👦, 👩, 🧑, 👨, 👩‍🦱, 🧑‍🦱, 👨‍🦱, 👩‍🦰, 🧑‍🦰, 👨‍🦰, 👱‍♀️, 👱, 👱‍♂️, 👩‍🦳, 🧑‍🦳, 👨‍🦳, 👩‍🦲, 🧑‍🦲, 👨‍🦲, 🧔, 👵,🧓, 👴, 👲, 👳‍♀️, 👳, 👳‍♂️, 🧕, 👮‍♀️, 👮, 👮‍♂️, 👷‍♀️, 👷, 👷‍♂️, 💂‍♀️, 💂, 💂‍♂️, 🕵️‍♀️, 🕵️, 🕵️‍♂️, 👩‍⚕️, 🧑‍⚕️, 👨‍⚕️, 👩‍🌾, 🧑‍🌾, 👨‍🌾, 👩‍🍳, 🧑‍🍳, 👨‍🍳, 👩‍🎓, 🧑‍🎓, 👨‍🎓, 👩‍🎤, 🧑‍🎤, 👨‍🎤, 👩‍🏫, 🧑‍🏫, 👨‍🏫, 👩‍🏭, 🧑‍🏭, 👨‍🏭, 👩‍💻, 🧑‍💻, 👨‍💻, 👩‍💼, 🧑‍💼, 👨‍💼, 👩‍🔧, 🧑‍🔧, 👨‍🔧, 👩‍🔬, 🧑‍🔬, 👨‍🔬, 👩‍🎨, 🧑‍🎨, 👨‍🎨, 👩‍🚒, 🧑‍🚒, 👨‍🚒, 👩‍✈️, 🧑‍✈️, 👨‍✈️, 👩‍🚀,🧑‍🚀, 👨‍🚀, 👩‍⚖️, 🤵‍♀️, 🤵, 🤵‍♂️, 👸, 🤴, 🥷, 🦸‍♀️, 🦸, 🦸‍♂️, 🦹‍♀️, 🦹, 🦹‍♂️, 🤶, 🧑‍🎄, 🎅, 🧙‍♀️, 🧙, 🧙‍♂️ ,🧝‍♀️ ,🧝, 🧝‍♂️, 🧛‍♀️, 🧛, 🧛‍♂️, success state",
       "createdAt": "2026-03-19T18:41:59.353Z",
-      "lastUpdated": "2026-06-09T20:31:53.926Z",
+      "lastUpdated": "2026-11-05T17:46:36.217Z",
       "version": 0
     },
     "30639:87": {
       "type": "spotIcon",
       "name": "instoInstantAccess",
       "hash": "a7TBYyue9W3QNi41ayz8jGR2077FHjccGqdKlwK4S4M=",
-      "width": 32,
+      "width": 33,
       "height": 32,
       "description": "",
       "createdAt": "2026-06-09T20:31:53.465Z",
-      "lastUpdated": "2026-06-09T20:31:53.465Z",
+      "lastUpdated": "2026-11-05T17:46:36.528Z",
       "version": 0
     },
     "28932:516": {
       "type": "spotIcon",
       "name": "instoLayeredNetworks",
       "hash": "moXeAjJjJmryfuVjmrxrK7DnilvzT4KuGoTy78Ytous=",
-      "width": 31.999969482421875,
+      "width": 32,
       "height": 32,
       "description": "layers, layer three, three, isometric, networks, base, blue, yellow",
       "createdAt": "2026-03-19T18:41:59.347Z",
-      "lastUpdated": "2026-06-09T20:31:54.007Z",
+      "lastUpdated": "2026-11-05T17:46:36.300Z",
       "version": 0
     },
     "28932:474": {
@@ -11687,7 +11775,7 @@
       "height": 32,
       "description": "product, icons, learning, rewards",
       "createdAt": "2026-03-19T18:41:59.501Z",
-      "lastUpdated": "2026-06-09T20:31:53.939Z",
+      "lastUpdated": "2026-11-05T17:46:36.232Z",
       "version": 0
     },
     "28932:406": {
@@ -11698,7 +11786,7 @@
       "height": 32,
       "description": "",
       "createdAt": "2026-03-19T18:41:59.446Z",
-      "lastUpdated": "2026-06-09T20:31:54.166Z",
+      "lastUpdated": "2026-11-05T17:46:36.449Z",
       "version": 0
     },
     "28932:463": {
@@ -11709,7 +11797,7 @@
       "height": 32,
       "description": "product, icons, pay, SDK",
       "createdAt": "2026-03-19T18:41:59.415Z",
-      "lastUpdated": "2026-06-09T20:31:54.208Z",
+      "lastUpdated": "2026-11-05T17:46:36.486Z",
       "version": 0
     },
     "28932:419": {
@@ -11720,7 +11808,7 @@
       "height": 32,
       "description": "chart pie, data, visualization, numbers, graph, 📊, 📉, 📈, 🥧",
       "createdAt": "2026-03-19T18:41:59.507Z",
-      "lastUpdated": "2026-06-09T20:31:53.968Z",
+      "lastUpdated": "2026-11-05T17:46:36.263Z",
       "version": 0
     },
     "28932:478": {
@@ -11731,7 +11819,7 @@
       "height": 32,
       "description": "product, icons, prime",
       "createdAt": "2026-03-19T18:41:59.391Z",
-      "lastUpdated": "2026-06-09T20:31:54.198Z",
+      "lastUpdated": "2026-11-05T17:46:36.475Z",
       "version": 0
     },
     "28932:476": {
@@ -11742,7 +11830,7 @@
       "height": 32,
       "description": "product, icons, private, client",
       "createdAt": "2026-03-19T18:41:59.452Z",
-      "lastUpdated": "2026-06-09T20:31:53.983Z",
+      "lastUpdated": "2026-11-05T17:46:36.276Z",
       "version": 1
     },
     "28932:513": {
@@ -11753,7 +11841,7 @@
       "height": 32,
       "description": "product, icons, icon, small, coinbase, 32x32, card",
       "createdAt": "2026-03-19T18:41:59.359Z",
-      "lastUpdated": "2026-06-09T20:31:54.022Z",
+      "lastUpdated": "2026-11-05T17:46:36.313Z",
       "version": 0
     },
     "28932:503": {
@@ -11764,7 +11852,7 @@
       "height": 32,
       "description": "product, icons, icon, small, coinbase, 32x32, compliance",
       "createdAt": "2026-03-19T18:41:59.365Z",
-      "lastUpdated": "2026-06-09T20:31:53.881Z",
+      "lastUpdated": "2026-11-05T17:46:36.198Z",
       "version": 0
     },
     "28932:496": {
@@ -11775,7 +11863,7 @@
       "height": 32,
       "description": "product, icons, icon, small, coinbase, 32x32, pro",
       "createdAt": "2026-03-19T18:41:59.371Z",
-      "lastUpdated": "2026-06-09T20:31:54.202Z",
+      "lastUpdated": "2026-11-05T17:46:36.479Z",
       "version": 0
     },
     "28932:536": {
@@ -11786,7 +11874,7 @@
       "height": 32,
       "description": "product, icons, icon, small, coinbase, 32x32, wallet",
       "createdAt": "2026-03-19T18:41:59.311Z",
-      "lastUpdated": "2026-06-09T20:31:53.930Z",
+      "lastUpdated": "2026-11-05T17:46:36.220Z",
       "version": 0
     },
     "28932:434": {
@@ -11797,7 +11885,7 @@
       "height": 32,
       "description": "reoccur, regular, schedule, calendar, organize, date, year, month, week, book, refresh, 📆, 📅, 🗓",
       "createdAt": "2026-03-19T18:41:59.483Z",
-      "lastUpdated": "2026-06-09T20:31:54.065Z",
+      "lastUpdated": "2026-11-05T17:46:36.359Z",
       "version": 1
     },
     "28932:471": {
@@ -11808,7 +11896,7 @@
       "height": 32,
       "description": "",
       "createdAt": "2026-03-19T18:41:59.397Z",
-      "lastUpdated": "2026-06-09T20:31:54.205Z",
+      "lastUpdated": "2026-11-05T17:46:36.482Z",
       "version": 0
     },
     "28932:407": {
@@ -11819,7 +11907,7 @@
       "height": 32,
       "description": "shield, protection, guard, defense, cover, safety, security",
       "createdAt": "2026-03-19T18:41:59.440Z",
-      "lastUpdated": "2026-06-09T20:31:54.025Z",
+      "lastUpdated": "2026-11-05T17:46:36.317Z",
       "version": 0
     },
     "28932:517": {
@@ -11830,7 +11918,7 @@
       "height": 32,
       "description": "product, icons, sign, in, with, coinbase",
       "createdAt": "2026-03-19T18:41:59.340Z",
-      "lastUpdated": "2026-06-09T20:31:53.835Z",
+      "lastUpdated": "2026-11-05T17:46:36.149Z",
       "version": 0
     },
     "28806:102": {
@@ -11841,7 +11929,7 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, product, icons, staking",
       "createdAt": "2026-03-16T14:55:20.527Z",
-      "lastUpdated": "2026-06-09T20:31:54.238Z",
+      "lastUpdated": "2026-11-05T17:46:36.513Z",
       "version": 1
     },
     "28932:472": {
@@ -11852,7 +11940,7 @@
       "height": 32,
       "description": "product, icons, wallet, as, a, service",
       "createdAt": "2026-03-19T18:41:59.433Z",
-      "lastUpdated": "2026-06-09T20:31:53.953Z",
+      "lastUpdated": "2026-11-05T17:46:36.249Z",
       "version": 0
     },
     "4158:2458": {
@@ -13398,45 +13486,45 @@
     "28806:57": {
       "type": "spotRectangle",
       "name": "insto",
-      "hash": "wTVmmNV4YyHtfpf67KpOtk2/qVsvYIDcgM+E8NdBQwo=",
+      "hash": "keiOA4stAOQHkuDDIfBqxczgk0kXkJhoHz7XOx5SyPk=",
       "width": 240,
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.981Z",
-      "lastUpdated": "2026-06-09T20:31:53.943Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.236Z",
+      "version": 2
     },
     "28957:1856": {
       "type": "spotRectangle",
       "name": "instoAboutOnchain",
-      "hash": "cgKEGcAkqXoiWlSNfZpo7Td20dAQHMhFPZQ9pFyZWYU=",
+      "hash": "zRotoxj8BqztNX45eWpf0j3U5gIysGSxIb0UZO5sz+Y=",
       "width": 240,
-      "height": 120,
+      "height": 121,
       "description": "",
       "createdAt": "2026-03-20T17:10:13.574Z",
-      "lastUpdated": "2026-06-09T20:31:53.964Z",
-      "version": 0
+      "lastUpdated": "2026-11-05T17:46:36.260Z",
+      "version": 1
     },
     "28955:91": {
       "type": "spotRectangle",
       "name": "instoApiKey",
-      "hash": "TJHIzwzNSHlcG5IIthWf6RE9AodmieRj0d6iCf9tuzQ=",
+      "hash": "bYebm4lzuu+m/V9jiAsmKpu5h+dQllI/yhhP2rRwgn4=",
       "width": 240,
       "height": 120,
       "description": "API, key, access, account, connect, unlock, gain, trust",
       "createdAt": "2026-03-20T17:10:13.588Z",
-      "lastUpdated": "2026-06-11T19:38:49.254Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.134Z",
+      "version": 2
     },
     "28958:422": {
       "type": "spotRectangle",
       "name": "instoConsensusWaitingForApprovals",
       "hash": "rP3Rn3cTnwFipOomleMUPX8XPYsq+dW+pfuOUa2Z8gc=",
-      "width": 240,
+      "width": 241,
       "height": 120,
       "description": "",
       "createdAt": "2026-03-20T17:10:13.597Z",
-      "lastUpdated": "2026-06-09T20:31:54.258Z",
+      "lastUpdated": "2026-11-05T17:46:36.534Z",
       "version": 0
     },
     "28806:64": {
@@ -13444,22 +13532,22 @@
       "name": "instoCryptoAndMore",
       "hash": "dITaHkPo7LttLL6ncKYYN5HvV0hD2DWP0T7tSK88UW0=",
       "width": 240,
-      "height": 120,
+      "height": 121,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coin, coins, moon, more, empty state",
       "createdAt": "2026-03-16T14:55:20.724Z",
-      "lastUpdated": "2026-06-09T20:31:54.294Z",
+      "lastUpdated": "2026-11-05T17:46:36.560Z",
       "version": 3
     },
     "28806:62": {
       "type": "spotRectangle",
       "name": "instoCurrency",
-      "hash": "XPJAxRZxip3ZW9ZdIoJjtjch/Do3CndH6cA3rg+0Ju4=",
+      "hash": "+NRm/B6Rr9lEBF8Bc9kpjXKDFO7IA7iQFukfNd6wW9s=",
       "width": 240,
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.004Z",
-      "lastUpdated": "2026-06-09T20:31:54.152Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.440Z",
+      "version": 2
     },
     "28957:1807": {
       "type": "spotRectangle",
@@ -13469,7 +13557,7 @@
       "height": 120,
       "description": "",
       "createdAt": "2026-03-20T17:10:13.605Z",
-      "lastUpdated": "2026-06-09T20:31:54.302Z",
+      "lastUpdated": "2026-11-05T17:46:36.566Z",
       "version": 0
     },
     "28806:65": {
@@ -13480,30 +13568,30 @@
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, empty state, trading, exchange",
       "createdAt": "2026-03-16T14:55:20.652Z",
-      "lastUpdated": "2026-06-09T20:31:53.956Z",
+      "lastUpdated": "2026-11-05T17:46:36.252Z",
       "version": 2
     },
     "28806:60": {
       "type": "spotRectangle",
       "name": "instoEthStakingMovement",
-      "hash": "5wZsXBZuFQGnoZVS5zvg+fZez342Yfe+bBBC/EWpcmQ=",
+      "hash": "zi4HzTteKvnWMUo+mQZmllTW3AQph1KYohDbBV2BN6c=",
       "width": 240,
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, staking, send, transfer, circles, movement, forward, exciting, 🟣, 🟢, 🔵",
       "createdAt": "2026-03-16T14:55:20.932Z",
-      "lastUpdated": "2026-06-09T20:31:54.000Z",
-      "version": 2
+      "lastUpdated": "2026-11-05T17:46:36.292Z",
+      "version": 3
     },
     "28806:61": {
       "type": "spotRectangle",
       "name": "instoGetStartedInMinutes",
-      "hash": "GI2kDoaAF2sLyeIliliSMOpi0cPURyE890OUUN8gdDA=",
+      "hash": "u2V760i0jULmkd25GJaRQnGmu58ZEzU2YNn1yvMDuBU=",
       "width": 240,
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, get, started, stopwatch, clock, time, fast, get, going, please",
       "createdAt": "2026-03-16T14:55:20.967Z",
-      "lastUpdated": "2026-06-09T20:31:53.844Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.160Z",
+      "version": 2
     },
     "28956:134": {
       "type": "spotRectangle",
@@ -13513,7 +13601,7 @@
       "height": 120,
       "description": "",
       "createdAt": "2026-03-20T17:10:13.601Z",
-      "lastUpdated": "2026-06-09T20:31:54.100Z",
+      "lastUpdated": "2026-11-05T17:46:36.392Z",
       "version": 0
     },
     "28955:90": {
@@ -13521,10 +13609,10 @@
       "name": "instoMargin",
       "hash": "80NzQXlzhxuOhB1ISrQRHEe5JRKVuUnfPNvbAeU36lc=",
       "width": 240,
-      "height": 120,
+      "height": 121,
       "description": "margin, trading, add, stack, more, lever, up, buy, sell, put, options, trade, risk",
       "createdAt": "2026-03-20T17:10:13.579Z",
-      "lastUpdated": "2026-06-09T20:31:53.987Z",
+      "lastUpdated": "2026-11-05T17:46:36.279Z",
       "version": 1
     },
     "28958:231": {
@@ -13535,41 +13623,41 @@
       "height": 120,
       "description": "",
       "createdAt": "2026-03-20T17:10:13.610Z",
-      "lastUpdated": "2026-06-09T20:31:54.211Z",
+      "lastUpdated": "2026-11-05T17:46:36.489Z",
       "version": 0
     },
     "28806:58": {
       "type": "spotRectangle",
       "name": "instoPrimeStaking",
-      "hash": "DWyCAjZLdxocPDrc1b31hvA699YQlL2xck0Gd9k850Q=",
+      "hash": "31JqBtxev71inbfT2Fe8kTk5IgwSBXCN+8R0aEK6X1s=",
       "width": 240,
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, Prime, Staking, Stake, Crypto, Interest, Earn, Coins, Assets, Circles, Universe, sparkles, ✨",
       "createdAt": "2026-03-16T14:55:20.758Z",
-      "lastUpdated": "2026-06-09T20:31:53.831Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.146Z",
+      "version": 2
     },
     "28958:490": {
       "type": "spotRectangle",
       "name": "instoQRCode",
       "hash": "kT/9HEzDWcRD/b1CGSV3J8lFBXYCV29/G73/6BF5gvg=",
       "width": 240,
-      "height": 119.9998550415039,
+      "height": 120,
       "description": "",
       "createdAt": "2026-03-20T17:10:13.559Z",
-      "lastUpdated": "2026-06-09T20:31:53.909Z",
+      "lastUpdated": "2026-11-05T17:46:36.202Z",
       "version": 0
     },
     "28956:112": {
       "type": "spotRectangle",
       "name": "instoRefreshKey",
-      "hash": "Ttlf5kzhqaXdaEePGZnSQ2Sngc/zGO4HXL+RiXjq8nc=",
+      "hash": "xp/D64CEN6ILZ0ZByR0i98tnscLU1MLDt4Tq9VrU640=",
       "width": 240,
       "height": 120,
       "description": "",
       "createdAt": "2026-03-20T17:10:13.592Z",
-      "lastUpdated": "2026-06-11T19:38:49.297Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.328Z",
+      "version": 2
     },
     "28806:63": {
       "type": "spotRectangle",
@@ -13579,30 +13667,30 @@
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, semi, custodial, semi custodial, bank, user, avatar, coin",
       "createdAt": "2026-03-16T14:55:20.717Z",
-      "lastUpdated": "2026-06-09T20:31:53.850Z",
+      "lastUpdated": "2026-11-05T17:46:36.166Z",
       "version": 1
     },
     "28957:289": {
       "type": "spotRectangle",
       "name": "instoSetupComplete",
-      "hash": "7yDila6x+Pc7YFT/5F33Q6ijCE8ZGYwsk3j6LOreMC4=",
+      "hash": "dovx+GvWINtQPTRR7NW3ZbqF7mpbXSVOubLj9RR5TXw=",
       "width": 240,
       "height": 120,
       "description": "",
       "createdAt": "2026-03-20T17:10:13.584Z",
-      "lastUpdated": "2026-06-09T20:31:54.019Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.310Z",
+      "version": 2
     },
     "28958:42": {
       "type": "spotRectangle",
       "name": "instoSetupOnchain",
-      "hash": "hxdFYLCTKOSt9xLjV7gYslu4uiRSeAuEuiMetTLCYnI=",
+      "hash": "V5F+z/hqsU5phgA09oCWgAZ4NmGz55/VBPlGWyjl5mo=",
       "width": 240,
       "height": 120,
       "description": "",
       "createdAt": "2026-03-20T17:10:13.569Z",
-      "lastUpdated": "2026-06-09T20:31:54.242Z",
-      "version": 0
+      "lastUpdated": "2026-11-05T17:46:36.516Z",
+      "version": 1
     },
     "28806:59": {
       "type": "spotRectangle",
@@ -13612,7 +13700,7 @@
       "height": 120,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coins, chart, stake, staking, liquid, earn, more, finance, graph, bar",
       "createdAt": "2026-03-16T14:55:20.988Z",
-      "lastUpdated": "2026-06-09T20:31:53.839Z",
+      "lastUpdated": "2026-11-05T17:46:36.153Z",
       "version": 1
     },
     "623:3431": {
@@ -15386,6 +15474,17 @@
       "lastUpdated": "2026-06-08T19:45:05.812Z",
       "version": 5
     },
+    "31754:53099": {
+      "type": "spotSquare",
+      "name": "camera",
+      "hash": "LT4aE+E8rMwXZvVFR3NSjUATiRgXr2JlSc8DOqB8+rE=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.710Z",
+      "lastUpdated": "2026-11-05T17:46:35.710Z",
+      "version": 0
+    },
     "1119:2132": {
       "type": "spotSquare",
       "name": "cardAnnouncement",
@@ -16035,6 +16134,28 @@
       "lastUpdated": "2026-06-08T19:47:40.895Z",
       "version": 3
     },
+    "31754:53103": {
+      "type": "spotSquare",
+      "name": "depositFailed",
+      "hash": "WwhiIjPJ0AAZc/RFfbPQdEjRNvzVbmsukzznOriq1Os=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.696Z",
+      "lastUpdated": "2026-11-05T17:46:35.696Z",
+      "version": 0
+    },
+    "31754:53113": {
+      "type": "spotSquare",
+      "name": "depositPending",
+      "hash": "P5alonrm5KFzE74Kc8F7bMCtaPwiyDIG4e/fEvRSrMY=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.729Z",
+      "lastUpdated": "2026-11-05T17:46:35.729Z",
+      "version": 0
+    },
     "624:2773": {
       "type": "spotSquare",
       "name": "didDecentralizedIdentity",
@@ -16483,19 +16604,19 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:20.778Z",
-      "lastUpdated": "2026-06-11T19:38:49.335Z",
+      "lastUpdated": "2026-11-05T17:46:36.401Z",
       "version": 3
     },
     "28806:71": {
       "type": "spotSquare",
       "name": "instoDappWallet",
-      "hash": "+apiUyU3wOQZfYLScv6zr3dpxCTZnUakmoiI7pwhGyE=",
+      "hash": "8sXUaIMs6LHGS3B8d71zXCl+HjQwQ3qP3PKc1XLLvzg=",
       "width": 96,
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, dappwallet, wallet, 🌐, web3",
       "createdAt": "2026-03-16T14:55:21.079Z",
-      "lastUpdated": "2026-06-09T20:31:54.029Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.321Z",
+      "version": 2
     },
     "28806:66": {
       "type": "spotSquare",
@@ -16505,7 +16626,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, ethereum, 2.0, staking, crypto, currency, earn, yield, interest, growth, make, money, asset, increase, reward",
       "createdAt": "2026-03-16T14:55:20.669Z",
-      "lastUpdated": "2026-06-09T20:31:54.191Z",
+      "lastUpdated": "2026-11-05T17:46:36.469Z",
       "version": 1
     },
     "28806:69": {
@@ -16516,7 +16637,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, eth, staking, trade, coins, stars, eth2, stacks of coins, graph",
       "createdAt": "2026-03-16T14:55:20.638Z",
-      "lastUpdated": "2026-06-11T19:38:49.390Z",
+      "lastUpdated": "2026-11-05T17:46:36.524Z",
       "version": 1
     },
     "28806:70": {
@@ -16527,7 +16648,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, PIX, Deposits, bank, coin, brazil, south, america, latam, arrow",
       "createdAt": "2026-03-16T14:55:21.087Z",
-      "lastUpdated": "2026-06-09T20:31:54.263Z",
+      "lastUpdated": "2026-11-05T17:46:36.538Z",
       "version": 1
     },
     "28806:68": {
@@ -16538,7 +16659,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, Prime, Staking, Stake, Crypto, Interest, Earn, Coins, Assets, Circles, Universe, sparkles, ✨",
       "createdAt": "2026-03-16T14:55:20.623Z",
-      "lastUpdated": "2026-06-09T20:31:54.096Z",
+      "lastUpdated": "2026-11-05T17:46:36.388Z",
       "version": 1
     },
     "28897:172": {
@@ -16549,19 +16670,19 @@
       "height": 48,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-18T17:25:34.676Z",
-      "lastUpdated": "2026-06-11T19:38:49.263Z",
+      "lastUpdated": "2026-11-05T17:46:36.172Z",
       "version": 1
     },
     "28806:73": {
       "type": "spotSquare",
       "name": "instoSecurityKey",
-      "hash": "SYHcII9Vbgo/0YnOmoGvqT7IL4EeLSzLdx+oiMsgrFo=",
+      "hash": "tWfRZ9BQqAYzqgv0/BflSdASgJGoz5mGcIHx9yGW7qs=",
       "width": 96,
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.065Z",
-      "lastUpdated": "2026-06-09T20:31:53.828Z",
-      "version": 1
+      "lastUpdated": "2026-11-05T17:46:36.141Z",
+      "version": 2
     },
     "28806:74": {
       "type": "spotSquare",
@@ -16571,7 +16692,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, chain, hexagon, connections, blue",
       "createdAt": "2026-03-16T14:55:21.027Z",
-      "lastUpdated": "2026-06-09T20:31:54.081Z",
+      "lastUpdated": "2026-11-05T17:46:36.375Z",
       "version": 0
     },
     "28806:67": {
@@ -16579,10 +16700,10 @@
       "name": "instoStaking",
       "hash": "gv/2oB3TbVdHH+bSsX++ruwVYAP6GA2muKa2wNB5kdw=",
       "width": 96,
-      "height": 96,
+      "height": 97,
       "description": "insto, prime, negroni, orange, institutional, institutional investor, coins, chart, stake, staking, liquid, earn, more, finance, graph, bar",
       "createdAt": "2026-03-16T14:55:20.659Z",
-      "lastUpdated": "2026-06-09T20:31:54.110Z",
+      "lastUpdated": "2026-11-05T17:46:36.398Z",
       "version": 1
     },
     "28806:75": {
@@ -16593,7 +16714,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.019Z",
-      "lastUpdated": "2026-06-09T20:31:53.875Z",
+      "lastUpdated": "2026-11-05T17:46:36.189Z",
       "version": 1
     },
     "28806:72": {
@@ -16604,7 +16725,7 @@
       "height": 96,
       "description": "insto, prime, negroni, orange, institutional, institutional investor,",
       "createdAt": "2026-03-16T14:55:21.072Z",
-      "lastUpdated": "2026-06-11T19:38:49.278Z",
+      "lastUpdated": "2026-11-05T17:46:36.266Z",
       "version": 3
     },
     "624:2800": {
@@ -16694,6 +16815,17 @@
       "createdAt": "2022-11-23T13:41:31.055Z",
       "lastUpdated": "2026-06-08T19:46:48.122Z",
       "version": 6
+    },
+    "31754:53100": {
+      "type": "spotSquare",
+      "name": "microphone",
+      "hash": "Wkqd0uENgNyN002lTUb355lKlXee+GLkO4/ssv0cfAs=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.707Z",
+      "lastUpdated": "2026-11-05T17:46:35.707Z",
+      "version": 0
     },
     "1119:565": {
       "type": "spotSquare",
@@ -16958,6 +17090,17 @@
       "createdAt": "2022-11-23T13:41:31.096Z",
       "lastUpdated": "2026-06-08T19:47:39.805Z",
       "version": 5
+    },
+    "31754:53106": {
+      "type": "spotSquare",
+      "name": "pageNotFound",
+      "hash": "x6Uuol64BqBlQ0BBCURqL11XuXmmwSjQSH86hp3iwkY=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.684Z",
+      "lastUpdated": "2026-11-05T17:46:35.684Z",
+      "version": 0
     },
     "1218:2793": {
       "type": "spotSquare",
@@ -17300,6 +17443,17 @@
       "lastUpdated": "2026-06-08T19:49:26.955Z",
       "version": 6
     },
+    "31754:53104": {
+      "type": "spotSquare",
+      "name": "serverError",
+      "hash": "5IjNU05lhA1JQKDfQz5SO6/mcKG7Fuzx1oxm6eKGj1I=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.693Z",
+      "lastUpdated": "2026-11-05T17:46:35.693Z",
+      "version": 0
+    },
     "624:2776": {
       "type": "spotSquare",
       "name": "shareOnSocialMedia",
@@ -17399,6 +17553,17 @@
       "lastUpdated": "2026-06-08T19:45:06.370Z",
       "version": 3
     },
+    "31754:53102": {
+      "type": "spotSquare",
+      "name": "success",
+      "hash": "D2GZ6yP6D75YqqejQNt82W9/0G1X0aR5EpYkCpeUGx0=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.700Z",
+      "lastUpdated": "2026-11-05T18:17:01.298Z",
+      "version": 0
+    },
     "1683:1415": {
       "type": "spotSquare",
       "name": "swapEth",
@@ -17454,6 +17619,17 @@
       "lastUpdated": "2026-06-08T19:47:40.737Z",
       "version": 5
     },
+    "31754:53111": {
+      "type": "spotSquare",
+      "name": "temporarilyUnavailable",
+      "hash": "emnogNT8V7ZqLh7Bw08SmIrWjdA4kTpEyegbhUhQXeo=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.721Z",
+      "lastUpdated": "2026-11-05T17:46:35.721Z",
+      "version": 0
+    },
     "2225:2596": {
       "type": "spotSquare",
       "name": "tradeImmediately",
@@ -17464,6 +17640,17 @@
       "createdAt": "2023-05-03T19:12:52.885Z",
       "lastUpdated": "2025-12-01T18:14:46.402Z",
       "version": 4
+    },
+    "31754:53115": {
+      "type": "spotSquare",
+      "name": "tradesEmpty",
+      "hash": "npYnRMY4PGX+M2DtZgWD9kHCxG9/6i7ylj44ggipUBA=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.714Z",
+      "lastUpdated": "2026-11-05T17:46:35.714Z",
+      "version": 0
     },
     "1119:1889": {
       "type": "spotSquare",
@@ -17509,6 +17696,17 @@
       "lastUpdated": "2026-06-08T19:46:47.798Z",
       "version": 4
     },
+    "31754:53112": {
+      "type": "spotSquare",
+      "name": "verifyIdentity",
+      "hash": "1K+J1GcjXM65/yznyvrBTkMbcw+oGAGaYXmS60uupm0=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.717Z",
+      "lastUpdated": "2026-11-05T17:46:35.717Z",
+      "version": 0
+    },
     "2225:2565": {
       "type": "spotSquare",
       "name": "verifyInfo",
@@ -17541,6 +17739,17 @@
       "createdAt": "2023-01-19T05:38:48.394Z",
       "lastUpdated": "2026-06-08T19:46:46.888Z",
       "version": 9
+    },
+    "31754:53107": {
+      "type": "spotSquare",
+      "name": "walletEmpty",
+      "hash": "pyFEtOFn2kdo72uLzsZLORjpcAfwbyFWw+Rl6a8YfCw=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.679Z",
+      "lastUpdated": "2026-11-05T17:46:35.679Z",
+      "version": 0
     },
     "2225:2536": {
       "type": "spotSquare",
@@ -17585,6 +17794,17 @@
       "createdAt": "2022-11-23T13:41:31.178Z",
       "lastUpdated": "2026-06-08T19:46:48.260Z",
       "version": 5
+    },
+    "31754:53101": {
+      "type": "spotSquare",
+      "name": "watchListEmpty",
+      "hash": "HcNNjUu21ey8iykdlig0BUvclIvQZDjGW7W6N1t/234=",
+      "width": 96,
+      "height": 96,
+      "description": "",
+      "createdAt": "2026-11-05T17:46:35.704Z",
+      "lastUpdated": "2026-11-05T17:46:35.704Z",
+      "version": 0
     },
     "624:2822": {
       "type": "spotSquare",

@@ -1501,6 +1501,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/explore-4.js').content,
     themeable: () => require('../svgJs/cjs/themeable/explore-4.js').content,
   },
+  faceScan: {
+    light: () => require('../svgJs/cjs/light/faceScan-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/faceScan-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/faceScan-0.js').content,
+  },
   fast: {
     light: () => require('../svgJs/cjs/light/fast-3.js').content,
     dark: () => require('../svgJs/cjs/dark/fast-3.js').content,
@@ -1530,6 +1535,11 @@ const svgJsMap = {
     light: () => require('../svgJs/cjs/light/findYourSelection-3.js').content,
     dark: () => require('../svgJs/cjs/dark/findYourSelection-3.js').content,
     themeable: () => require('../svgJs/cjs/themeable/findYourSelection-3.js').content,
+  },
+  fingerprint: {
+    light: () => require('../svgJs/cjs/light/fingerprint-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/fingerprint-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/fingerprint-0.js').content,
   },
   formDownload: {
     light: () => require('../svgJs/cjs/light/formDownload-2.js').content,
@@ -1610,6 +1620,11 @@ const svgJsMap = {
     light: () => require('../svgJs/cjs/light/higherLimits-3.js').content,
     dark: () => require('../svgJs/cjs/dark/higherLimits-3.js').content,
     themeable: () => require('../svgJs/cjs/themeable/higherLimits-3.js').content,
+  },
+  highRisk: {
+    light: () => require('../svgJs/cjs/light/highRisk-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/highRisk-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/highRisk-0.js').content,
   },
   holdingCoin: {
     light: () => require('../svgJs/cjs/light/holdingCoin-3.js').content,
@@ -1712,9 +1727,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/instoCoinFocus-1.js').content,
   },
   instoCrypto101: {
-    light: () => require('../svgJs/cjs/light/instoCrypto101-1.js').content,
-    dark: () => require('../svgJs/cjs/dark/instoCrypto101-1.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/instoCrypto101-1.js').content,
+    light: () => require('../svgJs/cjs/light/instoCrypto101-2.js').content,
+    dark: () => require('../svgJs/cjs/dark/instoCrypto101-2.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/instoCrypto101-2.js').content,
   },
   instoDecentralizationEverything: {
     light: () => require('../svgJs/cjs/light/instoDecentralizationEverything-1.js').content,
@@ -1772,9 +1787,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/instoFiat-1.js').content,
   },
   instoGem: {
-    light: () => require('../svgJs/cjs/light/instoGem-1.js').content,
-    dark: () => require('../svgJs/cjs/dark/instoGem-1.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/instoGem-1.js').content,
+    light: () => require('../svgJs/cjs/light/instoGem-2.js').content,
+    dark: () => require('../svgJs/cjs/dark/instoGem-2.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/instoGem-2.js').content,
   },
   instoGlobalConnections: {
     light: () => require('../svgJs/cjs/light/instoGlobalConnections-1.js').content,
@@ -1940,6 +1955,11 @@ const svgJsMap = {
     light: () => require('../svgJs/cjs/light/lowFees-4.js').content,
     dark: () => require('../svgJs/cjs/dark/lowFees-4.js').content,
     themeable: () => require('../svgJs/cjs/themeable/lowFees-4.js').content,
+  },
+  lowRisk: {
+    light: () => require('../svgJs/cjs/light/lowRisk-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/lowRisk-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/lowRisk-0.js').content,
   },
   manageWeb3SignersAcct: {
     light: () => require('../svgJs/cjs/light/manageWeb3SignersAcct-1.js').content,
@@ -2136,6 +2156,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/participateNavigation-6.js').content,
     themeable: () => require('../svgJs/cjs/themeable/participateNavigation-6.js').content,
   },
+  passKey: {
+    light: () => require('../svgJs/cjs/light/passKey-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/passKey-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/passKey-0.js').content,
+  },
   passport: {
     light: () => require('../svgJs/cjs/light/passport-2.js').content,
     dark: () => require('../svgJs/cjs/dark/passport-2.js').content,
@@ -2270,6 +2295,11 @@ const svgJsMap = {
     light: () => require('../svgJs/cjs/light/restaking-3.js').content,
     dark: () => require('../svgJs/cjs/dark/restaking-3.js').content,
     themeable: () => require('../svgJs/cjs/themeable/restaking-3.js').content,
+  },
+  retakeKnowledgeQuiz: {
+    light: () => require('../svgJs/cjs/light/retakeKnowledgeQuiz-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/retakeKnowledgeQuiz-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/retakeKnowledgeQuiz-0.js').content,
   },
   reviewAndAdd: {
     light: () => require('../svgJs/cjs/light/reviewAndAdd-3.js').content,
@@ -2426,6 +2456,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/strongWarning-4.js').content,
     themeable: () => require('../svgJs/cjs/themeable/strongWarning-4.js').content,
   },
+  submitID: {
+    light: () => require('../svgJs/cjs/light/submitID-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/submitID-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/submitID-0.js').content,
+  },
   successPhone: {
     light: () => require('../svgJs/cjs/light/successPhone-3.js').content,
     dark: () => require('../svgJs/cjs/dark/successPhone-3.js').content,
@@ -2440,6 +2475,11 @@ const svgJsMap = {
     light: () => require('../svgJs/cjs/light/supportChat-5.js').content,
     dark: () => require('../svgJs/cjs/dark/supportChat-5.js').content,
     themeable: () => require('../svgJs/cjs/themeable/supportChat-5.js').content,
+  },
+  takeKnowledgeQuiz: {
+    light: () => require('../svgJs/cjs/light/takeKnowledgeQuiz-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/takeKnowledgeQuiz-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/takeKnowledgeQuiz-0.js').content,
   },
   takeQuiz: {
     light: () => require('../svgJs/cjs/light/takeQuiz-3.js').content,
