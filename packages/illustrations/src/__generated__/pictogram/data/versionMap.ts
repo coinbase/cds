@@ -517,7 +517,7 @@ const versionMap: Record<PictogramName, number> = {
   instoWalletWarning: 1,
   instoDecentralizationEverything: 1,
   instoNftLibrary: 1,
-  instoGem: 1,
+  instoGem: 2,
   instoEthStakingChart: 1,
   instoStakingGraph: 1,
   instoAccount: 1,
@@ -533,7 +533,7 @@ const versionMap: Record<PictogramName, number> = {
   instoEthRewards: 1,
   instoAddressBook: 0,
   instoDelegate: 0,
-  instoCrypto101: 1,
+  instoCrypto101: 2,
   instoDecentralizedWeb3: 2,
   instoCoinbaseOneShield: 0,
   instoApyInterest: 3,
@@ -552,6 +552,14 @@ const versionMap: Record<PictogramName, number> = {
   usdTrade: 0,
   eurTrade: 0,
   chfTrade: 0,
+  passKey: 0,
+  fingerprint: 0,
+  faceScan: 0,
+  submitID: 0,
+  retakeKnowledgeQuiz: 0,
+  takeKnowledgeQuiz: 0,
+  lowRisk: 0,
+  highRisk: 0,
 };
 
 export default versionMap;
