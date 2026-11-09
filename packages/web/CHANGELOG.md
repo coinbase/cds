@@ -1,3 +1,13 @@
+## 9.30.0 (2026-10-26)
+
+### 🚀 Features
+
+- Add `hideStartIcon` prop to `Banner` to hide the start icon.
+
+### 🧱 Updated Dependencies
+
+- Updated illustrations to 4.49.1
+
 ## 9.29.0 (2026-10-02)
 
 ### 🚀 Features

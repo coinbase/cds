@@ -26,6 +26,11 @@ export type BannerBaseProps = SharedProps & {
   /** Whether the start icon is active */
   startIconActive?: boolean;
   /**
+   * Hides the start icon.
+   * @default false
+   */
+  hideStartIcon?: boolean;
+  /**
    * Color of the start icon.
    * @default based on the banner variant
    */
@@ -128,6 +133,7 @@ export const Banner = memo(function Banner({
     variant,
     startIcon,
     startIconActive,
+    hideStartIcon = false,
     startIconColor,
     onClose,
     primaryAction,
@@ -239,22 +245,24 @@ export const Banner = memo(function Banner({
       {...props}
     >
       {/** Start */}
-      <Box
-        accessibilityLabel={startIconAccessibilityLabel}
-        accessibilityRole="image"
-        accessible={!!startIconAccessibilityLabel}
-        style={styles?.start}
-      >
-        <Icon
-          active={startIconActive}
-          color={startIconColor ?? iconColor}
-          name={startIcon}
-          paddingX={0.5}
-          paddingY={0.25}
-          size="s"
-          testID={`${testID}-icon`}
-        />
-      </Box>
+      {!hideStartIcon && (
+        <Box
+          accessibilityLabel={startIconAccessibilityLabel}
+          accessibilityRole="image"
+          accessible={!!startIconAccessibilityLabel}
+          style={styles?.start}
+        >
+          <Icon
+            active={startIconActive}
+            color={startIconColor ?? iconColor}
+            name={startIcon}
+            paddingX={0.5}
+            paddingY={0.25}
+            size="s"
+            testID={`${testID}-icon`}
+          />
+        </Box>
+      )}
       <VStack
         flexGrow={1}
         flexShrink={1}

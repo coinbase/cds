@@ -57,6 +57,18 @@ describe('Banner Actions', () => {
 });
 
 describe('Banner', () => {
+  it('renders the start icon by default', () => {
+    render(<MockBanner testID={TEST_ID} />);
+
+    expect(screen.getByTestId(`${TEST_ID}-icon`)).toBeTruthy();
+  });
+
+  it('does not render the start icon when hideStartIcon is true', () => {
+    render(<MockBanner hideStartIcon testID={TEST_ID} />);
+
+    expect(screen.queryByTestId(`${TEST_ID}-icon`)).toBeNull();
+  });
+
   it('can set className', () => {
     const customCss = css`
       padding: 5px;

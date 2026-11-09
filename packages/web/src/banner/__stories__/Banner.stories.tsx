@@ -438,6 +438,21 @@ export const CustomAlignment = () => {
   );
 };
 
+export const HiddenStartIcon = () => {
+  return (
+    <VStack gap={2}>
+      <Banner
+        hideStartIcon
+        startIcon="info"
+        title="Banner without a start icon"
+        variant="informational"
+      >
+        {shortMessage}
+      </Banner>
+    </VStack>
+  );
+};
+
 export default {
   component: Banner,
   title: 'Components/Banner',

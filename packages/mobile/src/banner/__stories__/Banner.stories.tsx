@@ -177,6 +177,17 @@ const BannerScreen = () => {
         </VStack>
       </Example>
 
+      <Example title="Hidden Start Icon">
+        <Banner
+          hideStartIcon
+          startIcon="info"
+          title="Banner without a start icon"
+          variant="informational"
+        >
+          {shortMessage}
+        </Banner>
+      </Example>
+
       <Example title="With Labels">
         <VStack gap={2}>
           <Banner
