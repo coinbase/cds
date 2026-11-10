@@ -114,4 +114,125 @@ describe('useDateInput', () => {
     const error = result.current.validateDateInput(result.current.inputValue);
     expect(error).toEqual(new DateInputValidationError('required', options.requiredError || ''));
   });
+
+  describe('separator formatting', () => {
+    const typeSequence = (
+      result: { current: { onChangeDateInput: (value: string) => void } },
+      values: string[],
+    ) => {
+      values.forEach((value) => {
+        act(() => {
+          result.current.onChangeDateInput(value);
+        });
+      });
+    };
+
+    const renderBlankInput = (intlDateFormat = options.intlDateFormat) => {
+      const blankOptions: DateInputOptions = {
+        ...options,
+        date: null,
+        disabledDates: undefined,
+        minDate: undefined,
+        maxDate: undefined,
+        onChangeDate: jest.fn(),
+        onErrorDate: jest.fn(),
+        intlDateFormat,
+      };
+      const hook = renderHook(() => useDateInput(blankOptions));
+      return { ...hook, blankOptions };
+    };
+
+    it('inserts separators while typing one character at a time', () => {
+      const { result, blankOptions } = renderBlankInput();
+
+      typeSequence(result, [
+        '1',
+        '10',
+        '103',
+        '10/31',
+        '10/311',
+        '10/31/19',
+        '10/31/199',
+        '10/31/1990',
+      ]);
+
+      expect(result.current.inputValue).toBe('10/31/1990');
+      expect(blankOptions.onChangeDate).toHaveBeenCalledWith(new Date(1990, 9, 31));
+    });
+
+    it('inserts a skipped separator when Android emits several digits at once', () => {
+      const { result, blankOptions } = renderBlankInput();
+
+      typeSequence(result, ['1', '10', '103', '1031', '10311', '103119', '1031199', '10311990']);
+
+      expect(result.current.inputValue).toBe('10/31/1990');
+      expect(blankOptions.onChangeDate).toHaveBeenCalledWith(new Date(1990, 9, 31));
+    });
+
+    it('formats a shorter native string when it still contains a new digit', () => {
+      const { result } = renderBlankInput();
+
+      typeSequence(result, ['1', '10', '103', '1031', '10311']);
+      expect(result.current.inputValue).toBe('10/31/1');
+
+      act(() => {
+        result.current.onChangeDateInput('10/3119');
+      });
+
+      expect(result.current.inputValue).toBe('10/31/19');
+    });
+
+    it('keeps a trailing separator while deleting and restores it on the next digit', () => {
+      const { result } = renderBlankInput();
+
+      typeSequence(result, ['1', '10', '103']);
+      expect(result.current.inputValue).toBe('10/3');
+
+      act(() => {
+        result.current.onChangeDateInput('10/');
+      });
+      expect(result.current.inputValue).toBe('10/');
+
+      act(() => {
+        result.current.onChangeDateInput('10/3');
+      });
+      expect(result.current.inputValue).toBe('10/3');
+
+      act(() => {
+        result.current.onChangeDateInput('103');
+      });
+      expect(result.current.inputValue).toBe('103');
+
+      act(() => {
+        result.current.onChangeDateInput('1031');
+      });
+      expect(result.current.inputValue).toBe('10/31');
+    });
+
+    it('ignores a separator typed before one is expected', () => {
+      const { result } = renderBlankInput();
+
+      act(() => {
+        result.current.onChangeDateInput('1');
+      });
+      act(() => {
+        result.current.onChangeDateInput('1/');
+      });
+
+      expect(result.current.inputValue).toBe('1');
+    });
+
+    it('formats year-first locales from the digits', () => {
+      const { result, blankOptions } = renderBlankInput(
+        new IntlDateFormat({ locale: 'fr-CA', separator: '.' }),
+      );
+
+      act(() => {
+        result.current.onChangeDateInput('19901231');
+      });
+
+      expect(result.current.inputValue).toBe('1990.12.31');
+      expect(blankOptions.onChangeDate).toHaveBeenCalledWith(new Date(1990, 11, 31));
+    });
+  });
 });
