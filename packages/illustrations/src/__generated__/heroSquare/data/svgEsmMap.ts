@@ -967,7 +967,7 @@ const svgEsmMap = {
   },
   instoAdd2Fa: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoAdd2Fa-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoAdd2Fa-2.js').then((m) => m.default as string),
   },
   instoAddBankAccount: {
     themeable: () =>
@@ -975,7 +975,7 @@ const svgEsmMap = {
   },
   instoCoinbaseOneProtectedCrypto: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoCoinbaseOneProtectedCrypto-1.js').then(
+      import('../svgJs/esm/themeable/instoCoinbaseOneProtectedCrypto-2.js').then(
         (m) => m.default as string,
       ),
   },
@@ -989,11 +989,11 @@ const svgEsmMap = {
   },
   instoEnableBiometrics: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEnableBiometrics-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEnableBiometrics-2.js').then((m) => m.default as string),
   },
   instoEthStakingRewards: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoEthStakingRewards-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoEthStakingRewards-2.js').then((m) => m.default as string),
   },
   instoEthStakingUpsell: {
     themeable: () =>
@@ -1029,7 +1029,7 @@ const svgEsmMap = {
   },
   instoPrimeStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPrimeStaking-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoPrimeStaking-2.js').then((m) => m.default as string),
   },
   instoPrivateKey: {
     themeable: () =>
@@ -1037,7 +1037,7 @@ const svgEsmMap = {
   },
   instoRequestSent: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoRequestSent-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoRequestSent-3.js').then((m) => m.default as string),
   },
   instoSecurityKey: {
     themeable: () =>
@@ -1063,7 +1063,7 @@ const svgEsmMap = {
   },
   instoWalletSecurity: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoWalletSecurity-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoWalletSecurity-2.js').then((m) => m.default as string),
   },
   instoWeb3MobileSetupStart: {
     themeable: () =>
