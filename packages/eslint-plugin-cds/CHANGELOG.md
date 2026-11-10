@@ -1,3 +1,9 @@
+## 3.5.1 (2026-11-10)
+
+### 🩹 Fixes
+
+- Remove `@coinbase/cds-common`, `@coinbase/cds-mobile` and `@coinbase/cds-web` from `peerDependencies`. The plugin never imports them; its rules only match those package names in the linted source. Installers that auto-install required peers (pnpm, Bun, npm 7+) no longer pull `@coinbase/cds-mobile` and React Native into web-only projects that use the plugin.
+
 ## 3.5.0 (7/24/2026 PST)
 
 #### 🚀 Updates

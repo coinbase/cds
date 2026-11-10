@@ -1,3 +1,9 @@
+## 9.30.1 (2026-11-10)
+
+### 🩹 Fixes
+
+- Fix: keep `DateInput` separators when Android delivers more than one digit in a single change.
+
 ## 9.30.0 (2026-10-26)
 
 ### 🚀 Features
