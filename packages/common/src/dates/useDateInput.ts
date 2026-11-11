@@ -7,6 +7,30 @@ import {
   useDateInputValidation,
 } from './useDateInputValidation';
 
+const stripDateSeparators = (value: string, separator: string) => value.split(separator).join('');
+
+/**
+ * Place separators from the digits alone. A single keystroke used to insert a separator only when
+ * its last character landed on a separator index, which drops a slash when Android delivers more
+ * than one new digit in an event.
+ */
+const formatDateInputDigits = (
+  digits: string,
+  separator: string,
+  separatorIndices: readonly number[],
+) => {
+  let formatted = '';
+
+  for (const digit of digits) {
+    if (separatorIndices.includes(formatted.length)) {
+      formatted += separator;
+    }
+    formatted += digit;
+  }
+
+  return formatted;
+};
+
 export type DateInputOptions = {
   /** Control the date value of the DateInput. */
   date: Date | null;
@@ -76,36 +100,38 @@ export const useDateInput = ({
    */
   const onChangeDateInput = useCallback(
     (newDateString: string) => {
-      let dateString = newDateString;
-      const newStringLength = dateString.length;
       const maxLength = intlDateFormat.dateStringFormat.length;
 
-      if (newStringLength > maxLength || intlDateFormat.invalidDateFormatRegex.test(dateString))
+      if (
+        newDateString.length > maxLength ||
+        intlDateFormat.invalidDateFormatRegex.test(newDateString)
+      )
         return;
 
-      const newLastChar = dateString.charAt(newStringLength - 1);
-      const isDeletion = newStringLength < inputValue.length;
+      const { separator, separatorIndices } = intlDateFormat;
+      const previousDigits = stripDateSeparators(inputValue, separator);
+      const nextDigits = stripDateSeparators(newDateString, separator);
+      // Compare digits, not string length. Android can drop a formatted value update, so the next
+      // native string may be shorter than the React value even though the user typed another digit.
+      // Removing a separator keeps the same digits and shortens the text, which is still a deletion.
+      const removedSeparator =
+        nextDigits === previousDigits && newDateString.length < inputValue.length;
+      const isDeletion = nextDigits.length < previousDigits.length || removedSeparator;
+      let dateString = newDateString;
 
       if (!isDeletion) {
-        const expectSeparator = intlDateFormat.separatorIndices.includes(newStringLength - 1);
+        const formatted = formatDateInputDigits(nextDigits, separator, separatorIndices);
 
-        // Add a separator as the user is typing if they miss one
-        if (expectSeparator && newLastChar !== intlDateFormat.separator) {
-          dateString = `${dateString.slice(0, -1)}${intlDateFormat.separator}${dateString.slice(
-            -1,
-          )}`;
+        if (nextDigits !== previousDigits) {
+          const maxDigits = maxLength - separatorIndices.length;
+          if (nextDigits.length > maxDigits) return;
+          dateString = formatted;
+        } else if (newDateString !== formatted) {
+          const allowsTrailingSeparator =
+            separatorIndices.includes(formatted.length) &&
+            newDateString === `${formatted}${separator}`;
+          if (!allowsTrailingSeparator) return;
         }
-
-        const separatorCount = dateString.split(intlDateFormat.separator).length - 1;
-
-        // Don't allow the user to type a separator unless we expect one
-        if (!expectSeparator && newLastChar === intlDateFormat.separator) return;
-        // Don't allow the user to type a duplicate separator or more than 2 separators
-        if (
-          intlDateFormat.duplicateSeparatorRegex.test(dateString) ||
-          separatorCount > intlDateFormat.separatorIndices.length
-        )
-          return;
       }
 
       const isCompleteDateString = dateString.length === maxLength;
