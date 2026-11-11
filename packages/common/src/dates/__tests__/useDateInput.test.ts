@@ -82,6 +82,23 @@ describe('useDateInput', () => {
     );
   });
 
+  it.each(['/', '-', '.'])(
+    'should keep every digit typed one at a time with the "%s" separator',
+    (separator) => {
+      options.date = null;
+      options.intlDateFormat = new IntlDateFormat({ locale: 'en-US', separator });
+      const { result } = renderHook(() => useDateInput(options));
+
+      for (const char of '08182024') {
+        act(() => {
+          result.current.onChangeDateInput(`${result.current.inputValue}${char}`);
+        });
+      }
+
+      expect(result.current.inputValue).toBe(['08', '18', '2024'].join(separator));
+    },
+  );
+
   it('should handle invalid input text', () => {
     const { result } = renderHook(() => useDateInput(options));
     act(() => {
