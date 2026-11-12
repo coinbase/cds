@@ -354,7 +354,7 @@ export const Cell = memo(function Cell(_props: CellProps) {
           accessibilityHint={accessibilityHint}
           accessibilityLabel={accessibilityLabel}
           accessibilityRole={accessibilityRole}
-          accessibilityState={{ disabled, ...accessibilityState }}
+          accessibilityState={{ disabled, selected, ...accessibilityState }}
           background="bg"
           blendStyles={blendStyles}
           {...borderProps}
@@ -378,6 +378,7 @@ export const Cell = memo(function Cell(_props: CellProps) {
     accessibilityLabel,
     accessibilityRole,
     disabled,
+    selected,
     styles?.pressable,
     accessibilityState,
     blendStyles,
