@@ -1,0 +1,22 @@
+{
+  "import": "import { TabsScrollArea } from '@coinbase/cds-web/tabs'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/web/src/tabs/TabsScrollArea.tsx",
+  "storybook": "https://cds-storybook.coinbase.com/?path=/story/components-tabs-tabsscrollarea--default",
+  "description": "Horizontal scroll container for tab rows on web, with chevron controls, edge gradients, and automatic scroll-into-view for the active tab.",
+  "relatedComponents": [
+    {
+      "label": "Tabs",
+      "url": "/components/navigation/Tabs/"
+    },
+    {
+      "label": "TabbedChips (Alpha)",
+      "url": "/components/navigation/TabbedChipsAlpha/"
+    }
+  ],
+  "dependencies": [
+    {
+      "name": "framer-motion",
+      "version": "^10.18.0"
+    }
+  ]
+}

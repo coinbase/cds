@@ -218,3 +218,43 @@ function Example() {
   );
 }
 ```
+
+## Scrolling with TabsScrollArea
+
+When the tab row can overflow horizontally, wrap **`Tabs`** in [TabsScrollArea](/components/navigation/TabsScrollArea/). Pass the render prop’s **`onActiveTabElementChange`** into **`Tabs`**. Set **`width`** / **`maxWidth`** on **`TabsScrollArea`** so the row overflows and edge gradients appear.
+
+```jsx
+function Example() {
+  const tabs = [
+    { id: 't1', label: 'Overview' },
+    { id: 't2', label: 'Markets' },
+    { id: 't3', label: 'Trade' },
+    { id: 't4', label: 'Earn' },
+    { id: 't5', label: 'Learn' },
+    { id: 't6', label: 'More' },
+  ];
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  return (
+    <TabsScrollArea accessibilityLabel="Scrollable tab list" maxWidth={320} width="100%">
+      {({ onActiveTabElementChange }) => (
+        <Tabs
+          TabComponent={DefaultTab}
+          TabsActiveIndicatorComponent={DefaultTabsActiveIndicator}
+          accessibilityLabel="Tabs"
+          activeBackground="bgPrimary"
+          activeTab={activeTab}
+          background="bg"
+          gap={4}
+          onActiveTabElementChange={onActiveTabElementChange}
+          onChange={setActiveTab}
+          tabs={tabs}
+        />
+      )}
+    </TabsScrollArea>
+  );
+}
+```
+
+## Accessibility
+
+Set **`accessibilityLabel`** on **`Tabs`**. **`DefaultTab`** wires `accessibilityRole="tab"` and selection state; keep tab panels in sync in your screen content.
