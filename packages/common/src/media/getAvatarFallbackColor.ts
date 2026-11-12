@@ -23,12 +23,14 @@ export const rgbToAvatarFallbackColor = (color: string): AvatarFallbackColor => 
   const hue = Math.round(hslColor.h);
   // if gray (low saturation)
   if (hslColor.s < 0.3 || Number.isNaN(hslColor.s)) return 'gray';
+  // Hue bands below are contiguous and cover the whole 0-360 circle so that a
+  // saturated color can never fall through to the 'gray' fallback below.
   // if green or yellow
   if (hue === 0 || (hue >= 1 && hue <= 79)) return 'green' as const;
   if (hue >= 80 && hue <= 169) return 'teal' as const;
-  if (hue >= 70 && hue <= 249) return 'purple' as const;
+  if (hue >= 170 && hue <= 249) return 'purple' as const;
   // if red or pink or orange
-  if ((hue >= 250 && hue <= 344) || hue === 345) return 'pink' as const;
+  if (hue >= 250 && hue <= 360) return 'pink' as const;
 
   // // Map hue ranges to all available colors
   // // Hue range: 0-360 degrees
