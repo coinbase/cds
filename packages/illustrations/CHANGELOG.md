@@ -5,6 +5,7 @@
 - Publish illustrations 2026-11-13
 
   ##### ⭐️ Added (66)
+
   ###### Pictogram (17)
   - chartIllos
   - cryptoPortfolio
@@ -23,8 +24,10 @@
   - verifyEmail
   - vipBadge
   - walletEmpty
+
   ###### HeroSquare (1)
   - rusd
+
   ###### SpotIcon (29)
   - accountsNavigation
   - chartIllos
@@ -55,6 +58,7 @@
   - verifyEmail
   - vipBadge
   - walletEmpty
+
   ###### SpotSquare (19)
   - accountsNavigation
   - chartIllos
@@ -75,13 +79,16 @@
   - savingFunds
   - usdcRewards
   - vipBadge
+
   ##### ⭐️ Updated (7)
+
   ###### HeroSquare (5)
   - arrowsUpDown
   - filter
   - genniusLaunch
   - mcLoad
   - ship
+
   ###### SpotSquare (2)
   - pageNotFound
   - temporarilyUnavailable
