@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-05T18:29:20.558Z",
+  "lastUpdated": "2026-11-13T16:17:16.020Z",
   "colors": {
     "accent-1": {
       "light": "#FFD200",
@@ -220,13 +220,13 @@
     "30997:62424": {
       "type": "heroSquare",
       "name": "arrowsUpDown",
-      "hash": "DvHKsqgdEDdTM8BYsyqxFC9N8h2vIAw2CAan43VJxCI=",
+      "hash": "mBmC/UbUz2+mCyioJeqQ2LlB59Qa2PBp8Siaeh8puhs=",
       "width": 240,
       "height": 240,
       "description": "arrows, up, down",
       "createdAt": "2026-07-27T20:06:27.536Z",
-      "lastUpdated": "2026-07-28T15:46:53.218Z",
-      "version": 0
+      "lastUpdated": "2026-11-12T18:28:21.694Z",
+      "version": 1
     },
     "618:109": {
       "type": "heroSquare",
@@ -2299,13 +2299,13 @@
     "30611:11214": {
       "type": "heroSquare",
       "name": "filter",
-      "hash": "SguVU6itV2/c2mpDN6htioQESYinIS5r53a6zMOxrZA=",
+      "hash": "6zpADYEsak6o/OURgOmhEwLO4BZat7aLdS5DBcYK2ls=",
       "width": 240,
       "height": 240,
       "description": "",
       "createdAt": "2026-06-08T19:45:04.269Z",
-      "lastUpdated": "2026-06-11T21:55:20.977Z",
-      "version": 1
+      "lastUpdated": "2026-11-12T18:28:21.713Z",
+      "version": 2
     },
     "29036:24": {
       "type": "heroSquare",
@@ -2431,13 +2431,13 @@
     "29955:47": {
       "type": "heroSquare",
       "name": "genniusLaunch",
-      "hash": "Wjil+YVYGkCQcQrPScK3Lwgq90hZfVBURV83TFCG0Og=",
+      "hash": "Xp4oGEl/eFgXZ9g5lOMlbjUBsILGEe3ZZB5bEjme6RM=",
       "width": 240,
       "height": 240,
       "description": "coin, conversion, convert, yellow, blue, mega, gennius",
       "createdAt": "2026-05-12T15:44:35.131Z",
-      "lastUpdated": "2026-06-08T19:46:47.688Z",
-      "version": 0
+      "lastUpdated": "2026-11-12T18:28:21.650Z",
+      "version": 1
     },
     "2:34023": {
       "type": "heroSquare",
@@ -3223,13 +3223,13 @@
     "30611:11217": {
       "type": "heroSquare",
       "name": "mcLoad",
-      "hash": "VHMGeOlBuArgTSUiAJuI02nZ2fzs5MhSayx7apyVzCw=",
+      "hash": "7IGQGg67DHXDMXSXCsBmPUrwuLkva48wa/BSFy3eyNw=",
       "width": 240,
       "height": 240,
       "description": "",
       "createdAt": "2026-06-08T19:45:49.186Z",
-      "lastUpdated": "2026-06-11T21:55:20.971Z",
-      "version": 1
+      "lastUpdated": "2026-11-12T18:28:21.686Z",
+      "version": 2
     },
     "2:34050": {
       "type": "heroSquare",
@@ -4034,6 +4034,17 @@
       "lastUpdated": "2026-06-08T19:47:41.359Z",
       "version": 4
     },
+    "31923:43": {
+      "type": "heroSquare",
+      "name": "rusd",
+      "hash": "3S6i+X9i3kqD8SNYWtHAyltbKyku+/cjNTv9obqeJao=",
+      "width": 240,
+      "height": 240,
+      "description": "coin, conversion, convert, yellow, blue, rusd, stable, stablecoin, usd, ready",
+      "createdAt": "2026-11-12T18:28:21.466Z",
+      "lastUpdated": "2026-11-12T18:28:21.466Z",
+      "version": 0
+    },
     "4157:2418": {
       "type": "heroSquare",
       "name": "scalable",
@@ -4202,13 +4213,13 @@
     "30611:11216": {
       "type": "heroSquare",
       "name": "ship",
-      "hash": "gGDWr2HSqtWEUFigmvduQDmlwEHKy+sXWF16N7spwqQ=",
+      "hash": "itHBZ646Ugom32nYc7X824zHAe37HyVkpJVjeBORPY4=",
       "width": 240,
       "height": 240,
       "description": "",
       "createdAt": "2026-06-08T19:45:04.256Z",
-      "lastUpdated": "2026-06-11T21:55:20.965Z",
-      "version": 1
+      "lastUpdated": "2026-11-12T18:28:21.683Z",
+      "version": 2
     },
     "2:34076": {
       "type": "heroSquare",
@@ -7279,6 +7290,17 @@
       "lastUpdated": "2025-12-01T18:14:45.509Z",
       "version": 2
     },
+    "31901:2215": {
+      "type": "pictogram",
+      "name": "chartIllos",
+      "hash": "eF1frUGHktwESAsXxWUcneJhKvSq9qk1OLDKZV+MBmo=",
+      "width": 48,
+      "height": 48,
+      "description": "candlestick, chart, trading, price, market, candle, bars, finance, blue, graph, analysis, crypto, stocks, wick, volume, technical, trend, ohlc, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.357Z",
+      "lastUpdated": "2026-11-12T18:28:21.357Z",
+      "version": 0
+    },
     "2:41656": {
       "type": "pictogram",
       "name": "chat",
@@ -7752,6 +7774,17 @@
       "lastUpdated": "2026-06-08T19:45:54.101Z",
       "version": 3
     },
+    "31901:2202": {
+      "type": "pictogram",
+      "name": "cryptoPortfolio",
+      "hash": "iz42ZyPtyYA6DpfS5VLu7ldC99Lb+S3cWnbkT3IiRrY=",
+      "width": 48,
+      "height": 48,
+      "description": "pie, chart, portfolio, allocation, slices, breakdown, assets, distribution, holdings, blue, crypto, balance, segments, analytics, diversification, share, composition, overview, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.424Z",
+      "lastUpdated": "2026-11-12T18:28:21.424Z",
+      "version": 0
+    },
     "23873:83": {
       "type": "pictogram",
       "name": "crystalBallInsight",
@@ -7872,6 +7905,28 @@
       "createdAt": "2022-08-05T05:37:09.616Z",
       "lastUpdated": "2026-06-08T19:48:37.393Z",
       "version": 5
+    },
+    "31900:2145": {
+      "type": "pictogram",
+      "name": "depositFailed",
+      "hash": "gNwtJePsRN5KVFx8FVR7nm/c04p7GVVUPFAS/uP62lk=",
+      "width": 48,
+      "height": 48,
+      "description": "clock, time, failed, deposit, error, cancel, pending, timeout, red, warning, transaction, declined, late, schedule, status, unsuccessful, expired, x, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.397Z",
+      "lastUpdated": "2026-11-12T18:28:21.397Z",
+      "version": 0
+    },
+    "31903:2473": {
+      "type": "pictogram",
+      "name": "derivatives",
+      "hash": "RYLhgFLaOdT8quMkB8qyi2hJckr9iFzdY/5msrNUXcU=",
+      "width": 48,
+      "height": 48,
+      "description": "diamond, up, down, chevron, derivatives, trading, direction, long, short, blue, market, contract, leverage, both, ways, position, arrow, volatility, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.163Z",
+      "lastUpdated": "2026-11-12T18:28:21.163Z",
+      "version": 0
     },
     "2:41400": {
       "type": "pictogram",
@@ -8200,7 +8255,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.665Z",
-      "lastUpdated": "2026-11-05T17:46:35.665Z",
+      "lastUpdated": "2026-11-12T18:28:21.630Z",
       "version": 0
     },
     "2:41566": {
@@ -8277,7 +8332,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.661Z",
-      "lastUpdated": "2026-11-05T17:46:35.661Z",
+      "lastUpdated": "2026-11-12T18:28:21.623Z",
       "version": 0
     },
     "2:41555": {
@@ -8423,6 +8478,17 @@
       "lastUpdated": "2026-06-08T19:48:36.124Z",
       "version": 4
     },
+    "31901:2323": {
+      "type": "pictogram",
+      "name": "guideFiveThings",
+      "hash": "Bsc9rMepn40oG2IMyMV/huqwer1R9h25DuJDl/T6HCo=",
+      "width": 48,
+      "height": 48,
+      "description": "book, guide, bookmark, ribbon, reading, learn, education, manual, blue, help, documentation, chapter, knowledge, reference, tutorial, library, page, info, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.318Z",
+      "lastUpdated": "2026-11-12T18:28:21.318Z",
+      "version": 0
+    },
     "2:41651": {
       "type": "pictogram",
       "name": "hardwareWallet",
@@ -8464,7 +8530,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.726Z",
-      "lastUpdated": "2026-11-05T17:46:35.726Z",
+      "lastUpdated": "2026-11-12T18:28:21.702Z",
       "version": 0
     },
     "2:41506": {
@@ -9201,7 +9267,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.689Z",
-      "lastUpdated": "2026-11-05T17:46:35.689Z",
+      "lastUpdated": "2026-11-12T18:28:21.673Z",
       "version": 0
     },
     "1549:1794": {
@@ -9402,6 +9468,17 @@
       "lastUpdated": "2026-06-08T19:45:50.694Z",
       "version": 4
     },
+    "31903:2445": {
+      "type": "pictogram",
+      "name": "newshub",
+      "hash": "tKKVUFAjTnjvEUxrHRloaLtwQ3hcIhMnKKmty+LYRVs=",
+      "width": 48,
+      "height": 48,
+      "description": "newspaper, news, article, document, headline, lines, media, press, story, blue, hub, content, feed, publication, page, update, reading, bulletin, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.279Z",
+      "lastUpdated": "2026-11-12T18:28:21.279Z",
+      "version": 0
+    },
     "30725:15": {
       "type": "pictogram",
       "name": "newTradeError",
@@ -9410,7 +9487,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-06-16T21:19:21.482Z",
-      "lastUpdated": "2026-11-05T17:46:36.246Z",
+      "lastUpdated": "2026-11-12T18:28:21.639Z",
       "version": 0
     },
     "2:41585": {
@@ -9500,6 +9577,17 @@
       "createdAt": "2022-08-05T05:36:58.453Z",
       "lastUpdated": "2026-06-08T19:45:52.322Z",
       "version": 3
+    },
+    "31901:2209": {
+      "type": "pictogram",
+      "name": "noPortfolio",
+      "hash": "kYEKlDDJSLWzeLdZZj5adivbn3xxSe2l+zhg1x4DZSY=",
+      "width": 48,
+      "height": 48,
+      "description": "pie, chart, empty, portfolio, gray, inactive, allocation, placeholder, none, muted, holdings, missing, zero, empty-state, assets, unavailable, blank, overview, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.365Z",
+      "lastUpdated": "2026-11-12T18:28:21.365Z",
+      "version": 0
     },
     "624:2839": {
       "type": "pictogram",
@@ -9611,6 +9699,17 @@
       "lastUpdated": "2025-12-01T18:14:06.037Z",
       "version": 2
     },
+    "31901:2385": {
+      "type": "pictogram",
+      "name": "pageNotFound",
+      "hash": "OeXzRwIu0bAz9PCtAheodM+ZF9QIX4h97QOJ8nuVLA8=",
+      "width": 48,
+      "height": 48,
+      "description": "magnifying, glass, search, missing, not-found, lookup, empty, find, blue, page, lost, explore, query, no-results, discover, scan, absent, hunt, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.503Z",
+      "lastUpdated": "2026-11-12T18:28:21.503Z",
+      "version": 0
+    },
     "2:41533": {
       "type": "pictogram",
       "name": "partialCoins",
@@ -9641,7 +9740,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.655Z",
-      "lastUpdated": "2026-11-05T17:46:35.655Z",
+      "lastUpdated": "2026-11-12T18:28:21.710Z",
       "version": 0
     },
     "2683:1367": {
@@ -9775,6 +9874,17 @@
       "createdAt": "2023-04-04T16:02:30.784Z",
       "lastUpdated": "2026-06-08T19:49:26.895Z",
       "version": 5
+    },
+    "31901:2251": {
+      "type": "pictogram",
+      "name": "playBtn",
+      "hash": "PHv1dJmewbTQ+CEIKJViSeiodsx09vUR5VN/0BIG1XQ=",
+      "width": 48,
+      "height": 48,
+      "description": "play, triangle, video, media, start, circle, button, stream, watch, blue, content, playback, begin, tutorial, audio, control, launch, go, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.338Z",
+      "lastUpdated": "2026-11-13T16:13:45.831Z",
+      "version": 0
     },
     "2:41608": {
       "type": "pictogram",
@@ -9949,7 +10059,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.672Z",
-      "lastUpdated": "2026-11-05T17:46:35.672Z",
+      "lastUpdated": "2026-11-12T18:28:21.666Z",
       "version": 0
     },
     "2:41447": {
@@ -9962,6 +10072,17 @@
       "createdAt": "2022-08-05T05:36:58.584Z",
       "lastUpdated": "2026-06-08T19:45:51.621Z",
       "version": 3
+    },
+    "31900:2191": {
+      "type": "pictogram",
+      "name": "rewards",
+      "hash": "BwiF8VtE80tH38lWI11O9vakRvj1NcRbuScdC3cB5HQ=",
+      "width": 48,
+      "height": 48,
+      "description": "trophy, cup, award, reward, prize, win, achievement, champion, contest, blue, success, leaderboard, recognition, badge, victory, incentive, celebration, medal, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.378Z",
+      "lastUpdated": "2026-11-12T18:28:21.378Z",
+      "version": 0
     },
     "2:41647": {
       "type": "pictogram",
@@ -10017,6 +10138,17 @@
       "createdAt": "2022-08-05T05:36:48.316Z",
       "lastUpdated": "2026-06-08T19:48:36.331Z",
       "version": 3
+    },
+    "31901:2309": {
+      "type": "pictogram",
+      "name": "savingFunds",
+      "hash": "UtJThgfXIfbuKWEI9UZkIYJG9peDKBRUd70cXZQKoU0=",
+      "width": 48,
+      "height": 48,
+      "description": "piggy, bank, coin, savings, save, funds, money, deposit, blue, reserve, stash, finance, growth, store, cash, goal, accumulate, wallet, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.322Z",
+      "lastUpdated": "2026-11-12T18:28:21.322Z",
+      "version": 0
     },
     "2:41637": {
       "type": "pictogram",
@@ -10127,6 +10259,17 @@
       "createdAt": "2022-08-05T05:37:09.777Z",
       "lastUpdated": "2026-06-08T19:49:43.892Z",
       "version": 4
+    },
+    "31900:2108": {
+      "type": "pictogram",
+      "name": "serverError",
+      "hash": "INC40k0LQlHm+8e+ot71pg2gCBM5QCL5cMCJxJydsio=",
+      "width": 48,
+      "height": 48,
+      "description": "server, tower, error, rack, hardware, outage, infrastructure, blue, database, down, failure, system, backend, machine, status, crash, connection, alert, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.499Z",
+      "lastUpdated": "2026-11-12T18:28:21.499Z",
+      "version": 0
     },
     "2:41586": {
       "type": "pictogram",
@@ -10301,7 +10444,18 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.669Z",
-      "lastUpdated": "2026-11-05T17:46:35.669Z",
+      "lastUpdated": "2026-11-12T18:28:21.646Z",
+      "version": 0
+    },
+    "31900:2089": {
+      "type": "pictogram",
+      "name": "success",
+      "hash": "GuvXwaSa2OGkCL+IOZF8BOMSGGChLrPOXwIq8Xp9j6Y=",
+      "width": 48,
+      "height": 48,
+      "description": "checkmark, check, circle, success, complete, done, confirmed, approved, green, positive, status, tick, validation, finished, ok, progress, ring, achievement, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.442Z",
+      "lastUpdated": "2026-11-12T18:28:21.442Z",
       "version": 0
     },
     "2:41582": {
@@ -10345,7 +10499,7 @@
       "height": 48,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.676Z",
-      "lastUpdated": "2026-11-05T17:46:35.676Z",
+      "lastUpdated": "2026-11-12T18:28:21.690Z",
       "version": 0
     },
     "2:41657": {
@@ -10424,6 +10578,17 @@
       "createdAt": "2022-08-05T05:36:58.128Z",
       "lastUpdated": "2026-06-08T19:45:06.427Z",
       "version": 3
+    },
+    "31900:2102": {
+      "type": "pictogram",
+      "name": "temporarilyUnavailable",
+      "hash": "W9Epw1kGE+lxb7k8NoZUeUngO5Cpn3j8bPBPJoLIfxA=",
+      "width": 48,
+      "height": 48,
+      "description": "phone, gear, settings, maintenance, unavailable, temporary, device, cog, blue, service, down, update, mobile, repair, status, interrupted, tools, pause, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.514Z",
+      "lastUpdated": "2026-11-12T18:28:21.514Z",
+      "version": 0
     },
     "2:41490": {
       "type": "pictogram",
@@ -10678,6 +10843,17 @@
       "lastUpdated": "2025-12-01T18:13:23.605Z",
       "version": 2
     },
+    "31901:2367": {
+      "type": "pictogram",
+      "name": "verifyEmail",
+      "hash": "byq7u7cTwVK7ZqjnbCKYCxE4E7fh+2A0beZLOEdM9iI=",
+      "width": 48,
+      "height": 48,
+      "description": "book, guide, bookmark, ribbon, reading, learn, education, manual, blue, help, documentation, chapter, knowledge, reference, tutorial, library, page, info, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.315Z",
+      "lastUpdated": "2026-11-12T18:28:21.315Z",
+      "version": 0
+    },
     "2:41654": {
       "type": "pictogram",
       "name": "videoCalendar",
@@ -10699,6 +10875,17 @@
       "createdAt": "2022-08-05T05:36:47.605Z",
       "lastUpdated": "2026-06-08T19:48:37.515Z",
       "version": 5
+    },
+    "31901:2274": {
+      "type": "pictogram",
+      "name": "vipBadge",
+      "hash": "eXQwX69oofkzH//gzzlAsW5dTSRoC1X7Ctv9Ma+lDPY=",
+      "width": 48,
+      "height": 48,
+      "description": "badge, tag, star, vip, membership, pass, premium, label, blue, exclusive, status, credential, favorite, priority, access, recognition, lanyard, special, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.455Z",
+      "lastUpdated": "2026-11-12T18:28:21.455Z",
+      "version": 0
     },
     "2:41620": {
       "type": "pictogram",
@@ -10754,6 +10941,17 @@
       "createdAt": "2022-08-05T05:36:47.914Z",
       "lastUpdated": "2026-06-08T19:48:37.542Z",
       "version": 3
+    },
+    "31900:2180": {
+      "type": "pictogram",
+      "name": "walletEmpty",
+      "hash": "Sa/kaeZyC7/8+FahzLU3i82XP2ZxCW9o5qmBGKctLy8=",
+      "width": 48,
+      "height": 48,
+      "description": "wallet, empty, billfold, gray, inactive, cash, none, placeholder, muted, balance, zero, empty-state, purse, missing, funds, blank, payment, card, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.385Z",
+      "lastUpdated": "2026-11-12T18:28:21.385Z",
+      "version": 0
     },
     "624:2845": {
       "type": "pictogram",
@@ -10897,6 +11095,17 @@
       "createdAt": "2023-11-07T19:19:47.073Z",
       "lastUpdated": "2026-06-08T19:45:06.046Z",
       "version": 1
+    },
+    "31901:2230": {
+      "type": "spotIcon",
+      "name": "accountsNavigation",
+      "hash": "jhmx3Klm0j2qimoZ9ZG6lD6ziLPM10IGcFMiVkanUis=",
+      "width": 32,
+      "height": 32,
+      "description": "profile, person, user, account, avatar, identity, navigation, circle, blue, customer, member, head, shoulders, login, settings, human, portrait, hub, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.349Z",
+      "lastUpdated": "2026-11-12T18:28:21.349Z",
+      "version": 0
     },
     "4158:2429": {
       "type": "spotIcon",
@@ -11305,6 +11514,17 @@
       "lastUpdated": "2026-06-08T19:45:05.585Z",
       "version": 2
     },
+    "31901:2217": {
+      "type": "spotIcon",
+      "name": "chartIllos",
+      "hash": "EL39U3t5DaBC4HQDncme7mgqAM4iTgQZOodT5HEgnO8=",
+      "width": 32,
+      "height": 32,
+      "description": "candlestick, chart, trading, price, market, candle, bars, finance, blue, graph, analysis, crypto, stocks, wick, volume, technical, trend, ohlc, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.353Z",
+      "lastUpdated": "2026-11-12T18:28:21.353Z",
+      "version": 0
+    },
     "4390:694": {
       "type": "spotIcon",
       "name": "chat",
@@ -11315,6 +11535,17 @@
       "createdAt": "2023-11-07T19:19:47.066Z",
       "lastUpdated": "2026-06-08T19:45:06.229Z",
       "version": 1
+    },
+    "31901:2401": {
+      "type": "spotIcon",
+      "name": "clock",
+      "hash": "ngbMN3WRyywcJ24x3UzIvFztnmy24Q0OijXj9dfh0D4=",
+      "width": 32,
+      "height": 32,
+      "description": "clock, time, watch, hour, minute, schedule, pending, waiting, blue, circle, hands, deadline, timer, duration, history, later, status, analog, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.286Z",
+      "lastUpdated": "2026-11-12T18:28:21.286Z",
+      "version": 0
     },
     "4158:2445": {
       "type": "spotIcon",
@@ -11415,6 +11646,17 @@
       "lastUpdated": "2026-06-08T19:45:05.933Z",
       "version": 1
     },
+    "31901:2204": {
+      "type": "spotIcon",
+      "name": "cryptoPortfolio",
+      "hash": "tCVW7QlpbiD9fsDixV/EdXasNh+tQGDo9uPYRjzeCa0=",
+      "width": 32,
+      "height": 32,
+      "description": "pie, chart, portfolio, allocation, slices, breakdown, assets, distribution, holdings, blue, crypto, balance, segments, analytics, diversification, share, composition, overview, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.369Z",
+      "lastUpdated": "2026-11-12T18:28:21.369Z",
+      "version": 0
+    },
     "4158:2449": {
       "type": "spotIcon",
       "name": "custodyProduct",
@@ -11459,6 +11701,28 @@
       "lastUpdated": "2026-06-08T19:49:43.878Z",
       "version": 2
     },
+    "31900:2155": {
+      "type": "spotIcon",
+      "name": "depositFailed",
+      "hash": "cY49fcOsi6tSdb1r4HTwO2/3LFkOlatVlsHz0wMD6VU=",
+      "width": 32,
+      "height": 32,
+      "description": "clock, time, failed, deposit, error, cancel, pending, timeout, red, warning, transaction, declined, late, schedule, status, unsuccessful, expired, x, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.393Z",
+      "lastUpdated": "2026-11-12T18:28:21.393Z",
+      "version": 0
+    },
+    "31903:2476": {
+      "type": "spotIcon",
+      "name": "derivatives",
+      "hash": "IorsXkxuOc7Lwwlc3zEa8R8175Lih0n6vPrc+bcwoPA=",
+      "width": 32,
+      "height": 32,
+      "description": "diamond, up, down, chevron, derivatives, trading, direction, long, short, blue, market, contract, leverage, both, ways, position, arrow, volatility, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.154Z",
+      "lastUpdated": "2026-11-12T18:28:21.154Z",
+      "version": 0
+    },
     "11813:51": {
       "type": "spotIcon",
       "name": "derivativesProduct",
@@ -11470,6 +11734,17 @@
       "lastUpdated": "2026-06-08T19:45:54.258Z",
       "version": 5
     },
+    "31901:2412": {
+      "type": "spotIcon",
+      "name": "developerPlatformNavigation",
+      "hash": "2OXBbX20eAU5zIhpH+SNSq/W5ey6j0TqwrriaKCpO4Y=",
+      "width": 32,
+      "height": 32,
+      "description": "layers, stack, server, platform, developer, infrastructure, database, cubes, blue, api, navigation, cloud, storage, blocks, system, backend, product, tech, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.283Z",
+      "lastUpdated": "2026-11-12T18:28:21.283Z",
+      "version": 0
+    },
     "4390:698": {
       "type": "spotIcon",
       "name": "done",
@@ -11480,6 +11755,17 @@
       "createdAt": "2023-11-07T19:19:47.113Z",
       "lastUpdated": "2025-12-01T18:13:23.127Z",
       "version": 2
+    },
+    "31903:2454": {
+      "type": "spotIcon",
+      "name": "earnGraph",
+      "hash": "ST2QOiL/AvymOxKuRi4TeNQq1DZhrAzf6RJm/3xF+eI=",
+      "width": 32,
+      "height": 32,
+      "description": "chart, line, bars, graph, earnings, growth, trend, coin, analytics, blue, performance, yield, increase, data, finance, peak, histogram, return, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.270Z",
+      "lastUpdated": "2026-11-12T18:28:21.270Z",
+      "version": 0
     },
     "4390:689": {
       "type": "spotIcon",
@@ -11525,6 +11811,39 @@
       "lastUpdated": "2026-06-08T19:45:06.237Z",
       "version": 2
     },
+    "31903:2459": {
+      "type": "spotIcon",
+      "name": "futures",
+      "hash": "rnmk734G/PzibVE/d25sViyiZ7xJt5PqbKR6JUL3WB4=",
+      "width": 32,
+      "height": 32,
+      "description": "clock, coin, futures, time, contract, schedule, expiry, market, blue, trading, deadline, asset, later, position, timer, finance, settlement, pending, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.265Z",
+      "lastUpdated": "2026-11-12T18:28:21.265Z",
+      "version": 0
+    },
+    "31901:2372": {
+      "type": "spotIcon",
+      "name": "globalPayments",
+      "hash": "yXMdCtzq32kBY9kh2ipyoAoQ3TIzNA5ZLG/0sytNP+8=",
+      "width": 32,
+      "height": 32,
+      "description": "network, nodes, connection, payments, global, transfer, circuit, links, globe, blue, routing, international, flow, rails, send, receive, pathway, money, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.299Z",
+      "lastUpdated": "2026-11-12T18:28:21.299Z",
+      "version": 0
+    },
+    "31901:2329": {
+      "type": "spotIcon",
+      "name": "guideFiveThings",
+      "hash": "9Il6CAYYZ7Klp2huIKx+Bug/5MsErisZh2CJufPQwO4=",
+      "width": 32,
+      "height": 32,
+      "description": "book, guide, bookmark, ribbon, reading, learn, education, manual, blue, help, documentation, chapter, knowledge, reference, tutorial, library, page, info, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.311Z",
+      "lastUpdated": "2026-11-12T18:28:21.311Z",
+      "version": 0
+    },
     "4158:2440": {
       "type": "spotIcon",
       "name": "helpCenterProduct",
@@ -11535,6 +11854,28 @@
       "createdAt": "2023-10-21T00:32:35.817Z",
       "lastUpdated": "2026-06-08T19:45:06.605Z",
       "version": 3
+    },
+    "31900:2142": {
+      "type": "spotIcon",
+      "name": "highRisk",
+      "hash": "HxnpncuOhSARhRnHCBo1a9CAvstYOGMk9Zj7gwu813k=",
+      "width": 32,
+      "height": 32,
+      "description": "triangle, warning, alert, exclamation, danger, high, risk, caution, hazard, red, status, attention, severe, safety, critical, yield, sign, bang, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.401Z",
+      "lastUpdated": "2026-11-12T18:28:21.401Z",
+      "version": 0
+    },
+    "31901:2293": {
+      "type": "spotIcon",
+      "name": "holdingCoin",
+      "hash": "etYNI7i0qzCCO4QS9ZoFfPgoR1o3PzJAzxzoFzw7HUg=",
+      "width": 32,
+      "height": 32,
+      "description": "hand, palm, coin, hold, offer, receive, give, asset, blue, custody, support, present, crypto, token, gesture, open, balance, keep, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.326Z",
+      "lastUpdated": "2026-11-12T18:28:21.326Z",
+      "version": 0
     },
     "4390:703": {
       "type": "spotIcon",
@@ -11976,6 +12317,17 @@
       "lastUpdated": "2025-12-01T18:14:45.367Z",
       "version": 3
     },
+    "31900:2126": {
+      "type": "spotIcon",
+      "name": "lowRisk",
+      "hash": "uQB5FjORE4xD010rT0HvgIEbECujqe3M+7gZntVSY8w=",
+      "width": 32,
+      "height": 32,
+      "description": "exclamation, alert, warning, caution, circle, low, risk, notice, attention, red, status, info, mild, important, safety, reminder, bang, flag, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.404Z",
+      "lastUpdated": "2026-11-12T18:28:21.404Z",
+      "version": 0
+    },
     "4390:696": {
       "type": "spotIcon",
       "name": "multiCoin",
@@ -11986,6 +12338,17 @@
       "createdAt": "2023-11-07T19:19:47.086Z",
       "lastUpdated": "2026-06-08T19:45:06.736Z",
       "version": 1
+    },
+    "31903:2447": {
+      "type": "spotIcon",
+      "name": "newshub",
+      "hash": "Hdpe5B5emZ3Ij1CCb/xNOpxzji/yplLy9ph3j/RoU00=",
+      "width": 32,
+      "height": 32,
+      "description": "newspaper, news, article, document, headline, lines, media, press, story, blue, hub, content, feed, publication, page, update, reading, bulletin, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.274Z",
+      "lastUpdated": "2026-11-12T18:28:21.274Z",
+      "version": 0
     },
     "4158:2451": {
       "type": "spotIcon",
@@ -12020,6 +12383,39 @@
       "lastUpdated": "2026-06-08T19:45:06.389Z",
       "version": 1
     },
+    "31901:2212": {
+      "type": "spotIcon",
+      "name": "noPortfolio",
+      "hash": "EqKKDQkQYmnt0a7h6bzUTGyUAOdsg/fL35YI0cSEWps=",
+      "width": 32,
+      "height": 32,
+      "description": "pie, chart, empty, portfolio, gray, inactive, allocation, placeholder, none, muted, holdings, missing, zero, empty-state, assets, unavailable, blank, overview, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.360Z",
+      "lastUpdated": "2026-11-12T18:28:21.360Z",
+      "version": 0
+    },
+    "31901:2381": {
+      "type": "spotIcon",
+      "name": "notificationHubAnalysis",
+      "hash": "jBlMpRHO1V/zrdz/rlhxWfwlk2tXAjZyk3/bUdlrMVQ=",
+      "width": 32,
+      "height": 32,
+      "description": "document, magnifying, glass, search, analysis, page, inspect, review, report, blue, find, lookup, notification, hub, file, examine, detail, scan, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.295Z",
+      "lastUpdated": "2026-11-12T18:28:21.295Z",
+      "version": 0
+    },
+    "31901:2243": {
+      "type": "spotIcon",
+      "name": "notifications",
+      "hash": "utAVig9bHDcScBWWoqbkAYe+NledWoCua3MbUud8EXc=",
+      "width": 32,
+      "height": 32,
+      "description": "bell, notification, alert, alarm, ring, unread, message, blue, attention, reminder, updates, inbox, notice, chime, activity, status, ping, badge, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.463Z",
+      "lastUpdated": "2026-11-12T18:28:21.463Z",
+      "version": 0
+    },
     "7347:71": {
       "type": "spotIcon",
       "name": "outage",
@@ -12030,6 +12426,17 @@
       "createdAt": "2024-04-01T20:10:05.772Z",
       "lastUpdated": "2025-12-01T18:13:23.974Z",
       "version": 2
+    },
+    "31901:2389": {
+      "type": "spotIcon",
+      "name": "pageNotFound",
+      "hash": "pp+Ru3JfcA3RilpSl+5zzogMB3X+8iks9YpFaybfU8Q=",
+      "width": 32,
+      "height": 32,
+      "description": "magnifying, glass, search, missing, not-found, lookup, empty, find, blue, page, lost, explore, query, no-results, discover, scan, absent, hunt, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.518Z",
+      "lastUpdated": "2026-11-12T18:28:21.518Z",
+      "version": 0
     },
     "4158:2455": {
       "type": "spotIcon",
@@ -12063,6 +12470,17 @@
       "createdAt": "2023-11-07T19:19:47.136Z",
       "lastUpdated": "2026-06-08T19:46:47.978Z",
       "version": 3
+    },
+    "31901:2254": {
+      "type": "spotIcon",
+      "name": "playBtn",
+      "hash": "FUfWfVqAVq4G4M+JIl0buGqHbLaX06BqU00qAghzw8U=",
+      "width": 32,
+      "height": 32,
+      "description": "play, triangle, video, media, start, circle, button, stream, watch, blue, content, playback, begin, tutorial, audio, control, launch, go, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.416Z",
+      "lastUpdated": "2026-11-13T16:13:45.825Z",
+      "version": 0
     },
     "4158:2434": {
       "type": "spotIcon",
@@ -12152,6 +12570,17 @@
       "lastUpdated": "2026-06-08T19:48:36.825Z",
       "version": 3
     },
+    "31900:2195": {
+      "type": "spotIcon",
+      "name": "rewards",
+      "hash": "vfTZD/6kBiraioOa5g3JQaPmBShLlma2qfwuxKOzLqY=",
+      "width": 32,
+      "height": 32,
+      "description": "trophy, cup, award, reward, prize, win, achievement, champion, contest, blue, success, leaderboard, recognition, badge, victory, incentive, celebration, medal, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.373Z",
+      "lastUpdated": "2026-11-12T18:28:21.373Z",
+      "version": 0
+    },
     "4158:2436": {
       "type": "spotIcon",
       "name": "rewardsProduct",
@@ -12174,6 +12603,17 @@
       "lastUpdated": "2026-06-08T19:45:06.804Z",
       "version": 3
     },
+    "31901:2314": {
+      "type": "spotIcon",
+      "name": "savingFunds",
+      "hash": "r+kFLF/75VReFuKOyzTnBihmVmODKKTtd0nZLI59rPY=",
+      "width": 32,
+      "height": 32,
+      "description": "piggy, bank, coin, savings, save, funds, money, deposit, blue, reserve, stash, finance, growth, store, cash, goal, accumulate, wallet, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.486Z",
+      "lastUpdated": "2026-11-12T18:28:21.486Z",
+      "version": 0
+    },
     "4390:706": {
       "type": "spotIcon",
       "name": "send",
@@ -12184,6 +12624,17 @@
       "createdAt": "2023-11-07T19:19:47.059Z",
       "lastUpdated": "2026-06-08T19:49:27.017Z",
       "version": 3
+    },
+    "31900:2110": {
+      "type": "spotIcon",
+      "name": "serverError",
+      "hash": "vGifzYOrIY1yl6uTeGObgr26XjYl+t66iHw2DBrTZoI=",
+      "width": 32,
+      "height": 32,
+      "description": "server, tower, error, rack, hardware, outage, infrastructure, blue, database, down, failure, system, backend, machine, status, crash, connection, alert, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.408Z",
+      "lastUpdated": "2026-11-12T18:28:21.408Z",
+      "version": 0
     },
     "4390:705": {
       "type": "spotIcon",
@@ -12218,6 +12669,39 @@
       "lastUpdated": "2026-06-08T19:45:06.728Z",
       "version": 3
     },
+    "31900:2094": {
+      "type": "spotIcon",
+      "name": "success",
+      "hash": "q1cVfwI4pejZ805e9afeALLycacjSFBE4+1sqJtVTMI=",
+      "width": 32,
+      "height": 32,
+      "description": "checkmark, check, circle, success, complete, done, confirmed, approved, green, positive, status, tick, validation, finished, ok, progress, ring, achievement, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.412Z",
+      "lastUpdated": "2026-11-12T18:28:21.412Z",
+      "version": 0
+    },
+    "31900:2105": {
+      "type": "spotIcon",
+      "name": "temporarilyUnavailable",
+      "hash": "UdqQah3E3zo7yB2vAtDH7TFPj6ZmrdSNeXlodgkAC6o=",
+      "width": 32,
+      "height": 32,
+      "description": "phone, gear, settings, maintenance, unavailable, temporary, device, cog, blue, service, down, update, mobile, repair, status, interrupted, tools, pause, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.475Z",
+      "lastUpdated": "2026-11-12T18:28:21.475Z",
+      "version": 0
+    },
+    "31901:2428": {
+      "type": "spotIcon",
+      "name": "usdcRewards",
+      "hash": "4euUKIdBPTs/l/U8eZL7pikELf0Jp3UJDsZ7+OFN5RI=",
+      "width": 32,
+      "height": 32,
+      "description": "ribbon, badge, dollar, reward, usdc, money, prize, award, cash, blue, earnings, incentive, medal, payout, stablecoin, bonus, finance, recognition, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.490Z",
+      "lastUpdated": "2026-11-12T18:28:21.490Z",
+      "version": 0
+    },
     "4158:2452": {
       "type": "spotIcon",
       "name": "venturesProduct",
@@ -12228,6 +12712,28 @@
       "createdAt": "2023-10-21T00:32:36.044Z",
       "lastUpdated": "2026-06-08T19:45:06.249Z",
       "version": 2
+    },
+    "31901:2338": {
+      "type": "spotIcon",
+      "name": "verifyEmail",
+      "hash": "MoyDhPr3/27s5LnuPTV9m27kq+xfn/OKn5m3DvY7lPU=",
+      "width": 32,
+      "height": 32,
+      "description": "envelope, mail, email, letter, checkmark, verified, confirmation, inbox, message, open, flap, blue, account, identity, approved, notification, communication, delivered, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.307Z",
+      "lastUpdated": "2026-11-12T18:28:21.307Z",
+      "version": 0
+    },
+    "31901:2281": {
+      "type": "spotIcon",
+      "name": "vipBadge",
+      "hash": "m5phvriyDWG9ELWQ2uPJTAijZX6dCi3kEGorqwbMiY0=",
+      "width": 32,
+      "height": 32,
+      "description": "badge, tag, star, vip, membership, pass, premium, label, blue, exclusive, status, credential, favorite, priority, access, recognition, lanyard, special, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.333Z",
+      "lastUpdated": "2026-11-12T18:28:21.333Z",
+      "version": 0
     },
     "4390:690": {
       "type": "spotIcon",
@@ -12250,6 +12756,17 @@
       "createdAt": "2023-10-21T00:32:36.005Z",
       "lastUpdated": "2025-12-01T18:15:28.514Z",
       "version": 3
+    },
+    "31900:2182": {
+      "type": "spotIcon",
+      "name": "walletEmpty",
+      "hash": "Qt9WhLP/awhXAPmxs0zHvewzIDW96EtUMdyiQluPSJU=",
+      "width": 32,
+      "height": 32,
+      "description": "wallet, empty, billfold, gray, inactive, cash, none, placeholder, muted, balance, zero, empty-state, purse, missing, funds, blank, payment, card, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.382Z",
+      "lastUpdated": "2026-11-12T18:28:21.382Z",
+      "version": 0
     },
     "4158:2441": {
       "type": "spotIcon",
@@ -14814,6 +15331,17 @@
       "lastUpdated": "2026-06-08T19:47:40.915Z",
       "version": 4
     },
+    "31901:2228": {
+      "type": "spotSquare",
+      "name": "accountsNavigation",
+      "hash": "P2xI5pdpTZ8pcQ8ApX47SgRyJt9aFTHFpruA+9Cofp0=",
+      "width": 96,
+      "height": 96,
+      "description": "profile, person, user, account, avatar, identity, navigation, circle, blue, customer, member, head, shoulders, login, settings, human, portrait, hub, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.237Z",
+      "lastUpdated": "2026-11-12T18:28:21.237Z",
+      "version": 0
+    },
     "1218:1370": {
       "type": "spotSquare",
       "name": "addCard",
@@ -15482,7 +16010,7 @@
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.710Z",
-      "lastUpdated": "2026-11-05T17:46:35.710Z",
+      "lastUpdated": "2026-11-12T18:28:21.657Z",
       "version": 0
     },
     "1119:2132": {
@@ -15551,6 +16079,17 @@
       "lastUpdated": "2026-06-08T19:49:27.251Z",
       "version": 3
     },
+    "31901:2223": {
+      "type": "spotSquare",
+      "name": "chartIllos",
+      "hash": "SqO0GhuG8Vyyq7wJAwr7IOuwIglWqeY5Cs1HNqeUNwU=",
+      "width": 96,
+      "height": 96,
+      "description": "candlestick, chart, trading, price, market, candle, bars, finance, blue, graph, analysis, crypto, stocks, wick, volume, technical, trend, ohlc, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.429Z",
+      "lastUpdated": "2026-11-12T18:28:21.429Z",
+      "version": 0
+    },
     "19887:30": {
       "type": "spotSquare",
       "name": "checkVerifacation",
@@ -15560,6 +16099,17 @@
       "description": "",
       "createdAt": "2025-08-21T20:16:55.380Z",
       "lastUpdated": "2025-12-01T18:14:04.202Z",
+      "version": 0
+    },
+    "31901:2399": {
+      "type": "spotSquare",
+      "name": "clock",
+      "hash": "wtGyU4wFleAXJpO8WFMffsCIxeK/rkTONoWSjCW1xQM=",
+      "width": 96,
+      "height": 96,
+      "description": "clock, time, watch, hour, minute, schedule, pending, waiting, blue, circle, hands, deadline, timer, duration, history, later, status, analog, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.433Z",
+      "lastUpdated": "2026-11-12T18:28:21.433Z",
       "version": 0
     },
     "2225:2591": {
@@ -16142,7 +16692,7 @@
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.696Z",
-      "lastUpdated": "2026-11-05T17:46:35.696Z",
+      "lastUpdated": "2026-11-12T18:28:21.662Z",
       "version": 0
     },
     "31754:53113": {
@@ -16153,7 +16703,29 @@
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.729Z",
-      "lastUpdated": "2026-11-05T17:46:35.729Z",
+      "lastUpdated": "2026-11-12T18:28:21.642Z",
+      "version": 0
+    },
+    "31903:2470": {
+      "type": "spotSquare",
+      "name": "derivatives",
+      "hash": "kslYDXLodxkELmbI8fvP0Jt+PADi0gkPj3nmZC6qU/0=",
+      "width": 96,
+      "height": 96,
+      "description": "diamond, up, down, chevron, derivatives, trading, direction, long, short, blue, market, contract, leverage, both, ways, position, arrow, volatility, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.168Z",
+      "lastUpdated": "2026-11-12T18:28:21.168Z",
+      "version": 0
+    },
+    "31901:2418": {
+      "type": "spotSquare",
+      "name": "developerPlatformNavigation",
+      "hash": "ekeDS/mLfAbADFsh7dXy1jcjcxzf8vftH6/oSW4tFus=",
+      "width": 92,
+      "height": 92,
+      "description": "layers, stack, server, platform, developer, infrastructure, database, cubes, blue, api, navigation, cloud, storage, blocks, system, backend, product, tech, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.177Z",
+      "lastUpdated": "2026-11-12T18:28:21.177Z",
       "version": 0
     },
     "624:2773": {
@@ -16222,6 +16794,17 @@
       "lastUpdated": "2026-06-08T19:48:36.650Z",
       "version": 6
     },
+    "31903:2456": {
+      "type": "spotSquare",
+      "name": "earnGraph",
+      "hash": "M6u+ZDA5IwV+CAcL8LdxX1kFIwU6faVGhy8NjoJ+TSg=",
+      "width": 92,
+      "height": 91,
+      "description": "chart, line, bars, graph, earnings, growth, trend, coin, analytics, blue, performance, yield, increase, data, finance, peak, histogram, return, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.510Z",
+      "lastUpdated": "2026-11-12T18:28:21.510Z",
+      "version": 0
+    },
     "2225:2533": {
       "type": "spotSquare",
       "name": "earnInterest",
@@ -16265,6 +16848,17 @@
       "createdAt": "2023-01-20T04:23:08.504Z",
       "lastUpdated": "2026-06-08T19:46:47.243Z",
       "version": 4
+    },
+    "31900:2164": {
+      "type": "spotSquare",
+      "name": "error",
+      "hash": "bPpEtqfUNYsuO14hQSJKDtmtX+QavySQ8A5t1k8TBa0=",
+      "width": 96,
+      "height": 96,
+      "description": "x, cross, circle, error, failed, cancel, close, wrong, declined, red, status, negative, stop, invalid, rejected, unsuccessful, denied, remove, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.254Z",
+      "lastUpdated": "2026-11-12T18:28:21.254Z",
+      "version": 0
     },
     "2225:2569": {
       "type": "spotSquare",
@@ -16453,6 +17047,17 @@
       "lastUpdated": "2026-06-08T19:48:37.463Z",
       "version": 6
     },
+    "31901:2370": {
+      "type": "spotSquare",
+      "name": "globalPayments",
+      "hash": "zr/zEZdOTypDecqkc6ZCuXAQH6gZ4mcMrmKl9XTb/fc=",
+      "width": 96,
+      "height": 96,
+      "description": "network, nodes, connection, payments, global, transfer, circuit, links, globe, blue, routing, international, flow, rails, send, receive, pathway, money, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.189Z",
+      "lastUpdated": "2026-11-12T18:28:21.189Z",
+      "version": 0
+    },
     "624:2790": {
       "type": "spotSquare",
       "name": "globalTransactions",
@@ -16541,6 +17146,17 @@
       "lastUpdated": "2026-06-08T19:47:40.449Z",
       "version": 3
     },
+    "31900:2139": {
+      "type": "spotSquare",
+      "name": "highRisk",
+      "hash": "YShvHMOkj+N5SxZ8Y2ALFBX1RUC/lq7eZOnnWbr+XTU=",
+      "width": 96,
+      "height": 96,
+      "description": "triangle, warning, alert, exclamation, danger, high, risk, caution, hazard, red, status, attention, severe, safety, critical, yield, sign, bang, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.257Z",
+      "lastUpdated": "2026-11-12T18:28:21.257Z",
+      "version": 0
+    },
     "2225:2595": {
       "type": "spotSquare",
       "name": "holdCrypto",
@@ -16551,6 +17167,17 @@
       "createdAt": "2023-05-03T19:12:52.962Z",
       "lastUpdated": "2026-06-08T19:46:47.946Z",
       "version": 4
+    },
+    "31901:2296": {
+      "type": "spotSquare",
+      "name": "holdingCoin",
+      "hash": "IoONTcbixqZO5N9LxIsp3tQ43jWSOLe70jOIZZ1ApIw=",
+      "width": 96,
+      "height": 96,
+      "description": "hand, palm, coin, hold, offer, receive, give, asset, blue, custody, support, present, crypto, token, gesture, open, balance, keep, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.224Z",
+      "lastUpdated": "2026-11-12T18:28:21.224Z",
+      "version": 0
     },
     "2225:2535": {
       "type": "spotSquare",
@@ -16816,6 +17443,17 @@
       "lastUpdated": "2026-06-08T19:46:48.122Z",
       "version": 6
     },
+    "31900:2133": {
+      "type": "spotSquare",
+      "name": "lowRisk",
+      "hash": "AbXu+kKhrP0/rMTEHURh7OjQ/jTafOK/fqG/B2FSTz4=",
+      "width": 96,
+      "height": 96,
+      "description": "exclamation, alert, warning, caution, circle, low, risk, notice, attention, red, status, info, mild, important, safety, reminder, bang, flag, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.478Z",
+      "lastUpdated": "2026-11-12T18:28:21.478Z",
+      "version": 0
+    },
     "31754:53100": {
       "type": "spotSquare",
       "name": "microphone",
@@ -16824,7 +17462,7 @@
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.707Z",
-      "lastUpdated": "2026-11-05T17:46:35.707Z",
+      "lastUpdated": "2026-11-12T18:28:21.679Z",
       "version": 0
     },
     "1119:565": {
@@ -16904,6 +17542,17 @@
       "lastUpdated": "2026-06-08T19:47:40.319Z",
       "version": 4
     },
+    "31903:2449": {
+      "type": "spotSquare",
+      "name": "newshub",
+      "hash": "bw4xf5djq7q0MVu4pqMoyhckPNwVxw9KZxqCLcdUQWE=",
+      "width": 96,
+      "height": 96,
+      "description": "newspaper, news, article, document, headline, lines, media, press, story, blue, hub, content, feed, publication, page, update, reading, bulletin, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.470Z",
+      "lastUpdated": "2026-11-12T18:28:21.470Z",
+      "version": 0
+    },
     "1119:993": {
       "type": "spotSquare",
       "name": "nft",
@@ -16947,6 +17596,28 @@
       "createdAt": "2023-10-04T21:12:47.289Z",
       "lastUpdated": "2026-06-08T19:46:48.344Z",
       "version": 2
+    },
+    "31901:2379": {
+      "type": "spotSquare",
+      "name": "notificationHubAnalysis",
+      "hash": "E+HY0tVaubZBb3xncz/iKPn9lWOEZdfVJiQrqV6DhY0=",
+      "width": 96,
+      "height": 96,
+      "description": "document, magnifying, glass, search, analysis, page, inspect, review, report, blue, find, lookup, notification, hub, file, examine, detail, scan, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.185Z",
+      "lastUpdated": "2026-11-12T18:28:21.185Z",
+      "version": 0
+    },
+    "31901:2237": {
+      "type": "spotSquare",
+      "name": "notifications",
+      "hash": "0X2XTyX6L5cl9Gt2093/1jtmtVaklnb5IC2BHAmcNE8=",
+      "width": 96,
+      "height": 96,
+      "description": "bell, notification, alert, alarm, ring, unread, message, blue, attention, reminder, updates, inbox, notice, chime, activity, status, ping, badge, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.232Z",
+      "lastUpdated": "2026-11-12T18:28:21.232Z",
+      "version": 0
     },
     "2225:2526": {
       "type": "spotSquare",
@@ -17091,16 +17762,16 @@
       "lastUpdated": "2026-06-08T19:47:39.805Z",
       "version": 5
     },
-    "31754:53106": {
+    "31907:52": {
       "type": "spotSquare",
       "name": "pageNotFound",
-      "hash": "x6Uuol64BqBlQ0BBCURqL11XuXmmwSjQSH86hp3iwkY=",
+      "hash": "+XfyymA5NiaKeae6Y7SifkuvA4l5kXSlGD54YopZwGU=",
       "width": 96,
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.684Z",
-      "lastUpdated": "2026-11-05T17:46:35.684Z",
-      "version": 0
+      "lastUpdated": "2026-11-12T18:28:21.181Z",
+      "version": 1
     },
     "1218:2793": {
       "type": "spotSquare",
@@ -17178,6 +17849,17 @@
       "createdAt": "2022-11-23T13:41:30.879Z",
       "lastUpdated": "2026-06-08T19:48:36.287Z",
       "version": 6
+    },
+    "31901:2246": {
+      "type": "spotSquare",
+      "name": "playBtn",
+      "hash": "yyHQWy6uxdxezVA4gQXpsTGTHDXtOLnQDpSxD9ODkEU=",
+      "width": 96,
+      "height": 96,
+      "description": "play, triangle, video, media, start, circle, button, stream, watch, blue, content, playback, begin, tutorial, audio, control, launch, go, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.228Z",
+      "lastUpdated": "2026-11-13T16:14:02.026Z",
+      "version": 0
     },
     "30997:62426": {
       "type": "spotSquare",
@@ -17355,6 +18037,17 @@
       "lastUpdated": "2026-06-08T19:46:47.077Z",
       "version": 5
     },
+    "31900:2189": {
+      "type": "spotSquare",
+      "name": "rewards",
+      "hash": "DmtNuNptEexORUNykW63SyTl5cHUpOfgucVssudsoiI=",
+      "width": 96,
+      "height": 96,
+      "description": "trophy, cup, award, reward, prize, win, achievement, champion, contest, blue, success, leaderboard, recognition, badge, victory, incentive, celebration, medal, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.250Z",
+      "lastUpdated": "2026-11-12T18:28:21.250Z",
+      "version": 0
+    },
     "1218:2795": {
       "type": "spotSquare",
       "name": "saveTheDate",
@@ -17365,6 +18058,17 @@
       "createdAt": "2023-01-20T21:49:20.793Z",
       "lastUpdated": "2026-06-08T19:49:26.210Z",
       "version": 5
+    },
+    "31901:2304": {
+      "type": "spotSquare",
+      "name": "savingFunds",
+      "hash": "jsdhVPsCSxUlC1Cs2iNbgSYxLujKfw2bP5ndy2yCAYU=",
+      "width": 96,
+      "height": 96,
+      "description": "piggy, bank, coin, savings, save, funds, money, deposit, blue, reserve, stash, finance, growth, store, cash, goal, accumulate, wallet, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.215Z",
+      "lastUpdated": "2026-11-12T18:28:21.215Z",
+      "version": 0
     },
     "624:2785": {
       "type": "spotSquare",
@@ -17451,7 +18155,7 @@
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.693Z",
-      "lastUpdated": "2026-11-05T17:46:35.693Z",
+      "lastUpdated": "2026-11-12T18:28:21.627Z",
       "version": 0
     },
     "624:2776": {
@@ -17561,7 +18265,7 @@
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.700Z",
-      "lastUpdated": "2026-11-05T18:17:01.298Z",
+      "lastUpdated": "2026-11-12T18:28:21.654Z",
       "version": 0
     },
     "1683:1415": {
@@ -17619,16 +18323,16 @@
       "lastUpdated": "2026-06-08T19:47:40.737Z",
       "version": 5
     },
-    "31754:53111": {
+    "31907:55": {
       "type": "spotSquare",
       "name": "temporarilyUnavailable",
-      "hash": "emnogNT8V7ZqLh7Bw08SmIrWjdA4kTpEyegbhUhQXeo=",
+      "hash": "OxEqAG7q/Yhf2YzPXysduRn8aVIokeph6BKZ51Ks4kQ=",
       "width": 96,
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.721Z",
-      "lastUpdated": "2026-11-05T17:46:35.721Z",
-      "version": 0
+      "lastUpdated": "2026-11-12T18:28:21.262Z",
+      "version": 1
     },
     "2225:2596": {
       "type": "spotSquare",
@@ -17649,7 +18353,7 @@
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.714Z",
-      "lastUpdated": "2026-11-05T17:46:35.714Z",
+      "lastUpdated": "2026-11-12T18:28:21.698Z",
       "version": 0
     },
     "1119:1889": {
@@ -17685,6 +18389,17 @@
       "lastUpdated": "2026-06-08T19:46:47.789Z",
       "version": 5
     },
+    "31901:2436": {
+      "type": "spotSquare",
+      "name": "usdcRewards",
+      "hash": "0yuunrmvr44Pwzmt7SPH1+DzS70Lzp9IN5X7eTjRCHw=",
+      "width": 92,
+      "height": 92,
+      "description": "ribbon, badge, dollar, reward, usdc, money, prize, award, cash, blue, earnings, incentive, medal, payout, stablecoin, bonus, finance, recognition, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.341Z",
+      "lastUpdated": "2026-11-12T18:28:21.341Z",
+      "version": 0
+    },
     "2225:2541": {
       "type": "spotSquare",
       "name": "verifyEmail",
@@ -17704,7 +18419,7 @@
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.717Z",
-      "lastUpdated": "2026-11-05T17:46:35.717Z",
+      "lastUpdated": "2026-11-12T18:28:21.706Z",
       "version": 0
     },
     "2225:2565": {
@@ -17717,6 +18432,17 @@
       "createdAt": "2023-05-03T19:12:52.927Z",
       "lastUpdated": "2026-06-08T19:46:48.179Z",
       "version": 3
+    },
+    "31901:2265": {
+      "type": "spotSquare",
+      "name": "vipBadge",
+      "hash": "13071hqfNtKJOdG/tB+0qE5NMijHSzwfMiVUVUF051Y=",
+      "width": 96,
+      "height": 96,
+      "description": "badge, tag, star, vip, membership, pass, premium, label, blue, exclusive, status, credential, favorite, priority, access, recognition, lanyard, special, outline, spot",
+      "createdAt": "2026-11-12T18:28:21.495Z",
+      "lastUpdated": "2026-11-12T18:28:21.495Z",
+      "version": 0
     },
     "1218:2914": {
       "type": "spotSquare",
@@ -17748,7 +18474,7 @@
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.679Z",
-      "lastUpdated": "2026-11-05T17:46:35.679Z",
+      "lastUpdated": "2026-11-12T18:28:21.635Z",
       "version": 0
     },
     "2225:2536": {
@@ -17803,7 +18529,7 @@
       "height": 96,
       "description": "",
       "createdAt": "2026-11-05T17:46:35.704Z",
-      "lastUpdated": "2026-11-05T17:46:35.704Z",
+      "lastUpdated": "2026-11-12T18:28:21.670Z",
       "version": 0
     },
     "624:2822": {
