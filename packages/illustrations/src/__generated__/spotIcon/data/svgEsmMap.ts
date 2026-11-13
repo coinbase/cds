@@ -9,6 +9,10 @@ const svgEsmMap = {
   '2fa': {
     themeable: () => import('../svgJs/esm/themeable/2fa-1.js').then((m) => m.default as string),
   },
+  accountsNavigation: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/accountsNavigation-0.js').then((m) => m.default as string),
+  },
   advancedTradeProduct: {
     themeable: () =>
       import('../svgJs/esm/themeable/advancedTradeProduct-3.js').then((m) => m.default as string),
@@ -154,8 +158,15 @@ const svgEsmMap = {
   cb1Cash: {
     themeable: () => import('../svgJs/esm/themeable/cb1Cash-2.js').then((m) => m.default as string),
   },
+  chartIllos: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/chartIllos-0.js').then((m) => m.default as string),
+  },
   chat: {
     themeable: () => import('../svgJs/esm/themeable/chat-1.js').then((m) => m.default as string),
+  },
+  clock: {
+    themeable: () => import('../svgJs/esm/themeable/clock-0.js').then((m) => m.default as string),
   },
   cloudProduct: {
     themeable: () =>
@@ -195,6 +206,10 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/creditCard-1.js').then((m) => m.default as string),
   },
+  cryptoPortfolio: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/cryptoPortfolio-0.js').then((m) => m.default as string),
+  },
   custodyProduct: {
     themeable: () =>
       import('../svgJs/esm/themeable/custodyProduct-2.js').then((m) => m.default as string),
@@ -211,12 +226,30 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/delegateProduct-2.js').then((m) => m.default as string),
   },
+  depositFailed: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/depositFailed-0.js').then((m) => m.default as string),
+  },
+  derivatives: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/derivatives-0.js').then((m) => m.default as string),
+  },
   derivativesProduct: {
     themeable: () =>
       import('../svgJs/esm/themeable/derivativesProduct-5.js').then((m) => m.default as string),
   },
+  developerPlatformNavigation: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/developerPlatformNavigation-0.js').then(
+        (m) => m.default as string,
+      ),
+  },
   done: {
     themeable: () => import('../svgJs/esm/themeable/done-2.js').then((m) => m.default as string),
+  },
+  earnGraph: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/earnGraph-0.js').then((m) => m.default as string),
   },
   email: {
     themeable: () => import('../svgJs/esm/themeable/email-1.js').then((m) => m.default as string),
@@ -231,9 +264,28 @@ const svgEsmMap = {
   fast: {
     themeable: () => import('../svgJs/esm/themeable/fast-2.js').then((m) => m.default as string),
   },
+  futures: {
+    themeable: () => import('../svgJs/esm/themeable/futures-0.js').then((m) => m.default as string),
+  },
+  globalPayments: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/globalPayments-0.js').then((m) => m.default as string),
+  },
+  guideFiveThings: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/guideFiveThings-0.js').then((m) => m.default as string),
+  },
   helpCenterProduct: {
     themeable: () =>
       import('../svgJs/esm/themeable/helpCenterProduct-3.js').then((m) => m.default as string),
+  },
+  highRisk: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/highRisk-0.js').then((m) => m.default as string),
+  },
+  holdingCoin: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/holdingCoin-0.js').then((m) => m.default as string),
   },
   idVerification: {
     themeable: () =>
@@ -411,9 +463,15 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/learningRewardsProduct-3.js').then((m) => m.default as string),
   },
+  lowRisk: {
+    themeable: () => import('../svgJs/esm/themeable/lowRisk-0.js').then((m) => m.default as string),
+  },
   multiCoin: {
     themeable: () =>
       import('../svgJs/esm/themeable/multiCoin-1.js').then((m) => m.default as string),
+  },
+  newshub: {
+    themeable: () => import('../svgJs/esm/themeable/newshub-0.js').then((m) => m.default as string),
   },
   nftProduct: {
     themeable: () =>
@@ -426,8 +484,26 @@ const svgEsmMap = {
   noFees: {
     themeable: () => import('../svgJs/esm/themeable/noFees-1.js').then((m) => m.default as string),
   },
+  noPortfolio: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/noPortfolio-0.js').then((m) => m.default as string),
+  },
+  notificationHubAnalysis: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/notificationHubAnalysis-0.js').then(
+        (m) => m.default as string,
+      ),
+  },
+  notifications: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/notifications-0.js').then((m) => m.default as string),
+  },
   outage: {
     themeable: () => import('../svgJs/esm/themeable/outage-2.js').then((m) => m.default as string),
+  },
+  pageNotFound: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/pageNotFound-0.js').then((m) => m.default as string),
   },
   participateProduct: {
     themeable: () =>
@@ -440,6 +516,9 @@ const svgEsmMap = {
   pieChart: {
     themeable: () =>
       import('../svgJs/esm/themeable/pieChart-3.js').then((m) => m.default as string),
+  },
+  playBtn: {
+    themeable: () => import('../svgJs/esm/themeable/playBtn-0.js').then((m) => m.default as string),
   },
   primeProduct: {
     themeable: () =>
@@ -473,6 +552,9 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/recurringPurchases-3.js').then((m) => m.default as string),
   },
+  rewards: {
+    themeable: () => import('../svgJs/esm/themeable/rewards-0.js').then((m) => m.default as string),
+  },
   rewardsProduct: {
     themeable: () =>
       import('../svgJs/esm/themeable/rewardsProduct-3.js').then((m) => m.default as string),
@@ -481,8 +563,16 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/rosettaProduct-3.js').then((m) => m.default as string),
   },
+  savingFunds: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/savingFunds-0.js').then((m) => m.default as string),
+  },
   send: {
     themeable: () => import('../svgJs/esm/themeable/send-3.js').then((m) => m.default as string),
+  },
+  serverError: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/serverError-0.js').then((m) => m.default as string),
   },
   shield: {
     themeable: () => import('../svgJs/esm/themeable/shield-1.js').then((m) => m.default as string),
@@ -495,9 +585,28 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/stakingProduct-3.js').then((m) => m.default as string),
   },
+  success: {
+    themeable: () => import('../svgJs/esm/themeable/success-0.js').then((m) => m.default as string),
+  },
+  temporarilyUnavailable: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/temporarilyUnavailable-0.js').then((m) => m.default as string),
+  },
+  usdcRewards: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/usdcRewards-0.js').then((m) => m.default as string),
+  },
   venturesProduct: {
     themeable: () =>
       import('../svgJs/esm/themeable/venturesProduct-2.js').then((m) => m.default as string),
+  },
+  verifyEmail: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/verifyEmail-0.js').then((m) => m.default as string),
+  },
+  vipBadge: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/vipBadge-0.js').then((m) => m.default as string),
   },
   wallet: {
     themeable: () => import('../svgJs/esm/themeable/wallet-2.js').then((m) => m.default as string),
@@ -507,6 +616,10 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/walletAsAServiceProduct-3.js').then(
         (m) => m.default as string,
       ),
+  },
+  walletEmpty: {
+    themeable: () =>
+      import('../svgJs/esm/themeable/walletEmpty-0.js').then((m) => m.default as string),
   },
   walletLogo: {
     themeable: () =>

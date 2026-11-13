@@ -365,6 +365,7 @@ export type HeroSquareName =
   | 'rocket'
   | 'rotatingRewards'
   | 'routingAccount'
+  | 'rusd'
   | 'scalable'
   | 'secureAndTrusted'
   | 'secureGlobalTransactions'

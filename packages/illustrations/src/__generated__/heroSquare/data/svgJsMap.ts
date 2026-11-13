@@ -78,9 +78,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/appTrackingTransparency-5.js').content,
   },
   arrowsUpDown: {
-    light: () => require('../svgJs/cjs/light/arrowsUpDown-0.js').content,
-    dark: () => require('../svgJs/cjs/dark/arrowsUpDown-0.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/arrowsUpDown-0.js').content,
+    light: () => require('../svgJs/cjs/light/arrowsUpDown-1.js').content,
+    dark: () => require('../svgJs/cjs/dark/arrowsUpDown-1.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/arrowsUpDown-1.js').content,
   },
   artFrameEmptyState: {
     light: () => require('../svgJs/cjs/light/artFrameEmptyState-5.js').content,
@@ -1025,9 +1025,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/fileYourCryptoTaxesCheck-6.js').content,
   },
   filter: {
-    light: () => require('../svgJs/cjs/light/filter-1.js').content,
-    dark: () => require('../svgJs/cjs/dark/filter-1.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/filter-1.js').content,
+    light: () => require('../svgJs/cjs/light/filter-2.js').content,
+    dark: () => require('../svgJs/cjs/dark/filter-2.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/filter-2.js').content,
   },
   flipStable: {
     light: () => require('../svgJs/cjs/light/flipStable-0.js').content,
@@ -1085,9 +1085,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/generative-2.js').content,
   },
   genniusLaunch: {
-    light: () => require('../svgJs/cjs/light/genniusLaunch-0.js').content,
-    dark: () => require('../svgJs/cjs/dark/genniusLaunch-0.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/genniusLaunch-0.js').content,
+    light: () => require('../svgJs/cjs/light/genniusLaunch-1.js').content,
+    dark: () => require('../svgJs/cjs/dark/genniusLaunch-1.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/genniusLaunch-1.js').content,
   },
   getStartedInMinutes: {
     light: () => require('../svgJs/cjs/light/getStartedInMinutes-4.js').content,
@@ -1446,9 +1446,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/marginWarning-4.js').content,
   },
   mcLoad: {
-    light: () => require('../svgJs/cjs/light/mcLoad-1.js').content,
-    dark: () => require('../svgJs/cjs/dark/mcLoad-1.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/mcLoad-1.js').content,
+    light: () => require('../svgJs/cjs/light/mcLoad-2.js').content,
+    dark: () => require('../svgJs/cjs/dark/mcLoad-2.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/mcLoad-2.js').content,
   },
   mic: {
     light: () => require('../svgJs/cjs/light/mic-4.js').content,
@@ -1817,6 +1817,11 @@ const svgJsMap = {
     dark: () => require('../svgJs/cjs/dark/routingAccount-4.js').content,
     themeable: () => require('../svgJs/cjs/themeable/routingAccount-4.js').content,
   },
+  rusd: {
+    light: () => require('../svgJs/cjs/light/rusd-0.js').content,
+    dark: () => require('../svgJs/cjs/dark/rusd-0.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/rusd-0.js').content,
+  },
   scalable: {
     light: () => require('../svgJs/cjs/light/scalable-1.js').content,
     dark: () => require('../svgJs/cjs/dark/scalable-1.js').content,
@@ -1893,9 +1898,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/shareOnSocialMedia-4.js').content,
   },
   ship: {
-    light: () => require('../svgJs/cjs/light/ship-1.js').content,
-    dark: () => require('../svgJs/cjs/dark/ship-1.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/ship-1.js').content,
+    light: () => require('../svgJs/cjs/light/ship-2.js').content,
+    dark: () => require('../svgJs/cjs/dark/ship-2.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/ship-2.js').content,
   },
   sidechain: {
     light: () => require('../svgJs/cjs/light/sidechain-3.js').content,

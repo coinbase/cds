@@ -371,6 +371,7 @@ const names: HeroSquareName[] = [
   'rocket',
   'rotatingRewards',
   'routingAccount',
+  'rusd',
   'scalable',
   'secureAndTrusted',
   'secureGlobalTransactions',

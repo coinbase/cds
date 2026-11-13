@@ -560,6 +560,23 @@ const versionMap: Record<PictogramName, number> = {
   takeKnowledgeQuiz: 0,
   lowRisk: 0,
   highRisk: 0,
+  derivatives: 0,
+  newshub: 0,
+  verifyEmail: 0,
+  guideFiveThings: 0,
+  savingFunds: 0,
+  playBtn: 0,
+  chartIllos: 0,
+  noPortfolio: 0,
+  rewards: 0,
+  walletEmpty: 0,
+  depositFailed: 0,
+  cryptoPortfolio: 0,
+  success: 0,
+  vipBadge: 0,
+  serverError: 0,
+  pageNotFound: 0,
+  temporarilyUnavailable: 0,
 };
 
 export default versionMap;

@@ -445,17 +445,18 @@ const versionMap: Record<HeroSquareName, number> = {
   instoEnableBiometrics: 2,
   flipStable: 0,
   cbmega: 0,
-  genniusLaunch: 0,
-  ship: 1,
+  genniusLaunch: 1,
+  ship: 2,
   graduationCap: 1,
-  filter: 1,
-  mcLoad: 1,
+  filter: 2,
+  mcLoad: 2,
   usdl: 0,
   usdr: 0,
-  arrowsUpDown: 0,
+  arrowsUpDown: 1,
   cbzec: 0,
   cbhype: 0,
   usdj: 0,
+  rusd: 0,
 };
 
 export default versionMap;

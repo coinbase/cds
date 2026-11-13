@@ -66,7 +66,7 @@ const svgEsmMap = {
   },
   arrowsUpDown: {
     themeable: () =>
-      import('../svgJs/esm/themeable/arrowsUpDown-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/arrowsUpDown-1.js').then((m) => m.default as string),
   },
   artFrameEmptyState: {
     themeable: () =>
@@ -841,7 +841,7 @@ const svgEsmMap = {
       ),
   },
   filter: {
-    themeable: () => import('../svgJs/esm/themeable/filter-1.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/filter-2.js').then((m) => m.default as string),
   },
   flipStable: {
     themeable: () =>
@@ -886,7 +886,7 @@ const svgEsmMap = {
   },
   genniusLaunch: {
     themeable: () =>
-      import('../svgJs/esm/themeable/genniusLaunch-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/genniusLaunch-1.js').then((m) => m.default as string),
   },
   getStartedInMinutes: {
     themeable: () =>
@@ -1185,7 +1185,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/marginWarning-4.js').then((m) => m.default as string),
   },
   mcLoad: {
-    themeable: () => import('../svgJs/esm/themeable/mcLoad-1.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/mcLoad-2.js').then((m) => m.default as string),
   },
   mic: {
     themeable: () => import('../svgJs/esm/themeable/mic-4.js').then((m) => m.default as string),
@@ -1472,6 +1472,9 @@ const svgEsmMap = {
     themeable: () =>
       import('../svgJs/esm/themeable/routingAccount-4.js').then((m) => m.default as string),
   },
+  rusd: {
+    themeable: () => import('../svgJs/esm/themeable/rusd-0.js').then((m) => m.default as string),
+  },
   scalable: {
     themeable: () =>
       import('../svgJs/esm/themeable/scalable-1.js').then((m) => m.default as string),
@@ -1535,7 +1538,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/shareOnSocialMedia-4.js').then((m) => m.default as string),
   },
   ship: {
-    themeable: () => import('../svgJs/esm/themeable/ship-1.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/ship-2.js').then((m) => m.default as string),
   },
   sidechain: {
     themeable: () =>
