@@ -10,7 +10,8 @@ Designers publish illustration components in the
 turns that library into everything the repo derives from it: `packages/illustrations/src/__generated__`
 (SVG and PNG assets for the CDN, JS modules for web and mobile, and the TypeScript data (`names`,
 `versionMap`, `descriptionMap`, `<Type>Name` unions) the components and the docsite are built on)
-and web's illustration stories. It also writes an nx version plan so the package is released with
+and web's illustration stories and, when a native checkout is configured, the illustration assets
+of the native CDS packages (see _Native sinks_). It also writes an nx version plan so the package is released with
 the right semver bump. It is run by hand with `yarn nx run illustrations:sync-illustrations`, which
 does its work on a fresh `illustrations/YYYY-MM-DD` branch and pushes it (see _The shell_).
 
@@ -67,19 +68,23 @@ The sync is an **engine between a source and a set of sinks**, wrapped in a shel
   CLI;
 - a `Sink` is a destination (a package, a repository, a directory) and owns how illustrations appear
   there. `IllustrationsPackageSink` fills `src/__generated__`; `WebStoriesSink` fills web's
-  `__stories__`;
+  `__stories__`; `IosAssetCatalogSink` and `AndroidVectorDrawableSink` fill the native CDS packages;
 - `artifacts/` are pure helpers sinks build files from: PNG rasterization, module wrappers,
-  TypeScript data files, a prettier-style printer;
+  TypeScript data files, a prettier-style printer, the native SVG preparation and the vector
+  drawable converter;
 - `index.ts`, the shell, is the nx target: config, CLI args, writing the manifest and version plan,
-  the summary, and the release branch (`git.ts`).
+  the summary, and the release branches (`git.ts`).
 
 Inside the engine the steps are plain functions over plain data, one module each. The two
 abstractions, source and sink, sit at the two places where the outside world varies.
 
 ```
-index.ts                 shell: CLI args, release branch, version plan, manifest, summary
+index.ts                 shell: CLI args, release branches, version plan, manifest, summary
 config.ts                the source, the sinks, paths, flags
-git.ts                   ReleaseBranch: start / publish / abandon illustrations/YYYY-MM-DD
+selectSinks.ts           --select-sinks: the interactive choice of sinks for one run
+nativeRepo.ts            native module paths and layout, assertNativeCheckout
+git.ts                   ReleaseBranch: start / publish / abandon illustrations/YYYY-MM-DD,
+                           runOnReleaseBranches: one branch per repository the run writes to
 sync.ts                  engine: runSync(source, manifest, sinks) -> SyncOutcome
   selectComponents.ts      dedupe, incremental filter    -> which nodes to download
   optimizeSvg.ts           svgo config, color normalization and check, viewBox size
@@ -98,12 +103,17 @@ sinks/
   Sink.ts                  the sink contract: accepts, has, apply(SinkChanges)
   IllustrationsPackageSink.ts   src/__generated__ of this package
   WebStoriesSink.ts        packages/web/src/illustrations/__stories__
+  IosAssetCatalogSink.ts   CDSDesignSystem: Illustrations.xcassets, Illustrations/Generated/<Type>Name.swift
+  AndroidVectorDrawableSink.ts  :cds: res/drawable/cds_*_{light,dark}.xml, illustrations/.../generated/<Type>Names.kt
   files.ts                 write / remove / exists / relative import helpers
 artifacts/
   png.ts                   rasterizePng
   modules.ts               renderCjsModule, renderEsmModule, renderSvgJsMap, renderSvgEsmMap
   typescriptData.ts        renderNameType, renderNames, renderDescriptionMap, renderVersionMap
   source.ts                prettier-style printer for the generated TypeScript
+  nativeSvg.ts             toNativeSvg (validation, mask -> clip, approximations), the stamp, the
+                             generated-file header, the approximation list
+  vectorDrawable.ts        toVectorDrawable: prepared SVG -> Android <vector> XML
 __tests__/               tests + recorded Figma fixtures
 ```
 
@@ -329,6 +339,126 @@ API (`getIllustrationSheet`, `IllustrationExample`, the per-type scale), confine
 A further destination is another `Sink` subclass plus one line in `config.sinks`; the e2e test's
 `MirrorSink` (flat, light-only SVGs in another directory, about 20 lines) is the smallest example.
 
+### Native sinks
+
+The native CDS packages live in mobile-skunkworks: `CDSDesignSystem` (SwiftUI) and `:cds`
+(Compose). Each ships the five illustration components over fixed light and dark vector assets in
+the platform's own format; the component picks the set from the CDS color scheme, never from the
+system appearance, and custom themes do not recolor illustrations (the React Native default,
+`applyTheme` off). The sync is the assets' only source; the generated files are committed there and
+never edited by hand. Both sinks join `config.sinks` only when `SYNC_ILLUSTRATIONS_NATIVE_REPO`
+points at a checkout (see _Configuration and scratch runs_).
+
+| Sink                        | module (in the native repo)                                | Files                                                                                                                                                                                                                                   |
+| --------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `IosAssetCatalogSink`       | `modules/ios/CDS/CDSDesignSystem/Sources/CDSDesignSystem/` | `Resources/Illustrations.xcassets/<type>/<name>.imageset/{Contents.json,<name>-light.svg,<name>-dark.svg}` plus the catalog and type-folder `Contents.json` (`catalogDir`); `Illustrations/Generated/<Type>Name.swift` (`generatedDir`) |
+| `AndroidVectorDrawableSink` | `modules/android/cds/`                                     | `src/main/res/drawable/cds_<type_snake>_<name_snake>_{light,dark}.xml` (`drawableDir`); `illustrations/src/main/kotlin/com/coinbase/cds/illustrations/generated/<Type>Names.kt` (`kotlinDir`)                                           |
+
+- **One preparation, two formats.** Both sinks start from `toNativeSvg` (`artifacts/nativeSvg.ts`),
+  which validates the light SVG against what both renderers can express, rewrites the constructs
+  they lack (below), and derives the dark SVG with `palette.toDarkSvg`. iOS ships that SVG as is,
+  with `width`/`height` restored from the viewBox because the asset catalog reads the intrinsic size
+  from them; `actool` renders it with CoreSVG. Android converts each of the two SVGs with
+  `toVectorDrawable` (`artifacts/vectorDrawable.ts`).
+- **Asset catalog.** Type folders set `provides-namespace`, so the asset name is
+  `pictogram/wallet`. Each image set declares the dark file as the `luminosity: dark` appearance and
+  `preserves-vector-representation`. `Contents.json` is written in Xcode's own layout so Xcode never
+  rewrites it.
+- **Vector drawables.** `android:width`/`height` in dp and the viewport come from the viewBox; the
+  root carries `tools:ignore="VectorRaster,VectorPath"` because several illustrations exceed lint's
+  size and path-length advice by design. Two drawables per illustration, not one `drawable-night`
+  variant, because the CDS color scheme is independent of the system's.
+- **No version in file names.** The package version is the version. Instead every asset file starts
+  with one comment holding the header and a stamp, `cds-illustration <type> <name> <version>
+<hash>`, and `has()` is true only when every asset file of the illustration exists and its stamp
+  matches the manifest entry. A checkout that missed a run, or whose files were wiped, is repaired by
+  backfill on the next run. `actool` and `aapt2` drop comments, so the stamp costs nothing at runtime.
+- **Generated code is set-derived.** `<Type>Name.swift` is
+  `public enum <Type>Name: String, CaseIterable, Sendable`, one case per name, the Figma name as raw
+  value. `<Type>Names.kt` has one `public val <Type>Name.Companion.<name>: <Type>Name` per
+  illustration, built from the two `R.drawable` ids (so R8 drops unreferenced names and resource
+  shrinking drops their drawables), plus `<Type>Name.Companion.all`, a lazy map by Figma name for
+  galleries and catalog tests. The `<Type>Name` classes themselves are hand-written in the module.
+  Both files are rewritten from `illustrations` on every apply.
+- **Naming stays in each sink.** A leading digit gets a `_` prefix (`2fa` -> `_2fa`); Swift
+  keywords (`private`, `protocol`, `public`, …) and Kotlin hard keywords (`object`, `in`, …) are
+  backticked. Drawable names are `cds_` + snake-cased type and name + theme. Each sink fails the run
+  when two names would collide: as identifiers, as image sets on a case-insensitive file system
+  (iOS), or with the generated `all` property (Android).
+- **Header.** Every generated file starts with the same two comment lines, naming how it was made
+  and where to read more, never a date or a commit (which would churn every file).
+- **All or nothing per sink.** A sink prepares every asset and every code file before it touches the
+  first file, so an illustration that cannot be exported fails the run with its Figma link and
+  leaves that destination untouched.
+
+### What the native renderers draw
+
+Both formats are strict subsets of SVG. `toNativeSvg` admits exactly the constructs below and fails
+the run, naming the construct and the component's Figma URL, on anything else: radial gradients,
+`objectBoundingBox` gradients, `gradientTransform`, filters, images, patterns, `use`, text, other
+masks, other blend modes, unknown attributes or style properties, multi-shape or transformed clip
+shapes. The format is extended deliberately, never by dropping something a designer drew. The
+table is step R of CDS-2954: what the census of the 1,597 published illustrations uses, and how
+each renderer handles it (documentation plus the CoreSVG support notes; the on-device spike and the
+side-by-side Figma comparison are P5 of that plan).
+
+| SVG construct (count in the library)                              | iOS, CoreSVG (asset catalog SVG)                     | Android, vector drawable                                                                        |
+| ----------------------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `path` (17,032), relative commands, arcs, shorthands              | drawn                                                | drawn; `pathData` is SVG path grammar                                                           |
+| `circle` (214), `ellipse` (7), `rect` (12, mostly rounded)        | drawn                                                | converted to arc path data per the SVG spec                                                     |
+| `fill-rule="evenodd"` (3,603)                                     | drawn                                                | `android:fillType="evenOdd"`                                                                    |
+| strokes: width, cap, join, miter limit (171)                      | drawn                                                | `strokeWidth`, `strokeLineCap`, `strokeLineJoin`, `strokeMiterLimit`                            |
+| `fill-opacity` (82), `opacity` on a shape (8)                     | drawn                                                | `fillAlpha`/`strokeAlpha`; exact unless the shape is both filled and stroked (`shape-opacity`)  |
+| `opacity` on a group (1: `heroSquare/cbmega`)                     | drawn                                                | folded into each shape's alpha; overlaps composite darker (`group-opacity`, approximation list) |
+| `transform` on shapes (65: `rotate`, `matrix` reflections)        | drawn                                                | `<group android:rotation/scaleX/scaleY/translateX/translateY>`; skews fail                      |
+| `clipPath` with one shape (338), `clip-rule`                      | drawn                                                | `<clip-path android:pathData android:fillType>` in a `<group>`                                  |
+| `mask`, single opaque shape (2: `buy`, `stressTestedColdStorage`) | not supported: rewritten as `clipPath` before export | same rewrite; a `userSpaceOnUse` mask region becomes an outer rectangular clip                  |
+| `linearGradient`, `userSpaceOnUse`, `stop-opacity` (4: `usdj`)    | drawn                                                | inline `<aapt:attr><gradient android:type="linear">` with the stop opacity in the color alpha   |
+| `stroke-dasharray` (1: `heroSquare/primeDeFi`)                    | drawn                                                | no dashes: solid stroke (`stroke-dasharray`, approximation list)                                |
+| `mix-blend-mode:screen` (1: `heroSquare/usdj`)                    | not supported: dropped, painted normally             | same (`mix-blend-mode`, approximation list)                                                     |
+| very long path data (up to 72 KB in one `d`, 247 KB files)        | drawn                                                | compiles; lint's `VectorPath` advice is suppressed                                              |
+
+**Approximation list.** `approximationList` in `artifacts/nativeSvg.ts` names every illustration
+that ships with a known drawing difference, with the feature, the platforms and the reason. The
+converters call `requireApproximation` whenever they have to approximate; an illustration not on the
+list fails the run, and `assertApproximationsApplied` fails it too when an entry is no longer
+needed, so the list stays true to the art. The run prints it. Today:
+
+| Illustration           | Feature            | Platforms    | What is lost                                                                                     |
+| ---------------------- | ------------------ | ------------ | ------------------------------------------------------------------------------------------------ |
+| `heroSquare/usdj`      | `mix-blend-mode`   | iOS, Android | the highlight gradient across the coin is painted normally instead of with `screen`              |
+| `heroSquare/primeDeFi` | `stroke-dasharray` | Android      | one dashed outline (4 on, 4 off) is solid                                                        |
+| `heroSquare/cbmega`    | `group-opacity`    | Android      | three shapes at 92% group opacity are each 92%; where they overlap the result is slightly darker |
+
+**Not-exportable list.** `notExportableList` in the same file names the illustrations whose art
+neither renderer can draw exactly and that the native packages therefore do not ship yet, with the
+reason. Both native sinks leave them out through `accepts`, so they are neither exported nor named
+in the generated enums, and the run prints the list. The whole-library test keeps it exact: every
+entry must still fail to convert and nothing else may fail. The fix is in Figma; once the construct
+is flattened and the entry removed, the illustration joins the next sync by backfill. Today:
+`spotRectangle/insto` (a mask with a black cut-out: clips cannot subtract) and `spotSquare/lowRisk`
+(a mask of three shapes: a union clip neither converter expresses exactly).
+
+**Android-only list.** `androidNotExportableList` names the illustrations only the Android package
+leaves out. aapt2 caps a resource string at `MAX_PATH_DATA` (32,767) characters and Compose crashed
+loading a longer `android:pathData`, so `toVectorDrawable` refuses such a path and the Android sink
+skips the listed illustrations while iOS ships them; the whole-library test checks each entry still
+exceeds the limit. Today: `heroSquare/arrowsUpDown` (a 67,990-character path) and `heroSquare/mcLoad`
+(71,551), both removed from the Android package in mobile-skunkworks `3917156368`. The longest path
+that ships is 30,006 characters.
+
+**`<use>` elements.** svgo's `reusePaths` turns repeated identical paths into one `<path>` in
+`<defs>` and `<use>` elements (the `insto*` illustrations). Vector drawables have no equivalent, so
+`toNativeSvg` inlines each `<use>` as a copy of its shape, with the `<use>`'s attributes applied
+where the shape sets none, as SVG inheritance would; the `<defs>` shapes and the `xlink` namespace
+are dropped afterwards. A positioned or transformed `<use>`, or one of anything but a shape, fails.
+
+**Suspect list for P5.** The illustrations whose rendering the side-by-side comparison with Figma
+must confirm on device: the three above; the two rewritten masks (`heroSquare/buy`,
+`spotRectangle/stressTestedColdStorage`); the 65 transformed circles and ellipses on Android (group
+decomposition); `heroSquare/usdj` for gradient fidelity on both platforms; and the two largest files
+(`heroSquare/arrowsUpDown`, `heroSquare/mcLoad`) for compile and first-draw time on both.
+
 ### Generated TypeScript is printed, not formatted
 
 The data-file renderers print TypeScript with `artifacts/source.ts`, a small printer that follows
@@ -378,13 +508,31 @@ branch is abandoned when the sync throws, when Figma had nothing new, or when no
 failed or empty run never leaves a half-written tree behind. Scratch runs and `--no-git` skip the
 branch and just write files.
 
+`--select-sinks` (`selectSinks.ts`) asks on the terminal which of `config.sinks` to write to before
+any branch is started or anything is fetched; the engine then runs with that subset and the native
+release branch is only started when a native sink is selected. The manifest still records the run,
+so the illustrations a skipped sink missed are backfilled by a later run that includes it. Without
+the flag, every configured sink is written.
+
+With a native checkout configured, the run releases into two repositories: `runOnReleaseBranches`
+starts a `ReleaseBranch` in the native checkout first (so a dirty native tree stops the run before
+this repo is touched), then one here, runs the sync, and publishes or abandons each repository on
+its own. A run that only backfilled the native checkout pushes there and abandons the branch here.
+The checkout is validated (`assertNativeCheckout`: a git checkout with both native modules) before
+anything is fetched, with or without git. Pull requests in both repositories are opened by hand;
+`publish` prints each branch and the title to use.
+
 ## Configuration and scratch runs
 
 `config.ts` is one object: the `source` (a `FigmaSource` over the illustrations and colors file
-ids), the `sinks` (an `IllustrationsPackageSink` with its CSS variable prefix and a `WebStoriesSink`),
-the paths and the `git` flag. Two environment variables redirect a run for testing:
+ids), the `sinks` (an `IllustrationsPackageSink` with its CSS variable prefix and a `WebStoriesSink`,
+plus the two native sinks when `SYNC_ILLUSTRATIONS_NATIVE_REPO` is set), the paths, the `git` flag
+and the `nativeRepo` to release into. `SYNC_ILLUSTRATIONS_NATIVE_REPO` is an environment variable
+because the checkout's location is machine specific; when it is unset the sync behaves exactly as
+it did before the native sinks existed. Two environment variables redirect a run for testing:
 `SYNC_ILLUSTRATIONS_SCRATCH_DIR` writes everything (generated files, stories, manifest, version
-plan) under a scratch directory and turns the git workflow off;
+plan, and the native output under `native/` when `SYNC_ILLUSTRATIONS_NATIVE_REPO` is set, which
+then leaves the native checkout alone) under a scratch directory and turns the git workflow off;
 `SYNC_ILLUSTRATIONS_FIGMA_FILE_ID` points the source at another file, normally the test fixture
 library that mirrors the real file's layout. Scratch runs are the integration check for
 `FigmaSource` against the real API; the engine's behaviour is tested in memory.
@@ -399,12 +547,17 @@ Three layers, none of which mocks a module:
    while the source is mutated: first publish, no-op run, description-only change, artwork change,
    rename, case-only rename (rejected), node re-created under the same name, duplicate name,
    deletion, an export with an unsupported color (rejected, nothing written), `syncAll`, a sink
-   added mid-way (backfilled on an incremental run), a wiped sink directory, idempotence.
+   added mid-way (backfilled on an incremental run), a wiped sink directory, idempotence, the
+   native sinks added mid-way, and a native asset with a stale stamp.
    Assertions cover the files on disk, the generated TypeScript, the returned diff and the
    manifest. This is where the sync's behaviour is specified.
 2. **Pure modules on their own inputs** (`selectComponents`, `diffIllustrations`, the artifact
-   helpers and printer, `generateVersionPlan`, `manifest`), including the reconciliation table above
-   case by case.
+   helpers and printer, `generateVersionPlan`, `manifest`, `runOnReleaseBranches` with recording
+   stand-ins for `ReleaseBranch`), including the reconciliation table above case by case. The
+   native preparation is tested rewrite by rewrite and rejection by rejection (`nativeSvg.test.ts`),
+   the vector drawable converter construct by construct and over every published illustration in
+   both palettes (`vectorDrawable.test.ts`), and the native sinks are pinned byte for byte to
+   `__fixtures__/{iosSink,androidSink}/`, rendered from `__fixtures__/nativeSamples.ts`.
 3. **Adapters and formats against recorded production data**: the real `/components` response
    (trimmed, keeping duplicate names, both `Hero Square/` and `HeroSquare/` prefixes and a name with
    a leading space), the real variables responses, raw SVG exports exactly as Figma returns them

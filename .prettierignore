@@ -8,6 +8,8 @@
 
 # Test fixtures (must match exact transform output)
 **/__testfixtures__/
+packages/illustrations/scripts/sync-illustrations/__tests__/__fixtures__/iosSink/
+packages/illustrations/scripts/sync-illustrations/__tests__/__fixtures__/androidSink/
 
 # Builds
 dist/
