@@ -36,6 +36,20 @@ export type VectorDrawable = {
   approximated: ReadonlySet<ApproximatedFeature>;
 };
 
+/**
+ * The longest `android:pathData` a drawable may carry. aapt2 stores resource strings in a pool
+ * whose UTF-8 entries are capped at 0x7FFF bytes; longer path data has crashed Compose at load
+ * (`androidNotExportableList`). The longest path in the shipping library is 30,006 characters.
+ */
+export const MAX_PATH_DATA = 0x7fff;
+
+const checkedPathData = (pathData: string) =>
+  pathData.length > MAX_PATH_DATA
+    ? fail(
+        `a path of ${pathData.length} characters exceeds Android's ${MAX_PATH_DATA}-character resource string limit`,
+      )
+    : pathData;
+
 export function toVectorDrawable(
   svg: string,
   illustration: Pick<Illustration, 'type' | 'name'>,
@@ -343,7 +357,9 @@ class VectorDrawableWriter {
     return {
       name: 'clip-path',
       attributes: {
-        'android:pathData': shapeToPath(shape) ?? fail('a clip shape renders nothing'),
+        'android:pathData': checkedPathData(
+          shapeToPath(shape) ?? fail('a clip shape renders nothing'),
+        ),
         ...(fillType(rule) && { 'android:fillType': fillType(rule) }),
       },
       children: [],
@@ -375,7 +391,7 @@ class VectorDrawableWriter {
       this.approximated.add('stroke-dasharray');
     }
 
-    const attributes: Record<string, string> = { 'android:pathData': pathData };
+    const attributes: Record<string, string> = { 'android:pathData': checkedPathData(pathData) };
     const children: XmlNode[] = [];
     const paint = (attribute: 'fillColor' | 'strokeColor', value: string) => {
       const gradient = urlReference(value);

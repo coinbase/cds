@@ -439,6 +439,14 @@ is flattened and the entry removed, the illustration joins the next sync by back
 `spotRectangle/insto` (a mask with a black cut-out: clips cannot subtract) and `spotSquare/lowRisk`
 (a mask of three shapes: a union clip neither converter expresses exactly).
 
+**Android-only list.** `androidNotExportableList` names the illustrations only the Android package
+leaves out. aapt2 caps a resource string at `MAX_PATH_DATA` (32,767) characters and Compose crashed
+loading a longer `android:pathData`, so `toVectorDrawable` refuses such a path and the Android sink
+skips the listed illustrations while iOS ships them; the whole-library test checks each entry still
+exceeds the limit. Today: `heroSquare/arrowsUpDown` (a 67,990-character path) and `heroSquare/mcLoad`
+(71,551), both removed from the Android package in mobile-skunkworks `3917156368`. The longest path
+that ships is 30,006 characters.
+
 **`<use>` elements.** svgo's `reusePaths` turns repeated identical paths into one `<path>` in
 `<defs>` and `<use>` elements (the `insto*` illustrations). Vector drawables have no equivalent, so
 `toNativeSvg` inlines each `<use>` as a copy of its shape, with the `<use>`'s attributes applied

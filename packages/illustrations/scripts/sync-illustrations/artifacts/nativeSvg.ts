@@ -187,13 +187,33 @@ export const notExportableList: Readonly<Record<string, string>> = {
     'a mask of three shapes; a clip of several shapes is a union neither converter expresses exactly',
 };
 
-/** Whether the native sinks export the illustration; false for the `notExportableList`. */
-export const isNativelyExportable = (illustration: Pick<Illustration, 'type' | 'name'>) =>
-  !(illustrationKey(illustration) in notExportableList);
+/**
+ * Illustrations only the Android package leaves out, with the reason. Android compiles a resource
+ * string of at most `MAX_PATH_DATA` characters and Compose crashes loading a longer `pathData`
+ * (mobile-skunkworks removed these two in `3917156368`); `toVectorDrawable` refuses such a path, so
+ * an entry here is stale as soon as the art is simplified in Figma.
+ */
+export const androidNotExportableList: Readonly<Record<string, string>> = {
+  'heroSquare/arrowsUpDown':
+    'one path of 67,990 characters, over the Android resource string limit',
+  'heroSquare/mcLoad': 'one path of 71,551 characters, over the Android resource string limit',
+};
 
-/** The not-exportable list as lines for the run log. */
-export const notExportableSummary = () =>
-  Object.entries(notExportableList).map(([key, reason]) => `${key}: ${reason}`);
+/** Whether the sink for `platform` exports the illustration; false for the lists above. */
+export const isNativelyExportable = (
+  illustration: Pick<Illustration, 'type' | 'name'>,
+  platform: NativePlatform,
+) =>
+  !(illustrationKey(illustration) in notExportableList) &&
+  !(platform === 'android' && illustrationKey(illustration) in androidNotExportableList);
+
+/** Both not-exportable lists as lines for the run log. */
+export const notExportableSummary = () => [
+  ...Object.entries(notExportableList).map(([key, reason]) => `${key}: ${reason}`),
+  ...Object.entries(androidNotExportableList).map(
+    ([key, reason]) => `${key} (Android only): ${reason}`,
+  ),
+];
 
 // ---------------------------------------------------------------------------------------------
 // Parsing and shared vocabulary

@@ -1,7 +1,12 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { isNativelyExportable, notExportableList, toNativeSvg } from '../artifacts/nativeSvg';
+import {
+  androidNotExportableList,
+  isNativelyExportable,
+  notExportableList,
+  toNativeSvg,
+} from '../artifacts/nativeSvg';
 import { toVectorDrawable } from '../artifacts/vectorDrawable';
 import { ColorPalette } from '../colorPalette';
 import type { Illustration } from '../illustration';
@@ -46,16 +51,24 @@ ${extraNamespaces}    xmlns:tools="http://schemas.android.com/tools"
 const convert = (body: string, subject = sample, attributes?: string) =>
   toVectorDrawable(svg(body, attributes), subject);
 
-const throwsExportError = (attempt: () => unknown) => {
+const throwsExportError = (attempt: () => unknown, message = 'cannot be exported') => {
   try {
     attempt();
     return false;
   } catch (error) {
-    return error instanceof Error && error.message.includes('cannot be exported');
+    return error instanceof Error && error.message.includes(message);
   }
 };
 
 describe('toVectorDrawable', () => {
+  it("refuses a path longer than Android's resource string limit", () => {
+    const segments = Array.from({ length: 4000 }, (_, i) => `L${i} ${i}`).join('');
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" width="8" height="8"><path fill="#0052FF" d="M0 0${segments}z"/></svg>`;
+    expect(() => toVectorDrawable(svg, { type: 'heroSquare', name: 'big' })).toThrow(
+      /a path of \d+ characters exceeds Android's 32767-character resource string limit/,
+    );
+  });
+
   it('maps a filled even-odd path one to one', () => {
     expect(
       convert('<path fill="#0052FF" fill-rule="evenodd" d="M0 0h8v8H0z" clip-rule="evenodd"/>').xml,
@@ -373,6 +386,7 @@ describe('toVectorDrawable', () => {
 
     const approximated = new Map<string, string[]>();
     const notExportable: { key: string; fails: boolean }[] = [];
+    const androidOnly = new Set<string>();
     for (const item of illustrations) {
       const light = fs.readFileSync(
         path.join(
@@ -384,7 +398,7 @@ describe('toVectorDrawable', () => {
         ),
         'utf-8',
       );
-      if (!isNativelyExportable(item)) {
+      if (!isNativelyExportable(item, 'ios')) {
         // Every listed illustration must still be unexportable, or the entry is stale.
         const attempt = () => toNativeSvg(item, light, palette);
         notExportable.push({ key: `${item.type}/${item.name}`, fails: throwsExportError(attempt) });
@@ -393,6 +407,14 @@ describe('toVectorDrawable', () => {
       const native = toNativeSvg(item, light, palette);
       const features = new Set(native.approximated);
       for (const theme of ['light', 'dark'] as const) {
+        if (!isNativelyExportable(item, 'android')) {
+          // iOS ships it; Android must still refuse it, or the entry is stale.
+          const attempt = () => toVectorDrawable(native[theme], item);
+          androidOnly.add(`${item.type}/${item.name}`);
+          if (!throwsExportError(attempt, 'resource string limit'))
+            androidOnly.add(`converts: ${item.type}/${item.name}`);
+          continue;
+        }
         const drawable = toVectorDrawable(native[theme], item);
         expect(drawable.xml).toMatch(/^<vector\n[^]*\n<\/vector>$/);
         drawable.approximated.forEach((feature) => features.add(feature));
@@ -408,5 +430,6 @@ describe('toVectorDrawable', () => {
       Object.keys(notExportableList).sort(),
     );
     expect(notExportable.filter(({ fails }) => !fails)).toEqual([]);
+    expect([...androidOnly].sort()).toEqual(Object.keys(androidNotExportableList).sort());
   });
 });

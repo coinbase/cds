@@ -146,6 +146,16 @@ describe('the not-exportable list', () => {
     expect(android.accepts({ ...listed, name: 'wallet' })).toBe(true);
     expect(android.accepts(illustrations[0])).toBe(false);
   });
+
+  it('leaves the Android-only list out of the Android sink alone', () => {
+    const oversized = { ...illustrations[0], type: 'heroSquare', name: 'mcLoad' };
+    expect(sink.accepts(oversized)).toBe(true);
+    const android = new AndroidVectorDrawableSink({
+      drawableDir: path.join(dir, 'res/drawable'),
+      kotlinDir: path.join(dir, 'kotlin'),
+    });
+    expect(android.accepts(oversized)).toBe(false);
+  });
 });
 
 describe('swiftCaseName', () => {

@@ -130,7 +130,7 @@ export class IosAssetCatalogSink extends Sink {
     super({
       ...options,
       include: (illustration) =>
-        isNativelyExportable(illustration) && (options.include?.(illustration) ?? true),
+        isNativelyExportable(illustration, 'ios') && (options.include?.(illustration) ?? true),
     });
     this.catalogDir = catalogDir;
     this.generatedDir = generatedDir;

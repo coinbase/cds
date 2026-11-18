@@ -109,7 +109,7 @@ const sync = async (sinks: Sink[]) => {
     console.log('\nIllustrations the native packages draw with a known difference:');
     for (const line of approximationSummary()) console.log(`  ${line}`);
     console.log(
-      '\n⚠️ Illustrations the native packages do not ship until the art is flattened in Figma:',
+      '\n⚠️ Illustrations the native packages do not ship until the art is simplified in Figma:',
     );
     for (const line of notExportableSummary()) console.log(`  ${line}`);
   }

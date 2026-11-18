@@ -123,7 +123,7 @@ export class AndroidVectorDrawableSink extends Sink {
     super({
       ...options,
       include: (illustration) =>
-        isNativelyExportable(illustration) && (options.include?.(illustration) ?? true),
+        isNativelyExportable(illustration, 'android') && (options.include?.(illustration) ?? true),
     });
     this.drawableDir = drawableDir;
     this.kotlinDir = kotlinDir;
