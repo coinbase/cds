@@ -14,7 +14,16 @@ import { groupByType, type Illustration } from '../illustration';
 import { mapConcurrently } from '../mapConcurrently';
 
 import { allFilesExist, writeFile } from './files';
-import { Sink, type SinkChanges, type SinkOptions } from './Sink';
+import {
+  commitUnlessFailed,
+  keepAvailable,
+  Sink,
+  type SinkChanges,
+  type SinkFailure,
+  type SinkOptions,
+  type SinkPlan,
+  withoutFailed,
+} from './Sink';
 
 export type IosAssetCatalogSinkOptions = SinkOptions & {
   /** The `Illustrations.xcassets` directory: `Sources/CDSDesignSystem/Resources/Illustrations.xcassets` of the module. */
@@ -154,52 +163,82 @@ export class IosAssetCatalogSink extends Sink {
     );
   }
 
-  async apply({ remove, write, illustrations, palette }: SinkChanges) {
-    // Everything that can fail runs before the first file is touched.
-    const enums = [...groupByType(illustrations)].map(
+  private hasImageSet(illustration: Illustration) {
+    return allFilesExist([this.contentsFile(this.imageSetDir(illustration))]);
+  }
+
+  async plan({ remove, write, illustrations, palette }: SinkChanges): Promise<SinkPlan> {
+    const failures: SinkFailure[] = [];
+    const imageSets = write.flatMap(({ illustration, svg }) => {
+      try {
+        const native = toNativeSvg(illustration, svg, palette, {
+          componentUrl: this.componentUrl?.(illustration),
+        });
+        assertApproximationsApplied(illustration, 'ios', native.approximated);
+        return [
+          {
+            illustration,
+            files: [
+              ...themes.map(
+                (theme) =>
+                  [
+                    this.svgFile(illustration, theme),
+                    `${generatedXmlComment(illustration)}\n${withIntrinsicSize(native[theme], illustration)}\n`,
+                  ] as const,
+              ),
+              [
+                this.contentsFile(this.imageSetDir(illustration)),
+                imageSetContents(illustration),
+              ] as const,
+            ],
+          },
+        ];
+      } catch (error) {
+        failures.push({
+          illustration,
+          message: error instanceof Error ? error.message : String(error),
+        });
+        return [];
+      }
+    });
+    const available = await keepAvailable(illustrations, failures, (illustration) =>
+      this.hasImageSet(illustration),
+    );
+    const enums = [...groupByType(available)].map(
       ([type, ofType]) => [this.enumFile(type), renderNameEnum(type, ofType)] as const,
     );
-    const imageSets = write.map(({ illustration, svg }) => {
-      const native = toNativeSvg(illustration, svg, palette, {
-        componentUrl: this.componentUrl?.(illustration),
-      });
-      assertApproximationsApplied(illustration, 'ios', native.approximated);
-      return {
-        illustration,
-        files: [
-          ...themes.map(
-            (theme) =>
-              [
-                this.svgFile(illustration, theme),
-                `${generatedXmlComment(illustration)}\n${withIntrinsicSize(native[theme], illustration)}\n`,
-              ] as const,
-          ),
-          [
-            this.contentsFile(this.imageSetDir(illustration)),
-            imageSetContents(illustration),
-          ] as const,
-        ],
-      };
-    });
+    const removals = withoutFailed(remove, failures);
 
-    await Promise.all(
-      remove.map((illustration) =>
-        fs.promises.rm(this.imageSetDir(illustration), { recursive: true, force: true }),
-      ),
-    );
-    await mapConcurrently(imageSets, concurrentWrites, ({ files }) =>
-      Promise.all(files.map(([file, content]) => writeFile(file, content))),
-    );
-    await Promise.all([
-      writeFile(this.contentsFile(this.catalogDir), xcodeJson({ info: contentsInfo })),
-      ...[...groupByType(illustrations).keys()].map((type) =>
-        writeFile(
-          this.contentsFile(this.typeDir(type)),
-          xcodeJson({ info: contentsInfo, properties: { 'provides-namespace': true } }),
-        ),
-      ),
-      ...enums.map(([file, content]) => writeFile(file, content)),
-    ]);
+    return {
+      sink: this.name,
+      writes: imageSets.map(({ illustration }) => illustration),
+      removals,
+      failures,
+      commit: async () => {
+        await Promise.all(
+          removals.map((illustration) =>
+            fs.promises.rm(this.imageSetDir(illustration), { recursive: true, force: true }),
+          ),
+        );
+        await mapConcurrently(imageSets, concurrentWrites, ({ files }) =>
+          Promise.all(files.map(([file, content]) => writeFile(file, content))),
+        );
+        await Promise.all([
+          writeFile(this.contentsFile(this.catalogDir), xcodeJson({ info: contentsInfo })),
+          ...[...groupByType(available).keys()].map((type) =>
+            writeFile(
+              this.contentsFile(this.typeDir(type)),
+              xcodeJson({ info: contentsInfo, properties: { 'provides-namespace': true } }),
+            ),
+          ),
+          ...enums.map(([file, content]) => writeFile(file, content)),
+        ]);
+      },
+    };
+  }
+
+  async apply(changes: SinkChanges) {
+    await commitUnlessFailed(await this.plan(changes));
   }
 }
 

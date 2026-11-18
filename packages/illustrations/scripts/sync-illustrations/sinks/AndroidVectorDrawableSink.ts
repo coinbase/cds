@@ -1,3 +1,4 @@
+import fs from 'node:fs';
 import path from 'node:path';
 
 import {
@@ -10,12 +11,25 @@ import {
   toNativeSvg,
 } from '../artifacts/nativeSvg';
 import { nameTypeOf } from '../artifacts/typescriptData';
-import { toVectorDrawable } from '../artifacts/vectorDrawable';
+import {
+  oversizedPathData,
+  PathDataTooLongError,
+  toVectorDrawable,
+} from '../artifacts/vectorDrawable';
+import type { ColorPalette } from '../colorPalette';
 import { groupByType, type Illustration } from '../illustration';
 import { mapConcurrently } from '../mapConcurrently';
 
-import { removeFile, writeFile } from './files';
-import { Sink, type SinkChanges, type SinkOptions } from './Sink';
+import { allFilesExist, removeFile, writeFile } from './files';
+import {
+  commitUnlessFailed,
+  keepAvailable,
+  Sink,
+  type SinkChanges,
+  type SinkOptions,
+  type SinkPlan,
+  withoutFailed,
+} from './Sink';
 
 export type AndroidVectorDrawableSinkOptions = SinkOptions & {
   /** The `drawable` resource directory: `src/main/res/drawable` of the `:cds` module. */
@@ -139,58 +153,118 @@ export class AndroidVectorDrawableSink extends Sink {
 
   async has(illustration: Illustration) {
     const current = await Promise.all(
-      themes.map((theme) =>
-        isCurrentAssetFile(this.drawableFile(illustration, theme), illustration),
-      ),
+      themes.map(async (theme) => {
+        const file = this.drawableFile(illustration, theme);
+        return (
+          (await isCurrentAssetFile(file, illustration)) && !(await hasOversizedPathData(file))
+        );
+      }),
     );
     return current.every(Boolean);
   }
 
-  async apply({ remove, write, illustrations, palette }: SinkChanges) {
-    // Everything that can fail runs before the first file is touched.
-    const namesFiles = [...groupByType(illustrations)].map(
+  private hasDrawables(illustration: Illustration) {
+    return allFilesExist(themes.map((theme) => this.drawableFile(illustration, theme)));
+  }
+
+  async plan({ remove, write, illustrations, palette }: SinkChanges): Promise<SinkPlan> {
+    const converted = write.map(({ illustration, svg }) => ({
+      illustration,
+      ...this.convertAsset(illustration, svg, palette),
+    }));
+    const failures = converted.flatMap(({ illustration, failure }) =>
+      failure === undefined ? [] : [{ illustration, message: failure }],
+    );
+    const succeeded = converted.filter(({ files }) => files !== undefined);
+    const available = await keepAvailable(illustrations, failures, (illustration) =>
+      this.hasDrawables(illustration),
+    );
+    const namesFiles = [...groupByType(available)].map(
       ([type, ofType]) =>
         [this.namesFile(type), renderNameProperties(type, ofType, this.rPackage)] as const,
     );
-    const drawables = write.flatMap(({ illustration, svg }) => {
-      const componentUrl = this.componentUrl?.(illustration);
-      const native = toNativeSvg(illustration, svg, palette, { componentUrl });
-      const applied = new Set<ApproximatedFeature>(native.approximated);
-      const files = themes.map((theme) => {
-        const drawable = convert(native[theme], illustration, componentUrl);
-        drawable.approximated.forEach((feature) => applied.add(feature));
-        return {
-          file: this.drawableFile(illustration, theme),
-          content: `${xmlDeclaration}\n${generatedXmlComment(illustration)}\n${drawable.xml}\n`,
-        };
-      });
-      assertApproximationsApplied(illustration, 'android', applied);
-      return files;
-    });
+    const removals = withoutFailed(remove, failures);
+    const drawables = succeeded.flatMap(({ files }) => files ?? []);
 
-    await Promise.all(
-      remove.flatMap((illustration) =>
-        themes.map((theme) => removeFile(this.drawableFile(illustration, theme))),
-      ),
-    );
-    await mapConcurrently(drawables, concurrentWrites, ({ file, content }) =>
-      writeFile(file, content),
-    );
-    await Promise.all(namesFiles.map(([file, content]) => writeFile(file, content)));
+    return {
+      sink: this.name,
+      writes: succeeded.map(({ illustration }) => illustration),
+      removals,
+      failures,
+      commit: async () => {
+        await Promise.all(
+          removals.flatMap((illustration) =>
+            themes.map((theme) => removeFile(this.drawableFile(illustration, theme))),
+          ),
+        );
+        await mapConcurrently(drawables, concurrentWrites, ({ file, content }) =>
+          writeFile(file, content),
+        );
+        await Promise.all(namesFiles.map(([file, content]) => writeFile(file, content)));
+      },
+    };
+  }
+
+  async apply(changes: SinkChanges) {
+    await commitUnlessFailed(await this.plan(changes));
+  }
+
+  /**
+   * Both appearances or neither: a drawable pair is one asset. Every problem found is reported,
+   * and nothing here touches a file.
+   */
+  private convertAsset(illustration: Illustration, svg: string, palette: ColorPalette) {
+    const componentUrl = this.componentUrl?.(illustration);
+    const failure = (reasons: string[]) =>
+      `${illustration.type}/${illustration.name} cannot be drawn as an Android vector drawable.\n` +
+      reasons.map((reason) => `  Reason: ${reason}`).join('\n') +
+      (componentUrl ? `\n  Fix it in Figma: ${componentUrl}` : '');
+    const reasonOf = (error: unknown) => (error instanceof Error ? error.message : String(error));
+
+    let native: ReturnType<typeof toNativeSvg>;
+    try {
+      native = toNativeSvg(illustration, svg, palette, { componentUrl });
+    } catch (error) {
+      return { failure: failure([reasonOf(error)]) };
+    }
+
+    const applied = new Set<ApproximatedFeature>(native.approximated);
+    const files: { file: string; content: string }[] = [];
+    const reasons: string[] = [];
+    for (const theme of themes) {
+      const file = this.drawableFile(illustration, theme);
+      try {
+        const drawable = toVectorDrawable(native[theme], illustration);
+        drawable.approximated.forEach((feature) => applied.add(feature));
+        files.push({
+          file,
+          content: `${xmlDeclaration}\n${generatedXmlComment(illustration)}\n${drawable.xml}\n`,
+        });
+      } catch (error) {
+        reasons.push(
+          error instanceof PathDataTooLongError
+            ? `${theme}: ${error.message}; ` +
+                `output ${path.relative(this.drawableDir, file)}, path starts "${error.excerpt}"`
+            : reasonOf(error),
+        );
+      }
+    }
+    if (reasons.length === 0) {
+      try {
+        assertApproximationsApplied(illustration, 'android', applied);
+      } catch (error) {
+        reasons.push(reasonOf(error));
+      }
+    }
+    return reasons.length ? { failure: failure([...new Set(reasons)]) } : { files };
   }
 }
 
-/** Converts one prepared SVG, pointing at the component in Figma when it cannot be expressed. */
-function convert(svg: string, illustration: Illustration, componentUrl?: string) {
+async function hasOversizedPathData(file: string) {
   try {
-    return toVectorDrawable(svg, illustration);
-  } catch (error) {
-    throw new Error(
-      `${illustration.type}/${illustration.name} cannot be drawn as an Android vector drawable.\n` +
-        `  Reason: ${error instanceof Error ? error.message : String(error)}` +
-        (componentUrl ? `\n  Fix it in Figma: ${componentUrl}` : ''),
-      { cause: error },
-    );
+    return oversizedPathData(await fs.promises.readFile(file, 'utf-8')).length > 0;
+  } catch {
+    return false;
   }
 }
 

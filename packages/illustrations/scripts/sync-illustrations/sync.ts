@@ -1,4 +1,4 @@
-import type { Sink, SinkChanges } from './sinks/Sink';
+import type { Sink, SinkChanges, SinkFailure } from './sinks/Sink';
 import type { IllustrationSource } from './source/IllustrationSource';
 import {
   diffIllustrations,
@@ -21,7 +21,21 @@ export type SyncOptions = {
   sinks: Sink[];
   /** Re-download every component instead of only those updated since `manifest.lastUpdated`. */
   syncAll?: boolean;
+  /** Plan and validate every sink exactly as a real run would, but write nothing. */
+  dryRun?: boolean;
+  /** A sink with any failed illustration publishes nothing, instead of publishing the rest. */
+  allOrNothing?: boolean;
   log?: (message: string) => void;
+};
+
+/** What one sink did, or in a dry run would do, with this run's changes. */
+export type SinkResult = {
+  sink: string;
+  written: Illustration[];
+  removed: Illustration[];
+  failures: SinkFailure[];
+  /** False when the run was a dry run, or all-or-nothing withheld a sink that had failures. */
+  published: boolean;
 };
 
 export type SyncOutcome = {
@@ -36,6 +50,7 @@ export type SyncOutcome = {
       palette: ColorPalette;
       /** Unchanged illustrations that were written because a sink was missing their files. */
       backfilled: Illustration[];
+      sinkResults: SinkResult[];
     }
 );
 
@@ -76,6 +91,8 @@ export async function runSync({
   manifest,
   sinks,
   syncAll = false,
+  dryRun = false,
+  allOrNothing = false,
   log = () => undefined,
 }: SyncOptions): Promise<SyncOutcome> {
   const previous = manifestIllustrations(manifest);
@@ -146,32 +163,47 @@ export async function runSync({
   );
 
   log(
-    `Applying ${diff.removals.length} removals and ${diff.writes.length} changes` +
+    `${dryRun ? 'Planning' : 'Applying'} ${diff.removals.length} removals and ${diff.writes.length} changes` +
       (backfilled.length ? `, restoring ${backfilled.length} missing illustrations` : '') +
       ` to ${sinks.length} sinks...`,
   );
   // Sinks are independent and, past this point, so is the work: no more network, only CPU and the
-  // sinks' own files. Plan every sink, then apply them all at once.
-  const plans = sinks.map((sink) => {
-    const toWrite = diff.illustrations.filter(
-      (illustration) =>
-        sink.accepts(illustration) &&
-        (changed.has(illustration.nodeId) ||
-          missingByNodeId.get(illustration.nodeId)?.includes(sink)),
-    );
-    const changes: SinkChanges = {
-      remove: diff.removals.filter((illustration) => sink.accepts(illustration)),
-      write: toWrite.map((illustration) => ({
-        illustration,
-        svg: svgs.get(illustration.nodeId) as string,
-      })),
-      illustrations: diff.illustrations.filter((illustration) => sink.accepts(illustration)),
-      palette,
-    };
-    log(` ${sink.name}: ${changes.remove.length} removals, ${changes.write.length} writes`);
-    return { sink, changes };
-  });
-  await Promise.all(plans.map(({ sink, changes }) => sink.apply(changes)));
+  // sinks' own files. Plan every sink first, validating all of it, then publish. A sink that fails
+  // to plan as a whole (a name collision in its catalog) throws here, before any file is written.
+  const plans = await Promise.all(
+    sinks.map(async (sink) => {
+      const toWrite = diff.illustrations.filter(
+        (illustration) =>
+          sink.accepts(illustration) &&
+          (changed.has(illustration.nodeId) ||
+            missingByNodeId.get(illustration.nodeId)?.includes(sink)),
+      );
+      const changes: SinkChanges = {
+        remove: diff.removals.filter((illustration) => sink.accepts(illustration)),
+        write: toWrite.map((illustration) => ({
+          illustration,
+          svg: svgs.get(illustration.nodeId) as string,
+        })),
+        illustrations: diff.illustrations.filter((illustration) => sink.accepts(illustration)),
+        palette,
+      };
+      log(` ${sink.name}: ${changes.remove.length} removals, ${changes.write.length} writes`);
+      return sink.plan(changes);
+    }),
+  );
 
-  return { status: 'synced', diff, palette, backfilled, duplicates };
+  const publishing = plans.map((plan) => !dryRun && !(allOrNothing && plan.failures.length > 0));
+  await Promise.all(plans.map((plan, index) => (publishing[index] ? plan.commit() : undefined)));
+
+  const sinkResults = plans.map(
+    (plan, index): SinkResult => ({
+      sink: plan.sink,
+      written: plan.writes,
+      removed: plan.removals,
+      failures: plan.failures,
+      published: publishing[index],
+    }),
+  );
+
+  return { status: 'synced', diff, palette, backfilled, sinkResults, duplicates };
 }

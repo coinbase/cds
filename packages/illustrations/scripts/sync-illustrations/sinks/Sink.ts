@@ -1,5 +1,5 @@
 import type { ColorPalette } from '../colorPalette';
-import type { Illustration } from '../illustration';
+import { type Illustration, illustrationKey } from '../illustration';
 
 export type SinkOptions = {
   /**
@@ -25,6 +25,26 @@ export type SinkChanges = {
   illustrations: Illustration[];
   /** The palette, for sinks that derive themed variants. */
   palette: ColorPalette;
+};
+
+/** An illustration a sink could not produce, with the reason in words a designer can act on. */
+export type SinkFailure = {
+  illustration: Illustration;
+  message: string;
+};
+
+/**
+ * What a sink would do with its `SinkChanges`, decided without touching a file. Writes exclude the
+ * illustrations in `failures`, so `commit` publishes only coherent assets and a catalog that
+ * references only outputs that exist. A sink that cannot fail an illustration individually returns
+ * no failures.
+ */
+export type SinkPlan = {
+  sink: string;
+  writes: Illustration[];
+  removals: Illustration[];
+  failures: SinkFailure[];
+  commit(): Promise<void>;
 };
 
 /**
@@ -60,4 +80,49 @@ export abstract class Sink {
   abstract has(illustration: Illustration): Promise<boolean>;
 
   abstract apply(changes: SinkChanges): Promise<void>;
+
+  /**
+   * Validates and prepares `changes` without writing. The engine plans every sink before any
+   * `commit`, so a run can report every problem first, stop before publishing anything, or, for a
+   * dry run, never publish at all. The default has nothing to validate and commits with `apply`.
+   */
+  async plan(changes: SinkChanges): Promise<SinkPlan> {
+    return {
+      sink: this.name,
+      writes: changes.write.map(({ illustration }) => illustration),
+      removals: changes.remove,
+      failures: [],
+      commit: () => this.apply(changes),
+    };
+  }
+}
+
+/** The illustrations that are not among the `failures`. */
+export const withoutFailed = (illustrations: Illustration[], failures: SinkFailure[]) => {
+  const failed = new Set(failures.map(({ illustration }) => illustrationKey(illustration)));
+  return illustrations.filter((illustration) => !failed.has(illustrationKey(illustration)));
+};
+
+/**
+ * What a catalog may list after a partial run: every illustration that did not fail, plus the
+ * failed ones whose previous outputs still exist, so no entry points at a missing resource.
+ */
+export async function keepAvailable(
+  illustrations: Illustration[],
+  failures: SinkFailure[],
+  hasOutputs: (illustration: Illustration) => Promise<boolean>,
+) {
+  const intact = new Set(withoutFailed(illustrations, failures));
+  const kept = await Promise.all(
+    illustrations.map(async (illustration) => intact.has(illustration) || hasOutputs(illustration)),
+  );
+  return illustrations.filter((_, index) => kept[index]);
+}
+
+/** Commits `plan`, or throws every failure message and writes nothing. */
+export async function commitUnlessFailed(plan: SinkPlan) {
+  if (plan.failures.length) {
+    throw new Error(plan.failures.map(({ message }) => message).join('\n\n'));
+  }
+  await plan.commit();
 }

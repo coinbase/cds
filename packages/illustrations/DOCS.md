@@ -147,6 +147,23 @@ the next run that includes it:
 yarn nx run illustrations:sync-illustrations --select-sinks
 ```
 
+**Checking without publishing** — Pass `--dry-run` to download, convert and validate everything the
+real run would, including Android's 32,767-character limit on path data, and write nothing: no
+assets, catalogs, manifest, version plan or branches. It lists what each destination would write,
+remove and reject, and exits nonzero if any illustration would be rejected:
+
+```sh
+yarn nx run illustrations:sync-illustrations --dry-run
+```
+
+**Illustrations that fail validation** — By default a destination publishes the illustrations that
+validate, skips the ones that do not, and the run reports every rejected illustration with its
+reason and Figma link. The exit code is nonzero when anything was rejected, even though the valid
+assets were written; ask design to fix the rejected illustrations and re-run. Pass
+`--all-or-nothing` to make a destination with any rejected illustration publish nothing at all
+(files, catalogs and removals); other destinations still publish. The boundary is one destination:
+there is no rollback across destinations or after a file-system error during writing.
+
 **Syncing without the release branch** — Pass `--no-git` to write into the current branch instead of creating and pushing `illustrations/YYYY-MM-DD`, for example to inspect a `--sync-all` locally. Scratch runs (below) never touch git.
 
 **"`<type>/<name>` has an SVG the sync cannot publish"** — A layer uses a color theming cannot
@@ -160,7 +177,8 @@ re-run.
 Android vector drawable"** — The illustration uses something the native renderers do not support
 (a radial gradient, a filter, an image, a blend mode, dashes, a mask that is not a plain opaque
 shape, a skewing transform, …); the message names the reason and links to the node in Figma.
-Nothing was published. Ask design to flatten it in Figma. Until then, either add the illustration to
+The illustration is skipped; by default the rest still publish (see _Illustrations that fail
+validation_). Ask design to flatten it in Figma. Until then, either add the illustration to
 the not-exportable list in `scripts/sync-illustrations/artifacts/nativeSvg.ts` so the native
 packages ship without it (the Android-only list if the reason is a path over Android's resource
 string limit), or, if the difference is acceptable, to the approximation list (see _What the native

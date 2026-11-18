@@ -7,7 +7,13 @@ import {
   notExportableList,
   toNativeSvg,
 } from '../artifacts/nativeSvg';
-import { toVectorDrawable } from '../artifacts/vectorDrawable';
+import {
+  MAX_PATH_DATA,
+  measurePathData,
+  oversizedPathData,
+  PathDataTooLongError,
+  toVectorDrawable,
+} from '../artifacts/vectorDrawable';
 import { ColorPalette } from '../colorPalette';
 import type { Illustration } from '../illustration';
 import { manifestIllustrations, readManifest } from '../manifest';
@@ -61,6 +67,65 @@ const throwsExportError = (attempt: () => unknown, message = 'cannot be exported
 };
 
 describe('toVectorDrawable', () => {
+  describe("Android's resource string limit", () => {
+    const pathOfLength = (length: number) => {
+      const steps = Math.floor((length - 5) / 2);
+      const base = `M0 0${'h1'.repeat(steps)}z`;
+      return base.length === length ? base : `${base} `.padEnd(length, '0');
+    };
+    const ordinary = (length: number) => `<path fill="#0052FF" d="${pathOfLength(length)}"/>`;
+    const clipped = (length: number) =>
+      `<defs><clipPath id="a"><path d="${pathOfLength(length)}"/></clipPath></defs>` +
+      '<g clip-path="url(#a)"><path fill="#0052FF" d="M0 0h8v8H0z"/></g>';
+
+    it.each([
+      ['an ordinary path', ordinary],
+      ['a clip path', clipped],
+    ])('accepts %s of exactly %i characters', (_label, build) => {
+      expect(() => convert(build(MAX_PATH_DATA))).not.toThrow();
+    });
+
+    it.each([
+      ['an ordinary path', ordinary],
+      ['a clip path', clipped],
+    ])('rejects %s one character over the limit', (_label, build) => {
+      expect(() => convert(build(MAX_PATH_DATA + 1))).toThrow(PathDataTooLongError);
+    });
+
+    it('reports the measured length, the limit and where the path starts', () => {
+      const error = (() => {
+        try {
+          convert(ordinary(MAX_PATH_DATA + 1));
+        } catch (thrown) {
+          return thrown;
+        }
+        return undefined;
+      })();
+
+      expect(error).toBeInstanceOf(PathDataTooLongError);
+      const { length, excerpt, message } = error as PathDataTooLongError;
+      expect(length).toBe(MAX_PATH_DATA + 1);
+      expect(excerpt).toBe(`M0 0${'h1'.repeat(22)}`);
+      expect(message).toBe(
+        "a path of 32768 characters exceeds Android's 32767-character resource string limit",
+      );
+    });
+
+    it('counts encoded bytes as well as characters', () => {
+      const wide = '\u00e9'.repeat(Math.floor(MAX_PATH_DATA / 2) + 1);
+      expect(wide.length).toBeLessThan(MAX_PATH_DATA);
+      expect(measurePathData(wide)).toBe(wide.length * 2);
+      expect(measurePathData(wide)).toBeGreaterThan(MAX_PATH_DATA);
+      expect(measurePathData('M0 0')).toBe(4);
+    });
+
+    it('finds oversized pathData in generated XML', () => {
+      const exact = 'M'.repeat(MAX_PATH_DATA);
+      expect(oversizedPathData(`<path android:pathData="${exact}" />`)).toEqual([]);
+      expect(oversizedPathData(`<path android:pathData="${exact}M" />`)).toHaveLength(1);
+    });
+  });
+
   it("refuses a path longer than Android's resource string limit", () => {
     const segments = Array.from({ length: 4000 }, (_, i) => `L${i} ${i}`).join('');
     const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" width="8" height="8"><path fill="#0052FF" d="M0 0${segments}z"/></svg>`;
