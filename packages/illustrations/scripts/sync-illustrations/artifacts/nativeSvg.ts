@@ -419,8 +419,22 @@ const checkPaint = (attribute: string, value: string, gradients: Set<string>) =>
   }
 };
 
-const transformSyntax =
-  /^\s*((matrix|translate|scale|rotate|skewX|skewY)\s*\(\s*[-+.\deE\s,]*\)\s*,?\s*)+$/;
+/**
+ * Whether `value` is a list of SVG transform functions with numeric arguments. Tokenized rather
+ * than matched with one anchored regular expression, whose nested repetition backtracked
+ * exponentially on a malformed tail.
+ */
+const isTransformList = (value: string) => {
+  let functions = 0;
+  const rest = value.replace(
+    /(matrix|translate|scale|rotate|skewX|skewY)\s*\(([^()]*)\)/g,
+    (_match, _name, argumentList: string) => {
+      functions += 1;
+      return /^[-+.\deE\s,]*$/.test(argumentList) ? '' : '\u0000';
+    },
+  );
+  return functions > 0 && /^[\s,]*$/.test(rest);
+};
 
 type Definitions = { clipPaths: Set<string>; gradients: Set<string> };
 
@@ -451,7 +465,7 @@ function validateElement(element: XastElement, definitions: Definitions) {
   for (const attribute of ['fill-opacity', 'stroke-opacity', 'opacity', 'stop-opacity']) {
     if (attributes[attribute] !== undefined) parseNumber(attributes[attribute], attribute);
   }
-  if (attributes.transform !== undefined && !transformSyntax.test(attributes.transform)) {
+  if (attributes.transform !== undefined && !isTransformList(attributes.transform)) {
     fail(`transform="${attributes.transform}" is not supported`);
   }
   const clipPath = urlReference(attributes['clip-path']);

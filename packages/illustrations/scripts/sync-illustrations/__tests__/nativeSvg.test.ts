@@ -357,6 +357,16 @@ describe('toNativeSvg', () => {
         '<path fill="#0052FF" d="M0 0h8v8H0z" transform="rotate(45deg)"/>',
         'transform="rotate(45deg)" is not supported',
       ],
+      [
+        'a transform with a stray tail',
+        '<path fill="#0052FF" d="M0 0h8v8H0z" transform="scale(2) x"/>',
+        'transform="scale(2) x" is not supported',
+      ],
+      [
+        'a transform with nested parentheses',
+        '<path fill="#0052FF" d="M0 0h8v8H0z" transform="scale((2))"/>',
+        'transform="scale((2))" is not supported',
+      ],
     ])('rejects %s', (_, body, reason) => {
       expect(() => prepare(body)).toThrow(reason);
     });
