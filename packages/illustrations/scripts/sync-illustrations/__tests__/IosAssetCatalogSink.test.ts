@@ -3,6 +3,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import type { Illustration } from '../illustration';
+import { AndroidVectorDrawableSink } from '../sinks/AndroidVectorDrawableSink';
 import { IosAssetCatalogSink, renderNameEnum, swiftCaseName } from '../sinks/IosAssetCatalogSink';
 
 import { nativeSamples } from './__fixtures__/nativeSamples';
@@ -127,6 +128,21 @@ describe('IosAssetCatalogSink', () => {
       /spotIcon\/2fa cannot be exported to the native packages\.\n {2}Reason: <text> is not supported\n {2}Fix it in Figma: https:\/\/www\.figma\.com\/design\/file\?node-id=4390:695/,
     );
     expect(readTree(dir)).toEqual({});
+  });
+});
+
+describe('the not-exportable list', () => {
+  it('is left out by both native sinks, before and after any include predicate', () => {
+    const listed = { ...illustrations[0], type: 'spotSquare', name: 'lowRisk' };
+    expect(sink.accepts(listed)).toBe(false);
+    expect(sink.accepts(illustrations[0])).toBe(true);
+    const android = new AndroidVectorDrawableSink({
+      dir,
+      include: ({ type }) => type === 'spotSquare',
+    });
+    expect(android.accepts(listed)).toBe(false);
+    expect(android.accepts({ ...listed, name: 'wallet' })).toBe(true);
+    expect(android.accepts(illustrations[0])).toBe(false);
   });
 });
 

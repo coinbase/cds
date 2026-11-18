@@ -172,6 +172,29 @@ export const approximationSummary = () =>
     ),
   );
 
+/**
+ * Illustrations the native packages do not ship yet, keyed `type/name`, each with what in the
+ * art neither renderer can draw exactly. The native sinks leave them out (they are neither
+ * exported nor named in the generated enums) and the run prints the list. The whole-library test
+ * keeps it exact: every entry must still fail to convert, and nothing else may. The fix is in
+ * Figma: flatten the construct, and the illustration joins the next sync on its own once the entry
+ * is removed.
+ */
+export const notExportableList: Readonly<Record<string, string>> = {
+  'spotRectangle/insto':
+    'a mask of a white shape with a black cut-out; clips can only add shapes, never subtract one',
+  'spotSquare/lowRisk':
+    'a mask of three shapes; a clip of several shapes is a union neither converter expresses exactly',
+};
+
+/** Whether the native sinks export the illustration; false for the `notExportableList`. */
+export const isNativelyExportable = (illustration: Pick<Illustration, 'type' | 'name'>) =>
+  !(illustrationKey(illustration) in notExportableList);
+
+/** The not-exportable list as lines for the run log. */
+export const notExportableSummary = () =>
+  Object.entries(notExportableList).map(([key, reason]) => `${key}: ${reason}`);
+
 // ---------------------------------------------------------------------------------------------
 // Parsing and shared vocabulary
 
@@ -537,6 +560,48 @@ const pathElement = (attributes: Record<string, string>): XastElement => ({
   children: [],
 });
 
+/** Every element below `root`, depth first. */
+const descendants = (root: XastElement): XastElement[] =>
+  childElements(root).flatMap((child) => [child, ...descendants(child)]);
+
+const hrefOf = (use: XastElement) => use.attributes.href ?? use.attributes['xlink:href'];
+
+/**
+ * Replaces every `<use>` of a shape with a copy of that shape. svgo's `reusePaths` (in
+ * `preset-default`) turns repeated identical paths into one `<path>` in `<defs>` and `<use>`
+ * elements referring to it, which vector drawables cannot express. The copy is what the `<use>`
+ * renders: attributes on the `<use>` apply where the shape does not set them, as SVG inheritance
+ * would. A positioned or transformed `<use>`, or one of anything but a plain shape, fails. The
+ * shapes left in `<defs>`, the empty `<defs>` and the `xlink` namespace are removed afterwards.
+ */
+function inlineUses(svg: XastElement, byId: Map<string, XastElement>) {
+  for (const use of descendants(svg).filter((element) => element.name === 'use')) {
+    const href = hrefOf(use) ?? fail('<use> without an href is not supported');
+    const target =
+      (href.startsWith('#') ? byId.get(href.slice(1)) : undefined) ??
+      fail(`<use> references no element "${href}"`);
+    if (!shapeElements.includes(target.name)) fail(`<use> of <${target.name}> is not supported`);
+    const copy: XastElement = { ...target, attributes: { ...target.attributes }, children: [] };
+    delete copy.attributes.id;
+    for (const [attribute, value] of Object.entries(use.attributes)) {
+      if (attribute === 'href' || attribute === 'xlink:href') continue;
+      if (['x', 'y', 'width', 'height', 'transform'].includes(attribute)) {
+        fail(`${attribute} on <use> is not supported`);
+      }
+      copy.attributes[attribute] ??= value;
+    }
+    const parent = parentOf(svg, use) ?? fail('<use> has no parent');
+    parent.children.splice(parent.children.indexOf(use), 1, copy);
+  }
+  for (const defs of childElements(svg).filter((element) => element.name === 'defs')) {
+    defs.children = defs.children.filter(
+      (child) => child.type !== 'element' || !shapeElements.includes(child.name),
+    );
+    if (defs.children.length === 0) svg.children.splice(svg.children.indexOf(defs), 1);
+  }
+  delete svg.attributes['xmlns:xlink'];
+}
+
 const maskAttributes = [
   'x',
   'y',
@@ -688,6 +753,7 @@ export function toNativeSvg(
   try {
     const light = transformSvg(lightSvg, (svg) => {
       parseViewBox(svg);
+      inlineUses(svg, indexIds(svg));
       rewriteMasks(svg, indexIds(svg));
       dropBlendModes(svg, illustration, applied);
       const byId = [...indexIds(svg)];

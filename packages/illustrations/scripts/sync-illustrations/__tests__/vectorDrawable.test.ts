@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { toNativeSvg } from '../artifacts/nativeSvg';
+import { isNativelyExportable, notExportableList, toNativeSvg } from '../artifacts/nativeSvg';
 import { toVectorDrawable } from '../artifacts/vectorDrawable';
 import { ColorPalette } from '../colorPalette';
 import type { Illustration } from '../illustration';
@@ -45,6 +45,15 @@ ${extraNamespaces}    xmlns:tools="http://schemas.android.com/tools"
 
 const convert = (body: string, subject = sample, attributes?: string) =>
   toVectorDrawable(svg(body, attributes), subject);
+
+const throwsExportError = (attempt: () => unknown) => {
+  try {
+    attempt();
+    return false;
+  } catch (error) {
+    return error instanceof Error && error.message.includes('cannot be exported');
+  }
+};
 
 describe('toVectorDrawable', () => {
   it('maps a filled even-odd path one to one', () => {
@@ -353,7 +362,7 @@ describe('toVectorDrawable', () => {
     });
   });
 
-  it('converts every published illustration, light and dark', () => {
+  it('converts every published illustration, light and dark, except the not-exportable list', () => {
     const packageRoot = path.join(__dirname, '../../..');
     const manifest = readManifest(path.join(packageRoot, 'manifest.json'));
     const palette = new ColorPalette(
@@ -363,6 +372,7 @@ describe('toVectorDrawable', () => {
     expect(illustrations.length).toBeGreaterThan(1500);
 
     const approximated = new Map<string, string[]>();
+    const notExportable: { key: string; fails: boolean }[] = [];
     for (const item of illustrations) {
       const light = fs.readFileSync(
         path.join(
@@ -374,6 +384,12 @@ describe('toVectorDrawable', () => {
         ),
         'utf-8',
       );
+      if (!isNativelyExportable(item)) {
+        // Every listed illustration must still be unexportable, or the entry is stale.
+        const attempt = () => toNativeSvg(item, light, palette);
+        notExportable.push({ key: `${item.type}/${item.name}`, fails: throwsExportError(attempt) });
+        continue;
+      }
       const native = toNativeSvg(item, light, palette);
       const features = new Set(native.approximated);
       for (const theme of ['light', 'dark'] as const) {
@@ -388,5 +404,9 @@ describe('toVectorDrawable', () => {
       'heroSquare/primeDeFi': ['stroke-dasharray'],
       'heroSquare/usdj': ['mix-blend-mode'],
     });
+    expect(notExportable.map(({ key }) => key).sort()).toEqual(
+      Object.keys(notExportableList).sort(),
+    );
+    expect(notExportable.filter(({ fails }) => !fails)).toEqual([]);
   });
 });

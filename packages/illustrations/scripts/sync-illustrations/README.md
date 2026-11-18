@@ -430,6 +430,21 @@ needed, so the list stays true to the art. The run prints it. Today:
 | `heroSquare/primeDeFi` | `stroke-dasharray` | Android      | one dashed outline (4 on, 4 off) is solid                                                        |
 | `heroSquare/cbmega`    | `group-opacity`    | Android      | three shapes at 92% group opacity are each 92%; where they overlap the result is slightly darker |
 
+**Not-exportable list.** `notExportableList` in the same file names the illustrations whose art
+neither renderer can draw exactly and that the native packages therefore do not ship yet, with the
+reason. Both native sinks leave them out through `accepts`, so they are neither exported nor named
+in the generated enums, and the run prints the list. The whole-library test keeps it exact: every
+entry must still fail to convert and nothing else may fail. The fix is in Figma; once the construct
+is flattened and the entry removed, the illustration joins the next sync by backfill. Today:
+`spotRectangle/insto` (a mask with a black cut-out: clips cannot subtract) and `spotSquare/lowRisk`
+(a mask of three shapes: a union clip neither converter expresses exactly).
+
+**`<use>` elements.** svgo's `reusePaths` turns repeated identical paths into one `<path>` in
+`<defs>` and `<use>` elements (the `insto*` illustrations). Vector drawables have no equivalent, so
+`toNativeSvg` inlines each `<use>` as a copy of its shape, with the `<use>`'s attributes applied
+where the shape sets none, as SVG inheritance would; the `<defs>` shapes and the `xlink` namespace
+are dropped afterwards. A positioned or transformed `<use>`, or one of anything but a shape, fails.
+
 **Suspect list for P5.** The illustrations whose rendering the side-by-side comparison with Figma
 must confirm on device: the three above; the two rewritten masks (`heroSquare/buy`,
 `spotRectangle/stressTestedColdStorage`); the 65 transformed circles and ellipses on Android (group

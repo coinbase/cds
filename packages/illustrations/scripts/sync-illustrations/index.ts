@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { approximationSummary } from './artifacts/nativeSvg';
+import { approximationSummary, notExportableSummary } from './artifacts/nativeSvg';
 import { type Sink } from './sinks/Sink';
 import { config } from './config';
 import { hasChanges, type SyncResults } from './diffIllustrations';
@@ -108,6 +108,10 @@ const sync = async (sinks: Sink[]) => {
   if (sinks.some((sink) => config.nativeSinks.includes(sink))) {
     console.log('\nIllustrations the native packages draw with a known difference:');
     for (const line of approximationSummary()) console.log(`  ${line}`);
+    console.log(
+      '\n⚠️ Illustrations the native packages do not ship until the art is flattened in Figma:',
+    );
+    for (const line of notExportableSummary()) console.log(`  ${line}`);
   }
   return true;
 };

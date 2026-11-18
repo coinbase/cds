@@ -113,7 +113,8 @@ Open the native PR by hand in mobile-skunkworks with the title the run prints
 (`feat: Sync CDS illustrations YYYY-MM-DD`), next to the cds PR from step 5. The native files are
 generated: review them like `src/__generated__`, never edit them. The run ends by printing the
 illustrations the native packages draw with a known difference (the approximation list in the sync
-README); check that nothing new appeared there.
+README) and those they do not ship because the art uses a mask neither platform can draw (the
+not-exportable list); check that nothing new appeared in either.
 
 A checkout that missed a run is repaired by the next one: every native asset is stamped with the
 illustration's version and hash, and the sync rewrites any that are missing or stale. To export
@@ -157,9 +158,11 @@ re-run.
 Android vector drawable"** — The illustration uses something the native renderers do not support
 (a radial gradient, a filter, an image, a blend mode, dashes, a mask that is not a plain opaque
 shape, a skewing transform, …); the message names the reason and links to the node in Figma.
-Nothing was published. Ask design to flatten it in Figma, or, if the difference is acceptable, add
-the illustration to the approximation list in `scripts/sync-illustrations/artifacts/nativeSvg.ts`
-(see _What the native renderers draw_ in the sync README).
+Nothing was published. Ask design to flatten it in Figma. Until then, either add the illustration to
+the not-exportable list in `scripts/sync-illustrations/artifacts/nativeSvg.ts` so the native
+packages ship without it, or, if the difference is acceptable, to the approximation list (see _What
+the native renderers draw_ in the sync README). The same test that runs on every illustrations PR
+converts the whole library, so a newly published construct shows up there first.
 
 **"SYNC_ILLUSTRATIONS_NATIVE_REPO=… is not a native CDS checkout"** — The path is wrong, not a git
 checkout, or missing one of the native modules. Fix the path, or unset the variable to sync without

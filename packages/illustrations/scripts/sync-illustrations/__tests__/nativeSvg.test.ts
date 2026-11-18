@@ -100,6 +100,34 @@ describe('toNativeSvg', () => {
     expect([...native.approximated]).toEqual([]);
   });
 
+  it('inlines the <use> elements svgo makes of repeated paths, as the insto* illustrations have', () => {
+    const native = toNativeSvg(
+      illustration('pictogram', 'instoGem'),
+      svg(
+        '<path fill="#0A0B0E" d="M0 0h8v8H0z"/>' +
+          '<use xlink:href="#a" fill="#0052FF"/><g><use xlink:href="#a" fill="#5DE2F8" fill-rule="evenodd"/></g>' +
+          '<use xlink:href="#b" fill="#0052FF"/>' +
+          '<defs><path id="a" d="M1 1h6v6H1z"/><path id="b" fill="#FFFFFF" d="M2 2h4v4H2z"/></defs>',
+        ' xmlns:xlink="http://www.w3.org/1999/xlink"',
+      ),
+      palette,
+    );
+    expect(native.light).toBe(
+      svg(
+        '<path fill="#0A0B0E" d="M0 0h8v8H0z"/>' +
+          '<path d="M1 1h6v6H1z" fill="#0052FF"/><g><path d="M1 1h6v6H1z" fill="#5DE2F8" fill-rule="evenodd"/></g>' +
+          '<path fill="#FFFFFF" d="M2 2h4v4H2z"/>',
+      ),
+    );
+  });
+
+  it('keeps definitions a <use> did not reference', () => {
+    const body =
+      '<path fill="#0052FF" d="M0 0h8v8H0z" clip-path="url(#c)"/>' +
+      '<defs><clipPath id="c"><path d="M0 0h4v4H0z"/></clipPath></defs>';
+    expect(prepare(body).light).toBe(svg(body));
+  });
+
   it('rewrites the alpha mask of heroSquare/buy as a clip inside its region', () => {
     const native = toNativeSvg(
       illustration('heroSquare', 'buy'),
@@ -246,7 +274,18 @@ describe('toNativeSvg', () => {
       ],
       ['images', '<image href="x.png" width="8" height="8"/>', '<image> is not supported'],
       ['patterns', '<pattern id="p"/>', '<pattern> is not supported'],
-      ['use', '<use href="#x"/>', '<use> is not supported'],
+      ['a dangling use', '<use href="#x"/>', '<use> references no element "#x"'],
+      ['a use without an href', '<use fill="#0052FF"/>', '<use> without an href is not supported'],
+      [
+        'a use of a group',
+        '<use href="#g"/><defs><g id="g"><path d="M0 0h8v8H0z"/></g></defs>',
+        '<use> of <g> is not supported',
+      ],
+      [
+        'a positioned use',
+        '<use href="#p" x="1"/><defs><path id="p" d="M0 0h8v8H0z"/></defs>',
+        'x on <use> is not supported',
+      ],
       ['text', '<text>hi</text>', '<text> is not supported'],
       [
         'unknown attributes',

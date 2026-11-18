@@ -6,6 +6,7 @@ import {
   generatedHeader,
   generatedXmlComment,
   isCurrentAssetFile,
+  isNativelyExportable,
   toNativeSvg,
 } from '../artifacts/nativeSvg';
 import { nameTypeOf } from '../artifacts/typescriptData';
@@ -115,7 +116,11 @@ export class AndroidVectorDrawableSink extends Sink {
     rPackage = 'com.coinbase.cds',
     ...options
   }: AndroidVectorDrawableSinkOptions) {
-    super(options);
+    super({
+      ...options,
+      include: (illustration) =>
+        isNativelyExportable(illustration) && (options.include?.(illustration) ?? true),
+    });
     this.dir = dir;
     this.componentUrl = componentUrl;
     this.rPackage = rPackage;
