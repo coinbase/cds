@@ -160,16 +160,22 @@ mutation. The source returns _raw_ exports so that optimization is covered by th
 ## The engine (`sync.ts`)
 
 ```ts
-runSync({ source, manifest, sinks, syncAll, log }): Promise<SyncOutcome>
+runSync({ source, manifest, sinks, syncAll, dryRun, allOrNothing, log }): Promise<SyncOutcome>
 
 type SyncOutcome = { duplicates: Component[] } & (
   | { status: 'nothing-to-sync' } // no component updated since manifest.lastUpdated, nothing missing
   | { status: 'no-changes' } // downloaded, but every hash and description matched
-  | { status: 'synced'; diff: IllustrationDiff; palette: ColorPalette; backfilled: Illustration[] }
+  | {
+      status: 'synced';
+      diff: IllustrationDiff;
+      palette: ColorPalette;
+      backfilled: Illustration[];
+      sinkResults: SinkResult[]; // per sink: written, removed, failures, published
+    }
 );
 ```
 
-The engine fetches, reconciles, plans and applies each sink, then returns what the caller needs to
+The engine fetches, reconciles, plans every sink, then commits each plan that may publish, then returns what the caller needs to
 record the run. It does **not** write the manifest or the version plan, touch git, or read
 `process`. That keeps it callable from a test with nothing but a source, a manifest object and some
 sinks, and makes `index.ts` the only module with side effects on the repository.
@@ -387,9 +393,25 @@ points at a checkout (see _Configuration and scratch runs_).
   (iOS), or with the generated `all` property (Android).
 - **Header.** Every generated file starts with the same two comment lines, naming how it was made
   and where to read more, never a date or a commit (which would churn every file).
-- **All or nothing per sink.** A sink prepares every asset and every code file before it touches the
-  first file, so an illustration that cannot be exported fails the run with its Figma link and
-  leaves that destination untouched.
+- **Validate, then publish.** A sink's `plan(changes)` prepares every asset and every code file
+  without touching the file system and returns a `SinkPlan`: what it would write and remove, the
+  illustrations it could not produce (`failures`, each with a message that names the illustration,
+  the reason and its Figma link), and a `commit()` that writes. The engine plans every sink before
+  it commits any, so everything is validated before the first file changes. Sinks that cannot fail
+  an illustration individually inherit a `plan` that has no failures and commits with `apply`.
+- **Failed illustrations stay out, coherently.** A failed illustration is never half written: both
+  appearances convert or neither is written. Its previous files are kept, not removed as stale, its
+  entry stays in the generated catalog only if those previous files exist, and a failed new asset
+  never gets a catalog entry pointing at a missing resource. The manifest still records the new
+  version, but the sink's stamp stays stale, so the next run backfills it and reports the failure
+  again until the art is fixed. A drawable whose stamp is current but whose `pathData` is over
+  Android's limit does not count as present, so it is regenerated and validated rather than
+  skipped.
+- **Android path limit.** aapt2 replaces a string longer than 32,767 characters, in UTF-8 bytes or
+  UTF-16 units, with `STRING_TOO_LARGE`, and Compose then crashes parsing it. `toVectorDrawable`
+  measures the final `android:pathData` of every path and clip path in each appearance and throws
+  `PathDataTooLongError`; the sink reports the appearance, measured length, limit, output resource
+  and the start of the path. It does not simplify or split geometry.
 
 ### What the native renderers draw
 
@@ -521,6 +543,27 @@ its own. A run that only backfilled the native checkout pushes there and abandon
 The checkout is validated (`assertNativeCheckout`: a git checkout with both native modules) before
 anything is fetched, with or without git. Pull requests in both repositories are opened by hand;
 `publish` prints each branch and the title to use.
+
+### Failures, `--all-or-nothing` and `--dry-run`
+
+An illustration that cannot be exported does not stop the run by default. Each sink publishes the
+illustrations that validate and skips the ones that fail, and the run reports every failure, not
+the first. The process exits nonzero whenever any illustration was rejected, even though the valid
+assets were written, so CI and wrapper scripts must treat a nonzero exit as "published, but fix
+these in Figma". A failure of a whole sink, such as a name collision in its catalog, still aborts the
+run before anything is written.
+
+`--all-or-nothing` changes that per sink: a sink with any failed illustration publishes no files,
+no catalog changes and no removals, and the other sinks publish as usual. The transaction boundary
+is one sink's output set. There is no rollback across sinks, and none after an unexpected
+file-system error partway through a write; validation, not the file system, is what the guarantee
+covers.
+
+`--dry-run` runs the same download, conversion and validation, including the Android string limit,
+then writes nothing: no assets, catalogs, manifest or version plan, no deletions, and no release
+branches. It prints what each sink would write, remove and reject, and exits nonzero when anything
+would be rejected, so it works as a CI check. It combines with `--all-or-nothing`, which then
+reports the sinks that would publish nothing.
 
 ## Configuration and scratch runs
 

@@ -27,6 +27,26 @@ export type SinkChanges = {
   palette: ColorPalette;
 };
 
+/** An illustration a sink could not produce, with the reason in words a designer can act on. */
+export type SinkFailure = {
+  illustration: Illustration;
+  message: string;
+};
+
+/**
+ * What a sink would do with its `SinkChanges`, decided without touching a file. Writes exclude the
+ * illustrations in `failures`, so `commit` publishes only coherent assets and a catalog that
+ * references only outputs that exist. A sink that cannot fail an illustration individually returns
+ * no failures.
+ */
+export type SinkPlan = {
+  sink: string;
+  writes: Illustration[];
+  removals: Illustration[];
+  failures: SinkFailure[];
+  commit(): Promise<void>;
+};
+
 /**
  * A destination for synced illustrations: a package, a repository, a directory somewhere. A sink
  * owns everything about how illustrations appear there: which files, in which layout, with which
@@ -60,4 +80,19 @@ export abstract class Sink {
   abstract has(illustration: Illustration): Promise<boolean>;
 
   abstract apply(changes: SinkChanges): Promise<void>;
+
+  /**
+   * Validates and prepares `changes` without writing. The engine plans every sink before any
+   * `commit`, so a run can report every problem first, stop before publishing anything, or, for a
+   * dry run, never publish at all. The default has nothing to validate and commits with `apply`.
+   */
+  async plan(changes: SinkChanges): Promise<SinkPlan> {
+    return {
+      sink: this.name,
+      writes: changes.write.map(({ illustration }) => illustration),
+      removals: changes.remove,
+      failures: [],
+      commit: () => this.apply(changes),
+    };
+  }
 }

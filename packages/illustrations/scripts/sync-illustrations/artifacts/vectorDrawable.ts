@@ -15,6 +15,7 @@ import {
   shapeElements,
   shapeToPath,
   transformSvg,
+  UnsupportedSvgError,
   urlReference,
 } from './nativeSvg';
 
@@ -43,12 +44,54 @@ export type VectorDrawable = {
  */
 export const MAX_PATH_DATA = 0x7fff;
 
-const checkedPathData = (pathData: string) =>
-  pathData.length > MAX_PATH_DATA
-    ? fail(
-        `a path of ${pathData.length} characters exceeds Android's ${MAX_PATH_DATA}-character resource string limit`,
-      )
-    : pathData;
+const pathDataExcerptLength = 48;
+
+/** `pathData` over `MAX_PATH_DATA`; carries what a report needs to point at the offending path. */
+export class PathDataTooLongError extends UnsupportedSvgError {
+  readonly length: number;
+  readonly limit = MAX_PATH_DATA;
+  readonly excerpt: string;
+
+  constructor(pathData: string) {
+    const length = measurePathData(pathData);
+    super(
+      `a path of ${length} characters exceeds Android's ${MAX_PATH_DATA}-character resource string limit`,
+    );
+    this.name = 'PathDataTooLongError';
+    this.length = length;
+    this.excerpt = pathData.slice(0, pathDataExcerptLength);
+  }
+}
+
+/**
+ * aapt2 rejects a string whose UTF-8 byte length or UTF-16 length exceeds the limit, so the larger
+ * of the two is what counts. Both equal the character count for ASCII path data.
+ */
+export const measurePathData = (pathData: string) =>
+  Math.max(pathData.length, Buffer.byteLength(pathData, 'utf-8'));
+
+const checkedPathData = (pathData: string) => {
+  if (measurePathData(pathData) > MAX_PATH_DATA) throw new PathDataTooLongError(pathData);
+  return pathData;
+};
+
+const xmlEntities: Record<string, string> = {
+  '&quot;': '"',
+  '&apos;': "'",
+  '&lt;': '<',
+  '&gt;': '>',
+  '&amp;': '&',
+};
+
+/**
+ * The `android:pathData` values in generated drawable XML that exceed the limit, measured after
+ * XML unescaping because aapt2 stores the attribute value, not its escaped form.
+ */
+export function oversizedPathData(xml: string) {
+  return [...xml.matchAll(/android:pathData="([^"]*)"/g)]
+    .map(([, escaped]) => escaped.replace(/&(?:quot|apos|lt|gt|amp);/g, (e) => xmlEntities[e]))
+    .filter((pathData) => measurePathData(pathData) > MAX_PATH_DATA);
+}
 
 export function toVectorDrawable(
   svg: string,
