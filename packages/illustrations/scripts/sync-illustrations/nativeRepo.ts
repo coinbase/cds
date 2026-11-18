@@ -7,6 +7,18 @@ export const nativeModules = {
   android: 'modules/android/cds',
 };
 
+/** Where, inside each module, the illustration assets and the generated names go. */
+export const nativeLayout = {
+  ios: {
+    catalog: 'Sources/CDSDesignSystem/Resources/Illustrations.xcassets',
+    generated: 'Sources/CDSDesignSystem/Illustrations/Generated',
+  },
+  android: {
+    drawable: 'src/main/res/drawable',
+    kotlin: 'illustrations/src/main/kotlin',
+  },
+};
+
 /**
  * Fails unless `repo` is a git checkout containing both native CDS modules. Runs before anything
  * is fetched, so a wrong path never costs a download or leaves a branch behind.

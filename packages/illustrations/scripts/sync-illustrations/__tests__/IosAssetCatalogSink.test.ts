@@ -24,7 +24,8 @@ let sink: IosAssetCatalogSink;
 beforeEach(() => {
   dir = fs.mkdtempSync(path.join(os.tmpdir(), 'ios-asset-catalog-sink-'));
   sink = new IosAssetCatalogSink({
-    dir,
+    catalogDir: path.join(dir, 'Resources/Illustrations.xcassets'),
+    generatedDir: path.join(dir, 'Generated'),
     componentUrl: ({ nodeId }) => `https://www.figma.com/design/file?node-id=${nodeId}`,
   });
 });
@@ -137,7 +138,8 @@ describe('the not-exportable list', () => {
     expect(sink.accepts(listed)).toBe(false);
     expect(sink.accepts(illustrations[0])).toBe(true);
     const android = new AndroidVectorDrawableSink({
-      dir,
+      drawableDir: path.join(dir, 'res/drawable'),
+      kotlinDir: path.join(dir, 'kotlin'),
       include: ({ type }) => type === 'spotSquare',
     });
     expect(android.accepts(listed)).toBe(false);

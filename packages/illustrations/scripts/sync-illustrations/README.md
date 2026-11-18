@@ -82,7 +82,7 @@ abstractions, source and sink, sit at the two places where the outside world var
 index.ts                 shell: CLI args, release branches, version plan, manifest, summary
 config.ts                the source, the sinks, paths, flags
 selectSinks.ts           --select-sinks: the interactive choice of sinks for one run
-nativeRepo.ts            native module paths, assertNativeCheckout
+nativeRepo.ts            native module paths and layout, assertNativeCheckout
 git.ts                   ReleaseBranch: start / publish / abandon illustrations/YYYY-MM-DD,
                            runOnReleaseBranches: one branch per repository the run writes to
 sync.ts                  engine: runSync(source, manifest, sinks) -> SyncOutcome
@@ -103,8 +103,8 @@ sinks/
   Sink.ts                  the sink contract: accepts, has, apply(SinkChanges)
   IllustrationsPackageSink.ts   src/__generated__ of this package
   WebStoriesSink.ts        packages/web/src/illustrations/__stories__
-  IosAssetCatalogSink.ts   CDSDesignSystem: Resources/Illustrations.xcassets, Generated/<Type>Name.swift
-  AndroidVectorDrawableSink.ts  :cds: res/drawable/cds_*_{light,dark}.xml, generated/<Type>Names.kt
+  IosAssetCatalogSink.ts   CDSDesignSystem: Illustrations.xcassets, Illustrations/Generated/<Type>Name.swift
+  AndroidVectorDrawableSink.ts  :cds: res/drawable/cds_*_{light,dark}.xml, illustrations/.../generated/<Type>Names.kt
   files.ts                 write / remove / exists / relative import helpers
 artifacts/
   png.ts                   rasterizePng
@@ -349,10 +349,10 @@ system appearance, and custom themes do not recolor illustrations (the React Nat
 never edited by hand. Both sinks join `config.sinks` only when `SYNC_ILLUSTRATIONS_NATIVE_REPO`
 points at a checkout (see _Configuration and scratch runs_).
 
-| Sink                        | `dir` (in the native repo)                                              | Files                                                                                                                                                                                 |
-| --------------------------- | ----------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `IosAssetCatalogSink`       | `modules/ios/CDS/CDSDesignSystem/Sources/CDSDesignSystem/Illustrations` | `Resources/Illustrations.xcassets/<type>/<name>.imageset/{Contents.json,<name>-light.svg,<name>-dark.svg}`, the catalog and type-folder `Contents.json`, `Generated/<Type>Name.swift` |
-| `AndroidVectorDrawableSink` | `modules/android/cds/src/main`                                          | `res/drawable/cds_<type_snake>_<name_snake>_{light,dark}.xml`, `kotlin/com/coinbase/cds/illustrations/generated/<Type>Names.kt`                                                       |
+| Sink                        | module (in the native repo)                                | Files                                                                                                                                                                                                                                   |
+| --------------------------- | ---------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `IosAssetCatalogSink`       | `modules/ios/CDS/CDSDesignSystem/Sources/CDSDesignSystem/` | `Resources/Illustrations.xcassets/<type>/<name>.imageset/{Contents.json,<name>-light.svg,<name>-dark.svg}` plus the catalog and type-folder `Contents.json` (`catalogDir`); `Illustrations/Generated/<Type>Name.swift` (`generatedDir`) |
+| `AndroidVectorDrawableSink` | `modules/android/cds/`                                     | `src/main/res/drawable/cds_<type_snake>_<name_snake>_{light,dark}.xml` (`drawableDir`); `illustrations/src/main/kotlin/com/coinbase/cds/illustrations/generated/<Type>Names.kt` (`kotlinDir`)                                           |
 
 - **One preparation, two formats.** Both sinks start from `toNativeSvg` (`artifacts/nativeSvg.ts`),
   which validates the light SVG against what both renderers can express, rewrites the constructs

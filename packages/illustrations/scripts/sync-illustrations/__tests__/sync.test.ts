@@ -131,8 +131,14 @@ const sync = async (syncAll = false) => {
       new WebStoriesSink({ dir: path.join(dir, 'stories') }),
       ...(nativeDir
         ? [
-            new IosAssetCatalogSink({ dir: path.join(nativeDir, 'ios') }),
-            new AndroidVectorDrawableSink({ dir: path.join(nativeDir, 'android') }),
+            new IosAssetCatalogSink({
+              catalogDir: path.join(nativeDir, 'ios/Resources/Illustrations.xcassets'),
+              generatedDir: path.join(nativeDir, 'ios/Generated'),
+            }),
+            new AndroidVectorDrawableSink({
+              drawableDir: path.join(nativeDir, 'android/res/drawable'),
+              kotlinDir: path.join(nativeDir, 'android/kotlin'),
+            }),
           ]
         : []),
     ],

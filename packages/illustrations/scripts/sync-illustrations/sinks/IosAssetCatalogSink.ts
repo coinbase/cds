@@ -17,8 +17,10 @@ import { allFilesExist, writeFile } from './files';
 import { Sink, type SinkChanges, type SinkOptions } from './Sink';
 
 export type IosAssetCatalogSinkOptions = SinkOptions & {
-  /** `modules/ios/CDS/CDSDesignSystem/Sources/CDSDesignSystem/Illustrations` of the native repo. */
-  dir: string;
+  /** The `Illustrations.xcassets` directory: `Sources/CDSDesignSystem/Resources/Illustrations.xcassets` of the module. */
+  catalogDir: string;
+  /** Where the `<Type>Name.swift` enums go: `Sources/CDSDesignSystem/Illustrations/Generated` of the module. */
+  generatedDir: string;
   /** Deep link to an illustration's component, quoted when its SVG cannot be exported. */
   componentUrl?: (illustration: Illustration) => string;
 };
@@ -93,8 +95,6 @@ export function swiftCaseName(name: string) {
 
 const themes = ['light', 'dark'] as const;
 
-const catalogName = 'Illustrations.xcassets';
-
 /** Xcode's own JSON layout (`"key" : value`, two-space indent), so Xcode never rewrites the file. */
 const xcodeJson = (value: unknown) =>
   `${JSON.stringify(value, null, 2).replace(/^(\s*"[^"]+"):/gm, '$1 :')}\n`;
@@ -109,12 +109,12 @@ const concurrentWrites = 16;
  * enum per type. Type folders provide a namespace, so an asset is named `pictogram/wallet`.
  *
  * ```
- * <dir>/Resources/Illustrations.xcassets/Contents.json
- * <dir>/Resources/Illustrations.xcassets/<type>/Contents.json             provides-namespace
- * <dir>/Resources/Illustrations.xcassets/<type>/<name>.imageset/Contents.json
- * <dir>/Resources/Illustrations.xcassets/<type>/<name>.imageset/<name>-light.svg
- * <dir>/Resources/Illustrations.xcassets/<type>/<name>.imageset/<name>-dark.svg
- * <dir>/Generated/<Type>Name.swift         public enum <Type>Name: String, CaseIterable, Sendable
+ * <catalogDir>/Contents.json
+ * <catalogDir>/<type>/Contents.json             provides-namespace
+ * <catalogDir>/<type>/<name>.imageset/Contents.json
+ * <catalogDir>/<type>/<name>.imageset/<name>-light.svg
+ * <catalogDir>/<type>/<name>.imageset/<name>-dark.svg
+ * <generatedDir>/<Type>Name.swift               public enum <Type>Name: String, CaseIterable, Sendable
  * ```
  *
  * File names carry no version: the package version is the version. Each SVG is stamped with the
@@ -122,28 +122,28 @@ const concurrentWrites = 16;
  * repaired by the next one. `actool` compiles the catalog into `Assets.car` and drops the comments.
  */
 export class IosAssetCatalogSink extends Sink {
-  private readonly dir: string;
+  private readonly catalogDir: string;
+  private readonly generatedDir: string;
   private readonly componentUrl?: IosAssetCatalogSinkOptions['componentUrl'];
 
-  constructor({ dir, componentUrl, ...options }: IosAssetCatalogSinkOptions) {
+  constructor({ catalogDir, generatedDir, componentUrl, ...options }: IosAssetCatalogSinkOptions) {
     super({
       ...options,
       include: (illustration) =>
         isNativelyExportable(illustration) && (options.include?.(illustration) ?? true),
     });
-    this.dir = dir;
+    this.catalogDir = catalogDir;
+    this.generatedDir = generatedDir;
     this.componentUrl = componentUrl;
   }
 
-  private catalogDir = () => path.join(this.dir, 'Resources', catalogName);
-  private typeDir = (type: string) => path.join(this.catalogDir(), type);
+  private typeDir = (type: string) => path.join(this.catalogDir, type);
   private imageSetDir = ({ type, name }: Illustration) =>
     path.join(this.typeDir(type), `${name}.imageset`);
   private svgFile = (illustration: Illustration, theme: (typeof themes)[number]) =>
     path.join(this.imageSetDir(illustration), `${illustration.name}-${theme}.svg`);
   private contentsFile = (dir: string) => path.join(dir, 'Contents.json');
-  private enumFile = (type: string) =>
-    path.join(this.dir, 'Generated', `${nameTypeOf(type)}.swift`);
+  private enumFile = (type: string) => path.join(this.generatedDir, `${nameTypeOf(type)}.swift`);
 
   async has(illustration: Illustration) {
     const current = await Promise.all(
@@ -191,7 +191,7 @@ export class IosAssetCatalogSink extends Sink {
       Promise.all(files.map(([file, content]) => writeFile(file, content))),
     );
     await Promise.all([
-      writeFile(this.contentsFile(this.catalogDir()), xcodeJson({ info: contentsInfo })),
+      writeFile(this.contentsFile(this.catalogDir), xcodeJson({ info: contentsInfo })),
       ...[...groupByType(illustrations).keys()].map((type) =>
         writeFile(
           this.contentsFile(this.typeDir(type)),

@@ -104,8 +104,9 @@ yarn nx run illustrations:sync-illustrations
 
 The run first checks that the path is a git checkout with `modules/ios/CDS/CDSDesignSystem` and
 `modules/android/cds`, then creates an `illustrations/YYYY-MM-DD` branch from `origin/main` there
-as well. It writes `Sources/CDSDesignSystem/Illustrations/{Resources/Illustrations.xcassets,Generated}`
-and `src/main/{res/drawable,kotlin/com/coinbase/cds/illustrations/generated}` and commits and pushes
+as well. It writes `Sources/CDSDesignSystem/{Resources/Illustrations.xcassets,Illustrations/Generated}`
+in the iOS module and `{src/main/res/drawable,illustrations/src/main/kotlin/…/generated}` in the
+Android module (the paths live in `scripts/sync-illustrations/nativeRepo.ts`) and commits and pushes
 the branch when anything changed. Each repository is published on its own: if only the native
 checkout was missing files, only its branch is pushed.
 

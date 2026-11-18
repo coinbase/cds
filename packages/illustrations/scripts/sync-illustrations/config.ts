@@ -9,7 +9,7 @@ import { figmaNodeUrl } from './source/fetchComponents';
 import { FigmaSource } from './source/FigmaSource';
 import type { IllustrationSource } from './source/IllustrationSource';
 import type { Illustration } from './illustration';
-import { nativeModules } from './nativeRepo';
+import { nativeLayout, nativeModules } from './nativeRepo';
 
 type SyncIllustrationsConfig = {
   /* Where illustrations come from; see source/. */
@@ -70,11 +70,13 @@ const componentUrl = (illustration: Illustration) =>
 const nativeSinks = NATIVE_ROOT
   ? [
       new IosAssetCatalogSink({
-        dir: path.join(NATIVE_ROOT, nativeModules.ios, 'Sources/CDSDesignSystem/Illustrations'),
+        catalogDir: path.join(NATIVE_ROOT, nativeModules.ios, nativeLayout.ios.catalog),
+        generatedDir: path.join(NATIVE_ROOT, nativeModules.ios, nativeLayout.ios.generated),
         componentUrl,
       }),
       new AndroidVectorDrawableSink({
-        dir: path.join(NATIVE_ROOT, nativeModules.android, 'src/main'),
+        drawableDir: path.join(NATIVE_ROOT, nativeModules.android, nativeLayout.android.drawable),
+        kotlinDir: path.join(NATIVE_ROOT, nativeModules.android, nativeLayout.android.kotlin),
         componentUrl,
       }),
     ]

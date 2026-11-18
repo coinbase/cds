@@ -18,8 +18,10 @@ import { removeFile, writeFile } from './files';
 import { Sink, type SinkChanges, type SinkOptions } from './Sink';
 
 export type AndroidVectorDrawableSinkOptions = SinkOptions & {
-  /** `modules/android/cds/src/main` of the native repo. */
-  dir: string;
+  /** The `drawable` resource directory: `src/main/res/drawable` of the `:cds` module. */
+  drawableDir: string;
+  /** The Kotlin source root the generated package goes under: `illustrations/src/main/kotlin` of the module. */
+  kotlinDir: string;
   /** Deep link to an illustration's component, quoted when its SVG cannot be exported. */
   componentUrl?: (illustration: Illustration) => string;
   /** The package of the module's `R` class. */
@@ -94,9 +96,9 @@ const concurrentWrites = 16;
  * type, one companion extension property per name on the `<Type>Name` class.
  *
  * ```
- * <dir>/res/drawable/cds_<type>_<name>_light.xml                             snake_case
- * <dir>/res/drawable/cds_<type>_<name>_dark.xml
- * <dir>/kotlin/com/coinbase/cds/illustrations/generated/<Type>Names.kt
+ * <drawableDir>/cds_<type>_<name>_light.xml                                   snake_case
+ * <drawableDir>/cds_<type>_<name>_dark.xml
+ * <kotlinDir>/com/coinbase/cds/illustrations/generated/<Type>Names.kt
  * ```
  *
  * One property per illustration, rather than an enum or a central `when`, lets R8 drop every name
@@ -106,12 +108,14 @@ const concurrentWrites = 16;
  * the comments at build time.
  */
 export class AndroidVectorDrawableSink extends Sink {
-  private readonly dir: string;
+  private readonly drawableDir: string;
+  private readonly kotlinDir: string;
   private readonly componentUrl?: AndroidVectorDrawableSinkOptions['componentUrl'];
   private readonly rPackage: string;
 
   constructor({
-    dir,
+    drawableDir,
+    kotlinDir,
     componentUrl,
     rPackage = 'com.coinbase.cds',
     ...options
@@ -121,16 +125,17 @@ export class AndroidVectorDrawableSink extends Sink {
       include: (illustration) =>
         isNativelyExportable(illustration) && (options.include?.(illustration) ?? true),
     });
-    this.dir = dir;
+    this.drawableDir = drawableDir;
+    this.kotlinDir = kotlinDir;
     this.componentUrl = componentUrl;
     this.rPackage = rPackage;
   }
 
   private drawableFile = (illustration: Illustration, theme: Theme) =>
-    path.join(this.dir, 'res', 'drawable', `${drawableName(illustration, theme)}.xml`);
+    path.join(this.drawableDir, `${drawableName(illustration, theme)}.xml`);
 
   private namesFile = (type: string) =>
-    path.join(this.dir, 'kotlin', ...generatedPackage.split('.'), `${nameTypeOf(type)}s.kt`);
+    path.join(this.kotlinDir, ...generatedPackage.split('.'), `${nameTypeOf(type)}s.kt`);
 
   async has(illustration: Illustration) {
     const current = await Promise.all(

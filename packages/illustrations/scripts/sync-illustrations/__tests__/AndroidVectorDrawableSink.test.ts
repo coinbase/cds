@@ -29,7 +29,8 @@ let sink: AndroidVectorDrawableSink;
 beforeEach(() => {
   dir = fs.mkdtempSync(path.join(os.tmpdir(), 'android-vector-drawable-sink-'));
   sink = new AndroidVectorDrawableSink({
-    dir,
+    drawableDir: path.join(dir, 'res/drawable'),
+    kotlinDir: path.join(dir, 'kotlin'),
     componentUrl: ({ nodeId }) => `https://www.figma.com/design/file?node-id=${nodeId}`,
   });
 });
@@ -118,7 +119,11 @@ describe('AndroidVectorDrawableSink', () => {
   });
 
   it('imports R from the configured package', async () => {
-    sink = new AndroidVectorDrawableSink({ dir, rPackage: 'com.example.cds' });
+    sink = new AndroidVectorDrawableSink({
+      drawableDir: path.join(dir, 'res/drawable'),
+      kotlinDir: path.join(dir, 'kotlin'),
+      rPackage: 'com.example.cds',
+    });
     await applyAll();
     expect(
       fs.readFileSync(
