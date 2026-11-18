@@ -17,11 +17,19 @@ import {
   toVectorDrawable,
 } from '../artifacts/vectorDrawable';
 import type { ColorPalette } from '../colorPalette';
-import { groupByType, type Illustration, illustrationKey } from '../illustration';
+import { groupByType, type Illustration } from '../illustration';
 import { mapConcurrently } from '../mapConcurrently';
 
 import { allFilesExist, removeFile, writeFile } from './files';
-import { Sink, type SinkChanges, type SinkOptions, type SinkPlan } from './Sink';
+import {
+  commitUnlessFailed,
+  keepAvailable,
+  Sink,
+  type SinkChanges,
+  type SinkOptions,
+  type SinkPlan,
+  withoutFailed,
+} from './Sink';
 
 export type AndroidVectorDrawableSinkOptions = SinkOptions & {
   /** The `drawable` resource directory: `src/main/res/drawable` of the `:cds` module. */
@@ -168,22 +176,14 @@ export class AndroidVectorDrawableSink extends Sink {
       failure === undefined ? [] : [{ illustration, message: failure }],
     );
     const succeeded = converted.filter(({ files }) => files !== undefined);
-    const failed = new Set(failures.map(({ illustration }) => illustrationKey(illustration)));
-
-    const available = (
-      await Promise.all(
-        illustrations.map(async (illustration) =>
-          !failed.has(illustrationKey(illustration)) || (await this.hasDrawables(illustration))
-            ? [illustration]
-            : [],
-        ),
-      )
-    ).flat();
+    const available = await keepAvailable(illustrations, failures, (illustration) =>
+      this.hasDrawables(illustration),
+    );
     const namesFiles = [...groupByType(available)].map(
       ([type, ofType]) =>
         [this.namesFile(type), renderNameProperties(type, ofType, this.rPackage)] as const,
     );
-    const removals = remove.filter((illustration) => !failed.has(illustrationKey(illustration)));
+    const removals = withoutFailed(remove, failures);
     const drawables = succeeded.flatMap(({ files }) => files ?? []);
 
     return {
@@ -206,11 +206,7 @@ export class AndroidVectorDrawableSink extends Sink {
   }
 
   async apply(changes: SinkChanges) {
-    const plan = await this.plan(changes);
-    if (plan.failures.length) {
-      throw new Error(plan.failures.map(({ message }) => message).join('\n\n'));
-    }
-    await plan.commit();
+    await commitUnlessFailed(await this.plan(changes));
   }
 
   /**

@@ -49,7 +49,6 @@ const pathDataExcerptLength = 48;
 /** `pathData` over `MAX_PATH_DATA`; carries what a report needs to point at the offending path. */
 export class PathDataTooLongError extends UnsupportedSvgError {
   readonly length: number;
-  readonly limit = MAX_PATH_DATA;
   readonly excerpt: string;
 
   constructor(pathData: string) {
@@ -75,21 +74,10 @@ const checkedPathData = (pathData: string) => {
   return pathData;
 };
 
-const xmlEntities: Record<string, string> = {
-  '&quot;': '"',
-  '&apos;': "'",
-  '&lt;': '<',
-  '&gt;': '>',
-  '&amp;': '&',
-};
-
-/**
- * The `android:pathData` values in generated drawable XML that exceed the limit, measured after
- * XML unescaping because aapt2 stores the attribute value, not its escaped form.
- */
+/** The `android:pathData` values in generated drawable XML that exceed the limit. */
 export function oversizedPathData(xml: string) {
   return [...xml.matchAll(/android:pathData="([^"]*)"/g)]
-    .map(([, escaped]) => escaped.replace(/&(?:quot|apos|lt|gt|amp);/g, (e) => xmlEntities[e]))
+    .map(([, pathData]) => pathData)
     .filter((pathData) => measurePathData(pathData) > MAX_PATH_DATA);
 }
 

@@ -1,5 +1,5 @@
 import type { ColorPalette } from '../colorPalette';
-import type { Illustration } from '../illustration';
+import { type Illustration, illustrationKey } from '../illustration';
 
 export type SinkOptions = {
   /**
@@ -95,4 +95,34 @@ export abstract class Sink {
       commit: () => this.apply(changes),
     };
   }
+}
+
+/** The illustrations that are not among the `failures`. */
+export const withoutFailed = (illustrations: Illustration[], failures: SinkFailure[]) => {
+  const failed = new Set(failures.map(({ illustration }) => illustrationKey(illustration)));
+  return illustrations.filter((illustration) => !failed.has(illustrationKey(illustration)));
+};
+
+/**
+ * What a catalog may list after a partial run: every illustration that did not fail, plus the
+ * failed ones whose previous outputs still exist, so no entry points at a missing resource.
+ */
+export async function keepAvailable(
+  illustrations: Illustration[],
+  failures: SinkFailure[],
+  hasOutputs: (illustration: Illustration) => Promise<boolean>,
+) {
+  const intact = new Set(withoutFailed(illustrations, failures));
+  const kept = await Promise.all(
+    illustrations.map(async (illustration) => intact.has(illustration) || hasOutputs(illustration)),
+  );
+  return illustrations.filter((_, index) => kept[index]);
+}
+
+/** Commits `plan`, or throws every failure message and writes nothing. */
+export async function commitUnlessFailed(plan: SinkPlan) {
+  if (plan.failures.length) {
+    throw new Error(plan.failures.map(({ message }) => message).join('\n\n'));
+  }
+  await plan.commit();
 }

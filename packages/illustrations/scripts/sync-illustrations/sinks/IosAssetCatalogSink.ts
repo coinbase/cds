@@ -10,11 +10,20 @@ import {
   toNativeSvg,
 } from '../artifacts/nativeSvg';
 import { nameTypeOf } from '../artifacts/typescriptData';
-import { groupByType, type Illustration, illustrationKey } from '../illustration';
+import { groupByType, type Illustration } from '../illustration';
 import { mapConcurrently } from '../mapConcurrently';
 
 import { allFilesExist, writeFile } from './files';
-import { Sink, type SinkChanges, type SinkFailure, type SinkOptions, type SinkPlan } from './Sink';
+import {
+  commitUnlessFailed,
+  keepAvailable,
+  Sink,
+  type SinkChanges,
+  type SinkFailure,
+  type SinkOptions,
+  type SinkPlan,
+  withoutFailed,
+} from './Sink';
 
 export type IosAssetCatalogSinkOptions = SinkOptions & {
   /** The `Illustrations.xcassets` directory: `Sources/CDSDesignSystem/Resources/Illustrations.xcassets` of the module. */
@@ -192,21 +201,13 @@ export class IosAssetCatalogSink extends Sink {
         return [];
       }
     });
-    const failed = new Set(failures.map(({ illustration }) => illustrationKey(illustration)));
-
-    const available = (
-      await Promise.all(
-        illustrations.map(async (illustration) =>
-          !failed.has(illustrationKey(illustration)) || (await this.hasImageSet(illustration))
-            ? [illustration]
-            : [],
-        ),
-      )
-    ).flat();
+    const available = await keepAvailable(illustrations, failures, (illustration) =>
+      this.hasImageSet(illustration),
+    );
     const enums = [...groupByType(available)].map(
       ([type, ofType]) => [this.enumFile(type), renderNameEnum(type, ofType)] as const,
     );
-    const removals = remove.filter((illustration) => !failed.has(illustrationKey(illustration)));
+    const removals = withoutFailed(remove, failures);
 
     return {
       sink: this.name,
@@ -237,11 +238,7 @@ export class IosAssetCatalogSink extends Sink {
   }
 
   async apply(changes: SinkChanges) {
-    const plan = await this.plan(changes);
-    if (plan.failures.length) {
-      throw new Error(plan.failures.map(({ message }) => message).join('\n\n'));
-    }
-    await plan.commit();
+    await commitUnlessFailed(await this.plan(changes));
   }
 }
 

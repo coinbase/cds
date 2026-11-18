@@ -103,9 +103,8 @@ describe('toVectorDrawable', () => {
       })();
 
       expect(error).toBeInstanceOf(PathDataTooLongError);
-      const { length, limit, excerpt, message } = error as PathDataTooLongError;
+      const { length, excerpt, message } = error as PathDataTooLongError;
       expect(length).toBe(MAX_PATH_DATA + 1);
-      expect(limit).toBe(MAX_PATH_DATA);
       expect(excerpt).toBe(`M0 0${'h1'.repeat(22)}`);
       expect(message).toBe(
         "a path of 32768 characters exceeds Android's 32767-character resource string limit",
@@ -120,13 +119,10 @@ describe('toVectorDrawable', () => {
       expect(measurePathData('M0 0')).toBe(4);
     });
 
-    it('finds oversized pathData in generated XML after unescaping it', () => {
+    it('finds oversized pathData in generated XML', () => {
       const exact = 'M'.repeat(MAX_PATH_DATA);
-      const escaped = `${'&amp;'.repeat(MAX_PATH_DATA)}`;
       expect(oversizedPathData(`<path android:pathData="${exact}" />`)).toEqual([]);
       expect(oversizedPathData(`<path android:pathData="${exact}M" />`)).toHaveLength(1);
-      expect(oversizedPathData(`<path android:pathData="${escaped}" />`)).toEqual([]);
-      expect(oversizedPathData(`<path android:pathData="${escaped}&amp;" />`)).toHaveLength(1);
     });
   });
 

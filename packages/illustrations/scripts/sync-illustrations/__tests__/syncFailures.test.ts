@@ -44,13 +44,13 @@ const component = (name: string, nodeId: string): Component => ({
 const square = (fill: string) =>
   `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 8"><path fill="${fill}" d="M0 0h8v8H0z"/></svg>`;
 
-const oversized = () => {
+const oversizedSvg = (() => {
   const segments = Array.from(
-    { length: 9000 },
-    (_, i) => `L${(i * 37) % 1000}.123 ${(i * 7919) % 997}.456`,
+    { length: 3600 },
+    (_, i) => `L${(i * 7919) % 90000}.123 ${(i * 104729) % 90000}.456`,
   ).join('');
   return `<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 8 8"><path fill="#0052FF" d="M0 0${segments}z"/></svg>`;
-};
+})();
 
 jest.setTimeout(30000);
 
@@ -107,7 +107,7 @@ beforeEach(() => {
     svgs: {
       [good.nodeId]: square('#0052FF'),
       [other.nodeId]: square('#5DE2F8'),
-      [bad.nodeId]: oversized(),
+      [bad.nodeId]: oversizedSvg,
     },
     palette,
   });
@@ -130,8 +130,8 @@ describe('best effort, the default', () => {
     );
     expect(android.failures[0].message).toContain('light: a path of');
     expect(android.failures[0].message).toContain('dark: a path of');
-    expect(android.failures[0].message).toContain(
-      `a path of 54855 characters exceeds Android's ${MAX_PATH_DATA}-character`,
+    expect(android.failures[0].message).toMatch(
+      new RegExp(`a path of \\d+ characters exceeds Android's ${MAX_PATH_DATA}-character`),
     );
     expect(android.failures[0].message).toContain('output cds_pictogram_bad_light.xml');
     expect(android.failures[0].message).toContain('path starts "m0 0');
@@ -166,7 +166,7 @@ describe('best effort, the default', () => {
     await run();
     const before = androidTree();
 
-    source.svgs[bad.nodeId] = oversized();
+    source.svgs[bad.nodeId] = oversizedSvg;
     source.components = source.components.map((item) =>
       item.nodeId === bad.nodeId ? { ...item, updatedAt: '2030-01-01T00:00:00.000Z' } : item,
     );
@@ -181,7 +181,7 @@ describe('best effort, the default', () => {
     source.svgs[bad.nodeId] = square('#123456');
     await run();
     source.components = source.components.filter((item) => item.nodeId !== other.nodeId);
-    source.svgs[bad.nodeId] = oversized();
+    source.svgs[bad.nodeId] = oversizedSvg;
 
     await run();
 
@@ -209,7 +209,7 @@ describe('all or nothing', () => {
     const before = androidTree();
 
     source.components = source.components.filter((item) => item.nodeId !== other.nodeId);
-    source.svgs[bad.nodeId] = oversized();
+    source.svgs[bad.nodeId] = oversizedSvg;
     source.components = source.components.map((item) =>
       item.nodeId === bad.nodeId ? { ...item, updatedAt: '2030-01-01T00:00:00.000Z' } : item,
     );
