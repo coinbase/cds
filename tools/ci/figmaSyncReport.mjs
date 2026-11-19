@@ -9,6 +9,8 @@ import { pathToFileURL } from 'node:url';
  * set of problems only once.
  */
 
+const MAX_COMPARE_URL_LENGTH = 6000;
+
 /** Asset names and messages come from Figma, so keep them from breaking out of their formatting. */
 const plain = (text) =>
   String(text)
@@ -90,6 +92,40 @@ export const renderSlackPayload = (report, { runUrl } = {}) => {
   };
 };
 
+/**
+ * A link that opens the pull request form for the pushed branch with the title and description
+ * filled in, for repositories where Actions are not allowed to create pull requests.
+ */
+export const renderCompareUrl = (report, { serverUrl, repository, title, base = 'master' }) => {
+  const branch = report.branch.split('/').map(encodeURIComponent).join('/');
+  const compare = `${serverUrl}/${repository}/compare/${base}...${branch}`;
+  const withBody = `${compare}?${new URLSearchParams({
+    expand: '1',
+    title,
+    body: renderPullRequestBody(report),
+  })}`;
+  // GitHub rejects very long URLs, so a long list of rejected assets falls back to the title alone.
+  return withBody.length <= MAX_COMPARE_URL_LENGTH
+    ? withBody
+    : `${compare}?${new URLSearchParams({ expand: '1', title })}`;
+};
+
+/** The Slack message that tells engineers a sync branch is ready for a pull request. */
+export const renderReadyPayload = (report, { compareUrl, runUrl }) => {
+  const skipped = report.rejected.length;
+  const lines = [
+    `:package: The ${report.target} sync pushed \`${plain(report.branch)}\`: ${countSummary(report.counts)}.`,
+    report.breaking
+      ? ':rotating_light: It renames or deletes assets, so it needs a major version bump.'
+      : undefined,
+    skipped > 0
+      ? `${skipped} ${skipped === 1 ? 'asset was skipped and needs' : 'assets were skipped and need'} a fix in Figma.`
+      : undefined,
+    `<${compareUrl}|Open the pull request>${runUrl ? ` · <${runUrl}|Sync run>` : ''}`,
+  ];
+  return { text: lines.filter(Boolean).join('\n') };
+};
+
 /** Identical for the same assets and problems, so unchanged problems are announced only once. */
 export const rejectionFingerprint = (report) => {
   const entries = report.rejected.map(({ name, message }) => `${name}\t${message}`).sort();
@@ -98,6 +134,8 @@ export const rejectionFingerprint = (report) => {
 
 const commands = {
   'pr-body': (report) => renderPullRequestBody(report),
+  'compare-url': (report, options) => `${renderCompareUrl(report, options)}\n`,
+  'ready-slack': (report, options) => JSON.stringify(renderReadyPayload(report, options)),
   rejections: (report) => `${renderRejections(report)}\n`,
   slack: (report, options) => JSON.stringify(renderSlackPayload(report, options)),
   fingerprint: (report) => `${rejectionFingerprint(report)}\n`,
@@ -108,13 +146,22 @@ const main = () => {
   const render = commands[command];
   if (!render || !reportPath) {
     console.error(
-      `Usage: figmaSyncReport.mjs <${Object.keys(commands).join('|')}> <report.json> [--run-url <url>]`,
+      `Usage: figmaSyncReport.mjs <${Object.keys(commands).join('|')}> <report.json> [--run-url <url>] [--compare-url <url>] [--server-url <url>] [--repository <owner/name>] [--title <text>]`,
     );
     process.exit(1);
   }
-  const runUrlIndex = rest.indexOf('--run-url');
-  const runUrl = runUrlIndex >= 0 ? rest[runUrlIndex + 1] : undefined;
-  process.stdout.write(render(JSON.parse(readFileSync(reportPath, 'utf-8')), { runUrl }));
+  const option = (name) => {
+    const index = rest.indexOf(`--${name}`);
+    return index >= 0 ? rest[index + 1] : undefined;
+  };
+  const options = {
+    runUrl: option('run-url'),
+    compareUrl: option('compare-url'),
+    serverUrl: option('server-url'),
+    repository: option('repository'),
+    title: option('title'),
+  };
+  process.stdout.write(render(JSON.parse(readFileSync(reportPath, 'utf-8')), options));
 };
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main();

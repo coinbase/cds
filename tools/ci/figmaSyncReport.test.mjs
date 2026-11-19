@@ -1,7 +1,9 @@
 import { describe, expect, it } from '@jest/globals';
 
 import {
+  renderCompareUrl,
   renderPullRequestBody,
+  renderReadyPayload,
   renderRejections,
   renderSlackPayload,
   rejectionFingerprint,
@@ -83,6 +85,66 @@ describe('renderSlackPayload', () => {
   it('pluralizes the count', () => {
     const { text } = renderSlackPayload(report({ rejected: [...rejected, ...rejected] }));
     expect(text).toContain('skipped 2 assets. They need a fix in Figma:');
+  });
+});
+
+describe('renderCompareUrl', () => {
+  const url = new URL(
+    renderCompareUrl(report({ rejected }), {
+      serverUrl: 'https://github.com',
+      repository: 'coinbase/cds',
+      title: 'feat: Publish icons 2026-11-19',
+    }),
+  );
+
+  it('opens the pull request form for the branch against master', () => {
+    expect(url.origin + url.pathname).toBe(
+      'https://github.com/coinbase/cds/compare/master...icons/2026-11-19',
+    );
+    expect(url.searchParams.get('expand')).toBe('1');
+  });
+
+  it('fills in the title and the same description the workflow would have used', () => {
+    expect(url.searchParams.get('title')).toBe('feat: Publish icons 2026-11-19');
+    expect(url.searchParams.get('body')).toBe(renderPullRequestBody(report({ rejected })));
+  });
+});
+
+describe('renderCompareUrl with many rejected assets', () => {
+  it('drops the description rather than exceed the URL length GitHub accepts', () => {
+    const many = Array.from({ length: 60 }, (_, index) => ({
+      ...rejected[0],
+      name: `icon${index}`,
+      message: 'x'.repeat(80),
+    }));
+    const url = renderCompareUrl(report({ rejected: many }), {
+      serverUrl: 'https://github.com',
+      repository: 'coinbase/cds',
+      title: 'feat: Publish icons',
+    });
+    expect(url.length).toBeLessThan(6000);
+    expect(new URL(url).searchParams.get('title')).toBe('feat: Publish icons');
+    expect(new URL(url).searchParams.has('body')).toBe(false);
+  });
+});
+
+describe('renderReadyPayload', () => {
+  const compareUrl = 'https://github.com/coinbase/cds/compare/master...icons/2026-11-19';
+
+  it('links to the pull request form and summarizes the changes', () => {
+    const { text } = renderReadyPayload(report(), { compareUrl, runUrl: 'https://run' });
+    expect(text).toContain('pushed `icons/2026-11-19`: 2 added, 1 updated');
+    expect(text).toContain(`<${compareUrl}|Open the pull request>`);
+    expect(text).toContain('<https://run|Sync run>');
+  });
+
+  it('mentions breaking changes and skipped assets only when there are some', () => {
+    const plainText = renderReadyPayload(report(), { compareUrl }).text;
+    expect(plainText).not.toContain('major version bump');
+    expect(plainText).not.toContain('skipped');
+    const { text } = renderReadyPayload(report({ breaking: true, rejected }), { compareUrl });
+    expect(text).toContain('major version bump');
+    expect(text).toContain('1 asset was skipped');
   });
 });
 

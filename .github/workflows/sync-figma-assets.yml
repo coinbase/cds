@@ -4,6 +4,10 @@ name: Sync Figma Assets
 # longer need an engineer to run the sync by hand. An engineer still reviews every PR, does the
 # manual visreg check and merges it; nothing is merged automatically.
 #
+# Where Actions may not create pull requests, set vars.FIGMA_SYNC_OPEN_PR to 'false'. The workflow
+# then only pushes the sync branch and posts a link to Slack that opens the pull request form with
+# the title and description filled in. A pull request opened by a person runs CI as usual.
+#
 # Malformed assets are skipped rather than published. They are listed in the pull request and in
 # the job summary, and posted to Slack once per set of problems.
 #
@@ -12,6 +16,8 @@ name: Sync Figma Assets
 #   vars.FIGMA_SYNC_APP_ID                    GitHub App that pushes the branch and opens the PR.
 #   secrets.FIGMA_SYNC_APP_PRIVATE_KEY        Without an app, the default token is used and CI does not
 #                                             run on the sync PR until a maintainer pushes to it.
+#   vars.FIGMA_SYNC_OPEN_PR                   'false' to push the branch and post a link instead of
+#                                             creating the pull request. Defaults to creating it.
 #   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL      Slack webhook for rejected assets and failed runs.
 #   vars.FIGMA_SYNC_SCHEDULE_ENABLED          Set to 'true' to turn on the weekday schedule.
 
@@ -140,7 +146,7 @@ jobs:
 
       - name: Open or update the pull request
         id: pull-request
-        if: steps.report.outputs.pushed == 'true'
+        if: steps.report.outputs.pushed == 'true' && vars.FIGMA_SYNC_OPEN_PR != 'false'
         env:
           GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
           BRANCH: ${{ steps.report.outputs.branch }}
@@ -155,6 +161,17 @@ jobs:
           else
             url=$(gh pr create --base master --head "${BRANCH}" --title "${title}" --body-file "${body_file}")
           fi
+          echo "url=${url}" >> "$GITHUB_OUTPUT"
+
+      - name: Link to open the pull request
+        id: compare
+        if: steps.report.outputs.pushed == 'true' && vars.FIGMA_SYNC_OPEN_PR == 'false'
+        env:
+          BRANCH: ${{ steps.report.outputs.branch }}
+        run: |
+          title=$(git log -1 --format=%s "origin/${BRANCH}")
+          url=$(node tools/ci/figmaSyncReport.mjs compare-url "${SYNC_REPORT_PATH}" \
+            --server-url "${GITHUB_SERVER_URL}" --repository "${GITHUB_REPOSITORY}" --title "${title}")
           echo "url=${url}" >> "$GITHUB_OUTPUT"
 
       - name: Start CI on the pull request
@@ -179,13 +196,20 @@ jobs:
         if: steps.report.outputs.found == 'true'
         env:
           PR_URL: ${{ steps.pull-request.outputs.url }}
+          COMPARE_URL: ${{ steps.compare.outputs.url }}
           PUSHED: ${{ steps.report.outputs.pushed }}
           REJECTED: ${{ steps.report.outputs.rejected }}
           TARGET: ${{ matrix.target }}
         run: |
           {
             echo "### Sync ${TARGET}"
-            if [ "${PUSHED}" = "true" ]; then echo "Pull request: ${PR_URL}"; else echo "No changes to publish."; fi
+            if [ -n "${PR_URL}" ]; then
+              echo "Pull request: ${PR_URL}"
+            elif [ -n "${COMPARE_URL}" ]; then
+              echo "Branch pushed. [Open the pull request](${COMPARE_URL})"
+            else
+              echo "No changes to publish."
+            fi
             if [ "${REJECTED}" != "0" ]; then
               echo
               echo "#### Skipped, needs a fix in Figma"
@@ -193,6 +217,20 @@ jobs:
             fi
           } >> "$GITHUB_STEP_SUMMARY"
           jq -r '.rejected[] | "::warning title=Figma asset skipped::\(.name): \(.message | gsub("[\r\n]+"; " "))"' "${SYNC_REPORT_PATH}"
+
+      - name: Tell engineers the branch is ready
+        if: steps.compare.outputs.url != '' && steps.report.outputs.has-webhook == 'true'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL }}
+          COMPARE_URL: ${{ steps.compare.outputs.url }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          node tools/ci/figmaSyncReport.mjs ready-slack "${SYNC_REPORT_PATH}" \
+            --compare-url "${COMPARE_URL}" --run-url "${RUN_URL}" > "${RUNNER_TEMP}/ready.json"
+          curl --fail --silent --show-error --request POST \
+            --header 'Content-type: application/json' \
+            --data @"${RUNNER_TEMP}/ready.json" \
+            "${SLACK_WEBHOOK_URL}"
 
       - name: Check whether designers were already told
         id: notified
