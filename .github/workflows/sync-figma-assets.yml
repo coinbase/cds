@@ -100,6 +100,10 @@ jobs:
       - name: Configure git identity
         if: steps.open-pr.outputs.skip != 'true'
         run: |
+          # setup-node-ci writes enableGlobalCache and enableHardenedMode into .yarnrc.yml, and the
+          # sync refuses to start on a dirty tree.
+          git checkout -- .yarnrc.yml
+          git status --short
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
 
