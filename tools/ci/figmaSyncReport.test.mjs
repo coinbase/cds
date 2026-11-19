@@ -39,9 +39,17 @@ describe('renderPullRequestBody', () => {
     expect(body).not.toContain('[x]');
   });
 
-  it('warns about breaking changes only when there are some', () => {
-    expect(renderPullRequestBody(report())).not.toContain('Breaking changes');
-    expect(renderPullRequestBody(report({ breaking: true }))).toContain('Breaking changes');
+  it('says a non-breaking sync is released, so merging publishes it', () => {
+    const body = renderPullRequestBody(report());
+    expect(body).toContain('merging it publishes the package to npm');
+    expect(body).not.toContain('Breaking changes');
+  });
+
+  it('warns that a breaking sync is not released and how to release it', () => {
+    const body = renderPullRequestBody(report({ breaking: true }));
+    expect(body).toContain('Breaking changes');
+    expect(body).toContain('yarn release --projects=icons');
+    expect(body).not.toContain('merging it publishes');
   });
 
   it('lists rejected assets with their Figma links', () => {

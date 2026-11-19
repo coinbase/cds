@@ -4,6 +4,10 @@ name: Sync Figma Assets
 # longer need an engineer to run the sync by hand. An engineer still reviews every PR, does the
 # manual visreg check and merges it; nothing is merged automatically.
 #
+# A sync without renamed or deleted assets is also released: the workflow applies the version plan
+# (`yarn release`) on the same branch, so merging the PR publishes the package. A breaking sync keeps
+# only the version plan, because it needs a migration guide and a migrator before it can be released.
+#
 # Where Actions may not create pull requests, set vars.FIGMA_SYNC_OPEN_PR to 'false'. The workflow
 # then only pushes the sync branch and posts a link to Slack that opens the pull request form with
 # the title and description filled in. A pull request opened by a person runs CI as usual.
@@ -140,9 +144,26 @@ jobs:
             echo "branch=${branch}"
             echo "pushed=${pushed}"
             echo "rejected=${rejected}"
+            echo "breaking=$(jq -r '.breaking' "${SYNC_REPORT_PATH}")"
             echo "fingerprint=$(node tools/ci/figmaSyncReport.mjs fingerprint "${SYNC_REPORT_PATH}")"
             echo "has-webhook=$([ -n "${SLACK_WEBHOOK_URL}" ] && echo true || echo false)"
           } >> "$GITHUB_OUTPUT"
+
+      - name: Release the package
+        if: steps.report.outputs.pushed == 'true' && steps.report.outputs.breaking == 'false'
+        env:
+          BRANCH: ${{ steps.report.outputs.branch }}
+          TARGET: ${{ matrix.target }}
+        run: |
+          git checkout "${BRANCH}"
+          yarn release --projects="${TARGET}"
+          git add .
+          if git diff --cached --quiet; then
+            echo "Nothing to release."
+            exit 0
+          fi
+          git commit -m "chore: release ${TARGET}"
+          git push --force-with-lease origin "${BRANCH}"
 
       - name: Open or update the pull request
         id: pull-request
@@ -153,7 +174,7 @@ jobs:
         run: |
           body_file="${RUNNER_TEMP}/pr-body.md"
           node tools/ci/figmaSyncReport.mjs pr-body "${SYNC_REPORT_PATH}" > "${body_file}"
-          title=$(git log -1 --format=%s "origin/${BRANCH}")
+          title=$(git log --reverse --format=%s "origin/master..origin/${BRANCH}" | head -1)
           existing=$(gh pr list --head "${BRANCH}" --state open --json number --jq '.[0].number // ""')
           if [ -n "${existing}" ]; then
             gh pr edit "${existing}" --title "${title}" --body-file "${body_file}"
@@ -169,7 +190,7 @@ jobs:
         env:
           BRANCH: ${{ steps.report.outputs.branch }}
         run: |
-          title=$(git log -1 --format=%s "origin/${BRANCH}")
+          title=$(git log --reverse --format=%s "origin/master..origin/${BRANCH}" | head -1)
           url=$(node tools/ci/figmaSyncReport.mjs compare-url "${SYNC_REPORT_PATH}" \
             --server-url "${GITHUB_SERVER_URL}" --repository "${GITHUB_REPOSITORY}" --title "${title}")
           echo "url=${url}" >> "$GITHUB_OUTPUT"
