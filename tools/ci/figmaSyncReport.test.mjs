@@ -1,12 +1,12 @@
 import { describe, expect, it } from '@jest/globals';
 
 import {
+  failureExcerpt,
   renderCompareUrl,
   renderPullRequestBody,
-  renderReadyPayload,
   renderRejections,
-  renderSlackPayload,
-  rejectionFingerprint,
+  renderSummaryPayload,
+  summaryOutcome,
 } from './figmaSyncReport.mjs';
 
 const report = (overrides = {}) => ({
@@ -30,7 +30,7 @@ const rejected = [
 describe('renderPullRequestBody', () => {
   it('summarizes the changes and keeps the required checklist unchecked for the reviewer', () => {
     const body = renderPullRequestBody(report());
-    expect(body).toContain('2 added, 1 updated');
+    expect(body).toContain('2 new, 1 updated');
     expect(body).toContain('- [ ] verified visreg changes with Terran');
     expect(body).toContain(
       '- [ ] all illustration/icons names have been reviewed by Dom and/or Terran',
@@ -61,7 +61,9 @@ describe('renderPullRequestBody', () => {
 
   it('says so when nothing changed', () => {
     const counts = { added: 0, updated: 0, renamed: 0, deleted: 0 };
-    expect(renderPullRequestBody(report({ counts }))).toContain('no asset changes');
+    expect(renderPullRequestBody(report({ counts }))).toContain(
+      '0 new, 0 updated, 0 deleted, 0 renamed',
+    );
   });
 });
 
@@ -71,28 +73,6 @@ describe('renderRejections', () => {
       report({ rejected: [{ ...rejected[0], name: 'a`b\nc', message: 'line one\nline two' }] }),
     );
     expect(list).toBe(`- \`a b c\`: line one line two ([Figma](${rejected[0].url}))`);
-  });
-});
-
-describe('renderSlackPayload', () => {
-  it('lists each asset with its reason and a link, and how to fix it', () => {
-    const { text } = renderSlackPayload(report({ rejected }), { runUrl: 'https://run' });
-    expect(text).toContain('skipped 1 asset. It needs a fix in Figma:');
-    expect(text).toContain('`add`');
-    expect(text).toContain('<https://www.figma.com/design/FILE?node-id=1-2|Open in Figma>');
-    expect(text).toContain('<https://run|Sync run>');
-  });
-
-  it('escapes the characters Slack treats as markup', () => {
-    const { text } = renderSlackPayload(
-      report({ rejected: [{ ...rejected[0], message: 'Use <ui/name> & rename' }] }),
-    );
-    expect(text).toContain('Use &lt;ui/name&gt; &amp; rename');
-  });
-
-  it('pluralizes the count', () => {
-    const { text } = renderSlackPayload(report({ rejected: [...rejected, ...rejected] }));
-    expect(text).toContain('skipped 2 assets. They need a fix in Figma:');
   });
 });
 
@@ -136,31 +116,123 @@ describe('renderCompareUrl with many rejected assets', () => {
   });
 });
 
-describe('renderReadyPayload', () => {
-  const compareUrl = 'https://github.com/coinbase/cds/compare/master...icons/2026-11-19';
+describe('summaryOutcome', () => {
+  const base = { jobStatus: 'success', syncOutcome: 'success', report: report(), pushed: false };
 
-  it('links to the pull request form and summarizes the changes', () => {
-    const { text } = renderReadyPayload(report(), { compareUrl, runUrl: 'https://run' });
-    expect(text).toContain('pushed `icons/2026-11-19`: 2 added, 1 updated');
-    expect(text).toContain(`<${compareUrl}|Open the pull request>`);
-    expect(text).toContain('<https://run|Sync run>');
+  it('says skipped before anything else', () => {
+    expect(summaryOutcome({ ...base, skipped: true, jobStatus: 'failure' })).toBe('skipped');
   });
 
-  it('mentions breaking changes and skipped assets only when there are some', () => {
-    const plainText = renderReadyPayload(report(), { compareUrl }).text;
-    expect(plainText).not.toContain('major version bump');
-    expect(plainText).not.toContain('skipped');
-    const { text } = renderReadyPayload(report({ breaking: true, rejected }), { compareUrl });
-    expect(text).toContain('major version bump');
-    expect(text).toContain('1 asset was skipped');
+  it('says failed when the job failed or the sync crashed without a report', () => {
+    expect(summaryOutcome({ ...base, jobStatus: 'failure' })).toBe('failed');
+    expect(summaryOutcome({ ...base, syncOutcome: 'failure', report: undefined })).toBe('failed');
+  });
+
+  it('keeps a sync that exited non-zero but wrote a report, such as one with rejected assets', () => {
+    expect(summaryOutcome({ ...base, syncOutcome: 'failure', pushed: true })).toBe('branch');
+  });
+
+  it('says branch when one was pushed and nothing when none was', () => {
+    expect(summaryOutcome({ ...base, pushed: true })).toBe('branch');
+    expect(summaryOutcome(base)).toBe('nothing');
   });
 });
 
-describe('rejectionFingerprint', () => {
-  it('is the same for the same problems in any order and changes when they change', () => {
-    const other = { ...rejected[0], name: 'remove', message: 'something else' };
-    const a = rejectionFingerprint(report({ rejected: [rejected[0], other] }));
-    expect(rejectionFingerprint(report({ rejected: [other, rejected[0]] }))).toBe(a);
-    expect(rejectionFingerprint(report({ rejected: [rejected[0]] }))).not.toBe(a);
+describe('renderSummaryPayload', () => {
+  const compareUrl = 'https://github.com/coinbase/cds/compare/master...icons/2026-11-19';
+  const run = {
+    target: 'icons',
+    jobStatus: 'success',
+    syncOutcome: 'success',
+    runUrl: 'https://run',
+  };
+
+  it('names the branch, counts new, updated, deleted and renamed, and links to open the pull request', () => {
+    const { text } = renderSummaryPayload(report(), { ...run, pushed: true, compareUrl });
+    expect(text).toContain(
+      'pushed branch `icons/2026-11-19`: 2 new, 1 updated, 0 deleted, 0 renamed.',
+    );
+    expect(text).toContain(`<${compareUrl}|Open the pull request for \`icons/2026-11-19\`>`);
+    expect(text).toContain('<https://run|Sync run>');
+  });
+
+  it('warns that renames and deletes need a major version bump', () => {
+    const { text } = renderSummaryPayload(report({ breaking: true }), {
+      ...run,
+      pushed: true,
+      compareUrl,
+    });
+    expect(text).toContain('major version bump');
+  });
+
+  it('says there is nothing new when the sync pushed no branch', () => {
+    const { text } = renderSummaryPayload(report(), run);
+    expect(text).toContain('The icons Figma sync ran. Nothing new in Figma.');
+    expect(text).not.toContain('pushed branch');
+  });
+
+  it('says the sync was skipped while a sync pull request is open', () => {
+    const { text } = renderSummaryPayload(undefined, {
+      ...run,
+      skipped: true,
+      openPullRequestUrl: 'https://github.com/coinbase/cds/pull/2',
+    });
+    expect(text).toContain('did not run: a sync pull request is already open');
+    expect(text).toContain('https://github.com/coinbase/cds/pull/2');
+  });
+
+  it('says why a crashed sync failed, from its log, the failed step or a pointer to the run', () => {
+    const crashed = { ...run, jobStatus: 'failure', syncOutcome: 'failure' };
+    const fromLog = renderSummaryPayload(undefined, {
+      ...crashed,
+      failureLog: 'Starting\nERROR: The "cds" repo is not clean\n',
+    }).text;
+    expect(fromLog).toContain('The icons Figma sync failed. Nothing was published.');
+    expect(fromLog).toContain('ERROR: The "cds" repo is not clean');
+    expect(
+      renderSummaryPayload(undefined, { ...crashed, failedStep: 'Release the package' }).text,
+    ).toContain('The step "Release the package" failed.');
+    expect(renderSummaryPayload(undefined, crashed).text).toContain('See the run log');
+  });
+
+  it('lists the assets design has to fix with a link and the reason, on every outcome', () => {
+    const withRejected = report({ rejected });
+    for (const extra of [{}, { pushed: true, compareUrl }]) {
+      const { text } = renderSummaryPayload(withRejected, { ...run, ...extra });
+      expect(text).toContain('1 asset needs a fix in Figma, and was skipped:');
+      expect(text).toContain('`add`');
+      expect(text).toContain('<https://www.figma.com/design/FILE?node-id=1-2|Open in Figma>');
+    }
+  });
+
+  it('escapes the characters Slack treats as markup and pluralizes the count', () => {
+    const { text } = renderSummaryPayload(
+      report({
+        rejected: [{ ...rejected[0], message: 'Use <ui/name> & rename' }, rejected[0]],
+      }),
+      run,
+    );
+    expect(text).toContain('Use &lt;ui/name&gt; &amp; rename');
+    expect(text).toContain('2 assets need a fix in Figma, and were skipped:');
+  });
+});
+
+describe('failureExcerpt', () => {
+  it('keeps the lines that explain the failure and drops colors and backticks', () => {
+    const log = ['Starting', '\u001b[31mERROR: the `cds` repo is not clean\u001b[0m', 'Done'].join(
+      '\n',
+    );
+    expect(failureExcerpt(log)).toBe('ERROR: the cds repo is not clean');
+  });
+
+  it('falls back to the last lines when none look like an error', () => {
+    const log = Array.from({ length: 10 }, (_, index) => `line ${index + 1}`).join('\n');
+    expect(failureExcerpt(log).split('\n')).toEqual(
+      ['line 5', 'line 6', 'line 7', 'line 8', 'line 9', 'line 10'].slice(0),
+    );
+  });
+
+  it('is capped so one long log cannot flood the channel', () => {
+    expect(failureExcerpt(`error ${'x'.repeat(5000)}`).length).toBeLessThanOrEqual(701);
   });
 });

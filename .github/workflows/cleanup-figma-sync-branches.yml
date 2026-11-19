@@ -1,0 +1,84 @@
+name: Clean Up Figma Sync Branches
+
+# The Sync Figma Assets workflow pushes icons/YYYY-MM-DD and illustrations/YYYY-MM-DD. When the pull
+# request is closed without merging, or was never opened, the branch stays behind. Merged branches
+# are deleted by the repository. This deletes the remaining ones that have no open pull request and
+# no commit for stale-days (14 by default). Branches with any other name are never touched.
+#
+# A manual run is a dry run unless you turn dry-run off. The weekly schedule deletes, and follows the
+# same switch as the sync: set vars.FIGMA_SYNC_SCHEDULE_ENABLED to 'true' to turn it on. Every
+# deleted branch is logged with its commit SHA, so it can be restored with
+# `git push origin <sha>:refs/heads/<branch>`.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: List the branches that would be deleted without deleting them
+        type: boolean
+        default: true
+      stale-days:
+        description: Delete branches with no commit for this many days
+        type: string
+        default: '14'
+  schedule:
+    - cron: '0 15 * * 1'
+
+concurrency:
+  group: cleanup-figma-sync-branches
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  cleanup:
+    name: Delete stale sync branches
+    if: github.event_name != 'schedule' || vars.FIGMA_SYNC_SCHEDULE_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          token: ${{ github.token }}
+
+      - name: Delete stale sync branches
+        env:
+          GH_TOKEN: ${{ github.token }}
+          DRY_RUN: ${{ github.event_name == 'schedule' && 'false' || inputs.dry-run }}
+          STALE_DAYS: ${{ inputs.stale-days || '14' }}
+        run: |
+          git fetch --no-tags --depth=1 origin \
+            '+refs/heads/icons/*:refs/remotes/origin/icons/*' \
+            '+refs/heads/illustrations/*:refs/remotes/origin/illustrations/*'
+          git for-each-ref --format='%(refname:lstrip=3)%09%(committerdate:iso-strict)' \
+            refs/remotes/origin/icons refs/remotes/origin/illustrations > "${RUNNER_TEMP}/branches.tsv"
+          gh pr list --state open --limit 1000 --json headRefName --jq '.[].headRefName' \
+            > "${RUNNER_TEMP}/open-prs.txt"
+          node tools/ci/staleSyncBranches.mjs --branches "${RUNNER_TEMP}/branches.tsv" \
+            --open-prs "${RUNNER_TEMP}/open-prs.txt" --days "${STALE_DAYS}" > "${RUNNER_TEMP}/stale.txt"
+
+          {
+            echo "### Stale sync branches (no open pull request, no commit for ${STALE_DAYS} days)"
+            if [ ! -s "${RUNNER_TEMP}/stale.txt" ]; then echo "None."; fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          while read -r branch; do
+            sha=$(git rev-parse "origin/${branch}")
+            if [ "${DRY_RUN}" = "true" ]; then
+              echo "- Would delete \`${branch}\` (${sha})" >> "$GITHUB_STEP_SUMMARY"
+              echo "Would delete ${branch} (${sha})"
+            else
+              git push origin --delete "${branch}"
+              echo "- Deleted \`${branch}\` (was ${sha})" >> "$GITHUB_STEP_SUMMARY"
+              echo "Deleted ${branch} (was ${sha})"
+            fi
+          done < "${RUNNER_TEMP}/stale.txt"

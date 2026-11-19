@@ -14,6 +14,7 @@ import { chooseSinks } from './selectSinks';
 import { runSync, type SinkResult } from './sync';
 import {
   countChanges,
+  duplicateAssets,
   isBreaking,
   type RejectedAsset,
   rejectedAssets,
@@ -107,6 +108,7 @@ const sync = async (sinks: Sink[]) => {
     log: console.log,
   });
 
+  rejected.push(...duplicateAssets(outcome.duplicates));
   if (outcome.duplicates.length) {
     console.warn('\n⚠️ Skipping components whose type/name is already taken by another component:');
     console.table(outcome.duplicates.map(({ nodeId, type, name }) => ({ nodeId, type, name })));
