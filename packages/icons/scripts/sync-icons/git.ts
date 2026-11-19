@@ -84,5 +84,6 @@ export const commitAndPushChanges = (dirname: string, commitMessage: string) => 
     return;
   }
   exec(`git commit -m "${commitMessage}"`);
-  exec(`git push origin ${targetBranchName}`);
+  // A rerun on the same day rebuilds the branch from the default branch, so replace the earlier push
+  exec(`git push --force-with-lease origin ${targetBranchName}`);
 };
