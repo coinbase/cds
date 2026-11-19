@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import type { SyncResults } from './diffIllustrations';
-import { type Illustration, illustrationKey } from './illustration';
+import { type Component, type Illustration, illustrationKey } from './illustration';
 import type { SinkResult } from './sync';
 
 /** An asset the sync could not publish, described for the designer who can fix it in Figma. */
@@ -48,6 +48,15 @@ export const rejectedAssets = (
       ];
     });
 };
+
+/** Components dropped because another component already has their `type/name`. */
+export const duplicateAssets = (duplicates: Component[]): RejectedAsset[] =>
+  duplicates.map(({ nodeId, type, name, url }) => ({
+    name: `${type}/${name}`,
+    nodeId,
+    url,
+    message: `Another component is already named "${type}/${name}", so this one is skipped; rename one of them in Figma.`,
+  }));
 
 export const countChanges = (results?: SyncResults): SyncReport['counts'] => ({
   added: results?.added.length ?? 0,

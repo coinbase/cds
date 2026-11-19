@@ -1,12 +1,10 @@
-import { createHash } from 'node:crypto';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
 
 /**
  * Renders the report written by `sync-icons` and `sync-illustrations` (see `SyncReport` in
  * packages/icons/scripts/sync-icons/syncReport.ts) for the sync-figma-assets workflow: the pull
- * request description, the Slack message for designers, and the fingerprint used to announce each
- * set of problems only once.
+ * request description, the link that opens it, and the Slack message that ends every run.
  */
 
 const MAX_COMPARE_URL_LENGTH = 6000;
@@ -21,15 +19,7 @@ const escapeSlack = (text) =>
   plain(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
 const countSummary = ({ added, updated, renamed, deleted }) =>
-  [
-    ['added', added],
-    ['updated', updated],
-    ['renamed', renamed],
-    ['deleted', deleted],
-  ]
-    .filter(([, count]) => count > 0)
-    .map(([label, count]) => `${count} ${label}`)
-    .join(', ') || 'no asset changes';
+  `${added} new, ${updated} updated, ${deleted} deleted, ${renamed} renamed`;
 
 /** The rejected assets as a markdown list, for the pull request and the job summary. */
 export const renderRejections = (report) =>
@@ -70,28 +60,6 @@ export const renderPullRequestBody = (report) => {
   return `${sections.join('\n\n')}\n`;
 };
 
-/** The Slack message that tells designers which assets to fix. */
-export const renderSlackPayload = (report, { runUrl } = {}) => {
-  const count = report.rejected.length;
-  const lines = report.rejected.map(
-    ({ name, message, url }) =>
-      `• \`${plain(name)}\`: ${escapeSlack(message)} (<${url}|Open in Figma>)`,
-  );
-  const footer = [
-    'Fix them in Figma and publish the library; the next sync picks them up.',
-    runUrl ? `<${runUrl}|Sync run>` : undefined,
-  ]
-    .filter(Boolean)
-    .join(' ');
-  return {
-    text: [
-      `:warning: The ${report.target} sync skipped ${count} ${count === 1 ? 'asset' : 'assets'}. ${count === 1 ? 'It needs' : 'They need'} a fix in Figma:`,
-      ...lines,
-      footer,
-    ].join('\n'),
-  };
-};
-
 /**
  * A link that opens the pull request form for the pushed branch with the title and description
  * filled in, for repositories where Actions are not allowed to create pull requests.
@@ -110,35 +78,109 @@ export const renderCompareUrl = (report, { serverUrl, repository, title, base = 
     : `${compare}?${new URLSearchParams({ expand: '1', title })}`;
 };
 
-/** The Slack message that tells engineers a sync branch is ready for a pull request. */
-export const renderReadyPayload = (report, { compareUrl, runUrl }) => {
-  const skipped = report.rejected.length;
-  const lines = [
-    `:package: The ${report.target} sync pushed \`${plain(report.branch)}\`: ${countSummary(report.counts)}.`,
-    report.breaking
-      ? ':rotating_light: It renames or deletes assets, so it needs a major version bump.'
-      : undefined,
-    skipped > 0
-      ? `${skipped} ${skipped === 1 ? 'asset was skipped and needs' : 'assets were skipped and need'} a fix in Figma.`
-      : undefined,
-    `<${compareUrl}|Open the pull request>${runUrl ? ` · <${runUrl}|Sync run>` : ''}`,
-  ];
-  return { text: lines.filter(Boolean).join('\n') };
+const MAX_FAILURE_LINES = 6;
+const MAX_FAILURE_CHARS = 700;
+const FAILURE_LINE = /error|failed|❌|not clean|cannot|denied|forbidden|\b40[0-9]\b|\b50[0-9]\b/i;
+const ANSI = /\u001b\[[0-9;]*m/g;
+
+/** The lines of a sync log that say why it failed, falling back to its last lines. */
+export const failureExcerpt = (log) => {
+  const lines = log
+    .replace(ANSI, '')
+    .split('\n')
+    .map((line) => plain(line).replace(/\s{2,}/g, ' '))
+    .filter(Boolean);
+  const failures = lines.filter((line) => FAILURE_LINE.test(line));
+  const picked = (failures.length > 0 ? failures : lines).slice(-MAX_FAILURE_LINES);
+  const text = picked.join('\n');
+  return text.length > MAX_FAILURE_CHARS ? `${text.slice(0, MAX_FAILURE_CHARS)}…` : text;
 };
 
-/** Identical for the same assets and problems, so unchanged problems are announced only once. */
-export const rejectionFingerprint = (report) => {
-  const entries = report.rejected.map(({ name, message }) => `${name}\t${message}`).sort();
-  return createHash('sha256').update(entries.join('\n')).digest('hex').slice(0, 16);
+/** How a run ended: it failed, was skipped, pushed a branch, or found nothing new in Figma. */
+export const summaryOutcome = ({ skipped, jobStatus, syncOutcome, report, pushed }) => {
+  if (skipped) return 'skipped';
+  if (jobStatus === 'failure' || (syncOutcome === 'failure' && !report)) return 'failed';
+  return pushed ? 'branch' : 'nothing';
+};
+
+const failureReason = ({ failureLog, failedStep }) => {
+  if (failureLog) return failureExcerpt(failureLog);
+  if (failedStep) return `The step "${plain(failedStep)}" failed.`;
+  return 'See the run log for the failing step.';
+};
+
+/**
+ * The Slack message that ends every run. `report` is missing when the sync crashed before writing
+ * one. It always lists the assets design has to fix, because those are skipped on every run until
+ * they are fixed in Figma.
+ */
+export const renderSummaryPayload = (
+  report,
+  {
+    target,
+    jobStatus,
+    syncOutcome,
+    skipped,
+    pushed,
+    pullRequestUrl,
+    compareUrl,
+    openPullRequestUrl,
+    failureLog,
+    failedStep,
+    runUrl,
+  },
+) => {
+  const outcome = summaryOutcome({ skipped, jobStatus, syncOutcome, report, pushed });
+  const lines = [];
+
+  if (outcome === 'failed') {
+    lines.push(
+      `:red_circle: The ${target} Figma sync failed. Nothing was published.`,
+      `\`\`\`${failureReason({ failureLog, failedStep })}\`\`\``,
+    );
+  } else if (outcome === 'skipped') {
+    lines.push(
+      `:information_source: The ${target} Figma sync did not run: a sync pull request is already open (<${openPullRequestUrl}|open it>).`,
+    );
+  } else if (outcome === 'branch') {
+    lines.push(
+      `:package: The ${target} Figma sync pushed branch \`${plain(report.branch)}\`: ${countSummary(report.counts)}.`,
+    );
+    if (report.breaking) {
+      lines.push(
+        ':rotating_light: It renames or deletes assets, so it needs a major version bump.',
+      );
+    }
+    lines.push(
+      pullRequestUrl
+        ? `<${pullRequestUrl}|Pull request>`
+        : `<${compareUrl}|Open the pull request for \`${plain(report.branch)}\`>`,
+    );
+  } else {
+    lines.push(`:white_check_mark: The ${target} Figma sync ran. Nothing new in Figma.`);
+  }
+
+  const rejected = report?.rejected ?? [];
+  if (rejected.length > 0) {
+    lines.push(
+      `:warning: ${rejected.length} ${rejected.length === 1 ? 'asset needs' : 'assets need'} a fix in Figma, and ${rejected.length === 1 ? 'was' : 'were'} skipped:`,
+      ...rejected.map(
+        ({ name, message, url }) =>
+          `• \`${plain(name)}\`: ${escapeSlack(message)} (<${url}|Open in Figma>)`,
+      ),
+      'Fix them in Figma and publish the library; the next sync picks them up.',
+    );
+  }
+
+  if (runUrl) lines.push(`<${runUrl}|Sync run>`);
+  return { text: lines.join('\n') };
 };
 
 const commands = {
   'pr-body': (report) => renderPullRequestBody(report),
   'compare-url': (report, options) => `${renderCompareUrl(report, options)}\n`,
-  'ready-slack': (report, options) => JSON.stringify(renderReadyPayload(report, options)),
   rejections: (report) => `${renderRejections(report)}\n`,
-  slack: (report, options) => JSON.stringify(renderSlackPayload(report, options)),
-  fingerprint: (report) => `${rejectionFingerprint(report)}\n`,
+  'summary-slack': (report, options) => JSON.stringify(renderSummaryPayload(report, options)),
 };
 
 const main = () => {
@@ -146,7 +188,7 @@ const main = () => {
   const render = commands[command];
   if (!render || !reportPath) {
     console.error(
-      `Usage: figmaSyncReport.mjs <${Object.keys(commands).join('|')}> <report.json> [--run-url <url>] [--compare-url <url>] [--server-url <url>] [--repository <owner/name>] [--title <text>]`,
+      `Usage: figmaSyncReport.mjs <${Object.keys(commands).join('|')}> <report.json> [--target <name>] [--run-url <url>] [--server-url <url>] [--repository <owner/name>] [--title <text>] [--job-status <status>] [--sync-outcome <outcome>] [--skipped <true>] [--pushed <true>] [--pull-request-url <url>] [--compare-url <url>] [--open-pull-request-url <url>] [--log-file <path>] [--failed-step <name>]`,
     );
     process.exit(1);
   }
@@ -154,14 +196,30 @@ const main = () => {
     const index = rest.indexOf(`--${name}`);
     return index >= 0 ? rest[index + 1] : undefined;
   };
+  const logFile = option('log-file');
   const options = {
+    target: option('target'),
     runUrl: option('run-url'),
-    compareUrl: option('compare-url'),
     serverUrl: option('server-url'),
     repository: option('repository'),
     title: option('title'),
+    jobStatus: option('job-status'),
+    syncOutcome: option('sync-outcome'),
+    skipped: option('skipped') === 'true',
+    pushed: option('pushed') === 'true',
+    pullRequestUrl: option('pull-request-url'),
+    compareUrl: option('compare-url'),
+    openPullRequestUrl: option('open-pull-request-url'),
+    failedStep: option('failed-step'),
+    failureLog: logFile && existsSync(logFile) ? readFileSync(logFile, 'utf-8') : undefined,
   };
-  process.stdout.write(render(JSON.parse(readFileSync(reportPath, 'utf-8')), options));
+  // A sync that crashed before writing a report is still announced, so a missing report is allowed.
+  const report = existsSync(reportPath) ? JSON.parse(readFileSync(reportPath, 'utf-8')) : undefined;
+  if (!report && command !== 'summary-slack') {
+    console.error(`No report at ${reportPath}`);
+    process.exit(1);
+  }
+  process.stdout.write(render(report, options));
 };
 
 if (import.meta.url === pathToFileURL(process.argv[1] ?? '').href) main();

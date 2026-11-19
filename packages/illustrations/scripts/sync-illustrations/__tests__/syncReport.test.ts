@@ -4,7 +4,13 @@ import path from 'node:path';
 
 import type { Illustration } from '../illustration';
 import type { SinkResult } from '../sync';
-import { countChanges, rejectedAssets, type SyncReport, writeSyncReport } from '../syncReport';
+import {
+  countChanges,
+  duplicateAssets,
+  rejectedAssets,
+  type SyncReport,
+  writeSyncReport,
+} from '../syncReport';
 
 const illustration = (name: string, nodeId: string): Illustration => ({
   nodeId,
@@ -28,6 +34,28 @@ const sinkResult = (sink: string, failures: SinkResult['failures']): SinkResult 
 });
 
 const url = ({ nodeId }: Illustration) => `https://www.figma.com/design/file?node-id=${nodeId}`;
+
+describe('duplicateAssets', () => {
+  it('reports each dropped component with its Figma link and how to fix it', () => {
+    const [asset] = duplicateAssets([
+      {
+        nodeId: '9:9',
+        type: 'spotSquare',
+        name: 'futures',
+        description: '',
+        createdAt: '2026-01-01T00:00:00Z',
+        updatedAt: '2026-01-01T00:00:00Z',
+        url: 'https://www.figma.com/design/FILE?node-id=9-9',
+      },
+    ]);
+    expect(asset).toEqual({
+      name: 'spotSquare/futures',
+      nodeId: '9:9',
+      url: 'https://www.figma.com/design/FILE?node-id=9-9',
+      message: expect.stringContaining('already named "spotSquare/futures"'),
+    });
+  });
+});
 
 describe('rejectedAssets', () => {
   it('describes each rejected illustration with its Figma link and reason', () => {
