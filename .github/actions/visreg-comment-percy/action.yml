@@ -1,10 +1,14 @@
 name: Comment Percy Link
-description: Posts or updates a Percy build URL comment on the PR. No-ops if the URL is unchanged or the event is not a pull_request.
+description: Posts or updates a Percy build URL comment on the PR. No-ops if the URL is unchanged or there is no PR to comment on.
 
 inputs:
   percy_url:
     description: 'Percy build URL to post as a PR comment'
     required: true
+  pr_number:
+    description: 'Pull request to comment on, for runs that are not a pull_request event'
+    required: false
+    default: ''
 
 runs:
   using: composite
@@ -14,7 +18,7 @@ runs:
       env:
         GH_TOKEN: ${{ github.token }}
         REPO: ${{ github.repository }}
-        PR_NUMBER: ${{ github.event.pull_request.number }}
+        PR_NUMBER: ${{ inputs.pr_number || github.event.pull_request.number }}
         PERCY_URL: ${{ inputs.percy_url }}
       run: |
         EXISTING=$(gh api \

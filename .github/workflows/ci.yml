@@ -2,6 +2,11 @@ name: CI
 
 on:
   workflow_dispatch:
+    inputs:
+      base-sha:
+        description: 'Classify changes against this commit instead of running every toolchain (used by the Sync Figma Assets workflow)'
+        required: false
+        default: ''
   push:
     branches:
       - master
@@ -43,8 +48,8 @@ jobs:
       - name: Classify affected toolchains
         id: toolchains
         env:
-          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
-          FORCE_ALL: ${{ github.event_name == 'workflow_dispatch' }}
+          BASE_SHA: ${{ github.event.pull_request.base.sha || inputs.base-sha || github.event.before }}
+          FORCE_ALL: ${{ github.event_name == 'workflow_dispatch' && inputs.base-sha == '' }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
         run: node tools/ci/classifyToolchains.mjs
 

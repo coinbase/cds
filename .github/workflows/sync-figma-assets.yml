@@ -47,6 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
+      actions: write
       contents: write
       pull-requests: write
     strategy:
@@ -155,6 +156,24 @@ jobs:
             url=$(gh pr create --base master --head "${BRANCH}" --title "${title}" --body-file "${body_file}")
           fi
           echo "url=${url}" >> "$GITHUB_OUTPUT"
+
+      - name: Start CI on the pull request
+        if: steps.pull-request.outputs.url != '' && steps.app-token.outputs.token == ''
+        env:
+          GH_TOKEN: ${{ github.token }}
+          BRANCH: ${{ steps.report.outputs.branch }}
+          PR_URL: ${{ steps.pull-request.outputs.url }}
+        run: |
+          # GitHub does not run pull_request workflows for a PR opened with the default token, but it
+          # does run workflow_dispatch. With the GitHub App token the PR triggers CI by itself.
+          base_sha=$(git merge-base origin/master "origin/${BRANCH}")
+          failed=false
+          gh workflow run ci.yml --ref "${BRANCH}" -f base-sha="${base_sha}" || failed=true
+          gh workflow run visreg-web.yml --ref "${BRANCH}" -f pr-number="${PR_URL##*/}" || failed=true
+          if [ "${failed}" = "true" ]; then
+            echo "::warning::Could not start CI on ${BRANCH}. Close and reopen the pull request to run it."
+            echo "CI could not be started on the pull request. Close and reopen it to run CI." >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Write the job summary
         if: steps.report.outputs.found == 'true'
