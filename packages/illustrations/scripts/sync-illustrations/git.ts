@@ -63,7 +63,8 @@ export class ReleaseBranch {
     this.exec('git add .');
     if (!this.isDirty()) return false;
     this.exec(`git commit -m "${commitMessage}"`);
-    this.exec(`git push origin ${this.branchName}`);
+    // A rerun on the same day rebuilds the branch from the default branch, so replace the earlier push
+    this.exec(`git push --force-with-lease origin ${this.branchName}`);
     console.log(`\nPushed ${this.branchName}. Open a PR titled "${commitMessage}".`);
     return true;
   }
