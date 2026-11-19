@@ -156,15 +156,6 @@ describe('renderSummaryPayload', () => {
     expect(text).toContain('<https://run|Sync run>');
   });
 
-  it('links to the pull request when the workflow opened one', () => {
-    const { text } = renderSummaryPayload(report(), {
-      ...run,
-      pushed: true,
-      pullRequestUrl: 'https://github.com/coinbase/cds/pull/1',
-    });
-    expect(text).toContain('<https://github.com/coinbase/cds/pull/1|Pull request>');
-  });
-
   it('warns that renames and deletes need a major version bump', () => {
     const { text } = renderSummaryPayload(report({ breaking: true }), {
       ...run,

@@ -8,11 +8,10 @@ name: Sync Figma Assets
 # (`yarn release`) on the same branch, so merging the PR publishes the package. A breaking sync keeps
 # only the version plan, because it needs a migration guide and a migrator before it can be released.
 #
-# By default the workflow only pushes the sync branch; it does not create the pull request. The
-# Slack message that ends the run links to the pull request form for that branch, with the title and
-# description filled in, and a person opens it, which also makes CI run as usual. Set
-# vars.FIGMA_SYNC_OPEN_PR to 'true' to have the workflow open the pull request itself, where Actions
-# may create them.
+# The workflow only pushes the sync branch; it does not create the pull request, which Actions may
+# not be allowed to do. The Slack message that ends the run links to the pull request form for that
+# branch, with the title and description filled in, and a person opens it, which also makes CI run as
+# usual.
 #
 # Every run ends with one Slack message per target: the sync failed and why, it ran and Figma had
 # nothing new, or it pushed a branch with the new, updated, deleted and renamed counts and the link to
@@ -21,8 +20,6 @@ name: Sync Figma Assets
 #
 # Repository configuration (all optional except the Figma token):
 #   secrets.FIGMA_ACCESS_TOKEN                Figma token used by the syncs.
-#   vars.FIGMA_SYNC_OPEN_PR                   'true' to create the pull request from the workflow
-#                                             instead of linking to the form. Defaults to linking.
 #   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL      Slack webhook for the message that ends each run. Falls back to
 #                                             secrets.SLACK_WEBHOOK_URL; with neither set, Slack is skipped.
 #   vars.FIGMA_SYNC_SCHEDULE_ENABLED          Set to 'true' to turn on the weekday schedule.
@@ -59,9 +56,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 60
     permissions:
-      actions: write
       contents: write
-      pull-requests: write
+      pull-requests: read
     strategy:
       fail-fast: false
       matrix:
@@ -171,28 +167,9 @@ jobs:
           git commit -m "chore: release ${TARGET}"
           git push --force-with-lease origin "${BRANCH}"
 
-      - name: Open or update the pull request
-        id: pull-request
-        if: steps.report.outputs.pushed == 'true' && vars.FIGMA_SYNC_OPEN_PR == 'true'
-        env:
-          GH_TOKEN: ${{ github.token }}
-          BRANCH: ${{ steps.report.outputs.branch }}
-        run: |
-          body_file="${RUNNER_TEMP}/pr-body.md"
-          node tools/ci/figmaSyncReport.mjs pr-body "${SYNC_REPORT_PATH}" > "${body_file}"
-          title=$(git log --reverse --format=%s "origin/master..origin/${BRANCH}" | head -1)
-          existing=$(gh pr list --head "${BRANCH}" --state open --json number --jq '.[0].number // ""')
-          if [ -n "${existing}" ]; then
-            gh pr edit "${existing}" --title "${title}" --body-file "${body_file}"
-            url=$(gh pr view "${existing}" --json url --jq .url)
-          else
-            url=$(gh pr create --base master --head "${BRANCH}" --title "${title}" --body-file "${body_file}")
-          fi
-          echo "url=${url}" >> "$GITHUB_OUTPUT"
-
       - name: Link to open the pull request
         id: compare
-        if: steps.report.outputs.pushed == 'true' && vars.FIGMA_SYNC_OPEN_PR != 'true'
+        if: steps.report.outputs.pushed == 'true'
         env:
           BRANCH: ${{ steps.report.outputs.branch }}
         run: |
@@ -201,28 +178,9 @@ jobs:
             --server-url "${GITHUB_SERVER_URL}" --repository "${GITHUB_REPOSITORY}" --title "${title}")
           echo "url=${url}" >> "$GITHUB_OUTPUT"
 
-      - name: Start CI on the pull request
-        if: steps.pull-request.outputs.url != ''
-        env:
-          GH_TOKEN: ${{ github.token }}
-          BRANCH: ${{ steps.report.outputs.branch }}
-          PR_URL: ${{ steps.pull-request.outputs.url }}
-        run: |
-          # GitHub does not run pull_request workflows for a PR opened with the default token, but it
-          # does run workflow_dispatch.
-          base_sha=$(git merge-base origin/master "origin/${BRANCH}")
-          failed=false
-          gh workflow run ci.yml --ref "${BRANCH}" -f base-sha="${base_sha}" || failed=true
-          gh workflow run visreg-web.yml --ref "${BRANCH}" -f pr-number="${PR_URL##*/}" || failed=true
-          if [ "${failed}" = "true" ]; then
-            echo "::warning::Could not start CI on ${BRANCH}. Close and reopen the pull request to run it."
-            echo "CI could not be started on the pull request. Close and reopen it to run CI." >> "$GITHUB_STEP_SUMMARY"
-          fi
-
       - name: Write the job summary
         if: steps.report.outputs.found == 'true'
         env:
-          PR_URL: ${{ steps.pull-request.outputs.url }}
           COMPARE_URL: ${{ steps.compare.outputs.url }}
           PUSHED: ${{ steps.report.outputs.pushed }}
           REJECTED: ${{ steps.report.outputs.rejected }}
@@ -230,9 +188,7 @@ jobs:
         run: |
           {
             echo "### Sync ${TARGET}"
-            if [ -n "${PR_URL}" ]; then
-              echo "Pull request: ${PR_URL}"
-            elif [ -n "${COMPARE_URL}" ]; then
+            if [ -n "${COMPARE_URL}" ]; then
               echo "Branch pushed. [Open the pull request](${COMPARE_URL})"
             else
               echo "No changes to publish."
@@ -261,16 +217,15 @@ jobs:
           SKIPPED: ${{ steps.open-pr.outputs.skip }}
           OPEN_PR_URL: ${{ steps.open-pr.outputs.url }}
           PUSHED: ${{ steps.report.outputs.pushed }}
-          PR_URL: ${{ steps.pull-request.outputs.url }}
           COMPARE_URL: ${{ steps.compare.outputs.url }}
-          FAILED_STEP: ${{ steps.release.outcome == 'failure' && 'Release the package' || steps.pull-request.outcome == 'failure' && 'Open or update the pull request' || '' }}
+          FAILED_STEP: ${{ steps.release.outcome == 'failure' && 'Release the package' || '' }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           if [ -z "${SLACK_WEBHOOK_URL}" ]; then exit 0; fi
           node tools/ci/figmaSyncReport.mjs summary-slack "${SYNC_REPORT_PATH}" \
             --target "${TARGET}" --job-status "${JOB_STATUS}" --sync-outcome "${SYNC_OUTCOME}" \
             --skipped "${SKIPPED}" --open-pull-request-url "${OPEN_PR_URL}" --pushed "${PUSHED}" \
-            --pull-request-url "${PR_URL}" --compare-url "${COMPARE_URL}" --failed-step "${FAILED_STEP}" \
+            --compare-url "${COMPARE_URL}" --failed-step "${FAILED_STEP}" \
             --log-file "${RUNNER_TEMP}/sync.log" --run-url "${RUN_URL}" > "${RUNNER_TEMP}/summary.json"
           curl --fail --silent --show-error --request POST \
             --header 'Content-type: application/json' \

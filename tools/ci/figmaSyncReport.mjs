@@ -122,7 +122,6 @@ export const renderSummaryPayload = (
     syncOutcome,
     skipped,
     pushed,
-    pullRequestUrl,
     compareUrl,
     openPullRequestUrl,
     failureLog,
@@ -151,11 +150,7 @@ export const renderSummaryPayload = (
         ':rotating_light: It renames or deletes assets, so it needs a major version bump.',
       );
     }
-    lines.push(
-      pullRequestUrl
-        ? `<${pullRequestUrl}|Pull request>`
-        : `<${compareUrl}|Open the pull request for \`${plain(report.branch)}\`>`,
-    );
+    lines.push(`<${compareUrl}|Open the pull request for \`${plain(report.branch)}\`>`);
   } else {
     lines.push(`:white_check_mark: The ${target} Figma sync ran. Nothing new in Figma.`);
   }
@@ -177,7 +172,6 @@ export const renderSummaryPayload = (
 };
 
 const commands = {
-  'pr-body': (report) => renderPullRequestBody(report),
   'compare-url': (report, options) => `${renderCompareUrl(report, options)}\n`,
   rejections: (report) => `${renderRejections(report)}\n`,
   'summary-slack': (report, options) => JSON.stringify(renderSummaryPayload(report, options)),
@@ -188,7 +182,7 @@ const main = () => {
   const render = commands[command];
   if (!render || !reportPath) {
     console.error(
-      `Usage: figmaSyncReport.mjs <${Object.keys(commands).join('|')}> <report.json> [--target <name>] [--run-url <url>] [--server-url <url>] [--repository <owner/name>] [--title <text>] [--job-status <status>] [--sync-outcome <outcome>] [--skipped <true>] [--pushed <true>] [--pull-request-url <url>] [--compare-url <url>] [--open-pull-request-url <url>] [--log-file <path>] [--failed-step <name>]`,
+      `Usage: figmaSyncReport.mjs <${Object.keys(commands).join('|')}> <report.json> [--target <name>] [--run-url <url>] [--server-url <url>] [--repository <owner/name>] [--title <text>] [--job-status <status>] [--sync-outcome <outcome>] [--skipped <true>] [--pushed <true>] [--compare-url <url>] [--open-pull-request-url <url>] [--log-file <path>] [--failed-step <name>]`,
     );
     process.exit(1);
   }
@@ -207,7 +201,6 @@ const main = () => {
     syncOutcome: option('sync-outcome'),
     skipped: option('skipped') === 'true',
     pushed: option('pushed') === 'true',
-    pullRequestUrl: option('pull-request-url'),
     compareUrl: option('compare-url'),
     openPullRequestUrl: option('open-pull-request-url'),
     failedStep: option('failed-step'),

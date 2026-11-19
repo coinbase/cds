@@ -5,12 +5,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, labeled, unlabeled, ready_for_review]
     branches: [master]
-  workflow_dispatch:
-    inputs:
-      pr-number:
-        description: 'Pull request to post the Percy link on (used by the Sync Figma Assets workflow)'
-        required: false
-        default: ''
 
 concurrency:
   group: Visreg-Web-${{github.ref_name}}-${{github.event.pull_request.number || github.sha}}
@@ -80,11 +74,10 @@ jobs:
           PERCY_BRANCH: ${{ env.PERCY_BRANCH }}
           CI: true
       - name: Comment Percy link on PR
-        if: always() && (github.event_name == 'pull_request' || inputs.pr-number != '') && steps.percy-run.outputs.percy_url != ''
+        if: always() && github.event_name == 'pull_request' && steps.percy-run.outputs.percy_url != ''
         uses: ./.github/actions/visreg-comment-percy
         with:
           percy_url: ${{ steps.percy-run.outputs.percy_url }}
-          pr_number: ${{ inputs.pr-number }}
 
   finalize:
     name: Save visreg result cache
