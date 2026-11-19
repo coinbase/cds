@@ -66,12 +66,14 @@ jobs:
         target: ${{ fromJSON(inputs.target == 'icons' && '["icons"]' || inputs.target == 'illustrations' && '["illustrations"]' || '["icons","illustrations"]') }}
     env:
       NX_DAEMON: 'false'
-      SYNC_REPORT_PATH: ${{ runner.temp }}/sync-report.json
     steps:
       - name: Harden the runner (Audit all outbound calls)
         uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
         with:
           egress-policy: audit
+
+      - name: Set the sync report path
+        run: echo "SYNC_REPORT_PATH=${RUNNER_TEMP}/sync-report.json" >> "${GITHUB_ENV}"
 
       - name: Create GitHub App token
         id: app-token
