@@ -17,9 +17,6 @@ name: Sync Figma Assets
 #
 # Repository configuration (all optional except the Figma token):
 #   secrets.FIGMA_ACCESS_TOKEN                Figma token used by the syncs.
-#   vars.FIGMA_SYNC_APP_ID                    GitHub App that pushes the branch and opens the PR.
-#   secrets.FIGMA_SYNC_APP_PRIVATE_KEY        Without an app, the default token is used and CI does not
-#                                             run on the sync PR until a maintainer pushes to it.
 #   vars.FIGMA_SYNC_OPEN_PR                   'false' to push the branch and post a link instead of
 #                                             creating the pull request. Defaults to creating it.
 #   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL      Slack webhook for rejected assets and failed runs.
@@ -75,24 +72,16 @@ jobs:
       - name: Set the sync report path
         run: echo "SYNC_REPORT_PATH=${RUNNER_TEMP}/sync-report.json" >> "${GITHUB_ENV}"
 
-      - name: Create GitHub App token
-        id: app-token
-        if: ${{ vars.FIGMA_SYNC_APP_ID != '' }}
-        uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
-        with:
-          app-id: ${{ vars.FIGMA_SYNC_APP_ID }}
-          private-key: ${{ secrets.FIGMA_SYNC_APP_PRIVATE_KEY }}
-
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
         with:
           fetch-depth: 0
-          token: ${{ steps.app-token.outputs.token || github.token }}
+          token: ${{ github.token }}
 
       - name: Look for an open sync pull request
         id: open-pr
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
+          GH_TOKEN: ${{ github.token }}
           TARGET: ${{ matrix.target }}
         run: |
           # The manifest on master only advances when a sync PR merges, so a new scheduled sync would
@@ -171,7 +160,7 @@ jobs:
         id: pull-request
         if: steps.report.outputs.pushed == 'true' && vars.FIGMA_SYNC_OPEN_PR != 'false'
         env:
-          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
+          GH_TOKEN: ${{ github.token }}
           BRANCH: ${{ steps.report.outputs.branch }}
         run: |
           body_file="${RUNNER_TEMP}/pr-body.md"
@@ -198,14 +187,14 @@ jobs:
           echo "url=${url}" >> "$GITHUB_OUTPUT"
 
       - name: Start CI on the pull request
-        if: steps.pull-request.outputs.url != '' && steps.app-token.outputs.token == ''
+        if: steps.pull-request.outputs.url != ''
         env:
           GH_TOKEN: ${{ github.token }}
           BRANCH: ${{ steps.report.outputs.branch }}
           PR_URL: ${{ steps.pull-request.outputs.url }}
         run: |
           # GitHub does not run pull_request workflows for a PR opened with the default token, but it
-          # does run workflow_dispatch. With the GitHub App token the PR triggers CI by itself.
+          # does run workflow_dispatch.
           base_sha=$(git merge-base origin/master "origin/${BRANCH}")
           failed=false
           gh workflow run ci.yml --ref "${BRANCH}" -f base-sha="${base_sha}" || failed=true
