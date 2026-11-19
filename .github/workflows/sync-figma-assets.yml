@@ -12,7 +12,7 @@ name: Sync Figma Assets
 #   vars.FIGMA_SYNC_APP_ID                    GitHub App that pushes the branch and opens the PR.
 #   secrets.FIGMA_SYNC_APP_PRIVATE_KEY        Without an app, the default token is used and CI does not
 #                                             run on the sync PR until a maintainer pushes to it.
-#   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL      Slack webhook for the designers' channel.
+#   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL      Slack webhook for rejected assets and failed runs.
 #   vars.FIGMA_SYNC_SCHEDULE_ENABLED          Set to 'true' to turn on the weekday schedule.
 
 on:
@@ -209,3 +209,16 @@ jobs:
         run: |
           echo "The ${{ matrix.target }} sync failed before it wrote a report. See the sync step log."
           exit 1
+
+      - name: Notify Slack that the sync failed
+        if: failure()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL }}
+          TARGET: ${{ matrix.target }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          if [ -z "${SLACK_WEBHOOK_URL}" ]; then exit 0; fi
+          jq -n --arg target "${TARGET}" --arg url "${RUN_URL}" \
+            '{text: ":rotating_light: The \($target) Figma sync failed. Nothing was published. <\($url)|See the run>"}' \
+            | curl --fail --silent --show-error --request POST \
+              --header 'Content-type: application/json' --data @- "${SLACK_WEBHOOK_URL}"
