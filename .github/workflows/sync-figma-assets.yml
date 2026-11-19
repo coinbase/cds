@@ -150,9 +150,17 @@ jobs:
           BRANCH: ${{ steps.report.outputs.branch }}
           TARGET: ${{ matrix.target }}
         run: |
-          git checkout "${BRANCH}"
+          git checkout -B "${BRANCH}" "origin/${BRANCH}"
           yarn release --projects="${TARGET}"
-          git add .
+          # nx release deletes every pending version plan of the group without releasing it. Put
+          # back the plans that also name another package, so that package still gets its release.
+          for plan in $(git diff --name-only --diff-filter=D HEAD -- .nx/version-plans); do
+            others=$(git show "HEAD:${plan}" |
+              awk 'NR == 1 && $0 == "---" { inside = 1; next } inside && $0 == "---" { exit } inside { split($0, kv, ":"); print kv[1] }' |
+              grep -vxF "${TARGET}" || true)
+            if [ -n "${others}" ]; then git checkout HEAD -- "${plan}"; fi
+          done
+          git add -u
           if git diff --cached --quiet; then
             echo "Nothing to release."
             exit 0
