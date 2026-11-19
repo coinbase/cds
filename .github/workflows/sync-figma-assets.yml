@@ -1,0 +1,211 @@
+name: Sync Figma Assets
+
+# Syncs icons and illustrations from Figma and opens a pull request for each, so designers no
+# longer need an engineer to run the sync by hand. An engineer still reviews every PR, does the
+# manual visreg check and merges it; nothing is merged automatically.
+#
+# Malformed assets are skipped rather than published. They are listed in the pull request and in
+# the job summary, and posted to Slack once per set of problems.
+#
+# Repository configuration (all optional except the Figma token):
+#   secrets.FIGMA_ACCESS_TOKEN                Figma token used by the syncs.
+#   vars.FIGMA_SYNC_APP_ID                    GitHub App that pushes the branch and opens the PR.
+#   secrets.FIGMA_SYNC_APP_PRIVATE_KEY        Without an app, the default token is used and CI does not
+#                                             run on the sync PR until a maintainer pushes to it.
+#   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL      Slack webhook for the designers' channel.
+#   vars.FIGMA_SYNC_SCHEDULE_ENABLED          Set to 'true' to turn on the weekday schedule.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: What to sync
+        type: choice
+        options:
+          - all
+          - icons
+          - illustrations
+        default: all
+      sync-all:
+        description: Sync every asset, not only those changed since the last sync
+        type: boolean
+        default: false
+  schedule:
+    - cron: '0 14 * * 1-5'
+
+concurrency:
+  group: sync-figma-assets
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  sync:
+    name: Sync ${{ matrix.target }}
+    if: github.event_name != 'schedule' || vars.FIGMA_SYNC_SCHEDULE_ENABLED == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    permissions:
+      contents: write
+      pull-requests: write
+    strategy:
+      fail-fast: false
+      matrix:
+        target: ${{ fromJSON(inputs.target == 'icons' && '["icons"]' || inputs.target == 'illustrations' && '["illustrations"]' || '["icons","illustrations"]') }}
+    env:
+      NX_DAEMON: 'false'
+      SYNC_REPORT_PATH: ${{ runner.temp }}/sync-report.json
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Create GitHub App token
+        id: app-token
+        if: ${{ vars.FIGMA_SYNC_APP_ID != '' }}
+        uses: actions/create-github-app-token@67018539274d69449ef7c02e8e71183d1719ab42 # v2.1.4
+        with:
+          app-id: ${{ vars.FIGMA_SYNC_APP_ID }}
+          private-key: ${{ secrets.FIGMA_SYNC_APP_PRIVATE_KEY }}
+
+      - name: Checkout
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          fetch-depth: 0
+          token: ${{ steps.app-token.outputs.token || github.token }}
+
+      - name: Look for an open sync pull request
+        id: open-pr
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
+          TARGET: ${{ matrix.target }}
+        run: |
+          # The manifest on master only advances when a sync PR merges, so a new scheduled sync would
+          # repeat the changes of one that is still waiting for review.
+          open=$(gh pr list --state open --json number,url,headRefName \
+            --jq "[.[] | select(.headRefName | startswith(\"${TARGET}/\"))][0].url // \"\"")
+          echo "url=${open}" >> "$GITHUB_OUTPUT"
+          if [ "${GITHUB_EVENT_NAME}" = "schedule" ] && [ -n "${open}" ]; then
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            echo "A ${TARGET} sync pull request is already open, so this scheduled run skipped it: ${open}" >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: ./.github/actions/setup-node-ci
+        if: steps.open-pr.outputs.skip != 'true'
+
+      - name: Configure git identity
+        if: steps.open-pr.outputs.skip != 'true'
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
+      - name: Sync ${{ matrix.target }} from Figma
+        id: sync
+        if: steps.open-pr.outputs.skip != 'true'
+        continue-on-error: true
+        env:
+          FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+          SYNC_ALL: ${{ inputs.sync-all }}
+          TARGET: ${{ matrix.target }}
+        run: |
+          args=()
+          if [ "${SYNC_ALL}" = "true" ]; then args+=(--sync-all); fi
+          yarn nx run "${TARGET}:sync-${TARGET}" -- "${args[@]}"
+
+      - name: Read the sync report
+        id: report
+        if: steps.open-pr.outputs.skip != 'true'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL }}
+        run: |
+          if [ ! -f "${SYNC_REPORT_PATH}" ]; then
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          branch=$(jq -r '.branch' "${SYNC_REPORT_PATH}")
+          rejected=$(jq '.rejected | length' "${SYNC_REPORT_PATH}")
+          pushed=false
+          if git ls-remote --exit-code --heads origin "${branch}" > /dev/null 2>&1; then pushed=true; fi
+          {
+            echo "found=true"
+            echo "branch=${branch}"
+            echo "pushed=${pushed}"
+            echo "rejected=${rejected}"
+            echo "fingerprint=$(node tools/ci/figmaSyncReport.mjs fingerprint "${SYNC_REPORT_PATH}")"
+            echo "has-webhook=$([ -n "${SLACK_WEBHOOK_URL}" ] && echo true || echo false)"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Open or update the pull request
+        id: pull-request
+        if: steps.report.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.app-token.outputs.token || github.token }}
+          BRANCH: ${{ steps.report.outputs.branch }}
+        run: |
+          body_file="${RUNNER_TEMP}/pr-body.md"
+          node tools/ci/figmaSyncReport.mjs pr-body "${SYNC_REPORT_PATH}" > "${body_file}"
+          title=$(git log -1 --format=%s "origin/${BRANCH}")
+          existing=$(gh pr list --head "${BRANCH}" --state open --json number --jq '.[0].number // ""')
+          if [ -n "${existing}" ]; then
+            gh pr edit "${existing}" --title "${title}" --body-file "${body_file}"
+            url=$(gh pr view "${existing}" --json url --jq .url)
+          else
+            url=$(gh pr create --base master --head "${BRANCH}" --title "${title}" --body-file "${body_file}")
+          fi
+          echo "url=${url}" >> "$GITHUB_OUTPUT"
+
+      - name: Write the job summary
+        if: steps.report.outputs.found == 'true'
+        env:
+          PR_URL: ${{ steps.pull-request.outputs.url }}
+          PUSHED: ${{ steps.report.outputs.pushed }}
+          REJECTED: ${{ steps.report.outputs.rejected }}
+          TARGET: ${{ matrix.target }}
+        run: |
+          {
+            echo "### Sync ${TARGET}"
+            if [ "${PUSHED}" = "true" ]; then echo "Pull request: ${PR_URL}"; else echo "No changes to publish."; fi
+            if [ "${REJECTED}" != "0" ]; then
+              echo
+              echo "#### Skipped, needs a fix in Figma"
+              node tools/ci/figmaSyncReport.mjs rejections "${SYNC_REPORT_PATH}"
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+          jq -r '.rejected[] | "::warning title=Figma asset skipped::\(.name): \(.message | gsub("[\r\n]+"; " "))"' "${SYNC_REPORT_PATH}"
+
+      - name: Check whether designers were already told
+        id: notified
+        if: steps.report.outputs.rejected != '' && steps.report.outputs.rejected != '0' && steps.report.outputs.has-webhook == 'true'
+        uses: actions/cache/restore@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: .figma-sync-notified
+          key: figma-sync-notified-${{ matrix.target }}-${{ steps.report.outputs.fingerprint }}
+
+      - name: Notify designers in Slack
+        id: notify
+        if: steps.notified.outcome == 'success' && steps.notified.outputs.cache-hit != 'true'
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          node tools/ci/figmaSyncReport.mjs slack "${SYNC_REPORT_PATH}" --run-url "${RUN_URL}" > "${RUNNER_TEMP}/slack.json"
+          curl --fail --silent --show-error --request POST \
+            --header 'Content-type: application/json' \
+            --data @"${RUNNER_TEMP}/slack.json" \
+            "${SLACK_WEBHOOK_URL}"
+          date -u +%FT%TZ > .figma-sync-notified
+
+      - name: Remember that designers were told
+        if: steps.notify.outcome == 'success'
+        uses: actions/cache/save@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+        with:
+          path: .figma-sync-notified
+          key: figma-sync-notified-${{ matrix.target }}-${{ steps.report.outputs.fingerprint }}
+
+      - name: Fail when the sync crashed
+        if: steps.sync.outcome == 'failure' && steps.report.outputs.found != 'true'
+        run: |
+          echo "The ${{ matrix.target }} sync failed before it wrote a report. See the sync step log."
+          exit 1

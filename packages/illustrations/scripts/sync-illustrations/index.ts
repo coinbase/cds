@@ -12,9 +12,17 @@ import { readManifest, writeManifest } from './manifest';
 import { assertNativeCheckout } from './nativeRepo';
 import { chooseSinks } from './selectSinks';
 import { runSync, type SinkResult } from './sync';
+import {
+  countChanges,
+  isBreaking,
+  type RejectedAsset,
+  rejectedAssets,
+  writeSyncReport,
+} from './syncReport';
 
 const args = process.argv.slice(2);
 const syncAll = config.syncAll || args.includes('--sync-all');
+const reportPath = process.env.SYNC_REPORT_PATH;
 const dryRun = args.includes('--dry-run');
 const allOrNothing = args.includes('--all-or-nothing');
 const useGit = config.git && !args.includes('--no-git') && !dryRun;
@@ -59,6 +67,8 @@ const logSummary = (results: SyncResults) => {
 };
 
 const failedIllustrations: SinkResult['failures'] = [];
+const rejected: RejectedAsset[] = [];
+let changes: SyncResults | undefined;
 
 const logSinkResults = (results: SinkResult[]) => {
   console.log(dryRun ? '\nDry run: nothing was written.' : '\nSink results:');
@@ -112,6 +122,8 @@ const sync = async (sinks: Sink[]) => {
   }
 
   failedIllustrations.push(...outcome.sinkResults.flatMap(({ failures }) => failures));
+  rejected.push(...rejectedAssets(outcome.sinkResults, config.componentUrl));
+  changes = outcome.diff.results;
 
   if (hasChanges(outcome.diff) && !dryRun) {
     console.log('Writing version plan...');
@@ -184,6 +196,13 @@ const main = async () => {
 
 main().then(
   () => {
+    writeSyncReport(reportPath, {
+      target: 'illustrations',
+      branch: `illustrations/${todaysDate}`,
+      breaking: isBreaking(changes),
+      counts: countChanges(changes),
+      rejected,
+    });
     if (failedIllustrations.length) {
       console.error(
         `\n❌ Illustration sync finished with ${failedIllustrations.length} rejected illustration(s); ` +

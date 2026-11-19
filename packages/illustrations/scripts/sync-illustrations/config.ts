@@ -26,6 +26,8 @@ type SyncIllustrationsConfig = {
   syncAll: boolean;
   /* Whether to run on a fresh `illustrations/YYYY-MM-DD` branch and push it. Off for scratch runs; `--no-git` turns it off for a run. */
   git: boolean;
+  /* Deep link to an illustration's component in Figma, for error messages and the sync report. */
+  componentUrl: (illustration: Illustration) => string;
   /* The native CDS checkout (mobile-skunkworks) the native sinks write into, when it is synced too. Unset for scratch runs, which write the native output under the scratch directory instead. */
   nativeRepo?: string;
   /* The sinks among `sinks` that write into the native checkout; empty when none is configured. */
@@ -100,6 +102,7 @@ export const config: SyncIllustrationsConfig = {
   ],
   syncAll: false,
   git: !SCRATCH_DIR,
+  componentUrl,
   nativeSinks,
   nativeRepo: NATIVE_REPO && !SCRATCH_DIR ? path.resolve(NATIVE_REPO) : undefined,
 };

@@ -16,12 +16,21 @@ import { commitAndPushChanges, ensureCleanBranch, todaysDate } from './git';
 import { sortByCreatedAt } from './sortByCreatedAt';
 import { stringToObject } from './stringToObject';
 import { svgoConfig } from './svgoConfig';
+import { figmaNodeUrl, type RejectedAsset, writeSyncReport } from './syncReport';
+import { iconPropsProblem, iconSetNameProblem } from './validateIcons';
 
 const args = process.argv.slice(2);
 const syncAll = args.includes('--sync-all');
 const doSyncAll = config.syncAll || syncAll;
 
 let commitMessage = `feat: Publish icons ${todaysDate}`;
+
+/** Icon sets the sync skipped because designers need to fix them in Figma. */
+const rejected: RejectedAsset[] = [];
+const reject = (name: string, nodeId: string, message: string) => {
+  console.warn(`  [REJECTED] ${message}`);
+  rejected.push({ name, nodeId, url: figmaNodeUrl(config.figmaFileId, nodeId), message });
+};
 
 // The start and end unicode values that we allow for the icon font.
 // These values fall within the Basic Multilingual Plane (BMP) of the unicode Private Use Area (PUA).
@@ -32,12 +41,12 @@ const lastAllowedUnicode = 0xffffd; // U+FFFFD
 // TO DO: Update this when "ui" and "nav" prefixes are removed from the Figma file
 type FigmaIconNodeName = `${'ui' | 'nav'}/${string}`;
 
-/** Props that are required for all icons in each Figma icon set. */
+/** Props that are required for all icons in each Figma icon set, checked by `iconPropsProblem`. */
 type FigmaIconProps = {
   /** The size of the icon. */
-  size?: number;
+  size: number;
   /** The icon's active (filled) state. */
-  active?: boolean;
+  active: boolean;
 };
 
 /** Data about the Figma icon set and downloaded SVGs. */
@@ -154,6 +163,20 @@ const main = async () => {
   console.log('Preparing target repo branch...');
   const { branchName: newBranchName, defaultBranch } = ensureCleanBranch(config.repoRoot);
 
+  const report = (results?: IconSyncResults) =>
+    writeSyncReport(process.env.SYNC_REPORT_PATH, {
+      target: 'icons',
+      branch: newBranchName,
+      breaking: (results?.renamedIconSets.length ?? 0) + (results?.deletedIconSets.length ?? 0) > 0,
+      counts: {
+        added: results?.newIconSets.length ?? 0,
+        updated: results?.updatedIconSets.length ?? 0,
+        renamed: results?.renamedIconSets.length ?? 0,
+        deleted: results?.deletedIconSets.length ?? 0,
+      },
+      rejected,
+    });
+
   process.on('exit', (code) => {
     if (code === 0) return;
     // Clean up the working branch if the icons sync fails
@@ -189,6 +212,7 @@ const main = async () => {
     console.log('Figma file has no updates, skipping icon sync...');
     commitMessage = 'chore: Sync icon Code Connect entries';
     await syncIconCodeConnect(config.repoRoot);
+    report();
     return;
   }
 
@@ -221,8 +245,13 @@ const main = async () => {
     console.log(
       ` (${downloadProgress}/${numberOfNodes}) Icon set node: "${iconSetNode.document.id}" "${iconSetNode.document.name}"`,
     );
-    const iconName = (iconSetNode.document.name as FigmaIconNodeName).split('/')[1].trim();
     const nodeId = iconSetNode.document.id;
+    const setNameProblem = iconSetNameProblem(iconSetNode.document.name);
+    if (setNameProblem) {
+      reject(iconSetNode.document.name, nodeId, setNameProblem);
+      continue;
+    }
+    const iconName = (iconSetNode.document.name as FigmaIconNodeName).split('/')[1].trim();
     const { description, updated_at: lastUpdated, created_at: createdAt } = iconSetNode.metadata;
 
     // The icon set data from the last sync, if it exists
@@ -236,6 +265,22 @@ const main = async () => {
 
     if (duplicateIconSet) {
       console.log(`  [DUPLICATE] Icon set is a duplicate, skipping...`);
+      reject(
+        iconName,
+        nodeId,
+        `Icon set "${iconName}" has the same name as another icon set, "${duplicateIconSet.name}", ignoring capitalization. Rename one of them in Figma.`,
+      );
+      continue;
+    }
+
+    // Skip the whole icon set when any component is malformed, so a partial set never ships
+    const propsProblems = iconSetNode.document.children.flatMap((iconNode) => {
+      if (iconNode.type !== 'COMPONENT') return [];
+      const message = iconPropsProblem(iconName, iconNode.name, stringToObject(iconNode.name));
+      return message ? [{ componentId: iconNode.id, message }] : [];
+    });
+    if (propsProblems.length > 0) {
+      for (const { componentId, message } of propsProblems) reject(iconName, componentId, message);
       continue;
     }
 
@@ -247,13 +292,8 @@ const main = async () => {
       if (iconNode.type !== 'COMPONENT') continue;
       console.log(`  Downloading svg asset: "${iconNode.name}" "${iconNode.id}"`);
       // The name of the icon asset node in Figma contains the props of the icon asset
+      // Already validated by `iconPropsProblem` above
       const { size, active } = stringToObject(iconNode.name) as FigmaIconProps;
-      // Enforce that all icon assets have valid "size" and "active" props
-      if (size === undefined) throw Error(`Icon "${iconName}" is missing a "size" prop`);
-      if (typeof size !== 'number') throw Error(`Icon "${iconName}" has an invalid "size" prop`);
-      if (active === undefined) throw Error(`Icon "${iconName}" is missing an "active" prop`);
-      if (typeof active !== 'boolean')
-        throw Error(`Icon "${iconName}" has an invalid "active" prop`);
       // Download and optimize the icon asset SVG
       const rawSvg = await downloadSvgImage(syncedLibrary.imageUrls.svg[iconNode.id]);
       const svg = svgoOptimize(rawSvg, svgoConfig);
@@ -511,7 +551,8 @@ export const descriptionMap: Record<string, IconName[]> = ${descriptionMapConten
   }
 
   console.log('Updating manifest...');
-  newManifest.lastUpdated = new Date().toISOString();
+  // Rejected icon sets are fetched again next run, so they are reported until designers fix them
+  newManifest.lastUpdated = rejected.length ? oldManifest.lastUpdated : new Date().toISOString();
   fs.writeFileSync(config.manifestPath, JSON.stringify(newManifest, null, 2));
 
   console.log('\n\nChange summary:');
@@ -543,6 +584,13 @@ export const descriptionMap: Record<string, IconName[]> = ${descriptionMapConten
 
   console.log('Generating expo-app icon SVG map...');
   execSync('yarn nx run codegen:icon-svg-map', { cwd: config.repoRoot, stdio: 'inherit' });
+
+  report(syncResults);
+  if (rejected.length > 0) {
+    console.error(`\n❌ ${rejected.length} problem(s) were found in the Figma file:`);
+    for (const { message, url } of rejected) console.error(`\n${message}\n  ${url}`);
+    console.error('\nThe icon sets with problems were skipped. Fix them in Figma and sync again.');
+  }
 };
 
 process.on('exit', (code) => {
