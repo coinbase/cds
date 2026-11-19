@@ -19,7 +19,8 @@ name: Sync Figma Assets
 #   secrets.FIGMA_ACCESS_TOKEN                Figma token used by the syncs.
 #   vars.FIGMA_SYNC_OPEN_PR                   'false' to push the branch and post a link instead of
 #                                             creating the pull request. Defaults to creating it.
-#   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL      Slack webhook for rejected assets and failed runs.
+#   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL      Slack webhook for rejected assets and failed runs. Falls back to
+#                                             secrets.SLACK_WEBHOOK_URL; with neither set, Slack is skipped.
 #   vars.FIGMA_SYNC_SCHEDULE_ENABLED          Set to 'true' to turn on the weekday schedule.
 
 on:
@@ -124,7 +125,7 @@ jobs:
         id: report
         if: steps.open-pr.outputs.skip != 'true'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
         run: |
           if [ ! -f "${SYNC_REPORT_PATH}" ]; then
             echo "found=false" >> "$GITHUB_OUTPUT"
@@ -245,7 +246,7 @@ jobs:
       - name: Tell engineers the branch is ready
         if: steps.compare.outputs.url != '' && steps.report.outputs.has-webhook == 'true'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
           COMPARE_URL: ${{ steps.compare.outputs.url }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
@@ -268,7 +269,7 @@ jobs:
         id: notify
         if: steps.notified.outcome == 'success' && steps.notified.outputs.cache-hit != 'true'
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           node tools/ci/figmaSyncReport.mjs slack "${SYNC_REPORT_PATH}" --run-url "${RUN_URL}" > "${RUNNER_TEMP}/slack.json"
@@ -294,7 +295,7 @@ jobs:
       - name: Notify Slack that the sync failed
         if: failure()
         env:
-          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL || secrets.SLACK_WEBHOOK_URL }}
           TARGET: ${{ matrix.target }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
