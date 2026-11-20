@@ -1,0 +1,146 @@
+# Scheduled reaper for orphaned PR previews on gh-pages.
+#
+# The per-PR cleanup (preview-cleanup.yml) runs on PR close, but if that ever
+# fails or is missed, stale previews accumulate against GitHub Pages' ~1GB cap
+# and the manifest drifts. This job runs on a schedule, compares the pr-<n>
+# directories on gh-pages against the set of currently-open PRs, and removes any
+# whose PR is no longer open — keeping storage and manifest.json self-healing.
+
+name: Reap Orphaned PR Previews
+
+on:
+  schedule:
+    # Daily at 08:00 UTC
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'List what would be removed without pushing changes'
+        required: false
+        default: false
+        type: boolean
+
+concurrency:
+  group: gh-pages-reap
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  pull-requests: read
+
+jobs:
+  reap:
+    name: Remove orphaned previews
+    # Only run on the public repo, so this stays inert on any synced mirror
+    # (the repo string is not rewritten during sync).
+    if: github.repository == 'coinbase/cds'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Harden the runner (Audit all outbound calls)
+        uses: step-security/harden-runner@ec9f2d5744a09debf3a187a3f4f675c53b671911 # v2.13.0
+        with:
+          egress-policy: audit
+
+      - name: Checkout main branch
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: master
+
+      - name: Checkout gh-pages
+        uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+        with:
+          ref: gh-pages
+          path: gh-pages-checkout
+          fetch-depth: 1
+
+      - name: Reap orphaned previews
+        working-directory: gh-pages-checkout
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DRY_RUN: ${{ github.event.inputs.dry_run || 'false' }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Set of currently-open PR numbers.
+          OPEN_PRS="$(gh pr list --state open --limit 1000 --json number -q '.[].number' | tr '\n' ' ')"
+          echo "Open PRs: ${OPEN_PRS:-<none>}"
+
+          is_open() {
+            local n="$1" p
+            for p in $OPEN_PRS; do
+              [ "$p" = "$n" ] && return 0
+            done
+            return 1
+          }
+
+          # Removes pr-<n> directories whose PR is no longer open and prunes their
+          # manifest entries. Re-run safe (idempotent).
+          apply_changes() {
+            local removed=0 dir num
+            for dir in pr-*/; do
+              [ -d "$dir" ] || continue
+              num="${dir#pr-}"
+              num="${num%/}"
+              case "$num" in
+                '' | *[!0-9]*) continue ;;
+              esac
+              if is_open "$num"; then
+                continue
+              fi
+              echo "🗑️  Orphaned preview: pr-${num}"
+              rm -rf "$dir"
+              node ../.github/scripts/remove-from-manifest.mjs "$num"
+              removed=$((removed + 1))
+            done
+            echo "Reaped ${removed} orphaned preview(s)"
+          }
+
+          git fetch origin gh-pages
+          git reset --hard origin/gh-pages
+
+          apply_changes
+          git add -A
+
+          if git diff --staged --quiet; then
+            echo "No orphaned previews to remove"
+            exit 0
+          fi
+
+          if [ "$DRY_RUN" = "true" ]; then
+            echo "ℹ️ Dry run — the following changes would be pushed:"
+            git --no-pager diff --staged --stat
+            exit 0
+          fi
+
+          MAX_ATTEMPTS=8
+          MAX_BACKOFF_SECONDS=30
+          attempt=1
+          while [ "$attempt" -le "$MAX_ATTEMPTS" ]; do
+            SQUASHED=$(git commit-tree HEAD^{tree} -m "Reap orphaned PR previews")
+            if git push --force-with-lease origin "${SQUASHED}:refs/heads/gh-pages"; then
+              echo "✅ Reaped orphaned previews (attempt ${attempt}/${MAX_ATTEMPTS})"
+              exit 0
+            fi
+
+            if [ "$attempt" -eq "$MAX_ATTEMPTS" ]; then
+              break
+            fi
+
+            BACKOFF=$(( (1 << (attempt - 1)) + RANDOM % 5 ))
+            if [ "$BACKOFF" -gt "$MAX_BACKOFF_SECONDS" ]; then
+              BACKOFF=$MAX_BACKOFF_SECONDS
+            fi
+            echo "Push failed (concurrent update?), re-applying and retrying in ${BACKOFF}s (${attempt}/${MAX_ATTEMPTS})..."
+            sleep "$BACKOFF"
+            git fetch origin gh-pages
+            git reset --hard origin/gh-pages
+            apply_changes
+            git add -A
+            attempt=$((attempt + 1))
+          done
+
+          echo "❌ Failed to push after ${MAX_ATTEMPTS} attempts"
+          exit 1
