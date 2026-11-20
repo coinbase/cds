@@ -163,7 +163,7 @@ jobs:
             echo "The sync wrote nothing, so there is nothing to push."
             exit 0
           fi
-          render="yarn --silent tsx libs/figma-api/src/renderSyncReportCli.ts"
+          render="yarn tsx libs/figma-api/src/renderSyncReportCli.ts"
           git checkout -B "${SYNC_BRANCH}"
           if [ "${CHANGED}" = "true" ]; then
             mkdir -p .nx/version-plans
@@ -208,7 +208,7 @@ jobs:
           BRANCH: ${{ env.SYNC_BRANCH }}
         run: |
           title=$(git log --reverse --format=%s "origin/master..origin/${BRANCH}" | head -1)
-          url=$(yarn --silent tsx libs/figma-api/src/renderSyncReportCli.ts compare-url "${SYNC_REPORT_PATH}" \
+          url=$(yarn tsx libs/figma-api/src/renderSyncReportCli.ts compare-url "${SYNC_REPORT_PATH}" \
             --server-url "${GITHUB_SERVER_URL}" --repository "${GITHUB_REPOSITORY}" \
             --branch "${BRANCH}" --title "${title}")
           echo "url=${url}" >> "$GITHUB_OUTPUT"
@@ -231,7 +231,7 @@ jobs:
             if [ "${REJECTED}" != "0" ]; then
               echo
               echo "#### Skipped, needs a fix in Figma"
-              yarn --silent tsx libs/figma-api/src/renderSyncReportCli.ts rejections "${SYNC_REPORT_PATH}"
+              yarn tsx libs/figma-api/src/renderSyncReportCli.ts rejections "${SYNC_REPORT_PATH}"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
           jq -r '.rejected[] | "::warning title=Figma asset skipped::\(.name): \(.message | gsub("[\r\n]+"; " "))"' "${SYNC_REPORT_PATH}"
@@ -258,7 +258,7 @@ jobs:
         run: |
           if [ -z "${SLACK_WEBHOOK_URL}" ]; then exit 0; fi
           if [ -x node_modules/.bin/tsx ]; then
-            yarn --silent tsx libs/figma-api/src/renderSyncReportCli.ts summary-slack "${SYNC_REPORT_PATH}" \
+            yarn tsx libs/figma-api/src/renderSyncReportCli.ts summary-slack "${SYNC_REPORT_PATH}" \
               --target "${TARGET}" --job-status "${JOB_STATUS}" --sync-outcome "${SYNC_OUTCOME}" \
               --skipped "${SKIPPED}" --open-pull-request-url "${OPEN_PR_URL}" --pushed "${PUSHED}" \
               --branch "${SYNC_BRANCH}" --compare-url "${COMPARE_URL}" --failed-step "${FAILED_STEP}" \

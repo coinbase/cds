@@ -37,44 +37,57 @@ const report =
     ? (JSON.parse(fs.readFileSync(reportPath, 'utf-8')) as SyncReport)
     : undefined;
 
-if (command === 'summary-slack') {
-  const logFile = option('log-file');
-  console.log(
-    JSON.stringify(
-      renderSummary(report, {
-        target: required('target'),
-        jobStatus: option('job-status'),
-        syncOutcome: option('sync-outcome'),
-        skipped: option('skipped') === 'true',
-        pushed: option('pushed') === 'true',
-        branch: option('branch'),
-        compareUrl: option('compare-url'),
-        openPullRequestUrl: option('open-pull-request-url'),
-        failedStep: option('failed-step'),
-        failureLog:
-          logFile && fs.existsSync(logFile) ? fs.readFileSync(logFile, 'utf-8') : undefined,
-        runUrl: option('run-url'),
-      }),
-    ),
-  );
-} else if (report && command === 'version-plan') {
-  process.stdout.write(renderVersionPlan(report, required('date')));
-} else if (report && command === 'commit-title') {
-  console.log(commitTitle(report, required('date')));
-} else if (report && command === 'compare-url') {
-  console.log(
-    renderCompareUrl(report, {
-      serverUrl: required('server-url'),
-      repository: required('repository'),
-      branch: required('branch'),
-      title: required('title'),
-    }),
-  );
-} else if (report && command === 'rejections') {
-  console.log(renderRejections(report));
-} else {
+const usage = () => {
   console.error(
     'Usage: renderSyncReportCli.ts <version-plan|commit-title|compare-url|rejections|summary-slack> <report.json> [--option value]...',
   );
   process.exit(1);
+};
+
+const requireReport = (): SyncReport => report ?? usage();
+
+switch (command) {
+  case 'summary-slack': {
+    const logFile = option('log-file');
+    console.log(
+      JSON.stringify(
+        renderSummary(report, {
+          target: required('target'),
+          jobStatus: option('job-status'),
+          syncOutcome: option('sync-outcome'),
+          skipped: option('skipped') === 'true',
+          pushed: option('pushed') === 'true',
+          branch: option('branch'),
+          compareUrl: option('compare-url'),
+          openPullRequestUrl: option('open-pull-request-url'),
+          failedStep: option('failed-step'),
+          failureLog:
+            logFile && fs.existsSync(logFile) ? fs.readFileSync(logFile, 'utf-8') : undefined,
+          runUrl: option('run-url'),
+        }),
+      ),
+    );
+    break;
+  }
+  case 'version-plan':
+    process.stdout.write(renderVersionPlan(requireReport(), required('date')));
+    break;
+  case 'commit-title':
+    console.log(commitTitle(requireReport(), required('date')));
+    break;
+  case 'compare-url':
+    console.log(
+      renderCompareUrl(requireReport(), {
+        serverUrl: required('server-url'),
+        repository: required('repository'),
+        branch: required('branch'),
+        title: required('title'),
+      }),
+    );
+    break;
+  case 'rejections':
+    console.log(renderRejections(requireReport()));
+    break;
+  default:
+    usage();
 }
