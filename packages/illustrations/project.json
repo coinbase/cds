@@ -66,12 +66,6 @@
           "parallel": false
         }
       }
-    },
-    "version-plan": {
-      "executor": "nx:run-commands",
-      "options": {
-        "command": "tsx libs/figma-api/src/renderSyncReportCli.ts version-plan illustrations --write"
-      }
     }
   }
 }

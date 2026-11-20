@@ -166,7 +166,8 @@ jobs:
           render="yarn tsx libs/figma-api/src/renderSyncReportCli.ts"
           git checkout -B "${SYNC_BRANCH}"
           if [ "${CHANGED}" = "true" ]; then
-            ${render} version-plan "${SYNC_REPORT_PATH}" --date "${SYNC_DATE}" --write
+            mkdir -p .nx/version-plans
+            ${render} version-plan "${SYNC_REPORT_PATH}" --date "${SYNC_DATE}" > ".nx/version-plans/${TARGET}-${SYNC_DATE}.md"
           fi
           git add -A
           git commit -m "$(${render} commit-title "${SYNC_REPORT_PATH}" --date "${SYNC_DATE}")"

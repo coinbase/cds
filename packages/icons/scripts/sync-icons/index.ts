@@ -4,7 +4,6 @@ import {
   isBreaking,
   type RejectedAsset,
   type SyncChanges,
-  reportPathFor,
   writeSyncReport,
 } from '@cds/figma-api/syncReport';
 import { execSync } from 'node:child_process';
@@ -167,7 +166,7 @@ const main = async () => {
       renamed: results?.renamedIconSets.map(({ name, oldName }) => ({ name, oldName })) ?? [],
       deleted: results?.deletedIconSets.map(({ name }) => ({ name })) ?? [],
     };
-    writeSyncReport(reportPathFor('icons'), {
+    writeSyncReport(process.env.SYNC_REPORT_PATH, {
       target: 'icons',
       bump: isBreaking(changes) ? 'major' : 'minor',
       changes,

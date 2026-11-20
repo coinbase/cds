@@ -2,7 +2,6 @@ import {
   isBreaking,
   type RejectedAsset,
   type SyncChanges,
-  reportPathFor,
   writeSyncReport,
 } from '@cds/figma-api/syncReport';
 
@@ -20,8 +19,8 @@ import { duplicateAssets, rejectedAssets } from './syncReport';
 
 const args = process.argv.slice(2);
 const syncAll = config.syncAll || args.includes('--sync-all');
+const reportPath = process.env.SYNC_REPORT_PATH;
 const dryRun = args.includes('--dry-run');
-const reportPath = dryRun ? process.env.SYNC_REPORT_PATH : reportPathFor('illustrations');
 const allOrNothing = args.includes('--all-or-nothing');
 const useGit = config.git && !args.includes('--no-git') && !dryRun;
 const selectSinks = args.includes('--select-sinks');

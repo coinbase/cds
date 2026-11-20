@@ -57,10 +57,11 @@ yarn install
 yarn nx run illustrations:sync-illustrations
 ```
 
-4. To get the version plan the workflow would write, render it from the report the sync left behind, then release as usual
+4. To get the version plan the workflow would write, have the sync write its report and render the plan from it, then release as usual
 
 ```sh
-yarn nx run illustrations:version-plan
+SYNC_REPORT_PATH=/tmp/illustrations-report.json yarn nx run illustrations:sync-illustrations
+yarn tsx libs/figma-api/src/renderSyncReportCli.ts version-plan /tmp/illustrations-report.json --date "$(date -u +%F)" > ".nx/version-plans/illustrations-$(date -u +%F).md"
 yarn release --projects=illustrations
 ```
 
