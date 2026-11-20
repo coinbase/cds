@@ -274,7 +274,8 @@ const summaryHeadline = (
     case 'branch': {
       if (!report) return failed;
       const lines = [
-        `:package: The ${target} Figma sync pushed branch \`${escapeSlack(branch)}\`: ${countSummary(report.changes)}.`,
+        `:package: The ${target} Figma sync pushed branch \`${escapeSlack(branch)}\`.`,
+        `:sparkles: *${countSummary(report.changes)}*`,
       ];
       if (isBreaking(report.changes)) {
         lines.push(

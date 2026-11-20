@@ -358,15 +358,16 @@ describe('renderSummary', () => {
 
   it('says no asset changed when a branch only records Figma dates or generated files', () => {
     const { text } = renderSummary(report({ changes: emptyChanges() }), pushed);
-    expect(text).toContain('no asset changed, only recorded Figma dates or generated files');
+    expect(text.split('\n')).toContain(
+      ':sparkles: *no asset changed, only recorded Figma dates or generated files*',
+    );
     expect(text).not.toContain('0 new');
   });
 
   it('names the branch, counts new, updated, deleted and renamed, and links to open the pull request', () => {
     const { text } = renderSummary(report(), pushed);
-    expect(text).toContain(
-      'pushed branch `icons/2026-11-19`: 2 new, 1 updated, 0 deleted, 0 renamed.',
-    );
+    expect(text).toContain('pushed branch `icons/2026-11-19`.');
+    expect(text.split('\n')).toContain(':sparkles: *2 new, 1 updated, 0 deleted, 0 renamed*');
     expect(text).toContain(`<${compareUrl}|Open the pull request for icons/2026-11-19>`);
     expect(text).toContain('<https://run|Sync run>');
   });
