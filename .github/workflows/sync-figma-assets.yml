@@ -39,6 +39,10 @@ on:
           - icons
           - illustrations
         default: all
+      sync-all:
+        description: Compare every asset. Turn off to compare only those changed since the last sync, which can miss changes
+        type: boolean
+        default: true
   schedule:
     - cron: '0 14 * * 1-5'
 
@@ -72,6 +76,7 @@ jobs:
 
       - name: Set the sync report path, date and branch
         env:
+          SYNC_ALL: ${{ inputs.sync-all }}
           TARGET: ${{ matrix.target }}
         run: |
           date=$(date -u +%F)
@@ -125,8 +130,10 @@ jobs:
           TARGET: ${{ matrix.target }}
         run: |
           set -o pipefail
-          # Always compare every asset: the last-updated watermark misses changes.
-          yarn nx run "${TARGET}:sync-${TARGET}" -- --sync-all 2>&1 | tee "${RUNNER_TEMP}/sync.log"
+          # Scheduled runs have no inputs, so they compare every asset too.
+          args=()
+          if [ "${SYNC_ALL}" != "false" ]; then args+=(--sync-all); fi
+          yarn nx run "${TARGET}:sync-${TARGET}" -- "${args[@]}" 2>&1 | tee "${RUNNER_TEMP}/sync.log"
 
       - name: Read the sync report
         id: report
