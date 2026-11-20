@@ -306,11 +306,13 @@ export const summaryOutcome = (
   { skipped, jobStatus, syncOutcome, pushed }: SummaryContext,
 ): SummaryOutcome => {
   if (skipped) return 'skipped';
-  if (jobStatus === 'failure' || (syncOutcome === 'failure' && !report)) return 'failed';
+  if (jobStatus === 'failure' || jobStatus === 'cancelled') return 'failed';
+  if (syncOutcome === 'failure' && !report) return 'failed';
   return pushed ? 'branch' : 'nothing';
 };
 
-const failureReason = ({ failureLog, failedStep }: SummaryContext) => {
+const failureReason = ({ failureLog, failedStep, jobStatus }: SummaryContext) => {
+  if (jobStatus === 'cancelled') return 'The run was cancelled before it finished.';
   if (failedStep) return `The step "${escapeSlack(failedStep)}" failed.`;
   if (failureLog) return failureExcerpt(failureLog);
   return 'See the run log for the failing step.';
@@ -324,7 +326,7 @@ const summaryHeadline = (
   const { target, branch = '', compareUrl, openPullRequestUrl } = context;
   const nothingNew = `:white_check_mark: The ${target} Figma sync ran. Nothing new in Figma.`;
   const failed = [
-    `:red_circle: The ${target} Figma sync failed. Nothing was published.`,
+    `:red_circle: The ${target} Figma sync ${context.jobStatus === 'cancelled' ? 'was cancelled' : 'failed'}. Nothing was published.`,
     `\`\`\`${failureReason(context)}\`\`\``,
   ];
 

@@ -439,6 +439,14 @@ describe('renderSummary', () => {
     }
   });
 
+  it('reports a cancelled run as not finished, even when a report was written', () => {
+    const { text } = renderSummary(report(), { ...pushed, jobStatus: 'cancelled' });
+    expect(text).toContain('The icons Figma sync was cancelled. Nothing was published.');
+    expect(text).toContain('The run was cancelled before it finished.');
+    expect(text).not.toContain('Nothing new in Figma');
+    expect(text).not.toContain('pushed branch');
+  });
+
   describe('notify', () => {
     const notify = ['S01GJ9GT3LY', 'S05HRM5A309'];
     const cc = 'cc: <!subteam^S01GJ9GT3LY> <!subteam^S05HRM5A309>';
