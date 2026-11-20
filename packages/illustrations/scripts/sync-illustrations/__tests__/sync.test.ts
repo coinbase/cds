@@ -121,7 +121,7 @@ const assetFiles = (baseName: string) =>
     `svgJs/esm/themeable/${baseName}.js`,
   ].sort();
 
-const sync = async (syncAll = false) => {
+const sync = async (fullCompare = false) => {
   const outcome = await runSync({
     source,
     manifest,
@@ -143,7 +143,7 @@ const sync = async (syncAll = false) => {
           ]
         : []),
     ],
-    syncAll,
+    fullCompare,
   });
   if (outcome.status === 'synced') {
     writeManifest(path.join(dir, 'manifest.json'), {
@@ -342,7 +342,7 @@ describe('runSync, end to end against an in-memory source', () => {
     expect(manifestIllustrations(manifest).map((item) => item.name)).toEqual(['twoFactor']);
   });
 
-  it('re-downloads everything with syncAll and finds nothing changed', async () => {
+  it('re-downloads everything with fullCompare and finds nothing changed', async () => {
     expect((await sync(true)).status).toBe('no-changes');
   });
 
@@ -368,7 +368,7 @@ describe('runSync, end to end against an in-memory source', () => {
     expect((await sync(true)).status).toBe('no-changes');
   });
 
-  it('repairs a destination whose files were deleted, including under syncAll', async () => {
+  it('repairs a destination whose files were deleted, including under fullCompare', async () => {
     fs.rmSync(path.join(dir, 'spotIcon/svgJs'), { recursive: true });
     const outcome = await sync(true);
 

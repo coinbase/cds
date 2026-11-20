@@ -17,8 +17,8 @@ type SyncIconsConfig = {
   outputFontName: string;
   /* The name of the output font css file. */
   outputFontCssFileName: string;
-  /* Whether to force sync all icons regardless of when they were last updated. Can also be passed as an argument to the script with --sync-all. */
-  syncAll: boolean;
+  /* Whether to download and compare every icon set regardless of when it was last updated. Can also be passed as an argument to the script with --full-compare. */
+  fullCompare: boolean;
 };
 
 const MONOREPO_ROOT = process.env.PROJECT_CWD ?? process.env.NX_MONOREPO_ROOT;
@@ -35,5 +35,5 @@ export const config: SyncIconsConfig = {
   outputFontPath: path.resolve(ICONS_PKG, 'src/fonts'),
   outputFontName: 'CoinbaseIcons',
   outputFontCssFileName: 'icon-font',
-  syncAll: false,
+  fullCompare: false,
 };

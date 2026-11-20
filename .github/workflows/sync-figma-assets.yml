@@ -31,8 +31,12 @@ on:
           - icons
           - illustrations
         default: all
-      sync-all:
+      full-compare:
         description: Compare every asset, not only new or changed ones
+        type: boolean
+        default: false
+      sync-all:
+        description: 'Deprecated: use full-compare'
         type: boolean
         default: false
   schedule:
@@ -121,12 +125,12 @@ jobs:
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
           # The Monday schedule compares every asset; the other days compare new or changed ones.
-          SYNC_ALL: ${{ github.event.schedule == '0 14 * * 1' || inputs.sync-all }}
+          FULL_COMPARE: ${{ github.event.schedule == '0 14 * * 1' || inputs.full-compare || inputs.sync-all }}
           TARGET: ${{ matrix.target }}
         run: |
           set -o pipefail
           args=()
-          if [ "${SYNC_ALL}" = "true" ]; then args+=(--sync-all); fi
+          if [ "${FULL_COMPARE}" = "true" ]; then args+=(--full-compare); fi
           yarn nx run "${TARGET}:sync-${TARGET}" -- "${args[@]}" 2>&1 | tee "${RUNNER_TEMP}/sync.log"
 
       - name: Read the sync report

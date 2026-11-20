@@ -1,5 +1,6 @@
 import type { Sink, SinkChanges, SinkFailure } from './sinks/Sink';
 import type { IllustrationSource } from './source/IllustrationSource';
+import type { ColorPalette } from './colorPalette';
 import {
   diffIllustrations,
   type FetchedIllustration,
@@ -7,7 +8,6 @@ import {
   type IllustrationDiff,
 } from './diffIllustrations';
 import { hashSvg } from './hashSvg';
-import type { ColorPalette } from './colorPalette';
 import type { Component, Illustration } from './illustration';
 import { type Manifest, manifestIllustrations } from './manifest';
 import { mapConcurrently } from './mapConcurrently';
@@ -20,7 +20,7 @@ export type SyncOptions = {
   manifest: Manifest;
   sinks: Sink[];
   /** Re-download every component instead of only those updated since `manifest.lastUpdated`. */
-  syncAll?: boolean;
+  fullCompare?: boolean;
   /** Plan and validate every sink exactly as a real run would, but write nothing. */
   dryRun?: boolean;
   /** A sink with any failed illustration publishes nothing, instead of publishing the rest. */
@@ -90,7 +90,7 @@ export async function runSync({
   source,
   manifest,
   sinks,
-  syncAll = false,
+  fullCompare = false,
   dryRun = false,
   allOrNothing = false,
   log = () => undefined,
@@ -102,7 +102,7 @@ export async function runSync({
   const selection = selectComponents({
     components,
     previous,
-    syncAll,
+    fullCompare,
   });
   const { remoteNodeIds, duplicates } = selection;
 
@@ -129,7 +129,7 @@ export async function runSync({
 
   const deletions = previous.filter(({ nodeId }) => !remoteNodeIds.has(nodeId));
   if (toSync.length === 0 && deletions.length === 0) {
-    if (syncAll) throw Error('No illustrations found in the source');
+    if (fullCompare) throw Error('No illustrations found in the source');
     return { status: 'nothing-to-sync', duplicates };
   }
 

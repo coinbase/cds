@@ -116,11 +116,13 @@ Without `SYNC_ILLUSTRATIONS_NATIVE_REPO` the sync behaves exactly as before.
 
 **"Every illustration matches the last sync"** — Every illustration in Figma has the same last-updated date as the manifest records for it. Verify this is expected with design.
 
-**Force a full re-sync** — If you need to re-sync all illustrations regardless of when they were last updated, pass the `--sync-all` flag:
+**Force a full re-sync** — If you need to re-sync all illustrations regardless of when they were last updated, pass the `--full-compare` flag:
 
 ```sh
-yarn nx run illustrations:sync-illustrations --sync-all
+yarn nx run illustrations:sync-illustrations --full-compare
 ```
+
+`--sync-all` is the old name of `--full-compare`; it still works but is deprecated.
 
 **Native checkout is not clean** — With `SYNC_ILLUSTRATIONS_NATIVE_REPO` set, the native checkout must have no uncommitted changes, so that the run can create its release branch. Stash or commit them before running.
 

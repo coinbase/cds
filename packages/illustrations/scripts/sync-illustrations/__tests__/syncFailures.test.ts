@@ -78,7 +78,13 @@ const sinks = () => [
 ];
 
 const run = async (options: { dryRun?: boolean; allOrNothing?: boolean } = {}) => {
-  const outcome = await runSync({ source, manifest, sinks: sinks(), syncAll: true, ...options });
+  const outcome = await runSync({
+    source,
+    manifest,
+    sinks: sinks(),
+    fullCompare: true,
+    ...options,
+  });
   if (outcome.status === 'synced' && !options.dryRun) {
     writeManifest(path.join(dir, 'manifest.json'), {
       illustrations: outcome.diff.illustrations,

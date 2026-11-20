@@ -66,8 +66,10 @@ You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 
 **"Figma file has no updates"** — Every icon set in Figma has the same last-updated date, description and name as the manifest records for it. Verify this is expected with design.
 
-**Force a full re-sync** — If you need to re-sync all icons regardless of when they were last updated, pass the `--sync-all` flag:
+**Force a full re-sync** — If you need to re-sync all icons regardless of when they were last updated, pass the `--full-compare` flag:
 
 ```sh
-yarn nx run icons:sync-icons -- --sync-all
+yarn nx run icons:sync-icons -- --full-compare
 ```
+
+`--sync-all` is the old name of `--full-compare`; it still works but is deprecated.

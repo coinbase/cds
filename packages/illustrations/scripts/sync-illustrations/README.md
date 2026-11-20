@@ -159,7 +159,7 @@ mutation. The source returns _raw_ exports so that optimization is covered by th
 ## The engine (`sync.ts`)
 
 ```ts
-runSync({ source, manifest, sinks, syncAll, dryRun, allOrNothing, log }): Promise<SyncOutcome>
+runSync({ source, manifest, sinks, fullCompare, dryRun, allOrNothing, log }): Promise<SyncOutcome>
 
 type SyncOutcome = { duplicates: Component[] } & (
   | { status: 'nothing-to-sync' } // every component matches its manifest entry, nothing missing
@@ -249,7 +249,7 @@ versions at once, invalidating every CDN URL.
 Figma's `/components` endpoint returns every published component with its `updated_at` in one cheap
 call. The sync downloads only components that are new, renamed (a different `type/name` for the same node), or whose `updated_at` differs from the `lastUpdated`
 the manifest recorded for that component, so a normal run touches a handful of SVGs. Each component
-is compared with its own record, so no run depends on the clock or on the previous run having finished. `--sync-all` downloads everything and is how pipeline changes (a new svgo
+is compared with its own record, so no run depends on the clock or on the previous run having finished. `--full-compare` downloads everything and is how pipeline changes (a new svgo
 setting, a palette change) are applied across the whole set.
 
 The same step drops **duplicate `type/name`** components, which the real file does contain. It keeps
@@ -588,7 +588,7 @@ Three layers, none of which mocks a module:
    directories, run repeatedly
    while the source is mutated: first publish, no-op run, description-only change, artwork change,
    rename, case-only rename (rejected), node re-created under the same name, duplicate name,
-   deletion, an export with an unsupported color (rejected, nothing written), `syncAll`, a sink
+   deletion, an export with an unsupported color (rejected, nothing written), `fullCompare`, a sink
    added mid-way (backfilled on an incremental run), a wiped sink directory, idempotence, the
    native sinks added mid-way, and a native asset with a stale stamp.
    Assertions cover the files on disk, the generated TypeScript, the returned diff and the
@@ -622,7 +622,7 @@ fixture library are for.
   worse than a clean failure, and the shell abandons the release branch on failure.
 - **No "refresh sinks without Figma" command.** Set-derived files (data files, stories) are only
   rewritten by a run that found work, so a template change in a sink needs a Figma change or
-  `--sync-all` to propagate. Applying every sink from the manifest's set with no download would be a
+  `--full-compare` to propagate. Applying every sink from the manifest's set with no download would be a
   small addition to the shell if that becomes frequent.
 - **No deletion of a type's index files when its last illustration is deleted.** `src/index.ts`
   statically exports every type, so an empty type would already be a hand-edit.
