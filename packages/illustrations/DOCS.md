@@ -122,8 +122,6 @@ Without `SYNC_ILLUSTRATIONS_NATIVE_REPO` the sync behaves exactly as before.
 yarn nx run illustrations:sync-illustrations --full-compare
 ```
 
-`--sync-all` is the old name of `--full-compare`; it still works but is deprecated.
-
 **Native checkout is not clean** — With `SYNC_ILLUSTRATIONS_NATIVE_REPO` set, the native checkout must have no uncommitted changes, so that the run can create its release branch. Stash or commit them before running.
 
 **Writing to some destinations only** — Pass `--select-sinks` to be asked, before anything is
@@ -154,7 +152,7 @@ assets were written; ask design to fix the rejected illustrations and re-run. Pa
 (files, catalogs and removals); other destinations still publish. The boundary is one destination:
 there is no rollback across destinations or after a file-system error during writing.
 
-**Syncing without the native release branch** — Pass `--no-git` to write into the native checkout's current branch instead of creating and pushing `illustrations/YYYY-MM-DD` there, for example to inspect a `--sync-all` locally. Scratch runs (below) never touch git.
+**Syncing without the native release branch** — Pass `--no-git` to write into the native checkout's current branch instead of creating and pushing `illustrations/YYYY-MM-DD` there, for example to inspect a `--full-compare` locally. Scratch runs (below) never touch git.
 
 **"`<type>/<name>` has an SVG the sync cannot publish"** — A layer uses a color theming cannot
 handle (an alpha hex such as `#0052FF80`, `currentColor`, `rgba()`, `var()`); the message names the

@@ -1,5 +1,4 @@
 import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
-import { hasFullCompare } from '@cds/figma-api/syncOptions';
 import {
   isBreaking,
   type RejectedAsset,
@@ -21,7 +20,7 @@ import { runSync, type SinkResult } from './sync';
 import { duplicateAssets, rejectedAssets } from './syncReport';
 
 const args = process.argv.slice(2);
-const fullCompare = config.fullCompare || hasFullCompare(args);
+const fullCompare = config.fullCompare || args.includes('--full-compare');
 const reportPath = process.env.SYNC_REPORT_PATH;
 const dryRun = args.includes('--dry-run');
 const allOrNothing = args.includes('--all-or-nothing');

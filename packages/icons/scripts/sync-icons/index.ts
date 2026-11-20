@@ -1,6 +1,5 @@
 import { downloadSvgImage } from '@cds/figma-api';
 import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
-import { hasFullCompare } from '@cds/figma-api/syncOptions';
 import {
   figmaNodeUrl,
   hasChanges,
@@ -29,7 +28,7 @@ import { svgoConfig } from './svgoConfig';
 import { iconPropsProblem, iconSetNameProblem } from './validateIcons';
 
 const args = process.argv.slice(2);
-const fullCompare = config.fullCompare || hasFullCompare(args);
+const fullCompare = config.fullCompare || args.includes('--full-compare');
 
 /** Icon sets the sync skipped because designers need to fix them in Figma. */
 const rejected: RejectedAsset[] = [];

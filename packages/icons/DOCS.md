@@ -71,5 +71,3 @@ You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 ```sh
 yarn nx run icons:sync-icons -- --full-compare
 ```
-
-`--sync-all` is the old name of `--full-compare`; it still works but is deprecated.
