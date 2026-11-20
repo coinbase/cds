@@ -6,13 +6,13 @@ import {
   type FetchedIllustration,
   hasChangesToRecord,
   type IllustrationDiff,
-} from './diffIllustrations';
+} from './diff';
 import { hashSvg } from './hashSvg';
 import type { Component, Illustration } from './illustration';
 import { type Manifest, manifestIllustrations } from './manifest';
 import { mapConcurrently } from './mapConcurrently';
 import { getSvgSize, optimizeSvg } from './optimizeSvg';
-import { type DuplicateComponent, selectComponents } from './selectComponents';
+import { type DuplicateComponent, selectComponents } from './select';
 
 export type SyncOptions = {
   source: IllustrationSource;

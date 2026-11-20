@@ -19,12 +19,12 @@ import { webfont } from 'webfont';
 
 import { syncIconCodeConnect } from '../sync-icon-code-connect/index';
 
+import { fetchIconLibrary } from './source/fetchIconLibrary';
 import { config } from './config';
-import { fetchIconLibrary } from './fetchIconLibrary';
 import { getDescriptionMap } from './getDescriptionMap';
+import { iconPropsProblem, iconSetNameProblem } from './profile';
 import { stringToObject } from './stringToObject';
 import { svgoConfig } from './svgoConfig';
-import { iconPropsProblem, iconSetNameProblem } from './validateIcons';
 
 const args = process.argv.slice(2);
 const fullCompare = config.fullCompare || args.includes('--full-compare');
