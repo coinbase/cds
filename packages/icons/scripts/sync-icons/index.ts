@@ -538,7 +538,15 @@ export const descriptionMap: Record<string, IconName[]> = ${descriptionMapConten
 
   console.log('Updating manifest...');
   // Rejected icon sets are not in the manifest, so they are fetched and reported until designers fix them
-  newManifest.lastUpdated = new Date().toISOString();
+  // The date moves only when icon sets changed, so a run that finds nothing leaves manifest.json
+  // as it was and the workflow has nothing to push.
+  const iconSetsChanged =
+    syncResults.newIconSets.length +
+      syncResults.updatedIconSets.length +
+      syncResults.renamedIconSets.length +
+      syncResults.deletedIconSets.length >
+    0;
+  newManifest.lastUpdated = iconSetsChanged ? new Date().toISOString() : oldManifest.lastUpdated;
   fs.writeFileSync(config.manifestPath, JSON.stringify(newManifest, null, 2));
 
   console.log('\n\nChange summary:');
