@@ -48,6 +48,41 @@ describe('useTimer', () => {
     expect(remainingTime).toBe(expectedRemainingTime);
     expect(clearTimeout).toHaveBeenCalledTimes(1);
   });
+
+  it('does not report a negative remaining time when pausing before starting', () => {
+    const { result } = renderHook(() => useTimer());
+
+    const remainingTime = result.current.pause();
+
+    expect(remainingTime).toBe(0);
+    expect(result.current.getRemainingTime()).toBe(0);
+  });
+
+  it('does not report a negative remaining time when pausing after the timer elapsed', () => {
+    const { result } = renderHook(() => useTimer());
+    const callback = jest.fn();
+    const duration = 1000;
+
+    result.current.start(callback, duration);
+    jest.advanceTimersByTime(duration + 500);
+
+    expect(result.current.pause()).toBe(0);
+    expect(result.current.getRemainingTime()).toBe(0);
+  });
+
+  it('resumes with a non-negative delay when pausing after the timer elapsed', () => {
+    const { result } = renderHook(() => useTimer());
+    const callback = jest.fn();
+    const duration = 1000;
+
+    result.current.start(callback, duration);
+    jest.advanceTimersByTime(duration + 500);
+    result.current.pause();
+    result.current.resume();
+
+    expect(setTimeout).toHaveBeenLastCalledWith(expect.any(Function), 0);
+  });
+
   it('resumes timer', async () => {
     const { result } = renderHook(() => useTimer());
     const callback = jest.fn();
