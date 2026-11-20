@@ -1,7 +1,6 @@
 import { getFileComponentSets, getFileNodes } from '@cds/figma-api';
 
-import { fetchComponentSets } from '../source/fetchComponentSets';
-import { fetchSetNodes } from '../source/fetchSetNodes';
+import { fetchComponentSets, fetchSetNodes } from '../source/fetchComponents';
 import type { ComponentSet } from '../source/IconSource';
 
 jest.mock('@cds/figma-api');
