@@ -199,7 +199,8 @@ const assetLinks = ({ url, duplicateOf }: RejectedAsset, link: Link) =>
     ...(duplicateOf ? [link('the other one', duplicateOf.url)] : []),
   ].join(', ');
 
-const formatCount = (count: number) => count.toLocaleString('en-US');
+/** `1683` -> `1,683`; fixed on purpose, so the message reads the same on every runner. */
+const formatCount = (count: number) => String(count).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
 const ignoredCount = ({ ignored }: ExaminedSummary) =>
   ignored.reduce((total, { items }) => total + items.length, 0);
