@@ -40,6 +40,7 @@ const rejected = [
     nodeId: '1:2',
     url: 'https://www.figma.com/design/FILE?node-id=1-2',
     message: '"size=large" in icon set "add" has a "size" that is not a number.',
+    category: 'invalid-variant' as const,
   },
 ];
 
@@ -282,7 +283,12 @@ describe('renderRejections', () => {
     const list = renderRejections(
       report({ rejected: [{ ...rejected[0], name: 'a`b\nc', message: 'line one\nline two' }] }),
     );
-    expect(list).toBe(`- \`a b c\`: line one line two ([Figma](${rejected[0].url}))`);
+    expect(list).toBe(
+      [
+        '**Invalid variants (1)**: a variant is missing or has a wrong property; fix it.',
+        `- \`a b c\`: line one line two ([Figma](${rejected[0].url}))`,
+      ].join('\n'),
+    );
   });
 });
 
@@ -476,17 +482,46 @@ describe('renderSummary', () => {
     );
   });
 
-  it('lists only the first skipped assets so the message is not cut off, and points to the run', () => {
-    const many = Array.from({ length: 12 }, (_, index) => ({
+  it('groups skipped assets by category and lists only the first of each, with a link to the rest', () => {
+    const duplicates = Array.from({ length: 12 }, (_, index) => ({
       ...rejected[0],
       name: `asset${index}`,
+      message: 'a very long reason that the Slack message leaves out',
+      category: 'duplicate-name' as const,
     }));
-    const { text } = renderSummary(report({ rejected: many }), run);
-    expect(text).toContain('12 assets need a fix in Figma');
-    expect(text).toContain('`asset7`');
-    expect(text).not.toContain('`asset8`');
-    expect(text).toContain('…and 4 more, all listed in the <https://run|job summary>.');
+    const invalidName = { ...rejected[0], name: 'Nav/bad', category: 'invalid-name' as const };
+    const { text } = renderSummary(report({ rejected: [...duplicates, invalidName] }), run);
+    const lines = text.split('\n');
+
+    expect(text).toContain('13 assets need a fix in Figma');
+    expect(lines).toContain(
+      '*Duplicate name (12)*: two assets share a name; rename one of each pair.',
+    );
+    expect(lines).toContain('*Invalid name (1)*: the name breaks the naming rule; rename it.');
+    expect(text).toContain('`asset4`');
+    expect(text).not.toContain('`asset5`');
+    expect(text).not.toContain('a very long reason');
+    expect(lines).toContain('…and 7 more.');
+    expect(text).toContain('Every skipped asset is listed in the <https://run|job summary>.');
+    expect(
+      lines.indexOf('*Duplicate name (12)*: two assets share a name; rename one of each pair.'),
+    ).toBeLessThan(
+      lines.indexOf('*Invalid name (1)*: the name breaks the naming rule; rename it.'),
+    );
     expect(text.endsWith('<https://run|Sync run>')).toBe(true);
+  });
+
+  it('keeps a shortened reason for categories whose reason is specific to the asset', () => {
+    const asset = {
+      ...rejected[0],
+      message: `uses a color outside the palette ${'x'.repeat(200)}`,
+      category: 'invalid-asset' as const,
+    };
+    const { text } = renderSummary(report({ rejected: [asset] }), run);
+    expect(text).toContain('*Failed validation (1)*');
+    expect(text).toContain('`add`: uses a color outside the palette');
+    expect(text).toContain('…');
+    expect(text.length).toBeLessThan(600);
   });
 
   it('escapes the characters Slack treats as markup and pluralizes the count', () => {

@@ -1,6 +1,13 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
+/** Why an asset was skipped, so a long list reads as a few groups. */
+export type RejectedCategory =
+  | 'duplicate-name'
+  | 'invalid-name'
+  | 'invalid-variant'
+  | 'invalid-asset';
+
 /** An asset the sync could not publish, described for the designer who can fix it in Figma. */
 export type RejectedAsset = {
   name: string;
@@ -11,6 +18,8 @@ export type RejectedAsset = {
   message: string;
   /** For a name clash: where the asset it clashes with is in Figma. */
   duplicateOf?: { url: string };
+  /** Groups the asset with others skipped for the same reason. */
+  category?: RejectedCategory;
 };
 
 export type ChangedAsset = {

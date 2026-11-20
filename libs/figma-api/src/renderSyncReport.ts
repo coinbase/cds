@@ -1,7 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { hasChanges, isBreaking, type SyncChanges, type SyncReport } from './syncReport';
+import {
+  hasChanges,
+  isBreaking,
+  type RejectedAsset,
+  type RejectedCategory,
+  type SyncChanges,
+  type SyncReport,
+} from './syncReport';
 
 /**
  * Renders the report written by the sync scripts for the sync workflows: the version plan, the
@@ -13,7 +20,10 @@ const MAX_FAILURE_LINES = 6;
 /** A Slack user group id, like S05HRM5A309. */
 const SLACK_GROUP_ID = /^S[A-Z0-9]+$/;
 /** Slack cuts a long message off, which would lose the lines after the list. */
-const MAX_REJECTED_LINES = 8;
+const MAX_REJECTED_PER_CATEGORY = 5;
+const MAX_REASON_CHARS = 100;
+const shorten = (text: string) =>
+  text.length > MAX_REASON_CHARS ? `${text.slice(0, MAX_REASON_CHARS)}…` : text;
 const MAX_FAILURE_CHARS = 700;
 const FAILURE_LINE = /error|failed|❌|not clean|cannot|denied|forbidden|\b40[0-9]\b|\b50[0-9]\b/i;
 // eslint-disable-next-line no-control-regex
@@ -132,16 +142,50 @@ export const writeVersionPlan = (
   return planPath;
 };
 
-/** The rejected assets as a markdown list, for the pull request and the job summary. */
+/** How each category reads in the report, in the order the groups are listed. */
+const REJECTED_CATEGORIES: Record<RejectedCategory | 'other', { label: string; hint: string }> = {
+  'duplicate-name': {
+    label: 'Duplicate name',
+    hint: 'two assets share a name; rename one of each pair',
+  },
+  'invalid-name': {
+    label: 'Invalid name',
+    hint: 'the name breaks the naming rule; rename it',
+  },
+  'invalid-variant': {
+    label: 'Invalid variants',
+    hint: 'a variant is missing or has a wrong property; fix it',
+  },
+  'invalid-asset': {
+    label: 'Failed validation',
+    hint: 'the artwork could not be converted or failed a check; fix it',
+  },
+  other: { label: 'Other', hint: 'see the reason' },
+};
+
+const groupRejected = (rejected: RejectedAsset[]) =>
+  (Object.keys(REJECTED_CATEGORIES) as (RejectedCategory | 'other')[])
+    .map((category) => ({
+      ...REJECTED_CATEGORIES[category],
+      assets: rejected.filter((asset) => (asset.category ?? 'other') === category),
+    }))
+    .filter(({ assets }) => assets.length > 0);
+
+/** The rejected assets as markdown, grouped by category, for the pull request and the job summary. */
 export const renderRejections = (report: SyncReport) =>
-  report.rejected
-    .map(({ name, message, url, duplicateOf }) => {
-      const links = duplicateOf
-        ? `[Figma](${url}), [the other one](${duplicateOf.url})`
-        : `[Figma](${url})`;
-      return `- \`${plain(name)}\`: ${plain(message)} (${links})`;
-    })
-    .join('\n');
+  groupRejected(report.rejected)
+    .map(({ label, hint, assets }) =>
+      [
+        `**${label} (${assets.length})**: ${hint}.`,
+        ...assets.map(({ name, message, url, duplicateOf }) => {
+          const links = duplicateOf
+            ? `[Figma](${url}), [the other one](${duplicateOf.url})`
+            : `[Figma](${url})`;
+          return `- \`${plain(name)}\`: ${plain(message)} (${links})`;
+        }),
+      ].join('\n'),
+    )
+    .join('\n\n');
 
 export const renderPullRequestBody = (report: SyncReport) => {
   const sections = [
@@ -301,21 +345,35 @@ export const renderSummary = (report: SyncReport | undefined, context: SummaryCo
 
   const rejected = report?.rejected ?? [];
   if (rejected.length > 0) {
+    let hidden = 0;
     lines.push(
       `:warning: ${rejected.length} ${rejected.length === 1 ? 'asset needs' : 'assets need'} a fix in Figma, and ${rejected.length === 1 ? 'was' : 'were'} skipped:`,
-      ...rejected.slice(0, MAX_REJECTED_LINES).map(({ name, message, url, duplicateOf }) => {
+    );
+    for (const { label, hint, assets } of groupRejected(rejected)) {
+      lines.push(`*${label} (${assets.length})*: ${hint}.`);
+      for (const { name, message, url, duplicateOf, category } of assets.slice(
+        0,
+        MAX_REJECTED_PER_CATEGORY,
+      )) {
         const links = duplicateOf
           ? `<${url}|Open in Figma>, <${duplicateOf.url}|the other one>`
           : `<${url}|Open in Figma>`;
-        return `• \`${escapeSlack(name)}\`: ${escapeSlack(message)} (${links})`;
-      }),
-      ...(rejected.length > MAX_REJECTED_LINES
-        ? [
-            `…and ${rejected.length - MAX_REJECTED_LINES} more${context.runUrl ? `, all listed in the <${context.runUrl}|job summary>` : ''}.`,
-          ]
-        : []),
-      'Fix them in Figma and publish the library; the next sync picks them up.',
-    );
+        const reason =
+          category === 'duplicate-name' || category === 'invalid-name'
+            ? ''
+            : `: ${shorten(escapeSlack(message))}`;
+        lines.push(`• \`${escapeSlack(name)}\`${reason} (${links})`);
+      }
+      const more = assets.length - MAX_REJECTED_PER_CATEGORY;
+      if (more > 0) {
+        hidden += more;
+        lines.push(`…and ${more} more.`);
+      }
+    }
+    if (hidden > 0 && context.runUrl) {
+      lines.push(`Every skipped asset is listed in the <${context.runUrl}|job summary>.`);
+    }
+    lines.push('Fix them in Figma and publish the library; the next sync picks them up.');
   }
 
   if (context.runUrl) lines.push(`<${context.runUrl}|Sync run>`);

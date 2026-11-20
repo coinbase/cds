@@ -52,6 +52,7 @@ describe('duplicateAssets', () => {
       url: 'https://www.figma.com/design/FILE?node-id=9-9',
       message: expect.stringContaining('two components named "spotSquare/futures"'),
       duplicateOf: { url: 'https://www.figma.com/design/FILE?node-id=1-1' },
+      category: 'duplicate-name',
     });
   });
 });
@@ -73,6 +74,7 @@ describe('rejectedAssets', () => {
         nodeId: '1:3',
         url: 'https://www.figma.com/design/file?node-id=1:3',
         message: 'uses a color outside the palette',
+        category: 'invalid-asset',
       },
     ]);
   });

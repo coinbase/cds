@@ -22,6 +22,7 @@ export const rejectedAssets = (
           nodeId: illustration.nodeId,
           url: componentUrl(illustration),
           message,
+          category: 'invalid-asset' as const,
         },
       ];
     });
@@ -35,4 +36,5 @@ export const duplicateAssets = (duplicates: DuplicateComponent[]): RejectedAsset
     url,
     message: `The Figma file has two components named "${type}/${name}". This one is skipped; rename one of them.`,
     duplicateOf: { url: keptBy.url },
+    category: 'duplicate-name' as const,
   }));

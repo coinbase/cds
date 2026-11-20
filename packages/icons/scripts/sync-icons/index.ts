@@ -4,6 +4,7 @@ import {
   figmaNodeUrl,
   isBreaking,
   type RejectedAsset,
+  type RejectedCategory,
   type SyncChanges,
   type SyncReport,
   writeSyncReport,
@@ -31,13 +32,20 @@ const doSyncAll = config.syncAll || syncAll;
 
 /** Icon sets the sync skipped because designers need to fix them in Figma. */
 const rejected: RejectedAsset[] = [];
-const reject = (name: string, nodeId: string, message: string, duplicateNodeId?: string) => {
+const reject = (
+  name: string,
+  nodeId: string,
+  message: string,
+  category: RejectedCategory,
+  duplicateNodeId?: string,
+) => {
   console.warn(`  [REJECTED] ${message}`);
   rejected.push({
     name,
     nodeId,
     url: figmaNodeUrl(config.figmaFileId, nodeId),
     message,
+    category,
     ...(duplicateNodeId
       ? { duplicateOf: { url: figmaNodeUrl(config.figmaFileId, duplicateNodeId) } }
       : {}),
@@ -247,7 +255,7 @@ const main = async () => {
     const nodeId = iconSetNode.document.id;
     const setNameProblem = iconSetNameProblem(iconSetNode.document.name);
     if (setNameProblem) {
-      reject(iconSetNode.document.name, nodeId, setNameProblem);
+      reject(iconSetNode.document.name, nodeId, setNameProblem, 'invalid-name');
       continue;
     }
     const iconName = (iconSetNode.document.name as FigmaIconNodeName).split('/')[1].trim();
@@ -270,6 +278,7 @@ const main = async () => {
         duplicateIconSet.name === iconName
           ? `Icon set "${iconSetNode.document.name}" is skipped because the Figma file has two icon sets with the icon name "${iconName}" (the part after "ui/" or "nav/"). Rename one of them.`
           : `Icon set "${iconSetNode.document.name}" is skipped because its icon name "${iconName}" differs only in capitalization from "${duplicateIconSet.name}" in another icon set of the Figma file. Rename one of them.`,
+        'duplicate-name',
         duplicateIconSet.nodeId,
       );
       continue;
@@ -282,7 +291,9 @@ const main = async () => {
       return message ? [{ componentId: iconNode.id, message }] : [];
     });
     if (propsProblems.length > 0) {
-      for (const { componentId, message } of propsProblems) reject(iconName, componentId, message);
+      for (const { componentId, message } of propsProblems) {
+        reject(iconName, componentId, message, 'invalid-variant');
+      }
       continue;
     }
 
