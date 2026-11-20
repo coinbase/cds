@@ -9,6 +9,7 @@ import {
   renderExamined,
   renderPullRequestBody,
   renderRejections,
+  renderStatus,
   renderSummary,
   renderVersionPlan,
   summaryOutcome,
@@ -592,6 +593,48 @@ describe('examined summary', () => {
     expect(renderSummary(report({ rejected: [asset] }), run).text).toContain(
       '*New type (needs approval) (1)*',
     );
+  });
+});
+
+describe('renderStatus', () => {
+  it('lists every change and skipped asset with a one-letter status, like git status', () => {
+    const status = renderStatus(
+      report({
+        changes: changes({
+          added: [{ name: 'wallet', group: 'heroSquare' }],
+          updated: [{ name: 'cash' }],
+          renamed: [
+            { name: 'qrcode', oldName: 'qrCode' },
+            { name: 'newName', oldName: 'oldName' },
+          ],
+          deleted: [{ name: 'legacy' }],
+        }),
+        rejected: [
+          { ...rejected[0], name: 'home', category: 'duplicate-name' },
+          { ...rejected[0], name: 'Spot Wide/x', category: 'new-type' },
+        ],
+        examined: {
+          seen: 10,
+          ignored: [{ reason: 'not a component set', items: [{ name: 'frame' }] }],
+        },
+      }),
+    );
+    expect(status.split('\n')).toEqual([
+      '```text',
+      'A  heroSquare/wallet',
+      'M  cash',
+      'R  oldName -> newName',
+      'R  qrCode -> qrcode  (capitalization only)',
+      'D  legacy',
+      'U  home  [Duplicate name]',
+      '?  Spot Wide/x  [New type (needs approval)]',
+      '!  frame  [not a component set]',
+      '```',
+    ]);
+  });
+
+  it('is empty when nothing changed, was skipped or was ignored', () => {
+    expect(renderStatus(report({ changes: changes() }))).toBe('');
   });
 });
 

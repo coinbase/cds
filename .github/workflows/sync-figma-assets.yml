@@ -217,6 +217,12 @@ jobs:
             else
               echo "No changes to publish."
             fi
+            status=$(yarn tsx libs/figma-api/src/renderSyncReportCli.ts status "${SYNC_REPORT_PATH}")
+            if [ -n "${status}" ]; then
+              echo
+              echo "#### Status"
+              echo "${status}"
+            fi
             echo
             yarn tsx libs/figma-api/src/renderSyncReportCli.ts examined "${SYNC_REPORT_PATH}"
             if [ "${REJECTED}" != "0" ]; then

@@ -5,6 +5,7 @@ import {
   renderCompareUrl,
   renderExamined,
   renderRejections,
+  renderStatus,
   renderSummary,
 } from './renderSyncReport';
 import type { SyncReport } from './syncReport';
@@ -12,7 +13,7 @@ import type { SyncReport } from './syncReport';
 /**
  * Prints one rendering of the sync report for the workflow. Run it with `tsx`:
  *
- *   renderSyncReportCli.ts <commit-title|compare-url|examined|rejections|summary-slack>
+ *   renderSyncReportCli.ts <commit-title|compare-url|examined|rejections|status|summary-slack>
  *     <report.json> [--option value]...
  *
  * A missing report is allowed for `summary-slack`, which then describes a sync that crashed.
@@ -39,7 +40,7 @@ const report =
 
 const usage = () => {
   console.error(
-    'Usage: renderSyncReportCli.ts <commit-title|compare-url|examined|rejections|summary-slack> <report.json> [--option value]...',
+    'Usage: renderSyncReportCli.ts <commit-title|compare-url|examined|rejections|status|summary-slack> <report.json> [--option value]...',
   );
   process.exit(1);
 };
@@ -82,6 +83,9 @@ switch (command) {
         title: required('title'),
       }),
     );
+    break;
+  case 'status':
+    console.log(renderStatus(requireReport()));
     break;
   case 'examined':
     console.log(renderExamined(requireReport()));

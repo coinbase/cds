@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import {
+  type ChangedAsset,
   type ExaminedSummary,
   hasChanges,
   isBreaking,
@@ -220,6 +221,46 @@ const examinedParts = ({ examined, changes, rejected }: SyncReport) => {
     );
   }
   return parts.join(', ');
+};
+
+/**
+ * Every change and every skipped asset, one per line, in the words of `git status --short`:
+ * A new, M updated, R renamed, D deleted, U cannot be resolved (skipped, the published version
+ * stays), ? not part of the sync yet, ! ignored on purpose.
+ */
+export const renderStatus = (report: SyncReport) => {
+  const { added, updated, renamed, deleted } = report.changes;
+  const path = ({ group, name }: ChangedAsset) => plain(group ? `${group}/${name}` : name);
+  const byText = (a: string, b: string) => a.localeCompare(b);
+  /** Skipped assets: `?` when the type is not synced yet, `U` for everything that needs a fix. */
+  const skipped = (untracked: boolean) =>
+    report.rejected
+      .filter(({ category }) => (category === 'new-type') === untracked)
+      .map(
+        ({ name, category }) =>
+          `${untracked ? '?' : 'U'}  ${plain(name)}  [${REJECTED_CATEGORIES[category ?? 'other'].label}]`,
+      )
+      .sort(byText);
+  const lines = [
+    ...added.map((asset) => `A  ${path(asset)}`).sort(byText),
+    ...updated.map((asset) => `M  ${path(asset)}`).sort(byText),
+    ...renamed
+      .map((asset) => {
+        const note =
+          asset.oldName.toLowerCase() === asset.name.toLowerCase() ? '  (capitalization only)' : '';
+        return `R  ${path({ ...asset, name: asset.oldName })} -> ${plain(asset.name)}${note}`;
+      })
+      .sort(byText),
+    ...deleted.map((asset) => `D  ${path(asset)}`).sort(byText),
+    ...skipped(false),
+    ...skipped(true),
+    ...(report.examined?.ignored ?? [])
+      .flatMap(({ reason, items }) =>
+        items.map(({ name }) => `!  ${plain(name)}  [${plain(reason)}]`),
+      )
+      .sort(byText),
+  ];
+  return lines.length > 0 ? ['```text', ...lines, '```'].join('\n') : '';
 };
 
 /** What the sync looked at, with every ignored item, for the job summary. */
