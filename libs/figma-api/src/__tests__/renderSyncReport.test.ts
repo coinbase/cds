@@ -272,7 +272,7 @@ describe('renderPullRequestBody', () => {
 
   it('says so when nothing changed', () => {
     expect(renderPullRequestBody(report({ changes: changes() }))).toContain(
-      '0 new, 0 updated, 0 deleted, 0 renamed',
+      'no asset changed, only recorded Figma dates or generated files',
     );
   });
 });
