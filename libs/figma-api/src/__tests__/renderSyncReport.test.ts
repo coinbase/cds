@@ -432,6 +432,35 @@ describe('renderSummary', () => {
     }
   });
 
+  describe('notify', () => {
+    const notify = ['S01GJ9GT3LY', 'S05HRM5A309'];
+    const cc = 'cc: <!subteam^S01GJ9GT3LY> <!subteam^S05HRM5A309>';
+
+    it('pings the groups when a branch was pushed, the sync failed or assets were skipped', () => {
+      expect(renderSummary(report(), { ...pushed, notify }).text).toContain(cc);
+      expect(renderSummary(undefined, { ...run, jobStatus: 'failure', notify }).text).toContain(cc);
+      expect(
+        renderSummary(report({ changes: changes(), rejected }), { ...run, notify }).text,
+      ).toContain(cc);
+    });
+
+    it('stays quiet when nothing needs attention, and without groups', () => {
+      expect(renderSummary(report({ changes: changes() }), { ...run, notify }).text).not.toContain(
+        'cc:',
+      );
+      expect(renderSummary(report(), pushed).text).not.toContain('cc:');
+    });
+
+    it('ignores anything that is not a user group id', () => {
+      const { text } = renderSummary(report(), {
+        ...pushed,
+        notify: ['<!channel>', 'S05HRM5A309'],
+      });
+      expect(text).toContain('cc: <!subteam^S05HRM5A309>');
+      expect(text).not.toContain('<!channel>');
+    });
+  });
+
   it('points to the asset a name clashes with', () => {
     const clash = {
       ...rejected[0],

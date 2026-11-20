@@ -10,6 +10,8 @@ import { hasChanges, isBreaking, type SyncChanges, type SyncReport } from './syn
 
 const MAX_COMPARE_URL_LENGTH = 6000;
 const MAX_FAILURE_LINES = 6;
+/** A Slack user group id, like S05HRM5A309. */
+const SLACK_GROUP_ID = /^S[A-Z0-9]+$/;
 /** Slack cuts a long message off, which would lose the lines after the list. */
 const MAX_REJECTED_LINES = 8;
 const MAX_FAILURE_CHARS = 700;
@@ -228,6 +230,8 @@ export type SummaryContext = {
   failureLog?: string;
   failedStep?: string;
   runUrl?: string;
+  /** Slack user group ids to ping when a branch was pushed, the sync failed or assets were skipped. */
+  notify?: string[];
 };
 
 export type SummaryOutcome = 'failed' | 'skipped' | 'branch' | 'nothing';
@@ -314,6 +318,12 @@ export const renderSummary = (report: SyncReport | undefined, context: SummaryCo
   }
 
   if (context.runUrl) lines.push(`<${context.runUrl}|Sync run>`);
+
+  const needsAttention = outcome === 'branch' || outcome === 'failed' || rejected.length > 0;
+  const groups = (context.notify ?? []).filter((id) => SLACK_GROUP_ID.test(id));
+  if (needsAttention && groups.length > 0) {
+    lines.push(`cc: ${groups.map((id) => `<!subteam^${id}>`).join(' ')}`);
+  }
   return { text: lines.join('\n') };
 };
 

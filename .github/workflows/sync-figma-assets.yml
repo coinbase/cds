@@ -244,15 +244,20 @@ jobs:
           COMPARE_URL: ${{ steps.compare.outputs.url }}
           FAILED_STEP: ${{ (steps.push.outcome == 'failure' && 'Commit and push the sync branch') || (steps.release.outcome == 'failure' && 'Release the package') || '' }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          # Slack user groups to ping: @illustrators and @design-systems-oncall.
+          NOTIFY_GROUPS: S01GJ9GT3LY,S05HRM5A309
+          ONCALL_GROUP: S05HRM5A309
         run: |
           if [ -z "${SLACK_WEBHOOK_URL}" ]; then exit 0; fi
+          cc=""
+          if [ "${JOB_STATUS}" = "failure" ]; then cc=" cc: <!subteam^${ONCALL_GROUP}>"; fi
           rendered=false
           if [ -x node_modules/.bin/tsx ] &&
             yarn tsx libs/figma-api/src/renderSyncReportCli.ts summary-slack "${SYNC_REPORT_PATH}" \
               --target "${TARGET}" --job-status "${JOB_STATUS}" --sync-outcome "${SYNC_OUTCOME}" \
               --skipped "${SKIPPED}" --open-pull-request-url "${OPEN_PR_URL}" --pushed "${PUSHED}" \
               --branch "${SYNC_BRANCH}" --compare-url "${COMPARE_URL}" --failed-step "${FAILED_STEP}" \
-              --log-file "${RUNNER_TEMP}/sync.log" --run-url "${RUN_URL}" > "${RUNNER_TEMP}/summary.json" &&
+              --log-file "${RUNNER_TEMP}/sync.log" --run-url "${RUN_URL}" --notify "${NOTIFY_GROUPS}" > "${RUNNER_TEMP}/summary.json" &&
             jq -e '.text | length > 0' "${RUNNER_TEMP}/summary.json" > /dev/null; then
             rendered=true
           fi
@@ -262,9 +267,9 @@ jobs:
             # A skipped run never installs dependencies, so it cannot render the full message.
             jq -n --arg text ":information_source: The ${TARGET} Figma sync did not run: a sync pull request is already open (<${OPEN_PR_URL}|open it>)." '{text: $text}' > "${RUNNER_TEMP}/summary.json"
           elif [ -x node_modules/.bin/tsx ]; then
-            jq -n --arg text ":warning: The ${TARGET} Figma sync finished with status ${JOB_STATUS}, but its summary could not be rendered. <${RUN_URL}|Sync run>" '{text: $text}' > "${RUNNER_TEMP}/summary.json"
+            jq -n --arg text ":warning: The ${TARGET} Figma sync finished with status ${JOB_STATUS}, but its summary could not be rendered. <${RUN_URL}|Sync run>${cc}" '{text: $text}' > "${RUNNER_TEMP}/summary.json"
           else
-            jq -n --arg text ":red_circle: The ${TARGET} Figma sync failed before it could start. Nothing was published. <${RUN_URL}|Sync run>" '{text: $text}' > "${RUNNER_TEMP}/summary.json"
+            jq -n --arg text ":red_circle: The ${TARGET} Figma sync failed before it could start. Nothing was published. <${RUN_URL}|Sync run>${cc}" '{text: $text}' > "${RUNNER_TEMP}/summary.json"
           fi
           curl --fail --silent --show-error --request POST \
             --header 'Content-type: application/json' \
