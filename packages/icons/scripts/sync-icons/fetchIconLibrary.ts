@@ -1,4 +1,5 @@
 import { getFileComponentSets, getFileImages, getFileNodes } from '@cds/figma-api';
+import { selectChanged } from '@cds/figma-api/syncCore';
 
 // Derive types from the API functions being called
 type FileNodesResponse = Awaited<ReturnType<typeof getFileNodes>>;
@@ -145,17 +146,13 @@ export function selectIconSetsToFetch(
   if (!knownIconSets) return componentSets.map((componentSet) => componentSet.node_id);
 
   const knownByNodeId = new Map(knownIconSets.map((iconSet) => [iconSet.nodeId, iconSet]));
-  return componentSets
-    .filter((componentSet) => {
-      const known = knownByNodeId.get(componentSet.node_id);
-      return (
-        !known ||
-        known.lastUpdated !== componentSet.updated_at ||
-        known.description !== componentSet.description ||
-        known.name !== iconNameOf(componentSet.name)
-      );
-    })
-    .map((componentSet) => componentSet.node_id);
+  return selectChanged(componentSets, knownByNodeId, {
+    id: (componentSet) => componentSet.node_id,
+    differs: (componentSet, known) =>
+      known.lastUpdated !== componentSet.updated_at ||
+      known.description !== componentSet.description ||
+      known.name !== iconNameOf(componentSet.name),
+  }).map((componentSet) => componentSet.node_id);
 }
 
 /**
