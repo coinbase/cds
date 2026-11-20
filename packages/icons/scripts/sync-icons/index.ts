@@ -23,7 +23,7 @@ import { getDescriptionMap } from './getDescriptionMap';
 import { sortByCreatedAt } from './sortByCreatedAt';
 import { stringToObject } from './stringToObject';
 import { svgoConfig } from './svgoConfig';
-import { iconPropsProblem, iconSetNameProblem } from './validateIcons';
+import { caseOnlyRenameProblem, iconPropsProblem, iconSetNameProblem } from './validateIcons';
 
 const args = process.argv.slice(2);
 const syncAll = args.includes('--sync-all');
@@ -247,6 +247,13 @@ const main = async () => {
 
     // The icon set data from the last sync, if it exists
     const oldIconSet = oldManifest.iconSets.find((iconSet) => iconSet.nodeId === nodeId);
+
+    const caseRenameProblem = oldIconSet && caseOnlyRenameProblem(oldIconSet.name, iconName);
+    if (caseRenameProblem) {
+      console.log(`  [CASE-ONLY RENAME] ${caseRenameProblem}`);
+      reject(iconName, nodeId, caseRenameProblem);
+      continue;
+    }
 
     // Check for duplicate icon sets
     const lowercaseIconName = iconName.toLowerCase();

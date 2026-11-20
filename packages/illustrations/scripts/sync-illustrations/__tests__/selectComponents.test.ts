@@ -60,6 +60,19 @@ describe('selectComponents', () => {
     expect(toSync.map(({ nodeId }) => nodeId)).toEqual([renamed.nodeId, retyped.nodeId]);
   });
 
+  it('skips a rename that only changes capitalization but keeps the component in the file', () => {
+    const [renamed, other] = components;
+    const { toSync, caseRenames, remoteNodeIds } = selectComponents({
+      components: [{ ...renamed, name: renamed.name.toUpperCase() }, other],
+      previous: [previousFrom(renamed), { ...previousFrom(other), lastUpdated: '2020-01-01' }],
+      syncAll: true,
+    });
+
+    expect(toSync.map(({ nodeId }) => nodeId)).toEqual([other.nodeId]);
+    expect(caseRenames.map(({ previousName }) => previousName)).toEqual([renamed.name]);
+    expect(remoteNodeIds.has(renamed.nodeId)).toBe(true);
+  });
+
   it('does not depend on the order or the age of the updates', () => {
     const [older, newer] = [...components].sort((a, b) => a.updatedAt.localeCompare(b.updatedAt));
     const { toSync } = selectComponents({

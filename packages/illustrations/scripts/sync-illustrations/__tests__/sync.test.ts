@@ -262,11 +262,18 @@ describe('runSync, end to end against an in-memory source', () => {
     );
   });
 
-  it('rejects a rename that only changes case', async () => {
+  it('leaves a rename that only changes case as it was and reports it', async () => {
     const before = source.components[0];
-    source.components[0] = { ...before, name: 'TwoFactor', updatedAt: later() };
-    await expect(sync()).rejects.toThrow('Renames are case-insensitive');
+    source.components[0] = { ...before, name: before.name.toUpperCase(), updatedAt: later() };
+    const outcome = await sync();
     source.components[0] = before;
+
+    expect(outcome.status).toBe('nothing-to-sync');
+    expect(
+      outcome.caseRenames.map(({ component, previousName }) => [component.name, previousName]),
+    ).toEqual([[before.name.toUpperCase(), before.name]]);
+    expect(entry(before.name)).toBeDefined();
+    expect(entry(before.name.toUpperCase())).toBeUndefined();
   });
 
   it('continues the version history when design re-creates the node under the same name', async () => {

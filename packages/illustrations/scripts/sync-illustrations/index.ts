@@ -17,7 +17,7 @@ import { readManifest, writeManifest } from './manifest';
 import { assertNativeCheckout } from './nativeRepo';
 import { chooseSinks } from './selectSinks';
 import { runSync, type SinkResult } from './sync';
-import { duplicateAssets, rejectedAssets } from './syncReport';
+import { caseRenamedAssets, duplicateAssets, rejectedAssets } from './syncReport';
 
 const args = process.argv.slice(2);
 const syncAll = config.syncAll || args.includes('--sync-all');
@@ -105,7 +105,7 @@ const sync = async (sinks: Sink[]) => {
     log: console.log,
   });
 
-  rejected.push(...duplicateAssets(outcome.duplicates));
+  rejected.push(...duplicateAssets(outcome.duplicates), ...caseRenamedAssets(outcome.caseRenames));
   if (outcome.duplicates.length) {
     console.warn('\n⚠️ Skipping components whose type/name is already taken by another component:');
     console.table(outcome.duplicates.map(({ nodeId, type, name }) => ({ nodeId, type, name })));

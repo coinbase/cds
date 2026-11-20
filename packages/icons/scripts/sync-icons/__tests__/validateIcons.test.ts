@@ -1,5 +1,5 @@
 import { stringToObject } from '../stringToObject';
-import { iconPropsProblem, iconSetNameProblem } from '../validateIcons';
+import { caseOnlyRenameProblem, iconPropsProblem, iconSetNameProblem } from '../validateIcons';
 
 describe('iconSetNameProblem', () => {
   it.each(['ui/add', 'nav/home', ' ui/add '])('accepts "%s"', (name) => {
@@ -12,6 +12,20 @@ describe('iconSetNameProblem', () => {
       expect(iconSetNameProblem(name)).toContain('Rename the icon set in Figma');
     },
   );
+});
+
+describe('caseOnlyRenameProblem', () => {
+  it('flags a rename that only changes capitalization and says how to fix it', () => {
+    expect(caseOnlyRenameProblem('qrCode', 'qrcode')).toContain('only changes capitalization');
+    expect(caseOnlyRenameProblem('qrCode', 'qrcode')).toContain('in Figma');
+  });
+
+  it.each([
+    ['qrCode', 'qrCode'],
+    ['qrCode', 'scan'],
+  ])('lets "%s" -> "%s" through', (previousName, name) => {
+    expect(caseOnlyRenameProblem(previousName, name)).toBeUndefined();
+  });
 });
 
 describe('iconPropsProblem', () => {
