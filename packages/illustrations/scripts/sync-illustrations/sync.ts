@@ -1,5 +1,6 @@
 import type { Sink, SinkChanges, SinkFailure } from './sinks/Sink';
 import type { IllustrationSource } from './source/IllustrationSource';
+import type { ColorPalette } from './colorPalette';
 import {
   diffIllustrations,
   type FetchedIllustration,
@@ -7,7 +8,6 @@ import {
   type IllustrationDiff,
 } from './diffIllustrations';
 import { hashSvg } from './hashSvg';
-import type { ColorPalette } from './colorPalette';
 import type { Component, Illustration } from './illustration';
 import { type Manifest, manifestIllustrations } from './manifest';
 import { mapConcurrently } from './mapConcurrently';

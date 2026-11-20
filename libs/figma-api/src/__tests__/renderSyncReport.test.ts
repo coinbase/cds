@@ -271,6 +271,12 @@ describe('renderPullRequestBody', () => {
     expect(renderPullRequestBody(report())).not.toContain('Skipped');
   });
 
+  it('does not claim a release when no asset changed', () => {
+    const body = renderPullRequestBody(report({ changes: changes() }));
+    expect(body).toContain('**Not released:** no asset changed');
+    expect(body).not.toContain('publishes the package');
+  });
+
   it('says so when nothing changed', () => {
     expect(renderPullRequestBody(report({ changes: changes() }))).toContain(
       'no asset changed, only recorded Figma dates or generated files',

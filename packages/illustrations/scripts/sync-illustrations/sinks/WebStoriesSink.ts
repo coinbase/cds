@@ -1,7 +1,8 @@
 import path from 'node:path';
 
-import { groupByType, type Illustration } from '../illustration';
 import { pascalCase } from '../artifacts/typescriptData';
+import { groupByType, type Illustration } from '../illustration';
+
 import { writeFile } from './files';
 import { Sink, type SinkChanges, type SinkOptions } from './Sink';
 
