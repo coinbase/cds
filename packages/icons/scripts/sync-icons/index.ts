@@ -1,4 +1,3 @@
-import { downloadSvgImage } from '@cds/figma-api';
 import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
 import {
   figmaNodeUrl,
@@ -19,10 +18,11 @@ import { webfont } from 'webfont';
 
 import { syncIconCodeConnect } from '../sync-icon-code-connect/index';
 
-import { fetchIconLibrary } from './source/fetchIconLibrary';
+import type { SetNode } from './source/IconSource';
 import { config } from './config';
 import { getDescriptionMap } from './getDescriptionMap';
 import { iconPropsProblem, iconSetNameProblem } from './profile';
+import { selectIconSetsToFetch } from './select';
 import { stringToObject } from './stringToObject';
 import { svgoConfig } from './svgoConfig';
 
@@ -216,12 +216,16 @@ const main = async () => {
   }
 
   console.log('Fetching file data from Figma...');
-  const syncedLibrary = await fetchIconLibrary({
-    fileId: config.figmaFileId,
-    knownIconSets: fullCompare ? undefined : oldManifest.iconSets,
-  });
+  const componentSets = await config.source.listComponentSets();
+  const remoteIds = new Set(componentSets.map((componentSet) => componentSet.node_id));
+  const idsToFetch = new Set(
+    selectIconSetsToFetch(componentSets, fullCompare ? undefined : oldManifest.iconSets),
+  );
+  const nodes = await config.source.fetchSetNodes(
+    componentSets.filter((componentSet) => idsToFetch.has(componentSet.node_id)),
+  );
 
-  const numberOfNodes = Object.values(syncedLibrary.nodes).length;
+  const numberOfNodes = Object.values(nodes).length;
 
   if (numberOfNodes === 0) {
     if (fullCompare) throw Error('No icon sets found in Figma');
@@ -253,8 +257,18 @@ const main = async () => {
    * The icon set's unique name and id come from this parent node.
    * The children of this iconSetNode are the individual icon component assets at different sizes and active states.
    */
+  // Every set is validated before anything is downloaded, so only valid sets cost an SVG export.
+  const accepted: {
+    iconName: string;
+    nodeId: string;
+    oldIconSet: ManifestIconSet | undefined;
+    description: string;
+    lastUpdated: string;
+    createdAt: string;
+    variants: { id: string; name: string }[];
+  }[] = [];
   let downloadProgress = 0;
-  for (const iconSetNode of Object.values(syncedLibrary.nodes)) {
+  for (const iconSetNode of Object.values<SetNode>(nodes)) {
     downloadProgress++;
     if (iconSetNode?.document?.type !== 'COMPONENT_SET') continue;
     console.log(
@@ -311,18 +325,43 @@ const main = async () => {
       continue;
     }
 
+    accepted.push({
+      iconName,
+      nodeId,
+      oldIconSet,
+      description,
+      lastUpdated,
+      createdAt,
+      variants: iconSetNode.document.children.flatMap((iconNode) =>
+        iconNode.type === 'COMPONENT' ? [{ id: iconNode.id, name: iconNode.name }] : [],
+      ),
+    });
+  }
+
+  const variantIds = accepted.flatMap(({ variants }) => variants.map(({ id }) => id));
+  console.log(`\nDownloading ${variantIds.length} svg assets...`);
+  const rawSvgs = await config.source.fetchSvgs(variantIds);
+
+  for (const {
+    iconName,
+    nodeId,
+    oldIconSet,
+    description,
+    lastUpdated,
+    createdAt,
+    variants,
+  } of accepted) {
     // Temporary icons data for this icon set, used to process updates
     const tempIcons: TempIcon[] = [];
 
     // Process each svg icon asset in the icon set
-    for (const iconNode of iconSetNode.document.children) {
-      if (iconNode.type !== 'COMPONENT') continue;
-      console.log(`  Downloading svg asset: "${iconNode.name}" "${iconNode.id}"`);
+    for (const iconNode of variants) {
       // The name of the icon asset node in Figma contains the props of the icon asset
       // Already validated by `iconPropsProblem` above
       const { size, active } = stringToObject(iconNode.name) as FigmaIconProps;
-      // Download and optimize the icon asset SVG
-      const rawSvg = await downloadSvgImage(syncedLibrary.imageUrls.svg[iconNode.id]);
+      // Optimize the icon asset SVG that was downloaded
+      const rawSvg = rawSvgs.get(iconNode.id);
+      if (rawSvg === undefined) throw new Error(`No SVG was downloaded for node ${iconNode.id}`);
       const svg = svgoOptimize(rawSvg, svgoConfig);
       const svgName = `${iconName}-${size}-${active ? 'active' : 'inactive'}`;
       const svgPath = path.join(config.outputSvgPath, `${svgName}.svg`);
@@ -420,13 +459,13 @@ const main = async () => {
   }
 
   const deletedIconSetIds = oldManifest.iconSets.filter(
-    (iconSet) => !syncedLibrary.remoteIds.includes(iconSet.nodeId),
+    (iconSet) => !remoteIds.has(iconSet.nodeId),
   );
 
   console.log(`\nProcessing ${deletedIconSetIds.length} deleted icon sets...`);
   // If any icon set's node is no longer present in the Figma file, we need to delete the svg output files and update the manifest
   for (const oldIconSet of oldManifest.iconSets) {
-    if (!syncedLibrary.remoteIds.includes(oldIconSet.nodeId)) {
+    if (!remoteIds.has(oldIconSet.nodeId)) {
       console.log(` Deleting icon set: ${oldIconSet.name} ${oldIconSet.nodeId}`);
       for (const oldSvg of oldIconSet.svgs) {
         const oldSvgPath = path.join(config.outputSvgPath, oldSvg.name + '.svg');

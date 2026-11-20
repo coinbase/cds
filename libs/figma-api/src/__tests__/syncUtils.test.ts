@@ -1,6 +1,6 @@
 import crypto from 'node:crypto';
 
-import { createBatches, hashJson, sortByCreatedAt } from '../syncUtils';
+import { createBatches, hashJson, mapConcurrently, sortByCreatedAt } from '../syncUtils';
 
 describe('hashJson', () => {
   it('is the base64 SHA-256 of the JSON text, the hash manifests already record', () => {
@@ -37,5 +37,25 @@ describe('createBatches', () => {
   it('returns no batches for no items, and one batch when everything fits', () => {
     expect(createBatches([], 3)).toEqual([]);
     expect(createBatches([1, 2], 5)).toEqual([[1, 2]]);
+  });
+});
+
+describe('mapConcurrently', () => {
+  it('keeps the input order and never runs more than the limit at once', async () => {
+    let running = 0;
+    let peak = 0;
+    const results = await mapConcurrently([1, 2, 3, 4, 5], 2, async (value) => {
+      running += 1;
+      peak = Math.max(peak, running);
+      await new Promise((resolve) => setTimeout(resolve, 5 - value));
+      running -= 1;
+      return value * 10;
+    });
+    expect(results).toEqual([10, 20, 30, 40, 50]);
+    expect(peak).toBeLessThanOrEqual(2);
+  });
+
+  it('returns nothing for no items', async () => {
+    expect(await mapConcurrently([], 3, async (value) => value)).toEqual([]);
   });
 });

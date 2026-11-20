@@ -1,6 +1,7 @@
+import { fetchSvgs } from '@cds/figma-api/fetchSvgs';
+
 import { fetchColorPalette } from './fetchColorPalette';
 import { fetchComponents } from './fetchComponents';
-import { fetchSvgs } from './fetchSvgs';
 import type { IllustrationSource, ProgressCallback } from './IllustrationSource';
 
 export type FigmaSourceOptions = {
