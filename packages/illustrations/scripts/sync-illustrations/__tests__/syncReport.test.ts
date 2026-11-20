@@ -1,6 +1,6 @@
 import type { Illustration } from '../illustration';
 import type { SinkResult } from '../sync';
-import { duplicateAssets, rejectedAssets } from '../syncReport';
+import { duplicateAssets, invalidAssets, rejectedAssets } from '../syncReport';
 
 const illustration = (name: string, nodeId: string): Illustration => ({
   nodeId,
@@ -54,6 +54,29 @@ describe('duplicateAssets', () => {
       duplicateOf: { url: 'https://www.figma.com/design/FILE?node-id=1-1' },
       category: 'duplicate-name',
     });
+  });
+});
+
+describe('invalidAssets', () => {
+  it('reports each unusable name with its Figma link, grouped as an invalid name', () => {
+    expect(
+      invalidAssets([
+        {
+          nodeId: '1:1',
+          name: 'Not a type',
+          url: 'https://www.figma.com/design/F?node-id=1-1',
+          message: 'bad name',
+        },
+      ]),
+    ).toEqual([
+      {
+        name: 'Not a type',
+        nodeId: '1:1',
+        url: 'https://www.figma.com/design/F?node-id=1-1',
+        message: 'bad name',
+        category: 'invalid-name',
+      },
+    ]);
   });
 });
 

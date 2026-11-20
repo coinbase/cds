@@ -1,6 +1,6 @@
 import type { GetFileComponentsResponse } from '@figma/rest-api-spec';
 
-import { toComponent } from '../source/fetchComponents';
+import { toComponent, toComponentListing } from '../source/fetchComponents';
 import { InMemorySource } from '../source/InMemorySource';
 
 import componentsFixture from './__fixtures__/getFileComponents.json';
@@ -8,6 +8,35 @@ import componentsFixture from './__fixtures__/getFileComponents.json';
 const figmaComponents = (componentsFixture as unknown as GetFileComponentsResponse).meta.components;
 
 describe('FigmaSource component mapping', () => {
+  it('finds every component of the real Figma response usable', () => {
+    expect(toComponentListing(figmaComponents).invalid).toEqual([]);
+  });
+
+  it('lists a component with an unusable name separately instead of failing the listing', () => {
+    const [first] = figmaComponents;
+    const { components, invalid } = toComponentListing([
+      { ...first, node_id: '1:1', name: 'Not a type' },
+      first,
+      { ...first, node_id: '1:2', name: 'Spot Icon/bad_name' },
+    ]);
+
+    expect(components.map(({ nodeId }) => nodeId)).toEqual([first.node_id]);
+    expect(invalid).toEqual([
+      {
+        nodeId: '1:1',
+        name: 'Not a type',
+        url: expect.stringContaining('node-id=1-1'),
+        message: expect.stringContaining('is not in [type]/[name] format'),
+      },
+      {
+        nodeId: '1:2',
+        name: 'Spot Icon/bad_name',
+        url: expect.stringContaining('node-id=1-2'),
+        message: expect.stringContaining('is not camelCase'),
+      },
+    ]);
+  });
+
   it('maps every published component from the real Figma response', () => {
     const components = figmaComponents.map(toComponent);
     expect(components).toHaveLength(figmaComponents.length);
@@ -56,8 +85,8 @@ describe('InMemorySource', () => {
   });
 
   it('hands out copies so callers cannot mutate the source by accident', async () => {
-    const listed = await source.listComponents();
-    listed.pop();
-    expect(await source.listComponents()).toHaveLength(2);
+    const { components } = await source.listComponents();
+    components.pop();
+    expect((await source.listComponents()).components).toHaveLength(2);
   });
 });

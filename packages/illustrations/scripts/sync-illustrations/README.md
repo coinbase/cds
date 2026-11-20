@@ -161,7 +161,7 @@ mutation. The source returns _raw_ exports so that optimization is covered by th
 ```ts
 runSync({ source, manifest, sinks, fullCompare, dryRun, allOrNothing, log }): Promise<SyncOutcome>
 
-type SyncOutcome = { duplicates: Component[] } & (
+type SyncOutcome = { duplicates: DuplicateComponent[]; invalid: InvalidComponent[] } & (
   | { status: 'nothing-to-sync' } // every component matches its manifest entry, nothing missing
   | { status: 'no-changes' } // downloaded, but every hash and description matched
   | {
@@ -255,6 +255,11 @@ setting, a palette change) are applied across the whole set.
 The same step drops **duplicate `type/name`** components, which the real file does contain. It keeps
 the node the manifest already knows (so the choice is stable from run to run), otherwise the oldest,
 and warns about the rest.
+
+A published component whose name is not `[type]/[camelCaseName]` does not stop the sync either. The source
+lists it separately (`listComponents` returns `{ components, invalid }`), the sync skips it, and it is
+reported as an **invalid name**. What was published for it before stays untouched, so renaming a
+component to something unusable in Figma never deletes the illustration.
 
 ## SVG processing
 

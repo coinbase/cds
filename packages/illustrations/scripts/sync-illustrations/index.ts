@@ -17,7 +17,7 @@ import { readManifest, writeManifest } from './manifest';
 import { assertNativeCheckout } from './nativeRepo';
 import { chooseSinks } from './selectSinks';
 import { runSync, type SinkResult } from './sync';
-import { duplicateAssets, rejectedAssets } from './syncReport';
+import { duplicateAssets, invalidAssets, rejectedAssets } from './syncReport';
 
 const args = process.argv.slice(2);
 const fullCompare = config.fullCompare || args.includes('--full-compare');
@@ -105,7 +105,13 @@ const sync = async (sinks: Sink[]) => {
     log: console.log,
   });
 
-  rejected.push(...duplicateAssets(outcome.duplicates));
+  rejected.push(...invalidAssets(outcome.invalid), ...duplicateAssets(outcome.duplicates));
+  if (outcome.invalid.length) {
+    console.warn(
+      '\n⚠️ Skipping components whose name cannot be used; what was published for them stays:',
+    );
+    console.table(outcome.invalid.map(({ nodeId, name, message }) => ({ nodeId, name, message })));
+  }
   if (outcome.duplicates.length) {
     console.warn('\n⚠️ Skipping components whose type/name is already taken by another component:');
     console.table(
