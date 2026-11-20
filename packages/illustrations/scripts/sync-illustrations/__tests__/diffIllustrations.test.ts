@@ -1,4 +1,9 @@
-import { diffIllustrations, type FetchedIllustration, hasChanges } from '../diffIllustrations';
+import {
+  diffIllustrations,
+  type FetchedIllustration,
+  hasChanges,
+  hasChangesToRecord,
+} from '../diffIllustrations';
 import type { Illustration } from '../illustration';
 
 const previous = (overrides: Partial<Illustration> = {}): Illustration => ({
@@ -60,6 +65,33 @@ describe('diffIllustrations', () => {
     expect(hasChanges(diff)).toBe(false);
     expect(diff.writes).toEqual([]);
     expect(diff.illustrations).toEqual([previous({ lastUpdated: '2026-09-01T00:00:00.000Z' })]);
+  });
+
+  it('records a new Figma date on its own, without a reported change or a version bump', () => {
+    const diff = diffIllustrations({
+      previous: [previous({ lastUpdated: '2026-08-01T00:00:00.000Z' })],
+      fetched: [fetched({ updatedAt: '2026-09-01T00:00:00.000Z' })],
+      remoteNodeIds: new Set(['4390:695']),
+    });
+
+    expect(hasChanges(diff)).toBe(false);
+    expect(diff.datesChanged).toBe(true);
+    expect(hasChangesToRecord(diff)).toBe(true);
+    expect(diff.writes).toEqual([]);
+    expect(diff.illustrations[0]).toMatchObject({
+      version: 1,
+      lastUpdated: '2026-09-01T00:00:00.000Z',
+    });
+  });
+
+  it('has nothing to record when the Figma date is the one in the manifest', () => {
+    const diff = diffIllustrations({
+      previous: [previous({ lastUpdated: '2026-09-01T00:00:00.000Z' })],
+      fetched: [fetched({ updatedAt: '2026-09-01T00:00:00.000Z' })],
+      remoteNodeIds: new Set(['4390:695']),
+    });
+
+    expect(hasChangesToRecord(diff)).toBe(false);
   });
 
   it('bumps the version when the artwork changed and removes the previous files', () => {
