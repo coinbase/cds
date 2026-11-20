@@ -288,6 +288,30 @@ describe('ListCell', () => {
     expect(screen.getByTestId('listcell-with-a11y')).toBeAccessible();
   });
 
+  it('sets selected accessibilityState when selected and pressable', () => {
+    render(
+      <DefaultThemeProvider>
+        <ListCell selected onPress={noop} testID="listcell-selected" title="Title" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('listcell-selected-cell-pressable')).toHaveAccessibilityState({
+      selected: true,
+    });
+  });
+
+  it('does not set selected accessibilityState when not selected', () => {
+    render(
+      <DefaultThemeProvider>
+        <ListCell onPress={noop} testID="listcell-not-selected" title="Title" />
+      </DefaultThemeProvider>,
+    );
+
+    expect(screen.getByTestId('listcell-not-selected-cell-pressable')).not.toHaveAccessibilityState(
+      { selected: true },
+    );
+  });
+
   it('applies styles to internal components', () => {
     const styles = {
       accessory: { borderRightWidth: 11 },
