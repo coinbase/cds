@@ -32,9 +32,11 @@ This is also why renaming an illustration resets its version to `0`.
 
 ## Syncing Illustrations
 
-**WARNING: FOLLOW THESE INSTRUCTIONS EXACTLY. Copy and paste these commands directly into your terminal, editing them with the current date as necessary. DO NOT MESS AROUND.**
+The **Sync Figma Assets** workflow runs this sync: from the Actions tab (choose `illustrations`) or on its weekday schedule. The sync only writes the generated files, the version plan and a report; the plan selects `major` when any illustration was renamed or deleted, and `minor` otherwise. The workflow commits them on a new `illustrations/YYYY-MM-DD` branch, releases it with `yarn release --projects=illustrations` unless the sync is breaking, and pushes the branch. The Slack message that ends the run links to the pull request form for that branch, with the title and description filled in. Open it, then review it as described below. Squash-merge it: the workflow's commits are not signed.
 
-**IMPORTANT: If any illustrations are renamed or deleted, this is a BREAKING CHANGE. This MUST be published with an accompanying major version bump, migration guide, and a migrator script.**
+**IMPORTANT: If any illustrations are renamed or deleted, this is a BREAKING CHANGE. This MUST be published with an accompanying major version bump, migration guide, and a migrator script. The workflow does not release a breaking sync; it keeps the version plan, and you run `yarn release --projects=illustrations` on the branch once the migration guide and migrator are ready.**
+
+### Running the sync locally
 
 1. Retrieve the team Figma API key from the Config Service and set it in your environment.
 
@@ -42,60 +44,46 @@ This is also why renaming an illustration resets its version to `0`.
 export FIGMA_ACCESS_TOKEN=VALUE-FROM-CONFIG-SERVICE
 ```
 
-2. Make sure this repo has no uncommitted changes — the sync script will fail if it does
-
-```sh
-git status
-```
-
-3. Install dependencies
+2. Install dependencies
 
 ```sh
 nvm use
 yarn install
 ```
 
-4. Run the illustration sync. It creates a new `illustrations/YYYY-MM-DD` branch from `origin/master`, writes the generated assets, web's illustration stories, the manifest and a version plan, then commits and pushes the branch. If it fails or nothing changed, the branch is deleted again
+3. Run the illustration sync. It writes the generated files into your working tree, and nothing else: no branch, commit, version plan, release or push. Review the result with `git diff`
 
 ```sh
 yarn nx run illustrations:sync-illustrations
 ```
 
-5. Open a PR in [github.com/coinbase/cds](https://github.com/coinbase/cds). Title the PR exactly the same as the commit message: `feat: Publish illustrations YYYY-MM-DD`. Take note of the PR number for the next step
+4. When any illustration changed, the sync also writes the version plan into `.nx/version-plans`. It selects `major` when an illustration was renamed or deleted, and `minor` otherwise.
 
-6. Review the version plan that `sync-illustrations` wrote to `.nx/version-plans/illustrations-YYYY-MM-DD.md`. It lists the added, updated, renamed, and deleted illustrations grouped by type, and selects `major` when any illustration was renamed or deleted and `minor` otherwise. Edit the bump or the wording if you disagree with it. See [the release guide](../../docs/release.md) for how version plans work.
-
-7. Release the illustrations package so the plan is applied to `package.json` and `CHANGELOG.md`
+To publish in the same branch, release as usual:
 
 ```sh
 yarn release --projects=illustrations
 ```
 
-8. Commit and push the version plan and release to your PR
+### Reviewing the sync pull request
 
-```sh
-git add .
-git commit -m 'Update changelog'
-git push origin illustrations/YYYY-MM-DD
-```
-
-9. DM the illustrations DRI on Slack and share direct links to:
+1. DM the illustrations DRI on Slack and share direct links to:
 
 - the illustration changelog in your PR
 - the Web Visual Regression results in Percy
 
 You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 
-10. Carefully review the two links you shared with the illustrations DRI. Does the changelog look correct? Do the visual regression results look correct?
+2. Carefully review the two links you shared with the illustrations DRI. Does the changelog look correct? Do the visual regression results look correct?
 
 **IMPORTANT: Breaking change releases are a big deal. They should be performed extremely rarely, and should ALWAYS be accompanied by a migration plan. You are responsible for any breaking changes that you release.**
 
-11. DO NOT MERGE until the illustrations DRI has carefully reviewed and signed off on the changelog and the visual regression test results.
+3. DO NOT MERGE until the illustrations DRI has carefully reviewed and signed off on the changelog and the visual regression test results.
 
 ### Syncing the native packages
 
 The same run can update the illustrations of the native CDS packages. Point it at a local checkout
-of mobile-skunkworks, which must have no uncommitted changes either:
+of mobile-skunkworks, which must have no uncommitted changes:
 
 ```sh
 export SYNC_ILLUSTRATIONS_NATIVE_REPO=/path/to/mobile-skunkworks
@@ -104,14 +92,14 @@ yarn nx run illustrations:sync-illustrations
 
 The run first checks that the path is a git checkout with `modules/ios/CDS/CDSDesignSystem` and
 `modules/android/cds`, then creates an `illustrations/YYYY-MM-DD` branch from `origin/main` there
-as well. It writes `Sources/CDSDesignSystem/{Resources/Illustrations.xcassets,Illustrations/Generated}`
+there. It writes `Sources/CDSDesignSystem/{Resources/Illustrations.xcassets,Illustrations/Generated}`
 in the iOS module and `{src/main/res/drawable,illustrations/src/main/kotlin/…/generated}` in the
 Android module (the paths live in `scripts/sync-illustrations/nativeRepo.ts`) and commits and pushes
 the branch when anything changed. Each repository is published on its own: if only the native
 checkout was missing files, only its branch is pushed.
 
 Open the native PR by hand in mobile-skunkworks with the title the run prints
-(`feat: Sync CDS illustrations YYYY-MM-DD`), next to the cds PR from step 5. The native files are
+(`feat: Sync CDS illustrations YYYY-MM-DD`), next to the cds PR. The native files are
 generated: review them like `src/__generated__`, never edit them. The run ends by printing the
 illustrations the native packages draw with a known difference (the approximation list in the sync
 README) and those they do not ship because the art uses a mask neither platform can draw (the
@@ -126,7 +114,7 @@ Without `SYNC_ILLUSTRATIONS_NATIVE_REPO` the sync behaves exactly as before.
 
 ### Syncing Illustrations Troubleshooting
 
-**"There are no changes since the last update on XX/XX/XXXX"** — The script detected no illustration changes in Figma since the last sync. Verify this is expected with design.
+**"Every illustration matches the last sync"** — Every illustration in Figma has the same last-updated date as the manifest records for it. Verify this is expected with design.
 
 **Force a full re-sync** — If you need to re-sync all illustrations regardless of when they were last updated, pass the `--sync-all` flag:
 
@@ -134,7 +122,7 @@ Without `SYNC_ILLUSTRATIONS_NATIVE_REPO` the sync behaves exactly as before.
 yarn nx run illustrations:sync-illustrations --sync-all
 ```
 
-**Repo is not clean** — The sync requires a clean working tree so that it can create the release branch. Stash or commit any pending changes before running it.
+**Native checkout is not clean** — With `SYNC_ILLUSTRATIONS_NATIVE_REPO` set, the native checkout must have no uncommitted changes, so that the run can create its release branch. Stash or commit them before running.
 
 **Writing to some destinations only** — Pass `--select-sinks` to be asked, before anything is
 fetched, which of the configured destinations (the illustrations package, the web stories, the
@@ -164,7 +152,7 @@ assets were written; ask design to fix the rejected illustrations and re-run. Pa
 (files, catalogs and removals); other destinations still publish. The boundary is one destination:
 there is no rollback across destinations or after a file-system error during writing.
 
-**Syncing without the release branch** — Pass `--no-git` to write into the current branch instead of creating and pushing `illustrations/YYYY-MM-DD`, for example to inspect a `--sync-all` locally. Scratch runs (below) never touch git.
+**Syncing without the native release branch** — Pass `--no-git` to write into the native checkout's current branch instead of creating and pushing `illustrations/YYYY-MM-DD` there, for example to inspect a `--sync-all` locally. Scratch runs (below) never touch git.
 
 **"`<type>/<name>` has an SVG the sync cannot publish"** — A layer uses a color theming cannot
 handle (an alpha hex such as `#0052FF80`, `currentColor`, `rgba()`, `var()`); the message names the

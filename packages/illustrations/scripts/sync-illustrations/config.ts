@@ -16,15 +16,13 @@ type SyncIllustrationsConfig = {
   source: IllustrationSource;
   /* The absolute path of the repo root. */
   repoRoot: string;
-  /* The absolute path of the nx release version plans directory. */
-  versionPlansPath: string;
   /* The absolute path of the manifest file. */
   manifestPath: string;
   /* The destinations synced illustrations are written to. Each sink owns one; see sinks/. */
   sinks: Sink[];
   /* Whether to force sync all illustrations regardless of when they were last updated. Can also be passed as an argument to the script with --sync-all. */
   syncAll: boolean;
-  /* Whether to run on a fresh `illustrations/YYYY-MM-DD` branch and push it. Off for scratch runs; `--no-git` turns it off for a run. */
+  /* Whether to put the native checkout on a fresh `illustrations/YYYY-MM-DD` branch and push it. This repo's own branch, release and push belong to the sync workflow. Off for scratch runs; `--no-git` turns it off for a run. */
   git: boolean;
   /* Deep link to an illustration's component in Figma, for error messages and the sync report. */
   componentUrl: (illustration: Illustration) => string;
@@ -91,9 +89,6 @@ export const config: SyncIllustrationsConfig = {
     paletteVariablePrefix: 'illustration',
   }),
   repoRoot: MONOREPO_ROOT,
-  versionPlansPath: SCRATCH_DIR
-    ? path.resolve(OUTPUT_ROOT, 'version-plans')
-    : path.resolve(MONOREPO_ROOT, '.nx/version-plans'),
   manifestPath: path.resolve(OUTPUT_ROOT, 'manifest.json'),
   sinks: [
     new IllustrationsPackageSink({ dir: GENERATED_DIR, cssVariablePrefix: 'illustration' }),

@@ -1,10 +1,5 @@
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-
-import { stringToObject } from './stringToObject';
-import { figmaNodeUrl, type SyncReport, writeSyncReport } from './syncReport';
-import { iconPropsProblem, iconSetNameProblem } from './validateIcons';
+import { stringToObject } from '../stringToObject';
+import { iconPropsProblem, iconSetNameProblem } from '../validateIcons';
 
 describe('iconSetNameProblem', () => {
   it.each(['ui/add', 'nav/home', ' ui/add '])('accepts "%s"', (name) => {
@@ -38,33 +33,5 @@ describe('iconPropsProblem', () => {
 
   it('explains the expected format', () => {
     expect(problem('Default')).toContain('Name icon components like "size=24, active=false"');
-  });
-});
-
-describe('figmaNodeUrl', () => {
-  it('links to the node with a dashed id', () => {
-    expect(figmaNodeUrl('FILE', '12:34')).toBe('https://www.figma.com/design/FILE?node-id=12-34');
-  });
-});
-
-describe('writeSyncReport', () => {
-  const report: SyncReport = {
-    target: 'icons',
-    branch: 'icons/2026-11-19',
-    breaking: true,
-    counts: { added: 0, updated: 1, renamed: 1, deleted: 0 },
-    rejected: [{ name: 'add', nodeId: '1:2', url: 'https://figma.com', message: 'fix it' }],
-  };
-
-  it('writes the report as JSON, creating the directory', () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sync-report-'));
-    const file = path.join(dir, 'nested', 'report.json');
-    writeSyncReport(file, report);
-    expect(JSON.parse(fs.readFileSync(file, 'utf-8'))).toEqual(report);
-    fs.rmSync(dir, { recursive: true });
-  });
-
-  it('writes nothing without a path', () => {
-    expect(() => writeSyncReport(undefined, report)).not.toThrow();
   });
 });
