@@ -36,6 +36,18 @@ describe('dedupeByIdentity', () => {
     ]);
   });
 
+  it('lists dropped items by identity group, in the order the identities first appear', () => {
+    const a1 = item('1', 'a', 1);
+    const b1 = item('2', 'b', 1);
+    const a2 = item('3', 'a', 2);
+    const b2 = item('4', 'b', 2);
+    const { dropped } = dedupeByIdentity([a1, b1, b2, a2], identity, oldest);
+    expect(dropped.map(({ item: { id }, keptBy }) => [id, keptBy.id])).toEqual([
+      ['1', '3'],
+      ['2', '4'],
+    ]);
+  });
+
   it('keeps the existing item on a tie, so the choice does not depend on later items', () => {
     const a = item('1', 'cash', 4);
     const b = item('2', 'cash', 4);
