@@ -50,7 +50,7 @@ describe('duplicateAssets', () => {
       name: 'spotSquare/futures',
       nodeId: '9:9',
       url: 'https://www.figma.com/design/FILE?node-id=9-9',
-      message: expect.stringContaining('already named "spotSquare/futures"'),
+      message: expect.stringContaining('two components named "spotSquare/futures"'),
       duplicateOf: { url: 'https://www.figma.com/design/FILE?node-id=1-1' },
     });
   });

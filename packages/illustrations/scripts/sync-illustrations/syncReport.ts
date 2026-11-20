@@ -33,6 +33,6 @@ export const duplicateAssets = (duplicates: DuplicateComponent[]): RejectedAsset
     name: `${type}/${name}`,
     nodeId,
     url,
-    message: `Another component is already named "${type}/${name}", so this one is skipped; rename one of them in Figma.`,
+    message: `The Figma file has two components named "${type}/${name}". This one is skipped; rename one of them.`,
     duplicateOf: { url: keptBy.url },
   }));

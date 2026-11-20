@@ -268,8 +268,8 @@ const main = async () => {
         iconName,
         nodeId,
         duplicateIconSet.name === iconName
-          ? `Icon set "${iconName}" has the same name as another icon set. Rename one of them in Figma.`
-          : `Icon set "${iconName}" has the same name as another icon set, "${duplicateIconSet.name}", ignoring capitalization. Rename one of them in Figma.`,
+          ? `Icon set "${iconSetNode.document.name}" is skipped because the Figma file has two icon sets with the icon name "${iconName}" (the part after "ui/" or "nav/"). Rename one of them.`
+          : `Icon set "${iconSetNode.document.name}" is skipped because its icon name "${iconName}" differs only in capitalization from "${duplicateIconSet.name}" in another icon set of the Figma file. Rename one of them.`,
         duplicateIconSet.nodeId,
       );
       continue;
