@@ -215,11 +215,13 @@ export type SummaryContext = {
   runUrl?: string;
 };
 
+export type SummaryOutcome = 'failed' | 'skipped' | 'branch' | 'nothing';
+
 /** How a run ended: it failed, was skipped, pushed a branch, or found nothing new in Figma. */
 export const summaryOutcome = (
   report: SyncReport | undefined,
   { skipped, jobStatus, syncOutcome, pushed }: SummaryContext,
-) => {
+): SummaryOutcome => {
   if (skipped) return 'skipped';
   if (jobStatus === 'failure' || (syncOutcome === 'failure' && !report)) return 'failed';
   return pushed ? 'branch' : 'nothing';
@@ -231,38 +233,50 @@ const failureReason = ({ failureLog, failedStep }: SummaryContext) => {
   return 'See the run log for the failing step.';
 };
 
+const summaryHeadline = (
+  outcome: SummaryOutcome,
+  report: SyncReport | undefined,
+  context: SummaryContext,
+): string[] => {
+  const { target, branch = '', compareUrl, openPullRequestUrl } = context;
+  const nothingNew = `:white_check_mark: The ${target} Figma sync ran. Nothing new in Figma.`;
+
+  switch (outcome) {
+    case 'failed':
+      return [
+        `:red_circle: The ${target} Figma sync failed. Nothing was published.`,
+        `\`\`\`${failureReason(context)}\`\`\``,
+      ];
+    case 'skipped':
+      return [
+        `:information_source: The ${target} Figma sync did not run: a sync pull request is already open (<${openPullRequestUrl}|open it>).`,
+      ];
+    case 'branch': {
+      if (!report) return [nothingNew];
+      const lines = [
+        `:package: The ${target} Figma sync pushed branch \`${plain(branch)}\`: ${countSummary(report.changes)}.`,
+      ];
+      if (isBreaking(report.changes)) {
+        lines.push(
+          `:rotating_light: It renames or deletes assets, so it needs a ${report.bump} version bump.`,
+        );
+      }
+      lines.push(`<${compareUrl}|Open the pull request for \`${plain(branch)}\`>`);
+      return lines;
+    }
+    case 'nothing':
+      return [nothingNew];
+  }
+};
+
 /**
  * The Slack message that ends every run. `report` is missing when the sync crashed before writing
  * one. It always lists the assets design has to fix, because those are skipped on every run until
  * they are fixed in Figma.
  */
 export const renderSummary = (report: SyncReport | undefined, context: SummaryContext) => {
-  const { target, branch = '', compareUrl, openPullRequestUrl, runUrl } = context;
   const outcome = summaryOutcome(report, context);
-  const lines: string[] = [];
-
-  if (outcome === 'failed') {
-    lines.push(
-      `:red_circle: The ${target} Figma sync failed. Nothing was published.`,
-      `\`\`\`${failureReason(context)}\`\`\``,
-    );
-  } else if (outcome === 'skipped') {
-    lines.push(
-      `:information_source: The ${target} Figma sync did not run: a sync pull request is already open (<${openPullRequestUrl}|open it>).`,
-    );
-  } else if (outcome === 'branch' && report) {
-    lines.push(
-      `:package: The ${target} Figma sync pushed branch \`${plain(branch)}\`: ${countSummary(report.changes)}.`,
-    );
-    if (isBreaking(report.changes)) {
-      lines.push(
-        `:rotating_light: It renames or deletes assets, so it needs a ${report.bump} version bump.`,
-      );
-    }
-    lines.push(`<${compareUrl}|Open the pull request for \`${plain(branch)}\`>`);
-  } else {
-    lines.push(`:white_check_mark: The ${target} Figma sync ran. Nothing new in Figma.`);
-  }
+  const lines = summaryHeadline(outcome, report, context);
 
   const rejected = report?.rejected ?? [];
   if (rejected.length > 0) {
@@ -276,7 +290,7 @@ export const renderSummary = (report: SyncReport | undefined, context: SummaryCo
     );
   }
 
-  if (runUrl) lines.push(`<${runUrl}|Sync run>`);
+  if (context.runUrl) lines.push(`<${context.runUrl}|Sync run>`);
   return { text: lines.join('\n') };
 };
 
