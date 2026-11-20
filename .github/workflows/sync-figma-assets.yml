@@ -217,6 +217,8 @@ jobs:
             else
               echo "No changes to publish."
             fi
+            echo
+            yarn tsx libs/figma-api/src/renderSyncReportCli.ts examined "${SYNC_REPORT_PATH}"
             if [ "${REJECTED}" != "0" ]; then
               echo
               echo "#### Skipped, needs a fix in Figma"

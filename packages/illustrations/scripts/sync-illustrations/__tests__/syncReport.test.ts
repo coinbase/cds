@@ -66,6 +66,14 @@ describe('invalidAssets', () => {
           name: 'Not a type',
           url: 'https://www.figma.com/design/F?node-id=1-1',
           message: 'bad name',
+          category: 'invalid-name',
+        },
+        {
+          nodeId: '2:2',
+          name: 'Spot Wide/x',
+          url: 'https://www.figma.com/design/F?node-id=2-2',
+          message: 'unknown type',
+          category: 'new-type',
         },
       ]),
     ).toEqual([
@@ -75,6 +83,13 @@ describe('invalidAssets', () => {
         url: 'https://www.figma.com/design/F?node-id=1-1',
         message: 'bad name',
         category: 'invalid-name',
+      },
+      {
+        name: 'Spot Wide/x',
+        nodeId: '2:2',
+        url: 'https://www.figma.com/design/F?node-id=2-2',
+        message: 'unknown type',
+        category: 'new-type',
       },
     ]);
   });

@@ -1,3 +1,5 @@
+import type { RejectedCategory } from '@cds/figma-api/syncReport';
+
 import type { ColorPalette } from '../colorPalette';
 import type { Component } from '../illustration';
 
@@ -8,6 +10,7 @@ export type InvalidComponent = {
   name: string;
   url: string;
   message: string;
+  category: Extract<RejectedCategory, 'invalid-name' | 'new-type'>;
 };
 
 export type ComponentListing = { components: Component[]; invalid: InvalidComponent[] };

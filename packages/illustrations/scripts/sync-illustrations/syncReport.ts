@@ -29,14 +29,14 @@ export const rejectedAssets = (
     });
 };
 
-/** Published components skipped because their name is not `[type]/[camelCaseName]`. */
+/** Published components skipped because their name cannot be used or their type is not synced. */
 export const invalidAssets = (invalid: InvalidComponent[]): RejectedAsset[] =>
-  invalid.map(({ name, nodeId, url, message }) => ({
+  invalid.map(({ name, nodeId, url, message, category }) => ({
     name,
     nodeId,
     url,
     message,
-    category: 'invalid-name' as const,
+    category,
   }));
 
 /** Components dropped because another component already has their `type/name`. */

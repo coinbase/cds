@@ -8,6 +8,8 @@ export type FigmaSourceOptions = {
   fileId: string;
   /** The Figma file holding the published color variables. */
   colorsFileId: string;
+  /** The illustration types to sync; a published component of any other type is reported, not synced. */
+  knownTypes?: readonly string[];
   /** Name prefix of the palette variables, e.g. `illustration` for `illustration/primary`. */
   paletteVariablePrefix: string;
 };
@@ -21,7 +23,7 @@ export class FigmaSource implements IllustrationSource {
   }
 
   listComponents() {
-    return fetchComponents(this.options.fileId);
+    return fetchComponents(this.options.fileId, this.options.knownTypes);
   }
 
   fetchSvgs(nodeIds: string[], onProgress?: ProgressCallback) {

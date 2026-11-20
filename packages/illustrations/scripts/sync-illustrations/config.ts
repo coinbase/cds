@@ -10,6 +10,7 @@ import { FigmaSource } from './source/FigmaSource';
 import type { IllustrationSource } from './source/IllustrationSource';
 import type { Illustration } from './illustration';
 import { nativeLayout, nativeModules } from './nativeRepo';
+import { illustrationTypes } from './profile';
 
 type SyncIllustrationsConfig = {
   /* Where illustrations come from; see source/. */
@@ -87,6 +88,7 @@ export const config: SyncIllustrationsConfig = {
     fileId: FIGMA_FILE_ID,
     colorsFileId: 'AH4N0fma2EvI30IltjBGPy',
     paletteVariablePrefix: 'illustration',
+    knownTypes: illustrationTypes,
   }),
   repoRoot: MONOREPO_ROOT,
   manifestPath: path.resolve(OUTPUT_ROOT, 'manifest.json'),

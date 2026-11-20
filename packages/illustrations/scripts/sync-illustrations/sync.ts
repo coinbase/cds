@@ -43,6 +43,8 @@ export type SyncOutcome = {
   duplicates: DuplicateComponent[];
   /** Published components skipped because their name cannot be used; what was published for them stays. */
   invalid: InvalidComponent[];
+  /** How many published components the source listed, usable or not. */
+  listed: number;
 } & (
   | { status: 'nothing-to-sync' }
   | { status: 'no-changes' }
@@ -101,6 +103,7 @@ export async function runSync({
 
   log('Fetching component list...');
   const { components, invalid } = await source.listComponents();
+  const listed = components.length + invalid.length;
   const selection = selectComponents({
     components,
     previous,
@@ -135,7 +138,7 @@ export async function runSync({
   const deletions = previous.filter(({ nodeId }) => !remoteNodeIds.has(nodeId));
   if (toSync.length === 0 && deletions.length === 0) {
     if (fullCompare) throw Error('No illustrations found in the source');
-    return { status: 'nothing-to-sync', duplicates, invalid };
+    return { status: 'nothing-to-sync', duplicates, invalid, listed };
   }
 
   log('Fetching color palette...');
@@ -158,7 +161,7 @@ export async function runSync({
 
   const diff = diffIllustrations({ previous, fetched, remoteNodeIds });
   if (!hasChangesToRecord(diff) && missing.length === 0)
-    return { status: 'no-changes', duplicates, invalid };
+    return { status: 'no-changes', duplicates, invalid, listed };
 
   // Changed illustrations are written to every sink; unchanged ones only to sinks missing them.
   const missingByNodeId = new Map([...missingSinks].map(([prev, s]) => [prev.nodeId, s]));
@@ -210,5 +213,5 @@ export async function runSync({
     }),
   );
 
-  return { status: 'synced', diff, palette, backfilled, sinkResults, duplicates, invalid };
+  return { status: 'synced', diff, palette, backfilled, sinkResults, duplicates, invalid, listed };
 }

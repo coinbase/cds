@@ -256,6 +256,8 @@ The same step drops **duplicate `type/name`** components, which the real file do
 the node the manifest already knows (so the choice is stable from run to run), otherwise the oldest,
 and warns about the rest.
 
+A published component whose type is not in `illustrationTypes` (`profile.ts`) is not synced either: the source lists it as invalid with the category **new type**, and what was published for it stays.
+
 A published component whose name is not `[type]/[camelCaseName]` does not stop the sync either. The source
 lists it separately (`listComponents` returns `{ components, invalid }`), the sync skips it, and it is
 reported as an **invalid name**. What was published for it before stays untouched, so renaming a

@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 import {
+  type ExaminedSummary,
   hasChanges,
   isBreaking,
   type RejectedAsset,
@@ -171,6 +172,11 @@ const REJECTED_CATEGORIES: Record<
     hint: 'the artwork could not be converted or failed a check; fix it',
     showReason: true,
   },
+  'new-type': {
+    label: 'New type (needs approval)',
+    hint: 'the type is not synced yet; ask Design Systems to add it to the sync profile',
+    showReason: true,
+  },
   other: { label: 'Other', hint: 'see the reason', showReason: true },
 };
 
@@ -192,6 +198,47 @@ const assetLinks = ({ url, duplicateOf }: RejectedAsset, link: Link) =>
     link('Open in Figma', url),
     ...(duplicateOf ? [link('the other one', duplicateOf.url)] : []),
   ].join(', ');
+
+const formatCount = (count: number) => count.toLocaleString('en-US');
+
+const ignoredCount = ({ ignored }: ExaminedSummary) =>
+  ignored.reduce((total, { items }) => total + items.length, 0);
+
+/** What the sync did with everything it looked at: changed, skipped and ignored. */
+const examinedParts = ({ examined, changes, rejected }: SyncReport) => {
+  if (!examined) return undefined;
+  const { added, updated, renamed, deleted } = changes;
+  const parts = [
+    `${added.length + updated.length + renamed.length + deleted.length} changed`,
+    `${rejected.length} skipped`,
+  ];
+  const groups = examined.ignored.filter(({ items }) => items.length > 0);
+  if (groups.length > 0) {
+    parts.push(
+      `${ignoredCount(examined)} ignored (${groups.map(({ reason, items }) => `${items.length} ${plain(reason)}`).join('; ')})`,
+    );
+  }
+  return parts.join(', ');
+};
+
+/** What the sync looked at, with every ignored item, for the job summary. */
+export const renderExamined = (report: SyncReport) => {
+  const { examined } = report;
+  if (!examined) return '';
+  return [
+    `**Looked at ${formatCount(examined.seen)} items in Figma:** ${examinedParts(report)}.`,
+    ...examined.ignored
+      .filter(({ items }) => items.length > 0)
+      .map(({ reason, items }) =>
+        [
+          `**Ignored (${items.length})**: ${plain(reason)}.`,
+          ...items.map(
+            ({ name, url }) => `- \`${plain(name)}\`${url ? ` ([Open in Figma](${url}))` : ''}`,
+          ),
+        ].join('\n'),
+      ),
+  ].join('\n\n');
+};
 
 /** The rejected assets as markdown, grouped by category, for the pull request and the job summary. */
 export const renderRejections = (report: SyncReport) =>
@@ -377,7 +424,7 @@ const rejectedLines = (rejected: RejectedAsset[], runUrl?: string) => {
   }
   if (hidden > 0 && runUrl)
     lines.push(`Every skipped asset is listed in the <${runUrl}|job summary>.`);
-  lines.push('Fix them in Figma and publish the library; the next sync picks them up.');
+  lines.push('The next sync picks them up once they are fixed.');
   return lines;
 };
 
@@ -389,6 +436,13 @@ const rejectedLines = (rejected: RejectedAsset[], runUrl?: string) => {
 export const renderSummary = (report: SyncReport | undefined, context: SummaryContext) => {
   const outcome = summaryOutcome(report, context);
   const lines = summaryHeadline(outcome, report, context);
+
+  const parts = report && examinedParts(report);
+  if (report?.examined && parts) {
+    lines.push(
+      `:mag: Looked at ${formatCount(report.examined.seen)} in Figma: ${escapeSlack(parts)}.`,
+    );
+  }
 
   const rejected = report?.rejected ?? [];
   if (rejected.length > 0) lines.push(...rejectedLines(rejected, context.runUrl));
