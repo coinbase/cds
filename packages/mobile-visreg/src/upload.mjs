@@ -1,4 +1,4 @@
-import { execSync } from 'child_process';
+import { execFileSync } from 'child_process';
 import { resolve } from 'path';
 
 function parseArgs() {
@@ -24,6 +24,6 @@ if (!process.env.PERCY_TOKEN) {
 const screenshotDir = resolve(dir);
 console.log(`Uploading screenshots from ${screenshotDir} to Percy...`);
 
-execSync(`npx percy upload ${screenshotDir}`, { stdio: 'inherit' });
+execFileSync('npx', ['percy', 'upload', screenshotDir], { stdio: 'inherit' });
 
 console.log('\nUpload complete. Visit percy.io to review the build.');
