@@ -1,32 +1,23 @@
 name: Sync Figma Assets
 
-# Syncs icons and illustrations from Figma and pushes a branch for each, so designers no longer need
-# an engineer to run the sync by hand. An engineer still opens and reviews every PR, does the manual
-# visreg check and merges it; nothing is merged automatically.
+# Syncs icons and illustrations from Figma and pushes a branch for each. An engineer opens the PR,
+# does the manual visreg check and merges it; nothing is merged automatically. Squash-merge: the
+# workflow's commits are not signed.
 #
-# The sync scripts only write files and a report (SYNC_REPORT_PATH). This workflow does the rest: it
-# commits the changes on a `<target>/YYYY-MM-DD` branch, writes the version plan from the report,
-# pushes, and notifies. Merge the PR with a squash: the workflow's commits are not signed.
+# The sync scripts only write files, the version plan and a report (SYNC_REPORT_PATH). The workflow
+# commits them on a `<target>/YYYY-MM-DD` branch, pushes, and posts one Slack message per target
+# (failed, nothing new, or branch pushed with counts and a link to open the PR). Assets that need a
+# fix in Figma are skipped and listed in every message.
 #
-# A sync without renamed or deleted assets is also released: the workflow applies the version plan
-# (`yarn release`) on the same branch, so merging the PR publishes the package. A breaking sync keeps
-# only the version plan, because it needs a migration guide and a migrator before it can be released.
-#
-# The workflow only pushes the sync branch; it does not create the pull request, which Actions may
-# not be allowed to do. The Slack message that ends the run links to the pull request form for that
-# branch, with the title and description filled in, and a person opens it, which also makes CI run as
-# usual.
-#
-# Every run ends with one Slack message per target: the sync failed and why, it ran and Figma had
-# nothing new, or it pushed a branch with the new, updated, deleted and renamed counts and the link to
-# open the pull request. All of them list the assets design still has to fix in Figma; those are
-# skipped, never published.
+# A sync without renamed or deleted assets is also released on the branch (`yarn release`), so
+# merging publishes the package. A breaking sync keeps only the version plan until it has a
+# migration guide and a migrator.
 #
 # Repository configuration (all optional except the Figma token):
-#   secrets.FIGMA_ACCESS_TOKEN                Figma token used by the syncs.
-#   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL      Slack webhook for the message that ends each run. Falls back to
-#                                             secrets.SLACK_WEBHOOK_URL; with neither set, Slack is skipped.
-#   vars.FIGMA_SYNC_SCHEDULE_ENABLED          Set to 'true' to turn on the weekday schedule.
+#   secrets.FIGMA_ACCESS_TOKEN              Figma token.
+#   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL    Slack webhook, falling back to secrets.SLACK_WEBHOOK_URL.
+#                                           With neither set, Slack is skipped.
+#   vars.FIGMA_SYNC_SCHEDULE_ENABLED        'true' turns on the weekday schedule.
 
 on:
   workflow_dispatch:
@@ -76,7 +67,6 @@ jobs:
 
       - name: Set the sync report path, date and branch
         env:
-          SYNC_ALL: ${{ inputs.sync-all }}
           TARGET: ${{ matrix.target }}
         run: |
           date=$(date -u +%F)
@@ -127,12 +117,13 @@ jobs:
         continue-on-error: true
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
+          # Scheduled runs have no inputs and always compare every asset.
+          SYNC_ALL: ${{ github.event_name == 'schedule' || inputs.sync-all }}
           TARGET: ${{ matrix.target }}
         run: |
           set -o pipefail
-          # Scheduled runs have no inputs, so they compare every asset too.
           args=()
-          if [ "${SYNC_ALL}" != "false" ]; then args+=(--sync-all); fi
+          if [ "${SYNC_ALL}" = "true" ]; then args+=(--sync-all); fi
           yarn nx run "${TARGET}:sync-${TARGET}" -- "${args[@]}" 2>&1 | tee "${RUNNER_TEMP}/sync.log"
 
       - name: Read the sync report
