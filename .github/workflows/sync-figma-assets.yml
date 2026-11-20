@@ -155,7 +155,6 @@ jobs:
         if: steps.report.outputs.found == 'true'
         env:
           TARGET: ${{ matrix.target }}
-          CHANGED: ${{ steps.report.outputs.changed }}
         run: |
           git status --short
           if [ -z "$(git status --porcelain)" ]; then
@@ -165,10 +164,6 @@ jobs:
           fi
           render="yarn tsx libs/figma-api/src/renderSyncReportCli.ts"
           git checkout -B "${SYNC_BRANCH}"
-          if [ "${CHANGED}" = "true" ]; then
-            mkdir -p .nx/version-plans
-            ${render} version-plan "${SYNC_REPORT_PATH}" --date "${SYNC_DATE}" > ".nx/version-plans/${TARGET}-${SYNC_DATE}.md"
-          fi
           git add -A
           git commit -m "$(${render} commit-title "${SYNC_REPORT_PATH}" --date "${SYNC_DATE}")"
           # A rerun on the same day replaces the earlier push; the lease needs the remote branch fetched.

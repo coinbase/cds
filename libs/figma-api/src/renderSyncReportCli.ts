@@ -1,18 +1,12 @@
 import fs from 'node:fs';
 
-import {
-  commitTitle,
-  renderCompareUrl,
-  renderRejections,
-  renderSummary,
-  renderVersionPlan,
-} from './renderSyncReport';
+import { commitTitle, renderCompareUrl, renderRejections, renderSummary } from './renderSyncReport';
 import type { SyncReport } from './syncReport';
 
 /**
  * Prints one rendering of the sync report for the workflow. Run it with `tsx`:
  *
- *   renderSyncReportCli.ts <version-plan|commit-title|compare-url|rejections|summary-slack>
+ *   renderSyncReportCli.ts <commit-title|compare-url|rejections|summary-slack>
  *     <report.json> [--option value]...
  *
  * A missing report is allowed for `summary-slack`, which then describes a sync that crashed.
@@ -39,7 +33,7 @@ const report =
 
 const usage = () => {
   console.error(
-    'Usage: renderSyncReportCli.ts <version-plan|commit-title|compare-url|rejections|summary-slack> <report.json> [--option value]...',
+    'Usage: renderSyncReportCli.ts <commit-title|compare-url|rejections|summary-slack> <report.json> [--option value]...',
   );
   process.exit(1);
 };
@@ -69,9 +63,6 @@ switch (command) {
     );
     break;
   }
-  case 'version-plan':
-    process.stdout.write(renderVersionPlan(requireReport(), required('date')));
-    break;
   case 'commit-title':
     console.log(commitTitle(requireReport(), required('date')));
     break;

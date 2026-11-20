@@ -1,3 +1,7 @@
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+
 import {
   commitTitle,
   failureExcerpt,
@@ -7,6 +11,7 @@ import {
   renderSummary,
   renderVersionPlan,
   summaryOutcome,
+  writeVersionPlan,
 } from '../renderSyncReport';
 import { emptyChanges, type SyncChanges, type SyncReport } from '../syncReport';
 
@@ -39,6 +44,28 @@ const rejected = [
 ];
 
 const date = '2026-08-28';
+
+describe('writeVersionPlan', () => {
+  const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'version-plans-'));
+
+  afterAll(() => fs.rmSync(directory, { recursive: true, force: true }));
+
+  it('saves the plan as <target>-<date>.md and returns its path', () => {
+    const planPath = writeVersionPlan(
+      report({ changes: changes({ added: [{ name: 'compose' }] }) }),
+      directory,
+      date,
+    );
+    expect(planPath).toBe(path.join(directory, 'icons-2026-08-28.md'));
+    expect(fs.readFileSync(planPath as string, 'utf-8')).toContain('icons: minor');
+  });
+
+  it('writes nothing when no asset changed', () => {
+    const unchanged = report({ changes: emptyChanges() });
+    expect(writeVersionPlan(unchanged, path.join(directory, 'none'), date)).toBeUndefined();
+    expect(fs.existsSync(path.join(directory, 'none'))).toBe(false);
+  });
+});
 
 describe('renderVersionPlan', () => {
   const bumpOf = (plan: string) => plan.match(/^---\nicons: (\w+)\n---/)?.[1];

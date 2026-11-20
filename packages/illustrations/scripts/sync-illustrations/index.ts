@@ -1,7 +1,9 @@
+import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
 import {
   isBreaking,
   type RejectedAsset,
   type SyncChanges,
+  type SyncReport,
   writeSyncReport,
 } from '@cds/figma-api/syncReport';
 
@@ -187,13 +189,16 @@ const toSyncChanges = (results?: SyncResults): SyncChanges => ({
 main().then(
   () => {
     const syncChanges = toSyncChanges(changes);
-    writeSyncReport(reportPath, {
+    const syncReport: SyncReport = {
       target: 'illustrations',
       bump: isBreaking(syncChanges) ? 'major' : 'minor',
       groupOrder: changelogTypeOrder,
       changes: syncChanges,
       rejected,
-    });
+    };
+    writeSyncReport(reportPath, syncReport);
+    // Scratch runs and dry runs write nothing into the repository.
+    if (config.git && !dryRun) writeVersionPlan(syncReport, versionPlansDirectory(config.repoRoot));
     if (failedIllustrations.length) {
       console.error(
         `\n❌ Illustration sync finished with ${failedIllustrations.length} rejected illustration(s); ` +

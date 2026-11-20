@@ -1,3 +1,6 @@
+import fs from 'node:fs';
+import path from 'node:path';
+
 import { hasChanges, isBreaking, type SyncChanges, type SyncReport } from './syncReport';
 
 /**
@@ -94,6 +97,26 @@ Publish ${report.label ?? report.target} ${date}
 
 ${sections.join('\n\n')}
 `;
+};
+
+/** Where `nx release` reads the pending version plans from. */
+export const versionPlansDirectory = (repoRoot: string) =>
+  path.join(repoRoot, '.nx', 'version-plans');
+
+/**
+ * Saves the version plan for a sync that changed assets as `<target>-<date>.md` and returns its
+ * path. A sync that changed nothing needs no release, so it writes nothing.
+ */
+export const writeVersionPlan = (
+  report: SyncReport,
+  directory: string,
+  date = new Date().toISOString().slice(0, 10),
+) => {
+  if (!hasChanges(report.changes)) return undefined;
+  const planPath = path.join(directory, `${report.target}-${date}.md`);
+  fs.mkdirSync(directory, { recursive: true });
+  fs.writeFileSync(planPath, renderVersionPlan(report, date));
+  return planPath;
 };
 
 /** The rejected assets as a markdown list, for the pull request and the job summary. */

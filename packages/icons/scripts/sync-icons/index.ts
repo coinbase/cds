@@ -1,9 +1,11 @@
 import { downloadSvgImage } from '@cds/figma-api';
+import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
 import {
   figmaNodeUrl,
   isBreaking,
   type RejectedAsset,
   type SyncChanges,
+  type SyncReport,
   writeSyncReport,
 } from '@cds/figma-api/syncReport';
 import { execSync } from 'node:child_process';
@@ -166,12 +168,14 @@ const main = async () => {
       renamed: results?.renamedIconSets.map(({ name, oldName }) => ({ name, oldName })) ?? [],
       deleted: results?.deletedIconSets.map(({ name }) => ({ name })) ?? [],
     };
-    writeSyncReport(process.env.SYNC_REPORT_PATH, {
+    const syncReport: SyncReport = {
       target: 'icons',
       bump: isBreaking(changes) ? 'major' : 'minor',
       changes,
       rejected,
-    });
+    };
+    writeSyncReport(process.env.SYNC_REPORT_PATH, syncReport);
+    writeVersionPlan(syncReport, versionPlansDirectory(config.repoRoot));
   };
 
   console.log('Loading manifest file...');
