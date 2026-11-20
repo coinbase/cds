@@ -18,7 +18,9 @@ export const dedupeByIdentity = <T>(
   const groups = new Map<string, T[]>();
   for (const item of items) {
     const key = identity(item);
-    groups.set(key, [...(groups.get(key) ?? []), item]);
+    const group = groups.get(key);
+    if (group) group.push(item);
+    else groups.set(key, [item]);
   }
 
   const kept = new Map<string, T>();
