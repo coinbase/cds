@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import os from 'node:os';
 import path from 'node:path';
 
 /** An asset the sync could not publish, described for the designer who can fix it in Figma. */
@@ -63,7 +64,15 @@ export const isBreaking = (changes: SyncChanges) =>
 export const figmaNodeUrl = (fileKey: string, nodeId: string) =>
   `https://www.figma.com/design/${fileKey}?node-id=${nodeId.replace(':', '-')}`;
 
-/** Writes the report when a path is given; local and scratch runs pass none. */
+/** Where a local sync leaves its report, so `renderSyncReportCli` can find it by target name. */
+export const defaultReportPath = (target: string) =>
+  path.join(os.tmpdir(), 'figma-sync', `${target}.json`);
+
+/** `SYNC_REPORT_PATH` when the workflow sets it, otherwise the default for the target. */
+export const reportPathFor = (target: string) =>
+  process.env.SYNC_REPORT_PATH ?? defaultReportPath(target);
+
+/** Writes the report when a path is given; scratch runs pass none. */
 export const writeSyncReport = (reportPath: string | undefined, report: SyncReport) => {
   if (!reportPath) return;
   fs.mkdirSync(path.dirname(reportPath), { recursive: true });

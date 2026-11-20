@@ -3,10 +3,12 @@ import os from 'node:os';
 import path from 'node:path';
 
 import {
+  defaultReportPath,
   emptyChanges,
   figmaNodeUrl,
   hasChanges,
   isBreaking,
+  reportPathFor,
   type SyncReport,
   writeSyncReport,
 } from '../syncReport';
@@ -26,6 +28,23 @@ describe('hasChanges and isBreaking', () => {
     ).toBe(false);
     expect(isBreaking({ ...emptyChanges(), deleted: [{ name: 'a' }] })).toBe(true);
     expect(isBreaking({ ...emptyChanges(), renamed: [{ name: 'a', oldName: 'b' }] })).toBe(true);
+  });
+});
+
+describe('reportPathFor', () => {
+  afterEach(() => {
+    delete process.env.SYNC_REPORT_PATH;
+  });
+
+  it('defaults to a file named after the target in the temp directory', () => {
+    delete process.env.SYNC_REPORT_PATH;
+    expect(reportPathFor('icons')).toBe(defaultReportPath('icons'));
+    expect(defaultReportPath('icons')).toBe(path.join(os.tmpdir(), 'figma-sync', 'icons.json'));
+  });
+
+  it('uses SYNC_REPORT_PATH when it is set', () => {
+    process.env.SYNC_REPORT_PATH = '/tmp/custom.json';
+    expect(reportPathFor('icons')).toBe('/tmp/custom.json');
   });
 });
 

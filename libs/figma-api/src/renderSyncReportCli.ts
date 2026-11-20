@@ -1,4 +1,5 @@
 import fs from 'node:fs';
+import path from 'node:path';
 
 import {
   commitTitle,
@@ -7,17 +8,24 @@ import {
   renderSummary,
   renderVersionPlan,
 } from './renderSyncReport';
-import type { SyncReport } from './syncReport';
+import { defaultReportPath, type SyncReport } from './syncReport';
 
 /**
  * Prints one rendering of the sync report for the workflow. Run it with `tsx`:
  *
  *   renderSyncReportCli.ts <version-plan|commit-title|compare-url|rejections|summary-slack>
- *     <report.json> [--option value]...
+ *     <report.json|target> [--option value]...
  *
+ * A bare target name such as `icons` reads the report a local sync left in the temp directory.
+ * `version-plan` defaults `--date` to today, and `--write` saves the plan in `.nx/version-plans`.
  * A missing report is allowed for `summary-slack`, which then describes a sync that crashed.
  */
-const [command, reportPath, ...rest] = process.argv.slice(2);
+const [command, ...args] = process.argv.slice(2);
+const [reportArgument, ...rest] = args[0]?.startsWith('--') ? [undefined, ...args] : args;
+const reportPath =
+  reportArgument && !reportArgument.includes('/') && !reportArgument.endsWith('.json')
+    ? defaultReportPath(reportArgument)
+    : reportArgument;
 
 const option = (name: string) => {
   const index = rest.indexOf(`--${name}`);
@@ -36,6 +44,8 @@ const report =
   reportPath && fs.existsSync(reportPath)
     ? (JSON.parse(fs.readFileSync(reportPath, 'utf-8')) as SyncReport)
     : undefined;
+
+const date = () => option('date') ?? new Date().toISOString().slice(0, 10);
 
 const usage = () => {
   console.error(
@@ -69,11 +79,20 @@ switch (command) {
     );
     break;
   }
-  case 'version-plan':
-    process.stdout.write(renderVersionPlan(requireReport(), required('date')));
+  case 'version-plan': {
+    const plan = renderVersionPlan(requireReport(), date());
+    if (rest.includes('--write')) {
+      const planPath = path.join('.nx', 'version-plans', `${requireReport().target}-${date()}.md`);
+      fs.mkdirSync(path.dirname(planPath), { recursive: true });
+      fs.writeFileSync(planPath, plan);
+      console.log(planPath);
+    } else {
+      process.stdout.write(plan);
+    }
     break;
+  }
   case 'commit-title':
-    console.log(commitTitle(requireReport(), required('date')));
+    console.log(commitTitle(requireReport(), date()));
     break;
   case 'compare-url':
     console.log(

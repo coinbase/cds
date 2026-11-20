@@ -39,11 +39,10 @@ yarn nx run icons:sync-icons
 > yarn nx run icons:sync-icon-code-connect
 > ```
 
-4. To get the version plan the workflow would write, have the sync write its report and render the plan from it, then release as usual
+4. To get the version plan the workflow would write, render it from the report the sync left behind, then release as usual
 
 ```sh
-SYNC_REPORT_PATH=/tmp/icons-report.json yarn nx run icons:sync-icons
-yarn tsx libs/figma-api/src/renderSyncReportCli.ts version-plan /tmp/icons-report.json --date "$(date -u +%F)" > ".nx/version-plans/icons-$(date -u +%F).md"
+yarn nx run icons:version-plan
 yarn release --projects=icons
 ```
 

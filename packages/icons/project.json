@@ -68,6 +68,12 @@
         "command": "tsx ./scripts/sync-icon-code-connect/index.ts",
         "cwd": "packages/icons"
       }
+    },
+    "version-plan": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsx libs/figma-api/src/renderSyncReportCli.ts version-plan icons --write"
+      }
     }
   }
 }
