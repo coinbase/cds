@@ -10,8 +10,8 @@ import {
   type SyncReport,
   writeSyncReport,
 } from '@cds/figma-api/syncReport';
+import { hashJson, sortByCreatedAt } from '@cds/figma-api/syncUtils';
 import { execSync } from 'node:child_process';
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { optimize as svgoOptimize, type Output as SvgoOutput } from 'svgo';
@@ -19,13 +19,12 @@ import { webfont } from 'webfont';
 
 import { syncIconCodeConnect } from '../sync-icon-code-connect/index';
 
+import { fetchIconLibrary } from './source/fetchIconLibrary';
 import { config } from './config';
-import { fetchIconLibrary } from './fetchIconLibrary';
 import { getDescriptionMap } from './getDescriptionMap';
-import { sortByCreatedAt } from './sortByCreatedAt';
+import { iconPropsProblem, iconSetNameProblem } from './profile';
 import { stringToObject } from './stringToObject';
 import { svgoConfig } from './svgoConfig';
-import { iconPropsProblem, iconSetNameProblem } from './validateIcons';
 
 const args = process.argv.slice(2);
 const fullCompare = config.fullCompare || args.includes('--full-compare');
@@ -341,19 +340,13 @@ const main = async () => {
     const iconSetAssetsData = tempIcons.map((icon) => icon.svg);
 
     // Hash of the complete set of icon assets (all sizes and active states)
-    const iconSetAssetsHash = crypto
-      .createHash('sha256')
-      .update(JSON.stringify(iconSetAssetsData))
-      .digest('base64');
+    const iconSetAssetsHash = hashJson(iconSetAssetsData);
 
     // Used to check if the iconSet's assets have changed names
     const iconSetNameData = tempIcons.map((icon) => icon.name);
 
     // Hash of the icon set name and its assets
-    const iconSetNameHash = crypto
-      .createHash('sha256')
-      .update(JSON.stringify(iconSetNameData))
-      .digest('base64');
+    const iconSetNameHash = hashJson(iconSetNameData);
 
     const hasNameChanged = iconSetNameHash !== oldIconSet?.nameHash;
     const hasAssetsChanged = iconSetAssetsHash !== oldIconSet?.assetsHash;

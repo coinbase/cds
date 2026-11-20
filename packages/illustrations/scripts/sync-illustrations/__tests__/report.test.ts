@@ -1,6 +1,6 @@
 import type { Illustration } from '../illustration';
+import { duplicateAssets, invalidAssets, rejectedAssets } from '../report';
 import type { SinkResult } from '../sync';
-import { duplicateAssets, invalidAssets, rejectedAssets } from '../syncReport';
 
 const illustration = (name: string, nodeId: string): Illustration => ({
   nodeId,

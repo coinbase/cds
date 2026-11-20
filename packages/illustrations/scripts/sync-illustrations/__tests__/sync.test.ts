@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { parseStamp } from '../artifacts/nativeSvg';
-import { hasChanges } from '../diffIllustrations';
+import { hasChanges } from '../diff';
 import type { Component, Illustration } from '../illustration';
 import { type Manifest, manifestIllustrations, readManifest, writeManifest } from '../manifest';
 import { AndroidVectorDrawableSink } from '../sinks/AndroidVectorDrawableSink';

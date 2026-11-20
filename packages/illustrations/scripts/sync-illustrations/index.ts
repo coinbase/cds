@@ -10,14 +10,14 @@ import {
 import { approximationSummary, notExportableSummary } from './artifacts/nativeSvg';
 import { type Sink } from './sinks/Sink';
 import { config } from './config';
-import { hasChanges, hasChangesToRecord, type SyncResults } from './diffIllustrations';
+import { hasChanges, hasChangesToRecord, type SyncResults } from './diff';
 import { type Release, ReleaseBranch, runOnReleaseBranches } from './git';
 import { type Component, type Illustration, illustrationKey } from './illustration';
 import { readManifest, writeManifest } from './manifest';
 import { assertNativeCheckout } from './nativeRepo';
+import { duplicateAssets, invalidAssets, rejectedAssets } from './report';
 import { chooseSinks } from './selectSinks';
 import { runSync, type SinkResult } from './sync';
-import { duplicateAssets, invalidAssets, rejectedAssets } from './syncReport';
 
 const args = process.argv.slice(2);
 const fullCompare = config.fullCompare || args.includes('--full-compare');

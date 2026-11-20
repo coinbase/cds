@@ -86,13 +86,14 @@ nativeRepo.ts            native module paths and layout, assertNativeCheckout
 git.ts                   ReleaseBranch: start / publish / abandon illustrations/YYYY-MM-DD,
                            runOnReleaseBranches: the branch of the native checkout the run writes to
 sync.ts                  engine: runSync(source, manifest, sinks) -> SyncOutcome
-  selectComponents.ts      dedupe, incremental filter    -> which nodes to download
+  select.ts                dedupe, incremental filter    -> which nodes to download
   optimizeSvg.ts           svgo config, color normalization and check, viewBox size
   hashSvg.ts               the manifest hash of the light SVG
-  diffIllustrations.ts     reconcile fetched vs manifest -> IllustrationDiff
+  diff.ts                  reconcile fetched vs manifest -> IllustrationDiff
 illustration.ts          the domain records: Component, Illustration, sort orders
 colorPalette.ts          ColorPalette: the colors, recolor(svg, fn), toDarkSvg, toRecord
 manifest.ts              read/write manifest.json
+report.ts                the SyncReport the workflow reads: invalid names, duplicates, sink failures
 mapConcurrently.ts       bounded-concurrency map
 source/
   IllustrationSource.ts    the source contract

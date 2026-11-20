@@ -1,4 +1,5 @@
 import { downloadSvgImage, getFileImages } from '@cds/figma-api';
+import { createBatches } from '@cds/figma-api/syncUtils';
 
 import { mapConcurrently } from '../mapConcurrently';
 
@@ -6,16 +7,11 @@ import { mapConcurrently } from '../mapConcurrently';
 const idsPerImageRequest = 500;
 const concurrentDownloads = 8;
 
-const chunk = <T>(items: T[], size: number) =>
-  Array.from({ length: Math.ceil(items.length / size) }, (_, i) =>
-    items.slice(i * size, (i + 1) * size),
-  );
-
 /** Resolves temporary download URLs for the SVG export of every node. */
 async function fetchSvgUrls(fileId: string, nodeIds: string[]) {
   const urls = new Map<string, string>();
 
-  for (const ids of chunk(nodeIds, idsPerImageRequest)) {
+  for (const ids of createBatches(nodeIds, idsPerImageRequest)) {
     const response = await getFileImages(fileId, { ids: ids.join(','), format: 'svg' });
     for (const id of ids) {
       const url = response.images[id];

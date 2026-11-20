@@ -2,7 +2,7 @@ import type { RejectedAsset } from '@cds/figma-api/syncReport';
 
 import type { InvalidComponent } from './source/IllustrationSource';
 import { type Illustration, illustrationKey } from './illustration';
-import type { DuplicateComponent } from './selectComponents';
+import type { DuplicateComponent } from './select';
 import type { SinkResult } from './sync';
 
 /** One entry per illustration and reason, however many sinks rejected it. */

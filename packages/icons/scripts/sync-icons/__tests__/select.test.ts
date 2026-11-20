@@ -1,4 +1,4 @@
-import { type KnownIconSet, selectIconSetsToFetch } from '../fetchIconLibrary';
+import { type KnownIconSet, selectIconSetsToFetch } from '../select';
 
 const componentSet = (
   overrides: Partial<Parameters<typeof selectIconSetsToFetch>[0][number]> = {},

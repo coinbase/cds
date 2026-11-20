@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import { hashJson } from '@cds/figma-api/syncUtils';
 
 /**
  * The hash recorded in the manifest. It covers the node id as well as the optimized light SVG so
@@ -6,8 +6,5 @@ import crypto from 'node:crypto';
  * new sync from re-versioning every illustration.
  */
 export function hashSvg(nodeId: string, lightSvg: string) {
-  return crypto
-    .createHash('sha256')
-    .update(JSON.stringify({ [nodeId]: lightSvg }))
-    .digest('base64');
+  return hashJson({ [nodeId]: lightSvg });
 }
