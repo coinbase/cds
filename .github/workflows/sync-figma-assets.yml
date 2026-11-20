@@ -20,10 +20,9 @@ name: Sync Figma Assets
 #   vars.FIGMA_SYNC_SCHEDULE_ENABLED        'true' turns on the weekly schedule (Thursday
 #                                           morning, a full comparison). Other runs are manual.
 #   vars.FIGMA_SYNC_NOTIFY_GROUPS           Comma-separated Slack user group ids to ping when a branch
-#                                           was pushed, the sync failed or assets were skipped.
-#                                           Unset pings nobody.
-#   vars.FIGMA_SYNC_ONCALL_GROUP            Slack user group id pinged when the job failed and the
-#                                           summary could not be rendered. Unset pings nobody.
+#                                           was pushed, the sync failed or assets were skipped (and,
+#                                           in the plain fallback message, when the job failed and the
+#                                           summary could not be rendered). Unset pings nobody.
 
 on:
   workflow_dispatch:
@@ -258,12 +257,14 @@ jobs:
           FAILED_STEP: ${{ (steps.push.outcome == 'failure' && 'Commit and push the sync branch') || (steps.release.outcome == 'failure' && 'Release the package') || '' }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           NOTIFY_GROUPS: ${{ vars.FIGMA_SYNC_NOTIFY_GROUPS }}
-          ONCALL_GROUP: ${{ vars.FIGMA_SYNC_ONCALL_GROUP }}
         run: |
           if [ -z "${SLACK_WEBHOOK_URL}" ]; then exit 0; fi
           cc=""
-          if [ -n "${ONCALL_GROUP}" ] && [ "${JOB_STATUS}" = "failure" ]; then
-            cc=" cc: <!subteam^${ONCALL_GROUP}>"
+          if [ "${JOB_STATUS}" = "failure" ]; then
+            for group in ${NOTIFY_GROUPS//,/ }; do
+              if [[ "${group}" =~ ^S[A-Z0-9]+$ ]]; then cc="${cc} <!subteam^${group}>"; fi
+            done
+            if [ -n "${cc}" ]; then cc=" cc:${cc}"; fi
           fi
           rendered=false
           if [ -x node_modules/.bin/tsx ] &&
