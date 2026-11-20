@@ -385,7 +385,24 @@ describe('renderSummary', () => {
     expect(
       renderSummary(undefined, { ...crashed, failedStep: 'Release the package' }).text,
     ).toContain('The step "Release the package" failed.');
+    const afterSync = renderSummary(report(), {
+      ...run,
+      jobStatus: 'failure',
+      failedStep: 'Release the package',
+      failureLog: 'Dropping icon set "x": error in name\n',
+    }).text;
+    expect(afterSync).toContain('The step "Release the package" failed.');
+    expect(afterSync).not.toContain('Dropping icon set');
     expect(renderSummary(undefined, crashed).text).toContain('See the run log');
+  });
+
+  it('escapes Slack control characters in asset names', () => {
+    const { text } = renderSummary(
+      report({ rejected: [{ ...rejected[0], name: '<!channel>' }] }),
+      run,
+    );
+    expect(text).toContain('`&lt;!channel&gt;`');
+    expect(text).not.toContain('<!channel>');
   });
 
   it('lists the assets design has to fix with a link and the reason, on every outcome', () => {

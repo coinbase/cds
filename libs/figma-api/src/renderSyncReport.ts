@@ -228,8 +228,8 @@ export const summaryOutcome = (
 };
 
 const failureReason = ({ failureLog, failedStep }: SummaryContext) => {
+  if (failedStep) return `The step "${escapeSlack(failedStep)}" failed.`;
   if (failureLog) return failureExcerpt(failureLog);
-  if (failedStep) return `The step "${plain(failedStep)}" failed.`;
   return 'See the run log for the failing step.';
 };
 
@@ -240,28 +240,29 @@ const summaryHeadline = (
 ): string[] => {
   const { target, branch = '', compareUrl, openPullRequestUrl } = context;
   const nothingNew = `:white_check_mark: The ${target} Figma sync ran. Nothing new in Figma.`;
+  const failed = [
+    `:red_circle: The ${target} Figma sync failed. Nothing was published.`,
+    `\`\`\`${failureReason(context)}\`\`\``,
+  ];
 
   switch (outcome) {
     case 'failed':
-      return [
-        `:red_circle: The ${target} Figma sync failed. Nothing was published.`,
-        `\`\`\`${failureReason(context)}\`\`\``,
-      ];
+      return failed;
     case 'skipped':
       return [
         `:information_source: The ${target} Figma sync did not run: a sync pull request is already open (<${openPullRequestUrl}|open it>).`,
       ];
     case 'branch': {
-      if (!report) return [nothingNew];
+      if (!report) return failed;
       const lines = [
-        `:package: The ${target} Figma sync pushed branch \`${plain(branch)}\`: ${countSummary(report.changes)}.`,
+        `:package: The ${target} Figma sync pushed branch \`${escapeSlack(branch)}\`: ${countSummary(report.changes)}.`,
       ];
       if (isBreaking(report.changes)) {
         lines.push(
           `:rotating_light: It renames or deletes assets, so it needs a ${report.bump} version bump.`,
         );
       }
-      lines.push(`<${compareUrl}|Open the pull request for \`${plain(branch)}\`>`);
+      lines.push(`<${compareUrl}|Open the pull request for \`${escapeSlack(branch)}\`>`);
       return lines;
     }
     case 'nothing':
@@ -284,7 +285,7 @@ export const renderSummary = (report: SyncReport | undefined, context: SummaryCo
       `:warning: ${rejected.length} ${rejected.length === 1 ? 'asset needs' : 'assets need'} a fix in Figma, and ${rejected.length === 1 ? 'was' : 'were'} skipped:`,
       ...rejected.map(
         ({ name, message, url }) =>
-          `• \`${plain(name)}\`: ${escapeSlack(message)} (<${url}|Open in Figma>)`,
+          `• \`${escapeSlack(name)}\`: ${escapeSlack(message)} (<${url}|Open in Figma>)`,
       ),
       'Fix them in Figma and publish the library; the next sync picks them up.',
     );
