@@ -259,6 +259,8 @@ jobs:
           NOTIFY_GROUPS: ${{ vars.FIGMA_SYNC_NOTIFY_GROUPS }}
         run: |
           if [ -z "${SLACK_WEBHOOK_URL}" ]; then exit 0; fi
+          # One clean list for both the rendered message and the fallback.
+          NOTIFY_GROUPS="${NOTIFY_GROUPS//[[:space:]]/}"
           cc=""
           if [ "${JOB_STATUS}" = "failure" ]; then
             for group in ${NOTIFY_GROUPS//,/ }; do
