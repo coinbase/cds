@@ -1,4 +1,9 @@
-import { diffIllustrations, type FetchedIllustration, hasChanges } from '../diffIllustrations';
+import {
+  diffIllustrations,
+  type FetchedIllustration,
+  hasChanges,
+  hasChangesToRecord,
+} from '../diffIllustrations';
 import type { Illustration } from '../illustration';
 
 const previous = (overrides: Partial<Illustration> = {}): Illustration => ({
@@ -62,6 +67,33 @@ describe('diffIllustrations', () => {
     expect(diff.illustrations).toEqual([previous({ lastUpdated: '2026-09-01T00:00:00.000Z' })]);
   });
 
+  it('records a new Figma date on its own, without a reported change or a version bump', () => {
+    const diff = diffIllustrations({
+      previous: [previous({ lastUpdated: '2026-08-01T00:00:00.000Z' })],
+      fetched: [fetched({ updatedAt: '2026-09-01T00:00:00.000Z' })],
+      remoteNodeIds: new Set(['4390:695']),
+    });
+
+    expect(hasChanges(diff)).toBe(false);
+    expect(diff.datesChanged).toBe(true);
+    expect(hasChangesToRecord(diff)).toBe(true);
+    expect(diff.writes).toEqual([]);
+    expect(diff.illustrations[0]).toMatchObject({
+      version: 1,
+      lastUpdated: '2026-09-01T00:00:00.000Z',
+    });
+  });
+
+  it('has nothing to record when the Figma date is the one in the manifest', () => {
+    const diff = diffIllustrations({
+      previous: [previous({ lastUpdated: '2026-09-01T00:00:00.000Z' })],
+      fetched: [fetched({ updatedAt: '2026-09-01T00:00:00.000Z' })],
+      remoteNodeIds: new Set(['4390:695']),
+    });
+
+    expect(hasChangesToRecord(diff)).toBe(false);
+  });
+
   it('bumps the version when the artwork changed and removes the previous files', () => {
     const diff = diffIllustrations({
       previous: [previous()],
@@ -104,14 +136,18 @@ describe('diffIllustrations', () => {
     expect(names(diff.illustrations)).toEqual(['twoFactor']);
   });
 
-  it('rejects renames that only change case, since asset file names would collide', () => {
-    expect(() =>
-      diffIllustrations({
-        previous: [previous()],
-        fetched: [fetched({ name: '2FA' })],
-        remoteNodeIds: new Set(['4390:695']),
-      }),
-    ).toThrow('Renames are case-insensitive');
+  it('treats a rename that only changes capitalization as an ordinary rename', () => {
+    const diff = diffIllustrations({
+      previous: [previous()],
+      fetched: [fetched({ name: '2FA' })],
+      remoteNodeIds: new Set(['4390:695']),
+    });
+
+    expect(diff.results.renamed.map(({ oldName, name }) => [oldName, name])).toEqual([
+      ['2fa', '2FA'],
+    ]);
+    expect(diff.removals).toEqual([previous()]);
+    expect(names(diff.writes)).toEqual(['2FA']);
   });
 
   it('treats a type change as a deletion plus an addition', () => {

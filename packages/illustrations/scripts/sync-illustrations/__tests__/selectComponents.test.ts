@@ -45,6 +45,32 @@ describe('selectComponents', () => {
     expect(toSync.map(({ nodeId }) => nodeId)).toEqual([changed.nodeId, added.nodeId]);
   });
 
+  it('syncs a component whose name or type changed even when its updatedAt did not', () => {
+    const [renamed, retyped, unchanged] = components;
+    const { toSync } = selectComponents({
+      components: [renamed, retyped, unchanged],
+      previous: [
+        { ...previousFrom(renamed), name: 'oldName' },
+        { ...previousFrom(retyped), type: 'oldType' as Illustration['type'] },
+        previousFrom(unchanged),
+      ],
+      syncAll: false,
+    });
+
+    expect(toSync.map(({ nodeId }) => nodeId)).toEqual([renamed.nodeId, retyped.nodeId]);
+  });
+
+  it('syncs a component whose name only changes capitalization', () => {
+    const [renamed] = components;
+    const { toSync } = selectComponents({
+      components: [{ ...renamed, name: renamed.name.toUpperCase() }],
+      previous: [previousFrom(renamed)],
+      syncAll: false,
+    });
+
+    expect(toSync.map(({ nodeId }) => nodeId)).toEqual([renamed.nodeId]);
+  });
+
   it('does not depend on the order or the age of the updates', () => {
     const [older, newer] = [...components].sort((a, b) => a.updatedAt.localeCompare(b.updatedAt));
     const { toSync } = selectComponents({
@@ -84,7 +110,7 @@ describe('selectComponents', () => {
       const [older, newer] = [...futures()].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 
       expect(toSync.filter(({ name }) => name === 'futures')).toEqual([older]);
-      expect(duplicates).toContainEqual(newer);
+      expect(duplicates).toContainEqual({ component: newer, keptBy: older });
       expect(remoteNodeIds.has(newer.nodeId)).toBe(false);
     });
 
@@ -97,7 +123,10 @@ describe('selectComponents', () => {
       });
 
       expect(toSync.filter(({ name }) => name === 'futures')).toEqual([newer]);
-      expect(duplicates.map(({ name }) => name)).toEqual(['futures', 'instoDecentralizedExchange']);
+      expect(duplicates.map(({ component }) => component.name)).toEqual([
+        'futures',
+        'instoDecentralizedExchange',
+      ]);
     });
   });
 });

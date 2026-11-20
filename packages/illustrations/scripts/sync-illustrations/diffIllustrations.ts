@@ -20,10 +20,15 @@ export type IllustrationDiff = {
   writes: Illustration[];
   /** The complete set of illustrations after this sync. */
   illustrations: Illustration[];
+  /** Whether an illustration whose artwork and metadata are unchanged has a new Figma `updated_at`. */
+  datesChanged: boolean;
 };
 
 export const hasChanges = ({ results }: IllustrationDiff) =>
   Object.values(results).some((changes) => changes.length > 0);
+
+/** The manifest mirrors Figma, so it is rewritten when a change or only a Figma date moved. */
+export const hasChangesToRecord = (diff: IllustrationDiff) => hasChanges(diff) || diff.datesChanged;
 
 const toIllustration = (fetched: FetchedIllustration, version: number, createdAt: string) => {
   const { updatedAt, url: _url, ...rest } = fetched;
@@ -38,7 +43,8 @@ const toIllustration = (fetched: FetchedIllustration, version: number, createdAt
  *   different node id is treated as the same illustration (design re-created the node); since the
  *   hash covers the node id this always bumps the version, which keeps the CDN URL fresh.
  * - A changed hash bumps the version, which renames every asset file.
- * - A changed name resets the version to 0; a changed type is a deletion plus an addition.
+ * - A changed name, including one that only changes capitalization, resets the version to 0; a
+ *   changed type is a deletion plus an addition.
  * - Previous entries whose node no longer exists in Figma are deleted.
  */
 export function diffIllustrations({
@@ -58,6 +64,7 @@ export function diffIllustrations({
   const previousByNodeId = new Map(previous.map((item) => [item.nodeId, item]));
   const previousByKey = new Map(previous.map((item) => [illustrationKey(item), item]));
   const reconciled = new Set<Illustration>();
+  let datesChanged = false;
 
   const add = (next: FetchedIllustration) => {
     const illustration = toIllustration(next, 0, next.createdAt);
@@ -83,11 +90,6 @@ export function diffIllustrations({
     }
 
     if (prev.name !== next.name) {
-      if (prev.name.toLowerCase() === next.name.toLowerCase()) {
-        throw new Error(
-          `Renames are case-insensitive: "${prev.name}" -> "${next.name}". Pick a distinct name for ${illustrationKey(next)} in Figma.`,
-        );
-      }
       const illustration = toIllustration(next, 0, prev.createdAt);
       results.renamed.push({ ...illustration, oldName: prev.name });
       removals.push(prev);
@@ -107,6 +109,7 @@ export function diffIllustrations({
 
     const illustration = toIllustration(next, prev.version, prev.createdAt);
     if (prev.description !== next.description) results.updated.push(illustration);
+    if (prev.lastUpdated !== next.updatedAt) datesChanged = true;
     illustrations.push(illustration);
   }
 
@@ -120,5 +123,5 @@ export function diffIllustrations({
     }
   }
 
-  return { results, removals, writes, illustrations };
+  return { results, removals, writes, illustrations, datesChanged };
 }

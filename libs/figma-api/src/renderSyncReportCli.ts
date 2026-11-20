@@ -58,6 +58,7 @@ switch (command) {
           failureLog:
             logFile && fs.existsSync(logFile) ? fs.readFileSync(logFile, 'utf-8') : undefined,
           runUrl: option('run-url'),
+          notify: option('notify')?.split(',').filter(Boolean),
         }),
       ),
     );

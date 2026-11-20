@@ -40,6 +40,7 @@ const rejected = [
     nodeId: '1:2',
     url: 'https://www.figma.com/design/FILE?node-id=1-2',
     message: '"size=large" in icon set "add" has a "size" that is not a number.',
+    category: 'invalid-variant' as const,
   },
 ];
 
@@ -71,6 +72,17 @@ describe('writeVersionPlan', () => {
     } finally {
       delete process.env.SYNC_DATE;
     }
+  });
+
+  it('marks a rename that only changes capitalization in the plan', () => {
+    const planPath = writeVersionPlan(
+      report({ changes: changes({ renamed: [{ name: 'qrcode', oldName: 'qrCode' }] }) }),
+      directory,
+      '2026-01-02',
+    );
+    expect(fs.readFileSync(planPath as string, 'utf-8')).toContain(
+      'qrCode → qrcode (capitalization only)',
+    );
   });
 
   it('writes nothing when no asset changed', () => {
@@ -255,13 +267,13 @@ describe('renderPullRequestBody', () => {
   it('lists rejected assets with their Figma links', () => {
     const body = renderPullRequestBody(report({ rejected }));
     expect(body).toContain('Skipped, needs a fix in Figma');
-    expect(body).toContain('[Figma](https://www.figma.com/design/FILE?node-id=1-2)');
+    expect(body).toContain('[Open in Figma](https://www.figma.com/design/FILE?node-id=1-2)');
     expect(renderPullRequestBody(report())).not.toContain('Skipped');
   });
 
   it('says so when nothing changed', () => {
     expect(renderPullRequestBody(report({ changes: changes() }))).toContain(
-      '0 new, 0 updated, 0 deleted, 0 renamed',
+      'no asset changed, only recorded Figma dates or generated files',
     );
   });
 });
@@ -271,7 +283,12 @@ describe('renderRejections', () => {
     const list = renderRejections(
       report({ rejected: [{ ...rejected[0], name: 'a`b\nc', message: 'line one\nline two' }] }),
     );
-    expect(list).toBe(`- \`a b c\`: line one line two ([Figma](${rejected[0].url}))`);
+    expect(list).toBe(
+      [
+        '**Invalid variants (1)**: a variant is missing or has a wrong property; fix it.',
+        `- \`a b c\`: line one line two ([Open in Figma](${rejected[0].url}))`,
+      ].join('\n'),
+    );
   });
 });
 
@@ -345,12 +362,19 @@ describe('renderSummary', () => {
   };
   const pushed = { ...run, pushed: true, branch: 'icons/2026-11-19', compareUrl };
 
+  it('says no asset changed when a branch only records Figma dates or generated files', () => {
+    const { text } = renderSummary(report({ changes: emptyChanges() }), pushed);
+    expect(text.split('\n')).toContain(
+      ':sparkles: *no asset changed, only recorded Figma dates or generated files*',
+    );
+    expect(text).not.toContain('0 new');
+  });
+
   it('names the branch, counts new, updated, deleted and renamed, and links to open the pull request', () => {
     const { text } = renderSummary(report(), pushed);
-    expect(text).toContain(
-      'pushed branch `icons/2026-11-19`: 2 new, 1 updated, 0 deleted, 0 renamed.',
-    );
-    expect(text).toContain(`<${compareUrl}|Open the pull request for \`icons/2026-11-19\`>`);
+    expect(text).toContain('pushed branch `icons/2026-11-19`.');
+    expect(text.split('\n')).toContain(':sparkles: *2 new, 1 updated, 0 deleted, 0 renamed*');
+    expect(text).toContain(`<${compareUrl}|Open the pull request for icons/2026-11-19>`);
     expect(text).toContain('<https://run|Sync run>');
   });
 
@@ -385,7 +409,24 @@ describe('renderSummary', () => {
     expect(
       renderSummary(undefined, { ...crashed, failedStep: 'Release the package' }).text,
     ).toContain('The step "Release the package" failed.');
+    const afterSync = renderSummary(report(), {
+      ...run,
+      jobStatus: 'failure',
+      failedStep: 'Release the package',
+      failureLog: 'Dropping icon set "x": error in name\n',
+    }).text;
+    expect(afterSync).toContain('The step "Release the package" failed.');
+    expect(afterSync).not.toContain('Dropping icon set');
     expect(renderSummary(undefined, crashed).text).toContain('See the run log');
+  });
+
+  it('escapes Slack control characters in asset names', () => {
+    const { text } = renderSummary(
+      report({ rejected: [{ ...rejected[0], name: '<!channel>' }] }),
+      run,
+    );
+    expect(text).toContain('`&lt;!channel&gt;`');
+    expect(text).not.toContain('<!channel>');
   });
 
   it('lists the assets design has to fix with a link and the reason, on every outcome', () => {
@@ -396,6 +437,99 @@ describe('renderSummary', () => {
       expect(text).toContain('`add`');
       expect(text).toContain('<https://www.figma.com/design/FILE?node-id=1-2|Open in Figma>');
     }
+  });
+
+  it('reports a cancelled run as not finished, even when a report was written', () => {
+    const { text } = renderSummary(report(), { ...pushed, jobStatus: 'cancelled' });
+    expect(text).toContain('The icons Figma sync was cancelled. Nothing was published.');
+    expect(text).toContain('The run was cancelled before it finished.');
+    expect(text).not.toContain('Nothing new in Figma');
+    expect(text).not.toContain('pushed branch');
+  });
+
+  describe('notify', () => {
+    const notify = ['S01GJ9GT3LY', 'S05HRM5A309'];
+    const cc = 'cc: <!subteam^S01GJ9GT3LY> <!subteam^S05HRM5A309>';
+
+    it('pings the groups when a branch was pushed, the sync failed or assets were skipped', () => {
+      expect(renderSummary(report(), { ...pushed, notify }).text).toContain(cc);
+      expect(renderSummary(undefined, { ...run, jobStatus: 'failure', notify }).text).toContain(cc);
+      expect(
+        renderSummary(report({ changes: changes(), rejected }), { ...run, notify }).text,
+      ).toContain(cc);
+    });
+
+    it('stays quiet when nothing needs attention, and without groups', () => {
+      expect(renderSummary(report({ changes: changes() }), { ...run, notify }).text).not.toContain(
+        'cc:',
+      );
+      expect(renderSummary(report(), pushed).text).not.toContain('cc:');
+    });
+
+    it('ignores anything that is not a user group id', () => {
+      const { text } = renderSummary(report(), {
+        ...pushed,
+        notify: ['<!channel>', 'S05HRM5A309'],
+      });
+      expect(text).toContain('cc: <!subteam^S05HRM5A309>');
+      expect(text).not.toContain('<!channel>');
+    });
+  });
+
+  it('points to the asset a name clashes with', () => {
+    const clash = {
+      ...rejected[0],
+      duplicateOf: { url: 'https://www.figma.com/design/FILE?node-id=9-9' },
+    };
+    const { text } = renderSummary(report({ rejected: [clash] }), run);
+    expect(text).toContain(
+      '(<https://www.figma.com/design/FILE?node-id=1-2|Open in Figma>, <https://www.figma.com/design/FILE?node-id=9-9|the other one>)',
+    );
+    expect(renderRejections(report({ rejected: [clash] }))).toContain(
+      '[the other one](https://www.figma.com/design/FILE?node-id=9-9)',
+    );
+  });
+
+  it('groups skipped assets by category and lists only the first of each, with a link to the rest', () => {
+    const duplicates = Array.from({ length: 12 }, (_, index) => ({
+      ...rejected[0],
+      name: `asset${index}`,
+      message: 'a very long reason that the Slack message leaves out',
+      category: 'duplicate-name' as const,
+    }));
+    const invalidName = { ...rejected[0], name: 'Nav/bad', category: 'invalid-name' as const };
+    const { text } = renderSummary(report({ rejected: [...duplicates, invalidName] }), run);
+    const lines = text.split('\n');
+
+    expect(text).toContain('13 assets need a fix in Figma');
+    expect(lines).toContain(
+      '*Duplicate name (12)*: two assets share a name; rename one of each pair.',
+    );
+    expect(lines).toContain('*Invalid name (1)*: the name breaks the naming rule; rename it.');
+    expect(text).toContain('`asset4`');
+    expect(text).not.toContain('`asset5`');
+    expect(text).not.toContain('a very long reason');
+    expect(lines).toContain('…and 7 more.');
+    expect(text).toContain('Every skipped asset is listed in the <https://run|job summary>.');
+    expect(
+      lines.indexOf('*Duplicate name (12)*: two assets share a name; rename one of each pair.'),
+    ).toBeLessThan(
+      lines.indexOf('*Invalid name (1)*: the name breaks the naming rule; rename it.'),
+    );
+    expect(text.endsWith('<https://run|Sync run>')).toBe(true);
+  });
+
+  it('keeps a shortened reason for categories whose reason is specific to the asset', () => {
+    const asset = {
+      ...rejected[0],
+      message: `uses a color outside the palette ${'x'.repeat(200)}`,
+      category: 'invalid-asset' as const,
+    };
+    const { text } = renderSummary(report({ rejected: [asset] }), run);
+    expect(text).toContain('*Failed validation (1)*');
+    expect(text).toContain('`add`: uses a color outside the palette');
+    expect(text).toContain('…');
+    expect(text.length).toBeLessThan(600);
   });
 
   it('escapes the characters Slack treats as markup and pluralizes the count', () => {

@@ -7,6 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { parseStamp } from '../artifacts/nativeSvg';
+import { hasChanges } from '../diffIllustrations';
 import type { Component, Illustration } from '../illustration';
 import { type Manifest, manifestIllustrations, readManifest, writeManifest } from '../manifest';
 import { AndroidVectorDrawableSink } from '../sinks/AndroidVectorDrawableSink';
@@ -216,6 +217,18 @@ describe('runSync, end to end against an in-memory source', () => {
     expect(read('spotIcon/data/descriptionMap.ts')).toContain(`passkey: ['2fa']`);
   });
 
+  it('records a moved Figma date without a reported change, then has nothing to do', async () => {
+    const movedAt = later();
+    source.components[0] = { ...source.components[0], updatedAt: movedAt };
+    const diff = synced(await sync());
+
+    expect(hasChanges(diff)).toBe(false);
+    expect(diff.writes).toHaveLength(0);
+    expect(entry('2fa')?.lastUpdated).toBe(movedAt);
+    expect(entry('2fa')?.version).toBe(0);
+    expect((await sync()).status).toBe('nothing-to-sync');
+  });
+
   it('bumps the version and replaces the asset files when the artwork changes', async () => {
     source.components[0] = { ...source.components[0], updatedAt: later() };
     source.svgs[twoFactor.nodeId] = twoFactorSvg.replace('#CED2DB', '#3CC28A');
@@ -249,11 +262,20 @@ describe('runSync, end to end against an in-memory source', () => {
     );
   });
 
-  it('rejects a rename that only changes case', async () => {
+  it('applies a rename that only changes case and lists it as renamed', async () => {
     const before = source.components[0];
-    source.components[0] = { ...before, name: 'TwoFactor', updatedAt: later() };
-    await expect(sync()).rejects.toThrow('Renames are case-insensitive');
+    const upper = before.name.toUpperCase();
+    source.components[0] = { ...before, name: upper };
+    const diff = synced(await sync());
+
+    expect(diff.results.renamed.map(({ oldName, name }) => [oldName, name])).toEqual([
+      [before.name, upper],
+    ]);
+    expect(entry(upper)).toBeDefined();
+    expect(entry(before.name)).toBeUndefined();
+
     source.components[0] = before;
+    await sync();
   });
 
   it('continues the version history when design re-creates the node under the same name', async () => {
@@ -285,7 +307,7 @@ describe('runSync, end to end against an in-memory source', () => {
     source.svgs[duplicate.nodeId] = leverageSvg;
     const outcome = await sync();
 
-    expect(outcome.duplicates).toEqual([duplicate]);
+    expect(outcome.duplicates).toEqual([{ component: duplicate, keptBy: source.components[0] }]);
     expect(outcome.status).toBe('nothing-to-sync');
     expect(entry('twoFactor')?.nodeId).toBe('9000:1');
     source.components.pop();

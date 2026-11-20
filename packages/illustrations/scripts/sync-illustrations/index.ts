@@ -10,7 +10,7 @@ import {
 import { approximationSummary, notExportableSummary } from './artifacts/nativeSvg';
 import { type Sink } from './sinks/Sink';
 import { config } from './config';
-import { hasChanges, type SyncResults } from './diffIllustrations';
+import { hasChanges, hasChangesToRecord, type SyncResults } from './diffIllustrations';
 import { type Release, ReleaseBranch, runOnReleaseBranches } from './git';
 import { type Component, type Illustration, illustrationKey } from './illustration';
 import { readManifest, writeManifest } from './manifest';
@@ -108,7 +108,9 @@ const sync = async (sinks: Sink[]) => {
   rejected.push(...duplicateAssets(outcome.duplicates));
   if (outcome.duplicates.length) {
     console.warn('\n⚠️ Skipping components whose type/name is already taken by another component:');
-    console.table(outcome.duplicates.map(({ nodeId, type, name }) => ({ nodeId, type, name })));
+    console.table(
+      outcome.duplicates.map(({ component: { nodeId, type, name } }) => ({ nodeId, type, name })),
+    );
   }
 
   if (outcome.status === 'nothing-to-sync') {
@@ -124,7 +126,7 @@ const sync = async (sinks: Sink[]) => {
   rejected.push(...rejectedAssets(outcome.sinkResults, config.componentUrl));
   changes = outcome.diff.results;
 
-  if (hasChanges(outcome.diff) && !dryRun) {
+  if (hasChangesToRecord(outcome.diff) && !dryRun) {
     console.log('Updating manifest...');
     writeManifest(config.manifestPath, {
       illustrations: outcome.diff.illustrations,

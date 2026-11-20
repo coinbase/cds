@@ -3,7 +3,7 @@ import type { IllustrationSource } from './source/IllustrationSource';
 import {
   diffIllustrations,
   type FetchedIllustration,
-  hasChanges,
+  hasChangesToRecord,
   type IllustrationDiff,
 } from './diffIllustrations';
 import { hashSvg } from './hashSvg';
@@ -12,7 +12,7 @@ import type { Component, Illustration } from './illustration';
 import { type Manifest, manifestIllustrations } from './manifest';
 import { mapConcurrently } from './mapConcurrently';
 import { getSvgSize, optimizeSvg } from './optimizeSvg';
-import { selectComponents } from './selectComponents';
+import { type DuplicateComponent, selectComponents } from './selectComponents';
 
 export type SyncOptions = {
   source: IllustrationSource;
@@ -40,7 +40,7 @@ export type SinkResult = {
 
 export type SyncOutcome = {
   /** Components dropped because another component already claims the same `type/name`. */
-  duplicates: Component[];
+  duplicates: DuplicateComponent[];
 } & (
   | { status: 'nothing-to-sync' }
   | { status: 'no-changes' }
@@ -152,7 +152,8 @@ export async function runSync({
   });
 
   const diff = diffIllustrations({ previous, fetched, remoteNodeIds });
-  if (!hasChanges(diff) && missing.length === 0) return { status: 'no-changes', duplicates };
+  if (!hasChangesToRecord(diff) && missing.length === 0)
+    return { status: 'no-changes', duplicates };
 
   // Changed illustrations are written to every sink; unchanged ones only to sinks missing them.
   const missingByNodeId = new Map([...missingSinks].map(([prev, s]) => [prev.nodeId, s]));

@@ -1,7 +1,14 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-import { hasChanges, isBreaking, type SyncChanges, type SyncReport } from './syncReport';
+import {
+  hasChanges,
+  isBreaking,
+  type RejectedAsset,
+  type RejectedCategory,
+  type SyncChanges,
+  type SyncReport,
+} from './syncReport';
 
 /**
  * Renders the report written by the sync scripts for the sync workflows: the version plan, the
@@ -11,6 +18,11 @@ import { hasChanges, isBreaking, type SyncChanges, type SyncReport } from './syn
 const MAX_COMPARE_URL_LENGTH = 6000;
 const MAX_FAILURE_LINES = 6;
 const MAX_FAILURE_CHARS = 700;
+/** Slack cuts a long message off, which would lose the lines after the list of skipped assets. */
+const MAX_REJECTED_PER_CATEGORY = 5;
+const MAX_REASON_CHARS = 100;
+/** A Slack user group id, like S05HRM5A309. */
+const SLACK_GROUP_ID = /^S[A-Z0-9]+$/;
 const FAILURE_LINE = /error|failed|❌|not clean|cannot|denied|forbidden|\b40[0-9]\b|\b50[0-9]\b/i;
 // eslint-disable-next-line no-control-regex
 const ANSI = /\u001b\[[0-9;]*m/g;
@@ -21,8 +33,19 @@ const plain = (text: string) => text.replace(/[`\r\n]+/g, ' ').trim();
 const escapeSlack = (text: string) =>
   plain(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
-const countSummary = ({ added, updated, renamed, deleted }: SyncChanges) =>
-  `${added.length} new, ${updated.length} updated, ${deleted.length} deleted, ${renamed.length} renamed`;
+const shorten = (text: string) =>
+  text.length > MAX_REASON_CHARS ? `${text.slice(0, MAX_REASON_CHARS)}…` : text;
+
+/** The note that tells a reviewer a rename is only a change of capitalization. */
+const renameLabel = ({ name, oldName }: { name: string; oldName: string }) =>
+  `${oldName} → ${name}${oldName.toLowerCase() === name.toLowerCase() ? ' (capitalization only)' : ''}`;
+
+const countSummary = (changes: SyncChanges) => {
+  const { added, updated, renamed, deleted } = changes;
+  return hasChanges(changes)
+    ? `${added.length} new, ${updated.length} updated, ${deleted.length} deleted, ${renamed.length} renamed`
+    : 'no asset changed, only recorded Figma dates or generated files';
+};
 
 type Entry = { group?: string; label: string };
 
@@ -79,7 +102,7 @@ export const renderVersionPlan = (report: SyncReport, date: string) => {
     ),
     planSection(
       '☠️ Renamed',
-      renamed.map(({ group, name, oldName }) => ({ group, label: `${oldName} → ${name}` })),
+      renamed.map(({ group, name, oldName }) => ({ group, label: renameLabel({ name, oldName }) })),
       groupOrder,
     ),
     planSection(
@@ -120,11 +143,69 @@ export const writeVersionPlan = (
   return planPath;
 };
 
-/** The rejected assets as a markdown list, for the pull request and the job summary. */
+/**
+ * How each category of skipped asset reads, in the order the groups are listed. `showReason` is
+ * whether the reason belongs in Slack; where the category and the name already say it, it does not.
+ */
+const REJECTED_CATEGORIES: Record<
+  RejectedCategory | 'other',
+  { label: string; hint: string; showReason: boolean }
+> = {
+  'duplicate-name': {
+    label: 'Duplicate name',
+    hint: 'two assets share a name; rename one of each pair',
+    showReason: false,
+  },
+  'invalid-name': {
+    label: 'Invalid name',
+    hint: 'the name breaks the naming rule; rename it',
+    showReason: false,
+  },
+  'invalid-variant': {
+    label: 'Invalid variants',
+    hint: 'a variant is missing or has a wrong property; fix it',
+    showReason: true,
+  },
+  'invalid-asset': {
+    label: 'Failed validation',
+    hint: 'the artwork could not be converted or failed a check; fix it',
+    showReason: true,
+  },
+  other: { label: 'Other', hint: 'see the reason', showReason: true },
+};
+
+const groupRejected = (rejected: RejectedAsset[]) =>
+  (Object.keys(REJECTED_CATEGORIES) as (RejectedCategory | 'other')[])
+    .map((category) => ({
+      ...REJECTED_CATEGORIES[category],
+      assets: rejected.filter((asset) => (asset.category ?? 'other') === category),
+    }))
+    .filter(({ assets }) => assets.length > 0);
+
+type Link = (text: string, href: string) => string;
+const markdownLink: Link = (text, href) => `[${text}](${href})`;
+const slackLink: Link = (text, href) => `<${href}|${text}>`;
+
+/** The Figma link of a skipped asset, and of the asset it clashes with, in one link syntax. */
+const assetLinks = ({ url, duplicateOf }: RejectedAsset, link: Link) =>
+  [
+    link('Open in Figma', url),
+    ...(duplicateOf ? [link('the other one', duplicateOf.url)] : []),
+  ].join(', ');
+
+/** The rejected assets as markdown, grouped by category, for the pull request and the job summary. */
 export const renderRejections = (report: SyncReport) =>
-  report.rejected
-    .map(({ name, message, url }) => `- \`${plain(name)}\`: ${plain(message)} ([Figma](${url}))`)
-    .join('\n');
+  groupRejected(report.rejected)
+    .map(({ label, hint, assets }) =>
+      [
+        `**${label} (${assets.length})**: ${hint}.`,
+        ...assets.map(
+          (asset) =>
+            `- \`${plain(asset.name)}\`: ${plain(asset.message)} (${assetLinks(asset, markdownLink)})`,
+        ),
+      ].join('\n'),
+    )
+    .join('\n\n');
 
 export const renderPullRequestBody = (report: SyncReport) => {
   const sections = [
@@ -213,6 +294,8 @@ export type SummaryContext = {
   failureLog?: string;
   failedStep?: string;
   runUrl?: string;
+  /** Slack user group ids to ping when a branch was pushed, the sync failed or assets were skipped. */
+  notify?: string[];
 };
 
 export type SummaryOutcome = 'failed' | 'skipped' | 'branch' | 'nothing';
@@ -223,13 +306,15 @@ export const summaryOutcome = (
   { skipped, jobStatus, syncOutcome, pushed }: SummaryContext,
 ): SummaryOutcome => {
   if (skipped) return 'skipped';
-  if (jobStatus === 'failure' || (syncOutcome === 'failure' && !report)) return 'failed';
+  if (jobStatus === 'failure' || jobStatus === 'cancelled') return 'failed';
+  if (syncOutcome === 'failure' && !report) return 'failed';
   return pushed ? 'branch' : 'nothing';
 };
 
-const failureReason = ({ failureLog, failedStep }: SummaryContext) => {
+const failureReason = ({ failureLog, failedStep, jobStatus }: SummaryContext) => {
+  if (jobStatus === 'cancelled') return 'The run was cancelled before it finished.';
+  if (failedStep) return `The step "${escapeSlack(failedStep)}" failed.`;
   if (failureLog) return failureExcerpt(failureLog);
-  if (failedStep) return `The step "${plain(failedStep)}" failed.`;
   return 'See the run log for the failing step.';
 };
 
@@ -240,33 +325,60 @@ const summaryHeadline = (
 ): string[] => {
   const { target, branch = '', compareUrl, openPullRequestUrl } = context;
   const nothingNew = `:white_check_mark: The ${target} Figma sync ran. Nothing new in Figma.`;
+  const failed = [
+    `:red_circle: The ${target} Figma sync ${context.jobStatus === 'cancelled' ? 'was cancelled' : 'failed'}. Nothing was published.`,
+    `\`\`\`${failureReason(context)}\`\`\``,
+  ];
 
   switch (outcome) {
     case 'failed':
-      return [
-        `:red_circle: The ${target} Figma sync failed. Nothing was published.`,
-        `\`\`\`${failureReason(context)}\`\`\``,
-      ];
+      return failed;
     case 'skipped':
       return [
         `:information_source: The ${target} Figma sync did not run: a sync pull request is already open (<${openPullRequestUrl}|open it>).`,
       ];
     case 'branch': {
-      if (!report) return [nothingNew];
+      if (!report) return failed;
       const lines = [
-        `:package: The ${target} Figma sync pushed branch \`${plain(branch)}\`: ${countSummary(report.changes)}.`,
+        `:package: The ${target} Figma sync pushed branch \`${escapeSlack(branch)}\`.`,
+        `:sparkles: *${countSummary(report.changes)}*`,
       ];
       if (isBreaking(report.changes)) {
         lines.push(
           `:rotating_light: It renames or deletes assets, so it needs a ${report.bump} version bump.`,
         );
       }
-      lines.push(`<${compareUrl}|Open the pull request for \`${plain(branch)}\`>`);
+      lines.push(`<${compareUrl}|Open the pull request for ${escapeSlack(branch)}>`);
       return lines;
     }
     case 'nothing':
       return [nothingNew];
   }
+};
+
+/** The Slack lines for skipped assets: each category with a count and its first few assets. */
+const rejectedLines = (rejected: RejectedAsset[], runUrl?: string) => {
+  const single = rejected.length === 1;
+  const lines = [
+    `:warning: ${rejected.length} ${single ? 'asset needs' : 'assets need'} a fix in Figma, and ${single ? 'was' : 'were'} skipped:`,
+  ];
+  let hidden = 0;
+  for (const { label, hint, showReason, assets } of groupRejected(rejected)) {
+    lines.push(`*${label} (${assets.length})*: ${hint}.`);
+    for (const asset of assets.slice(0, MAX_REJECTED_PER_CATEGORY)) {
+      const reason = showReason ? `: ${shorten(escapeSlack(asset.message))}` : '';
+      lines.push(`• \`${escapeSlack(asset.name)}\`${reason} (${assetLinks(asset, slackLink)})`);
+    }
+    const more = assets.length - MAX_REJECTED_PER_CATEGORY;
+    if (more > 0) {
+      hidden += more;
+      lines.push(`…and ${more} more.`);
+    }
+  }
+  if (hidden > 0 && runUrl)
+    lines.push(`Every skipped asset is listed in the <${runUrl}|job summary>.`);
+  lines.push('Fix them in Figma and publish the library; the next sync picks them up.');
+  return lines;
 };
 
 /**
@@ -279,18 +391,15 @@ export const renderSummary = (report: SyncReport | undefined, context: SummaryCo
   const lines = summaryHeadline(outcome, report, context);
 
   const rejected = report?.rejected ?? [];
-  if (rejected.length > 0) {
-    lines.push(
-      `:warning: ${rejected.length} ${rejected.length === 1 ? 'asset needs' : 'assets need'} a fix in Figma, and ${rejected.length === 1 ? 'was' : 'were'} skipped:`,
-      ...rejected.map(
-        ({ name, message, url }) =>
-          `• \`${plain(name)}\`: ${escapeSlack(message)} (<${url}|Open in Figma>)`,
-      ),
-      'Fix them in Figma and publish the library; the next sync picks them up.',
-    );
-  }
+  if (rejected.length > 0) lines.push(...rejectedLines(rejected, context.runUrl));
 
   if (context.runUrl) lines.push(`<${context.runUrl}|Sync run>`);
+
+  const needsAttention = outcome === 'branch' || outcome === 'failed' || rejected.length > 0;
+  const groups = (context.notify ?? []).filter((id) => SLACK_GROUP_ID.test(id));
+  if (needsAttention && groups.length > 0) {
+    lines.push(`cc: ${groups.map((id) => `<!subteam^${id}>`).join(' ')}`);
+  }
   return { text: lines.join('\n') };
 };
 
