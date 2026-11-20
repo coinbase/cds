@@ -10,6 +10,8 @@ import { hasChanges, isBreaking, type SyncChanges, type SyncReport } from './syn
 
 const MAX_COMPARE_URL_LENGTH = 6000;
 const MAX_FAILURE_LINES = 6;
+/** Slack cuts a long message off, which would lose the lines after the list. */
+const MAX_REJECTED_LINES = 8;
 const MAX_FAILURE_CHARS = 700;
 const FAILURE_LINE = /error|failed|❌|not clean|cannot|denied|forbidden|\b40[0-9]\b|\b50[0-9]\b/i;
 // eslint-disable-next-line no-control-regex
@@ -131,7 +133,12 @@ export const writeVersionPlan = (
 /** The rejected assets as a markdown list, for the pull request and the job summary. */
 export const renderRejections = (report: SyncReport) =>
   report.rejected
-    .map(({ name, message, url }) => `- \`${plain(name)}\`: ${plain(message)} ([Figma](${url}))`)
+    .map(({ name, message, url, duplicateOf }) => {
+      const links = duplicateOf
+        ? `[Figma](${url}), [the other one](${duplicateOf.url})`
+        : `[Figma](${url})`;
+      return `- \`${plain(name)}\`: ${plain(message)} (${links})`;
+    })
     .join('\n');
 
 export const renderPullRequestBody = (report: SyncReport) => {
@@ -270,7 +277,7 @@ const summaryHeadline = (
           `:rotating_light: It renames or deletes assets, so it needs a ${report.bump} version bump.`,
         );
       }
-      lines.push(`<${compareUrl}|Open the pull request for \`${escapeSlack(branch)}\`>`);
+      lines.push(`<${compareUrl}|Open the pull request for ${escapeSlack(branch)}>`);
       return lines;
     }
     case 'nothing':
@@ -291,10 +298,17 @@ export const renderSummary = (report: SyncReport | undefined, context: SummaryCo
   if (rejected.length > 0) {
     lines.push(
       `:warning: ${rejected.length} ${rejected.length === 1 ? 'asset needs' : 'assets need'} a fix in Figma, and ${rejected.length === 1 ? 'was' : 'were'} skipped:`,
-      ...rejected.map(
-        ({ name, message, url }) =>
-          `• \`${escapeSlack(name)}\`: ${escapeSlack(message)} (<${url}|Open in Figma>)`,
-      ),
+      ...rejected.slice(0, MAX_REJECTED_LINES).map(({ name, message, url, duplicateOf }) => {
+        const links = duplicateOf
+          ? `<${url}|Open in Figma>, <${duplicateOf.url}|the other one>`
+          : `<${url}|Open in Figma>`;
+        return `• \`${escapeSlack(name)}\`: ${escapeSlack(message)} (${links})`;
+      }),
+      ...(rejected.length > MAX_REJECTED_LINES
+        ? [
+            `…and ${rejected.length - MAX_REJECTED_LINES} more${context.runUrl ? `, all listed in the <${context.runUrl}|job summary>` : ''}.`,
+          ]
+        : []),
       'Fix them in Figma and publish the library; the next sync picks them up.',
     );
   }

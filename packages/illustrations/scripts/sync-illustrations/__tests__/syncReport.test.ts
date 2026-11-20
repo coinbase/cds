@@ -27,15 +27,23 @@ const url = ({ nodeId }: Illustration) => `https://www.figma.com/design/file?nod
 
 describe('duplicateAssets', () => {
   it('reports each dropped component with its Figma link and how to fix it', () => {
+    const component = {
+      nodeId: '9:9',
+      type: 'spotSquare',
+      name: 'futures',
+      description: '',
+      createdAt: '2026-01-01T00:00:00Z',
+      updatedAt: '2026-01-01T00:00:00Z',
+      url: 'https://www.figma.com/design/FILE?node-id=9-9',
+    };
     const [asset] = duplicateAssets([
       {
-        nodeId: '9:9',
-        type: 'spotSquare',
-        name: 'futures',
-        description: '',
-        createdAt: '2026-01-01T00:00:00Z',
-        updatedAt: '2026-01-01T00:00:00Z',
-        url: 'https://www.figma.com/design/FILE?node-id=9-9',
+        component,
+        keptBy: {
+          ...component,
+          nodeId: '1:1',
+          url: 'https://www.figma.com/design/FILE?node-id=1-1',
+        },
       },
     ]);
     expect(asset).toEqual({
@@ -43,6 +51,7 @@ describe('duplicateAssets', () => {
       nodeId: '9:9',
       url: 'https://www.figma.com/design/FILE?node-id=9-9',
       message: expect.stringContaining('already named "spotSquare/futures"'),
+      duplicateOf: { url: 'https://www.figma.com/design/FILE?node-id=1-1' },
     });
   });
 });

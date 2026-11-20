@@ -1,6 +1,7 @@
 import type { RejectedAsset } from '@cds/figma-api/syncReport';
 
-import { type Component, type Illustration, illustrationKey } from './illustration';
+import { type Illustration, illustrationKey } from './illustration';
+import type { DuplicateComponent } from './selectComponents';
 import type { SinkResult } from './sync';
 
 /** One entry per illustration and reason, however many sinks rejected it. */
@@ -27,10 +28,11 @@ export const rejectedAssets = (
 };
 
 /** Components dropped because another component already has their `type/name`. */
-export const duplicateAssets = (duplicates: Component[]): RejectedAsset[] =>
-  duplicates.map(({ nodeId, type, name, url }) => ({
+export const duplicateAssets = (duplicates: DuplicateComponent[]): RejectedAsset[] =>
+  duplicates.map(({ component: { nodeId, type, name, url }, keptBy }) => ({
     name: `${type}/${name}`,
     nodeId,
     url,
     message: `Another component is already named "${type}/${name}", so this one is skipped; rename one of them in Figma.`,
+    duplicateOf: { url: keptBy.url },
   }));

@@ -307,7 +307,7 @@ describe('runSync, end to end against an in-memory source', () => {
     source.svgs[duplicate.nodeId] = leverageSvg;
     const outcome = await sync();
 
-    expect(outcome.duplicates).toEqual([duplicate]);
+    expect(outcome.duplicates).toEqual([{ component: duplicate, keptBy: source.components[0] }]);
     expect(outcome.status).toBe('nothing-to-sync');
     expect(entry('twoFactor')?.nodeId).toBe('9000:1');
     source.components.pop();

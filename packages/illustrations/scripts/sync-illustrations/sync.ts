@@ -12,7 +12,7 @@ import type { Component, Illustration } from './illustration';
 import { type Manifest, manifestIllustrations } from './manifest';
 import { mapConcurrently } from './mapConcurrently';
 import { getSvgSize, optimizeSvg } from './optimizeSvg';
-import { selectComponents } from './selectComponents';
+import { type DuplicateComponent, selectComponents } from './selectComponents';
 
 export type SyncOptions = {
   source: IllustrationSource;
@@ -40,7 +40,7 @@ export type SinkResult = {
 
 export type SyncOutcome = {
   /** Components dropped because another component already claims the same `type/name`. */
-  duplicates: Component[];
+  duplicates: DuplicateComponent[];
 } & (
   | { status: 'nothing-to-sync' }
   | { status: 'no-changes' }

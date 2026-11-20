@@ -9,6 +9,8 @@ export type RejectedAsset = {
   url: string;
   /** What is wrong and how to fix it. */
   message: string;
+  /** For a name clash: where the asset it clashes with is in Figma. */
+  duplicateOf?: { url: string };
 };
 
 export type ChangedAsset = {

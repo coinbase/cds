@@ -31,9 +31,17 @@ const doSyncAll = config.syncAll || syncAll;
 
 /** Icon sets the sync skipped because designers need to fix them in Figma. */
 const rejected: RejectedAsset[] = [];
-const reject = (name: string, nodeId: string, message: string) => {
+const reject = (name: string, nodeId: string, message: string, duplicateNodeId?: string) => {
   console.warn(`  [REJECTED] ${message}`);
-  rejected.push({ name, nodeId, url: figmaNodeUrl(config.figmaFileId, nodeId), message });
+  rejected.push({
+    name,
+    nodeId,
+    url: figmaNodeUrl(config.figmaFileId, nodeId),
+    message,
+    ...(duplicateNodeId
+      ? { duplicateOf: { url: figmaNodeUrl(config.figmaFileId, duplicateNodeId) } }
+      : {}),
+  });
 };
 
 // The start and end unicode values that we allow for the icon font.
@@ -259,7 +267,10 @@ const main = async () => {
       reject(
         iconName,
         nodeId,
-        `Icon set "${iconName}" has the same name as another icon set, "${duplicateIconSet.name}", ignoring capitalization. Rename one of them in Figma.`,
+        duplicateIconSet.name === iconName
+          ? `Icon set "${iconName}" has the same name as another icon set. Rename one of them in Figma.`
+          : `Icon set "${iconName}" has the same name as another icon set, "${duplicateIconSet.name}", ignoring capitalization. Rename one of them in Figma.`,
+        duplicateIconSet.nodeId,
       );
       continue;
     }

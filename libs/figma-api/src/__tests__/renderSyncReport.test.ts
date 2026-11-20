@@ -367,7 +367,7 @@ describe('renderSummary', () => {
     expect(text).toContain(
       'pushed branch `icons/2026-11-19`: 2 new, 1 updated, 0 deleted, 0 renamed.',
     );
-    expect(text).toContain(`<${compareUrl}|Open the pull request for \`icons/2026-11-19\`>`);
+    expect(text).toContain(`<${compareUrl}|Open the pull request for icons/2026-11-19>`);
     expect(text).toContain('<https://run|Sync run>');
   });
 
@@ -430,6 +430,33 @@ describe('renderSummary', () => {
       expect(text).toContain('`add`');
       expect(text).toContain('<https://www.figma.com/design/FILE?node-id=1-2|Open in Figma>');
     }
+  });
+
+  it('points to the asset a name clashes with', () => {
+    const clash = {
+      ...rejected[0],
+      duplicateOf: { url: 'https://www.figma.com/design/FILE?node-id=9-9' },
+    };
+    const { text } = renderSummary(report({ rejected: [clash] }), run);
+    expect(text).toContain(
+      '(<https://www.figma.com/design/FILE?node-id=1-2|Open in Figma>, <https://www.figma.com/design/FILE?node-id=9-9|the other one>)',
+    );
+    expect(renderRejections(report({ rejected: [clash] }))).toContain(
+      '[the other one](https://www.figma.com/design/FILE?node-id=9-9)',
+    );
+  });
+
+  it('lists only the first skipped assets so the message is not cut off, and points to the run', () => {
+    const many = Array.from({ length: 12 }, (_, index) => ({
+      ...rejected[0],
+      name: `asset${index}`,
+    }));
+    const { text } = renderSummary(report({ rejected: many }), run);
+    expect(text).toContain('12 assets need a fix in Figma');
+    expect(text).toContain('`asset7`');
+    expect(text).not.toContain('`asset8`');
+    expect(text).toContain('…and 4 more, all listed in the <https://run|job summary>.');
+    expect(text.endsWith('<https://run|Sync run>')).toBe(true);
   });
 
   it('escapes the characters Slack treats as markup and pluralizes the count', () => {

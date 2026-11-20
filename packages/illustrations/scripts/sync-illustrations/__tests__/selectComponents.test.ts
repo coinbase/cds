@@ -110,7 +110,7 @@ describe('selectComponents', () => {
       const [older, newer] = [...futures()].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 
       expect(toSync.filter(({ name }) => name === 'futures')).toEqual([older]);
-      expect(duplicates).toContainEqual(newer);
+      expect(duplicates).toContainEqual({ component: newer, keptBy: older });
       expect(remoteNodeIds.has(newer.nodeId)).toBe(false);
     });
 
@@ -123,7 +123,10 @@ describe('selectComponents', () => {
       });
 
       expect(toSync.filter(({ name }) => name === 'futures')).toEqual([newer]);
-      expect(duplicates.map(({ name }) => name)).toEqual(['futures', 'instoDecentralizedExchange']);
+      expect(duplicates.map(({ component }) => component.name)).toEqual([
+        'futures',
+        'instoDecentralizedExchange',
+      ]);
     });
   });
 });

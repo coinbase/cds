@@ -108,7 +108,9 @@ const sync = async (sinks: Sink[]) => {
   rejected.push(...duplicateAssets(outcome.duplicates));
   if (outcome.duplicates.length) {
     console.warn('\n⚠️ Skipping components whose type/name is already taken by another component:');
-    console.table(outcome.duplicates.map(({ nodeId, type, name }) => ({ nodeId, type, name })));
+    console.table(
+      outcome.duplicates.map(({ component: { nodeId, type, name } }) => ({ nodeId, type, name })),
+    );
   }
 
   if (outcome.status === 'nothing-to-sync') {
