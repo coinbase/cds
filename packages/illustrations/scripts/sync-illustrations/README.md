@@ -247,7 +247,7 @@ versions at once, invalidating every CDN URL.
 ## Incremental sync (`selectComponents`)
 
 Figma's `/components` endpoint returns every published component with its `updated_at` in one cheap
-call. The sync downloads only components that are new or whose `updated_at` differs from the `lastUpdated`
+call. The sync downloads only components that are new, renamed (a different `type/name` for the same node), or whose `updated_at` differs from the `lastUpdated`
 the manifest recorded for that component, so a normal run touches a handful of SVGs. Each component
 is compared with its own record, so no run depends on the clock or on the previous run having finished. `--sync-all` downloads everything and is how pipeline changes (a new svgo
 setting, a palette change) are applied across the whole set.

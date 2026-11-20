@@ -45,6 +45,21 @@ describe('selectComponents', () => {
     expect(toSync.map(({ nodeId }) => nodeId)).toEqual([changed.nodeId, added.nodeId]);
   });
 
+  it('syncs a component whose name or type changed even when its updatedAt did not', () => {
+    const [renamed, retyped, unchanged] = components;
+    const { toSync } = selectComponents({
+      components: [renamed, retyped, unchanged],
+      previous: [
+        { ...previousFrom(renamed), name: 'oldName' },
+        { ...previousFrom(retyped), type: 'oldType' as Illustration['type'] },
+        previousFrom(unchanged),
+      ],
+      syncAll: false,
+    });
+
+    expect(toSync.map(({ nodeId }) => nodeId)).toEqual([renamed.nodeId, retyped.nodeId]);
+  });
+
   it('does not depend on the order or the age of the updates', () => {
     const [older, newer] = [...components].sort((a, b) => a.updatedAt.localeCompare(b.updatedAt));
     const { toSync } = selectComponents({
