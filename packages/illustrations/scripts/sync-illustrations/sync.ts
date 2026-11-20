@@ -1,5 +1,5 @@
 import type { Sink, SinkChanges, SinkFailure } from './sinks/Sink';
-import type { IllustrationSource , InvalidComponent } from './source/IllustrationSource';
+import type { IllustrationSource, InvalidComponent } from './source/IllustrationSource';
 import type { ColorPalette } from './colorPalette';
 import {
   diffIllustrations,
