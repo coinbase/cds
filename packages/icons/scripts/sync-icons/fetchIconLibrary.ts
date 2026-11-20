@@ -7,14 +7,22 @@ type ComponentSetsResponse = Awaited<ReturnType<typeof getFileComponentSets>>;
 type ComponentSetMetadata = ComponentSetsResponse['meta']['component_sets'][number];
 type NodeWithMetadata = NodeData & { metadata: ComponentSetMetadata };
 
+/** What the manifest recorded for an icon set at the last sync. */
+export type KnownIconSet = {
+  nodeId: string;
+  name: string;
+  description: string;
+  lastUpdated: string;
+};
+
 type FetchIconLibraryParams = {
   /** The Figma file ID containing the icons */
   fileId: string;
   /**
-   * ISO timestamp from the last sync. Only component sets updated after this
-   * date will have their nodes and images fetched. Pass undefined to fetch all.
+   * The icon sets from the last sync. Only component sets that are new or differ from their entry
+   * (see `selectIconSetsToFetch`) have their nodes and images fetched. Pass undefined to fetch all.
    */
-  lastUpdated?: string;
+  knownIconSets?: readonly KnownIconSet[];
   /** Number of IDs to include in each batched API request. Defaults to 500. */
   batchSize?: number;
 };
@@ -24,7 +32,7 @@ type FetchIconLibraryParams = {
  *
  * This is a focused implementation for component_sets (icons) that:
  * 1. Gets all component set metadata from the /component_sets endpoint
- * 2. Filters to recently updated items based on lastUpdated
+ * 2. Filters to the component sets that are new or changed since the last sync
  * 3. Fetches detailed node data for recently updated component sets
  * 4. Fetches SVG image URLs for child components (not the component sets themselves)
  *
@@ -32,16 +40,16 @@ type FetchIconLibraryParams = {
  */
 export async function fetchIconLibrary({
   fileId,
-  lastUpdated,
+  knownIconSets,
   batchSize = 500,
 }: FetchIconLibraryParams) {
   // Step 1: Get all component sets metadata (fast endpoint)
   const componentSetsResponse = await getFileComponentSets(fileId);
   const allComponentSets = componentSetsResponse.meta.component_sets;
 
-  // Step 2: Extract all remote IDs and filter for recently updated
+  // Step 2: Extract all remote IDs and filter for new or changed icon sets
   const remoteIds = allComponentSets.map((cs) => cs.node_id);
-  const recentlyUpdatedIds = filterByLastUpdated(allComponentSets, lastUpdated);
+  const recentlyUpdatedIds = selectIconSetsToFetch(allComponentSets, knownIconSets);
 
   // If nothing was updated, return early with empty nodes/imageUrls
   if (recentlyUpdatedIds.length === 0) {
@@ -116,22 +124,38 @@ export async function fetchIconLibrary({
   };
 }
 
-/**
- * Filters items to only those updated after the given timestamp.
- * If no timestamp provided, returns all items.
- */
-function filterByLastUpdated(
-  items: readonly { node_id: string; updated_at: string }[],
-  lastUpdated?: string,
-): string[] {
-  if (!lastUpdated) {
-    return items.map((item) => item.node_id);
-  }
+/** The icon name is the part after the first `/` of the component set name, e.g. `Icon / add`. */
+const iconNameOf = (componentSetName: string) => componentSetName.split('/')[1]?.trim();
 
-  const lastUpdatedDate = new Date(lastUpdated);
-  return items
-    .filter((item) => new Date(item.updated_at) > lastUpdatedDate)
-    .map((item) => item.node_id);
+/**
+ * Picks the component sets to download: the ones the manifest does not know, and the ones whose
+ * `updated_at`, description or icon name differ from the manifest entry. Each set is compared with
+ * its own record, so the result does not depend on the clock or on the last run having finished.
+ * Without known icon sets every component set is picked.
+ */
+export function selectIconSetsToFetch(
+  componentSets: readonly {
+    node_id: string;
+    name: string;
+    description: string;
+    updated_at: string;
+  }[],
+  knownIconSets?: readonly KnownIconSet[],
+): string[] {
+  if (!knownIconSets) return componentSets.map((componentSet) => componentSet.node_id);
+
+  const knownByNodeId = new Map(knownIconSets.map((iconSet) => [iconSet.nodeId, iconSet]));
+  return componentSets
+    .filter((componentSet) => {
+      const known = knownByNodeId.get(componentSet.node_id);
+      return (
+        !known ||
+        known.lastUpdated !== componentSet.updated_at ||
+        known.description !== componentSet.description ||
+        known.name !== iconNameOf(componentSet.name)
+      );
+    })
+    .map((componentSet) => componentSet.node_id);
 }
 
 /**

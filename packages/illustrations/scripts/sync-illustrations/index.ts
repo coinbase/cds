@@ -112,7 +112,7 @@ const sync = async (sinks: Sink[]) => {
   }
 
   if (outcome.status === 'nothing-to-sync') {
-    console.log(`Figma file has no updates since ${manifest.lastUpdated}, skipping sync...`);
+    console.log('Every illustration matches the last sync, skipping sync...');
     return false;
   }
   if (outcome.status === 'no-changes') {

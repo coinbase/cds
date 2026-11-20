@@ -32,7 +32,7 @@ This is also why renaming an illustration resets its version to `0`.
 
 ## Syncing Illustrations
 
-The **Sync Figma Assets** workflow runs this sync: from the Actions tab (choose `illustrations`) or on its weekday schedule. The sync only writes the generated files and a report. The workflow commits them on a new `illustrations/YYYY-MM-DD` branch, writes the version plan from the report (it lists the added, updated, renamed and deleted illustrations, and selects `major` when any was renamed or deleted and `minor` otherwise), applies it with `yarn release --projects=illustrations` unless the sync is breaking, and pushes the branch. The Slack message that ends the run links to the pull request form for that branch, with the title and description filled in. Open it, then review it as described below. Squash-merge it: the workflow's commits are not signed.
+The **Sync Figma Assets** workflow runs this sync: from the Actions tab (choose `illustrations`) or on its weekday schedule. The sync only writes the generated files, the version plan and a report; the plan selects `major` when any illustration was renamed or deleted, and `minor` otherwise. The workflow commits them on a new `illustrations/YYYY-MM-DD` branch, releases it with `yarn release --projects=illustrations` unless the sync is breaking, and pushes the branch. The Slack message that ends the run links to the pull request form for that branch, with the title and description filled in. Open it, then review it as described below. Squash-merge it: the workflow's commits are not signed.
 
 **IMPORTANT: If any illustrations are renamed or deleted, this is a BREAKING CHANGE. This MUST be published with an accompanying major version bump, migration guide, and a migrator script. The workflow does not release a breaking sync; it keeps the version plan, and you run `yarn release --projects=illustrations` on the branch once the migration guide and migrator are ready.**
 
@@ -114,7 +114,7 @@ Without `SYNC_ILLUSTRATIONS_NATIVE_REPO` the sync behaves exactly as before.
 
 ### Syncing Illustrations Troubleshooting
 
-**"There are no changes since the last update on XX/XX/XXXX"** — The script detected no illustration changes in Figma since the last sync. Verify this is expected with design.
+**"Every illustration matches the last sync"** — Every illustration in Figma has the same last-updated date as the manifest records for it. Verify this is expected with design.
 
 **Force a full re-sync** — If you need to re-sync all illustrations regardless of when they were last updated, pass the `--sync-all` flag:
 
