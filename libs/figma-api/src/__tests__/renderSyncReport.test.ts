@@ -60,6 +60,19 @@ describe('writeVersionPlan', () => {
     expect(fs.readFileSync(planPath as string, 'utf-8')).toContain('icons: minor');
   });
 
+  it('uses SYNC_DATE when no date is passed, so the plan matches the branch name', () => {
+    process.env.SYNC_DATE = '2026-01-02';
+    try {
+      const planPath = writeVersionPlan(
+        report({ changes: changes({ added: [{ name: 'compose' }] }) }),
+        directory,
+      );
+      expect(planPath).toBe(path.join(directory, 'icons-2026-01-02.md'));
+    } finally {
+      delete process.env.SYNC_DATE;
+    }
+  });
+
   it('writes nothing when no asset changed', () => {
     const unchanged = report({ changes: emptyChanges() });
     expect(writeVersionPlan(unchanged, path.join(directory, 'none'), date)).toBeUndefined();

@@ -105,12 +105,13 @@ export const versionPlansDirectory = (repoRoot: string) =>
 
 /**
  * Saves the version plan for a sync that changed assets as `<target>-<date>.md` and returns its
- * path. A sync that changed nothing needs no release, so it writes nothing.
+ * path. The date is `SYNC_DATE`, which the workflow also uses in the branch name, or today for a
+ * local run. A sync that changed nothing needs no release, so it writes nothing.
  */
 export const writeVersionPlan = (
   report: SyncReport,
   directory: string,
-  date = new Date().toISOString().slice(0, 10),
+  date = process.env.SYNC_DATE ?? new Date().toISOString().slice(0, 10),
 ) => {
   if (!hasChanges(report.changes)) return undefined;
   const planPath = path.join(directory, `${report.target}-${date}.md`);
