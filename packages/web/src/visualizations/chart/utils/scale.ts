@@ -61,7 +61,10 @@ export const getCategoricalScale = ({
   range: AxisBounds;
   padding?: number;
 }): CategoricalScale => {
-  const domainArray = Array.from({ length: domain.max - domain.min + 1 }, (_, i) => i);
+  const domainArray = Array.from(
+    { length: domain.max - domain.min + 1 },
+    (_, i) => i + domain.min,
+  );
   const scale = scaleBand<number>()
     .domain(domainArray)
     .range([range.min, range.max])
