@@ -91,9 +91,10 @@ jobs:
           TARGET: ${{ matrix.target }}
         run: |
           # The manifest on master only advances when a sync PR merges, so a new scheduled sync would
-          # repeat the changes of one that is still waiting for review.
+          # repeat the changes of one that is still waiting for review. Only the sync branch names
+          # count, not a person's branch that happens to start with `icons/`.
           open=$(gh pr list --state open --json number,url,headRefName \
-            --jq "[.[] | select(.headRefName | startswith(\"${TARGET}/\"))][0].url // \"\"")
+            --jq "[.[] | select(.headRefName | test(\"^${TARGET}/[0-9]{4}-[0-9]{2}-[0-9]{2}\$\"))][0].url // \"\"")
           echo "url=${open}" >> "$GITHUB_OUTPUT"
           if [ "${GITHUB_EVENT_NAME}" = "schedule" ] && [ -n "${open}" ]; then
             echo "skip=true" >> "$GITHUB_OUTPUT"
