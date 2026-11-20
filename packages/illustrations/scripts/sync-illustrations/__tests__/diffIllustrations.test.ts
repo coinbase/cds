@@ -136,14 +136,18 @@ describe('diffIllustrations', () => {
     expect(names(diff.illustrations)).toEqual(['twoFactor']);
   });
 
-  it('rejects renames that only change case, since asset file names would collide', () => {
-    expect(() =>
-      diffIllustrations({
-        previous: [previous()],
-        fetched: [fetched({ name: '2FA' })],
-        remoteNodeIds: new Set(['4390:695']),
-      }),
-    ).toThrow('Renames are case-insensitive');
+  it('treats a rename that only changes capitalization as an ordinary rename', () => {
+    const diff = diffIllustrations({
+      previous: [previous()],
+      fetched: [fetched({ name: '2FA' })],
+      remoteNodeIds: new Set(['4390:695']),
+    });
+
+    expect(diff.results.renamed.map(({ oldName, name }) => [oldName, name])).toEqual([
+      ['2fa', '2FA'],
+    ]);
+    expect(diff.removals).toEqual([previous()]);
+    expect(names(diff.writes)).toEqual(['2FA']);
   });
 
   it('treats a type change as a deletion plus an addition', () => {

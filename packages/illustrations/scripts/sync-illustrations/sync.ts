@@ -41,8 +41,6 @@ export type SinkResult = {
 export type SyncOutcome = {
   /** Components dropped because another component already claims the same `type/name`. */
   duplicates: Component[];
-  /** Components left as they were because a rename only changes capitalization. */
-  caseRenames: { component: Component; previousName: string }[];
 } & (
   | { status: 'nothing-to-sync' }
   | { status: 'no-changes' }
@@ -106,8 +104,7 @@ export async function runSync({
     previous,
     syncAll,
   });
-  const { remoteNodeIds, duplicates, caseRenames } = selection;
-  const caseRenamedIds = new Set(caseRenames.map(({ component }) => component.nodeId));
+  const { remoteNodeIds, duplicates } = selection;
 
   // Illustrations some sink lacks (a new destination, a wiped directory) are downloaded as well,
   // so that every run leaves every destination complete.
@@ -126,14 +123,14 @@ export async function runSync({
   const toSync = [
     ...selection.toSync,
     ...missing
-      .filter(({ nodeId }) => !selected.has(nodeId) && !caseRenamedIds.has(nodeId))
+      .filter(({ nodeId }) => !selected.has(nodeId))
       .map(({ nodeId }) => componentsByNodeId.get(nodeId) as Component),
   ];
 
   const deletions = previous.filter(({ nodeId }) => !remoteNodeIds.has(nodeId));
   if (toSync.length === 0 && deletions.length === 0) {
     if (syncAll) throw Error('No illustrations found in the source');
-    return { status: 'nothing-to-sync', duplicates, caseRenames };
+    return { status: 'nothing-to-sync', duplicates };
   }
 
   log('Fetching color palette...');
@@ -156,7 +153,7 @@ export async function runSync({
 
   const diff = diffIllustrations({ previous, fetched, remoteNodeIds });
   if (!hasChangesToRecord(diff) && missing.length === 0)
-    return { status: 'no-changes', duplicates, caseRenames };
+    return { status: 'no-changes', duplicates };
 
   // Changed illustrations are written to every sink; unchanged ones only to sinks missing them.
   const missingByNodeId = new Map([...missingSinks].map(([prev, s]) => [prev.nodeId, s]));
@@ -208,5 +205,5 @@ export async function runSync({
     }),
   );
 
-  return { status: 'synced', diff, palette, backfilled, sinkResults, duplicates, caseRenames };
+  return { status: 'synced', diff, palette, backfilled, sinkResults, duplicates };
 }

@@ -73,6 +73,17 @@ describe('writeVersionPlan', () => {
     }
   });
 
+  it('marks a rename that only changes capitalization in the plan', () => {
+    const planPath = writeVersionPlan(
+      report({ changes: changes({ renamed: [{ name: 'qrcode', oldName: 'qrCode' }] }) }),
+      directory,
+      '2026-01-02',
+    );
+    expect(fs.readFileSync(planPath as string, 'utf-8')).toContain(
+      'qrCode → qrcode (capitalization only)',
+    );
+  });
+
   it('writes nothing when no asset changed', () => {
     const unchanged = report({ changes: emptyChanges() });
     expect(writeVersionPlan(unchanged, path.join(directory, 'none'), date)).toBeUndefined();

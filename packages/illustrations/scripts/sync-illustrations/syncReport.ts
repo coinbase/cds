@@ -26,17 +26,6 @@ export const rejectedAssets = (
     });
 };
 
-/** Components whose rename only changes capitalization: left as they were until design confirms. */
-export const caseRenamedAssets = (
-  caseRenames: { component: Component; previousName: string }[],
-): RejectedAsset[] =>
-  caseRenames.map(({ component: { nodeId, type, name, url }, previousName }) => ({
-    name: `${type}/${name}`,
-    nodeId,
-    url,
-    message: `Renamed from "${previousName}" to "${name}", which only changes capitalization and is usually a mistake, so it is left as "${previousName}"; rename it back, or pick a different name, in Figma.`,
-  }));
-
 /** Components dropped because another component already has their `type/name`. */
 export const duplicateAssets = (duplicates: Component[]): RejectedAsset[] =>
   duplicates.map(({ nodeId, type, name, url }) => ({

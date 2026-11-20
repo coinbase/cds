@@ -7,8 +7,6 @@ export type ComponentSelection = {
   toSync: Component[];
   /** Components dropped because another component already claims the same `type/name`. */
   duplicates: Component[];
-  /** Components skipped because a rename only changes the capitalization of the recorded name. */
-  caseRenames: { component: Component; previousName: string }[];
 };
 
 /**
@@ -70,23 +68,11 @@ export function selectComponents({
       illustrationKey(known) !== illustrationKey(component)
     );
   };
-  const caseRenames = kept.flatMap((component) => {
-    const known = previousByNodeId.get(component.nodeId);
-    const isCaseOnlyRename =
-      known &&
-      known.type === component.type &&
-      known.name !== component.name &&
-      known.name.toLowerCase() === component.name.toLowerCase();
-    return isCaseOnlyRename ? [{ component, previousName: known.name }] : [];
-  });
-  const skipped = new Set(caseRenames.map(({ component }) => component.nodeId));
-  const candidates = kept.filter(({ nodeId }) => !skipped.has(nodeId));
-  const toSync = syncAll ? candidates : candidates.filter(isChanged);
+  const toSync = syncAll ? kept : kept.filter(isChanged);
 
   return {
     remoteNodeIds: new Set(kept.map((component) => component.nodeId)),
     toSync,
     duplicates,
-    caseRenames,
   };
 }

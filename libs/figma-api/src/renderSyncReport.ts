@@ -21,6 +21,10 @@ const plain = (text: string) => text.replace(/[`\r\n]+/g, ' ').trim();
 const escapeSlack = (text: string) =>
   plain(text).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
+/** The note that tells a reviewer a rename is only a change of capitalization. */
+const renameLabel = ({ name, oldName }: { name: string; oldName: string }) =>
+  `${oldName} → ${name}${oldName.toLowerCase() === name.toLowerCase() ? ' (capitalization only)' : ''}`;
+
 const countSummary = ({ added, updated, renamed, deleted }: SyncChanges) =>
   `${added.length} new, ${updated.length} updated, ${deleted.length} deleted, ${renamed.length} renamed`;
 
@@ -79,7 +83,7 @@ export const renderVersionPlan = (report: SyncReport, date: string) => {
     ),
     planSection(
       '☠️ Renamed',
-      renamed.map(({ group, name, oldName }) => ({ group, label: `${oldName} → ${name}` })),
+      renamed.map(({ group, name, oldName }) => ({ group, label: renameLabel({ name, oldName }) })),
       groupOrder,
     ),
     planSection(

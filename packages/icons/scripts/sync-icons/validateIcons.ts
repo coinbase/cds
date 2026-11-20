@@ -1,12 +1,6 @@
 const ICON_SET_NAME = /^(ui|nav)\/[^/]+$/;
 
 /** What is wrong with an icon set's name in Figma, or undefined when it is valid. */
-/** A rename that only changes capitalization is usually a mistake, so the icon set stays as it was. */
-export const caseOnlyRenameProblem = (previousName: string, name: string) =>
-  previousName !== name && previousName.toLowerCase() === name.toLowerCase()
-    ? `Renamed from "${previousName}" to "${name}", which only changes capitalization and is usually a mistake, so it is left as "${previousName}". Rename it back, or pick a different name, in Figma.`
-    : undefined;
-
 export const iconSetNameProblem = (figmaName: string) =>
   ICON_SET_NAME.test(figmaName.trim())
     ? undefined

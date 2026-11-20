@@ -43,7 +43,8 @@ const toIllustration = (fetched: FetchedIllustration, version: number, createdAt
  *   different node id is treated as the same illustration (design re-created the node); since the
  *   hash covers the node id this always bumps the version, which keeps the CDN URL fresh.
  * - A changed hash bumps the version, which renames every asset file.
- * - A changed name resets the version to 0; a changed type is a deletion plus an addition.
+ * - A changed name, including one that only changes capitalization, resets the version to 0; a
+ *   changed type is a deletion plus an addition.
  * - Previous entries whose node no longer exists in Figma are deleted.
  */
 export function diffIllustrations({
@@ -89,11 +90,6 @@ export function diffIllustrations({
     }
 
     if (prev.name !== next.name) {
-      if (prev.name.toLowerCase() === next.name.toLowerCase()) {
-        throw new Error(
-          `Renames are case-insensitive: "${prev.name}" -> "${next.name}". Pick a distinct name for ${illustrationKey(next)} in Figma.`,
-        );
-      }
       const illustration = toIllustration(next, 0, prev.createdAt);
       results.renamed.push({ ...illustration, oldName: prev.name });
       removals.push(prev);
