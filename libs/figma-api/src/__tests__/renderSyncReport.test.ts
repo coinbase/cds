@@ -356,6 +356,12 @@ describe('renderSummary', () => {
   };
   const pushed = { ...run, pushed: true, branch: 'icons/2026-11-19', compareUrl };
 
+  it('says no asset changed when a branch only records Figma dates or generated files', () => {
+    const { text } = renderSummary(report({ changes: emptyChanges() }), pushed);
+    expect(text).toContain('no asset changed, only recorded Figma dates or generated files');
+    expect(text).not.toContain('0 new');
+  });
+
   it('names the branch, counts new, updated, deleted and renamed, and links to open the pull request', () => {
     const { text } = renderSummary(report(), pushed);
     expect(text).toContain(

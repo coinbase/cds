@@ -25,8 +25,12 @@ const escapeSlack = (text: string) =>
 const renameLabel = ({ name, oldName }: { name: string; oldName: string }) =>
   `${oldName} → ${name}${oldName.toLowerCase() === name.toLowerCase() ? ' (capitalization only)' : ''}`;
 
-const countSummary = ({ added, updated, renamed, deleted }: SyncChanges) =>
-  `${added.length} new, ${updated.length} updated, ${deleted.length} deleted, ${renamed.length} renamed`;
+const countSummary = (changes: SyncChanges) => {
+  const { added, updated, renamed, deleted } = changes;
+  return hasChanges(changes)
+    ? `${added.length} new, ${updated.length} updated, ${deleted.length} deleted, ${renamed.length} renamed`
+    : 'no asset changed, only recorded Figma dates or generated files';
+};
 
 type Entry = { group?: string; label: string };
 
