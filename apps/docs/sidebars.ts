@@ -611,6 +611,11 @@ const sidebars: SidebarsConfig = {
             { type: 'doc', id: 'components/navigation/Tabs/tabs', label: 'Tabs' },
             {
               type: 'doc',
+              id: 'components/navigation/TabsScrollArea/tabsScrollArea',
+              label: 'TabsScrollArea',
+            },
+            {
+              type: 'doc',
               id: 'components/navigation/Coachmark/coachmark',
               label: 'Coachmark',
             },

@@ -7,3 +7,5 @@ export * from './TabIndicator';
 export * from './TabLabel';
 export * from './TabNavigation';
 export * from './Tabs';
+export * from './TabsScrollArea';
+export * from './TabsScrollAreaOverflowIndicator';

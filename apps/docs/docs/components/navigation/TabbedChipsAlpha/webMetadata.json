@@ -23,6 +23,10 @@
       "url": "/components/navigation/Tabs/"
     },
     {
+      "label": "TabsScrollArea",
+      "url": "/components/navigation/TabsScrollArea/"
+    },
+    {
       "label": "SelectChip",
       "url": "/components/inputs/SelectChip/"
     }

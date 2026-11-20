@@ -1,0 +1,15 @@
+{
+  "import": "import { TabsScrollArea } from '@coinbase/cds-mobile/tabs'",
+  "source": "https://github.com/coinbase/cds/blob/master/packages/mobile/src/tabs/TabsScrollArea.tsx",
+  "description": "Horizontal scroll container for tab rows on React Native, with edge overflow gradients and automatic scroll-into-view for the active tab.",
+  "relatedComponents": [
+    {
+      "label": "Tabs",
+      "url": "/components/navigation/Tabs/"
+    },
+    {
+      "label": "TabbedChips (Alpha)",
+      "url": "/components/navigation/TabbedChipsAlpha/"
+    }
+  ]
+}
