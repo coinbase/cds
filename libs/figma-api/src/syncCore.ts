@@ -15,7 +15,7 @@ export const dedupeByIdentity = <T>(
   prefer: (existing: T, candidate: T) => T,
 ) => {
   const kept = new Map<string, T>();
-  const droppedItems: T[] = [];
+  const droppedItems: { item: T; key: string }[] = [];
 
   for (const item of items) {
     const key = identity(item);
@@ -26,13 +26,13 @@ export const dedupeByIdentity = <T>(
     }
     const winner = prefer(existing, item);
     kept.set(key, winner);
-    droppedItems.push(winner === existing ? item : existing);
+    droppedItems.push({ item: winner === existing ? item : existing, key });
   }
 
-  const dropped = droppedItems.map((item) => ({
-    item,
-    keptBy: kept.get(identity(item)) as T,
-  }));
+  const dropped = droppedItems.flatMap(({ item, key }) => {
+    const keptBy = kept.get(key);
+    return keptBy === undefined ? [] : [{ item, keptBy }];
+  });
   return { kept, dropped };
 };
 
