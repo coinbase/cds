@@ -29,13 +29,21 @@ export const useSort = <T>({ data, sortBy, sortDirection }: UseSortParams<T>) =>
   return useMemo(() => {
     // Spread to avoid overwriting in place
     return [...data].sort((a, b) => {
+      const aValue = sortBy ? get(a, sortBy) : a;
+      const bValue = sortBy ? get(b, sortBy) : b;
+
+      // Array.prototype.sort requires 0 for equal values. Returning 1 in both
+      // directions makes the comparator inconsistent, which leaves the order of
+      // tied rows implementation-defined and breaks the stable-sort guarantee.
+      if (aValue === bValue) return 0;
+
       // Descending
       if (sortDirection === 'descending') {
-        return (sortBy ? get(a, sortBy) : a) > (sortBy ? get(b, sortBy) : b) ? -1 : 1;
+        return aValue > bValue ? -1 : 1;
       }
 
       // Ascending (Default)
-      return (sortBy ? get(b, sortBy) : b) > (sortBy ? get(a, sortBy) : a) ? -1 : 1;
+      return aValue < bValue ? -1 : 1;
     });
   }, [data, sortDirection, sortBy]);
 };
