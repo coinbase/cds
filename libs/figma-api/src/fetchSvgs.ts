@@ -24,7 +24,7 @@ async function fetchSvgUrls(fileId: string, nodeIds: readonly string[]) {
 
 /**
  * Exports and downloads the raw SVG of every node, returning them keyed by node id. `onProgress` is
- * called after each download so the caller can report on long runs. Every sync uses this one.
+ * called after each download so the caller can report on long runs.
  */
 export async function fetchSvgs(
   fileId: string,
