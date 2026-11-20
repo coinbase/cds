@@ -30,8 +30,6 @@ export type LottiePlayerMobile<Source extends LottieSource = LottieSource> = {
   };
 } & LottiePlayer<Source>;
 
-const noop = () => {};
-
 export const createLottie = <Source extends LottieSource>(
   source: Source,
   progressOverride?: Animated.Value,
@@ -104,9 +102,9 @@ export const createLottie = <Source extends LottieSource>(
   return {
     play,
     playMarkers,
-    pause: lottieRef.current?.pause ?? noop,
-    resume: lottieRef.current?.resume ?? noop,
-    reset: lottieRef.current?.reset ?? noop,
+    pause: () => lottieRef.current?.pause(),
+    resume: () => lottieRef.current?.resume(),
+    reset: () => lottieRef.current?.reset(),
     progress: {
       value: progress,
       timing: setProgressTiming,
