@@ -19,7 +19,7 @@ import { webfont } from 'webfont';
 import { syncIconCodeConnect } from '../sync-icon-code-connect/index';
 
 import type { SetNode } from './source/IconSource';
-import { config } from './config';
+import { config, FIGMA_FILE_ID } from './config';
 import { getDescriptionMap } from './getDescriptionMap';
 import { iconPropsProblem, iconSetNameProblem } from './profile';
 import { selectIconSetsToFetch } from './select';
@@ -49,11 +49,11 @@ const reject = ({
   rejected.push({
     name,
     nodeId,
-    url: figmaNodeUrl(config.figmaFileId, nodeId),
+    url: figmaNodeUrl(FIGMA_FILE_ID, nodeId),
     message,
     category,
     ...(duplicateNodeId
-      ? { duplicateOf: { url: figmaNodeUrl(config.figmaFileId, duplicateNodeId) } }
+      ? { duplicateOf: { url: figmaNodeUrl(FIGMA_FILE_ID, duplicateNodeId) } }
       : {}),
   });
 };
