@@ -29,26 +29,40 @@ describe('selectComponents', () => {
     const { toSync, remoteNodeIds } = selectComponents({
       components,
       previous: [],
-      lastUpdated: '',
       syncAll: false,
     });
     expect(toSync.length).toBe(remoteNodeIds.size);
   });
 
-  it('only syncs components updated after the last sync', () => {
-    const lastUpdated = '2026-01-01T00:00:00.000Z';
-    const { toSync } = selectComponents({ components, previous: [], lastUpdated, syncAll: false });
+  it('only syncs components that are new or whose updatedAt differs from the manifest', () => {
+    const [unchanged, changed, added] = components;
+    const { toSync } = selectComponents({
+      components: [unchanged, changed, added],
+      previous: [previousFrom(unchanged), { ...previousFrom(changed), lastUpdated: '2020-01-01' }],
+      syncAll: false,
+    });
 
-    expect(toSync.length).toBeGreaterThan(0);
-    expect(toSync.every(({ updatedAt }) => updatedAt > lastUpdated)).toBe(true);
-    expect(toSync.map(({ name }) => name)).not.toContain('baseErrorMedium');
+    expect(toSync.map(({ nodeId }) => nodeId)).toEqual([changed.nodeId, added.nodeId]);
   });
 
-  it('syncs everything regardless of dates when syncAll is set', () => {
+  it('does not depend on the order or the age of the updates', () => {
+    const [older, newer] = [...components].sort((a, b) => a.updatedAt.localeCompare(b.updatedAt));
+    const { toSync } = selectComponents({
+      components: [older, newer],
+      previous: [
+        { ...previousFrom(older), lastUpdated: '2099-01-01' },
+        { ...previousFrom(newer), lastUpdated: '2099-01-01' },
+      ],
+      syncAll: false,
+    });
+
+    expect(toSync).toHaveLength(2);
+  });
+
+  it('syncs everything even when the manifest is up to date when syncAll is set', () => {
     const { toSync, remoteNodeIds } = selectComponents({
       components,
-      previous: [],
-      lastUpdated: '2099-01-01T00:00:00.000Z',
+      previous: components.map(previousFrom),
       syncAll: true,
     });
     expect(toSync.length).toBe(remoteNodeIds.size);
@@ -65,7 +79,6 @@ describe('selectComponents', () => {
       const { toSync, duplicates, remoteNodeIds } = selectComponents({
         components,
         previous: [],
-        lastUpdated: '',
         syncAll: false,
       });
       const [older, newer] = [...futures()].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
@@ -79,8 +92,7 @@ describe('selectComponents', () => {
       const [, newer] = [...futures()].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
       const { toSync, duplicates } = selectComponents({
         components,
-        previous: [previousFrom(newer)],
-        lastUpdated: '',
+        previous: [{ ...previousFrom(newer), lastUpdated: '2020-01-01' }],
         syncAll: false,
       });
 

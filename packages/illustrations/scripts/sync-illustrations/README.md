@@ -162,7 +162,7 @@ mutation. The source returns _raw_ exports so that optimization is covered by th
 runSync({ source, manifest, sinks, syncAll, dryRun, allOrNothing, log }): Promise<SyncOutcome>
 
 type SyncOutcome = { duplicates: Component[] } & (
-  | { status: 'nothing-to-sync' } // no component updated since manifest.lastUpdated, nothing missing
+  | { status: 'nothing-to-sync' } // every component matches its manifest entry, nothing missing
   | { status: 'no-changes' } // downloaded, but every hash and description matched
   | {
       status: 'synced';
@@ -247,8 +247,9 @@ versions at once, invalidating every CDN URL.
 ## Incremental sync (`selectComponents`)
 
 Figma's `/components` endpoint returns every published component with its `updated_at` in one cheap
-call. The sync downloads only components updated after `manifest.lastUpdated`, so a normal run
-touches a handful of SVGs. `--sync-all` downloads everything and is how pipeline changes (a new svgo
+call. The sync downloads only components that are new or whose `updated_at` differs from the `lastUpdated`
+the manifest recorded for that component, so a normal run touches a handful of SVGs. Each component
+is compared with its own record, so no run depends on the clock or on the previous run having finished. `--sync-all` downloads everything and is how pipeline changes (a new svgo
 setting, a palette change) are applied across the whole set.
 
 The same step drops **duplicate `type/name`** components, which the real file does contain. It keeps

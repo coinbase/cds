@@ -102,7 +102,6 @@ export async function runSync({
   const selection = selectComponents({
     components,
     previous,
-    lastUpdated: manifest.lastUpdated,
     syncAll,
   });
   const { remoteNodeIds, duplicates } = selection;

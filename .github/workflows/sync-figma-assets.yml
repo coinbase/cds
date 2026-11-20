@@ -17,7 +17,8 @@ name: Sync Figma Assets
 #   secrets.FIGMA_ACCESS_TOKEN              Figma token.
 #   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL    Slack webhook, falling back to secrets.SLACK_WEBHOOK_URL.
 #                                           With neither set, Slack is skipped.
-#   vars.FIGMA_SYNC_SCHEDULE_ENABLED        'true' turns on the weekday schedule.
+#   vars.FIGMA_SYNC_SCHEDULE_ENABLED        'true' turns on the weekday schedule (a full
+#                                           comparison on Mondays, new or changed assets after).
 
 on:
   workflow_dispatch:
@@ -31,11 +32,12 @@ on:
           - illustrations
         default: all
       sync-all:
-        description: Compare every asset. Turn off to compare only those changed since the last sync, which can miss changes
+        description: Compare every asset, not only new or changed ones
         type: boolean
-        default: true
+        default: false
   schedule:
-    - cron: '0 14 * * 1-5'
+    - cron: '0 14 * * 1'
+    - cron: '0 14 * * 2-5'
 
 concurrency:
   group: sync-figma-assets
@@ -117,8 +119,8 @@ jobs:
         continue-on-error: true
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
-          # Scheduled runs have no inputs and always compare every asset.
-          SYNC_ALL: ${{ github.event_name == 'schedule' || inputs.sync-all }}
+          # The Monday schedule compares every asset; the other days compare new or changed ones.
+          SYNC_ALL: ${{ github.event.schedule == '0 14 * * 1' || inputs.sync-all }}
           TARGET: ${{ matrix.target }}
         run: |
           set -o pipefail

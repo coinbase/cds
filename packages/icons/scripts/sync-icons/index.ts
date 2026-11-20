@@ -194,7 +194,7 @@ const main = async () => {
   console.log('Fetching file data from Figma...');
   const syncedLibrary = await fetchIconLibrary({
     fileId: config.figmaFileId,
-    lastUpdated: doSyncAll ? undefined : oldManifest.lastUpdated,
+    knownIconSets: doSyncAll ? undefined : oldManifest.iconSets,
   });
 
   const numberOfNodes = Object.values(syncedLibrary.nodes).length;
@@ -320,6 +320,8 @@ const main = async () => {
 
     const hasNameChanged = iconSetNameHash !== oldIconSet?.nameHash;
     const hasAssetsChanged = iconSetAssetsHash !== oldIconSet?.assetsHash;
+    const hasDescriptionChanged =
+      oldIconSet !== undefined && oldIconSet.description !== description;
 
     // Build the icon set data to be persisted in the manifest
     const iconSet: ManifestIconSet = {
@@ -375,7 +377,15 @@ const main = async () => {
       newManifest.iconSets.push(iconSet);
       if (hasNameChanged)
         syncResults.renamedIconSets.push({ ...iconSet, oldName: oldIconSet.name });
-      if (hasAssetsChanged) syncResults.updatedIconSets.push(iconSet);
+      if (hasAssetsChanged || hasDescriptionChanged) syncResults.updatedIconSets.push(iconSet);
+    }
+
+    // Same name and assets: record Figma's new update date and description, so the icon set is not
+    // downloaded again on every run, and report a description-only change as an update.
+    if (oldIconSet && !hasNameChanged && !hasAssetsChanged) {
+      newManifest.iconSets = newManifest.iconSets.filter((iconSet) => iconSet.nodeId !== nodeId);
+      newManifest.iconSets.push(iconSet);
+      if (hasDescriptionChanged) syncResults.updatedIconSets.push(iconSet);
     }
   }
 
@@ -527,8 +537,8 @@ export const descriptionMap: Record<string, IconName[]> = ${descriptionMapConten
   fs.writeFileSync(path.join(config.outputDataPath, 'descriptionMap.ts'), descriptionsDataContent);
 
   console.log('Updating manifest...');
-  // Rejected icon sets are fetched again next run, so they are reported until designers fix them
-  newManifest.lastUpdated = rejected.length ? oldManifest.lastUpdated : new Date().toISOString();
+  // Rejected icon sets are not in the manifest, so they are fetched and reported until designers fix them
+  newManifest.lastUpdated = new Date().toISOString();
   fs.writeFileSync(config.manifestPath, JSON.stringify(newManifest, null, 2));
 
   console.log('\n\nChange summary:');
