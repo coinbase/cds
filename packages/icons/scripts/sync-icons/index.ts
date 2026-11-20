@@ -2,6 +2,7 @@ import { downloadSvgImage } from '@cds/figma-api';
 import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
 import {
   figmaNodeUrl,
+  hasChanges,
   isBreaking,
   type RejectedAsset,
   type RejectedCategory,
@@ -32,13 +33,20 @@ const doSyncAll = config.syncAll || syncAll;
 
 /** Icon sets the sync skipped because designers need to fix them in Figma. */
 const rejected: RejectedAsset[] = [];
-const reject = (
-  name: string,
-  nodeId: string,
-  message: string,
-  category: RejectedCategory,
-  duplicateNodeId?: string,
-) => {
+const reject = ({
+  name,
+  nodeId,
+  message,
+  category,
+  duplicateNodeId,
+}: {
+  name: string;
+  nodeId: string;
+  message: string;
+  category: RejectedCategory;
+  /** For a name clash: the node it clashes with. */
+  duplicateNodeId?: string;
+}) => {
   console.warn(`  [REJECTED] ${message}`);
   rejected.push({
     name,
@@ -160,6 +168,13 @@ type Manifest = {
   iconSets: ManifestIconSet[];
 };
 
+const toChanges = (results?: IconSyncResults): SyncChanges => ({
+  added: results?.newIconSets.map(({ name }) => ({ name })) ?? [],
+  updated: results?.updatedIconSets.map(({ name }) => ({ name })) ?? [],
+  renamed: results?.renamedIconSets.map(({ name, oldName }) => ({ name, oldName })) ?? [],
+  deleted: results?.deletedIconSets.map(({ name }) => ({ name })) ?? [],
+});
+
 const emptyManifest: Manifest = { lastUpdated: '', lastUnicode: firstAllowedUnicode, iconSets: [] };
 
 const main = async () => {
@@ -178,12 +193,7 @@ const main = async () => {
     fs.writeFileSync(config.manifestPath, JSON.stringify(emptyManifest));
 
   const report = (results?: IconSyncResults) => {
-    const changes: SyncChanges = {
-      added: results?.newIconSets.map(({ name }) => ({ name })) ?? [],
-      updated: results?.updatedIconSets.map(({ name }) => ({ name })) ?? [],
-      renamed: results?.renamedIconSets.map(({ name, oldName }) => ({ name, oldName })) ?? [],
-      deleted: results?.deletedIconSets.map(({ name }) => ({ name })) ?? [],
-    };
+    const changes = toChanges(results);
     const syncReport: SyncReport = {
       target: 'icons',
       bump: isBreaking(changes) ? 'major' : 'minor',
@@ -255,7 +265,12 @@ const main = async () => {
     const nodeId = iconSetNode.document.id;
     const setNameProblem = iconSetNameProblem(iconSetNode.document.name);
     if (setNameProblem) {
-      reject(iconSetNode.document.name, nodeId, setNameProblem, 'invalid-name');
+      reject({
+        name: iconSetNode.document.name,
+        nodeId,
+        message: setNameProblem,
+        category: 'invalid-name',
+      });
       continue;
     }
     const iconName = (iconSetNode.document.name as FigmaIconNodeName).split('/')[1].trim();
@@ -272,15 +287,16 @@ const main = async () => {
 
     if (duplicateIconSet) {
       console.log(`  [DUPLICATE] Icon set is a duplicate, skipping...`);
-      reject(
-        iconName,
+      reject({
+        name: iconName,
         nodeId,
-        duplicateIconSet.name === iconName
-          ? `Icon set "${iconSetNode.document.name}" is skipped because the Figma file has two icon sets with the icon name "${iconName}" (the part after "ui/" or "nav/"). Rename one of them.`
-          : `Icon set "${iconSetNode.document.name}" is skipped because its icon name "${iconName}" differs only in capitalization from "${duplicateIconSet.name}" in another icon set of the Figma file. Rename one of them.`,
-        'duplicate-name',
-        duplicateIconSet.nodeId,
-      );
+        message:
+          duplicateIconSet.name === iconName
+            ? `Icon set "${iconSetNode.document.name}" is skipped because the Figma file has two icon sets with the icon name "${iconName}" (the part after "ui/" or "nav/"). Rename one of them.`
+            : `Icon set "${iconSetNode.document.name}" is skipped because its icon name "${iconName}" differs only in capitalization from "${duplicateIconSet.name}" in another icon set of the Figma file. Rename one of them.`,
+        category: 'duplicate-name',
+        duplicateNodeId: duplicateIconSet.nodeId,
+      });
       continue;
     }
 
@@ -292,7 +308,7 @@ const main = async () => {
     });
     if (propsProblems.length > 0) {
       for (const { componentId, message } of propsProblems) {
-        reject(iconName, componentId, message, 'invalid-variant');
+        reject({ name: iconName, nodeId: componentId, message, category: 'invalid-variant' });
       }
       continue;
     }
@@ -562,13 +578,9 @@ export const descriptionMap: Record<string, IconName[]> = ${descriptionMapConten
   // Rejected icon sets are not in the manifest, so they are fetched and reported until designers fix them
   // The date moves only when icon sets changed, so a run that finds nothing leaves manifest.json
   // as it was and the workflow has nothing to push.
-  const iconSetsChanged =
-    syncResults.newIconSets.length +
-      syncResults.updatedIconSets.length +
-      syncResults.renamedIconSets.length +
-      syncResults.deletedIconSets.length >
-    0;
-  newManifest.lastUpdated = iconSetsChanged ? new Date().toISOString() : oldManifest.lastUpdated;
+  newManifest.lastUpdated = hasChanges(toChanges(syncResults))
+    ? new Date().toISOString()
+    : oldManifest.lastUpdated;
   fs.writeFileSync(config.manifestPath, JSON.stringify(newManifest, null, 2));
 
   console.log('\n\nChange summary:');

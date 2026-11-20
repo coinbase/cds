@@ -267,7 +267,7 @@ describe('renderPullRequestBody', () => {
   it('lists rejected assets with their Figma links', () => {
     const body = renderPullRequestBody(report({ rejected }));
     expect(body).toContain('Skipped, needs a fix in Figma');
-    expect(body).toContain('[Figma](https://www.figma.com/design/FILE?node-id=1-2)');
+    expect(body).toContain('[Open in Figma](https://www.figma.com/design/FILE?node-id=1-2)');
     expect(renderPullRequestBody(report())).not.toContain('Skipped');
   });
 
@@ -286,7 +286,7 @@ describe('renderRejections', () => {
     expect(list).toBe(
       [
         '**Invalid variants (1)**: a variant is missing or has a wrong property; fix it.',
-        `- \`a b c\`: line one line two ([Figma](${rejected[0].url}))`,
+        `- \`a b c\`: line one line two ([Open in Figma](${rejected[0].url}))`,
       ].join('\n'),
     );
   });
