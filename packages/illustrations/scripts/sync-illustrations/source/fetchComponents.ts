@@ -1,14 +1,11 @@
 import { getFileComponents } from '@cds/figma-api';
+import { figmaNodeUrl } from '@cds/figma-api/syncReport';
 import type { PublishedComponent } from '@figma/rest-api-spec';
 
 import type { Component } from '../illustration';
 import { parseComponentName } from '../parseComponentName';
 
 import type { ComponentListing, InvalidComponent } from './IllustrationSource';
-
-/** The URL Figma itself uses to link to a node: the node id with `:` replaced by `-`. */
-export const figmaNodeUrl = (fileKey: string, nodeId: string) =>
-  `https://www.figma.com/design/${fileKey}?node-id=${nodeId.replace(':', '-')}`;
 
 /** Maps a component as the Figma REST API reports it to the sync's own record. */
 export const toComponent = (component: PublishedComponent): Component => ({

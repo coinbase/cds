@@ -1,5 +1,6 @@
 import { getFileComponentSets, getFileImages, getFileNodes } from '@cds/figma-api';
 import { selectChanged } from '@cds/figma-api/syncCore';
+import { createBatches } from '@cds/figma-api/syncUtils';
 
 // Derive types from the API functions being called
 type FileNodesResponse = Awaited<ReturnType<typeof getFileNodes>>;
@@ -153,15 +154,4 @@ export function selectIconSetsToFetch(
       known.description !== componentSet.description ||
       known.name !== iconNameOf(componentSet.name),
   }).map((componentSet) => componentSet.node_id);
-}
-
-/**
- * Splits an array into batches of the specified size.
- */
-function createBatches<T>(items: T[], batchSize: number): T[][] {
-  const batches: T[][] = [];
-  for (let i = 0; i < items.length; i += batchSize) {
-    batches.push(items.slice(i, i + batchSize));
-  }
-  return batches;
 }

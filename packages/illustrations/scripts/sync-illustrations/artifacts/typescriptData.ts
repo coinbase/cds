@@ -1,4 +1,6 @@
-import { byCreatedAt, type Illustration } from '../illustration';
+import { sortByCreatedAt } from '@cds/figma-api/syncUtils';
+
+import type { Illustration } from '../illustration';
 
 import { arrayLiteral, objectLiteral, stringLiteral, stringUnionType } from './source';
 
@@ -81,7 +83,7 @@ export const renderDescriptionMap = (
  * The search query filters the shown illustrations based on matches with name or description.
  */
 ${objectLiteral(
-  Object.entries(buildDescriptionMap([...illustrations].sort(byCreatedAt))).map(
+  Object.entries(buildDescriptionMap([...illustrations].sort(sortByCreatedAt))).map(
     ([keyword, names]) => [keyword, (layout) => arrayLiteral(names.map(stringLiteral), layout)],
   ),
   { prefix: 'const descriptionMap: Record<string, string[]> = ', suffix: ';' },
@@ -110,7 +112,7 @@ import type { ${nameTypeOf(type)} } from '${nameTypeImport}';
  */
 ${objectLiteral(
   [...illustrations]
-    .sort(byCreatedAt)
+    .sort(sortByCreatedAt)
     .map(({ name, version }): [string, string] => [name, String(version)]),
   { prefix: `const versionMap: Record<${nameTypeOf(type)}, number> = `, suffix: ';' },
 )}

@@ -1,3 +1,4 @@
+import { figmaNodeUrl } from '@cds/figma-api/syncReport';
 import path from 'node:path';
 
 import { AndroidVectorDrawableSink } from './sinks/AndroidVectorDrawableSink';
@@ -5,7 +6,6 @@ import { IllustrationsPackageSink } from './sinks/IllustrationsPackageSink';
 import { IosAssetCatalogSink } from './sinks/IosAssetCatalogSink';
 import type { Sink } from './sinks/Sink';
 import { WebStoriesSink } from './sinks/WebStoriesSink';
-import { figmaNodeUrl } from './source/fetchComponents';
 import { FigmaSource } from './source/FigmaSource';
 import type { IllustrationSource } from './source/IllustrationSource';
 import type { Illustration } from './illustration';
