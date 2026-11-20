@@ -4,6 +4,10 @@ name: Sync Figma Assets
 # an engineer to run the sync by hand. An engineer still opens and reviews every PR, does the manual
 # visreg check and merges it; nothing is merged automatically.
 #
+# The sync scripts only write files and a report (SYNC_REPORT_PATH). This workflow does the rest: it
+# commits the changes on a `<target>/YYYY-MM-DD` branch, writes the version plan from the report,
+# pushes, and notifies. Merge the PR with a squash: the workflow's commits are not signed.
+#
 # A sync without renamed or deleted assets is also released: the workflow applies the version plan
 # (`yarn release`) on the same branch, so merging the PR publishes the package. A breaking sync keeps
 # only the version plan, because it needs a migration guide and a migrator before it can be released.
@@ -70,8 +74,16 @@ jobs:
         with:
           egress-policy: audit
 
-      - name: Set the sync report path
-        run: echo "SYNC_REPORT_PATH=${RUNNER_TEMP}/sync-report.json" >> "${GITHUB_ENV}"
+      - name: Set the sync report path, date and branch
+        env:
+          TARGET: ${{ matrix.target }}
+        run: |
+          date=$(date -u +%F)
+          {
+            echo "SYNC_REPORT_PATH=${RUNNER_TEMP}/sync-report.json"
+            echo "SYNC_DATE=${date}"
+            echo "SYNC_BRANCH=${TARGET}/${date}"
+          } >> "${GITHUB_ENV}"
 
       - name: Checkout
         uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
@@ -130,23 +142,44 @@ jobs:
             echo "found=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          branch=$(jq -r '.branch' "${SYNC_REPORT_PATH}")
-          rejected=$(jq '.rejected | length' "${SYNC_REPORT_PATH}")
-          pushed=false
-          if git ls-remote --exit-code --heads origin "${branch}" > /dev/null 2>&1; then pushed=true; fi
           {
             echo "found=true"
-            echo "branch=${branch}"
-            echo "pushed=${pushed}"
-            echo "rejected=${rejected}"
-            echo "breaking=$(jq -r '.breaking' "${SYNC_REPORT_PATH}")"
+            echo "rejected=$(jq '.rejected | length' "${SYNC_REPORT_PATH}")"
+            echo "changed=$(jq '[.changes[] | length] | add > 0' "${SYNC_REPORT_PATH}")"
+            echo "breaking=$(jq '(.changes.renamed | length) + (.changes.deleted | length) > 0' "${SYNC_REPORT_PATH}")"
           } >> "$GITHUB_OUTPUT"
+
+      - name: Commit and push the sync branch
+        id: push
+        if: steps.report.outputs.found == 'true'
+        env:
+          TARGET: ${{ matrix.target }}
+          CHANGED: ${{ steps.report.outputs.changed }}
+        run: |
+          git status --short
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            echo "The sync wrote nothing, so there is nothing to push."
+            exit 0
+          fi
+          render="yarn --silent tsx libs/figma-api/src/renderSyncReportCli.ts"
+          git checkout -B "${SYNC_BRANCH}"
+          if [ "${CHANGED}" = "true" ]; then
+            mkdir -p .nx/version-plans
+            ${render} version-plan "${SYNC_REPORT_PATH}" --date "${SYNC_DATE}" > ".nx/version-plans/${TARGET}-${SYNC_DATE}.md"
+          fi
+          git add -A
+          git commit -m "$(${render} commit-title "${SYNC_REPORT_PATH}" --date "${SYNC_DATE}")"
+          # A rerun on the same day replaces the earlier push; the lease needs the remote branch fetched.
+          git fetch origin "+refs/heads/${SYNC_BRANCH}:refs/remotes/origin/${SYNC_BRANCH}" 2> /dev/null || true
+          git push --force-with-lease origin "${SYNC_BRANCH}"
+          echo "pushed=true" >> "$GITHUB_OUTPUT"
 
       - name: Release the package
         id: release
-        if: steps.report.outputs.pushed == 'true' && steps.report.outputs.breaking == 'false'
+        if: steps.push.outputs.pushed == 'true' && steps.report.outputs.changed == 'true' && steps.report.outputs.breaking == 'false'
         env:
-          BRANCH: ${{ steps.report.outputs.branch }}
+          BRANCH: ${{ env.SYNC_BRANCH }}
           TARGET: ${{ matrix.target }}
         run: |
           git checkout -B "${BRANCH}" "origin/${BRANCH}"
@@ -169,20 +202,21 @@ jobs:
 
       - name: Link to open the pull request
         id: compare
-        if: steps.report.outputs.pushed == 'true'
+        if: steps.push.outputs.pushed == 'true'
         env:
-          BRANCH: ${{ steps.report.outputs.branch }}
+          BRANCH: ${{ env.SYNC_BRANCH }}
         run: |
           title=$(git log --reverse --format=%s "origin/master..origin/${BRANCH}" | head -1)
-          url=$(node tools/ci/figmaSyncReport.mjs compare-url "${SYNC_REPORT_PATH}" \
-            --server-url "${GITHUB_SERVER_URL}" --repository "${GITHUB_REPOSITORY}" --title "${title}")
+          url=$(yarn --silent tsx libs/figma-api/src/renderSyncReportCli.ts compare-url "${SYNC_REPORT_PATH}" \
+            --server-url "${GITHUB_SERVER_URL}" --repository "${GITHUB_REPOSITORY}" \
+            --branch "${BRANCH}" --title "${title}")
           echo "url=${url}" >> "$GITHUB_OUTPUT"
 
       - name: Write the job summary
         if: steps.report.outputs.found == 'true'
         env:
           COMPARE_URL: ${{ steps.compare.outputs.url }}
-          PUSHED: ${{ steps.report.outputs.pushed }}
+          PUSHED: ${{ steps.push.outputs.pushed }}
           REJECTED: ${{ steps.report.outputs.rejected }}
           TARGET: ${{ matrix.target }}
         run: |
@@ -196,7 +230,7 @@ jobs:
             if [ "${REJECTED}" != "0" ]; then
               echo
               echo "#### Skipped, needs a fix in Figma"
-              node tools/ci/figmaSyncReport.mjs rejections "${SYNC_REPORT_PATH}"
+              yarn --silent tsx libs/figma-api/src/renderSyncReportCli.ts rejections "${SYNC_REPORT_PATH}"
             fi
           } >> "$GITHUB_STEP_SUMMARY"
           jq -r '.rejected[] | "::warning title=Figma asset skipped::\(.name): \(.message | gsub("[\r\n]+"; " "))"' "${SYNC_REPORT_PATH}"
@@ -216,17 +250,24 @@ jobs:
           SYNC_OUTCOME: ${{ steps.sync.outcome }}
           SKIPPED: ${{ steps.open-pr.outputs.skip }}
           OPEN_PR_URL: ${{ steps.open-pr.outputs.url }}
-          PUSHED: ${{ steps.report.outputs.pushed }}
+          PUSHED: ${{ steps.push.outputs.pushed }}
           COMPARE_URL: ${{ steps.compare.outputs.url }}
-          FAILED_STEP: ${{ steps.release.outcome == 'failure' && 'Release the package' || '' }}
+          FAILED_STEP: ${{ (steps.push.outcome == 'failure' && 'Commit and push the sync branch') || (steps.release.outcome == 'failure' && 'Release the package') || '' }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
         run: |
           if [ -z "${SLACK_WEBHOOK_URL}" ]; then exit 0; fi
-          node tools/ci/figmaSyncReport.mjs summary-slack "${SYNC_REPORT_PATH}" \
-            --target "${TARGET}" --job-status "${JOB_STATUS}" --sync-outcome "${SYNC_OUTCOME}" \
-            --skipped "${SKIPPED}" --open-pull-request-url "${OPEN_PR_URL}" --pushed "${PUSHED}" \
-            --compare-url "${COMPARE_URL}" --failed-step "${FAILED_STEP}" \
-            --log-file "${RUNNER_TEMP}/sync.log" --run-url "${RUN_URL}" > "${RUNNER_TEMP}/summary.json"
+          if [ -x node_modules/.bin/tsx ]; then
+            yarn --silent tsx libs/figma-api/src/renderSyncReportCli.ts summary-slack "${SYNC_REPORT_PATH}" \
+              --target "${TARGET}" --job-status "${JOB_STATUS}" --sync-outcome "${SYNC_OUTCOME}" \
+              --skipped "${SKIPPED}" --open-pull-request-url "${OPEN_PR_URL}" --pushed "${PUSHED}" \
+              --branch "${SYNC_BRANCH}" --compare-url "${COMPARE_URL}" --failed-step "${FAILED_STEP}" \
+              --log-file "${RUNNER_TEMP}/sync.log" --run-url "${RUN_URL}" > "${RUNNER_TEMP}/summary.json"
+          elif [ "${SKIPPED}" = "true" ]; then
+            # A skipped run never installs dependencies, so it cannot render the full message.
+            jq -n --arg text ":information_source: The ${TARGET} Figma sync did not run: a sync pull request is already open (<${OPEN_PR_URL}|open it>)." '{text: $text}' > "${RUNNER_TEMP}/summary.json"
+          else
+            jq -n --arg text ":red_circle: The ${TARGET} Figma sync failed before it could start. Nothing was published. <${RUN_URL}|Sync run>" '{text: $text}' > "${RUNNER_TEMP}/summary.json"
+          fi
           curl --fail --silent --show-error --request POST \
             --header 'Content-type: application/json' \
             --data @"${RUNNER_TEMP}/summary.json" \

@@ -1,4 +1,11 @@
 import { downloadSvgImage } from '@cds/figma-api';
+import {
+  figmaNodeUrl,
+  isBreaking,
+  type RejectedAsset,
+  type SyncChanges,
+  writeSyncReport,
+} from '@cds/figma-api/syncReport';
 import { execSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
@@ -10,20 +17,15 @@ import { syncIconCodeConnect } from '../sync-icon-code-connect/index';
 
 import { config } from './config';
 import { fetchIconLibrary } from './fetchIconLibrary';
-import { generateVersionPlan } from './generateVersionPlan';
 import { getDescriptionMap } from './getDescriptionMap';
-import { commitAndPushChanges, ensureCleanBranch, todaysDate } from './git';
 import { sortByCreatedAt } from './sortByCreatedAt';
 import { stringToObject } from './stringToObject';
 import { svgoConfig } from './svgoConfig';
-import { figmaNodeUrl, type RejectedAsset, writeSyncReport } from './syncReport';
 import { iconPropsProblem, iconSetNameProblem } from './validateIcons';
 
 const args = process.argv.slice(2);
 const syncAll = args.includes('--sync-all');
 const doSyncAll = config.syncAll || syncAll;
-
-let commitMessage = `feat: Publish icons ${todaysDate}`;
 
 /** Icon sets the sync skipped because designers need to fix them in Figma. */
 const rejected: RejectedAsset[] = [];
@@ -151,40 +153,26 @@ const main = async () => {
   if (!fs.existsSync(config.outputDataPath))
     fs.mkdirSync(config.outputDataPath, { recursive: true });
 
-  if (!fs.existsSync(config.versionPlansPath))
-    fs.mkdirSync(config.versionPlansPath, { recursive: true });
-
   if (!fs.existsSync(path.dirname(config.manifestPath)))
     fs.mkdirSync(path.dirname(config.manifestPath), { recursive: true });
 
   if (!fs.existsSync(config.manifestPath))
     fs.writeFileSync(config.manifestPath, JSON.stringify(emptyManifest));
 
-  console.log('Preparing target repo branch...');
-  const { branchName: newBranchName, defaultBranch } = ensureCleanBranch(config.repoRoot);
-
-  const report = (results?: IconSyncResults) =>
+  const report = (results?: IconSyncResults) => {
+    const changes: SyncChanges = {
+      added: results?.newIconSets.map(({ name }) => ({ name })) ?? [],
+      updated: results?.updatedIconSets.map(({ name }) => ({ name })) ?? [],
+      renamed: results?.renamedIconSets.map(({ name, oldName }) => ({ name, oldName })) ?? [],
+      deleted: results?.deletedIconSets.map(({ name }) => ({ name })) ?? [],
+    };
     writeSyncReport(process.env.SYNC_REPORT_PATH, {
       target: 'icons',
-      branch: newBranchName,
-      breaking: (results?.renamedIconSets.length ?? 0) + (results?.deletedIconSets.length ?? 0) > 0,
-      counts: {
-        added: results?.newIconSets.length ?? 0,
-        updated: results?.updatedIconSets.length ?? 0,
-        renamed: results?.renamedIconSets.length ?? 0,
-        deleted: results?.deletedIconSets.length ?? 0,
-      },
+      bump: isBreaking(changes) ? 'major' : 'minor',
+      changes,
       rejected,
     });
-
-  process.on('exit', (code) => {
-    if (code === 0) return;
-    // Clean up the working branch if the icons sync fails
-    console.log('Icons sync failed, deleting working branch...');
-    execSync(`git checkout ${defaultBranch} && git branch -D ${newBranchName}`, {
-      cwd: config.repoRoot,
-    });
-  });
+  };
 
   console.log('Loading manifest file...');
   const oldManifest = JSON.parse(fs.readFileSync(config.manifestPath, 'utf-8')) as Manifest;
@@ -210,7 +198,6 @@ const main = async () => {
   if (numberOfNodes === 0) {
     if (doSyncAll) throw Error('No icon sets found in Figma');
     console.log('Figma file has no updates, skipping icon sync...');
-    commitMessage = 'chore: Sync icon Code Connect entries';
     await syncIconCodeConnect(config.repoRoot);
     report();
     return;
@@ -535,21 +522,6 @@ import type { IconName } from './IconName';\n
 export const descriptionMap: Record<string, IconName[]> = ${descriptionMapContent};\n`;
   fs.writeFileSync(path.join(config.outputDataPath, 'descriptionMap.ts'), descriptionsDataContent);
 
-  const hasChanges =
-    syncResults.newIconSets.length ||
-    syncResults.deletedIconSets.length ||
-    syncResults.renamedIconSets.length ||
-    syncResults.updatedIconSets.length;
-
-  if (!hasChanges) console.log('No changes detected, skipping version plan...');
-  else {
-    console.log('Writing version plan...');
-    fs.writeFileSync(
-      path.join(config.versionPlansPath, `icons-${todaysDate}.md`),
-      generateVersionPlan(syncResults, todaysDate),
-    );
-  }
-
   console.log('Updating manifest...');
   // Rejected icon sets are fetched again next run, so they are reported until designers fix them
   newManifest.lastUpdated = rejected.length ? oldManifest.lastUpdated : new Date().toISOString();
@@ -596,8 +568,6 @@ export const descriptionMap: Record<string, IconName[]> = ${descriptionMapConten
 process.on('exit', (code) => {
   if (code !== 0) return console.log('\n❌ Error: Something went wrong with the icon sync');
   console.log('\n✅ Success: Icon sync completed successfully!');
-  console.log('\nCommitting and pushing changes...\n');
-  commitAndPushChanges(config.repoRoot, commitMessage);
 });
 
 main();

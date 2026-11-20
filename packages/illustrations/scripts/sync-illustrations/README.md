@@ -11,9 +11,9 @@ turns that library into everything the repo derives from it: `packages/illustrat
 (SVG and PNG assets for the CDN, JS modules for web and mobile, and the TypeScript data (`names`,
 `versionMap`, `descriptionMap`, `<Type>Name` unions) the components and the docsite are built on)
 and web's illustration stories and, when a native checkout is configured, the illustration assets
-of the native CDS packages (see _Native sinks_). It also writes an nx version plan so the package is released with
-the right semver bump. It is run by hand with `yarn nx run illustrations:sync-illustrations`, which
-does its work on a fresh `illustrations/YYYY-MM-DD` branch and pushes it (see _The shell_).
+of the native CDS packages (see _Native sinks_). It is run with `yarn nx run illustrations:sync-illustrations`,
+which writes files into the working tree and a report (`SYNC_REPORT_PATH`); the Sync Figma Assets workflow
+turns those into the branch, the version plan, the release and the push (see _The shell_).
 
 Three facts shape the design:
 
@@ -72,19 +72,19 @@ The sync is an **engine between a source and a set of sinks**, wrapped in a shel
 - `artifacts/` are pure helpers sinks build files from: PNG rasterization, module wrappers,
   TypeScript data files, a prettier-style printer, the native SVG preparation and the vector
   drawable converter;
-- `index.ts`, the shell, is the nx target: config, CLI args, writing the manifest and version plan,
-  the summary, and the release branches (`git.ts`).
+- `index.ts`, the shell, is the nx target: config, CLI args, writing the manifest and the report,
+  the summary, and the native checkout's release branch (`git.ts`).
 
 Inside the engine the steps are plain functions over plain data, one module each. The two
 abstractions, source and sink, sit at the two places where the outside world varies.
 
 ```
-index.ts                 shell: CLI args, release branches, version plan, manifest, summary
+index.ts                 shell: CLI args, native release branch, manifest, report, summary
 config.ts                the source, the sinks, paths, flags
 selectSinks.ts           --select-sinks: the interactive choice of sinks for one run
 nativeRepo.ts            native module paths and layout, assertNativeCheckout
 git.ts                   ReleaseBranch: start / publish / abandon illustrations/YYYY-MM-DD,
-                           runOnReleaseBranches: one branch per repository the run writes to
+                           runOnReleaseBranches: the branch of the native checkout the run writes to
 sync.ts                  engine: runSync(source, manifest, sinks) -> SyncOutcome
   selectComponents.ts      dedupe, incremental filter    -> which nodes to download
   optimizeSvg.ts           svgo config, color normalization and check, viewBox size
@@ -93,7 +93,6 @@ sync.ts                  engine: runSync(source, manifest, sinks) -> SyncOutcome
 illustration.ts          the domain records: Component, Illustration, sort orders
 colorPalette.ts          ColorPalette: the colors, recolor(svg, fn), toDarkSvg, toRecord
 manifest.ts              read/write manifest.json
-generateVersionPlan.ts   nx version plan markdown
 mapConcurrently.ts       bounded-concurrency map
 source/
   IllustrationSource.ts    the source contract
@@ -522,8 +521,10 @@ fixed field order, so unrelated edits never reorder the file. Entries hold no fi
 ## The shell (`index.ts`, `git.ts`)
 
 `index.ts` is the only module with side effects on the repository. It reads the manifest, calls
-`runSync`, writes the version plan and the new manifest when the diff has changes, and prints the
-summary. Around that, `ReleaseBranch` (`git.ts`) gives a release its git workflow: `start` requires
+`runSync`, writes the new manifest when the diff has changes, and prints the summary. It writes the
+sync report (`@cds/figma-api/syncReport`) for the workflow, which owns this repository's branch,
+version plan, release and push. For the native checkout, `ReleaseBranch` (`git.ts`) gives a release
+its git workflow: `start` requires
 a clean tree and creates `illustrations/YYYY-MM-DD` from the latest default branch, `publish`
 commits and pushes what the run produced, `abandon` discards the run and deletes the branch. The
 branch is abandoned when the sync throws, when Figma had nothing new, or when nothing changed, so a
@@ -536,13 +537,11 @@ release branch is only started when a native sink is selected. The manifest stil
 so the illustrations a skipped sink missed are backfilled by a later run that includes it. Without
 the flag, every configured sink is written.
 
-With a native checkout configured, the run releases into two repositories: `runOnReleaseBranches`
-starts a `ReleaseBranch` in the native checkout first (so a dirty native tree stops the run before
-this repo is touched), then one here, runs the sync, and publishes or abandons each repository on
-its own. A run that only backfilled the native checkout pushes there and abandons the branch here.
+With a native checkout configured, `runOnReleaseBranches` starts a `ReleaseBranch` there (so a dirty
+native tree stops the run before anything is written), runs the sync, and publishes or abandons it.
 The checkout is validated (`assertNativeCheckout`: a git checkout with both native modules) before
-anything is fetched, with or without git. Pull requests in both repositories are opened by hand;
-`publish` prints each branch and the title to use.
+anything is fetched, with or without git. The pull request there is opened by hand; `publish` prints
+the branch and the title to use.
 
 ### Failures, `--all-or-nothing` and `--dry-run`
 
@@ -560,8 +559,7 @@ file-system error partway through a write; validation, not the file system, is w
 covers.
 
 `--dry-run` runs the same download, conversion and validation, including the Android string limit,
-then writes nothing: no assets, catalogs, manifest or version plan, no deletions, and no release
-branches. It prints what each sink would write, remove and reject, and exits nonzero when anything
+then writes nothing: no assets, catalogs or manifest, no deletions, and no release branch. It prints what each sink would write, remove and reject, and exits nonzero when anything
 would be rejected, so it works as a CI check. It combines with `--all-or-nothing`, which then
 reports the sinks that would publish nothing.
 
@@ -595,7 +593,7 @@ Three layers, none of which mocks a module:
    Assertions cover the files on disk, the generated TypeScript, the returned diff and the
    manifest. This is where the sync's behaviour is specified.
 2. **Pure modules on their own inputs** (`selectComponents`, `diffIllustrations`, the artifact
-   helpers and printer, `generateVersionPlan`, `manifest`, `runOnReleaseBranches` with recording
+   helpers and printer, `manifest`, `runOnReleaseBranches` with recording
    stand-ins for `ReleaseBranch`), including the reconciliation table above case by case. The
    native preparation is tested rewrite by rewrite and rejection by rejection (`nativeSvg.test.ts`),
    the vector drawable converter construct by construct and over every published illustration in

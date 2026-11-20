@@ -1,25 +1,21 @@
-import fs from 'node:fs';
-import path from 'node:path';
+import {
+  isBreaking,
+  type RejectedAsset,
+  type SyncChanges,
+  writeSyncReport,
+} from '@cds/figma-api/syncReport';
 
 import { approximationSummary, notExportableSummary } from './artifacts/nativeSvg';
 import { type Sink } from './sinks/Sink';
 import { config } from './config';
 import { hasChanges, type SyncResults } from './diffIllustrations';
-import { generateVersionPlan } from './generateVersionPlan';
 import { type Release, ReleaseBranch, runOnReleaseBranches } from './git';
 import { type Component, type Illustration, illustrationKey } from './illustration';
 import { readManifest, writeManifest } from './manifest';
 import { assertNativeCheckout } from './nativeRepo';
 import { chooseSinks } from './selectSinks';
 import { runSync, type SinkResult } from './sync';
-import {
-  countChanges,
-  duplicateAssets,
-  isBreaking,
-  type RejectedAsset,
-  rejectedAssets,
-  writeSyncReport,
-} from './syncReport';
+import { duplicateAssets, rejectedAssets } from './syncReport';
 
 const args = process.argv.slice(2);
 const syncAll = config.syncAll || args.includes('--sync-all');
@@ -30,8 +26,10 @@ const useGit = config.git && !args.includes('--no-git') && !dryRun;
 const selectSinks = args.includes('--select-sinks');
 const todaysDate = new Date().toISOString().slice(0, 10);
 /** Only date-derived content: illustration names come from Figma and must never reach the shell. */
-const commitMessage = `feat: Publish illustrations ${todaysDate}`;
 const nativeCommitMessage = `feat: Sync CDS illustrations ${todaysDate}`;
+
+/** The order of illustration types in the changelog; other types follow alphabetically. */
+const changelogTypeOrder = ['pictogram', 'heroSquare', 'spotIcon', 'spotRectangle', 'spotSquare'];
 
 const logTable = (heading: string, illustrations: (Illustration | Component)[]) => {
   console.log(`\n${heading} (${illustrations.length}):`);
@@ -92,9 +90,6 @@ const logSinkResults = (results: SinkResult[]) => {
 
 /** Runs the sync into `sinks` and records it; returns whether anything was produced. */
 const sync = async (sinks: Sink[]) => {
-  if (!dryRun && !fs.existsSync(config.versionPlansPath))
-    fs.mkdirSync(config.versionPlansPath, { recursive: true });
-
   console.log('Loading manifest file...');
   const manifest = readManifest(config.manifestPath);
 
@@ -128,12 +123,6 @@ const sync = async (sinks: Sink[]) => {
   changes = outcome.diff.results;
 
   if (hasChanges(outcome.diff) && !dryRun) {
-    console.log('Writing version plan...');
-    fs.writeFileSync(
-      path.join(config.versionPlansPath, `illustrations-${todaysDate}.md`),
-      generateVersionPlan(outcome.diff.results, todaysDate),
-    );
-
     console.log('Updating manifest...');
     writeManifest(config.manifestPath, {
       illustrations: outcome.diff.illustrations,
@@ -158,10 +147,13 @@ const sync = async (sinks: Sink[]) => {
 };
 
 /**
- * With git, the sync runs on a fresh `illustrations/YYYY-MM-DD` branch in this repo, and in the
- * native checkout when one is configured. Each is pushed when the run changed it and deleted when
- * it did not or the run failed, so a failed run never leaves a half-written tree behind. Pull
- * requests are opened by hand; `publish` prints the branch and the title to use.
+ * The sync writes into this repo's working tree and leaves the branch, the version plan, the
+ * release and the push to the sync workflow (or to whoever runs it by hand, with `git diff`).
+ *
+ * With git, the native checkout runs on a fresh `illustrations/YYYY-MM-DD` branch that is pushed
+ * when the run changed it and deleted when it did not or the run failed, so a failed run never
+ * leaves a half-written tree behind. Pull requests are opened by hand; `publish` prints the branch
+ * and the title to use.
  *
  * `--select-sinks` asks which configured sinks to write to before anything starts; the native
  * checkout is only touched when one of its sinks is selected.
@@ -171,38 +163,35 @@ const main = async () => {
   if (config.nativeRepo) assertNativeCheckout(config.nativeRepo);
   const sinks = selectSinks ? await chooseSinks(config.sinks) : config.sinks;
   const writesNative = sinks.some((sink) => config.nativeSinks.includes(sink));
-  if (!useGit) {
+  if (!useGit || !config.nativeRepo || !writesNative) {
     await sync(sinks);
     return;
   }
 
-  // The native checkout starts first, so a dirty native tree fails before this repo is touched.
-  const releases: Release[] = [
-    ...(config.nativeRepo && writesNative
-      ? [
-          {
-            label: config.nativeRepo,
-            branch: new ReleaseBranch(config.nativeRepo, todaysDate),
-            commitMessage: nativeCommitMessage,
-          },
-        ]
-      : []),
-    {
-      label: config.repoRoot,
-      branch: new ReleaseBranch(config.repoRoot, todaysDate),
-      commitMessage,
-    },
-  ];
-  await runOnReleaseBranches(releases, () => sync(sinks));
+  const release: Release = {
+    label: config.nativeRepo,
+    branch: new ReleaseBranch(config.nativeRepo, todaysDate),
+    commitMessage: nativeCommitMessage,
+  };
+  await runOnReleaseBranches([release], () => sync(sinks));
 };
+
+const toSyncChanges = (results?: SyncResults): SyncChanges => ({
+  added: results?.added.map(({ name, type }) => ({ name, group: type })) ?? [],
+  updated: results?.updated.map(({ name, type }) => ({ name, group: type })) ?? [],
+  renamed:
+    results?.renamed.map(({ name, oldName, type }) => ({ name, oldName, group: type })) ?? [],
+  deleted: results?.deleted.map(({ name, type }) => ({ name, group: type })) ?? [],
+});
 
 main().then(
   () => {
+    const syncChanges = toSyncChanges(changes);
     writeSyncReport(reportPath, {
       target: 'illustrations',
-      branch: `illustrations/${todaysDate}`,
-      breaking: isBreaking(changes),
-      counts: countChanges(changes),
+      bump: isBreaking(syncChanges) ? 'major' : 'minor',
+      groupOrder: changelogTypeOrder,
+      changes: syncChanges,
       rejected,
     });
     if (failedIllustrations.length) {

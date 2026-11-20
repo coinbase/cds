@@ -1,16 +1,6 @@
-import fs from 'node:fs';
-import os from 'node:os';
-import path from 'node:path';
-
 import type { Illustration } from '../illustration';
 import type { SinkResult } from '../sync';
-import {
-  countChanges,
-  duplicateAssets,
-  rejectedAssets,
-  type SyncReport,
-  writeSyncReport,
-} from '../syncReport';
+import { duplicateAssets, rejectedAssets } from '../syncReport';
 
 const illustration = (name: string, nodeId: string): Illustration => ({
   nodeId,
@@ -59,9 +49,13 @@ describe('duplicateAssets', () => {
 
 describe('rejectedAssets', () => {
   it('describes each rejected illustration with its Figma link and reason', () => {
-    const bad = illustration('bad', '1:3');
+    const invalidIllustration = illustration('bad', '1:3');
     const rejected = rejectedAssets(
-      [sinkResult('package', [{ illustration: bad, message: 'uses a color outside the palette' }])],
+      [
+        sinkResult('package', [
+          { illustration: invalidIllustration, message: 'uses a color outside the palette' },
+        ]),
+      ],
       url,
     );
     expect(rejected).toEqual([
@@ -75,8 +69,11 @@ describe('rejectedAssets', () => {
   });
 
   it('lists an illustration once when several sinks reject it for the same reason', () => {
-    const bad = illustration('bad', '1:3');
-    const failure = { illustration: bad, message: 'uses a color outside the palette' };
+    const invalidIllustration = illustration('bad', '1:3');
+    const failure = {
+      illustration: invalidIllustration,
+      message: 'uses a color outside the palette',
+    };
     const rejected = rejectedAssets(
       [sinkResult('ios', [failure]), sinkResult('android', [failure])],
       url,
@@ -85,11 +82,13 @@ describe('rejectedAssets', () => {
   });
 
   it('keeps different reasons for the same illustration', () => {
-    const bad = illustration('bad', '1:3');
+    const invalidIllustration = illustration('bad', '1:3');
     const rejected = rejectedAssets(
       [
-        sinkResult('ios', [{ illustration: bad, message: 'too detailed for iOS' }]),
-        sinkResult('android', [{ illustration: bad, message: 'path data is too large' }]),
+        sinkResult('ios', [{ illustration: invalidIllustration, message: 'too detailed for iOS' }]),
+        sinkResult('android', [
+          { illustration: invalidIllustration, message: 'path data is too large' },
+        ]),
       ],
       url,
     );
@@ -97,41 +96,5 @@ describe('rejectedAssets', () => {
       'too detailed for iOS',
       'path data is too large',
     ]);
-  });
-});
-
-describe('countChanges', () => {
-  it('counts every kind of change and is zero without a diff', () => {
-    expect(countChanges()).toEqual({ added: 0, updated: 0, renamed: 0, deleted: 0 });
-    expect(
-      countChanges({
-        added: [illustration('a', '1:1')],
-        updated: [],
-        renamed: [{ ...illustration('b', '1:2'), oldName: 'old' }],
-        deleted: [illustration('c', '1:3'), illustration('d', '1:4')],
-      }),
-    ).toEqual({ added: 1, updated: 0, renamed: 1, deleted: 2 });
-  });
-});
-
-describe('writeSyncReport', () => {
-  const report: SyncReport = {
-    target: 'illustrations',
-    branch: 'illustrations/2026-11-19',
-    breaking: false,
-    counts: { added: 1, updated: 0, renamed: 0, deleted: 0 },
-    rejected: [],
-  };
-
-  it('writes the report as JSON, creating the directory', () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'sync-report-'));
-    const file = path.join(dir, 'nested', 'report.json');
-    writeSyncReport(file, report);
-    expect(JSON.parse(fs.readFileSync(file, 'utf-8'))).toEqual(report);
-    fs.rmSync(dir, { recursive: true });
-  });
-
-  it('writes nothing without a path', () => {
-    expect(() => writeSyncReport(undefined, report)).not.toThrow();
   });
 });
