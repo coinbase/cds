@@ -20,8 +20,8 @@ type SyncIllustrationsConfig = {
   manifestPath: string;
   /* The destinations synced illustrations are written to. Each sink owns one; see sinks/. */
   sinks: Sink[];
-  /* Whether to force sync all illustrations regardless of when they were last updated. Can also be passed as an argument to the script with --sync-all. */
-  syncAll: boolean;
+  /* Whether to download and compare every illustration regardless of when it was last updated. Can also be passed as an argument to the script with --full-compare. */
+  fullCompare: boolean;
   /* Whether to put the native checkout on a fresh `illustrations/YYYY-MM-DD` branch and push it. This repo's own branch, release and push belong to the sync workflow. Off for scratch runs; `--no-git` turns it off for a run. */
   git: boolean;
   /* Deep link to an illustration's component in Figma, for error messages and the sync report. */
@@ -95,7 +95,7 @@ export const config: SyncIllustrationsConfig = {
     new WebStoriesSink({ dir: WEB_STORIES_DIR }),
     ...nativeSinks,
   ],
-  syncAll: false,
+  fullCompare: false,
   git: !SCRATCH_DIR,
   componentUrl,
   nativeSinks,

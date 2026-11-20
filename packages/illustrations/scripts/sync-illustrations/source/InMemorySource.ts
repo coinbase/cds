@@ -1,7 +1,12 @@
 import { ColorPalette } from '../colorPalette';
 import type { Component } from '../illustration';
 
-import type { IllustrationSource, ProgressCallback } from './IllustrationSource';
+import type {
+  ComponentListing,
+  IllustrationSource,
+  InvalidComponent,
+  ProgressCallback,
+} from './IllustrationSource';
 
 /**
  * A source backed by plain data, for tests: mutate `components` and `svgs` between syncs to
@@ -9,22 +14,26 @@ import type { IllustrationSource, ProgressCallback } from './IllustrationSource'
  */
 export class InMemorySource implements IllustrationSource {
   components: Component[];
+  /** Published components with an unusable name. */
+  invalid: InvalidComponent[];
   /** Raw SVG export per node id. */
   svgs: Record<string, string>;
   palette: ColorPalette;
 
   constructor({
     components = [],
+    invalid = [],
     svgs = {},
     palette = new ColorPalette([]),
-  }: Partial<Pick<InMemorySource, 'components' | 'svgs' | 'palette'>> = {}) {
+  }: Partial<Pick<InMemorySource, 'components' | 'invalid' | 'svgs' | 'palette'>> = {}) {
     this.components = components;
+    this.invalid = invalid;
     this.svgs = svgs;
     this.palette = palette;
   }
 
-  async listComponents() {
-    return [...this.components];
+  async listComponents(): Promise<ComponentListing> {
+    return { components: [...this.components], invalid: [...this.invalid] };
   }
 
   async fetchSvgs(nodeIds: string[], onProgress?: ProgressCallback) {

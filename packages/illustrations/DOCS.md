@@ -32,7 +32,7 @@ This is also why renaming an illustration resets its version to `0`.
 
 ## Syncing Illustrations
 
-The **Sync Figma Assets** workflow runs this sync: from the Actions tab (choose `illustrations`) or on its weekday schedule. The sync only writes the generated files, the version plan and a report; the plan selects `major` when any illustration was renamed or deleted, and `minor` otherwise. The workflow commits them on a new `illustrations/YYYY-MM-DD` branch, releases it with `yarn release --projects=illustrations` unless the sync is breaking, and pushes the branch. The Slack message that ends the run links to the pull request form for that branch, with the title and description filled in. Open it, then review it as described below. Squash-merge it: the workflow's commits are not signed.
+The **Sync Figma Assets** workflow runs this sync: from the Actions tab (choose `illustrations`) or on its weekly schedule (Thursday morning, a full comparison). The sync only writes the generated files, the version plan and a report; the plan selects `major` when any illustration was renamed or deleted, and `minor` otherwise. The workflow commits them on a new `illustrations/YYYY-MM-DD` branch, releases it with `yarn release --projects=illustrations` unless the sync is breaking, and pushes the branch. The Slack message that ends the run links to the pull request form for that branch, with the title and description filled in. Open it, then review it as described below. Squash-merge it: the workflow's commits are not signed.
 
 **IMPORTANT: If any illustrations are renamed or deleted, this is a BREAKING CHANGE. This MUST be published with an accompanying major version bump, migration guide, and a migrator script. The workflow does not release a breaking sync; it keeps the version plan, and you run `yarn release --projects=illustrations` on the branch once the migration guide and migrator are ready.**
 
@@ -116,10 +116,10 @@ Without `SYNC_ILLUSTRATIONS_NATIVE_REPO` the sync behaves exactly as before.
 
 **"Every illustration matches the last sync"** — Every illustration in Figma has the same last-updated date as the manifest records for it. Verify this is expected with design.
 
-**Force a full re-sync** — If you need to re-sync all illustrations regardless of when they were last updated, pass the `--sync-all` flag:
+**Force a full re-sync** — If you need to re-sync all illustrations regardless of when they were last updated, pass the `--full-compare` flag:
 
 ```sh
-yarn nx run illustrations:sync-illustrations --sync-all
+yarn nx run illustrations:sync-illustrations --full-compare
 ```
 
 **Native checkout is not clean** — With `SYNC_ILLUSTRATIONS_NATIVE_REPO` set, the native checkout must have no uncommitted changes, so that the run can create its release branch. Stash or commit them before running.
@@ -152,7 +152,7 @@ assets were written; ask design to fix the rejected illustrations and re-run. Pa
 (files, catalogs and removals); other destinations still publish. The boundary is one destination:
 there is no rollback across destinations or after a file-system error during writing.
 
-**Syncing without the native release branch** — Pass `--no-git` to write into the native checkout's current branch instead of creating and pushing `illustrations/YYYY-MM-DD` there, for example to inspect a `--sync-all` locally. Scratch runs (below) never touch git.
+**Syncing without the native release branch** — Pass `--no-git` to write into the native checkout's current branch instead of creating and pushing `illustrations/YYYY-MM-DD` there, for example to inspect a `--full-compare` locally. Scratch runs (below) never touch git.
 
 **"`<type>/<name>` has an SVG the sync cannot publish"** — A layer uses a color theming cannot
 handle (an alpha hex such as `#0052FF80`, `currentColor`, `rgba()`, `var()`); the message names the

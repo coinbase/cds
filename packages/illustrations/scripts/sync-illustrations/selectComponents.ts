@@ -47,18 +47,18 @@ function dedupeByKey(components: Component[], knownNodeIds: Set<string>) {
 
 /**
  * Decides which Figma components take part in this sync: duplicates are dropped, and unless
- * `syncAll` is set only components that are new, renamed or whose `updatedAt` differs from the one
+ * `fullCompare` is set only components that are new, renamed or whose `updatedAt` differs from the one
  * the manifest recorded for them are downloaded. Each component is compared with its own record, so a
  * missed run, a clock difference or a component that failed earlier never hides a change.
  */
 export function selectComponents({
   components,
   previous,
-  syncAll,
+  fullCompare,
 }: {
   components: Component[];
   previous: Illustration[];
-  syncAll: boolean;
+  fullCompare: boolean;
 }): ComponentSelection {
   const knownNodeIds = new Set(previous.map((illustration) => illustration.nodeId));
   const { kept, duplicates } = dedupeByKey(components, knownNodeIds);
@@ -74,7 +74,7 @@ export function selectComponents({
       illustrationKey(known) !== illustrationKey(component)
     );
   };
-  const toSync = syncAll ? kept : kept.filter(isChanged);
+  const toSync = fullCompare ? kept : kept.filter(isChanged);
 
   return {
     remoteNodeIds: new Set(kept.map((component) => component.nodeId)),

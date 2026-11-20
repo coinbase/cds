@@ -28,8 +28,7 @@ import { svgoConfig } from './svgoConfig';
 import { iconPropsProblem, iconSetNameProblem } from './validateIcons';
 
 const args = process.argv.slice(2);
-const syncAll = args.includes('--sync-all');
-const doSyncAll = config.syncAll || syncAll;
+const fullCompare = config.fullCompare || args.includes('--full-compare');
 
 /** Icon sets the sync skipped because designers need to fix them in Figma. */
 const rejected: RejectedAsset[] = [];
@@ -220,13 +219,13 @@ const main = async () => {
   console.log('Fetching file data from Figma...');
   const syncedLibrary = await fetchIconLibrary({
     fileId: config.figmaFileId,
-    knownIconSets: doSyncAll ? undefined : oldManifest.iconSets,
+    knownIconSets: fullCompare ? undefined : oldManifest.iconSets,
   });
 
   const numberOfNodes = Object.values(syncedLibrary.nodes).length;
 
   if (numberOfNodes === 0) {
-    if (doSyncAll) throw Error('No icon sets found in Figma');
+    if (fullCompare) throw Error('No icon sets found in Figma');
     console.log('Figma file has no updates, skipping icon sync...');
     await syncIconCodeConnect(config.repoRoot);
     report();

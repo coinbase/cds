@@ -17,8 +17,8 @@ name: Sync Figma Assets
 #   secrets.FIGMA_ACCESS_TOKEN              Figma token.
 #   secrets.FIGMA_SYNC_SLACK_WEBHOOK_URL    Slack webhook, falling back to secrets.SLACK_WEBHOOK_URL.
 #                                           With neither set, Slack is skipped.
-#   vars.FIGMA_SYNC_SCHEDULE_ENABLED        'true' turns on the weekday schedule (a full
-#                                           comparison on Mondays, new or changed assets after).
+#   vars.FIGMA_SYNC_SCHEDULE_ENABLED        'true' turns on the weekly schedule (Thursday
+#                                           morning, a full comparison). Other runs are manual.
 
 on:
   workflow_dispatch:
@@ -31,13 +31,12 @@ on:
           - icons
           - illustrations
         default: all
-      sync-all:
+      full-compare:
         description: Compare every asset, not only new or changed ones
         type: boolean
         default: false
   schedule:
-    - cron: '0 14 * * 1'
-    - cron: '0 14 * * 2-5'
+    - cron: '0 14 * * 4'
 
 concurrency:
   group: sync-figma-assets
@@ -120,13 +119,14 @@ jobs:
         continue-on-error: true
         env:
           FIGMA_ACCESS_TOKEN: ${{ secrets.FIGMA_ACCESS_TOKEN }}
-          # The Monday schedule compares every asset; the other days compare new or changed ones.
-          SYNC_ALL: ${{ github.event.schedule == '0 14 * * 1' || inputs.sync-all }}
+          # The weekly schedule compares every asset; a manual run compares new or changed ones unless
+          # full-compare is on.
+          FULL_COMPARE: ${{ github.event_name == 'schedule' || inputs.full-compare }}
           TARGET: ${{ matrix.target }}
         run: |
           set -o pipefail
           args=()
-          if [ "${SYNC_ALL}" = "true" ]; then args+=(--sync-all); fi
+          if [ "${FULL_COMPARE}" = "true" ]; then args+=(--full-compare); fi
           yarn nx run "${TARGET}:sync-${TARGET}" -- "${args[@]}" 2>&1 | tee "${RUNNER_TEMP}/sync.log"
 
       - name: Read the sync report

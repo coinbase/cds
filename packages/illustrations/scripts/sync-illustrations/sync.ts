@@ -1,5 +1,6 @@
 import type { Sink, SinkChanges, SinkFailure } from './sinks/Sink';
-import type { IllustrationSource } from './source/IllustrationSource';
+import type { IllustrationSource, InvalidComponent } from './source/IllustrationSource';
+import type { ColorPalette } from './colorPalette';
 import {
   diffIllustrations,
   type FetchedIllustration,
@@ -7,7 +8,6 @@ import {
   type IllustrationDiff,
 } from './diffIllustrations';
 import { hashSvg } from './hashSvg';
-import type { ColorPalette } from './colorPalette';
 import type { Component, Illustration } from './illustration';
 import { type Manifest, manifestIllustrations } from './manifest';
 import { mapConcurrently } from './mapConcurrently';
@@ -20,7 +20,7 @@ export type SyncOptions = {
   manifest: Manifest;
   sinks: Sink[];
   /** Re-download every component instead of only those updated since `manifest.lastUpdated`. */
-  syncAll?: boolean;
+  fullCompare?: boolean;
   /** Plan and validate every sink exactly as a real run would, but write nothing. */
   dryRun?: boolean;
   /** A sink with any failed illustration publishes nothing, instead of publishing the rest. */
@@ -41,6 +41,8 @@ export type SinkResult = {
 export type SyncOutcome = {
   /** Components dropped because another component already claims the same `type/name`. */
   duplicates: DuplicateComponent[];
+  /** Published components skipped because their name cannot be used; what was published for them stays. */
+  invalid: InvalidComponent[];
 } & (
   | { status: 'nothing-to-sync' }
   | { status: 'no-changes' }
@@ -90,7 +92,7 @@ export async function runSync({
   source,
   manifest,
   sinks,
-  syncAll = false,
+  fullCompare = false,
   dryRun = false,
   allOrNothing = false,
   log = () => undefined,
@@ -98,19 +100,22 @@ export async function runSync({
   const previous = manifestIllustrations(manifest);
 
   log('Fetching component list...');
-  const components = await source.listComponents();
+  const { components, invalid } = await source.listComponents();
   const selection = selectComponents({
     components,
     previous,
-    syncAll,
+    fullCompare,
   });
-  const { remoteNodeIds, duplicates } = selection;
+  const { duplicates } = selection;
+  // A component with an unusable name still exists in Figma: what was published for it stays.
+  const invalidNodeIds = new Set(invalid.map(({ nodeId }) => nodeId));
+  const remoteNodeIds = new Set([...selection.remoteNodeIds, ...invalidNodeIds]);
 
   // Illustrations some sink lacks (a new destination, a wiped directory) are downloaded as well,
   // so that every run leaves every destination complete.
   const missingSinks = new Map<Illustration, Sink[]>();
   await mapConcurrently(
-    previous.filter(({ nodeId }) => remoteNodeIds.has(nodeId)),
+    previous.filter(({ nodeId }) => remoteNodeIds.has(nodeId) && !invalidNodeIds.has(nodeId)),
     concurrentChecks,
     async (illustration) => {
       const sinks_ = await sinksMissing(illustration, sinks);
@@ -129,8 +134,8 @@ export async function runSync({
 
   const deletions = previous.filter(({ nodeId }) => !remoteNodeIds.has(nodeId));
   if (toSync.length === 0 && deletions.length === 0) {
-    if (syncAll) throw Error('No illustrations found in the source');
-    return { status: 'nothing-to-sync', duplicates };
+    if (fullCompare) throw Error('No illustrations found in the source');
+    return { status: 'nothing-to-sync', duplicates, invalid };
   }
 
   log('Fetching color palette...');
@@ -153,7 +158,7 @@ export async function runSync({
 
   const diff = diffIllustrations({ previous, fetched, remoteNodeIds });
   if (!hasChangesToRecord(diff) && missing.length === 0)
-    return { status: 'no-changes', duplicates };
+    return { status: 'no-changes', duplicates, invalid };
 
   // Changed illustrations are written to every sink; unchanged ones only to sinks missing them.
   const missingByNodeId = new Map([...missingSinks].map(([prev, s]) => [prev.nodeId, s]));
@@ -205,5 +210,5 @@ export async function runSync({
     }),
   );
 
-  return { status: 'synced', diff, palette, backfilled, sinkResults, duplicates };
+  return { status: 'synced', diff, palette, backfilled, sinkResults, duplicates, invalid };
 }

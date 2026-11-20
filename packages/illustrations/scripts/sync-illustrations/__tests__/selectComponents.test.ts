@@ -29,7 +29,7 @@ describe('selectComponents', () => {
     const { toSync, remoteNodeIds } = selectComponents({
       components,
       previous: [],
-      syncAll: false,
+      fullCompare: false,
     });
     expect(toSync.length).toBe(remoteNodeIds.size);
   });
@@ -39,7 +39,7 @@ describe('selectComponents', () => {
     const { toSync } = selectComponents({
       components: [unchanged, changed, added],
       previous: [previousFrom(unchanged), { ...previousFrom(changed), lastUpdated: '2020-01-01' }],
-      syncAll: false,
+      fullCompare: false,
     });
 
     expect(toSync.map(({ nodeId }) => nodeId)).toEqual([changed.nodeId, added.nodeId]);
@@ -54,7 +54,7 @@ describe('selectComponents', () => {
         { ...previousFrom(retyped), type: 'oldType' as Illustration['type'] },
         previousFrom(unchanged),
       ],
-      syncAll: false,
+      fullCompare: false,
     });
 
     expect(toSync.map(({ nodeId }) => nodeId)).toEqual([renamed.nodeId, retyped.nodeId]);
@@ -65,7 +65,7 @@ describe('selectComponents', () => {
     const { toSync } = selectComponents({
       components: [{ ...renamed, name: renamed.name.toUpperCase() }],
       previous: [previousFrom(renamed)],
-      syncAll: false,
+      fullCompare: false,
     });
 
     expect(toSync.map(({ nodeId }) => nodeId)).toEqual([renamed.nodeId]);
@@ -79,17 +79,17 @@ describe('selectComponents', () => {
         { ...previousFrom(older), lastUpdated: '2099-01-01' },
         { ...previousFrom(newer), lastUpdated: '2099-01-01' },
       ],
-      syncAll: false,
+      fullCompare: false,
     });
 
     expect(toSync).toHaveLength(2);
   });
 
-  it('syncs everything even when the manifest is up to date when syncAll is set', () => {
+  it('syncs everything even when the manifest is up to date when fullCompare is set', () => {
     const { toSync, remoteNodeIds } = selectComponents({
       components,
       previous: components.map(previousFrom),
-      syncAll: true,
+      fullCompare: true,
     });
     expect(toSync.length).toBe(remoteNodeIds.size);
   });
@@ -105,7 +105,7 @@ describe('selectComponents', () => {
       const { toSync, duplicates, remoteNodeIds } = selectComponents({
         components,
         previous: [],
-        syncAll: false,
+        fullCompare: false,
       });
       const [older, newer] = [...futures()].sort((a, b) => a.createdAt.localeCompare(b.createdAt));
 
@@ -119,7 +119,7 @@ describe('selectComponents', () => {
       const { toSync, duplicates } = selectComponents({
         components,
         previous: [{ ...previousFrom(newer), lastUpdated: '2020-01-01' }],
-        syncAll: false,
+        fullCompare: false,
       });
 
       expect(toSync.filter(({ name }) => name === 'futures')).toEqual([newer]);

@@ -121,7 +121,7 @@ const assetFiles = (baseName: string) =>
     `svgJs/esm/themeable/${baseName}.js`,
   ].sort();
 
-const sync = async (syncAll = false) => {
+const sync = async (fullCompare = false) => {
   const outcome = await runSync({
     source,
     manifest,
@@ -143,7 +143,7 @@ const sync = async (syncAll = false) => {
           ]
         : []),
     ],
-    syncAll,
+    fullCompare,
   });
   if (outcome.status === 'synced') {
     writeManifest(path.join(dir, 'manifest.json'), {
@@ -278,6 +278,23 @@ describe('runSync, end to end against an in-memory source', () => {
     await sync();
   });
 
+  it('skips a component with an unusable name and keeps what was published for it', async () => {
+    const original = source.components;
+    const published = original.find(({ name }) => name === 'leverage') as Component;
+    source.components = original.filter((component) => component !== published);
+    source.invalid = [
+      { nodeId: published.nodeId, name: 'Leverage Chart', url: published.url, message: 'bad name' },
+    ];
+    const outcome = await sync();
+
+    expect(outcome.invalid.map(({ name }) => name)).toEqual(['Leverage Chart']);
+    expect(outcome.status).toBe('nothing-to-sync');
+    expect(entry('leverage')?.nodeId).toBe(published.nodeId);
+
+    source.components = original;
+    source.invalid = [];
+  });
+
   it('continues the version history when design re-creates the node under the same name', async () => {
     const recreated = { ...source.components[0], nodeId: '9000:1', updatedAt: later() };
     source.components[0] = recreated;
@@ -342,7 +359,7 @@ describe('runSync, end to end against an in-memory source', () => {
     expect(manifestIllustrations(manifest).map((item) => item.name)).toEqual(['twoFactor']);
   });
 
-  it('re-downloads everything with syncAll and finds nothing changed', async () => {
+  it('re-downloads everything with fullCompare and finds nothing changed', async () => {
     expect((await sync(true)).status).toBe('no-changes');
   });
 
@@ -368,7 +385,7 @@ describe('runSync, end to end against an in-memory source', () => {
     expect((await sync(true)).status).toBe('no-changes');
   });
 
-  it('repairs a destination whose files were deleted, including under syncAll', async () => {
+  it('repairs a destination whose files were deleted, including under fullCompare', async () => {
     fs.rmSync(path.join(dir, 'spotIcon/svgJs'), { recursive: true });
     const outcome = await sync(true);
 
