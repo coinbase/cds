@@ -1,6 +1,6 @@
 import { fetchSvgs } from '@cds/figma-api/fetchSvgs';
 
-import { fetchComponentSets, fetchSetNodes } from './fetchComponents';
+import { fetchComponentSets, fetchLooseComponents, fetchSetNodes } from './fetchComponents';
 import type { ComponentSet, IconSource, ProgressCallback } from './IconSource';
 
 export type FigmaSourceOptions = {
@@ -18,6 +18,10 @@ export class FigmaSource implements IconSource {
 
   listComponentSets() {
     return fetchComponentSets(this.options.fileId);
+  }
+
+  listLooseComponents() {
+    return fetchLooseComponents(this.options.fileId);
   }
 
   fetchSetNodes(sets: readonly ComponentSet[]) {

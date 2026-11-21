@@ -1,4 +1,7 @@
 import { selectChanged } from '@cds/figma-api/syncCore';
+import type { IgnoredGroup } from '@cds/figma-api/syncReport';
+
+import type { LooseComponent } from './source/IconSource';
 
 /** What the manifest recorded for an icon set at the last sync. */
 export type KnownIconSet = {
@@ -9,7 +12,7 @@ export type KnownIconSet = {
 };
 
 /** The icon name is the part after the first `/` of the component set name, e.g. `Icon / add`. */
-const iconNameOf = (componentSetName: string) => componentSetName.split('/')[1]?.trim();
+export const iconNameOf = (componentSetName: string) => componentSetName.split('/')[1]?.trim();
 
 /**
  * Picks the component sets to download: the ones the manifest does not know, and the ones whose
@@ -37,3 +40,47 @@ export function selectIconSetsToFetch(
       known.name !== iconNameOf(componentSet.name),
   }).map((componentSet) => componentSet.node_id);
 }
+
+/**
+ * Components outside component sets are not synced, but they are never silent. When one has the
+ * icon name of an icon that is published and whose set is gone, the published version is kept
+ * instead of being deleted: its node id comes back in `keepNodeIds`.
+ */
+export const sortLooseComponents = (
+  loose: readonly LooseComponent[],
+  knownIconSets: readonly (KnownIconSet & { nodeId: string })[],
+  presentNodeIds: ReadonlySet<string>,
+) => {
+  const knownByName = new Map(
+    knownIconSets.map((iconSet) => [iconSet.name.toLowerCase(), iconSet]),
+  );
+  const keepNodeIds: string[] = [];
+  const replacing: LooseComponent[] = [];
+  const others: LooseComponent[] = [];
+
+  for (const component of loose) {
+    const known = knownByName.get(
+      (iconNameOf(component.name) ?? component.name.trim()).toLowerCase(),
+    );
+    if (known && !presentNodeIds.has(known.nodeId)) {
+      keepNodeIds.push(known.nodeId);
+      replacing.push(component);
+    } else {
+      others.push(component);
+    }
+  }
+
+  const group = (reason: string, items: LooseComponent[]): IgnoredGroup[] =>
+    items.length > 0 ? [{ reason, items: items.map(({ name, url }) => ({ name, url })) }] : [];
+
+  return {
+    keepNodeIds,
+    ignored: [
+      ...group('components outside icon sets, not synced', others),
+      ...group(
+        'components outside icon sets that replace a published icon set, whose published version is kept',
+        replacing,
+      ),
+    ],
+  };
+};

@@ -25,3 +25,51 @@ export const iconPropsProblem = (
   }
   return undefined;
 };
+
+/** The variants every icon set has: each size, active and inactive. */
+export const iconVariants = { sizes: [12, 16, 24], states: [true, false] } as const;
+
+type Variant = { size: number; active: boolean };
+
+const variantLabel = ({ size, active }: Variant) => `size=${size}, active=${active}`;
+
+const expectedVariantLabels = iconVariants.sizes.flatMap((size) =>
+  iconVariants.states.map((active) => variantLabel({ size, active })),
+);
+
+/**
+ * What is wrong with the variants of an icon set as a whole, or undefined when it has exactly the
+ * expected ones: none missing, none twice, none that should not be there.
+ */
+export const iconVariantsProblem = (setName: string, variants: readonly Variant[]) => {
+  const counts = new Map<string, number>();
+  for (const variant of variants) {
+    const label = variantLabel(variant);
+    counts.set(label, (counts.get(label) ?? 0) + 1);
+  }
+
+  const quoted = (labels: string[]) => labels.map((label) => `"${label}"`).join(', ');
+  const missing = expectedVariantLabels.filter((label) => !counts.has(label));
+  const twice = [...counts].filter(([, count]) => count > 1).map(([label]) => label);
+  const unexpected = [...counts.keys()].filter((label) => !expectedVariantLabels.includes(label));
+
+  const problems = [
+    ...(variants.length === 0 ? ['it has no variants'] : []),
+    ...(variants.length > 0 && missing.length > 0 ? [`it is missing ${quoted(missing)}`] : []),
+    ...(twice.length > 0 ? [`it has ${quoted(twice)} more than once`] : []),
+    ...(unexpected.length > 0 ? [`it has the unexpected ${quoted(unexpected)}`] : []),
+  ];
+  if (problems.length === 0) return undefined;
+
+  const sizes = iconVariants.sizes.join(', ');
+  return `Icon set "${setName}" is skipped because ${problems.join(' and ')}. Every icon set needs exactly the sizes ${sizes}, each with active true and false.`;
+};
+
+/**
+ * What is wrong with an icon set whose icon name is already taken by another icon set, which is
+ * the one kept. The icon name is the part after "ui/" or "nav/".
+ */
+export const iconDuplicateProblem = (setName: string, iconName: string, otherIconName: string) =>
+  otherIconName === iconName
+    ? `Icon set "${setName}" is skipped because the Figma file has two icon sets with the icon name "${iconName}" (the part after "ui/" or "nav/"). Rename one of them.`
+    : `Icon set "${setName}" is skipped because its icon name "${iconName}" differs only in capitalization from "${otherIconName}" in another icon set of the Figma file. Rename one of them.`;

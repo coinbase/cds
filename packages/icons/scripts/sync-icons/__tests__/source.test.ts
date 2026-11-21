@@ -1,12 +1,13 @@
-import { getFileComponentSets, getFileNodes } from '@cds/figma-api';
+import { getFileComponents, getFileComponentSets, getFileNodes } from '@cds/figma-api';
 
-import { fetchComponentSets, fetchSetNodes } from '../source/fetchComponents';
+import { fetchComponentSets, fetchLooseComponents, fetchSetNodes } from '../source/fetchComponents';
 import type { ComponentSet } from '../source/IconSource';
 
 jest.mock('@cds/figma-api');
 
 const listing = getFileComponentSets as jest.MockedFunction<typeof getFileComponentSets>;
 const nodesRequest = getFileNodes as jest.MockedFunction<typeof getFileNodes>;
+const componentsRequest = getFileComponents as jest.MockedFunction<typeof getFileComponents>;
 
 const componentSet = (id: string, name = `Icon / ${id}`) =>
   ({
@@ -64,5 +65,32 @@ describe('fetchSetNodes', () => {
   it('makes no request when there is nothing to fetch', async () => {
     expect(await fetchSetNodes('FILE', [])).toEqual({});
     expect(nodesRequest).not.toHaveBeenCalled();
+  });
+});
+
+describe('fetchLooseComponents', () => {
+  it('returns only the components that are not part of a set, with a link to each', async () => {
+    componentsRequest.mockResolvedValueOnce({
+      meta: {
+        components: [
+          {
+            node_id: '1:1',
+            name: 'size=24, active=true',
+            component_set_id: '9:9',
+            file_key: 'FILE',
+          },
+          { node_id: '2:2', name: 'Icon / helper', file_key: 'FILE' },
+        ],
+      },
+    } as unknown as Awaited<ReturnType<typeof getFileComponents>>);
+
+    expect(await fetchLooseComponents('FILE')).toEqual([
+      {
+        nodeId: '2:2',
+        name: 'Icon / helper',
+        url: 'https://www.figma.com/design/FILE?node-id=2-2',
+      },
+    ]);
+    expect(componentsRequest).toHaveBeenCalledWith('FILE');
   });
 });
