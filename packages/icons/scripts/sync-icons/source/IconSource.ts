@@ -9,6 +9,9 @@ export type ComponentSet = ComponentSetsResponse['meta']['component_sets'][numbe
 /** A component set with its variants, plus the listing metadata it came from. */
 export type SetNode = NonNullable<NodesResponse['nodes'][string]> & { metadata: ComponentSet };
 
+/** A published component that is not part of a component set. */
+export type LooseComponent = { nodeId: string; name: string; url: string };
+
 export type ProgressCallback = (completed: number, total: number) => void;
 
 /**
@@ -18,6 +21,9 @@ export type ProgressCallback = (completed: number, total: number) => void;
 export type IconSource = {
   /** Every published component set with the metadata the sync compares. Expected to be cheap. */
   listComponentSets(): Promise<ComponentSet[]>;
+
+  /** Published components that are not part of a component set. They are not synced. */
+  listLooseComponents(): Promise<LooseComponent[]>;
 
   /** The variants of the given component sets, keyed by node id. */
   fetchSetNodes(sets: readonly ComponentSet[]): Promise<Record<string, SetNode>>;
