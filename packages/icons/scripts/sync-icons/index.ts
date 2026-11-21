@@ -211,10 +211,12 @@ const main = async () => {
   }
 
   console.log('Fetching file data from Figma...');
-  const componentSets = await config.source.listComponentSets();
+  const [componentSets, looseComponents] = await Promise.all([
+    config.source.listComponentSets(),
+    config.source.listLooseComponents(),
+  ]);
   const remoteIds = new Set(componentSets.map((componentSet) => componentSet.node_id));
   // Components outside sets are reported, not synced; a published icon they replace keeps its version.
-  const looseComponents = await config.source.listLooseComponents();
   const loose = sortLooseComponents(looseComponents, oldManifest.iconSets, remoteIds);
   loose.keepNodeIds.forEach((nodeId) => remoteIds.add(nodeId));
   const examined: ExaminedSummary = {
