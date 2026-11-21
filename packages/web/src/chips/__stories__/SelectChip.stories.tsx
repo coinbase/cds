@@ -57,6 +57,15 @@ export const Default = () => (
     </VStack>
     <VStack gap={2}>
       <Text as="h3" display="block" font="headline">
+        Medium
+      </Text>
+      <HStack gap={2}>
+        <ExampleSelectChip size="m" value="Balance" />
+        <ExampleSelectChip placeholder="Sort by" size="m" />
+      </HStack>
+    </VStack>
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
         Compact
       </Text>
       <HStack gap={2}>

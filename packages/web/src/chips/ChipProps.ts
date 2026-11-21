@@ -1,3 +1,4 @@
+import type { ChipSizeCommon } from '@coinbase/cds-common/chips/getMediaChipSpacingProps';
 import type { ThemeVars } from '@coinbase/cds-common/core/theme';
 import type { SharedAccessibilityProps } from '@coinbase/cds-common/types/SharedAccessibilityProps';
 import type { SharedProps } from '@coinbase/cds-common/types/SharedProps';
@@ -9,7 +10,7 @@ import type {
   PressableProps,
 } from '../system/Pressable';
 
-export type ChipSize = 'xs' | 's';
+export type ChipSize = ChipSizeCommon;
 
 export type ChipBaseProps = SharedProps &
   Omit<

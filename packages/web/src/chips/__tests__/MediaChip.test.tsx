@@ -79,6 +79,15 @@ describe('MediaChip', () => {
     expect(chip.firstElementChild).toHaveStyle('padding: var(--space-1-5) var(--space-0-75)');
   });
 
+  it('applies medium spacing when size="m"', () => {
+    render(<Wrapper size="m">Medium</Wrapper>);
+    const chip = screen.getByTestId(testID);
+    expect(chip).toBeVisible();
+    expect(chip.className).toMatch(/(^|\s)_900-/);
+    expect(chip.firstElementChild?.className).toMatch(/(^|\s)_3-/);
+    expect(chip.firstElementChild?.className).toMatch(/(^|\s)_1_5-/);
+  });
+
   it('allows custom spacing overrides', () => {
     render(
       <Wrapper paddingX={5} paddingY={3}>
