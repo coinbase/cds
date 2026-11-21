@@ -1,5 +1,5 @@
+import { iconPropsProblem, iconSetNameProblem } from '../profile';
 import { stringToObject } from '../stringToObject';
-import { iconPropsProblem, iconSetNameProblem } from '../validateIcons';
 
 describe('iconSetNameProblem', () => {
   it.each(['ui/add', 'nav/home', ' ui/add '])('accepts "%s"', (name) => {

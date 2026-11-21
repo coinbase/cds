@@ -1,8 +1,11 @@
 import path from 'node:path';
 
+import { FigmaSource } from './source/FigmaSource';
+import type { IconSource } from './source/IconSource';
+
 type SyncIconsConfig = {
-  /* The figma file id to sync icons from. */
-  figmaFileId: string;
+  /* Where icons come from; see source/. */
+  source: IconSource;
   /* The absolute path of the repo root. */
   repoRoot: string;
   /* The absolute path of the manifest file. */
@@ -26,8 +29,10 @@ if (!MONOREPO_ROOT) throw Error('MONOREPO_ROOT is undefined');
 
 const ICONS_PKG = path.resolve(MONOREPO_ROOT, 'packages/icons');
 
+export const FIGMA_FILE_ID = '1J3XC4iA2xRzlnC3y0pl1N';
+
 export const config: SyncIconsConfig = {
-  figmaFileId: '1J3XC4iA2xRzlnC3y0pl1N',
+  source: new FigmaSource({ fileId: FIGMA_FILE_ID }),
   repoRoot: MONOREPO_ROOT,
   manifestPath: path.resolve(ICONS_PKG, 'manifest.json'),
   outputSvgPath: path.resolve(ICONS_PKG, 'src/svgs'),

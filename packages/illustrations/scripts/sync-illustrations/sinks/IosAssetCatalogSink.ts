@@ -1,3 +1,4 @@
+import { mapConcurrently } from '@cds/figma-api/syncUtils';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -11,7 +12,6 @@ import {
 } from '../artifacts/nativeSvg';
 import { nameTypeOf } from '../artifacts/typescriptData';
 import { groupByType, type Illustration } from '../illustration';
-import { mapConcurrently } from '../mapConcurrently';
 
 import { allFilesExist, writeFile } from './files';
 import {

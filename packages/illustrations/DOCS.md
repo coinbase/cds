@@ -116,6 +116,8 @@ Without `SYNC_ILLUSTRATIONS_NATIVE_REPO` the sync behaves exactly as before.
 
 **"Every illustration matches the last sync"** — Every illustration in Figma has the same last-updated date as the manifest records for it. Verify this is expected with design.
 
+**"New type (needs approval)"** — The sync only takes the illustration types listed in `packages/illustrations/scripts/sync-illustrations/profile.ts`. A published component of any other type is not synced and is reported under this category, and what was already published for it stays. To sync a new type, add it to `illustrationTypes` and check that each sink handles it.
+
 **Force a full re-sync** — If you need to re-sync all illustrations regardless of when they were last updated, pass the `--full-compare` flag:
 
 ```sh

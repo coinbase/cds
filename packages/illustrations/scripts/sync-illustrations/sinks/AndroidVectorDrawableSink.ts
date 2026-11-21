@@ -1,3 +1,4 @@
+import { mapConcurrently } from '@cds/figma-api/syncUtils';
 import fs from 'node:fs';
 import path from 'node:path';
 
@@ -18,7 +19,6 @@ import {
 } from '../artifacts/vectorDrawable';
 import type { ColorPalette } from '../colorPalette';
 import { groupByType, type Illustration } from '../illustration';
-import { mapConcurrently } from '../mapConcurrently';
 
 import { allFilesExist, removeFile, writeFile } from './files';
 import {

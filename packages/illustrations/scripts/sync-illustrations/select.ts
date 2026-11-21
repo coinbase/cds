@@ -1,3 +1,5 @@
+import { dedupeByIdentity, selectChanged } from '@cds/figma-api/syncCore';
+
 import { type Component, type Illustration, illustrationKey } from './illustration';
 
 export type ComponentSelection = {
@@ -16,9 +18,6 @@ export type DuplicateComponent = { component: Component; keptBy: Component };
  * knows, falling back to the oldest, so the choice is stable across runs.
  */
 function dedupeByKey(components: Component[], knownNodeIds: Set<string>) {
-  const kept = new Map<string, Component>();
-  const dropped: Component[] = [];
-
   const preferred = (a: Component, b: Component) => {
     if (knownNodeIds.has(a.nodeId) !== knownNodeIds.has(b.nodeId)) {
       return knownNodeIds.has(a.nodeId) ? a : b;
@@ -26,23 +25,11 @@ function dedupeByKey(components: Component[], knownNodeIds: Set<string>) {
     return a.createdAt <= b.createdAt ? a : b;
   };
 
-  for (const component of components) {
-    const key = illustrationKey(component);
-    const existing = kept.get(key);
-    if (!existing) {
-      kept.set(key, component);
-      continue;
-    }
-    const winner = preferred(existing, component);
-    kept.set(key, winner);
-    dropped.push(winner === existing ? component : existing);
-  }
-
-  const duplicates = dropped.map((component) => ({
-    component,
-    keptBy: kept.get(illustrationKey(component)) as Component,
-  }));
-  return { kept: [...kept.values()], duplicates };
+  const { kept, dropped } = dedupeByIdentity(components, illustrationKey, preferred);
+  return {
+    kept: [...kept.values()],
+    duplicates: dropped.map(({ item, keptBy }) => ({ component: item, keptBy })),
+  };
 }
 
 /**
@@ -66,15 +53,14 @@ export function selectComponents({
   const previousByNodeId = new Map(
     previous.map((illustration) => [illustration.nodeId, illustration]),
   );
-  const isChanged = (component: Component) => {
-    const known = previousByNodeId.get(component.nodeId);
-    return (
-      !known ||
-      known.lastUpdated !== component.updatedAt ||
-      illustrationKey(known) !== illustrationKey(component)
-    );
-  };
-  const toSync = fullCompare ? kept : kept.filter(isChanged);
+  const toSync = fullCompare
+    ? kept
+    : selectChanged(kept, previousByNodeId, {
+        id: (component) => component.nodeId,
+        differs: (component, known) =>
+          known.lastUpdated !== component.updatedAt ||
+          illustrationKey(known) !== illustrationKey(component),
+      });
 
   return {
     remoteNodeIds: new Set(kept.map((component) => component.nodeId)),

@@ -1,5 +1,6 @@
 import type { GetFileComponentsResponse } from '@figma/rest-api-spec';
 
+import { illustrationTypes } from '../profile';
 import { toComponent, toComponentListing } from '../source/fetchComponents';
 import { InMemorySource } from '../source/InMemorySource';
 
@@ -10,6 +11,36 @@ const figmaComponents = (componentsFixture as unknown as GetFileComponentsRespon
 describe('FigmaSource component mapping', () => {
   it('finds every component of the real Figma response usable', () => {
     expect(toComponentListing(figmaComponents).invalid).toEqual([]);
+  });
+
+  it('finds every type of the real Figma response among the synced types', () => {
+    expect(toComponentListing(figmaComponents, illustrationTypes).invalid).toEqual([]);
+  });
+
+  it('does not sync a component of a type that is not listed, and says why', () => {
+    const [first] = figmaComponents;
+    const { components, invalid } = toComponentListing(
+      [first, { ...first, node_id: '2:1', name: 'Spot Wide/someName' }],
+      illustrationTypes,
+    );
+
+    expect(components.map(({ nodeId }) => nodeId)).toEqual([first.node_id]);
+    expect(invalid).toEqual([
+      {
+        nodeId: '2:1',
+        name: 'Spot Wide/someName',
+        url: expect.stringContaining('node-id=2-1'),
+        message: expect.stringContaining('The type "spotWide" is not a synced type'),
+        category: 'new-type',
+      },
+    ]);
+  });
+
+  it('syncs every type when no list is given', () => {
+    const [first] = figmaComponents;
+    expect(toComponentListing([{ ...first, name: 'Spot Wide/someName' }]).components).toHaveLength(
+      1,
+    );
   });
 
   it('lists a component with an unusable name separately instead of failing the listing', () => {
@@ -27,12 +58,14 @@ describe('FigmaSource component mapping', () => {
         name: 'Not a type',
         url: expect.stringContaining('node-id=1-1'),
         message: expect.stringContaining('is not in [type]/[name] format'),
+        category: 'invalid-name',
       },
       {
         nodeId: '1:2',
         name: 'Spot Icon/bad_name',
         url: expect.stringContaining('node-id=1-2'),
         message: expect.stringContaining('is not camelCase'),
+        category: 'invalid-name',
       },
     ]);
   });

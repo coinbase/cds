@@ -1,14 +1,11 @@
 import { getFileComponents } from '@cds/figma-api';
+import { figmaNodeUrl } from '@cds/figma-api/syncReport';
 import type { PublishedComponent } from '@figma/rest-api-spec';
 
 import type { Component } from '../illustration';
 import { parseComponentName } from '../parseComponentName';
 
 import type { ComponentListing, InvalidComponent } from './IllustrationSource';
-
-/** The URL Figma itself uses to link to a node: the node id with `:` replaced by `-`. */
-export const figmaNodeUrl = (fileKey: string, nodeId: string) =>
-  `https://www.figma.com/design/${fileKey}?node-id=${nodeId.replace(':', '-')}`;
 
 /** Maps a component as the Figma REST API reports it to the sync's own record. */
 export const toComponent = (component: PublishedComponent): Component => ({
@@ -20,21 +17,39 @@ export const toComponent = (component: PublishedComponent): Component => ({
   url: figmaNodeUrl(component.file_key, component.node_id),
 });
 
-/** Splits the published components into usable ones and ones whose name does not parse. */
-export const toComponentListing = (published: PublishedComponent[]): ComponentListing => {
+/**
+ * Splits the published components into usable ones and ones the sync skips: a name that does not
+ * parse, or, when `knownTypes` is given, a type that is not one of them.
+ */
+export const toComponentListing = (
+  published: PublishedComponent[],
+  knownTypes?: readonly string[],
+): ComponentListing => {
   const components: Component[] = [];
   const invalid: InvalidComponent[] = [];
+  const skip = (
+    { node_id: nodeId, name, file_key: fileKey }: PublishedComponent,
+    category: InvalidComponent['category'],
+    message: string,
+  ) => invalid.push({ nodeId, name, url: figmaNodeUrl(fileKey, nodeId), message, category });
+
   for (const component of published) {
+    let parsed: Component;
     try {
-      components.push(toComponent(component));
+      parsed = toComponent(component);
     } catch (error) {
-      invalid.push({
-        nodeId: component.node_id,
-        name: component.name,
-        url: figmaNodeUrl(component.file_key, component.node_id),
-        message: error instanceof Error ? error.message : String(error),
-      });
+      skip(component, 'invalid-name', error instanceof Error ? error.message : String(error));
+      continue;
     }
+    if (knownTypes && !knownTypes.includes(parsed.type)) {
+      skip(
+        component,
+        'new-type',
+        `The type "${parsed.type}" is not a synced type, so this component is not synced.`,
+      );
+      continue;
+    }
+    components.push(parsed);
   }
   return { components, invalid };
 };
@@ -43,7 +58,10 @@ export const toComponentListing = (published: PublishedComponent[]): ComponentLi
  * Lists every component published from the Figma file. This endpoint is cheap and carries all the
  * metadata the sync needs, so the much heavier node endpoints are never called.
  */
-export async function fetchComponents(fileId: string): Promise<ComponentListing> {
+export async function fetchComponents(
+  fileId: string,
+  knownTypes?: readonly string[],
+): Promise<ComponentListing> {
   const response = await getFileComponents(fileId);
-  return toComponentListing(response.meta.components);
+  return toComponentListing(response.meta.components, knownTypes);
 }

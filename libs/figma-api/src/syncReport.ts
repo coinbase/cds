@@ -6,7 +6,8 @@ export type RejectedCategory =
   | 'duplicate-name'
   | 'invalid-name'
   | 'invalid-variant'
-  | 'invalid-asset';
+  | 'invalid-asset'
+  | 'new-type';
 
 /** An asset the sync could not publish, described for the designer who can fix it in Figma. */
 export type RejectedAsset = {
@@ -20,6 +21,19 @@ export type RejectedAsset = {
   duplicateOf?: { url: string };
   /** Groups the asset with others skipped for the same reason. */
   category?: RejectedCategory;
+};
+
+/** Things the sync looked at and left out on purpose, with why. */
+export type IgnoredGroup = {
+  reason: string;
+  items: { name: string; url?: string }[];
+};
+
+/** What the sync looked at, so that nothing found in Figma is dropped without a trace. */
+export type ExaminedSummary = {
+  /** How many items the source listed. */
+  seen: number;
+  ignored: IgnoredGroup[];
 };
 
 export type ChangedAsset = {
@@ -55,6 +69,7 @@ export type SyncReport = {
   groupOrder?: string[];
   changes: SyncChanges;
   rejected: RejectedAsset[];
+  examined?: ExaminedSummary;
 };
 
 export const emptyChanges = (): SyncChanges => ({

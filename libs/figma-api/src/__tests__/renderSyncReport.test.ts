@@ -6,8 +6,10 @@ import {
   commitTitle,
   failureExcerpt,
   renderCompareUrl,
+  renderExamined,
   renderPullRequestBody,
   renderRejections,
+  renderStatus,
   renderSummary,
   renderVersionPlan,
   summaryOutcome,
@@ -539,6 +541,100 @@ describe('renderSummary', () => {
     );
     expect(text).toContain('Use &lt;ui/name&gt; &amp; rename');
     expect(text).toContain('2 assets need a fix in Figma, and were skipped:');
+  });
+});
+
+describe('examined summary', () => {
+  const examined = {
+    seen: 1683,
+    ignored: [
+      {
+        reason: 'components outside icon sets',
+        items: [
+          { name: 'helper', url: 'https://www.figma.com/design/F?node-id=3-3' },
+          { name: 'other' },
+        ],
+      },
+    ],
+  };
+  const run = { target: 'icons', jobStatus: 'success', syncOutcome: 'success' };
+
+  it('tells Slack how much was looked at, with only a count per ignored reason', () => {
+    const { text } = renderSummary(report({ examined }), run);
+    expect(text).toContain(
+      ':mag: Looked at 1,683 in Figma: 3 changed, 0 skipped, 2 ignored (2 components outside icon sets).',
+    );
+    expect(text).not.toContain('helper');
+  });
+
+  it('leaves the line out when the report has no summary or nothing was ignored', () => {
+    expect(renderSummary(report(), run).text).not.toContain('Looked at');
+    expect(renderSummary(report({ examined: { seen: 5, ignored: [] } }), run).text).toContain(
+      ':mag: Looked at 5 in Figma: 3 changed, 0 skipped.',
+    );
+  });
+
+  it('lists every ignored item in the job summary', () => {
+    expect(renderExamined(report({ examined }))).toBe(
+      [
+        '**Looked at 1,683 items in Figma:** 3 changed, 0 skipped, 2 ignored (2 components outside icon sets).',
+        [
+          '**Ignored (2)**: components outside icon sets.',
+          '- `helper` ([Open in Figma](https://www.figma.com/design/F?node-id=3-3))',
+          '- `other`',
+        ].join('\n'),
+      ].join('\n\n'),
+    );
+    expect(renderExamined(report())).toBe('');
+  });
+
+  it('groups a type that is not synced as its own category', () => {
+    const asset = { ...rejected[0], category: 'new-type' as const };
+    expect(renderSummary(report({ rejected: [asset] }), run).text).toContain(
+      '*New type (needs approval) (1)*',
+    );
+  });
+});
+
+describe('renderStatus', () => {
+  it('lists every change and skipped asset with a one-letter status, like git status', () => {
+    const status = renderStatus(
+      report({
+        changes: changes({
+          added: [{ name: 'wallet', group: 'heroSquare' }],
+          updated: [{ name: 'cash' }],
+          renamed: [
+            { name: 'qrcode', oldName: 'qrCode' },
+            { name: 'newName', oldName: 'oldName' },
+          ],
+          deleted: [{ name: 'legacy' }],
+        }),
+        rejected: [
+          { ...rejected[0], name: 'home', category: 'duplicate-name' },
+          { ...rejected[0], name: 'Spot Wide/x', category: 'new-type' },
+        ],
+        examined: {
+          seen: 10,
+          ignored: [{ reason: 'not a component set', items: [{ name: 'frame' }] }],
+        },
+      }),
+    );
+    expect(status.split('\n')).toEqual([
+      '```text',
+      'A  heroSquare/wallet',
+      'M  cash',
+      'R  oldName -> newName',
+      'R  qrCode -> qrcode  (capitalization only)',
+      'D  legacy',
+      'U  home  [Duplicate name]',
+      '?  Spot Wide/x  [New type (needs approval)]',
+      '!  frame  [not a component set]',
+      '```',
+    ]);
+  });
+
+  it('is empty when nothing changed, was skipped or was ignored', () => {
+    expect(renderStatus(report({ changes: changes() }))).toBe('');
   });
 });
 

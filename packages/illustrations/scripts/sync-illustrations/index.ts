@@ -10,14 +10,14 @@ import {
 import { approximationSummary, notExportableSummary } from './artifacts/nativeSvg';
 import { type Sink } from './sinks/Sink';
 import { config } from './config';
-import { hasChanges, hasChangesToRecord, type SyncResults } from './diffIllustrations';
+import { hasChanges, hasChangesToRecord, type SyncResults } from './diff';
 import { type Release, ReleaseBranch, runOnReleaseBranches } from './git';
 import { type Component, type Illustration, illustrationKey } from './illustration';
 import { readManifest, writeManifest } from './manifest';
 import { assertNativeCheckout } from './nativeRepo';
+import { duplicateAssets, invalidAssets, rejectedAssets } from './report';
 import { chooseSinks } from './selectSinks';
 import { runSync, type SinkResult } from './sync';
-import { duplicateAssets, invalidAssets, rejectedAssets } from './syncReport';
 
 const args = process.argv.slice(2);
 const fullCompare = config.fullCompare || args.includes('--full-compare');
@@ -69,6 +69,8 @@ const logSummary = (results: SyncResults) => {
 
 const failedIllustrations: SinkResult['failures'] = [];
 const rejected: RejectedAsset[] = [];
+/** How many published components the source listed; for the report's "looked at" count. */
+let listed = 0;
 let changes: SyncResults | undefined;
 
 const logSinkResults = (results: SinkResult[]) => {
@@ -105,6 +107,7 @@ const sync = async (sinks: Sink[]) => {
     log: console.log,
   });
 
+  listed = outcome.listed;
   rejected.push(...invalidAssets(outcome.invalid), ...duplicateAssets(outcome.duplicates));
   if (outcome.invalid.length) {
     console.warn(
@@ -203,6 +206,7 @@ main().then(
       groupOrder: changelogTypeOrder,
       changes: syncChanges,
       rejected,
+      examined: { seen: listed, ignored: [] },
     };
     writeSyncReport(reportPath, syncReport);
     // Scratch runs and dry runs write nothing into the repository.
