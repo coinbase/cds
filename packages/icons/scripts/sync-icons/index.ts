@@ -1,5 +1,7 @@
 import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
+import { dedupeByIdentity } from '@cds/figma-api/syncCore';
 import {
+  type ExaminedSummary,
   figmaNodeUrl,
   hasChanges,
   isBreaking,
@@ -21,8 +23,13 @@ import { syncIconCodeConnect } from '../sync-icon-code-connect/index';
 import type { SetNode } from './source/IconSource';
 import { config, FIGMA_FILE_ID } from './config';
 import { getDescriptionMap } from './getDescriptionMap';
-import { iconPropsProblem, iconSetNameProblem } from './profile';
-import { selectIconSetsToFetch } from './select';
+import {
+  iconDuplicateProblem,
+  iconPropsProblem,
+  iconSetNameProblem,
+  iconVariantsProblem,
+} from './profile';
+import { selectIconSetsToFetch, sortLooseComponents } from './select';
 import { stringToObject } from './stringToObject';
 import { svgoConfig } from './svgoConfig';
 
@@ -190,18 +197,6 @@ const main = async () => {
   if (!fs.existsSync(config.manifestPath))
     fs.writeFileSync(config.manifestPath, JSON.stringify(emptyManifest));
 
-  const report = (results?: IconSyncResults) => {
-    const changes = toChanges(results);
-    const syncReport: SyncReport = {
-      target: 'icons',
-      bump: isBreaking(changes) ? 'major' : 'minor',
-      changes,
-      rejected,
-    };
-    writeSyncReport(process.env.SYNC_REPORT_PATH, syncReport);
-    writeVersionPlan(syncReport, versionPlansDirectory(config.repoRoot));
-  };
-
   console.log('Loading manifest file...');
   const oldManifest = JSON.parse(fs.readFileSync(config.manifestPath, 'utf-8')) as Manifest;
 
@@ -216,8 +211,31 @@ const main = async () => {
   }
 
   console.log('Fetching file data from Figma...');
-  const componentSets = await config.source.listComponentSets();
+  const [componentSets, looseComponents] = await Promise.all([
+    config.source.listComponentSets(),
+    config.source.listLooseComponents(),
+  ]);
   const remoteIds = new Set(componentSets.map((componentSet) => componentSet.node_id));
+  // Components outside sets are reported, not synced; a published icon they replace keeps its version.
+  const loose = sortLooseComponents(looseComponents, oldManifest.iconSets, remoteIds);
+  loose.keepNodeIds.forEach((nodeId) => remoteIds.add(nodeId));
+  const examined: ExaminedSummary = {
+    seen: componentSets.length + looseComponents.length,
+    ignored: loose.ignored,
+  };
+
+  const report = (results?: IconSyncResults) => {
+    const changes = toChanges(results);
+    const syncReport: SyncReport = {
+      target: 'icons',
+      bump: isBreaking(changes) ? 'major' : 'minor',
+      changes,
+      rejected,
+      examined,
+    };
+    writeSyncReport(process.env.SYNC_REPORT_PATH, syncReport);
+    writeVersionPlan(syncReport, versionPlansDirectory(config.repoRoot));
+  };
   const idsToFetch = new Set(
     selectIconSetsToFetch(componentSets, fullCompare ? undefined : oldManifest.iconSets),
   );
@@ -259,6 +277,7 @@ const main = async () => {
    */
   // Every set is validated before anything is downloaded, so only valid sets cost an SVG export.
   const accepted: {
+    setName: string;
     iconName: string;
     nodeId: string;
     oldIconSet: ManifestIconSet | undefined;
@@ -302,10 +321,7 @@ const main = async () => {
       reject({
         name: iconName,
         nodeId,
-        message:
-          duplicateIconSet.name === iconName
-            ? `Icon set "${iconSetNode.document.name}" is skipped because the Figma file has two icon sets with the icon name "${iconName}" (the part after "ui/" or "nav/"). Rename one of them.`
-            : `Icon set "${iconSetNode.document.name}" is skipped because its icon name "${iconName}" differs only in capitalization from "${duplicateIconSet.name}" in another icon set of the Figma file. Rename one of them.`,
+        message: iconDuplicateProblem(iconSetNode.document.name, iconName, duplicateIconSet.name),
         category: 'duplicate-name',
         duplicateNodeId: duplicateIconSet.nodeId,
       });
@@ -325,20 +341,50 @@ const main = async () => {
       continue;
     }
 
+    const variants = iconSetNode.document.children.flatMap((iconNode) =>
+      iconNode.type === 'COMPONENT' ? [{ id: iconNode.id, name: iconNode.name }] : [],
+    );
+    // Every icon set needs exactly the expected variants, so a partial set never ships either.
+    const variantsProblem = iconVariantsProblem(
+      iconSetNode.document.name,
+      variants.map(({ name }) => stringToObject(name) as { size: number; active: boolean }),
+    );
+    if (variantsProblem) {
+      reject({ name: iconName, nodeId, message: variantsProblem, category: 'invalid-variant' });
+      continue;
+    }
+
     accepted.push({
+      setName: iconSetNode.document.name,
       iconName,
       nodeId,
       oldIconSet,
       description,
       lastUpdated,
       createdAt,
-      variants: iconSetNode.document.children.flatMap((iconNode) =>
-        iconNode.type === 'COMPONENT' ? [{ id: iconNode.id, name: iconNode.name }] : [],
-      ),
+      variants,
     });
   }
 
-  const variantIds = accepted.flatMap(({ variants }) => variants.map(({ id }) => id));
+  // Two new icon sets with the same icon name in one run: the older one is kept, the other is
+  // reported. (A clash with an icon set from an earlier sync is caught above.)
+  const { kept: uniqueAccepted, dropped: sameNameSets } = dedupeByIdentity(
+    accepted,
+    ({ iconName }) => iconName.toLowerCase(),
+    (existing, candidate) => (candidate.createdAt < existing.createdAt ? candidate : existing),
+  );
+  for (const { item, keptBy } of sameNameSets) {
+    reject({
+      name: item.iconName,
+      nodeId: item.nodeId,
+      message: iconDuplicateProblem(item.setName, item.iconName, keptBy.iconName),
+      category: 'duplicate-name',
+      duplicateNodeId: keptBy.nodeId,
+    });
+  }
+  const acceptedSets = [...uniqueAccepted.values()];
+
+  const variantIds = acceptedSets.flatMap(({ variants }) => variants.map(({ id }) => id));
   console.log(`\nDownloading ${variantIds.length} svg assets...`);
   const rawSvgs = await config.source.fetchSvgs(variantIds);
 
@@ -350,7 +396,7 @@ const main = async () => {
     lastUpdated,
     createdAt,
     variants,
-  } of accepted) {
+  } of acceptedSets) {
     // Temporary icons data for this icon set, used to process updates
     const tempIcons: TempIcon[] = [];
 

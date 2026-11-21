@@ -62,6 +62,16 @@ You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 
 3. DO NOT MERGE until the icons DRI has carefully reviewed and signed off on the changelog and the visual regression test results.
 
+### What the sync takes from Figma
+
+The sync lists the published **component sets** of the icons file. An icon set is synced only if it follows these rules; the rules are in `scripts/sync-icons/profile.ts`. An icon set that breaks one is skipped, reported to design in Slack and in the job summary, and any version that is already published stays as it was.
+
+- **Name:** `ui/<name>` or `nav/<name>`. The icon name is the part after the slash, and it must be unique ignoring capitalization (`ui/cash` and `nav/cash` clash). Reported as _Invalid name_ or _Duplicate name_. When two new icon sets clash in one run, the older one is kept.
+- **Variants:** exactly sizes 12, 16 and 24, each with `active=true` and `active=false`, named like `size=24, active=false`. A missing, repeated or extra variant, or a set with no variants, is reported as _Invalid variants_ with what is wrong.
+- **Components outside a set** are not synced. They are listed as ignored in the job summary, and counted in the Slack message. If one has the icon name of a published icon whose set is gone, that published icon is kept instead of being deleted.
+
+To allow another size, change `iconVariants` in `profile.ts`.
+
 ### Syncing Icons Troubleshooting
 
 **"Figma file has no updates"** — Every icon set in Figma has the same last-updated date, description and name as the manifest records for it. Verify this is expected with design.
