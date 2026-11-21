@@ -84,6 +84,25 @@ export const Default = () => {
           </InputChip>
         </HStack>
         <Text as="h4" color="fgMuted" display="block" font="label1">
+          {'size="m"'}
+        </Text>
+        <HStack gap={2}>
+          <InputChip onClick={NoopFn} size="m">
+            USD
+          </InputChip>
+          <InputChip onClick={NoopFn} size="m" start={<RemoteImage {...regularMediaProps} />}>
+            USD
+          </InputChip>
+          <InputChip
+            disabled
+            onClick={NoopFn}
+            size="m"
+            start={<RemoteImage {...regularMediaProps} />}
+          >
+            USD
+          </InputChip>
+        </HStack>
+        <Text as="h4" color="fgMuted" display="block" font="label1">
           {'size="xs"'}
         </Text>
         <HStack gap={2}>
