@@ -5,10 +5,17 @@ import { getBrowserGlobals } from '../../utils/browser';
 // ~500ms buffer reset, matching native `<select>`.
 export const TYPEAHEAD_RESET_MS = 500;
 
-const printableTypeaheadKeyRegex = /^[a-z0-9]$/i;
+// Glyphs that can precede an option's label but are never typed to find it: whitespace, ASCII and
+// Latin-1 punctuation/symbols, symbol blocks such as arrows and dingbats (e.g. "✓"), CJK
+// punctuation, icon font glyphs (Private Use Area) and emoji with their presentation selector.
+// Letters and digits of every script are kept. These are listed as ranges because Babel expands
+// `\p{L}` into a multi-kilobyte regex for the older Safari versions in our browserslist.
+const leadingNonTextRegex =
+  /^(?:[\s\x21-\x2F\x3A-\x40\x5B-\x60\x7B-\x7E\u00A0-\u00BF\u00D7\u00F7\u2000-\u2BFF\u3000-\u303F\uE000-\uF8FF]|[\uD83C-\uD83E\uDB80-\uDBFF][\uDC00-\uDFFF]|\uFE0F)+/;
 
+// A single character in any script, excluding the non-text glyphs above.
 export function isPrintableTypeaheadKey(key: string): boolean {
-  return printableTypeaheadKeyRegex.test(key);
+  return [...key].length === 1 && !leadingNonTextRegex.test(key);
 }
 
 // Union accepts both React's synthetic event (control handler) and the native event (window listener).
@@ -18,9 +25,9 @@ export function isTypeaheadKeyEvent(event: React.KeyboardEvent | KeyboardEvent):
   return isPrintableTypeaheadKey(event.key);
 }
 
-// Strip leading non-alphanumerics (e.g. icon/checkbox glyphs) so prefixes match.
+// Strip leading non-text glyphs (e.g. icon/checkbox glyphs) so prefixes match.
 export function normalizeOptionText(text: string | null | undefined): string {
-  return (text ?? '').toLowerCase().replace(/^[^a-z0-9]+/, '');
+  return (text ?? '').toLowerCase().replace(leadingNonTextRegex, '');
 }
 
 // Native `<select>` semantics: a single (or repeated) char cycles options by first letter;

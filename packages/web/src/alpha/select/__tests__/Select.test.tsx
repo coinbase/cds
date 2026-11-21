@@ -780,6 +780,43 @@ describe('Select', () => {
       });
     });
 
+    it('matches options that start with non-ASCII letters', async () => {
+      const user = userEvent.setup();
+      render(
+        <DefaultThemeProvider>
+          <Select
+            {...defaultProps}
+            defaultOpen
+            options={[
+              { value: 'clafoutis', label: 'Clafoutis' },
+              { value: 'eclair', label: 'Éclair' },
+              { value: 'geneva', label: 'Женева' },
+              { value: 'zhukov', label: 'Жуков' },
+            ]}
+          />
+        </DefaultThemeProvider>,
+      );
+
+      await waitFor(() => {
+        expect(screen.getByRole('listbox')).toBeInTheDocument();
+      });
+
+      // Start inside the listbox: the mocked @floating-ui trigger ref is always empty in tests.
+      getOption('Clafoutis').focus();
+
+      await user.keyboard('é');
+      await waitFor(() => {
+        expect(getOption('Éclair')).toHaveFocus();
+      });
+
+      await new Promise((resolve) => setTimeout(resolve, TYPEAHEAD_RESET_MS + 100));
+
+      await user.keyboard('жу');
+      await waitFor(() => {
+        expect(getOption('Жуков')).toHaveFocus();
+      });
+    });
+
     it('resets the search buffer after the reset timeout elapses', async () => {
       const user = userEvent.setup();
       render(
