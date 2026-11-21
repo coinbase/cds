@@ -183,4 +183,34 @@ describe('Chip', () => {
 
     expect(screen.getByTestId(testID)).toHaveStyle({ backgroundColor: 'rgb(1, 2, 3)' });
   });
+
+  it('applies medium size tokens when size="m"', () => {
+    render(
+      <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
+        <Chip size="m" testID={testID}>
+          Medium
+        </Chip>
+      </ThemeProvider>,
+    );
+
+    const chip = screen.getByTestId(testID);
+    expect(chip.className).toMatch(/(^|\s)_900-/);
+    expect(chip.firstElementChild?.className).toMatch(/(^|\s)_3-/);
+    expect(chip.firstElementChild?.className).toMatch(/(^|\s)_1_5-/);
+    expect(screen.getByText('Medium').className).toMatch(/headline/);
+  });
+
+  it('lets size="m" win over compact', () => {
+    render(
+      <ThemeProvider activeColorScheme="light" theme={defaultTheme}>
+        <Chip compact size="m" testID={testID}>
+          Medium
+        </Chip>
+      </ThemeProvider>,
+    );
+
+    const chip = screen.getByTestId(testID);
+    expect(chip.className).toMatch(/(^|\s)_900-/);
+    expect(chip.firstElementChild?.className).toMatch(/(^|\s)_3-/);
+  });
 });

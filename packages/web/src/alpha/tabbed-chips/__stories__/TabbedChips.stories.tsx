@@ -129,6 +129,10 @@ export const Default = () => {
       </Text>
       <Demo size="s" />
       <Text as="p" color="fgMuted" display="block" font="label1">
+        {'size="m"'}
+      </Text>
+      <Demo size="m" />
+      <Text as="p" color="fgMuted" display="block" font="label1">
         {'size="xs"'}
       </Text>
       <Demo size="xs" />

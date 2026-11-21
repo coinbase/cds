@@ -1,6 +1,6 @@
 import { forwardRef, Fragment, memo, useMemo } from 'react';
 import { curves, durations } from '@coinbase/cds-common/motion/tokens';
-import { chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
+import { CHIP_SIZES, chipMaxWidth } from '@coinbase/cds-common/tokens/chip';
 import { css } from '@linaria/core';
 
 import { cx } from '../cx';
@@ -16,18 +16,6 @@ import { Text } from '../typography/Text';
 import type { ChipProps, ChipSize } from './ChipProps';
 export type { ChipProps, ChipSize };
 
-const chipSizes = {
-  xs: { paddingX: 1.5, paddingY: 0.75, font: 'label1', borderRadius: 700 },
-  s: { paddingX: 2, paddingY: 1, font: 'headline', borderRadius: 700 },
-} as const satisfies Record<
-  ChipSize,
-  {
-    paddingX: NonNullable<HStackProps<'div'>['paddingX']>;
-    paddingY: NonNullable<HStackProps<'div'>['paddingY']>;
-    font: NonNullable<ChipProps['font']>;
-    borderRadius: NonNullable<ChipProps['borderRadius']>;
-  }
->;
 
 const defaultChipSize: ChipSize = 's';
 
@@ -48,7 +36,7 @@ export const Chip = memo(
     const mergedProps = useComponentConfig('Chip', _props);
     // Geometry is driven by `size`; deprecated `compact` falls back to its legacy `xs` size.
     const sizeConfig =
-      chipSizes[mergedProps.size ?? (mergedProps.compact ? 'xs' : defaultChipSize)];
+      CHIP_SIZES[mergedProps.size ?? (mergedProps.compact ? 'xs' : defaultChipSize)];
     const {
       as,
       alignItems = 'center',

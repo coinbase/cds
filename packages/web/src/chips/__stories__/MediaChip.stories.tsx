@@ -19,11 +19,12 @@ const MediaChipExamples = ({
   ...props
 }: { label?: string; direction?: 'row' | 'column' } & Pick<
   ChipBaseProps,
-  'active' | 'compact'
+  'active' | 'compact' | 'size'
 >) => {
   const divRef = useRef<HTMLDivElement>(null);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const mediaSize = props.compact ? 16 : 24;
+  const isCompactSize = props.compact || props.size === 'xs';
+  const mediaSize = isCompactSize ? 16 : 24;
   const assetIconProps: RemoteImageProps = {
     height: mediaSize,
     shape: 'circle',
@@ -80,6 +81,21 @@ export const Default = () => (
       Compact
     </Text>
     <MediaChipExamples compact />
+    <Text as="h3" display="block" font="headline" paddingTop={3}>
+      Sizes
+    </Text>
+    <Text as="h4" color="fgMuted" display="block" font="label1">
+      {'size="s" (default)'}
+    </Text>
+    <MediaChipExamples size="s" />
+    <Text as="h4" color="fgMuted" display="block" font="label1">
+      {'size="m"'}
+    </Text>
+    <MediaChipExamples size="m" />
+    <Text as="h4" color="fgMuted" display="block" font="label1">
+      {'size="xs"'}
+    </Text>
+    <MediaChipExamples size="xs" />
     <Text as="h3" display="block" font="headline" paddingTop={3}>
       Long text
     </Text>
