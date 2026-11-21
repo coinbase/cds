@@ -2,7 +2,7 @@ import type { RejectedAsset } from '@cds/figma-api/syncReport';
 
 import type { InvalidComponent } from './source/IllustrationSource';
 import { type Illustration, illustrationKey } from './illustration';
-import type { DuplicateComponent } from './selectComponents';
+import type { DuplicateComponent } from './select';
 import type { SinkResult } from './sync';
 
 /** One entry per illustration and reason, however many sinks rejected it. */
@@ -29,14 +29,14 @@ export const rejectedAssets = (
     });
 };
 
-/** Published components skipped because their name is not `[type]/[camelCaseName]`. */
+/** Published components skipped because their name cannot be used or their type is not synced. */
 export const invalidAssets = (invalid: InvalidComponent[]): RejectedAsset[] =>
-  invalid.map(({ name, nodeId, url, message }) => ({
+  invalid.map(({ name, nodeId, url, message, category }) => ({
     name,
     nodeId,
     url,
     message,
-    category: 'invalid-name' as const,
+    category,
   }));
 
 /** Components dropped because another component already has their `type/name`. */

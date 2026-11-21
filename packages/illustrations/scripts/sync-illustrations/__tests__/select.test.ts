@@ -1,7 +1,7 @@
 import type { GetFileComponentsResponse } from '@figma/rest-api-spec';
 
 import { type Component, type Illustration } from '../illustration';
-import { selectComponents } from '../selectComponents';
+import { selectComponents } from '../select';
 import { toComponent } from '../source/fetchComponents';
 
 import componentsFixture from './__fixtures__/getFileComponents.json';

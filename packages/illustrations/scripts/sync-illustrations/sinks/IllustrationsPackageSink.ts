@@ -1,3 +1,4 @@
+import { mapConcurrently } from '@cds/figma-api/syncUtils';
 import path from 'node:path';
 
 import {
@@ -16,7 +17,6 @@ import {
 } from '../artifacts/typescriptData';
 import type { ColorPalette } from '../colorPalette';
 import { byName, groupByType, type Illustration } from '../illustration';
-import { mapConcurrently } from '../mapConcurrently';
 
 import { allFilesExist, relativeImport, removeFile, writeFile } from './files';
 import { Sink, type SinkChanges, type SinkOptions } from './Sink';

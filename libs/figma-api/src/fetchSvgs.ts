@@ -1,21 +1,16 @@
-import { downloadSvgImage, getFileImages } from '@cds/figma-api';
-
-import { mapConcurrently } from '../mapConcurrently';
+import { downloadSvgImage } from './downloadSvgImage';
+import { getFileImages } from './getFileImages';
+import { createBatches, mapConcurrently } from './syncUtils';
 
 /** Figma's image endpoint accepts many ids per request, but very long URLs are rejected. */
 const idsPerImageRequest = 500;
 const concurrentDownloads = 8;
 
-const chunk = <T>(items: T[], size: number) =>
-  Array.from({ length: Math.ceil(items.length / size) }, (_, i) =>
-    items.slice(i * size, (i + 1) * size),
-  );
-
 /** Resolves temporary download URLs for the SVG export of every node. */
-async function fetchSvgUrls(fileId: string, nodeIds: string[]) {
+async function fetchSvgUrls(fileId: string, nodeIds: readonly string[]) {
   const urls = new Map<string, string>();
 
-  for (const ids of chunk(nodeIds, idsPerImageRequest)) {
+  for (const ids of createBatches(nodeIds, idsPerImageRequest)) {
     const response = await getFileImages(fileId, { ids: ids.join(','), format: 'svg' });
     for (const id of ids) {
       const url = response.images[id];
@@ -33,14 +28,16 @@ async function fetchSvgUrls(fileId: string, nodeIds: string[]) {
  */
 export async function fetchSvgs(
   fileId: string,
-  nodeIds: string[],
+  nodeIds: readonly string[],
   onProgress: (completed: number, total: number) => void = () => undefined,
 ) {
   const urls = await fetchSvgUrls(fileId, nodeIds);
   let completed = 0;
 
   const svgs = await mapConcurrently(nodeIds, concurrentDownloads, async (nodeId) => {
-    const rawSvg = await downloadSvgImage(urls.get(nodeId) as string);
+    const url = urls.get(nodeId);
+    if (url === undefined) throw new Error(`No SVG export URL for node ${nodeId}`);
+    const rawSvg = await downloadSvgImage(url);
     completed += 1;
     onProgress(completed, nodeIds.length);
     return [nodeId, rawSvg] as const;

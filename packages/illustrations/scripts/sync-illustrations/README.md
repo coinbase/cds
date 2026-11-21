@@ -86,13 +86,14 @@ nativeRepo.ts            native module paths and layout, assertNativeCheckout
 git.ts                   ReleaseBranch: start / publish / abandon illustrations/YYYY-MM-DD,
                            runOnReleaseBranches: the branch of the native checkout the run writes to
 sync.ts                  engine: runSync(source, manifest, sinks) -> SyncOutcome
-  selectComponents.ts      dedupe, incremental filter    -> which nodes to download
+  select.ts                dedupe, incremental filter    -> which nodes to download
   optimizeSvg.ts           svgo config, color normalization and check, viewBox size
   hashSvg.ts               the manifest hash of the light SVG
-  diffIllustrations.ts     reconcile fetched vs manifest -> IllustrationDiff
+  diff.ts                  reconcile fetched vs manifest -> IllustrationDiff
 illustration.ts          the domain records: Component, Illustration, sort orders
 colorPalette.ts          ColorPalette: the colors, recolor(svg, fn), toDarkSvg, toRecord
 manifest.ts              read/write manifest.json
+report.ts                the SyncReport the workflow reads: invalid names, duplicates, sink failures
 mapConcurrently.ts       bounded-concurrency map
 source/
   IllustrationSource.ts    the source contract
@@ -255,6 +256,8 @@ setting, a palette change) are applied across the whole set.
 The same step drops **duplicate `type/name`** components, which the real file does contain. It keeps
 the node the manifest already knows (so the choice is stable from run to run), otherwise the oldest,
 and warns about the rest.
+
+A published component whose type is not in `illustrationTypes` (`profile.ts`) is not synced either: the source lists it as invalid with the category **new type**, and what was published for it stays.
 
 A published component whose name is not `[type]/[camelCaseName]` does not stop the sync either. The source
 lists it separately (`listComponents` returns `{ components, invalid }`), the sync skips it, and it is

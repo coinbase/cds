@@ -36,11 +36,6 @@ export type Illustration = {
 export const illustrationKey = (illustration: Pick<Illustration, 'type' | 'name'>) =>
   `${illustration.type}/${illustration.name}`;
 
-export const byCreatedAt = (a: Illustration, b: Illustration) => {
-  const dateDiff = new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf();
-  return dateDiff !== 0 ? dateDiff : a.name.localeCompare(b.name);
-};
-
 /** Case- and number-aware alphabetical order (`a1`, `a2`, `a10`). */
 export const byName = (a: Pick<Illustration, 'name'>, b: Pick<Illustration, 'name'>) =>
   a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: 'base' });

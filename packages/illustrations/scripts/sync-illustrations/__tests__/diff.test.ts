@@ -3,7 +3,7 @@ import {
   type FetchedIllustration,
   hasChanges,
   hasChangesToRecord,
-} from '../diffIllustrations';
+} from '../diff';
 import type { Illustration } from '../illustration';
 
 const previous = (overrides: Partial<Illustration> = {}): Illustration => ({

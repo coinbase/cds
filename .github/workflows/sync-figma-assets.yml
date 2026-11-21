@@ -19,6 +19,10 @@ name: Sync Figma Assets
 #                                           With neither set, Slack is skipped.
 #   vars.FIGMA_SYNC_SCHEDULE_ENABLED        'true' turns on the weekly schedule (Thursday
 #                                           morning, a full comparison). Other runs are manual.
+#   vars.FIGMA_SYNC_NOTIFY_GROUPS           Comma-separated Slack user group ids to ping when a branch
+#                                           was pushed, the sync failed or assets were skipped (and,
+#                                           in the plain fallback message, when the job failed and the
+#                                           summary could not be rendered). Unset pings nobody.
 
 on:
   workflow_dispatch:
@@ -217,6 +221,14 @@ jobs:
             else
               echo "No changes to publish."
             fi
+            status=$(yarn tsx libs/figma-api/src/renderSyncReportCli.ts status "${SYNC_REPORT_PATH}")
+            if [ -n "${status}" ]; then
+              echo
+              echo "#### Status"
+              echo "${status}"
+            fi
+            echo
+            yarn tsx libs/figma-api/src/renderSyncReportCli.ts examined "${SYNC_REPORT_PATH}"
             if [ "${REJECTED}" != "0" ]; then
               echo
               echo "#### Skipped, needs a fix in Figma"
@@ -244,13 +256,18 @@ jobs:
           COMPARE_URL: ${{ steps.compare.outputs.url }}
           FAILED_STEP: ${{ (steps.push.outcome == 'failure' && 'Commit and push the sync branch') || (steps.release.outcome == 'failure' && 'Release the package') || '' }}
           RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          # Slack user groups to ping: @illustrators and @design-systems-oncall.
-          NOTIFY_GROUPS: S01GJ9GT3LY,S05HRM5A309
-          ONCALL_GROUP: S05HRM5A309
+          NOTIFY_GROUPS: ${{ vars.FIGMA_SYNC_NOTIFY_GROUPS }}
         run: |
           if [ -z "${SLACK_WEBHOOK_URL}" ]; then exit 0; fi
+          # One clean list for both the rendered message and the fallback.
+          NOTIFY_GROUPS="${NOTIFY_GROUPS//[[:space:]]/}"
           cc=""
-          if [ "${JOB_STATUS}" = "failure" ]; then cc=" cc: <!subteam^${ONCALL_GROUP}>"; fi
+          if [ "${JOB_STATUS}" = "failure" ]; then
+            for group in ${NOTIFY_GROUPS//,/ }; do
+              if [[ "${group}" =~ ^S[A-Z0-9]+$ ]]; then cc="${cc} <!subteam^${group}>"; fi
+            done
+            if [ -n "${cc}" ]; then cc=" cc:${cc}"; fi
+          fi
           rendered=false
           if [ -x node_modules/.bin/tsx ] &&
             yarn tsx libs/figma-api/src/renderSyncReportCli.ts summary-slack "${SYNC_REPORT_PATH}" \

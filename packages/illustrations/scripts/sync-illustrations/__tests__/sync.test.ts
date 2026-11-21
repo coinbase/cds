@@ -7,7 +7,7 @@ import os from 'node:os';
 import path from 'node:path';
 
 import { parseStamp } from '../artifacts/nativeSvg';
-import { hasChanges } from '../diffIllustrations';
+import { hasChanges } from '../diff';
 import type { Component, Illustration } from '../illustration';
 import { type Manifest, manifestIllustrations, readManifest, writeManifest } from '../manifest';
 import { AndroidVectorDrawableSink } from '../sinks/AndroidVectorDrawableSink';
@@ -283,7 +283,13 @@ describe('runSync, end to end against an in-memory source', () => {
     const published = original.find(({ name }) => name === 'leverage') as Component;
     source.components = original.filter((component) => component !== published);
     source.invalid = [
-      { nodeId: published.nodeId, name: 'Leverage Chart', url: published.url, message: 'bad name' },
+      {
+        nodeId: published.nodeId,
+        name: 'Leverage Chart',
+        url: published.url,
+        message: 'bad name',
+        category: 'invalid-name',
+      },
     ];
     const outcome = await sync();
 
