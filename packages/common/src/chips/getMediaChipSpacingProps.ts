@@ -1,8 +1,4 @@
-import {
-  type ChipSizeCommon,
-  MEDIA_CHIP_SPACING,
-  type MediaChipSpacing,
-} from '../tokens/chip';
+import { type ChipSizeCommon, MEDIA_CHIP_SPACING, type MediaChipSpacing } from '../tokens/chip';
 
 export type { ChipSizeCommon };
 

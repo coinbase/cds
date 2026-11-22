@@ -62,4 +62,3 @@ export const MEDIA_CHIP_SPACING = {
 } as const satisfies Record<ChipSizeCommon, Record<MediaChipComposition, MediaChipSpacing>>;
 
 export const chipMaxWidth = 200;
-

@@ -16,7 +16,6 @@ import { Text } from '../typography/Text';
 import type { ChipProps, ChipSize } from './ChipProps';
 export type { ChipProps, ChipSize };
 
-
 const defaultChipSize: ChipSize = 's';
 
 const transitionCss = css`
