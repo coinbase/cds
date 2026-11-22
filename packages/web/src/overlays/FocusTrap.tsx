@@ -84,6 +84,13 @@ const ALPHABET_KEYS = [
 ];
 const FOCUSABLE_ELEMENTS_INCLUDING_TABINDEX = `${FOCUSABLE_ELEMENTS}, [tabindex]`;
 
+/**
+ * Meta, Control and Alt combinations are browser and OS shortcuts (copy, paste, select all, ...),
+ * so the trap must never intercept them. Shift is excluded so Shift+Tab keeps cycling backwards.
+ */
+const hasShortcutModifier = (event: KeyboardEvent) =>
+  event.metaKey || event.ctrlKey || event.altKey;
+
 export const FocusTrap = memo((_props: FocusTrapProps) => {
   const mergedProps = useComponentConfig('FocusTrap', _props);
   const {
@@ -140,7 +147,7 @@ export const FocusTrap = memo((_props: FocusTrapProps) => {
   // trap focus for accessibility
   const handleKeyboardNavigation = useCallback(
     (event: KeyboardEvent, element: RefObject<HTMLElement | null>['current']) => {
-      if (event.defaultPrevented) return;
+      if (event.defaultPrevented || hasShortcutModifier(event)) return;
       const document = getBrowserGlobals()?.document;
       const activeElement = document?.activeElement as HTMLElement;
 
@@ -323,15 +330,21 @@ export const FocusTrap = memo((_props: FocusTrapProps) => {
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent) => {
+      if (disableFocusTrap || hasShortcutModifier(event)) return;
+
       // Update the keystroke history
       updateKeystrokeHistory(event.key);
 
-      if (
-        !disableFocusTrap &&
-        (NAVIGATION_KEYS.includes(event.key) || ALPHABET_KEYS.includes(event.key))
-      ) {
-        handleKeyboardNavigation(event, childrenRef.current);
-      }
+      const trapElement = childrenRef.current;
+      const activeElement = getBrowserGlobals()?.document?.activeElement;
+      const isNavigationKey = NAVIGATION_KEYS.includes(event.key);
+      // Typeahead only applies once focus is inside the trap, so typing elsewhere is left alone
+      const isTypeaheadKey =
+        ALPHABET_KEYS.includes(event.key) && !!trapElement?.contains(activeElement ?? null);
+
+      if (!isNavigationKey && !isTypeaheadKey) return;
+
+      handleKeyboardNavigation(event, trapElement);
 
       // Swallow the event, in case someone is listening on the body.
       event.stopPropagation();
