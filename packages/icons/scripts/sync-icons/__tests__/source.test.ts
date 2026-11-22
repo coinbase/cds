@@ -76,10 +76,26 @@ describe('fetchLooseComponents', () => {
           {
             node_id: '1:1',
             name: 'size=24, active=true',
-            component_set_id: '9:9',
             file_key: 'FILE',
+            containing_frame: {
+              pageId: '0:1',
+              pageName: 'Icons',
+              containingComponentSet: { nodeId: '9:9', name: 'ui/add' },
+            },
           },
-          { node_id: '2:2', name: 'Icon / helper', file_key: 'FILE' },
+          {
+            node_id: '2:2',
+            name: 'Icon / helper',
+            file_key: 'FILE',
+            containing_frame: { pageId: '0:1', pageName: 'Icons' },
+          },
+          {
+            node_id: '3:3',
+            name: 'Icon / other',
+            file_key: 'FILE',
+            containing_frame: { pageId: '0:1', pageName: 'Icons', containingComponentSet: null },
+          },
+          { node_id: '4:4', name: 'Icon / bare', file_key: 'FILE' },
         ],
       },
     } as unknown as Awaited<ReturnType<typeof getFileComponents>>);
@@ -89,6 +105,16 @@ describe('fetchLooseComponents', () => {
         nodeId: '2:2',
         name: 'Icon / helper',
         url: 'https://www.figma.com/design/FILE?node-id=2-2',
+      },
+      {
+        nodeId: '3:3',
+        name: 'Icon / other',
+        url: 'https://www.figma.com/design/FILE?node-id=3-3',
+      },
+      {
+        nodeId: '4:4',
+        name: 'Icon / bare',
+        url: 'https://www.figma.com/design/FILE?node-id=4-4',
       },
     ]);
     expect(componentsRequest).toHaveBeenCalledWith('FILE');

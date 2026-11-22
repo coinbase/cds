@@ -43,7 +43,7 @@ export async function fetchSetNodes(
 export async function fetchLooseComponents(fileId: string): Promise<LooseComponent[]> {
   const response = await getFileComponents(fileId);
   return response.meta.components
-    .filter((component) => !component.component_set_id)
+    .filter((component) => !component.containing_frame?.containingComponentSet)
     .map((component) => ({
       nodeId: component.node_id,
       name: component.name,
