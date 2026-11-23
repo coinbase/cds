@@ -1,3 +1,20 @@
+## 4.52.0 (2026-11-23)
+
+### 🚀 Features
+
+- Publish illustrations 2026-11-23
+
+  ##### ⭐️ Updated (2)
+  ###### HeroSquare (2)
+  - arrowsUpDown
+  - mcLoad
+
+### 🩹 Fixes
+
+- Add two native sinks to the `sync-illustrations` tooling: `IosAssetCatalogSink` (an asset catalog with light/dark SVG appearances and `<Type>Name` enums for `CDSDesignSystem`) and `AndroidVectorDrawableSink` (light and dark vector drawables and `<Type>Name` companion properties for `:cds`), active when `SYNC_ILLUSTRATIONS_NATIVE_REPO` points at a mobile-skunkworks checkout. Internal tooling only; the published `esm`/`dts` output is unchanged for consumers.
+- Make `sync-illustrations` validate before it publishes. Sinks now `plan` their changes first, the Android sink rejects `pathData` over aapt2's 32,767-character resource string limit with an actionable per-illustration report, and the run publishes the illustrations that validate while exiting nonzero for the rest. New flags: `--dry-run` (full validation, no writes) and `--all-or-nothing` (a sink with any failed illustration publishes nothing). Internal tooling only; the published `esm`/`dts` output is unchanged for consumers.
+- Add a machine-readable report to the icons and illustrations syncs, and a Sync Figma Assets workflow that runs them and opens a pull request. Set `SYNC_REPORT_PATH` to write a JSON report of the changes and of the assets the sync rejected, with a Figma link and a fix for each. `sync-icons` now collects every malformed icon set instead of stopping at the first, and skips them rather than failing the sync. Internal tooling only; the published `esm`/`dts` output is unchanged for consumers.
+
 ## 4.51.0 (2026-11-13)
 
 ### 🚀 Features
