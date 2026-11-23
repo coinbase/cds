@@ -18,6 +18,16 @@ const RATE_LIMIT_DELAY_MS = 100; // 100ms delay between requests
 const MAX_RETRIES = 3;
 const RETRY_DELAY_MS = 1000;
 
+/** Figma answers these when it fails on its side and says to try again later. */
+const SERVER_ERROR_STATUS_CODES = [500, 502, 503, 504];
+
+const isRetryableStatus = (statusCode: number) =>
+  statusCode === 429 || SERVER_ERROR_STATUS_CODES.includes(statusCode);
+
+/** A rate limit is retried after a fixed delay; a server error after a delay that doubles each time. */
+const retryDelayMs = (statusCode: number, retryCount: number) =>
+  statusCode === 429 ? RETRY_DELAY_MS : RETRY_DELAY_MS * 2 ** retryCount;
+
 type Primitive = string | boolean | number;
 
 /**
@@ -124,14 +134,15 @@ async function makeRequest<T>(
         res.on('end', async () => {
           const statusCode = res.statusCode || 0;
 
-          // Handle rate limiting with retry
-          if (statusCode === 429 && retryCount < MAX_RETRIES) {
+          // Handle rate limiting and Figma server errors with retry
+          if (isRetryableStatus(statusCode) && retryCount < MAX_RETRIES) {
+            const delayMs = retryDelayMs(statusCode, retryCount);
             verboseLog(
-              `[figma-api] Rate limited (429). Retry ${
+              `[figma-api] HTTP ${statusCode}. Retry ${
                 retryCount + 1
-              }/${MAX_RETRIES} after ${RETRY_DELAY_MS}ms delay. URL: ${figmaUrl.toString()}`,
+              }/${MAX_RETRIES} after ${delayMs}ms delay. URL: ${figmaUrl.toString()}`,
             );
-            await sleep(RETRY_DELAY_MS);
+            await sleep(delayMs);
             try {
               const result = await makeRequest<T>(path, queryParams, retryCount + 1);
               resolve(result);
@@ -141,10 +152,10 @@ async function makeRequest<T>(
             return;
           }
 
-          // Log when retries are exhausted for rate limiting
-          if (statusCode === 429) {
+          // Log when retries are exhausted
+          if (isRetryableStatus(statusCode)) {
             verboseLog(
-              `[figma-api] Rate limited (429). Max retries (${MAX_RETRIES}) exhausted. URL: ${figmaUrl.toString()}`,
+              `[figma-api] HTTP ${statusCode}. Max retries (${MAX_RETRIES}) exhausted. URL: ${figmaUrl.toString()}`,
             );
           }
 
