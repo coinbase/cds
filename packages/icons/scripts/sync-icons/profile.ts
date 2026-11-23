@@ -1,4 +1,13 @@
+import { parseVariantName } from '@cds/figma-api/variantName';
+
 const ICON_SET_NAME = /^(ui|nav)\/[^/]+$/;
+
+/** The properties of a variant name that are numbers in this profile: `size` is a number of pixels. */
+const numericVariantProps = ['size'];
+
+/** Reads the properties of an icon component name such as `size=24, active=false`. */
+export const parseIconVariantName = (componentName: string) =>
+  parseVariantName(componentName, numericVariantProps);
 
 /** What is wrong with an icon set's name in Figma, or undefined when it is valid. */
 export const iconSetNameProblem = (figmaName: string) =>

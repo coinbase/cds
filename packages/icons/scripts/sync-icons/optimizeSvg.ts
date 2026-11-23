@@ -1,6 +1,5 @@
+import { svgoConfig } from '@cds/figma-api/svgoConfig';
 import { optimize, type Output } from 'svgo';
-
-import { svgoConfig } from './svgoConfig';
 
 export type OptimizedSvg = Output;
 

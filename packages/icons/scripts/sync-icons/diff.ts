@@ -11,8 +11,8 @@ import {
   iconPropsProblem,
   iconSetNameProblem,
   iconVariantsProblem,
+  parseIconVariantName,
 } from './profile';
-import { stringToObject } from './stringToObject';
 
 /** An icon set the sync skipped because designers need to fix it in Figma. */
 export type Rejection = {
@@ -148,7 +148,11 @@ export function validateIconSets({
     // Skip the whole icon set when any component is malformed, so a partial set never ships
     const propsProblems = iconSetNode.document.children.flatMap((iconNode) => {
       if (iconNode.type !== 'COMPONENT') return [];
-      const message = iconPropsProblem(iconName, iconNode.name, stringToObject(iconNode.name));
+      const message = iconPropsProblem(
+        iconName,
+        iconNode.name,
+        parseIconVariantName(iconNode.name),
+      );
       return message ? [{ componentId: iconNode.id, message }] : [];
     });
     if (propsProblems.length > 0) {
@@ -169,7 +173,7 @@ export function validateIconSets({
     // Every icon set needs exactly the expected variants, so a partial set never ships either.
     const variantsProblem = iconVariantsProblem(
       iconSetNode.document.name,
-      variants.map(({ name }) => stringToObject(name) as { size: number; active: boolean }),
+      variants.map(({ name }) => parseIconVariantName(name) as { size: number; active: boolean }),
     );
     if (variantsProblem) {
       rejections.push({
@@ -234,7 +238,10 @@ export function buildFetchedIconSets({
     let problem: string | undefined;
     for (const variant of set.variants) {
       // The name was checked by `iconPropsProblem`
-      const { size, active } = stringToObject(variant.name) as { size: number; active: boolean };
+      const { size, active } = parseIconVariantName(variant.name) as {
+        size: number;
+        active: boolean;
+      };
       const rawSvg = rawSvgs.get(variant.id);
       if (rawSvg === undefined) throw new Error(`No SVG was downloaded for node ${variant.id}`);
       try {

@@ -4,8 +4,8 @@ import {
   iconSetNameProblem,
   iconVariants,
   iconVariantsProblem,
+  parseIconVariantName,
 } from '../profile';
-import { stringToObject } from '../stringToObject';
 
 describe('iconSetNameProblem', () => {
   it.each(['ui/add', 'nav/home', ' ui/add '])('accepts "%s"', (name) => {
@@ -22,7 +22,7 @@ describe('iconSetNameProblem', () => {
 
 describe('iconPropsProblem', () => {
   const problem = (componentName: string) =>
-    iconPropsProblem('add', componentName, stringToObject(componentName));
+    iconPropsProblem('add', componentName, parseIconVariantName(componentName));
 
   it('accepts a component named after a size and an active state', () => {
     expect(problem('size=24, active=false')).toBeUndefined();
