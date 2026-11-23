@@ -211,4 +211,85 @@ describe('FocusTrap', () => {
     expect(events).toHaveLength(2);
     expect(events[1].defaultPrevented).toBe(false);
   });
+  describe('browser and OS shortcuts', () => {
+    const shortcuts = [
+      { name: 'Cmd+C', key: 'c', metaKey: true },
+      { name: 'Ctrl+C', key: 'c', ctrlKey: true },
+      { name: 'Cmd+A', key: 'a', metaKey: true },
+      { name: 'Cmd+V', key: 'v', metaKey: true },
+    ];
+
+    const renderMenu = () =>
+      render(
+        <DefaultThemeProvider>
+          <p data-testid="outside-element" tabIndex={-1}>
+            Copy me
+          </p>
+          <FocusTrap>
+            <div>
+              <button data-testid="first-item" role="menuitem">
+                Apple
+              </button>
+              <button data-testid="second-item" role="menuitem">
+                Cherry
+              </button>
+            </div>
+          </FocusTrap>
+        </DefaultThemeProvider>,
+      );
+
+    it.each(shortcuts)('does not intercept $name while focus is outside the trap', (shortcut) => {
+      renderMenu();
+      const outsideElement = screen.getByTestId('outside-element');
+      outsideElement.focus();
+
+      const isNotCancelled = fireEvent.keyDown(outsideElement, shortcut);
+
+      expect(isNotCancelled).toBe(true);
+      expect(outsideElement).toHaveFocus();
+    });
+
+    it.each(shortcuts)('does not intercept $name while focus is inside the trap', (shortcut) => {
+      renderMenu();
+      const firstItem = screen.getByTestId('first-item');
+      expect(firstItem).toHaveFocus();
+
+      const isNotCancelled = fireEvent.keyDown(firstItem, shortcut);
+
+      expect(isNotCancelled).toBe(true);
+      expect(firstItem).toHaveFocus();
+    });
+
+    it('does not intercept letter keys or steal focus while focus is outside the trap', () => {
+      renderMenu();
+      const outsideElement = screen.getByTestId('outside-element');
+      outsideElement.focus();
+
+      const isNotCancelled = fireEvent.keyDown(outsideElement, { key: 'c' });
+
+      expect(isNotCancelled).toBe(true);
+      expect(outsideElement).toHaveFocus();
+    });
+
+    it('still moves focus to the matching menu item when typing inside the trap', () => {
+      renderMenu();
+      const firstItem = screen.getByTestId('first-item');
+      expect(firstItem).toHaveFocus();
+
+      const isNotCancelled = fireEvent.keyDown(firstItem, { key: 'c' });
+
+      expect(isNotCancelled).toBe(false);
+      expect(screen.getByTestId('second-item')).toHaveFocus();
+    });
+
+    it('still cycles focus backwards with Shift+Tab', () => {
+      renderMenu();
+      const firstItem = screen.getByTestId('first-item');
+      expect(firstItem).toHaveFocus();
+
+      fireEvent.keyDown(firstItem, { key: 'Tab', shiftKey: true });
+
+      expect(screen.getByTestId('second-item')).toHaveFocus();
+    });
+  });
 });

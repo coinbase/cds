@@ -717,6 +717,40 @@ describe('Select', () => {
   });
 
   describe('Typeahead', () => {
+    // The global @floating-ui/react-dom mock never records the reference element, but the open
+    // typeahead path needs it to know focus is on the trigger.
+    const triggerRef: { current: HTMLElement | null } = { current: null };
+    const originalResizeObserver = global.ResizeObserver;
+
+    beforeEach(() => {
+      triggerRef.current = null;
+      global.ResizeObserver = jest.fn(() => ({
+        observe: jest.fn(),
+        unobserve: jest.fn(),
+        disconnect: jest.fn(),
+      })) as unknown as typeof ResizeObserver;
+      const floatingUi = jest.requireMock('@floating-ui/react-dom');
+      const { useFloating } = floatingUi;
+      jest.spyOn(floatingUi, 'useFloating').mockImplementation((...args: unknown[]) => {
+        const result = useFloating(...args);
+        return {
+          ...result,
+          refs: {
+            ...result.refs,
+            reference: triggerRef,
+            setReference: (element: HTMLElement | null) => {
+              triggerRef.current = element;
+            },
+          },
+        };
+      });
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+      global.ResizeObserver = originalResizeObserver;
+    });
+
     const typeAheadOptions = [
       { value: 'apple', label: 'Apple' },
       { value: 'banana', label: 'Banana' },
