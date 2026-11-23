@@ -74,6 +74,18 @@ The sync lists the published **component sets** of the icons file. An icon set i
 
 To allow another size, change `iconVariants` in `profile.ts`.
 
+### How the sync is organized
+
+The sync lives in `scripts/sync-icons`, laid out like the illustrations sync:
+
+- `index.ts` reads the arguments, picks the sinks and writes the report.
+- `sync.ts` runs the sync: it lists the component sets, downloads the ones that changed, and hands the result to the sinks.
+- `source/` is where icons come from: `FigmaSource` reads the Figma API, and `InMemorySource` holds plain data for tests.
+- `profile.ts` holds the rules of what is synced, `select.ts` picks what to download, and `diff.ts` compares it with the manifest. `manifest.ts` reads and writes the manifest, and `report.ts` builds the report.
+- `sinks/` are the places the sync writes to, in this order: `SvgFilesSink` (the SVG files), `IconFontSink` (the font and the glyph map), `IconDataSink` (the icon names and descriptions), then, after the manifest is saved, `CodeConnectSink` and `ExpoSvgMapSink`. Every sink checks what it is about to write before any of them writes, so an icon set that cannot be written (an icon name the font cannot map, no code point left) is reported as _Invalid asset_ and what was published for it stays.
+
+`__tests__/sync.test.ts` runs the whole sync over an `InMemorySource` and compares every file it writes with the files in `__tests__/__fixtures__/golden`.
+
 ### Syncing Icons Troubleshooting
 
 **"Figma file has no updates"** — Every icon set in Figma has the same last-updated date, description and name as the manifest records for it. Verify this is expected with design.

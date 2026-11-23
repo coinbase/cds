@@ -3,9 +3,11 @@ import path from 'node:path';
 import { FigmaSource } from './source/FigmaSource';
 import type { IconSource } from './source/IconSource';
 
-type SyncIconsConfig = {
+export type SyncIconsConfig = {
   /* Where icons come from; see source/. */
   source: IconSource;
+  /* The Figma file the icons are published from. */
+  figmaFileId: string;
   /* The absolute path of the repo root. */
   repoRoot: string;
   /* The absolute path of the manifest file. */
@@ -33,6 +35,7 @@ export const FIGMA_FILE_ID = '1J3XC4iA2xRzlnC3y0pl1N';
 
 export const config: SyncIconsConfig = {
   source: new FigmaSource({ fileId: FIGMA_FILE_ID }),
+  figmaFileId: FIGMA_FILE_ID,
   repoRoot: MONOREPO_ROOT,
   manifestPath: path.resolve(ICONS_PKG, 'manifest.json'),
   outputSvgPath: path.resolve(ICONS_PKG, 'src/svgs'),
