@@ -25,4 +25,12 @@ describe('parseVariantName', () => {
       active: true,
     });
   });
+
+  it('keeps a property without a value as undefined, even when it is listed as numeric', () => {
+    expect(parseVariantName('size', ['size'])).toEqual({ size: undefined });
+    expect(parseVariantName('size, active=true', ['size'])).toEqual({
+      size: undefined,
+      active: true,
+    });
+  });
 });

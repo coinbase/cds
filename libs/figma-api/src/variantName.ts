@@ -14,7 +14,7 @@ export const parseVariantName = (
     const propertyName = rawName.trim();
     if (value === 'true') properties[propertyName] = true;
     else if (value === 'false') properties[propertyName] = false;
-    else if (numeric.includes(propertyName) && /^-?\d+$/.test(value)) {
+    else if (value !== undefined && numeric.includes(propertyName) && /^-?\d+$/.test(value)) {
       properties[propertyName] = Number(value);
     } else properties[propertyName] = value;
   }
