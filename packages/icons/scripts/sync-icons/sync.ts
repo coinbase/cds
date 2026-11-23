@@ -1,3 +1,4 @@
+import { selectDeleted } from '@cds/figma-api/syncCore';
 import {
   emptyChanges,
   hasChanges,
@@ -111,7 +112,7 @@ export async function runSync({
     oldManifest.iconSets,
   );
   duplicates.forEach(reject);
-  const { matches, gone } = matchIconSets(unique, oldManifest.iconSets);
+  const matches = matchIconSets(unique, oldManifest.iconSets);
 
   // Components outside sets are reported, not synced; a published icon they replace keeps its version.
   const presentNodeIds = new Set(
@@ -123,8 +124,11 @@ export async function runSync({
   // A published icon set is only deleted when Figma no longer has it. One whose component set is
   // still in Figma under a name that is not allowed, or that a component outside a set replaces,
   // stays as published. Deleting a set bumps no `updated_at`, so deletions are found here.
-  const kept = new Set([...named.invalidNodeIds, ...loose.keepNodeIds]);
-  const deleted = gone.filter(({ nodeId }) => !kept.has(nodeId));
+  const deleted = selectDeleted(oldManifest.iconSets, {
+    identity: ({ nodeId }) => nodeId,
+    present: presentNodeIds,
+    kept: [...named.invalidNodeIds, ...loose.keepNodeIds],
+  });
 
   const idsToFetch = new Set(selectIconSetsToFetch(matches, fullCompare));
   const nodes = await config.source.fetchSetNodes(

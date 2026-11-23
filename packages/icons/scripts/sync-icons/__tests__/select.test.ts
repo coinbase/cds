@@ -95,8 +95,8 @@ describe('dedupeRemoteIconSets', () => {
 });
 
 describe('matchIconSets', () => {
-  it('matches by name first and by node id for a rename, and lists what is gone', () => {
-    const { matches, gone } = matchIconSets(
+  it('matches by name first and by node id for a rename, and leaves a new set without a match', () => {
+    const matches = matchIconSets(
       [remote('minus', '1:2'), remote('Add', '9:9'), remote('send', '1:4')],
       [published('remove', '1:2'), published('add', '1:1'), published('cash', '1:3')],
     );
@@ -105,13 +105,12 @@ describe('matchIconSets', () => {
       ['Add', 'add'],
       ['send', undefined],
     ]);
-    expect(gone.map(({ name }) => name)).toEqual(['cash']);
   });
 });
 
 describe('selectIconSetsToFetch', () => {
   const pick = (r: RemoteIconSet, p?: ManifestIconSet, fullCompare = false) =>
-    selectIconSetsToFetch(matchIconSets([r], p ? [p] : []).matches, fullCompare);
+    selectIconSetsToFetch(matchIconSets([r], p ? [p] : []), fullCompare);
 
   it('picks a set that is new', () => {
     expect(pick(remote('add', '1:1'))).toEqual(['1:1']);

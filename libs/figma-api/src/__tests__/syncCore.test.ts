@@ -112,33 +112,21 @@ describe('selectDeleted', () => {
 describe('matchPublished', () => {
   type Set = { id: string; name: string };
   const keys = { name: (item: Set) => item.name, id: (item: Set) => item.id };
-  const match = (remote: Set[], published: Set[]) => {
-    const { matches, gone } = matchPublished(remote, published, keys);
-    return {
-      matches: matches.map(({ remote: r, published: p }) => [r.id, p?.id]),
-      gone: gone.map(({ id }) => id),
-    };
-  };
+  const match = (remote: Set[], published: Set[]) =>
+    matchPublished(remote, published, keys).map(({ remote: r, published: p }) => [r.id, p?.id]);
 
   it('matches by name, ignoring capitalization, so a change of capitalization is the same icon', () => {
-    expect(match([{ id: '1', name: 'Add' }], [{ id: '1', name: 'add' }])).toEqual({
-      matches: [['1', '1']],
-      gone: [],
-    });
+    expect(match([{ id: '1', name: 'Add' }], [{ id: '1', name: 'add' }])).toEqual([['1', '1']]);
   });
 
   it('keeps an icon that was re-created under the same name, whatever its node id', () => {
-    expect(match([{ id: '9', name: 'add' }], [{ id: '1', name: 'add' }])).toEqual({
-      matches: [['9', '1']],
-      gone: [],
-    });
+    expect(match([{ id: '9', name: 'add' }], [{ id: '1', name: 'add' }])).toEqual([['9', '1']]);
   });
 
   it('calls a published item whose node id is in Figma under another name a rename', () => {
-    expect(match([{ id: '1', name: 'minus' }], [{ id: '1', name: 'remove' }])).toEqual({
-      matches: [['1', '1']],
-      gone: [],
-    });
+    expect(match([{ id: '1', name: 'minus' }], [{ id: '1', name: 'remove' }])).toEqual([
+      ['1', '1'],
+    ]);
   });
 
   it('prefers the name over the node id, and never matches a published item twice', () => {
@@ -154,16 +142,13 @@ describe('matchPublished', () => {
         ],
         published,
       ),
-    ).toEqual({
-      matches: [
-        ['2', '1'],
-        ['3', undefined],
-      ],
-      gone: ['2'],
-    });
+    ).toEqual([
+      ['2', '1'],
+      ['3', undefined],
+    ]);
   });
 
-  it('finds what is published and not in Figma, and what is new', () => {
+  it('leaves an item that is new without a published item', () => {
     expect(
       match(
         [{ id: '5', name: 'send' }],
@@ -172,7 +157,7 @@ describe('matchPublished', () => {
           { id: '2', name: 'cash' },
         ],
       ),
-    ).toEqual({ matches: [['5', undefined]], gone: ['1', '2'] });
+    ).toEqual([['5', undefined]]);
   });
 });
 

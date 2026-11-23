@@ -84,7 +84,7 @@ export const matchIconSets = (
     id: ({ nodeId }) => nodeId,
   });
 
-type Match = ReturnType<typeof matchIconSets>['matches'][number];
+type Match = ReturnType<typeof matchIconSets>[number];
 
 /**
  * Picks the component sets to download: the new ones, and the ones whose node id, name,

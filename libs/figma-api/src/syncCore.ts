@@ -77,7 +77,8 @@ export const selectDeleted = <T>(
  * Matches what Figma has with what was published. The name decides first, ignoring
  * capitalization, so an icon that was re-created under the same name stays the same icon whatever
  * its node id. A published item whose name matches nothing but whose node id is in Figma is a
- * rename. What no remote item matches is gone from Figma. `remote` must have one item per name.
+ * rename. `remote` must have one item per name. What is published and matches nothing is gone from
+ * Figma, which `selectDeleted` finds.
  */
 export const matchPublished = <Remote, Published>(
   remote: readonly Remote[],
@@ -102,7 +103,7 @@ export const matchPublished = <Remote, Published>(
       taken.add(renamed);
     }
   }
-  return { matches, gone: published.filter((item) => !taken.has(item)) };
+  return matches;
 };
 
 /**

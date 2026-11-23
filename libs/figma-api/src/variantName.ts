@@ -10,8 +10,9 @@ export const parseVariantName = (
 ): Record<string, unknown> => {
   const properties: Record<string, unknown> = {};
   for (const property of name.split(',')) {
-    const [rawName, value] = property.trim().split('=');
-    const propertyName = rawName.trim();
+    const equals = property.indexOf('=');
+    const propertyName = (equals < 0 ? property : property.slice(0, equals)).trim();
+    const value = equals < 0 ? undefined : property.slice(equals + 1).trim();
     if (value === 'true') properties[propertyName] = true;
     else if (value === 'false') properties[propertyName] = false;
     else if (value !== undefined && numeric.includes(propertyName) && /^-?\d+$/.test(value)) {

@@ -19,6 +19,18 @@ describe('parseVariantName', () => {
     expect(parseVariantName('size=2.5', ['size'])).toEqual({ size: '2.5' });
   });
 
+  it('reads a name with spaces around the equals sign', () => {
+    expect(parseVariantName('size = 24 , active = true', ['size'])).toEqual({
+      size: 24,
+      active: true,
+    });
+    expect(parseVariantName('size = 24')).toEqual({ size: '24' });
+  });
+
+  it('takes everything after the first equals sign as the value', () => {
+    expect(parseVariantName('label=a=b')).toEqual({ label: 'a=b' });
+  });
+
   it('reads a name with spaces around the properties', () => {
     expect(parseVariantName('  size=24,   active=true ', ['size'])).toEqual({
       size: 24,
