@@ -41,6 +41,21 @@ export function selectIconSetsToFetch(
   }).map((componentSet) => componentSet.node_id);
 }
 
+/** The published icon sets whose component set is no longer in Figma. */
+export const selectDeletedIconSets = <T extends { nodeId: string }>(
+  knownIconSets: readonly T[],
+  remoteIds: ReadonlySet<string>,
+) => knownIconSets.filter(({ nodeId }) => !remoteIds.has(nodeId));
+
+/**
+ * A Figma response with no component sets while icons are published is a failed read, not a
+ * library where every icon was deleted, so the sync stops instead of deleting them all.
+ */
+export const emptyLibraryProblem = (remoteSetCount: number, publishedSetCount: number) =>
+  remoteSetCount === 0 && publishedSetCount > 0
+    ? `Figma returned no icon sets, but ${publishedSetCount} are published. Nothing was deleted; check the Figma file and the access token.`
+    : undefined;
+
 /**
  * Components outside component sets are not synced, but they are never silent. When one has the
  * icon name of an icon that is published and whose set is gone, the published version is kept

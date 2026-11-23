@@ -1,4 +1,10 @@
-import { type KnownIconSet, selectIconSetsToFetch, sortLooseComponents } from '../select';
+import {
+  emptyLibraryProblem,
+  type KnownIconSet,
+  selectDeletedIconSets,
+  selectIconSetsToFetch,
+  sortLooseComponents,
+} from '../select';
 
 const componentSet = (
   overrides: Partial<Parameters<typeof selectIconSetsToFetch>[0][number]> = {},
@@ -99,5 +105,31 @@ describe('sortLooseComponents', () => {
 
   it('returns no groups for no components', () => {
     expect(sortLooseComponents([], known, new Set())).toEqual({ keepNodeIds: [], ignored: [] });
+  });
+});
+
+describe('selectDeletedIconSets', () => {
+  const published = [
+    knownIconSet({ nodeId: '1:1', name: 'add' }),
+    knownIconSet({ nodeId: '2:2', name: 'remove' }),
+  ];
+
+  it('finds a published set that Figma no longer has, even when no other set changed', () => {
+    expect(selectDeletedIconSets(published, new Set(['1:1']))).toEqual([published[1]]);
+  });
+
+  it('finds nothing when every published set is still in Figma, or kept', () => {
+    expect(selectDeletedIconSets(published, new Set(['1:1', '2:2']))).toEqual([]);
+  });
+});
+
+describe('emptyLibraryProblem', () => {
+  it('stops the sync when Figma returns no sets while icons are published', () => {
+    expect(emptyLibraryProblem(0, 572)).toContain('572 are published');
+  });
+
+  it('allows an empty library on the first sync and a library that has sets', () => {
+    expect(emptyLibraryProblem(0, 0)).toBeUndefined();
+    expect(emptyLibraryProblem(571, 572)).toBeUndefined();
   });
 });

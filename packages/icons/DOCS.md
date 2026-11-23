@@ -70,6 +70,8 @@ The sync lists the published **component sets** of the icons file. An icon set i
 - **Variants:** exactly sizes 12, 16 and 24, each with `active=true` and `active=false`, named like `size=24, active=false`. A missing, repeated or extra variant, or a set with no variants, is reported as _Invalid variants_ with what is wrong.
 - **Components outside a set** are not synced. They are listed as ignored in the job summary, and counted in the Slack message. If one has the icon name of a published icon whose set is gone, that published icon is kept instead of being deleted.
 
+- **A set that is gone from Figma** is deleted on the next run, incremental or full, because deleting a set changes no `updated_at`. If Figma returns no icon sets at all while icons are published, the sync fails and deletes nothing.
+
 To allow another size, change `iconVariants` in `profile.ts`.
 
 ### Syncing Icons Troubleshooting

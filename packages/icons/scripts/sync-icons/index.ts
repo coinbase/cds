@@ -29,7 +29,12 @@ import {
   iconSetNameProblem,
   iconVariantsProblem,
 } from './profile';
-import { selectIconSetsToFetch, sortLooseComponents } from './select';
+import {
+  emptyLibraryProblem,
+  selectDeletedIconSets,
+  selectIconSetsToFetch,
+  sortLooseComponents,
+} from './select';
 import { stringToObject } from './stringToObject';
 import { svgoConfig } from './svgoConfig';
 
@@ -219,6 +224,10 @@ const main = async () => {
   // Components outside sets are reported, not synced; a published icon they replace keeps its version.
   const loose = sortLooseComponents(looseComponents, oldManifest.iconSets, remoteIds);
   loose.keepNodeIds.forEach((nodeId) => remoteIds.add(nodeId));
+  const emptyLibrary = emptyLibraryProblem(componentSets.length, oldManifest.iconSets.length);
+  if (emptyLibrary) throw Error(emptyLibrary);
+  // Deleting a set bumps no `updated_at`, so deletions are found here and not from the fetched sets.
+  const deletedIconSets = selectDeletedIconSets(oldManifest.iconSets, remoteIds);
   const examined: ExaminedSummary = {
     seen: componentSets.length + looseComponents.length,
     ignored: loose.ignored,
@@ -245,7 +254,7 @@ const main = async () => {
 
   const numberOfNodes = Object.values(nodes).length;
 
-  if (numberOfNodes === 0) {
+  if (numberOfNodes === 0 && deletedIconSets.length === 0) {
     if (fullCompare) throw Error('No icon sets found in Figma');
     console.log('Figma file has no updates, skipping icon sync...');
     await syncIconCodeConnect(config.repoRoot);
@@ -504,24 +513,18 @@ const main = async () => {
     }
   }
 
-  const deletedIconSetIds = oldManifest.iconSets.filter(
-    (iconSet) => !remoteIds.has(iconSet.nodeId),
-  );
-
-  console.log(`\nProcessing ${deletedIconSetIds.length} deleted icon sets...`);
+  console.log(`\nProcessing ${deletedIconSets.length} deleted icon sets...`);
   // If any icon set's node is no longer present in the Figma file, we need to delete the svg output files and update the manifest
-  for (const oldIconSet of oldManifest.iconSets) {
-    if (!remoteIds.has(oldIconSet.nodeId)) {
-      console.log(` Deleting icon set: ${oldIconSet.name} ${oldIconSet.nodeId}`);
-      for (const oldSvg of oldIconSet.svgs) {
-        const oldSvgPath = path.join(config.outputSvgPath, oldSvg.name + '.svg');
-        fs.rmSync(oldSvgPath);
-      }
-      newManifest.iconSets = newManifest.iconSets.filter(
-        (iconSet) => iconSet.nodeId !== oldIconSet.nodeId,
-      );
-      syncResults.deletedIconSets.push(oldIconSet);
+  for (const oldIconSet of deletedIconSets) {
+    console.log(` Deleting icon set: ${oldIconSet.name} ${oldIconSet.nodeId}`);
+    for (const oldSvg of oldIconSet.svgs) {
+      const oldSvgPath = path.join(config.outputSvgPath, oldSvg.name + '.svg');
+      fs.rmSync(oldSvgPath);
     }
+    newManifest.iconSets = newManifest.iconSets.filter(
+      (iconSet) => iconSet.nodeId !== oldIconSet.nodeId,
+    );
+    syncResults.deletedIconSets.push(oldIconSet);
   }
 
   // Sort the icon sets by creation date
