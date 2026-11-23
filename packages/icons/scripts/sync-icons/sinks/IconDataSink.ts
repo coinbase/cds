@@ -13,9 +13,10 @@ export class IconDataSink extends Sink {
       writeFile(path.join(config.outputDataPath, fileName), `${codegenHeader}\n${content}`);
 
     console.log('Generating output types data...');
-    const iconNameUnion = ['', ...manifest.iconSets.map(({ name }) => `'${name}'`).sort()].join(
-      '\n | ',
-    );
+    const iconNameUnion = [
+      '',
+      ...manifest.iconSets.map(({ name }) => toSingleQuotedLiteral(name)).sort(),
+    ].join('\n | ');
     write('IconName.ts', `export type IconName = ${iconNameUnion};\n`);
 
     console.log('Generating output names data...');
