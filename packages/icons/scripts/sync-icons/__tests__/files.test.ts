@@ -46,6 +46,20 @@ describe('toSingleQuotedLiteral', () => {
     expect(readBack(original)).toEqual(original);
   });
 
+  it('lays values out like JSON.stringify, with single quotes', () => {
+    const value = {
+      a: ['x', 'y'],
+      b: {},
+      c: [],
+      d: { e: 'f' },
+      g: 1,
+      h: true,
+      i: null,
+      j: undefined,
+    };
+    expect(toSingleQuotedLiteral(value)).toBe(JSON.stringify(value, null, 2).replace(/"/g, "'"));
+  });
+
   it('does not run text that tries to end the string', () => {
     const exit = jest.spyOn(process, 'exit').mockImplementation((() => undefined) as never);
     readBack({ description: ["x'); process.exit(1); ('"] });
