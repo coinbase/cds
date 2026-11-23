@@ -7,6 +7,7 @@ import {
   changedBetween,
   type FileExplanation,
   snapshotChanges,
+  trySnapshotChanges,
   unexplainedFiles,
 } from '../changedFiles';
 import { Ledger } from '../syncLedger';
@@ -105,5 +106,26 @@ describe('snapshotChanges', () => {
     fs.mkdirSync(path.join(root, 'src/svgs'), { recursive: true });
     fs.writeFileSync(path.join(root, 'src/svgs/add-24.svg'), '<svg/>');
     expect(changedBetween(before, snapshotChanges(root))).toEqual(['src/svgs/add-24.svg']);
+  });
+});
+
+describe('trySnapshotChanges', () => {
+  it('warns, once, and gives undefined when the check cannot run', () => {
+    const notARepository = fs.mkdtempSync(path.join(os.tmpdir(), 'not-a-repository-'));
+    const warn = jest.fn();
+
+    expect(trySnapshotChanges(notARepository, ['.'], warn)).toBeUndefined();
+    expect(warn).toHaveBeenCalledTimes(1);
+    expect(warn.mock.calls[0][0]).toContain('The check for changed files');
+  });
+
+  it('gives the snapshot, without a warning, in a git checkout', () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'try-snapshot-'));
+    execFileSync('git', ['init', '-q'], { cwd: root });
+    fs.writeFileSync(path.join(root, 'new.txt'), 'new');
+    const warn = jest.fn();
+
+    expect([...(trySnapshotChanges(root, ['.'], warn) ?? new Map()).keys()]).toEqual(['new.txt']);
+    expect(warn).not.toHaveBeenCalled();
   });
 });

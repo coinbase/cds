@@ -1,4 +1,5 @@
 import { explainIconFile } from '../explainFile';
+import { iconVariants } from '../profile';
 
 describe('explainIconFile', () => {
   it('names the icon of an SVG file, whatever its size and state', () => {
@@ -35,5 +36,13 @@ describe('explainIconFile', () => {
   it('does not explain a file the sync does not write', () => {
     expect(explainIconFile('packages/icons/README.md')).toBeUndefined();
     expect(explainIconFile('packages/icons/src/svgs/readme.txt')).toBeUndefined();
+  });
+
+  it('explains an SVG of every size the profile lists', () => {
+    for (const size of iconVariants.sizes) {
+      expect(explainIconFile(`packages/icons/src/svgs/add-${size}-active.svg`)).toEqual({
+        item: 'add',
+      });
+    }
   });
 });

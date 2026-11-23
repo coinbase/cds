@@ -37,6 +37,25 @@ export const snapshotChanges = (cwd: string, pathspecs: string[] = ['.']) => {
   return new Map(files.map(({ file, deleted }) => [file, deleted ? 'deleted' : hashOf.get(file)!]));
 };
 
+/**
+ * Like `snapshotChanges`, but a failure (git is missing, this is not a checkout, git fails) is
+ * reported through `warn` and gives `undefined`, so a check that could not run is visible instead
+ * of passing without anyone noticing.
+ */
+export const trySnapshotChanges = (
+  cwd: string,
+  pathspecs?: string[],
+  warn: (message: string) => void = console.warn,
+) => {
+  try {
+    return snapshotChanges(cwd, pathspecs);
+  } catch (error) {
+    const reason = error instanceof Error ? error.message.split('\n')[0] : String(error);
+    warn(`\n⚠️ The check for changed files that nothing explains was skipped: ${reason}`);
+    return undefined;
+  }
+};
+
 /** The files whose content differs between two snapshots, or that are in only one of them. */
 export const changedBetween = (
   before: ReadonlyMap<string, string>,

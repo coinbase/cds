@@ -1,5 +1,7 @@
 import type { FileExplanation } from '@cds/figma-api/changedFiles';
 
+import { iconVariants } from './profile';
+
 /** The paths, from the repository root, that the icon sync writes to. */
 export const generatedPaths = [
   'packages/icons',
@@ -8,7 +10,9 @@ export const generatedPaths = [
   'packages/mobile/src/icons/__figma__',
 ];
 
-const ICON_SVG = /^packages\/icons\/src\/svgs\/(.+)-(?:12|16|24)-(?:active|inactive)\.svg$/;
+const ICON_SVG = new RegExp(
+  `^packages/icons/src/svgs/(.+)-(?:${iconVariants.sizes.join('|')})-(?:active|inactive)\\.svg$`,
+);
 const MANIFEST = /^packages\/icons\/manifest\.json$/;
 const FROM_CHANGES = [
   /^packages\/icons\/src\/(?:IconName|names|descriptionMap|glyphMap)\.ts$/,

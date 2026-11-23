@@ -1,4 +1,4 @@
-import { changedBetween, snapshotChanges, unexplainedFiles } from '@cds/figma-api/changedFiles';
+import { changedBetween, trySnapshotChanges, unexplainedFiles } from '@cds/figma-api/changedFiles';
 import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
 import { Ledger } from '@cds/figma-api/syncLedger';
 import { isBreaking, type SyncReport, writeSyncReport } from '@cds/figma-api/syncReport';
@@ -70,14 +70,8 @@ const ledger = new Ledger();
 /** How many published components the source listed; for the report's "looked at" count. */
 let listed = 0;
 
-/** The files git sees as changed in the generated paths; none when this is not a git checkout. */
-const snapshot = () => {
-  try {
-    return snapshotChanges(config.repoRoot, generatedPaths);
-  } catch {
-    return undefined;
-  }
-};
+/** The files git sees as changed in the generated paths; a warning and none when git cannot say. */
+const snapshot = () => trySnapshotChanges(config.repoRoot, generatedPaths);
 
 const logSinkResults = (results: SinkResult[]) => {
   console.log(dryRun ? '\nDry run: nothing was written.' : '\nSink results:');
@@ -204,7 +198,7 @@ const filesBefore = snapshot();
 main().then(
   () => {
     const syncChanges = ledger.changes();
-    const filesAfter = snapshot();
+    const filesAfter = filesBefore && snapshot();
     const unexplained =
       filesBefore && filesAfter
         ? unexplainedFiles({

@@ -1,4 +1,4 @@
-import { changedBetween, snapshotChanges, unexplainedFiles } from '@cds/figma-api/changedFiles';
+import { changedBetween, trySnapshotChanges, unexplainedFiles } from '@cds/figma-api/changedFiles';
 
 import { CodeConnectSink } from './sinks/CodeConnectSink';
 import { ExpoSvgMapSink } from './sinks/ExpoSvgMapSink';
@@ -13,14 +13,8 @@ import { runSync } from './sync';
 const args = process.argv.slice(2);
 const fullCompare = config.fullCompare || args.includes('--full-compare');
 
-/** The files git sees as changed in the generated paths; none when this is not a git checkout. */
-const snapshot = () => {
-  try {
-    return snapshotChanges(config.repoRoot, generatedPaths);
-  } catch {
-    return undefined;
-  }
-};
+/** The files git sees as changed in the generated paths; a warning and none when git cannot say. */
+const snapshot = () => trySnapshotChanges(config.repoRoot, generatedPaths);
 
 const main = async () => {
   const before = snapshot();
@@ -36,7 +30,7 @@ const main = async () => {
     ],
   });
 
-  const after = snapshot();
+  const after = before && snapshot();
   const unexplained =
     before && after
       ? unexplainedFiles({
