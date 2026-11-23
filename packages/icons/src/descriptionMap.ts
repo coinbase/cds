@@ -1042,8 +1042,6 @@ export const descriptionMap: Record<string, IconName[]> = {
     'rain',
     'autoCar',
     'column',
-    'caretExpand',
-    'caretCollapse',
     'learningCenter',
     'predictions',
     'inviteFriends',
@@ -2522,7 +2520,8 @@ export const descriptionMap: Record<string, IconName[]> = {
     'clock'
   ],
   'collapse': [
-    'collapse'
+    'collapse',
+    'caretCollapse'
   ],
   'shrink': [
     'collapse'
@@ -6693,6 +6692,13 @@ export const descriptionMap: Record<string, IconName[]> = {
   ],
   'under': [
     'underPredictions'
+  ],
+  'Caret': [
+    'caretExpand',
+    'caretCollapse'
+  ],
+  'expand': [
+    'caretExpand'
   ],
   'tutorials': [
     'openBook'
