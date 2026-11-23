@@ -177,7 +177,12 @@ jobs:
           TARGET: ${{ matrix.target }}
         run: |
           git checkout -B "${BRANCH}" "origin/${BRANCH}"
+          # nx release stops at a pending version plan that names a package of another release group
+          # (a web change waiting for its own release). Set those aside, and put them back after.
+          aside="${RUNNER_TEMP}/version-plans-aside"
+          node tools/ci/setAsideVersionPlans.mjs aside "${TARGET}" "${aside}"
           yarn release --projects="${TARGET}"
+          node tools/ci/setAsideVersionPlans.mjs restore "${aside}"
           # nx release deletes every pending version plan of the group without releasing it. Put
           # back the plans that also name another package, so that package still gets its release.
           for plan in $(git diff --name-only --diff-filter=D HEAD -- .nx/version-plans); do

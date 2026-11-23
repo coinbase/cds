@@ -192,7 +192,7 @@ describe('createClient', () => {
 
     it('should handle non-JSON error responses', async () => {
       const response = new EventEmitter() as any;
-      response.statusCode = 500;
+      response.statusCode = 501;
       response.setEncoding = jest.fn();
 
       const request = new EventEmitter() as any;
@@ -213,7 +213,7 @@ describe('createClient', () => {
 
       const client = createClient<never, any>();
 
-      await expect(client('files/test-key')).rejects.toThrow('HTTP 500 error: HTTP 500 error');
+      await expect(client('files/test-key')).rejects.toThrow('HTTP 501 error: HTTP 501 error');
     });
 
     it('should handle JSON parse errors in successful responses', async () => {
@@ -283,6 +283,113 @@ describe('createClient', () => {
       const client = createClient<never, any>();
 
       await expect(client('files/test-key')).rejects.toThrow('Rate limited: Rate limited');
+    });
+
+    describe('server errors', () => {
+      beforeEach(() => {
+        jest.useFakeTimers({ doNotFake: ['nextTick'] });
+        jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+      });
+      afterEach(() => {
+        jest.useRealTimers();
+        jest.restoreAllMocks();
+      });
+
+      // Jest has it, but the types of this repository do not know it yet.
+      const advanceTimers = (ms: number) =>
+        (
+          jest as unknown as { advanceTimersByTimeAsync: (ms: number) => Promise<void> }
+        ).advanceTimersByTimeAsync(ms);
+
+      /** Answers each request with the next status, and records when it was made. */
+      const answerWith = (statuses: number[]) => {
+        const times: number[] = [];
+        mockHttps.request.mockImplementation((options: any, callback: any) => {
+          const response = new EventEmitter() as any;
+          response.setEncoding = jest.fn();
+          const request = new EventEmitter() as any;
+          request.end = jest.fn();
+          const statusCode = statuses[Math.min(times.length, statuses.length - 1)];
+          times.push(Date.now());
+          process.nextTick(() => {
+            response.statusCode = statusCode;
+            callback(response);
+            process.nextTick(() => {
+              response.emit(
+                'data',
+                JSON.stringify(
+                  statusCode === 200
+                    ? { name: 'Success after retries' }
+                    : { err: 'Error retrieving file, please try again later' },
+                ),
+              );
+              response.emit('end');
+            });
+          });
+          return request;
+        });
+        return times;
+      };
+
+      it.each([500, 502, 503, 504])(
+        'retries a %i, waiting longer each time, and returns the answer that follows',
+        async (statusCode) => {
+          const times = answerWith([statusCode, statusCode, 200]);
+          const client = createClient<never, any>();
+
+          const result = client('files/test-key');
+          await advanceTimers(10_000);
+
+          await expect(result).resolves.toEqual({ name: 'Success after retries' });
+          expect(times).toHaveLength(3);
+          expect(times[1] - times[0]).toBe(1000);
+          expect(times[2] - times[1]).toBe(2000);
+        },
+      );
+
+      it('gives up after the last retry, with the error of the server', async () => {
+        const times = answerWith([500]);
+        const client = createClient<never, any>();
+
+        const result = client('files/test-key');
+        const settled = result.catch((error: Error) => error);
+        await advanceTimers(20_000);
+
+        expect((await settled).message).toContain(
+          'HTTP 500 error: Error retrieving file, please try again later',
+        );
+        expect((await settled).message).toContain('gave up after 3 retries');
+        expect(times).toHaveLength(4);
+        expect(times.slice(1).map((time, index) => time - times[index])).toEqual([
+          1000, 2000, 4000,
+        ]);
+      });
+
+      it('says in the log that it retries, and how many times it tried', async () => {
+        const warn = jest.spyOn(console, 'warn');
+        answerWith([503, 503, 200]);
+        const client = createClient<never, any>();
+
+        const result = client('files/test-key');
+        await advanceTimers(10_000);
+        await result;
+
+        expect(warn.mock.calls.map(([message]) => message)).toEqual([
+          expect.stringContaining('HTTP 503. Retry 1/3 after 1000ms delay'),
+          expect.stringContaining('HTTP 503. Retry 2/3 after 2000ms delay'),
+        ]);
+      });
+
+      it('does not retry an error that is not about the server', async () => {
+        const times = answerWith([501]);
+        const client = createClient<never, any>();
+
+        const settled = client('files/test-key').catch((error: Error) => error);
+        await advanceTimers(20_000);
+
+        expect((await settled).message).toContain('HTTP 501 error');
+        expect(times).toHaveLength(1);
+      });
     });
 
     it('should retry on network errors and eventually succeed', async () => {
