@@ -286,8 +286,14 @@ describe('createClient', () => {
     });
 
     describe('server errors', () => {
-      beforeEach(() => jest.useFakeTimers({ doNotFake: ['nextTick'] }));
-      afterEach(() => jest.useRealTimers());
+      beforeEach(() => {
+        jest.useFakeTimers({ doNotFake: ['nextTick'] });
+        jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+      });
+      afterEach(() => {
+        jest.useRealTimers();
+        jest.restoreAllMocks();
+      });
 
       // Jest has it, but the types of this repository do not know it yet.
       const advanceTimers = (ms: number) =>
@@ -352,9 +358,25 @@ describe('createClient', () => {
         expect((await settled).message).toContain(
           'HTTP 500 error: Error retrieving file, please try again later',
         );
+        expect((await settled).message).toContain('gave up after 3 retries');
         expect(times).toHaveLength(4);
         expect(times.slice(1).map((time, index) => time - times[index])).toEqual([
           1000, 2000, 4000,
+        ]);
+      });
+
+      it('says in the log that it retries, and how many times it tried', async () => {
+        const warn = jest.spyOn(console, 'warn');
+        answerWith([503, 503, 200]);
+        const client = createClient<never, any>();
+
+        const result = client('files/test-key');
+        await advanceTimers(10_000);
+        await result;
+
+        expect(warn.mock.calls.map(([message]) => message)).toEqual([
+          expect.stringContaining('HTTP 503. Retry 1/3 after 1000ms delay'),
+          expect.stringContaining('HTTP 503. Retry 2/3 after 2000ms delay'),
         ]);
       });
 

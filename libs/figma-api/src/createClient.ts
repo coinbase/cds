@@ -137,11 +137,12 @@ async function makeRequest<T>(
           // Handle rate limiting and Figma server errors with retry
           if (isRetryableStatus(statusCode) && retryCount < MAX_RETRIES) {
             const delayMs = retryDelayMs(statusCode, retryCount);
-            verboseLog(
-              `[figma-api] HTTP ${statusCode}. Retry ${
-                retryCount + 1
-              }/${MAX_RETRIES} after ${delayMs}ms delay. URL: ${figmaUrl.toString()}`,
-            );
+            const retryMessage = `[figma-api] HTTP ${statusCode}. Retry ${
+              retryCount + 1
+            }/${MAX_RETRIES} after ${delayMs}ms delay. URL: ${figmaUrl.toString()}`;
+            // A rate limit is routine; Figma failing on its side is worth a line in every log.
+            if (statusCode === 429) verboseLog(retryMessage);
+            else console.warn(retryMessage);
             await sleep(delayMs);
             try {
               const result = await makeRequest<T>(path, queryParams, retryCount + 1);
@@ -161,7 +162,13 @@ async function makeRequest<T>(
 
           // Handle error status codes
           if (statusCode < 200 || statusCode >= 300) {
-            reject(parseFigmaError(statusCode, responseBody, figmaUrl.toString()));
+            const error = parseFigmaError(statusCode, responseBody, figmaUrl.toString());
+            // Say that it was tried again, so that a failure does not look like a single bad answer.
+            reject(
+              isRetryableStatus(statusCode)
+                ? new Error(`${error.message} (gave up after ${MAX_RETRIES} retries)`)
+                : error,
+            );
             return;
           }
 
