@@ -119,6 +119,10 @@ export const Default = () => (
     </Text>
     <ChipExamples size="s" />
     <Text as="h4" color="fgMuted" display="block" font="label1">
+      {'size="m"'}
+    </Text>
+    <ChipExamples size="m" />
+    <Text as="h4" color="fgMuted" display="block" font="label1">
       {'size="xs"'}
     </Text>
     <ChipExamples size="xs" />

@@ -108,14 +108,15 @@ const ChipMixRow = ({
   controlSize,
 }: {
   chipSize: ChipSize;
-  /** Matching small control size to mix alongside chips */
-  controlSize: 'xs' | 's';
+  /** Matching control size to mix alongside chips */
+  controlSize: 'xs' | 's' | 'm';
 }) => {
   const [activeTab, setActiveTab] = useState<TabValue | null>(tabbedChipTabs[0]);
   const [chipSelectValue, setChipSelectValue] = useState<string | null>('usd');
   const [text, setText] = useState('');
   const [search, setSearch] = useState('');
-  const includeTextInputs = chipSize === 's';
+  const textInputSize: TextInputSize | undefined =
+    chipSize === 's' || chipSize === 'm' ? chipSize : undefined;
 
   return (
     <HStack alignItems="center" flexWrap="wrap" gap={2}>
@@ -138,13 +139,13 @@ const ChipMixRow = ({
       />
       <Button size={controlSize}>Action</Button>
       <IconButton accessibilityLabel="Settings" name="gear" size={controlSize} />
-      {includeTextInputs && (
+      {textInputSize && (
         <>
           <TextInput
             accessibilityLabel="Filter"
             onChange={(e) => setText(e.target.value)}
             placeholder="Filter"
-            size="s"
+            size={textInputSize}
             value={text}
             width={140}
           />
@@ -153,7 +154,7 @@ const ChipMixRow = ({
             onChangeText={setSearch}
             onClear={() => setSearch('')}
             placeholder="Search"
-            size="s"
+            size={textInputSize}
             value={search}
             width={140}
           />
@@ -191,6 +192,12 @@ export const SizeComposition = () => (
         Chips + small controls — size=&quot;s&quot;
       </Text>
       <ChipMixRow chipSize="s" controlSize="s" />
+    </VStack>
+    <VStack gap={2}>
+      <Text as="h3" display="block" font="headline">
+        Chips + medium controls — size=&quot;m&quot;
+      </Text>
+      <ChipMixRow chipSize="m" controlSize="m" />
     </VStack>
     <VStack gap={2}>
       <Text as="h3" display="block" font="headline">
