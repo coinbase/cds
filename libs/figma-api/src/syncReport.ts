@@ -65,11 +65,18 @@ export type SyncReport = {
   label?: string;
   /** What the version plan asks `nx release` for. */
   bump: ReleaseBump;
+  /** The Figma file the assets come from, linked in the pull request body. */
+  figmaFile?: { name: string; url: string };
   /** The order of `group` headings in the changelog; other groups follow alphabetically. */
   groupOrder?: string[];
   changes: SyncChanges;
   rejected: RejectedAsset[];
   examined?: ExaminedSummary;
+  /**
+   * Files the sync changed that no entry of the report explains, such as a Code Connect file that
+   * changed when no asset did. They are listed for the reviewer; nothing fails because of them.
+   */
+  unexplainedFiles?: string[];
 };
 
 export const emptyChanges = (): SyncChanges => ({

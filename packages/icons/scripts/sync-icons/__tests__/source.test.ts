@@ -1,12 +1,13 @@
-import { getFileComponentSets, getFileNodes } from '@cds/figma-api';
+import { getFileComponents, getFileComponentSets, getFileNodes } from '@cds/figma-api';
 
-import { fetchComponentSets, fetchSetNodes } from '../source/fetchComponents';
+import { fetchComponentSets, fetchLooseComponents, fetchSetNodes } from '../source/fetchComponents';
 import type { ComponentSet } from '../source/IconSource';
 
 jest.mock('@cds/figma-api');
 
 const listing = getFileComponentSets as jest.MockedFunction<typeof getFileComponentSets>;
 const nodesRequest = getFileNodes as jest.MockedFunction<typeof getFileNodes>;
+const componentsRequest = getFileComponents as jest.MockedFunction<typeof getFileComponents>;
 
 const componentSet = (id: string, name = `Icon / ${id}`) =>
   ({
@@ -64,5 +65,58 @@ describe('fetchSetNodes', () => {
   it('makes no request when there is nothing to fetch', async () => {
     expect(await fetchSetNodes('FILE', [])).toEqual({});
     expect(nodesRequest).not.toHaveBeenCalled();
+  });
+});
+
+describe('fetchLooseComponents', () => {
+  it('returns only the components that are not part of a set, with a link to each', async () => {
+    componentsRequest.mockResolvedValueOnce({
+      meta: {
+        components: [
+          {
+            node_id: '1:1',
+            name: 'size=24, active=true',
+            file_key: 'FILE',
+            containing_frame: {
+              pageId: '0:1',
+              pageName: 'Icons',
+              containingComponentSet: { nodeId: '9:9', name: 'ui/add' },
+            },
+          },
+          {
+            node_id: '2:2',
+            name: 'Icon / helper',
+            file_key: 'FILE',
+            containing_frame: { pageId: '0:1', pageName: 'Icons' },
+          },
+          {
+            node_id: '3:3',
+            name: 'Icon / other',
+            file_key: 'FILE',
+            containing_frame: { pageId: '0:1', pageName: 'Icons', containingComponentSet: null },
+          },
+          { node_id: '4:4', name: 'Icon / bare', file_key: 'FILE' },
+        ],
+      },
+    } as unknown as Awaited<ReturnType<typeof getFileComponents>>);
+
+    expect(await fetchLooseComponents('FILE')).toEqual([
+      {
+        nodeId: '2:2',
+        name: 'Icon / helper',
+        url: 'https://www.figma.com/design/FILE?node-id=2-2',
+      },
+      {
+        nodeId: '3:3',
+        name: 'Icon / other',
+        url: 'https://www.figma.com/design/FILE?node-id=3-3',
+      },
+      {
+        nodeId: '4:4',
+        name: 'Icon / bare',
+        url: 'https://www.figma.com/design/FILE?node-id=4-4',
+      },
+    ]);
+    expect(componentsRequest).toHaveBeenCalledWith('FILE');
   });
 });

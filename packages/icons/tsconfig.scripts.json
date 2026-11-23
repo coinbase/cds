@@ -1,0 +1,19 @@
+{
+  "extends": "../../tsconfig.project.json",
+  "compilerOptions": {
+    "noEmit": true,
+    "composite": false,
+    "incremental": false,
+    "declaration": false,
+    "declarationMap": false,
+    "emitDeclarationOnly": false,
+    "rootDir": "../..",
+    "skipLibCheck": true
+  },
+  "include": [
+    "scripts/**/*.ts"
+  ],
+  "exclude": [
+    "scripts/**/__tests__/**"
+  ]
+}

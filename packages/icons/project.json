@@ -27,11 +27,16 @@
       "defaultConfiguration": "dev",
       "configurations": {
         "dev": {
-          "command": "tsc --build --pretty --verbose"
+          "commands": [
+            "tsc --build --pretty --verbose",
+            "tsc -p tsconfig.scripts.json --pretty"
+          ],
+          "parallel": false
         },
         "prod": {
           "commands": [
             "tsc --build ./tsconfig.build.json --pretty --verbose",
+            "tsc -p tsconfig.scripts.json --pretty",
             "prettier ./dts --write --loglevel warn"
           ],
           "parallel": false

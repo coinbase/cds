@@ -33,7 +33,8 @@
     "CHANGELOG"
   ],
   "dependencies": {
-    "@figma/rest-api-spec": "^0.34.0"
+    "@figma/rest-api-spec": "^0.34.0",
+    "svgo": "^3.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.28.0",

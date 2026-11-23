@@ -1,7 +1,8 @@
-import { getFileComponentSets, getFileNodes } from '@cds/figma-api';
+import { getFileComponents, getFileComponentSets, getFileNodes } from '@cds/figma-api';
+import { figmaNodeUrl } from '@cds/figma-api/syncReport';
 import { createBatches } from '@cds/figma-api/syncUtils';
 
-import type { ComponentSet, SetNode } from './IconSource';
+import type { ComponentSet, LooseComponent, SetNode } from './IconSource';
 
 /** Lists every component set published from the Figma file. The endpoint is cheap. */
 export async function fetchComponentSets(fileId: string): Promise<ComponentSet[]> {
@@ -33,4 +34,19 @@ export async function fetchSetNodes(
   }
 
   return nodes;
+}
+
+/**
+ * Lists the published components that are not part of a component set. The variants of a set are
+ * published components too, but they belong to their set and are left out here.
+ */
+export async function fetchLooseComponents(fileId: string): Promise<LooseComponent[]> {
+  const response = await getFileComponents(fileId);
+  return response.meta.components
+    .filter((component) => !component.containing_frame?.containingComponentSet)
+    .map((component) => ({
+      nodeId: component.node_id,
+      name: component.name,
+      url: figmaNodeUrl(component.file_key, component.node_id),
+    }));
 }

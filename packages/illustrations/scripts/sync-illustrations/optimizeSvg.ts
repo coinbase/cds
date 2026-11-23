@@ -1,3 +1,4 @@
+import { withSvgoPlugins } from '@cds/figma-api/svgoConfig';
 import { type Config, optimize } from 'svgo';
 
 /** https://github.com/svg/svgo/blob/main/plugins/_collections.js */
@@ -41,42 +42,22 @@ function assertSupportedColor(attribute: string, value: string) {
   if (!supportedColor.test(value)) throw new UnsupportedColorError(attribute, value);
 }
 
-export const svgoConfig: Config = {
-  multipass: true,
-  /** https://github.com/svg/svgo#built-in-plugins */
-  plugins: [
-    'convertStyleToAttrs',
-    {
-      name: 'preset-default',
-      params: {
-        overrides: {
-          cleanupNumericValues: { floatPrecision: 2 },
-          convertColors: { names2hex: true, rgb2hex: true, shortname: false, shorthex: false },
-        },
+export const svgoConfig: Config = withSvgoPlugins({
+  name: 'normalizeHexColors',
+  fn: () => ({
+    element: {
+      enter: (node) => {
+        for (const attribute of colorAttributes) {
+          if (attribute in node.attributes) {
+            const normalized = normalizeHexColor(node.attributes[attribute]);
+            assertSupportedColor(attribute, normalized);
+            node.attributes[attribute] = normalized;
+          }
+        }
       },
     },
-    'removeDimensions',
-    'cleanupListOfValues',
-    'removeRasterImages',
-    'removeStyleElement',
-    {
-      name: 'normalizeHexColors',
-      fn: () => ({
-        element: {
-          enter: (node) => {
-            for (const attribute of colorAttributes) {
-              if (attribute in node.attributes) {
-                const normalized = normalizeHexColor(node.attributes[attribute]);
-                assertSupportedColor(attribute, normalized);
-                node.attributes[attribute] = normalized;
-              }
-            }
-          },
-        },
-      }),
-    },
-  ],
-};
+  }),
+});
 
 /** Optimizes a raw Figma SVG export into the canonical light variant. */
 export function optimizeSvg(rawSvg: string) {

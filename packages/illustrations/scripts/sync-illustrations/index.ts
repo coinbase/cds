@@ -1,3 +1,4 @@
+import { changedBetween, snapshotFiles, unexplainedFiles } from '@cds/figma-api/changedFiles';
 import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
 import {
   isBreaking,
@@ -11,6 +12,7 @@ import { approximationSummary, notExportableSummary } from './artifacts/nativeSv
 import { type Sink } from './sinks/Sink';
 import { config } from './config';
 import { hasChanges, hasChangesToRecord, type SyncResults } from './diff';
+import { explainIllustrationFile, generatedPaths } from './explainFile';
 import { type Release, ReleaseBranch, runOnReleaseBranches } from './git';
 import { type Component, type Illustration, illustrationKey } from './illustration';
 import { readManifest, writeManifest } from './manifest';
@@ -72,6 +74,9 @@ const rejected: RejectedAsset[] = [];
 /** How many published components the source listed; for the report's "looked at" count. */
 let listed = 0;
 let changes: SyncResults | undefined;
+
+/** Every file the sync can write, with a hash of its content, to find what a run changed. */
+const snapshot = () => snapshotFiles(config.repoRoot, generatedPaths);
 
 const logSinkResults = (results: SinkResult[]) => {
   console.log(dryRun ? '\nDry run: nothing was written.' : '\nSink results:');
@@ -197,9 +202,20 @@ const toSyncChanges = (results?: SyncResults): SyncChanges => ({
   deleted: results?.deleted.map(({ name, type }) => ({ name, group: type })) ?? [],
 });
 
+const filesBefore = snapshot();
+
 main().then(
   () => {
     const syncChanges = toSyncChanges(changes);
+    const unexplained = unexplainedFiles({
+      changed: changedBetween(filesBefore, snapshot()),
+      changes: syncChanges,
+      explain: explainIllustrationFile,
+    });
+    if (unexplained.length > 0) {
+      console.warn(`\n⚠️ ${unexplained.length} changed file(s) have no entry in the report:`);
+      for (const file of unexplained) console.warn(`  ${file}`);
+    }
     const syncReport: SyncReport = {
       target: 'illustrations',
       bump: isBreaking(syncChanges) ? 'major' : 'minor',
@@ -207,6 +223,7 @@ main().then(
       changes: syncChanges,
       rejected,
       examined: { seen: listed, ignored: [] },
+      ...(unexplained.length > 0 ? { unexplainedFiles: unexplained } : {}),
     };
     writeSyncReport(reportPath, syncReport);
     // Scratch runs and dry runs write nothing into the repository.

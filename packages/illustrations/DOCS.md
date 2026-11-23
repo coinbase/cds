@@ -80,6 +80,8 @@ You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 
 3. DO NOT MERGE until the illustrations DRI has carefully reviewed and signed off on the changelog and the visual regression test results.
 
+The job summary of the Sync Figma Assets run also lists every changed file that nothing in the report accounts for under _Changed files with no entry in the report_, and shows it as a warning on the run. The run does not fail because of it; check those files before you merge.
+
 ### Syncing the native packages
 
 The same run can update the illustrations of the native CDS packages. Point it at a local checkout

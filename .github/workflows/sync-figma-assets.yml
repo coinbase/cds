@@ -234,8 +234,15 @@ jobs:
               echo "#### Skipped, needs a fix in Figma"
               yarn tsx libs/figma-api/src/renderSyncReportCli.ts rejections "${SYNC_REPORT_PATH}"
             fi
+            unexplained=$(yarn tsx libs/figma-api/src/renderSyncReportCli.ts unexplained-files "${SYNC_REPORT_PATH}")
+            if [ -n "${unexplained}" ]; then
+              echo
+              echo "#### Changed files with no entry in the report"
+              echo "${unexplained}"
+            fi
           } >> "$GITHUB_STEP_SUMMARY"
           jq -r '.rejected[] | "::warning title=Figma asset skipped::\(.name): \(.message | gsub("[\r\n]+"; " "))"' "${SYNC_REPORT_PATH}"
+          jq -r '.unexplainedFiles[]? | "::warning file=\(.),title=Changed file has no entry in the report::No asset the sync found in Figma accounts for this change."' "${SYNC_REPORT_PATH}"
 
       - name: Fail when the sync crashed
         if: steps.sync.outcome == 'failure' && steps.report.outputs.found != 'true'

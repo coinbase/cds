@@ -1980,6 +1980,7 @@ __metadata:
     "@babel/preset-react": "npm:^7.28.5"
     "@babel/preset-typescript": "npm:^7.27.1"
     "@figma/rest-api-spec": "npm:^0.34.0"
+    svgo: "npm:^3.0.2"
   languageName: unknown
   linkType: soft
 

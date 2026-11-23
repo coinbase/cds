@@ -62,6 +62,36 @@ You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 
 3. DO NOT MERGE until the icons DRI has carefully reviewed and signed off on the changelog and the visual regression test results.
 
+### What the job summary says about the changes
+
+The job summary of the Sync Figma Assets run lists every item the sync found in Figma in the words of `git status --short`: `A` new, `M` updated, `R` renamed, `D` deleted, `U` skipped because it needs a fix in Figma (what was published stays), `?` not part of the sync yet, `!` ignored on purpose. It then compares the files the run changed with that list. A file that nothing in the list accounts for is shown under _Changed files with no entry in the report_ and as a warning on the run. The usual cause is a Code Connect file that changed while no icon did. The run does not fail because of it; check those files before you merge.
+
+### What the sync takes from Figma
+
+The sync lists the published **component sets** of the icons file. An icon set is synced only if it follows these rules; the rules are in `scripts/sync-icons/profile.ts`. An icon set that breaks one is skipped, reported to design in Slack and in the job summary, and any version that is already published stays as it was.
+
+- **Name:** `ui/<name>` or `nav/<name>`. The icon name is the part after the slash, and it may use only letters, numbers, `-` and `_`. Reported as _Invalid name_ when it does not follow this.
+- **One icon set per icon name, ignoring capitalization** (`ui/cash` and `nav/cash` clash). The icon set that is already published stays; between two new ones the older stays. The other is reported as _Duplicate name_.
+- **Which icon is which:** the name decides, ignoring capitalization, so an icon set that was re-created in Figma under the same name stays the same icon, whatever its node id. An icon set whose name changed but that has the same node id is a rename, and so is a change of capitalization. A rename or a delete is a breaking change.
+- **Variants:** exactly sizes 12, 16 and 24, each with `active=true` and `active=false`, named like `size=24, active=false`. A missing, repeated or extra variant, or a set with no variants, is reported as _Invalid variants_ with what is wrong.
+- **Components outside a set** are not synced. They are listed as ignored in the job summary, and counted in the Slack message. If one has the icon name of a published icon whose set is gone, that published icon is kept instead of being deleted.
+
+- **A set that is gone from Figma** is deleted on the next run, incremental or full, because deleting a set changes no `updated_at`. If Figma returns no icon sets at all while icons are published, the sync fails and deletes nothing.
+
+To allow another size, change `variants.sizes` in `profile.ts`.
+
+### How the sync is organized
+
+The sync lives in `scripts/sync-icons`. It is the same code as the retail icons sync in the private repository; only `profile.ts` (the rules and the facts about the package) and `config.ts` (the paths, the Figma file and the sinks) differ, and the Code Connect script. When you change the sync, change the same file in both.
+
+- `index.ts` reads the arguments, runs the sync, checks the changed files and writes the report.
+- `sync.ts` runs the sync: it lists the component sets, matches them with the published icon sets, downloads the ones that changed, and hands the result to the sinks.
+- `rules.ts` holds the rules that follow from the profile (safe names, variants), `select.ts` lists and matches the component sets and picks what to download, `diff.ts` compares them with the manifest, `manifest.ts` reads and writes the manifest, and `report.ts` builds the report.
+- `source/` is where icons come from: `FigmaSource` reads the Figma API, and `InMemorySource` holds plain data for tests.
+- `sinks/` are the places the sync writes to, in this order: `SvgFilesSink` (the SVG files), `IconFontSink` (the font and the glyph map), `IconDataSink` (the icon names and descriptions), then, after the manifest is saved, `CodeConnectSink` and `ExpoSvgMapSink`. Every sink checks what it is about to write before any of them writes, so an icon set that cannot be written (an SVG that is not an SVG, no code point left) is reported as _Invalid asset_ and what was published for it stays.
+
+`__tests__/sync.test.ts` runs the whole sync over an `InMemorySource` and compares every file it writes with the files in `__tests__/__fixtures__/golden`.
+
 ### Syncing Icons Troubleshooting
 
 **"Figma file has no updates"** — Every icon set in Figma has the same last-updated date, description and name as the manifest records for it. Verify this is expected with design.

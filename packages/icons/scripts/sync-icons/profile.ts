@@ -1,27 +1,39 @@
-const ICON_SET_NAME = /^(ui|nav)\/[^/]+$/;
+import type { SyncProfile } from './rules';
 
-/** What is wrong with an icon set's name in Figma, or undefined when it is valid. */
-export const iconSetNameProblem = (figmaName: string) =>
-  ICON_SET_NAME.test(figmaName.trim())
-    ? undefined
-    : `Icon set "${figmaName}" is not named "ui/<name>" or "nav/<name>". Rename the icon set in Figma.`;
+const SET_NAME = /^(ui|nav)\/([^/]+)$/;
 
-/**
- * What is wrong with an icon component's properties, or undefined when it is valid. Components are
- * named after their properties, like "size=24, active=false".
- */
-export const iconPropsProblem = (
-  iconName: string,
-  componentName: string,
-  { size, active }: Record<string, unknown>,
-) => {
-  const where = `"${componentName}" in icon set "${iconName}"`;
-  const format = 'Name icon components like "size=24, active=false".';
-  if (size === undefined) return `${where} is missing a "size" property. ${format}`;
-  if (typeof size !== 'number') return `${where} has a "size" that is not a number. ${format}`;
-  if (active === undefined) return `${where} is missing an "active" property. ${format}`;
-  if (typeof active !== 'boolean') {
-    return `${where} has an "active" that is not true or false. ${format}`;
-  }
-  return undefined;
+// TO DO: Update this when "ui" and "nav" prefixes are removed from the Figma file
+export const profile: SyncProfile = {
+  target: 'icons',
+  scriptName: 'icons:sync-icons',
+  iconName: (figmaName) => {
+    const match = SET_NAME.exec(figmaName.trim());
+    return match
+      ? { name: match[2].trim() }
+      : {
+          problem: `Icon set "${figmaName}" is not named "ui/<name>" or "nav/<name>". Rename the icon set in Figma.`,
+        };
+  },
+  variants: { sizes: ['12', '16', '24'], sizeIsNumber: true },
+  publishesDescriptions: true,
+  bump: { breaking: 'major', otherwise: 'minor' },
+  generated: {
+    packageDir: 'packages/icons',
+    paths: [
+      'packages/icons/src',
+      'packages/icons/manifest.json',
+      'apps/expo-app/src/__generated__/iconSvgMap.ts',
+      'packages/web/src/icons/__figma__',
+      'packages/mobile/src/icons/__figma__',
+    ],
+    fromChanges: [
+      'packages/icons/src/IconName.ts',
+      'packages/icons/src/names.ts',
+      'packages/icons/src/descriptionMap.ts',
+      'packages/icons/src/glyphMap.ts',
+      'packages/icons/src/fonts/',
+      'apps/expo-app/src/__generated__/iconSvgMap.ts',
+    ],
+    fromListing: ['packages/web/src/icons/__figma__/', 'packages/mobile/src/icons/__figma__/'],
+  },
 };

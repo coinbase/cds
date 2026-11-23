@@ -11,6 +11,7 @@ import {
   renderRejections,
   renderStatus,
   renderSummary,
+  renderUnexplainedFiles,
   renderVersionPlan,
   summaryOutcome,
   writeVersionPlan,
@@ -660,5 +661,29 @@ describe('failureExcerpt', () => {
 
   it('is capped so one long log cannot flood the channel', () => {
     expect(failureExcerpt(`error ${'x'.repeat(5000)}`).length).toBeLessThanOrEqual(701);
+  });
+});
+
+describe('renderUnexplainedFiles', () => {
+  it('lists the changed files nothing in the report explains', () => {
+    const text = renderUnexplainedFiles(
+      report({
+        unexplainedFiles: [
+          'packages/web/src/icons/__figma__/icons.figma.batch.json',
+          'packages/icons/README.md',
+        ],
+      }),
+    );
+    expect(text).toContain('2 changed files have no entry in the report.');
+    expect(text).toContain('- `packages/web/src/icons/__figma__/icons.figma.batch.json`');
+    expect(text).toContain('- `packages/icons/README.md`');
+  });
+
+  it('says it in the singular for one file, and says nothing when every file is explained', () => {
+    expect(renderUnexplainedFiles(report({ unexplainedFiles: ['a.txt'] }))).toContain(
+      '1 changed file has no entry in the report.',
+    );
+    expect(renderUnexplainedFiles(report())).toBe('');
+    expect(renderUnexplainedFiles(report({ unexplainedFiles: [] }))).toBe('');
   });
 });
