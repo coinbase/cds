@@ -1,3 +1,5 @@
+import { selectDeleted } from '@cds/figma-api/syncCore';
+import { Ledger } from '@cds/figma-api/syncLedger';
 import type { ExaminedSummary, RejectedAsset } from '@cds/figma-api/syncReport';
 import fs from 'node:fs';
 
@@ -11,6 +13,7 @@ import {
   type IconSetChange,
   type IconSetDiff,
   type IconSyncResults,
+  recordDiff,
   type Rejection,
   toSyncResults,
   validateIconSets,
@@ -19,12 +22,7 @@ import {
 import { assertSvgFilesExist, readManifest, writeManifest } from './manifest';
 import { optimizeSvg } from './optimizeSvg';
 import { toRejectedAsset } from './report';
-import {
-  emptyLibraryProblem,
-  selectDeletedIconSets,
-  selectIconSetsToFetch,
-  sortLooseComponents,
-} from './select';
+import { emptyLibraryProblem, selectIconSetsToFetch, sortLooseComponents } from './select';
 
 export type SyncOptions = {
   config: SyncIconsConfig;
@@ -39,10 +37,28 @@ export type SyncOptions = {
 export type SyncOutcome = {
   status: 'nothing-to-sync' | 'synced';
   results: IconSyncResults;
+  /** What happened to everything the sync found in Figma; the report is built from it. */
+  ledger: Ledger;
+  /** How many component sets and components the source listed. */
+  seen: number;
   /** Icon sets that were skipped because designers need to fix them in Figma. */
   rejected: RejectedAsset[];
   examined: ExaminedSummary;
 };
+
+const toOutcome = (
+  status: SyncOutcome['status'],
+  results: IconSyncResults,
+  ledger: Ledger,
+  seen: number,
+): SyncOutcome => ({
+  status,
+  results,
+  ledger,
+  seen,
+  rejected: ledger.rejected(),
+  examined: { seen, ignored: ledger.ignoredGroups() },
+});
 
 const noResults = (): IconSyncResults => ({
   newIconSets: [],
@@ -100,20 +116,21 @@ export async function runSync({
   const remoteIds = new Set(componentSets.map((componentSet) => componentSet.node_id));
   // Components outside sets are reported, not synced; a published icon they replace keeps its version.
   const loose = sortLooseComponents(looseComponents, oldManifest.iconSets, remoteIds);
-  loose.keepNodeIds.forEach((nodeId) => remoteIds.add(nodeId));
   const emptyLibrary = emptyLibraryProblem(componentSets.length, oldManifest.iconSets.length);
   if (emptyLibrary) throw Error(emptyLibrary);
   // Deleting a set bumps no `updated_at`, so deletions are found here and not from the fetched sets.
-  const deletedIconSets = selectDeletedIconSets(oldManifest.iconSets, remoteIds);
-  const examined: ExaminedSummary = {
-    seen: componentSets.length + looseComponents.length,
-    ignored: loose.ignored,
-  };
+  const deletedIconSets = selectDeleted(oldManifest.iconSets, {
+    identity: ({ nodeId }) => nodeId,
+    present: remoteIds,
+    kept: loose.keepNodeIds,
+  });
+  const seen = componentSets.length + looseComponents.length;
 
-  const rejected: RejectedAsset[] = [];
+  const ledger = new Ledger();
+  for (const { reason, items } of loose.ignored) ledger.ignored(reason, items);
   const reject = (rejection: Rejection) => {
     console.warn(`  [REJECTED] ${rejection.message}`);
-    rejected.push(toRejectedAsset(config.figmaFileId, rejection));
+    ledger.skipped(toRejectedAsset(config.figmaFileId, rejection));
   };
 
   const idsToFetch = new Set(
@@ -134,7 +151,7 @@ export async function runSync({
     for (const sink of finishSinks.filter(({ runsWithoutChanges }) => runsWithoutChanges)) {
       await sink.apply(unchanged);
     }
-    return { status: 'nothing-to-sync', results: noResults(), rejected, examined };
+    return toOutcome('nothing-to-sync', noResults(), ledger, seen);
   }
 
   log(`\nProcessing ${numberOfNodes} updated icon sets from Figma...`);
@@ -184,6 +201,7 @@ export async function runSync({
   for (const iconSet of diff.deleted) log(` Deleting icon set: ${iconSet.name} ${iconSet.nodeId}`);
 
   const results = toSyncResults(diff);
+  recordDiff(ledger, diff);
 
   log('\nGenerating output files...');
   for (const plan of plans) await plan.commit();
@@ -198,5 +216,5 @@ export async function runSync({
   const finished = toSinkChanges(config, manifest, diff);
   for (const sink of finishSinks) await sink.apply(finished);
 
-  return { status: 'synced', results, rejected, examined };
+  return toOutcome('synced', results, ledger, seen);
 }

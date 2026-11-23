@@ -70,6 +70,11 @@ export type SyncReport = {
   changes: SyncChanges;
   rejected: RejectedAsset[];
   examined?: ExaminedSummary;
+  /**
+   * Files the sync changed that no entry of the report explains, such as a Code Connect file that
+   * changed when no asset did. They are listed for the reviewer; nothing fails because of them.
+   */
+  unexplainedFiles?: string[];
 };
 
 export const emptyChanges = (): SyncChanges => ({

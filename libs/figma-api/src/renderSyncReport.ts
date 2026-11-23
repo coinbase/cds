@@ -296,6 +296,16 @@ export const renderRejections = (report: SyncReport) =>
     )
     .join('\n\n');
 
+/** The changed files nothing in the report explains, for the job summary; empty when there are none. */
+export const renderUnexplainedFiles = (report: SyncReport) => {
+  const files = report.unexplainedFiles ?? [];
+  if (files.length === 0) return '';
+  return [
+    `**${files.length} changed ${files.length === 1 ? 'file has' : 'files have'} no entry in the report.** Nothing the sync found in Figma accounts for ${files.length === 1 ? 'it' : 'them'}, for example a Code Connect file that changed while no asset did. Check ${files.length === 1 ? 'it' : 'them'} before merging.`,
+    ...files.map((file) => `- \`${plain(file)}\``),
+  ].join('\n');
+};
+
 export const renderPullRequestBody = (report: SyncReport) => {
   const sections = [
     '## What changed? Why?',

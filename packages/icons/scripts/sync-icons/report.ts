@@ -1,10 +1,9 @@
 import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
+import type { Ledger } from '@cds/figma-api/syncLedger';
 import {
-  type ExaminedSummary,
   figmaNodeUrl,
   isBreaking,
   type RejectedAsset,
-  type SyncChanges,
   type SyncReport,
   writeSyncReport,
 } from '@cds/figma-api/syncReport';
@@ -23,29 +22,24 @@ export const toRejectedAsset = (
   ...(duplicateNodeId ? { duplicateOf: { url: figmaNodeUrl(figmaFileId, duplicateNodeId) } } : {}),
 });
 
-export const toChanges = (results?: IconSyncResults): SyncChanges => ({
-  added: results?.newIconSets.map(({ name }) => ({ name })) ?? [],
-  updated: results?.updatedIconSets.map(({ name }) => ({ name })) ?? [],
-  renamed: results?.renamedIconSets.map(({ name, oldName }) => ({ name, oldName })) ?? [],
-  deleted: results?.deletedIconSets.map(({ name }) => ({ name })) ?? [],
-});
-
 export const buildSyncReport = ({
-  results,
-  rejected,
-  examined,
+  ledger,
+  seen,
+  unexplainedFiles,
 }: {
-  results?: IconSyncResults;
-  rejected: RejectedAsset[];
-  examined: ExaminedSummary;
+  ledger: Ledger;
+  /** How many items the source listed. */
+  seen: number;
+  unexplainedFiles?: string[];
 }): SyncReport => {
-  const changes = toChanges(results);
+  const changes = ledger.changes();
   return {
     target: 'icons',
     bump: isBreaking(changes) ? 'major' : 'minor',
     changes,
-    rejected,
-    examined,
+    rejected: ledger.rejected(),
+    examined: { seen, ignored: ledger.ignoredGroups() },
+    ...(unexplainedFiles?.length ? { unexplainedFiles } : {}),
   };
 };
 

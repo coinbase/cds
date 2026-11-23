@@ -1,4 +1,4 @@
-import { dedupeByIdentity, selectChanged } from '../syncCore';
+import { dedupeByIdentity, selectChanged, selectDeleted } from '../syncCore';
 
 type Item = { id: string; name: string; age: number };
 const item = (id: string, name: string, age: number): Item => ({ id, name, age });
@@ -76,5 +76,29 @@ describe('selectChanged', () => {
 
   it('picks every item when there are no records', () => {
     expect(selectChanged([item('1', 'a', 1)], new Map(), options)).toHaveLength(1);
+  });
+});
+
+describe('selectDeleted', () => {
+  const published = [{ id: 'a' }, { id: 'b' }, { id: 'c' }, { id: 'd' }];
+  const identity = ({ id }: { id: string }) => id;
+
+  it('finds the published items Figma no longer has', () => {
+    expect(selectDeleted(published, { identity, present: new Set(['a', 'c']) })).toEqual([
+      { id: 'b' },
+      { id: 'd' },
+    ]);
+  });
+
+  it('keeps an item Figma still has, however the sync treated it', () => {
+    expect(selectDeleted(published, { identity, present: new Set(['a', 'b', 'c', 'd']) })).toEqual(
+      [],
+    );
+  });
+
+  it('keeps an item that is kept for another reason, such as one skipped as invalid', () => {
+    expect(
+      selectDeleted(published, { identity, present: new Set(['a']), kept: ['b', 'd'] }),
+    ).toEqual([{ id: 'c' }]);
   });
 });

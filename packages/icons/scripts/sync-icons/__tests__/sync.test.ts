@@ -1,8 +1,11 @@
+import { changedBetween, snapshotChanges, unexplainedFiles } from '@cds/figma-api/changedFiles';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
 import type { SyncIconsConfig } from '../config';
+import { explainIconFile, generatedPaths } from '../explainFile';
 import { lastAllowedUnicode, type Manifest } from '../manifest';
 import { buildSyncReport, writeReport } from '../report';
 import { CodeConnectSink } from '../sinks/CodeConnectSink';
@@ -129,6 +132,47 @@ describe('icon sync end to end', () => {
     ]);
     expect(examined.seen).toBe(6);
     expect(examined.ignored[0].items).toEqual([{ name: looseHelper.name, url: looseHelper.url }]);
+  });
+
+  it('keeps one ledger entry per outcome, in the words of git status', async () => {
+    const run = createRun();
+    run.source.sets = firstLibrary();
+    await run.sync();
+
+    run.source.sets = secondLibrary();
+    run.source.loose = [looseHelper];
+    const { ledger } = await run.sync();
+
+    expect(ledger.entries.map(({ status, name }) => `${status} ${name}`)).toEqual([
+      '! Icon / helper',
+      'U broken',
+      'U add',
+      'M add',
+      'R minus',
+      'M minus',
+      'A send',
+      'D cash',
+    ]);
+    expect(ledger.explains('remove')).toBe(true);
+    expect(ledger.explains('broken')).toBe(false);
+  });
+
+  it('only records an icon set again when Figma touched it and nothing visible changed', async () => {
+    const run = createRun();
+    run.source.sets = firstLibrary();
+    await run.sync();
+
+    run.source.sets = firstLibrary().map((set) =>
+      set.nodeId === '1:1' ? { ...set, updatedAt: '2026-05-01T00:00:00.000Z' } : set,
+    );
+    const { ledger, results } = await run.sync();
+
+    expect(ledger.hasChanges()).toBe(false);
+    expect(ledger.hasRefreshed()).toBe(true);
+    expect(results.updatedIconSets).toEqual([]);
+    expect(run.readManifest().iconSets.find(({ name }) => name === 'add')?.lastUpdated).toBe(
+      '2026-05-01T00:00:00.000Z',
+    );
   });
 
   it('downloads only the icon sets that changed, and leaves the rest alone', async () => {
@@ -294,5 +338,72 @@ describe('icon sync failures', () => {
     expect(rejected[0].message).toContain('no code point left');
     expect(results.newIconSets.map(({ name }) => name)).toEqual(['send']);
     expect(run.readManifest().lastUnicode).toBe(lastAllowedUnicode);
+  });
+});
+
+describe('icon sync changed files', () => {
+  const git = (cwd: string, ...args: string[]) =>
+    execFileSync(
+      'git',
+      [
+        '-c',
+        'user.name=test',
+        '-c',
+        'user.email=test@example.test',
+        '-c',
+        'commit.gpgsign=false',
+        ...args,
+      ],
+      { cwd, encoding: 'utf-8' },
+    );
+
+  /** Runs the icon sync and lists the changed files that nothing in the report explains. */
+  const syncAndCheck = async (run: ReturnType<typeof createRun>) => {
+    const before = snapshotChanges(run.root, generatedPaths);
+    const { ledger } = await run.sync();
+    const after = snapshotChanges(run.root, generatedPaths);
+    return unexplainedFiles({
+      changed: changedBetween(before, after),
+      ledger,
+      explain: explainIconFile,
+    });
+  };
+
+  beforeEach(() => {
+    jest.spyOn(console, 'log').mockImplementation(() => undefined);
+    jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+  });
+
+  afterEach(() => jest.restoreAllMocks());
+
+  it('explains every file of a sync that changed icons', async () => {
+    const run = createRun();
+    git(run.root, 'init', '-q');
+    run.source.sets = firstLibrary();
+    expect(await syncAndCheck(run)).toEqual([]);
+    git(run.root, 'add', '-A');
+    git(run.root, 'commit', '-qm', 'first');
+
+    run.source.sets = secondLibrary();
+    expect(await syncAndCheck(run)).toEqual([]);
+  });
+
+  it('lists a Code Connect file that changed while no icon did', async () => {
+    const run = createRun();
+    git(run.root, 'init', '-q');
+    const batch = path.join(run.root, 'packages/web/src/icons/__figma__/icons.figma.batch.json');
+    let calls = 0;
+    run.codeConnect.mockImplementation(async () => {
+      fs.mkdirSync(path.dirname(batch), { recursive: true });
+      fs.writeFileSync(batch, `{"call":${++calls}}`);
+    });
+    run.source.sets = firstLibrary();
+    await run.sync();
+    git(run.root, 'add', '-A');
+    git(run.root, 'commit', '-qm', 'first');
+
+    expect(await syncAndCheck(run)).toEqual([
+      'packages/web/src/icons/__figma__/icons.figma.batch.json',
+    ]);
   });
 });

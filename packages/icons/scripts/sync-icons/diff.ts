@@ -1,4 +1,5 @@
 import { dedupeByIdentity } from '@cds/figma-api/syncCore';
+import type { Ledger } from '@cds/figma-api/syncLedger';
 import { hasChanges, type RejectedCategory } from '@cds/figma-api/syncReport';
 import { hashJson, sortByCreatedAt } from '@cds/figma-api/syncUtils';
 
@@ -330,6 +331,23 @@ export function diffIconSets({
   });
 
   return { changes, deleted: [...deleted] };
+}
+
+/** Records what the diff did to each icon set, in the order the icon sets were processed. */
+export function recordDiff(ledger: Ledger, diff: IconSetDiff) {
+  for (const change of diff.changes) {
+    const { name } = change.iconSet;
+    if (change.kind === 'new') ledger.added({ name });
+    if (change.kind === 'changed') {
+      if (change.renamed) ledger.renamed({ name, oldName: change.oldIconSet.name });
+      if (change.updated) ledger.updated({ name });
+    }
+    if (change.kind === 'unchanged') {
+      if (change.updated) ledger.updated({ name });
+      else ledger.refreshed({ name });
+    }
+  }
+  for (const { name } of diff.deleted) ledger.deleted({ name });
 }
 
 /** Takes icon sets out of a diff, so that what was published for them stays as it is. */

@@ -1,3 +1,4 @@
+import { selectDeleted } from '@cds/figma-api/syncCore';
 import { mapConcurrently } from '@cds/figma-api/syncUtils';
 
 import type { Sink, SinkChanges, SinkFailure } from './sinks/Sink';
@@ -136,7 +137,11 @@ export async function runSync({
       .map(({ nodeId }) => componentsByNodeId.get(nodeId) as Component),
   ];
 
-  const deletions = previous.filter(({ nodeId }) => !remoteNodeIds.has(nodeId));
+  const deletions = selectDeleted(previous, {
+    identity: ({ nodeId }) => nodeId,
+    present: selection.remoteNodeIds,
+    kept: invalidNodeIds,
+  });
   if (toSync.length === 0 && deletions.length === 0) {
     if (fullCompare) throw Error('No illustrations found in the source');
     return { status: 'nothing-to-sync', duplicates, invalid, listed };

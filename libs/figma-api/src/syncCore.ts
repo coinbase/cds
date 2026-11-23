@@ -51,3 +51,24 @@ export const selectChanged = <Remote, Known>(
     const record = known.get(id(item));
     return record === undefined || differs(item, record);
   });
+
+/**
+ * The published items that are gone from Figma: the only real deletions. An item Figma still has
+ * is never deleted, whatever the sync made of it (`present`), and neither is an item the sync
+ * keeps for another reason (`kept`): one it skipped as invalid, or a component outside a set that
+ * took the name of a published icon. In all of these the published version stays.
+ */
+export const selectDeleted = <T>(
+  published: readonly T[],
+  {
+    identity,
+    present,
+    kept = [],
+  }: { identity: (item: T) => string; present: ReadonlySet<string>; kept?: Iterable<string> },
+) => {
+  const keep = new Set(kept);
+  return published.filter((item) => {
+    const id = identity(item);
+    return !present.has(id) && !keep.has(id);
+  });
+};

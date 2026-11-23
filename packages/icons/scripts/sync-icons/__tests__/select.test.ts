@@ -1,7 +1,6 @@
 import {
   emptyLibraryProblem,
   type KnownIconSet,
-  selectDeletedIconSets,
   selectIconSetsToFetch,
   sortLooseComponents,
 } from '../select';
@@ -105,21 +104,6 @@ describe('sortLooseComponents', () => {
 
   it('returns no groups for no components', () => {
     expect(sortLooseComponents([], known, new Set())).toEqual({ keepNodeIds: [], ignored: [] });
-  });
-});
-
-describe('selectDeletedIconSets', () => {
-  const published = [
-    knownIconSet({ nodeId: '1:1', name: 'add' }),
-    knownIconSet({ nodeId: '2:2', name: 'remove' }),
-  ];
-
-  it('finds a published set that Figma no longer has, even when no other set changed', () => {
-    expect(selectDeletedIconSets(published, new Set(['1:1']))).toEqual([published[1]]);
-  });
-
-  it('finds nothing when every published set is still in Figma, or kept', () => {
-    expect(selectDeletedIconSets(published, new Set(['1:1', '2:2']))).toEqual([]);
   });
 });
 

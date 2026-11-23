@@ -62,6 +62,10 @@ You can get the Percy link from the GitHub Actions "Visreg Web" job on your PR
 
 3. DO NOT MERGE until the icons DRI has carefully reviewed and signed off on the changelog and the visual regression test results.
 
+### What the job summary says about the changes
+
+The job summary of the Sync Figma Assets run lists every item the sync found in Figma in the words of `git status --short`: `A` new, `M` updated, `R` renamed, `D` deleted, `U` skipped because it needs a fix in Figma (what was published stays), `?` not part of the sync yet, `!` ignored on purpose. It then compares the files the run changed with that list. A file that nothing in the list accounts for is shown under _Changed files with no entry in the report_ and as a warning on the run. The usual cause is a Code Connect file that changed while no icon did. The run does not fail because of it; check those files before you merge.
+
 ### What the sync takes from Figma
 
 The sync lists the published **component sets** of the icons file. An icon set is synced only if it follows these rules; the rules are in `scripts/sync-icons/profile.ts`. An icon set that breaks one is skipped, reported to design in Slack and in the job summary, and any version that is already published stays as it was.

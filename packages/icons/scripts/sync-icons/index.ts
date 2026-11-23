@@ -1,17 +1,30 @@
+import { changedBetween, snapshotChanges, unexplainedFiles } from '@cds/figma-api/changedFiles';
+
 import { CodeConnectSink } from './sinks/CodeConnectSink';
 import { ExpoSvgMapSink } from './sinks/ExpoSvgMapSink';
 import { IconDataSink } from './sinks/IconDataSink';
 import { IconFontSink } from './sinks/IconFontSink';
 import { SvgFilesSink } from './sinks/SvgFilesSink';
 import { config } from './config';
+import { explainIconFile, generatedPaths } from './explainFile';
 import { buildSyncReport, logRejections, logSummary, writeReport } from './report';
 import { runSync } from './sync';
 
 const args = process.argv.slice(2);
 const fullCompare = config.fullCompare || args.includes('--full-compare');
 
+/** The files git sees as changed in the generated paths; none when this is not a git checkout. */
+const snapshot = () => {
+  try {
+    return snapshotChanges(config.repoRoot, generatedPaths);
+  } catch {
+    return undefined;
+  }
+};
+
 const main = async () => {
-  const { results, rejected, examined } = await runSync({
+  const before = snapshot();
+  const { results, rejected, ledger, seen } = await runSync({
     config,
     fullCompare,
     sinks: [
@@ -23,8 +36,22 @@ const main = async () => {
     ],
   });
 
+  const after = snapshot();
+  const unexplained =
+    before && after
+      ? unexplainedFiles({
+          changed: changedBetween(before, after),
+          ledger,
+          explain: explainIconFile,
+        })
+      : [];
+  if (unexplained.length > 0) {
+    console.warn(`\n⚠️ ${unexplained.length} changed file(s) have no entry in the report:`);
+    for (const file of unexplained) console.warn(`  ${file}`);
+  }
+
   logSummary(results);
-  writeReport(buildSyncReport({ results, rejected, examined }), {
+  writeReport(buildSyncReport({ ledger, seen, unexplainedFiles: unexplained }), {
     repoRoot: config.repoRoot,
     reportPath: process.env.SYNC_REPORT_PATH,
   });
