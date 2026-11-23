@@ -12,7 +12,14 @@ describe('typeahead helpers', () => {
       expect(isPrintableTypeaheadKey(key)).toBe(true);
     });
 
-    it.each(['Enter', 'ArrowDown', 'Escape', ' ', '-', 'ab'])(
+    it.each(['é', 'Ö', 'ж', 'Ω', 'ß', '日', 'क', 'ा', '٣'])(
+      'treats single non-ASCII letter, mark or digit "%s" as printable',
+      (key) => {
+        expect(isPrintableTypeaheadKey(key)).toBe(true);
+      },
+    );
+
+    it.each(['Enter', 'ArrowDown', 'Escape', 'Dead', ' ', '-', '✓', '€', '😀', 'ab', 'жж'])(
       'treats "%s" as non-printable',
       (key) => {
         expect(isPrintableTypeaheadKey(key)).toBe(false);
@@ -59,6 +66,21 @@ describe('typeahead helpers', () => {
 
     it('strips leading non-alphanumeric characters', () => {
       expect(normalizeOptionText('  ✓ Banana')).toBe('banana');
+    });
+
+    it('keeps leading non-ASCII letters', () => {
+      expect(normalizeOptionText('Éclair')).toBe('éclair');
+      expect(normalizeOptionText('Österreich')).toBe('österreich');
+      expect(normalizeOptionText('Женева')).toBe('женева');
+      expect(normalizeOptionText('東京')).toBe('東京');
+    });
+
+    it('strips leading icon glyphs and emoji', () => {
+      expect(normalizeOptionText('\u{F05A4}Banana')).toBe('banana');
+      expect(normalizeOptionText('\uE001 Banana')).toBe('banana');
+      expect(normalizeOptionText('🇺🇸 United States')).toBe('united states');
+      expect(normalizeOptionText('❤️ Favorites')).toBe('favorites');
+      expect(normalizeOptionText('✓ Éclair')).toBe('éclair');
     });
 
     it('handles nullish input', () => {
