@@ -66,7 +66,7 @@ const svgEsmMap = {
   },
   arrowsUpDown: {
     themeable: () =>
-      import('../svgJs/esm/themeable/arrowsUpDown-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/arrowsUpDown-2.js').then((m) => m.default as string),
   },
   artFrameEmptyState: {
     themeable: () =>
@@ -1185,7 +1185,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/marginWarning-4.js').then((m) => m.default as string),
   },
   mcLoad: {
-    themeable: () => import('../svgJs/esm/themeable/mcLoad-2.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/mcLoad-3.js').then((m) => m.default as string),
   },
   mic: {
     themeable: () => import('../svgJs/esm/themeable/mic-4.js').then((m) => m.default as string),

@@ -78,9 +78,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/appTrackingTransparency-5.js').content,
   },
   arrowsUpDown: {
-    light: () => require('../svgJs/cjs/light/arrowsUpDown-1.js').content,
-    dark: () => require('../svgJs/cjs/dark/arrowsUpDown-1.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/arrowsUpDown-1.js').content,
+    light: () => require('../svgJs/cjs/light/arrowsUpDown-2.js').content,
+    dark: () => require('../svgJs/cjs/dark/arrowsUpDown-2.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/arrowsUpDown-2.js').content,
   },
   artFrameEmptyState: {
     light: () => require('../svgJs/cjs/light/artFrameEmptyState-5.js').content,
@@ -1446,9 +1446,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/marginWarning-4.js').content,
   },
   mcLoad: {
-    light: () => require('../svgJs/cjs/light/mcLoad-2.js').content,
-    dark: () => require('../svgJs/cjs/dark/mcLoad-2.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/mcLoad-2.js').content,
+    light: () => require('../svgJs/cjs/light/mcLoad-3.js').content,
+    dark: () => require('../svgJs/cjs/dark/mcLoad-3.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/mcLoad-3.js').content,
   },
   mic: {
     light: () => require('../svgJs/cjs/light/mic-4.js').content,
