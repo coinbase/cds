@@ -48,6 +48,15 @@ describe('getMediaChipSpacingProps', () => {
         ).toEqual(getMediaChipSpacingProps({ size: 's', start, children, end }));
       },
     );
+
+    it.each(sizeDependentCompositions)(
+      'size:"m" + compact:true resolves to the m output for $name',
+      ({ start, children, end }) => {
+        expect(
+          getMediaChipSpacingProps({ size: 'm', compact: true, start, children, end }),
+        ).toEqual(getMediaChipSpacingProps({ size: 'm', start, children, end }));
+      },
+    );
   });
 
   describe('media-only compositions are size-agnostic', () => {
@@ -61,6 +70,45 @@ describe('getMediaChipSpacingProps', () => {
       const expected = { paddingStart: 1, paddingY: 1, paddingEnd: 1.5, gap: 0.75 };
       expect(getMediaChipSpacingProps({ start: true, end: true, size: 'xs' })).toEqual(expected);
       expect(getMediaChipSpacingProps({ start: true, end: true, size: 's' })).toEqual(expected);
+    });
+  });
+
+  describe('size "m" spacing', () => {
+    it('returns medium spacing for all compositions', () => {
+      expect(getMediaChipSpacingProps({ size: 'm', children: true })).toEqual({
+        paddingX: 3,
+        paddingY: 1.5,
+      });
+      expect(getMediaChipSpacingProps({ size: 'm', start: true })).toEqual({
+        paddingY: 1.5,
+        paddingX: 1.5,
+      });
+      expect(getMediaChipSpacingProps({ size: 'm', start: true, end: true })).toEqual({
+        paddingStart: 1.5,
+        paddingY: 1.5,
+        paddingEnd: 2,
+        gap: 1,
+      });
+      expect(getMediaChipSpacingProps({ size: 'm', start: true, children: true })).toEqual({
+        paddingStart: 1.5,
+        paddingY: 1.5,
+        paddingEnd: 3,
+        gap: 1,
+      });
+      expect(getMediaChipSpacingProps({ size: 'm', children: true, end: true })).toEqual({
+        paddingStart: 3,
+        paddingY: 1.5,
+        paddingEnd: 2,
+        gap: 1,
+      });
+      expect(
+        getMediaChipSpacingProps({ size: 'm', start: true, children: true, end: true }),
+      ).toEqual({
+        paddingStart: 1.5,
+        paddingY: 1.5,
+        paddingEnd: 2,
+        gap: 1,
+      });
     });
   });
 });

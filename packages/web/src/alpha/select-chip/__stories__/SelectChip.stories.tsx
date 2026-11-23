@@ -81,6 +81,16 @@ export const Sizes = () => {
         value={value}
       />
       <Text as="h4" color="fgMuted" display="block" font="label1">
+        {'size="m"'}
+      </Text>
+      <SelectChip
+        onChange={setValue}
+        options={exampleOptions}
+        placeholder="Choose an option"
+        size="m"
+        value={value}
+      />
+      <Text as="h4" color="fgMuted" display="block" font="label1">
         {'size="xs"'}
       </Text>
       <SelectChip
