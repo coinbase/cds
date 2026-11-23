@@ -5,7 +5,7 @@ import { webfont } from 'webfont';
 
 import { firstAllowedUnicode, lastAllowedUnicode, type Manifest } from '../manifest';
 
-import { codegenHeader, resetDirectory, writeFile } from './files';
+import { codegenHeader, resetDirectory, toSingleQuotedLiteral, writeFile } from './files';
 import { Sink, type SinkChanges, type SinkFailure } from './Sink';
 
 /** The return type of the webfont function. */
@@ -161,7 +161,7 @@ export class IconFontSink extends Sink {
         .sort(sortByCreatedAt)
         .map((metadata) => [metadata.name, metadata.unicode?.[0]]),
     );
-    const glyphsContent = JSON.stringify(glyphMap, null, 2).replaceAll('"', "'");
+    const glyphsContent = toSingleQuotedLiteral(glyphMap);
     writeFile(
       path.join(config.outputDataPath, 'glyphMap.ts'),
       `${codegenHeader}

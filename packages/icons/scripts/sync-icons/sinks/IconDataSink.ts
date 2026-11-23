@@ -3,42 +3,34 @@ import path from 'node:path';
 import { getDescriptionMap } from '../getDescriptionMap';
 import { profile } from '../profile';
 
-import { codegenHeader, writeFile } from './files';
+import { codegenHeader, toSingleQuotedLiteral, writeFile } from './files';
 import { Sink, type SinkChanges } from './Sink';
 
-/** Writes the icon name type, the list of names, and the description map from the manifest. */
+/** Writes the icon name type and the list of names from the manifest, and the description map where it is published. */
 export class IconDataSink extends Sink {
   async apply({ config, manifest }: SinkChanges) {
+    const write = (fileName: string, content: string) =>
+      writeFile(path.join(config.outputDataPath, fileName), `${codegenHeader}\n${content}`);
+
     console.log('Generating output types data...');
-    const iconNamesStrings = manifest.iconSets.map((iconSet) => `'${iconSet.name}'`).sort();
-    const iconNamesUnionContent = ['', ...iconNamesStrings].join('\n | ');
-    writeFile(
-      path.join(config.outputDataPath, 'IconName.ts'),
-      `${codegenHeader}
-export type IconName = ${iconNamesUnionContent};\n`,
+    const iconNameUnion = ['', ...manifest.iconSets.map(({ name }) => `'${name}'`).sort()].join(
+      '\n | ',
     );
+    write('IconName.ts', `export type IconName = ${iconNameUnion};\n`);
 
     console.log('Generating output names data...');
-    const iconNamesByCreatedAt = manifest.iconSets.map((iconSet) => iconSet.name);
-    const iconNamesContent = JSON.stringify(iconNamesByCreatedAt, null, 2).replaceAll('"', "'");
-    writeFile(
-      path.join(config.outputDataPath, 'names.ts'),
-      `${codegenHeader}
-import type { IconName } from './IconName';\n
-export const names: IconName[] = ${iconNamesContent};\n`,
+    const names = toSingleQuotedLiteral(manifest.iconSets.map(({ name }) => name));
+    write(
+      'names.ts',
+      `import type { IconName } from './IconName';\n\nexport const names: IconName[] = ${names};\n`,
     );
 
-    if (profile.publishesDescriptions) {
-      console.log('Generating output descriptions data...');
-      const descriptionMap = getDescriptionMap(manifest.iconSets);
-      const descriptionMapContent = JSON.stringify(descriptionMap, null, 2).replaceAll('"', "'");
-      writeFile(
-        path.join(config.outputDataPath, 'descriptionMap.ts'),
-        `${codegenHeader}
-  import type { IconName } from './IconName';\n
-  /** Mapping of descriptions to associated icons. */
-  export const descriptionMap: Record<string, IconName[]> = ${descriptionMapContent};\n`,
-      );
-    }
+    if (!profile.publishesDescriptions) return;
+    console.log('Generating output descriptions data...');
+    const descriptionMap = toSingleQuotedLiteral(getDescriptionMap(manifest.iconSets));
+    write(
+      'descriptionMap.ts',
+      `import type { IconName } from './IconName';\n\n/** Mapping of descriptions to associated icons. */\nexport const descriptionMap: Record<string, IconName[]> = ${descriptionMap};\n`,
+    );
   }
 }

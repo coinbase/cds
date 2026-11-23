@@ -216,6 +216,27 @@ describe('icon sync end to end', () => {
     );
   });
 
+  it('writes a description from Figma as text, whatever characters it has', async () => {
+    // Only a package that publishes descriptions writes them.
+    if (!profile.publishesDescriptions) return;
+    const run = createRun();
+    const description = "x': []}; globalThis.injected = true; const rest = {'y, it's \\ \"quoted\"";
+    run.source.sets = [{ ...iconSet('ui/add', '1:1', 2), description }];
+    await run.sync();
+
+    const file = fs.readFileSync(
+      path.join(run.config.outputDataPath, 'descriptionMap.ts'),
+      'utf-8',
+    );
+    const literal = file.slice(file.indexOf('= {') + 2, file.lastIndexOf(';'));
+    const descriptionMap = new Function(`return ${literal}`)();
+    expect(descriptionMap).toEqual({
+      "x': []}; globalThis.injected = true; const rest = {'y": ['add'],
+      'it\'s \\ "quoted"': ['add'],
+    });
+    expect((globalThis as { injected?: boolean }).injected).toBeUndefined();
+  });
+
   it('downloads only the icon sets that changed, and leaves the rest alone', async () => {
     const run = createRun();
     run.source.sets = firstLibrary();

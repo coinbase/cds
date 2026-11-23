@@ -65,6 +65,8 @@ export type SyncReport = {
   label?: string;
   /** What the version plan asks `nx release` for. */
   bump: ReleaseBump;
+  /** The Figma file the assets come from, linked in the pull request body. */
+  figmaFile?: { name: string; url: string };
   /** The order of `group` headings in the changelog; other groups follow alphabetically. */
   groupOrder?: string[];
   changes: SyncChanges;
