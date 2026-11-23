@@ -1,7 +1,12 @@
-import { changedBetween, trySnapshotChanges, unexplainedFiles } from '@cds/figma-api/changedFiles';
+import { changedBetween, snapshotFiles, unexplainedFiles } from '@cds/figma-api/changedFiles';
 import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
-import { Ledger } from '@cds/figma-api/syncLedger';
-import { isBreaking, type SyncReport, writeSyncReport } from '@cds/figma-api/syncReport';
+import {
+  isBreaking,
+  type RejectedAsset,
+  type SyncChanges,
+  type SyncReport,
+  writeSyncReport,
+} from '@cds/figma-api/syncReport';
 
 import { approximationSummary, notExportableSummary } from './artifacts/nativeSvg';
 import { type Sink } from './sinks/Sink';
@@ -12,7 +17,7 @@ import { type Release, ReleaseBranch, runOnReleaseBranches } from './git';
 import { type Component, type Illustration, illustrationKey } from './illustration';
 import { readManifest, writeManifest } from './manifest';
 import { assertNativeCheckout } from './nativeRepo';
-import { duplicateAssets, invalidAssets, recordResults, rejectedAssets } from './report';
+import { duplicateAssets, invalidAssets, rejectedAssets } from './report';
 import { chooseSinks } from './selectSinks';
 import { runSync, type SinkResult } from './sync';
 
@@ -65,13 +70,13 @@ const logSummary = (results: SyncResults) => {
 };
 
 const failedIllustrations: SinkResult['failures'] = [];
-/** What happened to everything the sync found in Figma; the report is built from it. */
-const ledger = new Ledger();
+const rejected: RejectedAsset[] = [];
 /** How many published components the source listed; for the report's "looked at" count. */
 let listed = 0;
+let changes: SyncResults | undefined;
 
-/** The files git sees as changed in the generated paths; a warning and none when git cannot say. */
-const snapshot = () => trySnapshotChanges(config.repoRoot, generatedPaths);
+/** Every file the sync can write, with a hash of its content, to find what a run changed. */
+const snapshot = () => snapshotFiles(config.repoRoot, generatedPaths);
 
 const logSinkResults = (results: SinkResult[]) => {
   console.log(dryRun ? '\nDry run: nothing was written.' : '\nSink results:');
@@ -108,9 +113,7 @@ const sync = async (sinks: Sink[]) => {
   });
 
   listed = outcome.listed;
-  for (const asset of [...invalidAssets(outcome.invalid), ...duplicateAssets(outcome.duplicates)]) {
-    ledger.skipped(asset);
-  }
+  rejected.push(...invalidAssets(outcome.invalid), ...duplicateAssets(outcome.duplicates));
   if (outcome.invalid.length) {
     console.warn(
       '\n⚠️ Skipping components whose name cannot be used; what was published for them stays:',
@@ -134,10 +137,8 @@ const sync = async (sinks: Sink[]) => {
   }
 
   failedIllustrations.push(...outcome.sinkResults.flatMap(({ failures }) => failures));
-  for (const asset of rejectedAssets(outcome.sinkResults, config.componentUrl)) {
-    ledger.skipped(asset);
-  }
-  recordResults(ledger, outcome.diff.results);
+  rejected.push(...rejectedAssets(outcome.sinkResults, config.componentUrl));
+  changes = outcome.diff.results;
 
   if (hasChangesToRecord(outcome.diff) && !dryRun) {
     console.log('Updating manifest...');
@@ -193,20 +194,24 @@ const main = async () => {
   await runOnReleaseBranches([release], () => sync(sinks));
 };
 
+const toSyncChanges = (results?: SyncResults): SyncChanges => ({
+  added: results?.added.map(({ name, type }) => ({ name, group: type })) ?? [],
+  updated: results?.updated.map(({ name, type }) => ({ name, group: type })) ?? [],
+  renamed:
+    results?.renamed.map(({ name, oldName, type }) => ({ name, oldName, group: type })) ?? [],
+  deleted: results?.deleted.map(({ name, type }) => ({ name, group: type })) ?? [],
+});
+
 const filesBefore = snapshot();
 
 main().then(
   () => {
-    const syncChanges = ledger.changes();
-    const filesAfter = filesBefore && snapshot();
-    const unexplained =
-      filesBefore && filesAfter
-        ? unexplainedFiles({
-            changed: changedBetween(filesBefore, filesAfter),
-            ledger,
-            explain: explainIllustrationFile,
-          })
-        : [];
+    const syncChanges = toSyncChanges(changes);
+    const unexplained = unexplainedFiles({
+      changed: changedBetween(filesBefore, snapshot()),
+      changes: syncChanges,
+      explain: explainIllustrationFile,
+    });
     if (unexplained.length > 0) {
       console.warn(`\n⚠️ ${unexplained.length} changed file(s) have no entry in the report:`);
       for (const file of unexplained) console.warn(`  ${file}`);
@@ -216,8 +221,8 @@ main().then(
       bump: isBreaking(syncChanges) ? 'major' : 'minor',
       groupOrder: changelogTypeOrder,
       changes: syncChanges,
-      rejected: ledger.rejected(),
-      examined: { seen: listed, ignored: ledger.ignoredGroups() },
+      rejected,
+      examined: { seen: listed, ignored: [] },
       ...(unexplained.length > 0 ? { unexplainedFiles: unexplained } : {}),
     };
     writeSyncReport(reportPath, syncReport);

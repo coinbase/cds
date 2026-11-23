@@ -1,4 +1,5 @@
 import { sortByCreatedAt } from '@cds/figma-api/syncUtils';
+import crypto from 'node:crypto';
 import path from 'node:path';
 import { webfont } from 'webfont';
 
@@ -48,12 +49,18 @@ const createFontGlyphMetadata =
     glyphData: CorrectedWebfontGlyphMetadata,
   ): CorrectedWebfontGlyphMetadata & CustomGlyphMetadata => {
     const { name: svgName } = glyphData;
-    const [iconSetName, sizeString, activeString] = svgName.split('-');
-    const size = Number(sizeString);
+    // svgName is `${iconName}-${size}-${active|inactive}`. Parse from the tail so icon names with
+    // a hyphen are preserved.
+    const parts = svgName.split('-');
+    const activeString = parts[parts.length - 1];
+    const sizeString = parts[parts.length - 2];
+    const iconSetName = parts.slice(0, -2).join('-');
     const active = activeString === 'active';
     const iconSet = manifest.iconSets.find((iconSet) => iconSet.name === iconSetName);
     if (!iconSet) throw Error(`Unable to find matching icon set for "${svgName}"`);
-    const icon = iconSet.svgs.find((svg) => svg.size === size && svg.active === active);
+    const icon = iconSet.svgs.find(
+      (svg) => String(svg.size) === sizeString && svg.active === active,
+    );
     if (!icon) throw Error(`Unable to find matching icon asset for "${svgName}"`);
     let unicode = icon.unicode;
     if (unicode === undefined) {
@@ -81,26 +88,10 @@ export class IconFontSink extends Sink {
   async plan(changes: SinkChanges) {
     const failures: SinkFailure[] = [];
 
-    // The glyph of an icon is found again through its file name, `<name>-<size>-<state>`.
-    for (const { iconSet } of changes.write) {
-      if (iconSet.name.includes('-')) {
-        failures.push({
-          nodeId: iconSet.nodeId,
-          name: iconSet.name,
-          message: `The icon name "${iconSet.name}" contains "-", which the icon font cannot map back to its icon set. Rename the icon set in Figma.`,
-        });
-      }
-    }
-
     // Every new icon needs a code point of its own, and the font has a fixed range of them.
     let free = lastAllowedUnicode - changes.manifest.lastUnicode;
-    const needing = changes.write
-      .filter(({ iconSet }) => !failures.some(({ nodeId }) => nodeId === iconSet.nodeId))
-      .map(({ iconSet }) => ({
-        iconSet,
-        count: iconSet.svgs.filter(({ unicode }) => unicode === undefined).length,
-      }));
-    for (const { iconSet, count } of needing) {
+    for (const { iconSet } of changes.write) {
+      const count = iconSet.svgs.filter(({ unicode }) => unicode === undefined).length;
       if (count <= free) {
         free -= count;
       } else {
@@ -132,20 +123,23 @@ export class IconFontSink extends Sink {
       throw err;
     })) as WebfontResult;
 
-    // Write the ttf font file for use with React Native
-    if (font.ttf) {
-      const fontDirectoryPath = path.join(config.outputFontPath, 'native');
-      resetDirectory(fontDirectoryPath);
-      writeFile(path.join(fontDirectoryPath, `${config.outputFontName}.ttf`), font.ttf);
+    // Where both folders are the same, it is reset once.
+    for (const directory of new Set([config.outputFontNativePath, config.outputFontWebPath])) {
+      resetDirectory(directory);
     }
 
-    // Write the woff2 font file and CSS file for use with web
+    // The ttf font file is for React Native: a stable file name, as native bundlers link fonts by name.
+    if (font.ttf) {
+      writeFile(path.join(config.outputFontNativePath, `${config.outputFontName}.ttf`), font.ttf);
+    }
+
+    // The woff2 font file and the CSS file are for web. The file name has the hash of its content.
     if (font.woff2) {
-      const fontHash = font.hash?.slice(0, 13) ?? Date.now();
-      const fontDirectoryPath = path.join(config.outputFontPath, 'web');
+      const fontHash =
+        font.hash?.slice(0, 13) ??
+        crypto.createHash('sha256').update(font.woff2).digest('hex').slice(0, 13);
       const fontFilename = `${config.outputFontName}-${fontHash}.woff2`;
-      resetDirectory(fontDirectoryPath);
-      writeFile(path.join(fontDirectoryPath, fontFilename), font.woff2);
+      writeFile(path.join(config.outputFontWebPath, fontFilename), font.woff2);
 
       const cssFileContent = `@font-face {
   font-family: '${config.outputFontName}';
@@ -155,7 +149,7 @@ export class IconFontSink extends Sink {
   src: url('./${fontFilename}') format('woff2');
 }`;
       writeFile(
-        path.join(fontDirectoryPath, `${config.outputFontCssFileName}.css`),
+        path.join(config.outputFontWebPath, `${config.outputFontCssFileName}.css`),
         cssFileContent,
       );
     }

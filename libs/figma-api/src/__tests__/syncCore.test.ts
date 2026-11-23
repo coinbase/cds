@@ -1,4 +1,10 @@
-import { dedupeByIdentity, selectChanged, selectDeleted } from '../syncCore';
+import {
+  dedupeByIdentity,
+  matchPublished,
+  preferPublishedThenOlder,
+  selectChanged,
+  selectDeleted,
+} from '../syncCore';
 
 type Item = { id: string; name: string; age: number };
 const item = (id: string, name: string, age: number): Item => ({ id, name, age });
@@ -100,5 +106,98 @@ describe('selectDeleted', () => {
     expect(
       selectDeleted(published, { identity, present: new Set(['a']), kept: ['b', 'd'] }),
     ).toEqual([{ id: 'c' }]);
+  });
+});
+
+describe('matchPublished', () => {
+  type Set = { id: string; name: string };
+  const keys = { name: (item: Set) => item.name, id: (item: Set) => item.id };
+  const match = (remote: Set[], published: Set[]) => {
+    const { matches, gone } = matchPublished(remote, published, keys);
+    return {
+      matches: matches.map(({ remote: r, published: p }) => [r.id, p?.id]),
+      gone: gone.map(({ id }) => id),
+    };
+  };
+
+  it('matches by name, ignoring capitalization, so a change of capitalization is the same icon', () => {
+    expect(match([{ id: '1', name: 'Add' }], [{ id: '1', name: 'add' }])).toEqual({
+      matches: [['1', '1']],
+      gone: [],
+    });
+  });
+
+  it('keeps an icon that was re-created under the same name, whatever its node id', () => {
+    expect(match([{ id: '9', name: 'add' }], [{ id: '1', name: 'add' }])).toEqual({
+      matches: [['9', '1']],
+      gone: [],
+    });
+  });
+
+  it('calls a published item whose node id is in Figma under another name a rename', () => {
+    expect(match([{ id: '1', name: 'minus' }], [{ id: '1', name: 'remove' }])).toEqual({
+      matches: [['1', '1']],
+      gone: [],
+    });
+  });
+
+  it('prefers the name over the node id, and never matches a published item twice', () => {
+    const published = [
+      { id: '1', name: 'add' },
+      { id: '2', name: 'remove' },
+    ];
+    expect(
+      match(
+        [
+          { id: '2', name: 'add' },
+          { id: '3', name: 'send' },
+        ],
+        published,
+      ),
+    ).toEqual({
+      matches: [
+        ['2', '1'],
+        ['3', undefined],
+      ],
+      gone: ['2'],
+    });
+  });
+
+  it('finds what is published and not in Figma, and what is new', () => {
+    expect(
+      match(
+        [{ id: '5', name: 'send' }],
+        [
+          { id: '1', name: 'add' },
+          { id: '2', name: 'cash' },
+        ],
+      ),
+    ).toEqual({ matches: [['5', undefined]], gone: ['1', '2'] });
+  });
+});
+
+describe('preferPublishedThenOlder', () => {
+  type Set = { id: string; createdAt: string };
+  const prefer = preferPublishedThenOlder<Set>({
+    isPublished: ({ id }) => id === 'published',
+    createdAt: ({ createdAt }) => createdAt,
+  });
+  const older = { id: 'older', createdAt: '2026-01-01' };
+  const newer = { id: 'newer', createdAt: '2026-02-01' };
+  const published = { id: 'published', createdAt: '2026-03-01' };
+
+  it('keeps the published one, even when it is newer', () => {
+    expect(prefer(older, published)).toBe(published);
+    expect(prefer(published, older)).toBe(published);
+  });
+
+  it('keeps the older one when neither is published, in either order', () => {
+    expect(prefer(newer, older)).toBe(older);
+    expect(prefer(older, newer)).toBe(older);
+  });
+
+  it('keeps the first one when they are equally old', () => {
+    const twin = { id: 'twin', createdAt: older.createdAt };
+    expect(prefer(older, twin)).toBe(older);
   });
 });

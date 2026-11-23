@@ -1,10 +1,10 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-/** One output SVG of an icon set: a size and an active state. */
+/** One output SVG of an icon set: a size and an active state. The size is a number or text, as the profile says. */
 export type ManifestSvg = {
   active: boolean;
-  size: number;
+  size: number | string;
   /** The name of the output SVG file, without the file extension. */
   name: string;
   /** The last used unicode value of this SVG file in the icon font. */

@@ -1,7 +1,10 @@
 import type { FileExplanation } from '@cds/figma-api/changedFiles';
 
 /** The paths, from the repository root, that the illustration sync writes to in this repository. */
-export const generatedPaths = ['packages/illustrations'];
+export const generatedPaths = [
+  'packages/illustrations/src/__generated__',
+  'packages/illustrations/manifest.json',
+];
 
 const PACKAGE = 'packages/illustrations';
 const ASSET = new RegExp(

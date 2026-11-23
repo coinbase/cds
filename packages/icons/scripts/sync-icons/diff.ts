@@ -1,38 +1,26 @@
-import { dedupeByIdentity } from '@cds/figma-api/syncCore';
-import type { Ledger } from '@cds/figma-api/syncLedger';
-import { hasChanges, type RejectedCategory } from '@cds/figma-api/syncReport';
+import { emptyChanges, type SyncChanges } from '@cds/figma-api/syncReport';
 import { hashJson, sortByCreatedAt } from '@cds/figma-api/syncUtils';
 
 import type { SetNode } from './source/IconSource';
 import type { Manifest, ManifestIconSet } from './manifest';
 import type { OptimizedSvg } from './optimizeSvg';
+import { profile } from './profile';
 import {
-  iconDuplicateProblem,
-  iconSetNameProblem,
   iconVariantsProblem,
   parseIconVariant,
-} from './profile';
+  type Rejection,
+  type Size,
+  svgNameOf,
+} from './rules';
+import type { RemoteIconSet } from './select';
 
-/** An icon set the sync skipped because designers need to fix it in Figma. */
-export type Rejection = {
-  name: string;
-  nodeId: string;
-  message: string;
-  category: RejectedCategory;
-  /** For a name clash: the node it clashes with. */
-  duplicateNodeId?: string;
-};
+type Match = { remote: RemoteIconSet; published: ManifestIconSet | undefined };
 
 /** An icon set that follows the rules of the profile, before its SVGs are downloaded. */
-export type ValidIconSet = {
-  setName: string;
-  iconName: string;
-  nodeId: string;
-  oldIconSet: ManifestIconSet | undefined;
+export type ValidIconSet = Match & {
   description: string;
-  lastUpdated: string;
   createdAt: string;
-  variants: { id: string; name: string; size: number; active: boolean }[];
+  variants: { id: string; name: string; size: Size; active: boolean }[];
 };
 
 /** Data about one icon asset of an icon set: its SVG, optimized. */
@@ -41,7 +29,7 @@ export type IconAsset = {
   nodeId: string;
   /** The name of the output SVG file, without the file extension. */
   name: string;
-  size: number;
+  size: Size;
   active: boolean;
   svg: OptimizedSvg;
 };
@@ -49,169 +37,112 @@ export type IconAsset = {
 /** A valid icon set with its optimized SVGs. */
 export type FetchedIconSet = ValidIconSet & { icons: IconAsset[] };
 
-/** Results from the sync process used to generate logs and the version plan. */
-export type IconSyncResults = {
-  newIconSets: ManifestIconSet[];
-  deletedIconSets: ManifestIconSet[];
-  renamedIconSets: (ManifestIconSet & { oldName: string })[];
-  updatedIconSets: ManifestIconSet[];
-};
-
+/** What happened to an icon set that was fetched. */
 export type IconSetChange =
   | { kind: 'new'; iconSet: ManifestIconSet; icons: IconAsset[] }
   | {
       kind: 'changed';
       iconSet: ManifestIconSet;
       icons: IconAsset[];
-      oldIconSet: ManifestIconSet;
+      published: ManifestIconSet;
+      /** The name changed, even if only its capitalization: the SVG files are named after it. */
       renamed: boolean;
+      /** The icons changed, or the package publishes the description and it changed. */
       updated: boolean;
     }
-  | { kind: 'unchanged'; iconSet: ManifestIconSet; updated: boolean };
+  | {
+      kind: 'unchanged';
+      iconSet: ManifestIconSet;
+      published: ManifestIconSet;
+      /** Only the package that publishes descriptions counts a new description as a change. */
+      updated: boolean;
+    };
 
 export type IconSetDiff = {
+  /** Icon sets that were not fetched, or were rejected, and stay as they were published. */
+  carried: { published: ManifestIconSet; iconSet: ManifestIconSet }[];
   /** In the order the icon sets were processed. */
   changes: IconSetChange[];
+  /** Published icon sets that Figma no longer has. */
   deleted: ManifestIconSet[];
 };
 
-export const hasIconChanges = (results: IconSyncResults) =>
-  hasChanges({
-    added: results.newIconSets,
-    updated: results.updatedIconSets,
-    renamed: results.renamedIconSets,
-    deleted: results.deletedIconSets,
-  });
-
-export const svgNameOf = (iconName: string, size: number, active: boolean) =>
-  `${iconName}-${size}-${active ? 'active' : 'inactive'}`;
-
 /**
- * Applies the rules of the profile to the fetched component sets. Every set is validated before
- * anything is downloaded, so only valid sets cost an SVG export.
+ * Checks the variants of each fetched icon set against the profile before anything is downloaded,
+ * so only valid sets cost an SVG export. A set that was not fetched is unchanged and carried
+ * forward with its new node id; a set that is rejected keeps what was published for it.
  */
 export function validateIconSets({
+  matches,
   nodes,
-  previous,
   log = () => undefined,
 }: {
+  matches: readonly Match[];
   nodes: Record<string, SetNode>;
-  previous: readonly ManifestIconSet[];
   log?: (message: string) => void;
 }) {
   const rejections: Rejection[] = [];
   const accepted: ValidIconSet[] = [];
-  const total = Object.values(nodes).length;
+  const carried: IconSetDiff['carried'] = [];
   let progress = 0;
 
-  for (const iconSetNode of Object.values<SetNode>(nodes)) {
+  for (const match of matches) {
     progress++;
-    if (iconSetNode?.document?.type !== 'COMPONENT_SET') continue;
-    log(
-      ` (${progress}/${total}) Icon set node: "${iconSetNode.document.id}" "${iconSetNode.document.name}"`,
-    );
-    const nodeId = iconSetNode.document.id;
-    const setNameProblem = iconSetNameProblem(iconSetNode.document.name);
-    if (setNameProblem) {
-      rejections.push({
-        name: iconSetNode.document.name,
-        nodeId,
-        message: setNameProblem,
-        category: 'invalid-name',
-      });
-      continue;
-    }
-    const iconName = iconSetNode.document.name.split('/')[1].trim();
-    const { description, updated_at: lastUpdated, created_at: createdAt } = iconSetNode.metadata;
+    const { remote, published } = match;
+    const fetchedNode = nodes[remote.nodeId];
 
-    // The icon set data from the last sync, if it exists
-    const oldIconSet = previous.find((iconSet) => iconSet.nodeId === nodeId);
-
-    // An icon set from an earlier sync that has the same icon name
-    const lowercaseIconName = iconName.toLowerCase();
-    const duplicateIconSet = previous.find(
-      (iconSet) => iconSet.name.toLowerCase() === lowercaseIconName && iconSet.nodeId !== nodeId,
-    );
-    if (duplicateIconSet) {
-      log('  [DUPLICATE] Icon set is a duplicate, skipping...');
-      rejections.push({
-        name: iconName,
-        nodeId,
-        message: iconDuplicateProblem(iconSetNode.document.name, iconName, duplicateIconSet.name),
-        category: 'duplicate-name',
-        duplicateNodeId: duplicateIconSet.nodeId,
+    // Not fetched this run → unchanged; carry it forward with a refreshed node id.
+    if (!fetchedNode || fetchedNode.document.type !== 'COMPONENT_SET') {
+      if (!published) {
+        // A new set is always recently updated (hence fetched); this is reachable only if a
+        // prior sync failed to persist it, which a full compare repairs.
+        log(`  ⚠️ "${remote.name}" is new but was not fetched; run a full compare to add it`);
+        continue;
+      }
+      carried.push({
+        published,
+        iconSet: { ...published, nodeId: remote.nodeId, lastUpdated: remote.updatedAt },
       });
       continue;
     }
 
-    // Skip the whole icon set when any component is malformed, so a partial set never ships
-    const components = iconSetNode.document.children.filter(
+    log(` (${progress}/${matches.length}) Icon set: "${remote.nodeId}" "${remote.name}"`);
+    const { description, created_at: createdAt } = fetchedNode.metadata;
+    const components = fetchedNode.document.children.filter(
       (iconNode) => iconNode.type === 'COMPONENT',
     );
+
+    // If any variant's name doesn't follow the `size=…, active=…` convention, drop the whole set
+    // rather than emit a partial one.
     const variants: ValidIconSet['variants'] = [];
-    const propsProblems: { componentId: string; message: string }[] = [];
+    let malformed: { id: string; problem: string } | undefined;
     for (const { id, name } of components) {
-      const parsed = parseIconVariant(iconName, name);
-      if ('problem' in parsed) propsProblems.push({ componentId: id, message: parsed.problem });
+      const parsed = parseIconVariant(remote.name, name);
+      if ('problem' in parsed) malformed ??= { id, problem: parsed.problem };
       else variants.push({ id, name, ...parsed });
     }
-    if (propsProblems.length > 0) {
-      for (const { componentId, message } of propsProblems) {
-        rejections.push({
-          name: iconName,
-          nodeId: componentId,
-          message,
-          category: 'invalid-variant',
-        });
-      }
-      continue;
-    }
-
-    // Every icon set needs exactly the expected variants, so a partial set never ships either.
-    const variantsProblem = iconVariantsProblem(
-      iconSetNode.document.name,
-      variants.map(({ size, active }) => ({ size, active })),
-    );
-    if (variantsProblem) {
+    const problem =
+      malformed?.problem ??
+      iconVariantsProblem(
+        remote.name,
+        variants.map(({ size, active }) => ({ size, active })),
+      );
+    if (problem) {
       rejections.push({
-        name: iconName,
-        nodeId,
-        message: variantsProblem,
+        name: remote.name,
+        nodeId: malformed?.id ?? remote.nodeId,
+        message: problem,
         category: 'invalid-variant',
       });
+      // Keep a previously valid entry, so a bad edit cannot drop an icon.
+      if (published) carried.push({ published, iconSet: { ...published, nodeId: remote.nodeId } });
       continue;
     }
 
-    accepted.push({
-      setName: iconSetNode.document.name,
-      iconName,
-      nodeId,
-      oldIconSet,
-      description,
-      lastUpdated,
-      createdAt,
-      variants,
-    });
+    accepted.push({ ...match, description, createdAt, variants });
   }
 
-  // Two new icon sets with the same icon name in one run: the older one is kept, the other is
-  // reported. (A clash with an icon set from an earlier sync is caught above.)
-  const { kept, dropped } = dedupeByIdentity(
-    accepted,
-    ({ iconName }) => iconName.toLowerCase(),
-    (existing, candidate) => (candidate.createdAt < existing.createdAt ? candidate : existing),
-  );
-  for (const { item, keptBy } of dropped) {
-    rejections.push({
-      name: item.iconName,
-      nodeId: item.nodeId,
-      message: iconDuplicateProblem(item.setName, item.iconName, keptBy.iconName),
-      category: 'duplicate-name',
-      duplicateNodeId: keptBy.nodeId,
-    });
-  }
-
-  return { accepted: [...kept.values()], rejections };
+  return { accepted, carried, rejections };
 }
 
 /**
@@ -228,25 +159,25 @@ export function buildFetchedIconSets({
   optimize: (rawSvg: string) => OptimizedSvg;
 }) {
   const fetched: FetchedIconSet[] = [];
+  const carried: IconSetDiff['carried'] = [];
   const rejections: Rejection[] = [];
 
   for (const set of accepted) {
     const icons: IconAsset[] = [];
     let problem: string | undefined;
-    for (const variant of set.variants) {
-      const { size, active } = variant;
-      const rawSvg = rawSvgs.get(variant.id);
-      if (rawSvg === undefined) throw new Error(`No SVG was downloaded for node ${variant.id}`);
+    for (const { id, name, size, active } of set.variants) {
+      const rawSvg = rawSvgs.get(id);
+      if (rawSvg === undefined) throw new Error(`No SVG was downloaded for node ${id}`);
       try {
         icons.push({
-          nodeId: variant.id,
+          nodeId: id,
           size,
           active,
           svg: optimize(rawSvg),
-          name: svgNameOf(set.iconName, size, active),
+          name: svgNameOf(set.remote.name, size, active),
         });
       } catch (error) {
-        problem = `The SVG of "${variant.name}" in icon set "${set.setName}" cannot be optimized (${
+        problem = `The SVG of "${name}" in icon set "${set.remote.name}" cannot be optimized (${
           error instanceof Error ? error.message : String(error)
         }). Fix it in Figma.`;
         break;
@@ -254,140 +185,151 @@ export function buildFetchedIconSets({
     }
     if (problem) {
       rejections.push({
-        name: set.iconName,
-        nodeId: set.nodeId,
+        name: set.remote.name,
+        nodeId: set.remote.nodeId,
         message: problem,
         category: 'invalid-asset',
       });
+      const { published } = set;
+      if (published) {
+        carried.push({ published, iconSet: { ...published, nodeId: set.remote.nodeId } });
+      }
     } else {
       fetched.push({ ...set, icons });
     }
   }
 
-  return { fetched, rejections };
+  return { fetched, carried, rejections };
 }
 
 /**
- * Compares each fetched icon set with what the manifest recorded: a new set, a set whose name or
- * assets changed (its SVG files are rewritten), or one that only gets Figma's new update date and
- * description recorded so that it is not downloaded again on every run.
+ * Compares each fetched icon set with what was published: a new set, a set whose name or icons
+ * changed (its SVG files are rewritten, and the code points of icons that remain are kept), or one
+ * that is identical and only gets Figma's new date and description recorded.
  */
 export function diffIconSets({
   fetched,
+  carried,
   deleted,
 }: {
   fetched: readonly FetchedIconSet[];
+  carried: IconSetDiff['carried'];
   deleted: readonly ManifestIconSet[];
 }): IconSetDiff {
   const changes = fetched.map((set): IconSetChange => {
-    const { oldIconSet, icons } = set;
+    const { remote, published, icons } = set;
     const assetsHash = hashJson(icons.map(({ svg }) => svg));
     const nameHash = hashJson(icons.map(({ name }) => name));
 
-    const hasNameChanged = nameHash !== oldIconSet?.nameHash;
-    const hasAssetsChanged = assetsHash !== oldIconSet?.assetsHash;
-    const hasDescriptionChanged =
-      oldIconSet !== undefined && oldIconSet.description !== set.description;
-
     const iconSet: ManifestIconSet = {
-      nodeId: set.nodeId,
-      name: set.iconName,
+      nodeId: remote.nodeId,
+      name: remote.name,
       description: set.description,
       assetsHash,
       nameHash,
-      createdAt: oldIconSet?.createdAt ?? set.createdAt,
-      lastUpdated: set.lastUpdated,
-      svgs: oldIconSet?.svgs ?? [],
+      createdAt: published?.createdAt ?? set.createdAt,
+      lastUpdated: remote.updatedAt,
+      svgs: icons.map(({ name, active, size }) => ({
+        name,
+        active,
+        size,
+        unicode: published?.svgs.find((svg) => svg.size === size && svg.active === active)?.unicode,
+      })),
     };
+    if (!published) return { kind: 'new', iconSet, icons };
 
-    if (!oldIconSet) {
-      iconSet.svgs = icons.map(({ name, active, size }) => ({
-        name,
-        active,
-        size,
-        unicode: undefined,
-      }));
-      return { kind: 'new', iconSet, icons };
-    }
-
-    if (hasNameChanged || hasAssetsChanged) {
-      iconSet.svgs = icons.map(({ name, active, size }) => ({
-        name,
-        active,
-        size,
-        unicode: oldIconSet.svgs.find((svg) => svg.size === size && svg.active === active)?.unicode,
-      }));
+    const renamed = published.name !== remote.name;
+    const assetsChanged = assetsHash !== published.assetsHash;
+    const descriptionChanged =
+      profile.publishesDescriptions && published.description !== set.description;
+    if (renamed || assetsChanged) {
       return {
         kind: 'changed',
         iconSet,
         icons,
-        oldIconSet,
-        renamed: hasNameChanged,
-        updated: hasAssetsChanged || hasDescriptionChanged,
+        published,
+        renamed,
+        updated: assetsChanged || descriptionChanged,
       };
     }
 
-    return { kind: 'unchanged', iconSet, updated: hasDescriptionChanged };
+    // Downloaded but identical → keep the existing files and code points, refresh the metadata.
+    return {
+      kind: 'unchanged',
+      published,
+      updated: descriptionChanged,
+      iconSet: {
+        ...published,
+        nodeId: remote.nodeId,
+        description: set.description,
+        lastUpdated: remote.updatedAt,
+      },
+    };
   });
 
-  return { changes, deleted: [...deleted] };
-}
-
-/** Records what the diff did to each icon set, in the order the icon sets were processed. */
-export function recordDiff(ledger: Ledger, diff: IconSetDiff) {
-  for (const change of diff.changes) {
-    const { name } = change.iconSet;
-    if (change.kind === 'new') ledger.added({ name });
-    if (change.kind === 'changed') {
-      if (change.renamed) ledger.renamed({ name, oldName: change.oldIconSet.name });
-      if (change.updated) ledger.updated({ name });
-    }
-    if (change.kind === 'unchanged') {
-      if (change.updated) ledger.updated({ name });
-      else ledger.refreshed({ name });
-    }
-  }
-  for (const { name } of diff.deleted) ledger.deleted({ name });
+  return { carried, changes, deleted: [...deleted] };
 }
 
 /** Takes icon sets out of a diff, so that what was published for them stays as it is. */
 export const withoutIconSets = (diff: IconSetDiff, nodeIds: ReadonlySet<string>): IconSetDiff => ({
+  ...diff,
+  carried: [
+    ...diff.carried,
+    ...diff.changes.flatMap((change) =>
+      change.kind !== 'new' && nodeIds.has(change.iconSet.nodeId)
+        ? [
+            {
+              published: change.published,
+              iconSet: { ...change.published, nodeId: change.iconSet.nodeId },
+            },
+          ]
+        : [],
+    ),
+  ],
   changes: diff.changes.filter(({ iconSet }) => !nodeIds.has(iconSet.nodeId)),
-  deleted: diff.deleted,
 });
 
-export function toSyncResults(diff: IconSetDiff): IconSyncResults {
-  const results: IconSyncResults = {
-    newIconSets: [],
-    deletedIconSets: [],
-    renamedIconSets: [],
-    updatedIconSets: [],
-  };
+/** What the diff changed, in the shape of the report, and whether an icon set was only recorded again. */
+export function toChanges(diff: IconSetDiff) {
+  const changes: SyncChanges = emptyChanges();
+  let refreshed = false;
   for (const change of diff.changes) {
-    if (change.kind === 'new') results.newIconSets.push(change.iconSet);
+    const { name } = change.iconSet;
+    if (change.kind === 'new') changes.added.push({ name });
     if (change.kind === 'changed') {
-      if (change.renamed) {
-        results.renamedIconSets.push({ ...change.iconSet, oldName: change.oldIconSet.name });
-      }
-      if (change.updated) results.updatedIconSets.push(change.iconSet);
+      if (change.renamed) changes.renamed.push({ name, oldName: change.published.name });
+      if (change.updated) changes.updated.push({ name });
     }
-    if (change.kind === 'unchanged' && change.updated) results.updatedIconSets.push(change.iconSet);
+    if (change.kind === 'unchanged') {
+      if (change.updated) changes.updated.push({ name });
+      else refreshed = true;
+    }
   }
-  results.deletedIconSets.push(...diff.deleted);
-  return results;
+  for (const { name } of diff.deleted) changes.deleted.push({ name });
+  return { changes, refreshed };
 }
 
-/** The manifest after the diff: icon sets in the order they were processed, then by creation date. */
+/**
+ * The manifest after the diff: the published icon sets in their order, each replaced by what the
+ * sync made of it or dropped when it is gone, then the new ones, by creation date.
+ */
 export function applyDiff(previous: Manifest, diff: IconSetDiff): Manifest {
-  const next: Manifest = JSON.parse(JSON.stringify(previous));
-  const replace = (iconSet: ManifestIconSet) => {
-    next.iconSets = next.iconSets.filter(({ nodeId }) => nodeId !== iconSet.nodeId);
-    next.iconSets.push(iconSet);
-  };
-  for (const change of diff.changes) replace(change.iconSet);
-  for (const iconSet of diff.deleted) {
-    next.iconSets = next.iconSets.filter(({ nodeId }) => nodeId !== iconSet.nodeId);
+  const replacements = new Map<string, ManifestIconSet>();
+  const added: ManifestIconSet[] = [];
+  for (const { published, iconSet } of diff.carried) replacements.set(published.nodeId, iconSet);
+  for (const change of diff.changes) {
+    if (change.kind === 'new') added.push(change.iconSet);
+    else replacements.set(change.published.nodeId, change.iconSet);
   }
-  next.iconSets.sort(sortByCreatedAt);
-  return next;
+  const gone = new Set(diff.deleted.map(({ nodeId }) => nodeId));
+  const iconSets: ManifestIconSet[] = JSON.parse(
+    JSON.stringify([
+      ...previous.iconSets
+        .filter(({ nodeId }) => !gone.has(nodeId))
+        .map((iconSet) => replacements.get(iconSet.nodeId) ?? iconSet),
+      ...added,
+    ]),
+  );
+  iconSets.sort(sortByCreatedAt);
+  return { ...previous, iconSets };
 }

@@ -1,18 +1,16 @@
-import { changedBetween, snapshotChanges, unexplainedFiles } from '@cds/figma-api/changedFiles';
-import { execFileSync } from 'node:child_process';
+/**
+ * @jest-environment node
+ */
+import { changedBetween, snapshotFiles, unexplainedFiles } from '@cds/figma-api/changedFiles';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import type { SyncIconsConfig } from '../config';
-import { explainIconFile, generatedPaths } from '../explainFile';
+import { createConfig } from '../config';
+import { explainIconFile } from '../explainFile';
 import { lastAllowedUnicode, type Manifest } from '../manifest';
+import { profile } from '../profile';
 import { buildSyncReport, writeReport } from '../report';
-import { CodeConnectSink } from '../sinks/CodeConnectSink';
-import { ExpoSvgMapSink } from '../sinks/ExpoSvgMapSink';
-import { IconDataSink } from '../sinks/IconDataSink';
-import { IconFontSink } from '../sinks/IconFontSink';
-import { SvgFilesSink } from '../sinks/SvgFilesSink';
 import { InMemorySource } from '../source/InMemorySource';
 import { runSync } from '../sync';
 
@@ -34,42 +32,34 @@ import { readTree } from './__fixtures__/readTree';
 /**
  * Drives the whole icon sync, from the list of component sets to the files on disk, against an
  * in-memory source that is changed between runs the way designers change the Figma library. The
- * golden files were recorded from the sync as it ran before it was split into sources, a diff and
- * sinks, so they show that the split changed no output. Only the network, Code Connect and the
- * expo codegen command are replaced.
+ * same test runs for every package; the golden files are what its sync writes. Only the network,
+ * Code Connect and the expo codegen command are replaced.
  */
 
+const mockCodeConnect = jest.fn(async (_repoRoot: string) => undefined);
+jest.mock('../../sync-icon-code-connect/index', () => ({
+  syncIconCodeConnect: (repoRoot: string) => mockCodeConnect(repoRoot),
+}));
+jest.mock('node:child_process', () => ({ execSync: jest.fn() }));
+
 const fixedDate = new Date('2026-11-23T12:00:00.000Z');
+const sizeCount = profile.variants.sizes.length;
+const packageDir = profile.generated.packageDir;
 
 const createRun = () => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'icons-sync-'));
   const source = new InMemorySource();
-  const codeConnect = jest.fn(async () => undefined);
-  const expoCommands: string[] = [];
-  const config: SyncIconsConfig = {
-    source,
-    figmaFileId: scenarioFigmaFileId,
-    repoRoot: root,
-    manifestPath: path.join(root, 'packages/icons/manifest.json'),
-    outputSvgPath: path.join(root, 'packages/icons/src/svgs'),
-    outputDataPath: path.join(root, 'packages/icons/src'),
-    outputFontPath: path.join(root, 'packages/icons/src/fonts'),
-    outputFontName: 'CoinbaseIcons',
-    outputFontCssFileName: 'icon-font',
-    fullCompare: false,
-  };
-  const sinks = () => [
-    new SvgFilesSink(),
-    new IconFontSink(),
-    new IconDataSink(),
-    new CodeConnectSink(codeConnect),
-    new ExpoSvgMapSink((command) => expoCommands.push(command)),
-  ];
+  const config = createConfig(root, { source, figmaFileId: scenarioFigmaFileId });
   let step = 0;
   const sync = async (fullCompare = false) => {
     step++;
-    const outcome = await runSync({ config, sinks: sinks(), fullCompare, now: () => fixedDate });
-    writeReport(buildSyncReport(outcome), {
+    const outcome = await runSync({
+      config,
+      sinks: config.sinks,
+      fullCompare,
+      now: () => fixedDate,
+    });
+    writeReport(buildSyncReport(outcome, { figmaFileId: config.figmaFileId }), {
       repoRoot: root,
       reportPath: path.join(root, `report-${step}.json`),
     });
@@ -78,18 +68,36 @@ const createRun = () => {
   const readManifest = () => JSON.parse(fs.readFileSync(config.manifestPath, 'utf-8')) as Manifest;
   const writeManifest = (manifest: Manifest) =>
     fs.writeFileSync(config.manifestPath, JSON.stringify(manifest));
-  return { root, source, config, codeConnect, expoCommands, sync, readManifest, writeManifest };
+  const svgExists = (name: string) =>
+    fs.existsSync(
+      path.join(config.outputSvgPath, `${name}-${profile.variants.sizes[0]}-active.svg`),
+    );
+  return { root, source, config, sync, readManifest, writeManifest, svgExists };
 };
 
-describe('icon sync end to end', () => {
+const silence = () => {
   beforeEach(() => {
     jest.spyOn(console, 'log').mockImplementation(() => undefined);
     jest.spyOn(console, 'warn').mockImplementation(() => undefined);
+    mockCodeConnect.mockClear();
   });
-
   afterEach(() => jest.restoreAllMocks());
+};
 
-  it('writes the same files as the sync before it was split, over four runs', async () => {
+const withoutReports = (tree: ReturnType<typeof readTree>) =>
+  Object.fromEntries(Object.entries(tree).filter(([file]) => !file.startsWith('report-')));
+
+const brokenSvg = (set: ReturnType<typeof iconSet>) => ({
+  ...set,
+  variants: set.variants.map((variant, index) =>
+    index === 0 ? { ...variant, svg: '<svg><path d="M0 0" ' } : variant,
+  ),
+});
+
+describe('icon sync end to end', () => {
+  silence();
+
+  it('writes the files of the golden runs, over four syncs', async () => {
     const run = createRun();
 
     run.source.sets = firstLibrary();
@@ -117,47 +125,62 @@ describe('icon sync end to end', () => {
 
     run.source.sets = secondLibrary();
     run.source.loose = [looseHelper];
-    const { status, results, rejected, examined } = await run.sync();
+    const { status, changes, rejected, ignored, seen } = await run.sync();
 
     expect(status).toBe('synced');
-    expect(results.newIconSets.map(({ name }) => name)).toEqual(['send']);
-    expect(results.updatedIconSets.map(({ name }) => name)).toEqual(['add', 'minus']);
-    expect(results.renamedIconSets.map(({ name, oldName }) => [oldName, name])).toEqual([
-      ['remove', 'minus'],
+    expect(changes.added).toEqual([{ name: 'send' }]);
+    expect(changes.updated).toEqual([
+      { name: 'add' },
+      ...(profile.publishesDescriptions ? [{ name: 'minus' }] : []),
     ]);
-    expect(results.deletedIconSets.map(({ name }) => name)).toEqual(['cash']);
+    expect(changes.renamed).toEqual([
+      { name: 'minus', oldName: 'remove' },
+      { name: 'Plus', oldName: 'plus' },
+    ]);
+    expect(changes.deleted).toEqual([{ name: 'cash' }]);
     expect(rejected.map(({ category, name }) => `${category}:${name}`)).toEqual([
-      'invalid-variant:broken',
+      'invalid-name:ui/bad name',
       'duplicate-name:add',
+      'duplicate-name:send',
+      'invalid-variant:broken',
     ]);
-    expect(examined.seen).toBe(6);
-    expect(examined.ignored[0].items).toEqual([{ name: looseHelper.name, url: looseHelper.url }]);
+    expect(seen).toBe(10);
+    expect(ignored[0].items).toEqual([{ name: looseHelper.name, url: looseHelper.url }]);
   });
 
-  it('keeps one ledger entry per outcome, in the words of git status', async () => {
+  it('keeps an icon that was re-created under the same name, and finds a rename by its node id', async () => {
     const run = createRun();
     run.source.sets = firstLibrary();
     await run.sync();
 
     run.source.sets = secondLibrary();
-    run.source.loose = [looseHelper];
-    const { ledger } = await run.sync();
+    const { changes } = await run.sync();
 
-    expect(ledger.entries.map(({ status, name }) => `${status} ${name}`)).toEqual([
-      '! Icon / helper',
-      'U broken',
-      'U add',
-      'M add',
-      'R minus',
-      'M minus',
-      'A send',
-      'D cash',
-    ]);
-    expect(ledger.explains('remove')).toBe(true);
-    expect(ledger.explains('broken')).toBe(false);
+    const manifest = run.readManifest();
+    expect(manifest.iconSets.find(({ name }) => name === 'stack')?.nodeId).toBe('1:10');
+    expect(changes.deleted.map(({ name }) => name)).not.toContain('stack');
+    expect(changes.added.map(({ name }) => name)).not.toContain('stack');
+    expect(manifest.iconSets.find(({ name }) => name === 'minus')?.nodeId).toBe('1:2');
+    expect(run.svgExists('remove')).toBe(false);
+    expect(run.svgExists('minus')).toBe(true);
   });
 
-  it('only records an icon set again when Figma touched it and nothing visible changed', async () => {
+  it('keeps the published icon set when Figma has a second one with the same icon name', async () => {
+    const run = createRun();
+    run.source.sets = firstLibrary();
+    await run.sync();
+
+    run.source.sets = [...firstLibrary(), iconSet('nav/add', '1:11', 8)];
+    const { rejected, changes } = await run.sync();
+
+    expect(rejected.map(({ category, name }) => `${category}:${name}`)).toEqual([
+      'duplicate-name:add',
+    ]);
+    expect(changes.added).toEqual([]);
+    expect(run.readManifest().iconSets.find(({ name }) => name === 'add')?.nodeId).toBe('1:1');
+  });
+
+  it('only records an icon set again when nothing visible changed', async () => {
     const run = createRun();
     run.source.sets = firstLibrary();
     await run.sync();
@@ -165,13 +188,31 @@ describe('icon sync end to end', () => {
     run.source.sets = firstLibrary().map((set) =>
       set.nodeId === '1:1' ? { ...set, updatedAt: '2026-05-01T00:00:00.000Z' } : set,
     );
-    const { ledger, results } = await run.sync();
+    const { changes, refreshed } = await run.sync();
 
-    expect(ledger.hasChanges()).toBe(false);
-    expect(ledger.hasRefreshed()).toBe(true);
-    expect(results.updatedIconSets).toEqual([]);
+    expect(changes.updated).toEqual([]);
+    expect(refreshed).toBe(true);
     expect(run.readManifest().iconSets.find(({ name }) => name === 'add')?.lastUpdated).toBe(
       '2026-05-01T00:00:00.000Z',
+    );
+  });
+
+  it('counts a new description as a change only where the package publishes descriptions', async () => {
+    const run = createRun();
+    run.source.sets = firstLibrary();
+    await run.sync();
+
+    run.source.sets = firstLibrary().map((set) =>
+      set.nodeId === '1:1'
+        ? { ...set, description: 'a new description', updatedAt: '2026-05-01T00:00:00.000Z' }
+        : set,
+    );
+    const { changes, refreshed } = await run.sync();
+
+    expect(changes.updated).toEqual(profile.publishesDescriptions ? [{ name: 'add' }] : []);
+    expect(refreshed).toBe(!profile.publishesDescriptions);
+    expect(run.readManifest().iconSets.find(({ name }) => name === 'add')?.description).toBe(
+      'a new description',
     );
   });
 
@@ -187,32 +228,27 @@ describe('icon sync end to end', () => {
         ? iconSet('ui/add', '1:1', 9, { updatedAt: '2026-04-01T00:00:00.000Z' })
         : set,
     );
-    const { results } = await run.sync();
+    const { changes } = await run.sync();
 
     expect(run.source.requestedSetIds).toEqual(['1:1']);
-    expect(run.source.requestedSvgIds).toHaveLength(6);
-    expect(results.updatedIconSets.map(({ name }) => name)).toEqual(['add']);
+    expect(run.source.requestedSvgIds).toHaveLength(sizeCount * 2);
+    expect(changes.updated).toEqual([{ name: 'add' }]);
   });
 
   it('does nothing, but still runs Code Connect, when no icon set changed', async () => {
     const run = createRun();
     run.source.sets = firstLibrary();
     await run.sync();
-    const before = readTree(run.root);
+    const before = withoutReports(readTree(run.root));
     run.source.requestedSetIds = [];
 
-    const { status, results } = await run.sync();
+    const { status, changes } = await run.sync();
 
     expect(status).toBe('nothing-to-sync');
     expect(run.source.requestedSetIds).toEqual([]);
-    expect(results.newIconSets).toEqual([]);
-    expect(run.codeConnect).toHaveBeenCalledTimes(2);
-    expect(run.expoCommands).toHaveLength(1);
-    const withoutReports = (tree: ReturnType<typeof readTree>) =>
-      Object.fromEntries(Object.entries(tree).filter(([file]) => !file.startsWith('report-')));
-    const after = withoutReports(readTree(run.root));
-    const firstTree = withoutReports(before);
-    expect(after).toEqual(firstTree);
+    expect(changes.added).toEqual([]);
+    expect(mockCodeConnect).toHaveBeenCalledTimes(2);
+    expect(withoutReports(readTree(run.root))).toEqual(before);
   });
 
   it('finds a deleted icon set when no other icon set changed', async () => {
@@ -222,17 +258,13 @@ describe('icon sync end to end', () => {
     run.source.requestedSetIds = [];
 
     run.source.sets = firstLibrary().filter(({ nodeId }) => nodeId !== '1:3');
-    const { status, results } = await run.sync();
+    const { status, changes } = await run.sync();
 
     expect(status).toBe('synced');
     expect(run.source.requestedSetIds).toEqual([]);
-    expect(results.deletedIconSets.map(({ name }) => name)).toEqual(['cash']);
-    expect(run.readManifest().iconSets.map(({ name }) => name)).toEqual(['add', 'remove']);
-    expect(fs.existsSync(path.join(run.config.outputSvgPath, 'cash-24-active.svg'))).toBe(false);
-    const plan = fs.readdirSync(path.join(run.root, '.nx/version-plans'))[0];
-    expect(fs.readFileSync(path.join(run.root, '.nx/version-plans', plan), 'utf-8')).toContain(
-      'icons: major',
-    );
+    expect(changes.deleted).toEqual([{ name: 'cash' }]);
+    expect(run.readManifest().iconSets.map(({ name }) => name)).not.toContain('cash');
+    expect(run.svgExists('cash')).toBe(false);
   });
 
   it('stops instead of deleting every icon when Figma returns no icon sets', async () => {
@@ -243,11 +275,22 @@ describe('icon sync end to end', () => {
 
     run.source.sets = [];
 
-    await expect(run.sync()).rejects.toThrow('Figma returned no icon sets, but 3 are published');
+    await expect(run.sync()).rejects.toThrow('Figma returned no icon sets, but 5 are published');
     expect(readTree(run.root)).toEqual(before);
   });
 
-  it('keeps giving every new icon the next free code point, and keeps the code points of old ones', async () => {
+  it('syncs an icon name with a hyphen, which the font finds again from the end of the name', async () => {
+    const run = createRun();
+    run.source.sets = [...firstLibrary(), iconSet('ui/add-circle', '1:12', 6)];
+    const { rejected, changes } = await run.sync();
+
+    expect(rejected).toEqual([]);
+    expect(changes.added.map(({ name }) => name)).toContain('add-circle');
+    const glyphMap = fs.readFileSync(path.join(run.config.outputDataPath, 'glyphMap.ts'), 'utf-8');
+    expect(glyphMap).toContain(`'add-circle-${profile.variants.sizes[0]}-active'`);
+  });
+
+  it('gives every new icon the next free code point, and keeps the code points of old ones', async () => {
     const run = createRun();
     run.source.sets = firstLibrary();
     await run.sync();
@@ -258,131 +301,99 @@ describe('icon sync end to end', () => {
     const second = run.readManifest();
 
     const unicodes = (manifest: Manifest) =>
-      manifest.iconSets.flatMap(({ name, svgs }) => svgs.map((svg) => [svg.name, svg.unicode]));
-    expect(unicodes(second).slice(0, unicodes(first).length)).toEqual(unicodes(first));
-    expect(second.lastUnicode).toBe(first.lastUnicode + 6);
+      Object.fromEntries(
+        manifest.iconSets.flatMap(({ svgs }) => svgs.map((svg) => [svg.name, svg.unicode])),
+      );
+    expect(unicodes(second)).toMatchObject(unicodes(first));
+    expect(second.lastUnicode).toBe(first.lastUnicode + sizeCount * 2);
   });
 });
 
 describe('icon sync failures', () => {
-  beforeEach(() => {
-    jest.spyOn(console, 'log').mockImplementation(() => undefined);
-    jest.spyOn(console, 'warn').mockImplementation(() => undefined);
-  });
+  silence();
 
-  afterEach(() => jest.restoreAllMocks());
-
-  it('rejects an icon set whose SVG cannot be optimized and leaves the other icon sets alone', async () => {
+  it('rejects a new icon set whose SVG cannot be optimized and leaves the other icon sets alone', async () => {
     const run = createRun();
     run.source.sets = firstLibrary();
     await run.sync();
 
     run.source.sets = [
       ...firstLibrary(),
-      iconSet('ui/send', '1:4', 6, {
-        variants: iconSet('ui/send', '1:4', 6).variants.map((variant, index) =>
-          index === 0 ? { ...variant, svg: '<svg><path d="M0 0" ' } : variant,
-        ),
-      }),
-      iconSet('ui/plus', '1:5', 7),
+      brokenSvg(iconSet('ui/send', '1:4', 6)),
+      iconSet('ui/minus', '1:12', 7),
     ];
-    const { rejected, results } = await run.sync();
+    const { rejected, changes } = await run.sync();
 
     expect(rejected.map(({ category, name }) => `${category}:${name}`)).toEqual([
       'invalid-asset:send',
     ]);
     expect(rejected[0].message).toContain('cannot be optimized');
-    expect(results.newIconSets.map(({ name }) => name)).toEqual(['plus']);
+    expect(changes.added).toEqual([{ name: 'minus' }]);
     expect(run.readManifest().iconSets.map(({ name }) => name)).not.toContain('send');
-    expect(fs.existsSync(path.join(run.config.outputSvgPath, 'send-24-active.svg'))).toBe(false);
+    expect(run.svgExists('send')).toBe(false);
   });
 
-  it('rejects an icon set whose name the icon font cannot map back, before writing any file', async () => {
+  it('keeps what was published for an icon set whose new SVG cannot be optimized', async () => {
     const run = createRun();
     run.source.sets = firstLibrary();
     await run.sync();
+    const published = run.readManifest().iconSets.find(({ name }) => name === 'add');
 
-    run.source.sets = [
-      ...firstLibrary(),
-      iconSet('ui/add-circle', '1:4', 6),
-      iconSet('ui/plus', '1:5', 7),
-    ];
-    const { rejected, results } = await run.sync();
+    run.source.sets = firstLibrary().map((set) =>
+      set.nodeId === '1:1'
+        ? brokenSvg(iconSet('ui/add', '1:1', 9, { updatedAt: '2026-04-01T00:00:00.000Z' }))
+        : set,
+    );
+    const { rejected, changes } = await run.sync();
 
     expect(rejected.map(({ category, name }) => `${category}:${name}`)).toEqual([
-      'invalid-asset:add-circle',
+      'invalid-asset:add',
     ]);
-    expect(rejected[0].message).toContain('contains "-"');
-    expect(results.newIconSets.map(({ name }) => name)).toEqual(['plus']);
-    expect(fs.existsSync(path.join(run.config.outputSvgPath, 'add-circle-24-active.svg'))).toBe(
-      false,
-    );
+    expect(changes.updated).toEqual([]);
+    expect(run.readManifest().iconSets.find(({ name }) => name === 'add')).toEqual(published);
   });
 
   it('rejects an icon set that no code point is left for, and keeps the ones that fit', async () => {
     const run = createRun();
     run.source.sets = firstLibrary();
     await run.sync();
-    run.writeManifest({ ...run.readManifest(), lastUnicode: lastAllowedUnicode - 6 });
+    run.writeManifest({ ...run.readManifest(), lastUnicode: lastAllowedUnicode - sizeCount * 2 });
 
     run.source.sets = [
       ...firstLibrary(),
       iconSet('ui/send', '1:4', 6),
-      iconSet('ui/plus', '1:5', 7),
+      iconSet('ui/minus', '1:12', 7),
     ];
-    const { rejected, results } = await run.sync();
+    const { rejected, changes } = await run.sync();
 
     expect(rejected.map(({ category, name }) => `${category}:${name}`)).toEqual([
-      'invalid-asset:plus',
+      'invalid-asset:minus',
     ]);
     expect(rejected[0].message).toContain('no code point left');
-    expect(results.newIconSets.map(({ name }) => name)).toEqual(['send']);
+    expect(changes.added).toEqual([{ name: 'send' }]);
     expect(run.readManifest().lastUnicode).toBe(lastAllowedUnicode);
   });
 });
 
 describe('icon sync changed files', () => {
-  const git = (cwd: string, ...args: string[]) =>
-    execFileSync(
-      'git',
-      [
-        '-c',
-        'user.name=test',
-        '-c',
-        'user.email=test@example.test',
-        '-c',
-        'commit.gpgsign=false',
-        ...args,
-      ],
-      { cwd, encoding: 'utf-8' },
-    );
+  silence();
 
   /** Runs the icon sync and lists the changed files that nothing in the report explains. */
   const syncAndCheck = async (run: ReturnType<typeof createRun>) => {
-    const before = snapshotChanges(run.root, generatedPaths);
-    const { ledger } = await run.sync();
-    const after = snapshotChanges(run.root, generatedPaths);
+    const before = snapshotFiles(run.root, profile.generated.paths);
+    const { changes, refreshed } = await run.sync();
     return unexplainedFiles({
-      changed: changedBetween(before, after),
-      ledger,
+      changed: changedBetween(before, snapshotFiles(run.root, profile.generated.paths)),
+      changes,
+      refreshed,
       explain: explainIconFile,
     });
   };
 
-  beforeEach(() => {
-    jest.spyOn(console, 'log').mockImplementation(() => undefined);
-    jest.spyOn(console, 'warn').mockImplementation(() => undefined);
-  });
-
-  afterEach(() => jest.restoreAllMocks());
-
   it('explains every file of a sync that changed icons', async () => {
     const run = createRun();
-    git(run.root, 'init', '-q');
     run.source.sets = firstLibrary();
     expect(await syncAndCheck(run)).toEqual([]);
-    git(run.root, 'add', '-A');
-    git(run.root, 'commit', '-qm', 'first');
 
     run.source.sets = secondLibrary();
     expect(await syncAndCheck(run)).toEqual([]);
@@ -390,20 +401,16 @@ describe('icon sync changed files', () => {
 
   it('lists a Code Connect file that changed while no icon did', async () => {
     const run = createRun();
-    git(run.root, 'init', '-q');
-    const batch = path.join(run.root, 'packages/web/src/icons/__figma__/icons.figma.batch.json');
+    const [codeConnectFolder] = profile.generated.fromListing;
+    const batch = path.join(run.root, codeConnectFolder, 'icons.figma.batch.json');
     let calls = 0;
-    run.codeConnect.mockImplementation(async () => {
+    mockCodeConnect.mockImplementation(async () => {
       fs.mkdirSync(path.dirname(batch), { recursive: true });
       fs.writeFileSync(batch, `{"call":${++calls}}`);
     });
     run.source.sets = firstLibrary();
     await run.sync();
-    git(run.root, 'add', '-A');
-    git(run.root, 'commit', '-qm', 'first');
 
-    expect(await syncAndCheck(run)).toEqual([
-      'packages/web/src/icons/__figma__/icons.figma.batch.json',
-    ]);
+    expect(await syncAndCheck(run)).toEqual([`${codeConnectFolder}icons.figma.batch.json`]);
   });
 });

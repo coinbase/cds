@@ -1,6 +1,10 @@
-import { selectDeleted } from '@cds/figma-api/syncCore';
-import { Ledger } from '@cds/figma-api/syncLedger';
-import type { ExaminedSummary, RejectedAsset } from '@cds/figma-api/syncReport';
+import {
+  emptyChanges,
+  hasChanges,
+  type IgnoredGroup,
+  type RejectedAsset,
+  type SyncChanges,
+} from '@cds/figma-api/syncReport';
 import fs from 'node:fs';
 
 import type { Sink, SinkChanges } from './sinks/Sink';
@@ -9,20 +13,23 @@ import {
   applyDiff,
   buildFetchedIconSets,
   diffIconSets,
-  hasIconChanges,
-  type IconSetChange,
   type IconSetDiff,
-  type IconSyncResults,
-  recordDiff,
-  type Rejection,
-  toSyncResults,
+  toChanges,
   validateIconSets,
   withoutIconSets,
 } from './diff';
 import { assertSvgFilesExist, readManifest, writeManifest } from './manifest';
 import { optimizeSvg } from './optimizeSvg';
 import { toRejectedAsset } from './report';
-import { emptyLibraryProblem, selectIconSetsToFetch, sortLooseComponents } from './select';
+import type { Rejection } from './rules';
+import {
+  dedupeRemoteIconSets,
+  emptyLibraryProblem,
+  matchIconSets,
+  selectIconSetsToFetch,
+  sortLooseComponents,
+  toRemoteIconSets,
+} from './select';
 
 export type SyncOptions = {
   config: SyncIconsConfig;
@@ -34,38 +41,19 @@ export type SyncOptions = {
   log?: (message: string) => void;
 };
 
+/** What a sync found in Figma and did with it: the report is made from this. */
 export type SyncOutcome = {
   status: 'nothing-to-sync' | 'synced';
-  results: IconSyncResults;
-  /** What happened to everything the sync found in Figma; the report is built from it. */
-  ledger: Ledger;
-  /** How many component sets and components the source listed. */
-  seen: number;
+  changes: SyncChanges;
   /** Icon sets that were skipped because designers need to fix them in Figma. */
   rejected: RejectedAsset[];
-  examined: ExaminedSummary;
+  /** Things the sync looked at and left out on purpose. */
+  ignored: IgnoredGroup[];
+  /** An icon set was only recorded again (a new date), so the manifest changes. */
+  refreshed: boolean;
+  /** How many component sets and components the source listed. */
+  seen: number;
 };
-
-const toOutcome = (
-  status: SyncOutcome['status'],
-  results: IconSyncResults,
-  ledger: Ledger,
-  seen: number,
-): SyncOutcome => ({
-  status,
-  results,
-  ledger,
-  seen,
-  rejected: ledger.rejected(),
-  examined: { seen, ignored: ledger.ignoredGroups() },
-});
-
-const noResults = (): IconSyncResults => ({
-  newIconSets: [],
-  deletedIconSets: [],
-  renamedIconSets: [],
-  updatedIconSets: [],
-});
 
 const toSinkChanges = (
   config: SyncIconsConfig,
@@ -78,17 +66,10 @@ const toSinkChanges = (
     change.kind === 'unchanged' ? [] : [{ iconSet: change.iconSet, icons: change.icons }],
   ),
   remove: [
-    ...diff.changes.flatMap((change) => (change.kind === 'changed' ? [change.oldIconSet] : [])),
+    ...diff.changes.flatMap((change) => (change.kind === 'changed' ? [change.published] : [])),
     ...diff.deleted,
   ],
 });
-
-const logChange = (change: IconSetChange, log: (message: string) => void) => {
-  if (change.kind === 'new') log('  [NEW] Icon set is new, creating svg output files...');
-  if (change.kind === 'changed') {
-    log('  [CHANGED] Icon set has changed, deleting and recreating svg output files...');
-  }
-};
 
 export async function runSync({
   config,
@@ -113,108 +94,125 @@ export async function runSync({
     config.source.listComponentSets(),
     config.source.listLooseComponents(),
   ]);
-  const remoteIds = new Set(componentSets.map((componentSet) => componentSet.node_id));
-  // Components outside sets are reported, not synced; a published icon they replace keeps its version.
-  const loose = sortLooseComponents(looseComponents, oldManifest.iconSets, remoteIds);
   const emptyLibrary = emptyLibraryProblem(componentSets.length, oldManifest.iconSets.length);
   if (emptyLibrary) throw Error(emptyLibrary);
-  // Deleting a set bumps no `updated_at`, so deletions are found here and not from the fetched sets.
-  const deletedIconSets = selectDeleted(oldManifest.iconSets, {
-    identity: ({ nodeId }) => nodeId,
-    present: remoteIds,
-    kept: loose.keepNodeIds,
-  });
-  const seen = componentSets.length + looseComponents.length;
 
-  const ledger = new Ledger();
-  for (const { reason, items } of loose.ignored) ledger.ignored(reason, items);
+  const rejected: RejectedAsset[] = [];
   const reject = (rejection: Rejection) => {
-    console.warn(`  [REJECTED] ${rejection.message}`);
-    ledger.skipped(toRejectedAsset(config.figmaFileId, rejection));
+    console.warn(`  ⚠️ ${rejection.message}`);
+    rejected.push(toRejectedAsset(config.figmaFileId, rejection));
   };
 
-  const idsToFetch = new Set(
-    selectIconSetsToFetch(componentSets, fullCompare ? undefined : oldManifest.iconSets),
+  // One component set per icon name; what Figma still has is matched with what was published.
+  const named = toRemoteIconSets(componentSets);
+  named.rejections.forEach(reject);
+  const { unique, rejections: duplicates } = dedupeRemoteIconSets(
+    named.remote,
+    oldManifest.iconSets,
   );
+  duplicates.forEach(reject);
+  const { matches, gone } = matchIconSets(unique, oldManifest.iconSets);
+
+  // Components outside sets are reported, not synced; a published icon they replace keeps its version.
+  const presentNodeIds = new Set(
+    matches.flatMap(({ published }) => (published ? [published.nodeId] : [])),
+  );
+  const loose = sortLooseComponents(looseComponents, oldManifest.iconSets, presentNodeIds);
+  const seen = componentSets.length + looseComponents.length;
+
+  // A published icon set is only deleted when Figma no longer has it. One whose component set is
+  // still in Figma under a name that is not allowed, or that a component outside a set replaces,
+  // stays as published. Deleting a set bumps no `updated_at`, so deletions are found here.
+  const kept = new Set([...named.invalidNodeIds, ...loose.keepNodeIds]);
+  const deleted = gone.filter(({ nodeId }) => !kept.has(nodeId));
+
+  const idsToFetch = new Set(selectIconSetsToFetch(matches, fullCompare));
   const nodes = await config.source.fetchSetNodes(
     componentSets.filter((componentSet) => idsToFetch.has(componentSet.node_id)),
   );
-  const numberOfNodes = Object.values(nodes).length;
 
   const finishSinks = sinks.filter(({ stage }) => stage === 'finish');
   const assetSinks = sinks.filter(({ stage }) => stage === 'assets');
+  const outcome = (status: SyncOutcome['status'], changes: SyncChanges, refreshed = false) => ({
+    status,
+    changes,
+    rejected,
+    ignored: loose.ignored,
+    refreshed,
+    seen,
+  });
 
-  if (numberOfNodes === 0 && deletedIconSets.length === 0) {
+  // Nothing fetched and nothing deleted → unchanged.
+  if (Object.keys(nodes).length === 0 && deleted.length === 0) {
     if (fullCompare) throw Error('No icon sets found in Figma');
     log('Figma file has no updates, skipping icon sync...');
-    const unchanged = toSinkChanges(config, oldManifest, { changes: [], deleted: [] });
+    const unchanged = toSinkChanges(config, oldManifest, { carried: [], changes: [], deleted: [] });
     for (const sink of finishSinks.filter(({ runsWithoutChanges }) => runsWithoutChanges)) {
       await sink.apply(unchanged);
     }
-    return toOutcome('nothing-to-sync', noResults(), ledger, seen);
+    return outcome('nothing-to-sync', emptyChanges());
   }
 
-  log(`\nProcessing ${numberOfNodes} updated icon sets from Figma...`);
-  const { accepted, rejections: ruleRejections } = validateIconSets({
-    nodes,
-    previous: oldManifest.iconSets,
-    log,
-  });
-  ruleRejections.forEach(reject);
+  log(`\nReconciling ${matches.length} icon sets from Figma...`);
+  const { accepted, carried, rejections } = validateIconSets({ matches, nodes, log });
+  rejections.forEach(reject);
 
   const variantIds = accepted.flatMap(({ variants }) => variants.map(({ id }) => id));
   log(`\nDownloading ${variantIds.length} svg assets...`);
   const rawSvgs = await config.source.fetchSvgs(variantIds);
 
-  const { fetched, rejections: assetRejections } = buildFetchedIconSets({
-    accepted,
-    rawSvgs,
-    optimize: optimizeSvg,
-  });
-  assetRejections.forEach(reject);
+  const built = buildFetchedIconSets({ accepted, rawSvgs, optimize: optimizeSvg });
+  built.rejections.forEach(reject);
 
   // Every sink plans what it is about to write before any of them writes. An icon set a sink
   // cannot write is rejected and left as it was published, and the sinks plan again without it.
-  let diff = diffIconSets({ fetched, deleted: deletedIconSets });
-  let manifest = applyDiff(oldManifest, diff);
-  let plans = await Promise.all(
-    assetSinks.map((sink) => sink.plan(toSinkChanges(config, manifest, diff))),
-  );
-  const failures = plans.flatMap((plan) => plan.failures);
-  if (failures.length > 0) {
-    for (const { nodeId, name, message } of failures) {
-      reject({ name, nodeId, message, category: 'invalid-asset' });
-    }
-    diff = withoutIconSets(diff, new Set(failures.map(({ nodeId }) => nodeId)));
-    manifest = applyDiff(oldManifest, diff);
-    plans = await Promise.all(
+  const planSinks = async (diff: IconSetDiff) => {
+    const manifest = applyDiff(oldManifest, diff);
+    const plans = await Promise.all(
       assetSinks.map((sink) => sink.plan(toSinkChanges(config, manifest, diff))),
     );
-    const remaining = plans.flatMap((plan) => plan.failures);
-    if (remaining.length > 0) {
-      throw Error(remaining.map(({ name, message }) => `${name}: ${message}`).join('\n'));
+    return { manifest, plans, failures: plans.flatMap((plan) => plan.failures) };
+  };
+  let diff = diffIconSets({
+    fetched: built.fetched,
+    carried: [...carried, ...built.carried],
+    deleted,
+  });
+  let planned = await planSinks(diff);
+  if (planned.failures.length > 0) {
+    for (const { nodeId, name, message } of planned.failures) {
+      reject({ name, nodeId, message, category: 'invalid-asset' });
+    }
+    diff = withoutIconSets(diff, new Set(planned.failures.map(({ nodeId }) => nodeId)));
+    planned = await planSinks(diff);
+    if (planned.failures.length > 0) {
+      throw Error(planned.failures.map(({ name, message }) => `${name}: ${message}`).join('\n'));
     }
   }
 
-  for (const change of diff.changes) logChange(change, log);
-  log(`\nProcessing ${deletedIconSets.length} deleted icon sets...`);
+  for (const change of diff.changes) {
+    if (change.kind === 'new') log('  [NEW] Icon set is new, creating svg output files...');
+    if (change.kind === 'changed')
+      log('  [CHANGED] Icon set changed, recreating svg output files...');
+  }
+  log(`\nProcessing ${diff.deleted.length} deleted icon sets...`);
   for (const iconSet of diff.deleted) log(` Deleting icon set: ${iconSet.name} ${iconSet.nodeId}`);
 
-  const results = toSyncResults(diff);
-  recordDiff(ledger, diff);
-
   log('\nGenerating output files...');
-  for (const plan of plans) await plan.commit();
+  for (const plan of planned.plans) await plan.commit();
 
+  const { changes, refreshed } = toChanges(diff);
   log('Updating manifest...');
-  // Rejected icon sets are not in the manifest, so they are fetched and reported until designers fix them
-  // The date moves only when icon sets changed, so a run that finds nothing leaves manifest.json
-  // as it was and the workflow has nothing to push.
-  manifest.lastUpdated = hasIconChanges(results) ? now().toISOString() : oldManifest.lastUpdated;
-  writeManifest(config.manifestPath, manifest);
+  // Rejected icon sets are fetched and reported on every run until designers fix them. The date
+  // moves only when icon sets changed, so a run that finds nothing leaves manifest.json as it was
+  // and the workflow has nothing to push.
+  planned.manifest.lastUpdated = hasChanges(changes)
+    ? now().toISOString()
+    : oldManifest.lastUpdated;
+  writeManifest(config.manifestPath, planned.manifest);
 
-  const finished = toSinkChanges(config, manifest, diff);
+  const finished = toSinkChanges(config, planned.manifest, diff);
   for (const sink of finishSinks) await sink.apply(finished);
 
-  return toOutcome('synced', results, ledger, seen);
+  return outcome('synced', changes, refreshed);
 }

@@ -72,3 +72,54 @@ export const selectDeleted = <T>(
     return !present.has(id) && !keep.has(id);
   });
 };
+
+/**
+ * Matches what Figma has with what was published. The name decides first, ignoring
+ * capitalization, so an icon that was re-created under the same name stays the same icon whatever
+ * its node id. A published item whose name matches nothing but whose node id is in Figma is a
+ * rename. What no remote item matches is gone from Figma. `remote` must have one item per name.
+ */
+export const matchPublished = <Remote, Published>(
+  remote: readonly Remote[],
+  published: readonly Published[],
+  {
+    name,
+    id,
+  }: { name: (item: Remote | Published) => string; id: (item: Remote | Published) => string },
+) => {
+  const byName = new Map(published.map((item) => [name(item).toLowerCase(), item]));
+  const byId = new Map(published.map((item) => [id(item), item]));
+  const taken = new Set<Published>();
+  const matches = remote.map((item) => {
+    const match = byName.get(name(item).toLowerCase());
+    if (match) taken.add(match);
+    return { remote: item, published: match };
+  });
+  for (const match of matches) {
+    const renamed = match.published ? undefined : byId.get(id(match.remote));
+    if (renamed && !taken.has(renamed)) {
+      match.published = renamed;
+      taken.add(renamed);
+    }
+  }
+  return { matches, gone: published.filter((item) => !taken.has(item)) };
+};
+
+/**
+ * For `dedupeByIdentity`: of two items with the same name, the one that is already published
+ * stays, so the choice does not change from run to run; otherwise the older one, the original.
+ */
+export const preferPublishedThenOlder =
+  <T>({
+    isPublished,
+    createdAt,
+  }: {
+    isPublished: (item: T) => boolean;
+    createdAt: (item: T) => string;
+  }) =>
+  (existing: T, candidate: T) => {
+    if (isPublished(existing) !== isPublished(candidate)) {
+      return isPublished(existing) ? existing : candidate;
+    }
+    return createdAt(candidate) < createdAt(existing) ? candidate : existing;
+  };

@@ -1,32 +1,21 @@
 import type { FileExplanation } from '@cds/figma-api/changedFiles';
 
-import { iconVariants } from './profile';
+import { profile } from './profile';
 
-/** The paths, from the repository root, that the icon sync writes to. */
-export const generatedPaths = [
-  'packages/icons',
-  'apps/expo-app/src/__generated__',
-  'packages/web/src/icons/__figma__',
-  'packages/mobile/src/icons/__figma__',
-];
+const { packageDir, fromChanges, fromListing } = profile.generated;
 
 const ICON_SVG = new RegExp(
-  `^packages/icons/src/svgs/(.+)-(?:${iconVariants.sizes.join('|')})-(?:active|inactive)\\.svg$`,
+  `^${packageDir}/src/svgs/(.+)-(?:${profile.variants.sizes.join('|')})-(?:active|inactive)\\.svg$`,
 );
-const MANIFEST = /^packages\/icons\/manifest\.json$/;
-const FROM_CHANGES = [
-  /^packages\/icons\/src\/(?:IconName|names|descriptionMap|glyphMap)\.ts$/,
-  /^packages\/icons\/src\/fonts\//,
-  /^apps\/expo-app\/src\/__generated__\/iconSvgMap\.ts$/,
-];
-const CODE_CONNECT = /^packages\/(?:web|mobile)\/src\/icons\/__figma__\//;
+const startsWithAny = (file: string, prefixes: string[]) =>
+  prefixes.some((prefix) => file === prefix || (prefix.endsWith('/') && file.startsWith(prefix)));
 
 /** Where a file the icon sync can write comes from; a file it does not write is not explained. */
 export const explainIconFile = (file: string): FileExplanation | undefined => {
   const svg = ICON_SVG.exec(file);
   if (svg) return { item: svg[1] };
-  if (MANIFEST.test(file)) return { derived: 'records' };
-  if (FROM_CHANGES.some((pattern) => pattern.test(file))) return { derived: 'changes' };
-  if (CODE_CONNECT.test(file)) return { derived: 'listing' };
+  if (file === `${packageDir}/manifest.json`) return { derived: 'records' };
+  if (startsWithAny(file, fromChanges)) return { derived: 'changes' };
+  if (startsWithAny(file, fromListing)) return { derived: 'listing' };
   return undefined;
 };

@@ -1,8 +1,6 @@
-import type { Ledger } from '@cds/figma-api/syncLedger';
 import type { RejectedAsset } from '@cds/figma-api/syncReport';
 
 import type { InvalidComponent } from './source/IllustrationSource';
-import type { SyncResults } from './diff';
 import { type Illustration, illustrationKey } from './illustration';
 import type { DuplicateComponent } from './select';
 import type { SinkResult } from './sync';
@@ -51,13 +49,3 @@ export const duplicateAssets = (duplicates: DuplicateComponent[]): RejectedAsset
     duplicateOf: { url: keptBy.url },
     category: 'duplicate-name' as const,
   }));
-
-/** Records what the sync did to each illustration, with its type as the group. */
-export const recordResults = (ledger: Ledger, results: SyncResults) => {
-  for (const { name, type } of results.added) ledger.added({ name, group: type });
-  for (const { name, type } of results.updated) ledger.updated({ name, group: type });
-  for (const { name, oldName, type } of results.renamed) {
-    ledger.renamed({ name, oldName, group: type });
-  }
-  for (const { name, type } of results.deleted) ledger.deleted({ name, group: type });
-};

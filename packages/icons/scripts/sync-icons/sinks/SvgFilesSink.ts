@@ -1,6 +1,8 @@
+import fs from 'node:fs';
+
 import { svgFilePath } from '../manifest';
 
-import { removeFile, writeFile } from './files';
+import { resolveSvgPath, writeFile } from './files';
 import { Sink, type SinkChanges, type SinkFailure } from './Sink';
 
 /** Writes the optimized SVG of every icon asset to the package, and removes the replaced ones. */
@@ -22,7 +24,10 @@ export class SvgFilesSink extends Sink {
 
   async apply({ config, write, remove }: SinkChanges) {
     for (const iconSet of remove) {
-      for (const svg of iconSet.svgs) removeFile(svgFilePath(config.outputSvgPath, svg.name));
+      for (const svg of iconSet.svgs) {
+        const svgPath = resolveSvgPath(config.outputSvgPath, svg.name);
+        if (svgPath && fs.existsSync(svgPath)) fs.rmSync(svgPath);
+      }
     }
     for (const { icons } of write) {
       for (const icon of icons)

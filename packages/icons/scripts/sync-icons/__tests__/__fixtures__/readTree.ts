@@ -34,7 +34,10 @@ export const readTree = (root: string) => {
     tree[relative] = text
       .replace(fontHash, '-HASH.woff2')
       .replace(/icons-\d{4}-\d{2}-\d{2}/g, 'icons-<date>')
-      .replace(/Publish icons \d{4}-\d{2}-\d{2}/g, 'Publish icons <date>');
+      .replace(
+        /Publish (retail )?icons \d{4}-\d{2}-\d{2}/g,
+        (_match, retail) => `Publish ${retail ?? ''}icons <date>`,
+      );
   }
   return tree;
 };

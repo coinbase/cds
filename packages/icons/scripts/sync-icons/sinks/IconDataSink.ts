@@ -1,6 +1,7 @@
 import path from 'node:path';
 
 import { getDescriptionMap } from '../getDescriptionMap';
+import { profile } from '../profile';
 
 import { codegenHeader, writeFile } from './files';
 import { Sink, type SinkChanges } from './Sink';
@@ -27,15 +28,17 @@ import type { IconName } from './IconName';\n
 export const names: IconName[] = ${iconNamesContent};\n`,
     );
 
-    console.log('Generating output descriptions data...');
-    const descriptionMap = getDescriptionMap(manifest.iconSets);
-    const descriptionMapContent = JSON.stringify(descriptionMap, null, 2).replaceAll('"', "'");
-    writeFile(
-      path.join(config.outputDataPath, 'descriptionMap.ts'),
-      `${codegenHeader}
-import type { IconName } from './IconName';\n
-/** Mapping of descriptions to associated icons. */
-export const descriptionMap: Record<string, IconName[]> = ${descriptionMapContent};\n`,
-    );
+    if (profile.publishesDescriptions) {
+      console.log('Generating output descriptions data...');
+      const descriptionMap = getDescriptionMap(manifest.iconSets);
+      const descriptionMapContent = JSON.stringify(descriptionMap, null, 2).replaceAll('"', "'");
+      writeFile(
+        path.join(config.outputDataPath, 'descriptionMap.ts'),
+        `${codegenHeader}
+  import type { IconName } from './IconName';\n
+  /** Mapping of descriptions to associated icons. */
+  export const descriptionMap: Record<string, IconName[]> = ${descriptionMapContent};\n`,
+      );
+    }
   }
 }

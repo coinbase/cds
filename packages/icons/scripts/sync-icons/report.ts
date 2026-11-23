@@ -1,14 +1,16 @@
 import { versionPlansDirectory, writeVersionPlan } from '@cds/figma-api/renderSyncReport';
-import type { Ledger } from '@cds/figma-api/syncLedger';
 import {
   figmaNodeUrl,
   isBreaking,
   type RejectedAsset,
+  type SyncChanges,
   type SyncReport,
   writeSyncReport,
 } from '@cds/figma-api/syncReport';
 
-import type { IconSyncResults, Rejection } from './diff';
+import { profile } from './profile';
+import type { Rejection } from './rules';
+import type { SyncOutcome } from './sync';
 
 export const toRejectedAsset = (
   figmaFileId: string,
@@ -22,26 +24,20 @@ export const toRejectedAsset = (
   ...(duplicateNodeId ? { duplicateOf: { url: figmaNodeUrl(figmaFileId, duplicateNodeId) } } : {}),
 });
 
-export const buildSyncReport = ({
-  ledger,
-  seen,
-  unexplainedFiles,
-}: {
-  ledger: Ledger;
-  /** How many items the source listed. */
-  seen: number;
-  unexplainedFiles?: string[];
-}): SyncReport => {
-  const changes = ledger.changes();
-  return {
-    target: 'icons',
-    bump: isBreaking(changes) ? 'major' : 'minor',
-    changes,
-    rejected: ledger.rejected(),
-    examined: { seen, ignored: ledger.ignoredGroups() },
-    ...(unexplainedFiles?.length ? { unexplainedFiles } : {}),
-  };
-};
+export const buildSyncReport = (
+  { changes, rejected, ignored, seen }: SyncOutcome,
+  { figmaFileId, unexplainedFiles }: { figmaFileId: string; unexplainedFiles?: string[] },
+): SyncReport => ({
+  target: profile.target,
+  ...(profile.label ? { label: profile.label } : {}),
+  ...(profile.figmaFile ? { figmaFile: profile.figmaFile(figmaFileId) } : {}),
+  // A deletion or a rename removes a public `IconName` export, so it is a breaking change.
+  bump: isBreaking(changes) ? profile.bump.breaking : profile.bump.otherwise,
+  changes,
+  rejected,
+  examined: { seen, ignored },
+  ...(unexplainedFiles?.length ? { unexplainedFiles } : {}),
+});
 
 /** Writes the report for the workflow, and the version plan when an icon changed. */
 export const writeReport = (
@@ -52,26 +48,21 @@ export const writeReport = (
   writeVersionPlan(report, versionPlansDirectory(repoRoot));
 };
 
-export const logSummary = (results: IconSyncResults) => {
-  console.log('\n\nChange summary:');
-  console.log(`\nNew icon sets (${results.newIconSets.length}):`);
-  console.table(results.newIconSets.map(({ nodeId, name }) => ({ nodeId, name })));
-  console.log(`\nDeleted icon sets (${results.deletedIconSets.length}):`);
-  console.table(results.deletedIconSets.map(({ nodeId, name }) => ({ nodeId, name })));
-  console.log(`\nRenamed icon sets (${results.renamedIconSets.length}):`);
-  console.table(
-    results.renamedIconSets.map(({ nodeId, oldName, name }) => ({
-      nodeId,
-      oldName,
-      newName: name,
-    })),
-  );
-  console.log(`\nUpdated icon sets (${results.updatedIconSets.length}):`);
-  console.table(results.updatedIconSets.map(({ nodeId, name }) => ({ nodeId, name })));
+const names = (assets: { name: string }[]) => assets.map(({ name }) => ({ name }));
 
-  const breakingChanges = results.deletedIconSets.length + results.renamedIconSets.length;
-  if (breakingChanges > 0)
-    console.log(`\n⚠️ Warning: ${breakingChanges} breaking changes detected`);
+export const logSummary = ({ added, deleted, renamed, updated }: SyncChanges) => {
+  console.log('\n\nChange summary:');
+  console.log(`\nNew icon sets (${added.length}):`);
+  console.table(names(added));
+  console.log(`\nDeleted icon sets (${deleted.length}):`);
+  console.table(names(deleted));
+  console.log(`\nRenamed icon sets (${renamed.length}):`);
+  console.table(renamed.map(({ oldName, name }) => ({ oldName, newName: name })));
+  console.log(`\nUpdated icon sets (${updated.length}):`);
+  console.table(names(updated));
+  if (deleted.length + renamed.length > 0) {
+    console.log(`\n⚠️ Warning: ${deleted.length + renamed.length} breaking changes detected`);
+  }
 };
 
 export const logRejections = (rejected: RejectedAsset[]) => {
