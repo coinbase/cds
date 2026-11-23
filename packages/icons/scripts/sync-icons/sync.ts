@@ -180,10 +180,17 @@ export async function runSync({
   });
   let planned = await planSinks(diff);
   if (planned.failures.length > 0) {
+    // Several sinks can reject the same icon set: it is one rejection, with every reason.
+    const reasons = new Map<string, { name: string; messages: string[] }>();
     for (const { nodeId, name, message } of planned.failures) {
-      reject({ name, nodeId, message, category: 'invalid-asset' });
+      const entry = reasons.get(nodeId) ?? { name, messages: [] };
+      entry.messages.push(message);
+      reasons.set(nodeId, entry);
     }
-    diff = withoutIconSets(diff, new Set(planned.failures.map(({ nodeId }) => nodeId)));
+    for (const [nodeId, { name, messages }] of reasons) {
+      reject({ name, nodeId, message: messages.join(' '), category: 'invalid-asset' });
+    }
+    diff = withoutIconSets(diff, new Set(reasons.keys()));
     planned = await planSinks(diff);
     if (planned.failures.length > 0) {
       throw Error(planned.failures.map(({ name, message }) => `${name}: ${message}`).join('\n'));

@@ -11,6 +11,7 @@ import { explainIconFile } from '../explainFile';
 import { lastAllowedUnicode, type Manifest } from '../manifest';
 import { profile } from '../profile';
 import { buildSyncReport, writeReport } from '../report';
+import { Sink, type SinkChanges } from '../sinks/Sink';
 import { InMemorySource } from '../source/InMemorySource';
 import { runSync } from '../sync';
 
@@ -372,6 +373,50 @@ describe('icon sync failures', () => {
     ]);
     expect(changes.updated).toEqual([]);
     expect(run.readManifest().iconSets.find(({ name }) => name === 'add')).toEqual(published);
+  });
+
+  it('rejects an icon set that two sinks cannot write once, with both reasons', async () => {
+    class RejectingSink extends Sink {
+      private readonly message: string;
+
+      constructor(message: string) {
+        super();
+        this.message = message;
+      }
+
+      async apply() {}
+
+      async plan(changes: SinkChanges) {
+        const failing = changes.write.find(({ iconSet }) => iconSet.name === 'send');
+        const failures = failing
+          ? [{ nodeId: failing.iconSet.nodeId, name: 'send', message: this.message }]
+          : [];
+        return { sink: this.name, failures, commit: async () => {} };
+      }
+    }
+    const run = createRun();
+    run.source.sets = [
+      ...firstLibrary(),
+      iconSet('ui/send', '1:4', 6),
+      iconSet('ui/minus', '1:12', 7),
+    ];
+    const config = createConfig(run.root, {
+      source: run.source,
+      sinks: [new RejectingSink('First reason.'), new RejectingSink('Second reason.')],
+    });
+
+    const { rejected, changes } = await runSync({
+      config,
+      sinks: config.sinks,
+      now: () => fixedDate,
+    });
+
+    expect(rejected.map(({ category, name }) => `${category}:${name}`)).toEqual([
+      'invalid-asset:send',
+    ]);
+    expect(rejected[0].message).toBe('First reason. Second reason.');
+    expect(changes.added.map(({ name }) => name)).toContain('minus');
+    expect(changes.added.map(({ name }) => name)).not.toContain('send');
   });
 
   it('rejects an icon set that no code point is left for, and keeps the ones that fit', async () => {
