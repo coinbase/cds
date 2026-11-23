@@ -153,22 +153,14 @@ async function makeRequest<T>(
             return;
           }
 
-          // Log when retries are exhausted
-          if (isRetryableStatus(statusCode)) {
-            verboseLog(
-              `[figma-api] HTTP ${statusCode}. Max retries (${MAX_RETRIES}) exhausted. URL: ${figmaUrl.toString()}`,
-            );
-          }
-
           // Handle error status codes
           if (statusCode < 200 || statusCode >= 300) {
             const error = parseFigmaError(statusCode, responseBody, figmaUrl.toString());
             // Say that it was tried again, so that a failure does not look like a single bad answer.
-            reject(
-              isRetryableStatus(statusCode)
-                ? new Error(`${error.message} (gave up after ${MAX_RETRIES} retries)`)
-                : error,
-            );
+            if (isRetryableStatus(statusCode)) {
+              error.message += ` (gave up after ${MAX_RETRIES} retries)`;
+            }
+            reject(error);
             return;
           }
 
