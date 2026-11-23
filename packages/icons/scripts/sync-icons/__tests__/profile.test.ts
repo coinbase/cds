@@ -1,9 +1,9 @@
 import {
   iconDuplicateProblem,
-  iconPropsProblem,
   iconSetNameProblem,
   iconVariants,
   iconVariantsProblem,
+  parseIconVariant,
   parseIconVariantName,
 } from '../profile';
 
@@ -20,9 +20,15 @@ describe('iconSetNameProblem', () => {
   );
 });
 
-describe('iconPropsProblem', () => {
-  const problem = (componentName: string) =>
-    iconPropsProblem('add', componentName, parseIconVariantName(componentName));
+describe('parseIconVariant', () => {
+  const problem = (componentName: string) => {
+    const parsed = parseIconVariant('add', componentName);
+    return 'problem' in parsed ? parsed.problem : undefined;
+  };
+
+  it('reads the size as a number and the state as a boolean', () => {
+    expect(parseIconVariant('add', 'size=24, active=false')).toEqual({ size: 24, active: false });
+  });
 
   it('accepts a component named after a size and an active state', () => {
     expect(problem('size=24, active=false')).toBeUndefined();

@@ -15,27 +15,32 @@ export const iconSetNameProblem = (figmaName: string) =>
     ? undefined
     : `Icon set "${figmaName}" is not named "ui/<name>" or "nav/<name>". Rename the icon set in Figma.`;
 
+export type IconVariant = { size: number; active: boolean };
+
 /**
- * What is wrong with an icon component's properties, or undefined when it is valid. Components are
- * named after their properties, like "size=24, active=false".
+ * The size and state an icon component is named after, or what is wrong with its name, such as
+ * "size=24, active=false".
  */
-export const iconPropsProblem = (
+export const parseIconVariant = (
   iconName: string,
   componentName: string,
-  { size, active }: Record<string, unknown>,
-) => {
+): IconVariant | { problem: string } => {
+  const { size, active } = parseIconVariantName(componentName);
   const where = `"${componentName}" in icon set "${iconName}"`;
   const format = 'Name icon components like "size=24, active=false".';
-  if (size === undefined) return `${where} is missing a "size" property. ${format}`;
-  if (typeof size !== 'number') return `${where} has a "size" that is not a number. ${format}`;
-  if (active === undefined) return `${where} is missing an "active" property. ${format}`;
-  if (typeof active !== 'boolean') {
-    return `${where} has an "active" that is not true or false. ${format}`;
+  if (size === undefined) return { problem: `${where} is missing a "size" property. ${format}` };
+  if (typeof size !== 'number') {
+    return { problem: `${where} has a "size" that is not a number. ${format}` };
   }
-  return undefined;
+  if (active === undefined) {
+    return { problem: `${where} is missing an "active" property. ${format}` };
+  }
+  if (typeof active !== 'boolean') {
+    return { problem: `${where} has an "active" that is not true or false. ${format}` };
+  }
+  return { size, active };
 };
 
-/** The variants every icon set has: each size, active and inactive. */
 export const iconVariants = { sizes: [12, 16, 24], states: [true, false] } as const;
 
 type Variant = { size: number; active: boolean };

@@ -245,7 +245,9 @@ export async function syncIconCodeConnect(repoRoot: string) {
 const MONOREPO_ROOT = process.env.PROJECT_CWD ?? process.env.NX_MONOREPO_ROOT;
 
 // Only when this file is the script that was started; the icon sync imports it and runs it itself.
-const isEntryPoint = process.argv[1]?.includes('sync-icon-code-connect');
+const isEntryPoint = process.argv[1]
+  ? path.basename(path.dirname(path.resolve(process.argv[1]))) === 'sync-icon-code-connect'
+  : false;
 
 if (MONOREPO_ROOT && isEntryPoint) {
   syncIconCodeConnect(MONOREPO_ROOT).catch((err: unknown) => {
