@@ -41,7 +41,7 @@ const versionMap: Record<SpotIconName, number> = {
   rosettaProduct: 3,
   coinbaseOneProduct: 1,
   privateClientProduct: 1,
-  walletAsAServiceProduct: 3,
+  walletAsAServiceProduct: 4,
   nftProduct: 2,
   cloudProduct: 2,
   dataMarketplace: 3,

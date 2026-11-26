@@ -613,7 +613,7 @@ const svgEsmMap = {
   },
   walletAsAServiceProduct: {
     themeable: () =>
-      import('../svgJs/esm/themeable/walletAsAServiceProduct-3.js').then(
+      import('../svgJs/esm/themeable/walletAsAServiceProduct-4.js').then(
         (m) => m.default as string,
       ),
   },

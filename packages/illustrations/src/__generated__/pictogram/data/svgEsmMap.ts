@@ -609,7 +609,7 @@ const svgEsmMap = {
   },
   baseDoor: {
     themeable: () =>
-      import('../svgJs/esm/themeable/baseDoor-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/baseDoor-2.js').then((m) => m.default as string),
   },
   baseEarnedBadge: {
     themeable: () =>
@@ -627,7 +627,7 @@ const svgEsmMap = {
   },
   baseErrorSmall: {
     themeable: () =>
-      import('../svgJs/esm/themeable/baseErrorSmall-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/baseErrorSmall-1.js').then((m) => m.default as string),
   },
   baseExchange: {
     themeable: () =>
@@ -662,7 +662,7 @@ const svgEsmMap = {
   },
   baseLocationSmall: {
     themeable: () =>
-      import('../svgJs/esm/themeable/baseLocationSmall-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/baseLocationSmall-2.js').then((m) => m.default as string),
   },
   baseLogo: {
     themeable: () =>
@@ -738,7 +738,7 @@ const svgEsmMap = {
   },
   baseSignin: {
     themeable: () =>
-      import('../svgJs/esm/themeable/baseSignin-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/baseSignin-1.js').then((m) => m.default as string),
   },
   baseSmile: {
     themeable: () =>
@@ -762,7 +762,7 @@ const svgEsmMap = {
   },
   bigBtcSend: {
     themeable: () =>
-      import('../svgJs/esm/themeable/bigBtcSend-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/bigBtcSend-1.js').then((m) => m.default as string),
   },
   bitcoin: {
     themeable: () => import('../svgJs/esm/themeable/bitcoin-1.js').then((m) => m.default as string),
@@ -966,7 +966,7 @@ const svgEsmMap = {
   },
   coinbaseUnlockOffers: {
     themeable: () =>
-      import('../svgJs/esm/themeable/coinbaseUnlockOffers-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/coinbaseUnlockOffers-1.js').then((m) => m.default as string),
   },
   coinbaseWalletApp: {
     themeable: () =>
@@ -1014,7 +1014,7 @@ const svgEsmMap = {
   },
   congratulations: {
     themeable: () =>
-      import('../svgJs/esm/themeable/congratulations-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/congratulations-5.js').then((m) => m.default as string),
   },
   connectNavigation: {
     themeable: () =>
@@ -1311,7 +1311,7 @@ const svgEsmMap = {
   },
   hardwareWallet: {
     themeable: () =>
-      import('../svgJs/esm/themeable/hardwareWallet-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/hardwareWallet-6.js').then((m) => m.default as string),
   },
   helpCenterNavigation: {
     themeable: () =>
@@ -1832,7 +1832,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/pluginBrowser-4.js').then((m) => m.default as string),
   },
   podium: {
-    themeable: () => import('../svgJs/esm/themeable/podium-0.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/podium-1.js').then((m) => m.default as string),
   },
   positiveReviews: {
     themeable: () =>
@@ -1909,7 +1909,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/riskStaking-3.js').then((m) => m.default as string),
   },
   robot: {
-    themeable: () => import('../svgJs/esm/themeable/robot-0.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/robot-1.js').then((m) => m.default as string),
   },
   rosettaNavigation: {
     themeable: () =>
@@ -2086,7 +2086,7 @@ const svgEsmMap = {
   },
   tokenSales: {
     themeable: () =>
-      import('../svgJs/esm/themeable/tokenSales-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/tokenSales-1.js').then((m) => m.default as string),
   },
   trading: {
     themeable: () => import('../svgJs/esm/themeable/trading-2.js').then((m) => m.default as string),

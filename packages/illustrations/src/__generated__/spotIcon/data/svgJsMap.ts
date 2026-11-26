@@ -762,9 +762,9 @@ const svgJsMap = {
     themeable: () => require('../svgJs/cjs/themeable/wallet-2.js').content,
   },
   walletAsAServiceProduct: {
-    light: () => require('../svgJs/cjs/light/walletAsAServiceProduct-3.js').content,
-    dark: () => require('../svgJs/cjs/dark/walletAsAServiceProduct-3.js').content,
-    themeable: () => require('../svgJs/cjs/themeable/walletAsAServiceProduct-3.js').content,
+    light: () => require('../svgJs/cjs/light/walletAsAServiceProduct-4.js').content,
+    dark: () => require('../svgJs/cjs/dark/walletAsAServiceProduct-4.js').content,
+    themeable: () => require('../svgJs/cjs/themeable/walletAsAServiceProduct-4.js').content,
   },
   walletEmpty: {
     light: () => require('../svgJs/cjs/light/walletEmpty-0.js').content,

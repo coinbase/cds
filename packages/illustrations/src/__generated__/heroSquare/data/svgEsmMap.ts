@@ -66,7 +66,7 @@ const svgEsmMap = {
   },
   arrowsUpDown: {
     themeable: () =>
-      import('../svgJs/esm/themeable/arrowsUpDown-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/arrowsUpDown-2.js').then((m) => m.default as string),
   },
   artFrameEmptyState: {
     themeable: () =>
@@ -102,7 +102,7 @@ const svgEsmMap = {
   },
   baseCreatorCoin: {
     themeable: () =>
-      import('../svgJs/esm/themeable/baseCreatorCoin-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/baseCreatorCoin-2.js').then((m) => m.default as string),
   },
   baseCreatorCoinEmpty: {
     themeable: () =>
@@ -124,7 +124,7 @@ const svgEsmMap = {
   },
   baseErrorButterfly: {
     themeable: () =>
-      import('../svgJs/esm/themeable/baseErrorButterfly-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/baseErrorButterfly-1.js').then((m) => m.default as string),
   },
   baseErrorLarge: {
     themeable: () =>
@@ -306,7 +306,7 @@ const svgEsmMap = {
   },
   chickenFishSystemError: {
     themeable: () =>
-      import('../svgJs/esm/themeable/chickenFishSystemError-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/chickenFishSystemError-4.js').then((m) => m.default as string),
   },
   claimCryptoUsername: {
     themeable: () =>
@@ -449,7 +449,7 @@ const svgEsmMap = {
   },
   coinbaseOneZeroPromotion: {
     themeable: () =>
-      import('../svgJs/esm/themeable/coinbaseOneZeroPromotion-1.js').then(
+      import('../svgJs/esm/themeable/coinbaseOneZeroPromotion-2.js').then(
         (m) => m.default as string,
       ),
   },
@@ -499,7 +499,7 @@ const svgEsmMap = {
   },
   congratulationsOnEarningCrypto: {
     themeable: () =>
-      import('../svgJs/esm/themeable/congratulationsOnEarningCrypto-3.js').then(
+      import('../svgJs/esm/themeable/congratulationsOnEarningCrypto-4.js').then(
         (m) => m.default as string,
       ),
   },
@@ -533,7 +533,7 @@ const svgEsmMap = {
   },
   cryptoEconomy: {
     themeable: () =>
-      import('../svgJs/esm/themeable/cryptoEconomy-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/cryptoEconomy-5.js').then((m) => m.default as string),
   },
   cryptoForBeginners: {
     themeable: () =>
@@ -545,7 +545,7 @@ const svgEsmMap = {
   },
   cryptoPortfolioUsdc: {
     themeable: () =>
-      import('../svgJs/esm/themeable/cryptoPortfolioUsdc-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/cryptoPortfolioUsdc-2.js').then((m) => m.default as string),
   },
   cryptoWallet: {
     themeable: () =>
@@ -650,7 +650,7 @@ const svgEsmMap = {
   },
   discardAssets: {
     themeable: () =>
-      import('../svgJs/esm/themeable/discardAssets-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/discardAssets-6.js').then((m) => m.default as string),
   },
   docError: {
     themeable: () =>
@@ -677,7 +677,7 @@ const svgEsmMap = {
   },
   earnCryptoInterest: {
     themeable: () =>
-      import('../svgJs/esm/themeable/earnCryptoInterest-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/earnCryptoInterest-6.js').then((m) => m.default as string),
   },
   earnGlobe: {
     themeable: () =>
@@ -697,7 +697,7 @@ const svgEsmMap = {
   },
   earnMore: {
     themeable: () =>
-      import('../svgJs/esm/themeable/earnMore-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/earnMore-5.js').then((m) => m.default as string),
   },
   earnNuxHome: {
     themeable: () =>
@@ -743,7 +743,7 @@ const svgEsmMap = {
   },
   engagement: {
     themeable: () =>
-      import('../svgJs/esm/themeable/engagement-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/engagement-3.js').then((m) => m.default as string),
   },
   ensProfilePic: {
     themeable: () =>
@@ -874,7 +874,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/gainsAndLosses-4.js').then((m) => m.default as string),
   },
   gamer: {
-    themeable: () => import('../svgJs/esm/themeable/gamer-1.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/gamer-2.js').then((m) => m.default as string),
   },
   gasFeesNetworkFees: {
     themeable: () =>
@@ -910,7 +910,7 @@ const svgEsmMap = {
   },
   graphChartTrading: {
     themeable: () =>
-      import('../svgJs/esm/themeable/graphChartTrading-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/graphChartTrading-1.js').then((m) => m.default as string),
   },
   hardwareWallets: {
     themeable: () =>
@@ -1017,7 +1017,7 @@ const svgEsmMap = {
   },
   instoOnChain: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoOnChain-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoOnChain-4.js').then((m) => m.default as string),
   },
   instoOpenEmail: {
     themeable: () =>
@@ -1029,7 +1029,7 @@ const svgEsmMap = {
   },
   instoPrimeStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPrimeStaking-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoPrimeStaking-3.js').then((m) => m.default as string),
   },
   instoPrivateKey: {
     themeable: () =>
@@ -1111,11 +1111,11 @@ const svgEsmMap = {
   },
   ledgerAccess: {
     themeable: () =>
-      import('../svgJs/esm/themeable/ledgerAccess-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/ledgerAccess-5.js').then((m) => m.default as string),
   },
   ledgerPlugin: {
     themeable: () =>
-      import('../svgJs/esm/themeable/ledgerPlugin-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/ledgerPlugin-5.js').then((m) => m.default as string),
   },
   lend: {
     themeable: () => import('../svgJs/esm/themeable/lend-1.js').then((m) => m.default as string),
@@ -1140,7 +1140,7 @@ const svgEsmMap = {
   },
   lightningNetworkTransfer: {
     themeable: () =>
-      import('../svgJs/esm/themeable/lightningNetworkTransfer-1.js').then(
+      import('../svgJs/esm/themeable/lightningNetworkTransfer-2.js').then(
         (m) => m.default as string,
       ),
   },
@@ -1185,7 +1185,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/marginWarning-4.js').then((m) => m.default as string),
   },
   mcLoad: {
-    themeable: () => import('../svgJs/esm/themeable/mcLoad-2.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/mcLoad-3.js').then((m) => m.default as string),
   },
   mic: {
     themeable: () => import('../svgJs/esm/themeable/mic-4.js').then((m) => m.default as string),
@@ -1278,7 +1278,7 @@ const svgEsmMap = {
   },
   optInPushNotificationsEmail: {
     themeable: () =>
-      import('../svgJs/esm/themeable/optInPushNotificationsEmail-3.js').then(
+      import('../svgJs/esm/themeable/optInPushNotificationsEmail-4.js').then(
         (m) => m.default as string,
       ),
   },
@@ -1286,7 +1286,7 @@ const svgEsmMap = {
     themeable: () => import('../svgJs/esm/themeable/options-1.js').then((m) => m.default as string),
   },
   oracle: {
-    themeable: () => import('../svgJs/esm/themeable/oracle-1.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/oracle-2.js').then((m) => m.default as string),
   },
   orderBooks: {
     themeable: () =>
@@ -1351,15 +1351,15 @@ const svgEsmMap = {
   },
   primeDeFi: {
     themeable: () =>
-      import('../svgJs/esm/themeable/primeDeFi-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/primeDeFi-5.js').then((m) => m.default as string),
   },
   primeEarn: {
     themeable: () =>
-      import('../svgJs/esm/themeable/primeEarn-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/primeEarn-6.js').then((m) => m.default as string),
   },
   primeStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/primeStaking-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/primeStaking-6.js').then((m) => m.default as string),
   },
   private: {
     themeable: () => import('../svgJs/esm/themeable/private-2.js').then((m) => m.default as string),
@@ -1377,10 +1377,10 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/protocol-1.js').then((m) => m.default as string),
   },
   public: {
-    themeable: () => import('../svgJs/esm/themeable/public-1.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/public-2.js').then((m) => m.default as string),
   },
   quest: {
-    themeable: () => import('../svgJs/esm/themeable/quest-2.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/quest-3.js').then((m) => m.default as string),
   },
   quickAndSimple: {
     themeable: () =>
@@ -1627,7 +1627,7 @@ const svgEsmMap = {
   },
   taxesDetails: {
     themeable: () =>
-      import('../svgJs/esm/themeable/taxesDetails-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/taxesDetails-4.js').then((m) => m.default as string),
   },
   test: {
     themeable: () => import('../svgJs/esm/themeable/test-0.js').then((m) => m.default as string),
@@ -1649,7 +1649,7 @@ const svgEsmMap = {
   },
   tradingPerpetualsUsdc: {
     themeable: () =>
-      import('../svgJs/esm/themeable/tradingPerpetualsUsdc-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/tradingPerpetualsUsdc-2.js').then((m) => m.default as string),
   },
   tradingWithLeverage: {
     themeable: () =>
@@ -1729,7 +1729,7 @@ const svgEsmMap = {
   },
   walletAsset: {
     themeable: () =>
-      import('../svgJs/esm/themeable/walletAsset-7.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/walletAsset-8.js').then((m) => m.default as string),
   },
   walletConfirmation: {
     themeable: () =>

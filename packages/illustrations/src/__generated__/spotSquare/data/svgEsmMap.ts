@@ -84,7 +84,7 @@ const svgEsmMap = {
   },
   baseCheckMedium: {
     themeable: () =>
-      import('../svgJs/esm/themeable/baseCheckMedium-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/baseCheckMedium-1.js').then((m) => m.default as string),
   },
   baseCheckTrophyMedium: {
     themeable: () =>
@@ -108,7 +108,7 @@ const svgEsmMap = {
   },
   baseDecentralizationMedium: {
     themeable: () =>
-      import('../svgJs/esm/themeable/baseDecentralizationMedium-0.js').then(
+      import('../svgJs/esm/themeable/baseDecentralizationMedium-1.js').then(
         (m) => m.default as string,
       ),
   },
@@ -208,7 +208,7 @@ const svgEsmMap = {
   },
   baseSendMedium: {
     themeable: () =>
-      import('../svgJs/esm/themeable/baseSendMedium-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/baseSendMedium-1.js').then((m) => m.default as string),
   },
   baseSwitch: {
     themeable: () =>
@@ -220,10 +220,10 @@ const svgEsmMap = {
   },
   baseUsdcMedium: {
     themeable: () =>
-      import('../svgJs/esm/themeable/baseUsdcMedium-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/baseUsdcMedium-1.js').then((m) => m.default as string),
   },
   bigBtc: {
-    themeable: () => import('../svgJs/esm/themeable/bigBtc-4.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/bigBtc-5.js').then((m) => m.default as string),
   },
   blockchain: {
     themeable: () =>
@@ -389,7 +389,7 @@ const svgEsmMap = {
   },
   coinbaseUnlockOffers: {
     themeable: () =>
-      import('../svgJs/esm/themeable/coinbaseUnlockOffers-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/coinbaseUnlockOffers-1.js').then((m) => m.default as string),
   },
   coinFifty: {
     themeable: () =>
@@ -397,7 +397,7 @@ const svgEsmMap = {
   },
   collectingNfts: {
     themeable: () =>
-      import('../svgJs/esm/themeable/collectingNfts-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/collectingNfts-5.js').then((m) => m.default as string),
   },
   commerceAccounting: {
     themeable: () =>
@@ -443,7 +443,7 @@ const svgEsmMap = {
   },
   cryptoAndMore: {
     themeable: () =>
-      import('../svgJs/esm/themeable/cryptoAndMore-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/cryptoAndMore-6.js').then((m) => m.default as string),
   },
   cryptoApps: {
     themeable: () =>
@@ -459,7 +459,7 @@ const svgEsmMap = {
   },
   cryptoEconomyArrows: {
     themeable: () =>
-      import('../svgJs/esm/themeable/cryptoEconomyArrows-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/cryptoEconomyArrows-3.js').then((m) => m.default as string),
   },
   cryptoForBeginners: {
     themeable: () =>
@@ -556,7 +556,7 @@ const svgEsmMap = {
   },
   documentCertified: {
     themeable: () =>
-      import('../svgJs/esm/themeable/documentCertified-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/documentCertified-4.js').then((m) => m.default as string),
   },
   documentSuccess: {
     themeable: () =>
@@ -575,7 +575,7 @@ const svgEsmMap = {
   },
   earnInterestOnCryptocurrency: {
     themeable: () =>
-      import('../svgJs/esm/themeable/earnInterestOnCryptocurrency-6.js').then(
+      import('../svgJs/esm/themeable/earnInterestOnCryptocurrency-7.js').then(
         (m) => m.default as string,
       ),
   },
@@ -635,7 +635,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/frameEmpty-5.js').then((m) => m.default as string),
   },
   freeBtc: {
-    themeable: () => import('../svgJs/esm/themeable/freeBtc-3.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/freeBtc-4.js').then((m) => m.default as string),
   },
   futures: {
     themeable: () => import('../svgJs/esm/themeable/futures-6.js').then((m) => m.default as string),
@@ -654,7 +654,7 @@ const svgEsmMap = {
   },
   giftBoxCrypto: {
     themeable: () =>
-      import('../svgJs/esm/themeable/giftBoxCrypto-8.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/giftBoxCrypto-9.js').then((m) => m.default as string),
   },
   gifting: {
     themeable: () => import('../svgJs/esm/themeable/gifting-6.js').then((m) => m.default as string),
@@ -742,7 +742,7 @@ const svgEsmMap = {
   },
   instoPixDeposits: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPixDeposits-1.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoPixDeposits-2.js').then((m) => m.default as string),
   },
   instoPrimeStaking: {
     themeable: () =>
@@ -947,11 +947,11 @@ const svgEsmMap = {
   },
   pixBankDeposits: {
     themeable: () =>
-      import('../svgJs/esm/themeable/pixBankDeposits-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/pixBankDeposits-6.js').then((m) => m.default as string),
   },
   pixDeposits: {
     themeable: () =>
-      import('../svgJs/esm/themeable/pixDeposits-6.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/pixDeposits-7.js').then((m) => m.default as string),
   },
   playBtn: {
     themeable: () => import('../svgJs/esm/themeable/playBtn-0.js').then((m) => m.default as string),
@@ -978,11 +978,11 @@ const svgEsmMap = {
   },
   primeDeFi: {
     themeable: () =>
-      import('../svgJs/esm/themeable/primeDeFi-6.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/primeDeFi-7.js').then((m) => m.default as string),
   },
   primeEarn: {
     themeable: () =>
-      import('../svgJs/esm/themeable/primeEarn-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/primeEarn-6.js').then((m) => m.default as string),
   },
   primeStaking: {
     themeable: () =>
@@ -1085,7 +1085,7 @@ const svgEsmMap = {
   },
   starToken: {
     themeable: () =>
-      import('../svgJs/esm/themeable/starToken-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/starToken-6.js').then((m) => m.default as string),
   },
   startToday: {
     themeable: () =>
@@ -1107,7 +1107,7 @@ const svgEsmMap = {
     themeable: () => import('../svgJs/esm/themeable/success-0.js').then((m) => m.default as string),
   },
   swapEth: {
-    themeable: () => import('../svgJs/esm/themeable/swapEth-4.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/swapEth-5.js').then((m) => m.default as string),
   },
   switchAdvancedToSimpleTrading: {
     themeable: () =>
@@ -1117,7 +1117,7 @@ const svgEsmMap = {
   },
   switchReward: {
     themeable: () =>
-      import('../svgJs/esm/themeable/switchReward-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/switchReward-6.js').then((m) => m.default as string),
   },
   taxDocuments: {
     themeable: () =>

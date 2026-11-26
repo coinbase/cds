@@ -77,7 +77,7 @@ const svgEsmMap = {
   },
   bridging: {
     themeable: () =>
-      import('../svgJs/esm/themeable/bridging-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/bridging-4.js').then((m) => m.default as string),
   },
   browserExtension: {
     themeable: () =>
@@ -104,14 +104,14 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/cb1BankTransfers-1.js').then((m) => m.default as string),
   },
   cbbtc: {
-    themeable: () => import('../svgJs/esm/themeable/cbbtc-1.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/cbbtc-2.js').then((m) => m.default as string),
   },
   cbEth: {
-    themeable: () => import('../svgJs/esm/themeable/cbEth-4.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/cbEth-5.js').then((m) => m.default as string),
   },
   clawMachinePig: {
     themeable: () =>
-      import('../svgJs/esm/themeable/clawMachinePig-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/clawMachinePig-5.js').then((m) => m.default as string),
   },
   coinbaseCardLock: {
     themeable: () =>
@@ -181,7 +181,7 @@ const svgEsmMap = {
   },
   connectWalletTutorial: {
     themeable: () =>
-      import('../svgJs/esm/themeable/connectWalletTutorial-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/connectWalletTutorial-5.js').then((m) => m.default as string),
   },
   contactsListWarning: {
     themeable: () =>
@@ -247,7 +247,7 @@ const svgEsmMap = {
   },
   decentralization: {
     themeable: () =>
-      import('../svgJs/esm/themeable/decentralization-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/decentralization-6.js').then((m) => m.default as string),
   },
   decentralizedWebWeb3: {
     themeable: () =>
@@ -291,7 +291,7 @@ const svgEsmMap = {
   },
   digitalCollectibles: {
     themeable: () =>
-      import('../svgJs/esm/themeable/digitalCollectibles-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/digitalCollectibles-4.js').then((m) => m.default as string),
   },
   documentCertified: {
     themeable: () =>
@@ -443,7 +443,7 @@ const svgEsmMap = {
   },
   graphChartTrading: {
     themeable: () =>
-      import('../svgJs/esm/themeable/graphChartTrading-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/graphChartTrading-1.js').then((m) => m.default as string),
   },
   hardwareWallets: {
     themeable: () =>
@@ -462,7 +462,7 @@ const svgEsmMap = {
       import('../svgJs/esm/themeable/holdingCrypto-3.js').then((m) => m.default as string),
   },
   insto: {
-    themeable: () => import('../svgJs/esm/themeable/insto-2.js').then((m) => m.default as string),
+    themeable: () => import('../svgJs/esm/themeable/insto-3.js').then((m) => m.default as string),
   },
   instoAboutOnchain: {
     themeable: () =>
@@ -522,7 +522,7 @@ const svgEsmMap = {
   },
   instoPrimeStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/instoPrimeStaking-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/instoPrimeStaking-3.js').then((m) => m.default as string),
   },
   instoQRCode: {
     themeable: () =>
@@ -564,19 +564,19 @@ const svgEsmMap = {
   },
   leadingProtocol: {
     themeable: () =>
-      import('../svgJs/esm/themeable/leadingProtocol-2.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/leadingProtocol-3.js').then((m) => m.default as string),
   },
   leadingProtocolMorpho: {
     themeable: () =>
-      import('../svgJs/esm/themeable/leadingProtocolMorpho-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/leadingProtocolMorpho-1.js').then((m) => m.default as string),
   },
   ledgerFailed: {
     themeable: () =>
-      import('../svgJs/esm/themeable/ledgerFailed-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/ledgerFailed-4.js').then((m) => m.default as string),
   },
   ledgerSignatureRejected: {
     themeable: () =>
-      import('../svgJs/esm/themeable/ledgerSignatureRejected-3.js').then(
+      import('../svgJs/esm/themeable/ledgerSignatureRejected-4.js').then(
         (m) => m.default as string,
       ),
   },
@@ -709,11 +709,11 @@ const svgEsmMap = {
   },
   primeDeFi: {
     themeable: () =>
-      import('../svgJs/esm/themeable/primeDeFi-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/primeDeFi-5.js').then((m) => m.default as string),
   },
   primeEarn: {
     themeable: () =>
-      import('../svgJs/esm/themeable/primeEarn-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/primeEarn-6.js').then((m) => m.default as string),
   },
   primeOrderConfirmation: {
     themeable: () =>
@@ -725,7 +725,7 @@ const svgEsmMap = {
   },
   primeStaking: {
     themeable: () =>
-      import('../svgJs/esm/themeable/primeStaking-4.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/primeStaking-5.js').then((m) => m.default as string),
   },
   primeTradePreferences: {
     themeable: () =>
@@ -749,11 +749,11 @@ const svgEsmMap = {
   },
   ratMigration: {
     themeable: () =>
-      import('../svgJs/esm/themeable/ratMigration-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/ratMigration-4.js').then((m) => m.default as string),
   },
   ratMigrationerror: {
     themeable: () =>
-      import('../svgJs/esm/themeable/ratMigrationerror-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/ratMigrationerror-4.js').then((m) => m.default as string),
   },
   readyToTrade: {
     themeable: () =>
@@ -789,11 +789,11 @@ const svgEsmMap = {
   },
   secureAndTrusted: {
     themeable: () =>
-      import('../svgJs/esm/themeable/secureAndTrusted-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/secureAndTrusted-4.js').then((m) => m.default as string),
   },
   secureGlobalTransactions: {
     themeable: () =>
-      import('../svgJs/esm/themeable/secureGlobalTransactions-5.js').then(
+      import('../svgJs/esm/themeable/secureGlobalTransactions-6.js').then(
         (m) => m.default as string,
       ),
   },
@@ -815,7 +815,7 @@ const svgEsmMap = {
   },
   sendCryptoFaster: {
     themeable: () =>
-      import('../svgJs/esm/themeable/sendCryptoFaster-5.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/sendCryptoFaster-6.js').then((m) => m.default as string),
   },
   sendingCrypto: {
     themeable: () =>
@@ -852,7 +852,7 @@ const svgEsmMap = {
   },
   stressTestedColdStorage: {
     themeable: () =>
-      import('../svgJs/esm/themeable/stressTestedColdStorage-4.js').then(
+      import('../svgJs/esm/themeable/stressTestedColdStorage-5.js').then(
         (m) => m.default as string,
       ),
   },
@@ -868,7 +868,7 @@ const svgEsmMap = {
   },
   tokenSales: {
     themeable: () =>
-      import('../svgJs/esm/themeable/tokenSales-0.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/tokenSales-1.js').then((m) => m.default as string),
   },
   trade: {
     themeable: () => import('../svgJs/esm/themeable/trade-3.js').then((m) => m.default as string),
@@ -891,7 +891,7 @@ const svgEsmMap = {
   },
   trendingHotAssets: {
     themeable: () =>
-      import('../svgJs/esm/themeable/trendingHotAssets-3.js').then((m) => m.default as string),
+      import('../svgJs/esm/themeable/trendingHotAssets-4.js').then((m) => m.default as string),
   },
   trustedContacts: {
     themeable: () =>
