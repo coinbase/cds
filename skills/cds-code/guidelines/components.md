@@ -120,7 +120,7 @@ Use the detailed sections below the table only when you need further clarificati
 - **Use for:** Submits, primary/secondary/negative actions, full‑width CTAs (`block`).
 - **Key details:**
   - Uses `onClick` (not `onPress`).
-  - `compact` is the size control; there is no generic `size` prop.
+  - `size` (`"xs"`, `"s"`, `"m"`, `"l"`; defaults to `"l"`) is the size control; `compact` is deprecated.
 
 ### `IconButton`
 
@@ -312,14 +312,14 @@ Focus on **which input** to pick, not the full event/value API.
 
 ### `ProgressCircle`
 
-- Circular progress indicator from `@coinbase/cds-web-visualization`.
+- Circular progress indicator from `@coinbase/cds-web/visualizations`.
 - **Use for:**
   - `indeterminate` loading spinners.
   - Determinate progress when you want circular visuals instead of bars.
 
 ### `ProgressBar`
 
-- Linear determinate progress from `@coinbase/cds-web-visualization`.
+- Linear determinate progress from `@coinbase/cds-web/visualizations`.
 - **Use for:** Long‑running operations where linear progress is easy to interpret.
 
 ---
@@ -388,12 +388,12 @@ Focus on **which input** to pick, not the full event/value API.
 
 ## 10. Visualization
 
-From `@coinbase/cds-web-visualization`.
+Charts and `Legend` come from `@coinbase/cds-web/visualizations/chart`; sparklines come from `@coinbase/cds-web/visualizations/sparkline`. Do not import from the separate `@coinbase/cds-web-visualization` package; it is deprecated.
 
 ### Charts
 
-- `LineChart`, `BarChart`, `AreaChart`, `PieChart`.
-- **Use for:** Time series, comparisons, distributions, and proportions, respectively.
+- `LineChart`, `BarChart`, `AreaChart`, `PercentageBarChart`.
+- **Use for:** Time series, comparisons, cumulative or stacked values, and share of a whole as percentages, respectively.
 - Configure via `data`, axes, and `series` definitions.
 
 ### `Legend`

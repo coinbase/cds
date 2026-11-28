@@ -8,7 +8,7 @@ description: |
   control requirements after the code has been written.
 license: Apache-2.0
 metadata:
-  version: '2.0.0'
+  version: '2.0.1'
 ---
 
 # cds-accessibility
@@ -169,7 +169,7 @@ These patterns are **not** a substitute for reading each component’s doc. They
 
 - Prefer a **CDS composite** (data table, select, dialog, list row) over **`Box` + ad hoc** when the **doc** for the composite already specifies **semantics, focus, and keyboard** for that pattern.
 - When **two** CDS entry points exist (e.g. low vs high level), the one whose **“Accessibility” or “When to use”** section matches the **screen reader and keyboard** requirements should be used.
-- **Visualization** components: read **cds-web-visualization** / **cds-mobile-visualization** docs (via **cds-docs**) for **data point** and **legend** behavior before custom composition.
+- **Visualization** components: read the **chart** and **sparkline** docs (via **cds-docs**) for **data point** and **legend** behavior before custom composition.
 
 ### Forms and errors
 
